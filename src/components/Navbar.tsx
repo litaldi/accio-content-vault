@@ -1,9 +1,16 @@
-
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus, Search, User } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { ModeToggle } from '@/components/ui/mode-toggle';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { BarChart, FolderOpen, LogOut, Settings, User } from 'lucide-react';
 
 interface NavbarProps {
   isLoggedIn: boolean;
@@ -11,90 +18,79 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
-    }
-    toast({
-      title: "Logged out successfully",
-      description: "You have been logged out of your account",
-    });
-    navigate('/');
-  };
 
   return (
-    <nav className="border-b border-border bg-background sticky top-0 z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center">
-              <h1 className="text-xl font-bold text-primary">Accio</h1>
-            </Link>
-          </div>
+    <header className="border-b border-border">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-6">
+          <Link to="/" className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-primary">Accio</span>
+          </Link>
+          
+          {isLoggedIn && (
+            <nav className="hidden md:flex gap-6">
+              <Link to="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
+                Dashboard
+              </Link>
+              <Link to="/collections" className="text-sm font-medium transition-colors hover:text-primary">
+                Collections
+              </Link>
+              <Link to="/analytics" className="text-sm font-medium transition-colors hover:text-primary">
+                Analytics
+              </Link>
+            </nav>
+          )}
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <ModeToggle />
           
           {isLoggedIn ? (
-            <div className="flex items-center space-x-4">
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="hidden md:flex"
-                onClick={() => navigate('/dashboard')}
-              >
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="hidden md:flex"
-                onClick={() => navigate('/save')}
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Save Content
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => navigate('/profile')}
-              >
-                <User className="h-4 w-4 mr-2" />
-                Profile
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarFallback>U</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/collections')}>
+                  <FolderOpen className="mr-2 h-4 w-4" />
+                  <span>Collections</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/analytics')}>
+                  <BarChart className="mr-2 h-4 w-4" />
+                  <span>Analytics</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={onLogout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
-            <div className="flex items-center space-x-4">
-              {location.pathname !== '/login' && (
-                <Button 
-                  variant="ghost" 
-                  onClick={() => navigate('/login')}
-                >
-                  Login
-                </Button>
-              )}
-              {location.pathname !== '/register' && (
-                <Button 
-                  variant="default" 
-                  onClick={() => navigate('/register')}
-                >
-                  Register
-                </Button>
-              )}
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" onClick={() => navigate('/login')}>
+                Log in
+              </Button>
+              <Button onClick={() => navigate('/register')}>
+                Sign up
+              </Button>
             </div>
           )}
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

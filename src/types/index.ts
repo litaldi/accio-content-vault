@@ -19,6 +19,8 @@ export interface SavedContent {
   created_at: string;
   tags: Tag[];
   embedding?: number[]; // Vector embedding for semantic search
+  summary?: string; // AI-generated summary
+  collection_ids?: string[]; // Collections this content belongs to
 }
 
 export interface Tag {
@@ -58,4 +60,13 @@ export interface TagEditorProps {
   tags: Tag[];
   onTagsChange: (newTags: Tag[]) => void;
   readOnly?: boolean;
+}
+
+export interface Collection {
+  id: string;
+  name: string;
+  description: string;
+  content_ids: string[];
+  created_at: string;
+  parent_id?: string; // For nested collections
 }

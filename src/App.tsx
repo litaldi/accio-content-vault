@@ -13,6 +13,8 @@ import SaveContent from "./pages/SaveContent";
 import NotFound from "./pages/NotFound";
 import Pricing from "./pages/Pricing";
 import AccountSettings from "./pages/AccountSettings";
+import Analytics from "./pages/Analytics";
+import Collections from "./pages/Collections";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -33,6 +35,8 @@ const App: React.FC = () => {
               <Route path="/save" element={<SaveContent />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/settings" element={<AccountSettings />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/collections" element={<Collections />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

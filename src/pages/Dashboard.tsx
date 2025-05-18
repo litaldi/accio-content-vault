@@ -8,67 +8,8 @@ import TagEditor from '@/components/TagEditor';
 import { SavedContent, Tag, SearchResult } from '@/types';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
-
-// Mock data for initial development
-const mockContents: SavedContent[] = [
-  {
-    id: '1',
-    user_id: 'user123',
-    url: 'https://example.com/article1',
-    title: 'How to Build a React App',
-    description: 'Learn the basics of React and build your first application with this step-by-step tutorial.',
-    image_url: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070',
-    created_at: new Date(2025, 4, 10).toISOString(),
-    tags: [
-      { id: 't1', name: 'react', auto_generated: true, confirmed: true },
-      { id: 't2', name: 'javascript', auto_generated: true, confirmed: true },
-      { id: 't3', name: 'tutorial', auto_generated: true, confirmed: false }
-    ]
-  },
-  {
-    id: '2',
-    user_id: 'user123',
-    url: 'https://example.com/article2',
-    title: 'Job Interview Tips',
-    description: 'Top 10 tips to prepare for your next tech job interview and stand out from other candidates.',
-    image_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2688',
-    created_at: new Date(2025, 4, 15).toISOString(),
-    tags: [
-      { id: 't4', name: 'job', auto_generated: true, confirmed: true },
-      { id: 't5', name: 'interview', auto_generated: true, confirmed: true },
-      { id: 't6', name: 'career', auto_generated: true, confirmed: true }
-    ]
-  },
-  {
-    id: '3',
-    user_id: 'user123',
-    url: 'https://example.com/article3',
-    title: 'Productivity Tools for Developers',
-    description: 'A curated list of the best productivity tools that every developer should try in 2025.',
-    created_at: new Date(2025, 4, 18).toISOString(),
-    tags: [
-      { id: 't7', name: 'productivity', auto_generated: true, confirmed: true },
-      { id: 't8', name: 'tools', auto_generated: true, confirmed: true },
-      { id: 't9', name: 'development', auto_generated: true, confirmed: true }
-    ]
-  },
-  // Add a file example
-  {
-    id: '4',
-    user_id: 'user123',
-    title: 'Project Requirements.pdf',
-    description: 'Project specifications and requirements document',
-    file_url: 'https://example.com/files/requirements.pdf',
-    file_type: 'pdf',
-    file_size: 2500000,
-    created_at: new Date(2025, 4, 19).toISOString(),
-    tags: [
-      { id: 't10', name: 'project', auto_generated: true, confirmed: true },
-      { id: 't11', name: 'documentation', auto_generated: true, confirmed: true }
-    ]
-  }
-];
+import { Plus, BarChart, FolderOpen } from 'lucide-react';
+import { mockContents } from '@/lib/mock-data';
 
 const Dashboard = () => {
   const [contents, setContents] = useState<SavedContent[]>(mockContents);
@@ -234,10 +175,20 @@ const Dashboard = () => {
       <main className="flex-grow container mx-auto px-4 py-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold">My Content</h1>
-          <Button onClick={() => navigate('/save')} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            Save New
-          </Button>
+          <div className="flex gap-2">
+            <Button onClick={() => navigate('/collections')} variant="outline" className="flex items-center gap-2">
+              <FolderOpen className="h-4 w-4" />
+              Collections
+            </Button>
+            <Button onClick={() => navigate('/analytics')} variant="outline" className="flex items-center gap-2">
+              <BarChart className="h-4 w-4" />
+              Analytics
+            </Button>
+            <Button onClick={() => navigate('/save')} className="flex items-center gap-2">
+              <Plus className="h-4 w-4" />
+              Save New
+            </Button>
+          </div>
         </div>
         
         <div className="mb-8">

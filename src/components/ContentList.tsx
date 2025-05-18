@@ -1,9 +1,10 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { SavedContent, Tag, SearchResult } from '@/types';
+import { SavedContent, Tag } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
 import { File, FileText, Image, Link } from 'lucide-react';
+import ContentDetailView from './ContentDetailView';
 
 interface ContentListProps {
   contents: SavedContent[];
@@ -11,6 +12,8 @@ interface ContentListProps {
 }
 
 const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
+  const [selectedContent, setSelectedContent] = useState<SavedContent | null>(null);
+
   // Helper function to highlight search term in text
   const highlightText = (text: string, searchTerm: string) => {
     if (!searchTerm || !text) return text;
@@ -33,6 +36,10 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
     }
   };
 
+  const handleCardClick = (content: SavedContent) => {
+    setSelectedContent(content);
+  };
+
   if (contents.length === 0) {
     return (
       <div className="text-center py-10">
@@ -47,7 +54,11 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
   return (
     <div className="space-y-4">
       {contents.map((content) => (
-        <Card key={content.id} className="overflow-hidden card-hover">
+        <Card 
+          key={content.id} 
+          className="overflow-hidden card-hover cursor-pointer" 
+          onClick={() => handleCardClick(content)}
+        >
           <div className="flex flex-col md:flex-row">
             {content.image_url && !content.file_type && (
               <div className="md:w-1/4">
@@ -77,16 +88,11 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
                     <div>
                       <CardTitle className="line-clamp-2">
                         {content.url ? (
-                          <a 
-                            href={content.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer"
-                            className="hover:text-primary transition-colors"
-                          >
+                          <span className="hover:text-primary transition-colors">
                             {searchQuery 
                               ? highlightText(content.title, searchQuery) 
                               : content.title}
-                          </a>
+                          </span>
                         ) : (
                           <span>
                             {searchQuery 
@@ -125,6 +131,14 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
           </div>
         </Card>
       ))}
+      
+      {selectedContent && (
+        <ContentDetailView 
+          content={selectedContent}
+          isOpen={!!selectedContent}
+          onClose={() => setSelectedContent(null)}
+        />
+      )}
     </div>
   );
 };
