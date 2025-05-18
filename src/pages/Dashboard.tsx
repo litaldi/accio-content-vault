@@ -2,10 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
-import SearchBar from '@/components/SearchBar';
+import SemanticSearchBar from '@/components/SemanticSearchBar';
 import ContentList from '@/components/ContentList';
-import { SavedContent, Tag } from '@/types';
+import TagEditor from '@/components/TagEditor';
+import { SavedContent, Tag, SearchResult } from '@/types';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
 
 // Mock data for initial development
 const mockContents: SavedContent[] = [
@@ -49,13 +52,31 @@ const mockContents: SavedContent[] = [
       { id: 't8', name: 'tools', auto_generated: true, confirmed: true },
       { id: 't9', name: 'development', auto_generated: true, confirmed: true }
     ]
+  },
+  // Add a file example
+  {
+    id: '4',
+    user_id: 'user123',
+    title: 'Project Requirements.pdf',
+    description: 'Project specifications and requirements document',
+    file_url: 'https://example.com/files/requirements.pdf',
+    file_type: 'pdf',
+    file_size: 2500000,
+    created_at: new Date(2025, 4, 19).toISOString(),
+    tags: [
+      { id: 't10', name: 'project', auto_generated: true, confirmed: true },
+      { id: 't11', name: 'documentation', auto_generated: true, confirmed: true }
+    ]
   }
 ];
 
 const Dashboard = () => {
   const [contents, setContents] = useState<SavedContent[]>(mockContents);
-  const [filteredContents, setFilteredContents] = useState<SavedContent[]>(mockContents);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>(
+    mockContents.map(content => ({ content }))
+  );
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSemanticSearch, setIsSemanticSearch] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -74,7 +95,7 @@ const Dashboard = () => {
         await new Promise(resolve => setTimeout(resolve, 500));
         
         setContents(mockContents);
-        setFilteredContents(mockContents);
+        setSearchResults(mockContents.map(content => ({ content })));
       } catch (error) {
         console.error('Error fetching content:', error);
         toast({
@@ -88,10 +109,42 @@ const Dashboard = () => {
     fetchContent();
   }, [toast]);
 
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
+  // Mock function to simulate semantic search
+  const simulateSemanticSearch = (query: string, contents: SavedContent[]): SearchResult[] => {
+    // In a real implementation, this would use vector embeddings and similarity search
     
-    // Simple search implementation (case insensitive)
+    // For now, we'll do simple text matching but add relevance scores
+    const results = contents.map(content => {
+      // Calculate a mock relevance score based on simple text matching
+      let score = 0;
+      
+      // Check title (highest weight)
+      if (content.title.toLowerCase().includes(query.toLowerCase())) {
+        score += 0.6;
+      }
+      
+      // Check description
+      if (content.description.toLowerCase().includes(query.toLowerCase())) {
+        score += 0.3;
+      }
+      
+      // Check tags
+      if (content.tags.some(tag => tag.name.toLowerCase().includes(query.toLowerCase()))) {
+        score += 0.4;
+      }
+      
+      return { content, score };
+    });
+    
+    // Filter out low-relevance results
+    const filteredResults = results.filter(result => result.score! > 0);
+    
+    // Sort by relevance score
+    return filteredResults.sort((a, b) => (b.score || 0) - (a.score || 0));
+  };
+
+  // Basic keyword search function
+  const basicSearch = (query: string, contents: SavedContent[]): SearchResult[] => {
     const lowercaseQuery = query.toLowerCase();
     
     const filtered = contents.filter(content => {
@@ -109,28 +162,64 @@ const Dashboard = () => {
       );
     });
     
-    setFilteredContents(filtered);
+    return filtered.map(content => ({ content }));
+  };
+
+  const handleSearch = (query: string, useSemanticSearch: boolean) => {
+    setSearchQuery(query);
+    setIsSemanticSearch(useSemanticSearch);
     
-    // In a real app, we would track searches for analytics
-    console.log(`Search performed: ${query}`);
+    let results: SearchResult[];
     
-    if (filtered.length === 0) {
+    if (useSemanticSearch) {
+      // Use semantic search
+      results = simulateSemanticSearch(query, contents);
+    } else {
+      // Use basic search
+      results = basicSearch(query, contents);
+    }
+    
+    setSearchResults(results);
+    
+    // In a real app, track searches for analytics
+    console.log(`Search performed: ${query} (Semantic: ${useSemanticSearch})`);
+    
+    if (results.length === 0) {
       toast({
         title: 'No results found',
         description: `No content matches "${query}"`,
       });
-    } else {
-      // Track search counts per tag (for analytics)
-      const matchedTags = contents.flatMap(content => 
-        content.tags.filter(tag => 
-          tag.name.toLowerCase().includes(lowercaseQuery)
-        )
-      );
-      
-      if (matchedTags.length > 0) {
-        console.log('Tags matched in search:', matchedTags.map(t => t.name));
-      }
     }
+  };
+
+  const handleTagsChange = (contentId: string, newTags: Tag[]) => {
+    // Update tags for the specific content
+    const updatedContents = contents.map(content => {
+      if (content.id === contentId) {
+        return { ...content, tags: newTags };
+      }
+      return content;
+    });
+    
+    setContents(updatedContents);
+    
+    // Update search results
+    const updatedResults = searchResults.map(result => {
+      if (result.content.id === contentId) {
+        return { ...result, content: { ...result.content, tags: newTags } };
+      }
+      return result;
+    });
+    
+    setSearchResults(updatedResults);
+    
+    // In a real app, save to database
+    console.log(`Updated tags for content ${contentId}:`, newTags);
+    
+    toast({
+      title: 'Tags updated',
+      description: 'Your changes have been saved',
+    });
   };
 
   const handleLogout = () => {
@@ -143,23 +232,46 @@ const Dashboard = () => {
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       
       <main className="flex-grow container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold">My Content</h1>
+          <Button onClick={() => navigate('/save')} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Save New
+          </Button>
+        </div>
+        
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-6">My Content</h1>
-          <SearchBar onSearch={handleSearch} />
+          <SemanticSearchBar onSearch={handleSearch} />
         </div>
 
         {searchQuery && (
           <div className="mb-6">
             <h2 className="text-xl font-medium mb-2">
-              Search results for: <span className="text-primary">"{searchQuery}"</span>
+              {isSemanticSearch ? 'Results for: ' : 'Search results for: '}
+              <span className="text-primary">"{searchQuery}"</span>
             </h2>
             <p className="text-muted-foreground">
-              Found {filteredContents.length} {filteredContents.length === 1 ? 'item' : 'items'}
+              Found {searchResults.length} {searchResults.length === 1 ? 'item' : 'items'}
             </p>
           </div>
         )}
         
-        <ContentList contents={filteredContents} searchQuery={searchQuery} />
+        <div className="space-y-6">
+          {searchResults.map(result => (
+            <div key={result.content.id} className="space-y-2">
+              <ContentList 
+                contents={[result.content]} 
+                searchQuery={searchQuery} 
+              />
+              <div className="pl-4 pr-4 pb-4">
+                <TagEditor 
+                  tags={result.content.tags}
+                  onTagsChange={(newTags) => handleTagsChange(result.content.id, newTags)}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );

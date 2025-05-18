@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { SavedContent, Tag } from '@/types';
+import { SavedContent, Tag, SearchResult } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
+import { File, FileText, Image, Link } from 'lucide-react';
 
 interface ContentListProps {
   contents: SavedContent[];
@@ -22,6 +23,16 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
     );
   };
 
+  const renderContentIcon = (content: SavedContent) => {
+    if (content.file_type === 'pdf') {
+      return <FileText className="h-6 w-6 text-primary" />;
+    } else if (content.file_type === 'image') {
+      return <Image className="h-6 w-6 text-primary" />;
+    } else {
+      return <Link className="h-6 w-6 text-primary" />;
+    }
+  };
+
   if (contents.length === 0) {
     return (
       <div className="text-center py-10">
@@ -38,7 +49,7 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
       {contents.map((content) => (
         <Card key={content.id} className="overflow-hidden card-hover">
           <div className="flex flex-col md:flex-row">
-            {content.image_url && (
+            {content.image_url && !content.file_type && (
               <div className="md:w-1/4">
                 <img 
                   src={content.image_url} 
@@ -47,25 +58,52 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
                 />
               </div>
             )}
-            <div className={`flex-1 ${content.image_url ? 'md:w-3/4' : 'w-full'}`}>
+            
+            {content.file_type === 'image' && content.file_url && (
+              <div className="md:w-1/4">
+                <img 
+                  src={content.file_url} 
+                  alt={content.title} 
+                  className="h-48 md:h-full w-full object-cover"
+                />
+              </div>
+            )}
+            
+            <div className={`flex-1 ${(content.image_url || (content.file_type === 'image' && content.file_url)) ? 'md:w-3/4' : 'w-full'}`}>
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle className="line-clamp-2">
-                      <a 
-                        href={content.url} 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="hover:text-primary transition-colors"
-                      >
-                        {searchQuery 
-                          ? highlightText(content.title, searchQuery) 
-                          : content.title}
-                      </a>
-                    </CardTitle>
-                    <CardDescription className="text-xs mt-1">
-                      {formatDistanceToNow(new Date(content.created_at), { addSuffix: true })}
-                    </CardDescription>
+                  <div className="flex items-center gap-2">
+                    {renderContentIcon(content)}
+                    <div>
+                      <CardTitle className="line-clamp-2">
+                        {content.url ? (
+                          <a 
+                            href={content.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="hover:text-primary transition-colors"
+                          >
+                            {searchQuery 
+                              ? highlightText(content.title, searchQuery) 
+                              : content.title}
+                          </a>
+                        ) : (
+                          <span>
+                            {searchQuery 
+                              ? highlightText(content.title, searchQuery) 
+                              : content.title}
+                          </span>
+                        )}
+                      </CardTitle>
+                      <CardDescription className="text-xs mt-1">
+                        {formatDistanceToNow(new Date(content.created_at), { addSuffix: true })}
+                        {content.file_size && (
+                          <span className="ml-2">
+                            {(content.file_size / 1024 / 1024).toFixed(2)} MB
+                          </span>
+                        )}
+                      </CardDescription>
+                    </div>
                   </div>
                 </div>
               </CardHeader>
