@@ -1,18 +1,19 @@
 
 import React, { useState } from 'react';
-import { Tag } from '@/types';
+import { Tag as TagType } from '@/types';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { X, Plus } from 'lucide-react';
 
 interface TagEditorProps {
-  tags: Tag[];
-  onTagsChange: (newTags: Tag[]) => void;
+  tags: TagType[];
+  onTagsChange: (newTags: TagType[]) => void;
   readOnly?: boolean;
 }
 
 const TagEditor: React.FC<TagEditorProps> = ({ tags, onTagsChange, readOnly = false }) => {
   const [newTagName, setNewTagName] = useState('');
+  const [inputFocused, setInputFocused] = useState(false);
 
   const handleAddTag = () => {
     if (!newTagName.trim()) return;
@@ -23,7 +24,7 @@ const TagEditor: React.FC<TagEditorProps> = ({ tags, onTagsChange, readOnly = fa
     );
     
     if (!tagExists) {
-      const newTag: Tag = {
+      const newTag: TagType = {
         id: `user-${Date.now()}`, // In production, this ID would come from the server
         name: newTagName.trim(),
         auto_generated: false,
@@ -47,7 +48,7 @@ const TagEditor: React.FC<TagEditorProps> = ({ tags, onTagsChange, readOnly = fa
       handleAddTag();
     }
   };
-
+  
   return (
     <div>
       <div className="flex flex-wrap gap-2 mb-4">
@@ -60,14 +61,17 @@ const TagEditor: React.FC<TagEditorProps> = ({ tags, onTagsChange, readOnly = fa
                 ? 'bg-accent/20 text-accent-foreground' 
                 : 'bg-primary/20 text-primary-foreground'}
               ${!readOnly && 'pr-1'}
+              animate-scale-in transition-all duration-200 hover:bg-opacity-30
             `}
+            role="listitem"
           >
             {tag.name}
             {!readOnly && (
               <button
                 type="button"
                 onClick={() => handleRemoveTag(tag.id)}
-                className="ml-1 rounded-full p-0.5 hover:bg-accent/30"
+                className="ml-1 rounded-full p-0.5 hover:bg-accent/30 transition-colors"
+                aria-label={`Remove ${tag.name} tag`}
               >
                 <X className="h-3 w-3" />
                 <span className="sr-only">Remove {tag.name} tag</span>
@@ -79,13 +83,16 @@ const TagEditor: React.FC<TagEditorProps> = ({ tags, onTagsChange, readOnly = fa
 
       {!readOnly && (
         <div className="flex space-x-2">
-          <div className="relative flex-grow">
+          <div className={`relative flex-grow transition-all duration-200 ${inputFocused ? 'shadow-sm ring-1 ring-primary/20 rounded-md' : ''}`}>
             <Input
               value={newTagName}
               onChange={(e) => setNewTagName(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={() => setInputFocused(true)}
+              onBlur={() => setInputFocused(false)}
               placeholder="Add a tag..."
-              className="w-full"
+              className="w-full transition-all"
+              aria-label="New tag name"
             />
           </div>
           <Button 
@@ -93,9 +100,11 @@ const TagEditor: React.FC<TagEditorProps> = ({ tags, onTagsChange, readOnly = fa
             size="sm"
             onClick={handleAddTag}
             disabled={!newTagName.trim()}
+            className="btn-with-icon transition-all duration-200"
+            aria-label="Add tag"
           >
-            <Plus className="h-4 w-4 mr-1" />
-            Add
+            <Plus className="h-4 w-4" />
+            <span>Add</span>
           </Button>
         </div>
       )}

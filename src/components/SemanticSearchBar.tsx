@@ -1,9 +1,15 @@
 
 import React, { useState } from 'react';
-import { Search } from 'lucide-react';
+import { Search, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SemanticSearchBarProps {
   onSearch: (query: string, isSemanticSearch: boolean) => void;
@@ -12,6 +18,7 @@ interface SemanticSearchBarProps {
 const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSemanticSearch, setIsSemanticSearch] = useState<boolean>(true);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const { toast } = useToast();
 
   const handleSearch = (e: React.FormEvent) => {
@@ -33,31 +40,71 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
   };
 
   return (
-    <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto">
-      <div className="flex flex-col w-full items-center space-y-2">
-        <div className="relative flex-grow w-full">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+    <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto animate-fade-in">
+      <div className="flex flex-col w-full items-center space-y-3">
+        <div className={`relative w-full transition-all duration-200 ${isFocused ? 'shadow-sm ring-2 ring-primary/20 rounded-md' : ''}`}>
+          <Search className={`absolute left-2.5 top-2.5 h-4 w-4 transition-colors duration-200 ${isFocused ? 'text-primary' : 'text-muted-foreground'}`} />
           <Input
             type="text"
             placeholder={isSemanticSearch ? "Ask a question about your content..." : "Search by tag or keyword..."}
             className="w-full pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
           />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground rounded-full p-0.5 transition-colors"
+              aria-label="Clear search"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+            </button>
+          )}
         </div>
-        <div className="flex justify-between w-full">
+        <div className="flex justify-between items-center w-full">
           <div className="flex items-center space-x-2">
-            <label className="text-sm cursor-pointer">
+            <label className="flex items-center space-x-2 text-sm cursor-pointer group">
               <input 
                 type="checkbox"
-                className="mr-1"
+                className="accent-primary rounded"
                 checked={isSemanticSearch}
                 onChange={(e) => setIsSemanticSearch(e.target.checked)}
+                aria-label="Use semantic search"
               />
-              Use semantic search
+              <span className="group-hover:text-primary transition-colors">Use semantic search</span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="text-muted-foreground hover:text-foreground cursor-help">
+                      <Sparkles className="h-3.5 w-3.5" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs max-w-xs">
+                      Semantic search understands the meaning of your question rather than just matching keywords.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </label>
           </div>
-          <Button type="submit">Search</Button>
+          <Button 
+            type="submit" 
+            className="btn-with-icon interactive"
+          >
+            {isSemanticSearch ? (
+              <Sparkles className="h-4 w-4" />
+            ) : (
+              <Search className="h-4 w-4" />
+            )}
+            <span>Search</span>
+          </Button>
         </div>
       </div>
     </form>
