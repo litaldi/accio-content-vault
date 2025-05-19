@@ -4,6 +4,7 @@ import { render, RenderOptions } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import { ThemeProvider } from 'next-themes';
 import { BrowserRouter } from 'react-router-dom';
+import '@testing-library/jest-dom'; // Explicit import for matchers
 
 // Add jest-axe matchers
 expect.extend(toHaveNoViolations);

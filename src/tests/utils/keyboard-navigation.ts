@@ -1,6 +1,7 @@
 
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
+import '@testing-library/jest-dom'; // Explicit import for matchers
 
 /**
  * Helper function to test keyboard navigation through a series of elements

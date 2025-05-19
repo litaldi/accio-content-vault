@@ -1,6 +1,13 @@
 
 import '@testing-library/jest-dom';
 
+// Make sure jest-dom matchers are available globally
+import { expect } from '@jest/globals';
+import { toHaveNoViolations } from 'jest-axe';
+
+// Add jest-axe matchers
+expect.extend({ toHaveNoViolations });
+
 // Mock window.matchMedia for theme testing
 Object.defineProperty(window, 'matchMedia', {
   writable: true,

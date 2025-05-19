@@ -4,6 +4,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders, testAccessibility } from '../utils/accessibility';
 import { Input } from '@/components/ui/input';
+import '@testing-library/jest-dom'; // Explicit import for matchers
 
 describe('Input Component', () => {
   it('should render correctly', () => {
