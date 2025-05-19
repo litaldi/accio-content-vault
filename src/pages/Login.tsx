@@ -66,7 +66,7 @@ const Login = () => {
           <Alert className="max-w-md w-full border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20">
             <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
             <AlertTitle className="text-xl font-bold mb-2 text-yellow-800 dark:text-yellow-300">
-              Supabase Configuration Required
+              <span>Supabase Configuration Required</span>
             </AlertTitle>
             <AlertDescription className="mt-2">
               <p className="mb-4">
@@ -81,9 +81,11 @@ const Login = () => {
         ) : (
           <Card className="w-full max-w-md animate-fade-up shadow-lg">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+              <CardTitle className="text-2xl font-bold text-center">
+                <span>Login</span>
+              </CardTitle>
               <CardDescription className="text-center">
-                Enter your email and password to access your account
+                <span>Enter your email and password to access your account</span>
               </CardDescription>
             </CardHeader>
             <CardContent>

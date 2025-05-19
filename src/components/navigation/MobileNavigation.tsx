@@ -46,7 +46,9 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </SheetTrigger>
       <SheetContent side="left">
         <SheetHeader>
-          <SheetTitle>ReadSmart</SheetTitle>
+          <SheetTitle>
+            <span>ReadSmart</span>
+          </SheetTitle>
         </SheetHeader>
         <div className="mt-6 flex flex-col space-y-3">
           {links.map((link) => (
