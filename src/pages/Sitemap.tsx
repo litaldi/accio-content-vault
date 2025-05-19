@@ -3,7 +3,7 @@ import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Sitemap as SitemapIcon } from "lucide-react";
+import { Map } from "lucide-react";
 
 const Sitemap = () => {
   const pages = [
@@ -54,7 +54,7 @@ const Sitemap = () => {
       <div className="container px-4 py-8 mx-auto max-w-4xl">
         <div className="mb-8 space-y-4">
           <div className="flex items-center gap-2">
-            <SitemapIcon className="h-8 w-8 text-primary" />
+            <Map className="h-8 w-8 text-primary" />
             <h1 className="text-3xl md:text-4xl font-bold">Sitemap</h1>
           </div>
           <p className="text-muted-foreground text-lg">
