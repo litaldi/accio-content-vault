@@ -4,6 +4,7 @@ import { render, RenderOptions, screen, fireEvent, waitFor } from '@testing-libr
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { axe, toHaveNoViolations } from 'jest-axe';
+import '@testing-library/jest-dom';
 
 // Add jest-axe matchers
 expect.extend(toHaveNoViolations);

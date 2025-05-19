@@ -46,3 +46,15 @@ global.ResizeObserver = class ResizeObserver {
   unobserve = jest.fn();
   disconnect = jest.fn();
 };
+
+// Extend the Jest matchers
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      toBeInTheDocument(): R;
+      toHaveAttribute(attr: string, value?: string): R;
+      toBeDisabled(): R;
+      toHaveValue(value: string | string[] | number | null): R;
+    }
+  }
+}
