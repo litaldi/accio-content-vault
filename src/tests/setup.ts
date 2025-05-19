@@ -17,13 +17,24 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  disconnect() {}
-  observe() {}
-  takeRecords() { return []; }
-  unobserve() {}
-};
+class MockIntersectionObserver implements IntersectionObserver {
+  readonly root: Element | null = null;
+  readonly rootMargin: string = '';
+  readonly thresholds: ReadonlyArray<number> = [];
+  
+  constructor(private callback: IntersectionObserverCallback) {}
+  
+  disconnect(): void {}
+  observe(): void {}
+  takeRecords(): IntersectionObserverEntry[] { return []; }
+  unobserve(): void {}
+}
+
+Object.defineProperty(window, 'IntersectionObserver', {
+  writable: true,
+  configurable: true,
+  value: MockIntersectionObserver
+});
 
 // Mock localStorage
 const localStorageMock = (function() {
