@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentService } from '@/services';
@@ -5,8 +6,11 @@ import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
 import TagConfirmation from './TagConfirmation';
 import { Tag } from '@/types';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface SaveContentFormProps {
   onSaveContent: (url: string, tags: Tag[]) => void;
@@ -17,6 +21,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [suggestedTag, setSuggestedTag] = useState<Tag | null>(null);
   const [showTagConfirmation, setShowTagConfirmation] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
   const { user } = useAuth();
   const { saveContent } = useContentService();
@@ -41,13 +46,39 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
     }
   };
 
+  const validateUrl = (url: string): boolean => {
+    // Basic URL validation - checks if properly formatted
+    try {
+      // Try to create a URL object - if it fails, URL is invalid
+      new URL(url.startsWith('http') ? url : `https://${url}`);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!url) {
+    // Reset any previous errors
+    setError(null);
+    
+    // Input validation
+    if (!url.trim()) {
+      setError("Please enter a URL");
       toast({
         title: "URL is required",
         description: "Please enter a valid URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!validateUrl(url)) {
+      setError("Please enter a valid URL");
+      toast({
+        title: "Invalid URL format",
+        description: "Please check your URL and try again",
         variant: "destructive",
       });
       return;
@@ -65,7 +96,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
     try {
       setIsLoading(true);
       
-      // Validate URL
+      // Process URL - ensure it has http/https prefix
       let processedUrl = url;
       if (!url.startsWith('http://') && !url.startsWith('https://')) {
         processedUrl = 'https://' + url;
@@ -99,6 +130,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
       }
     } catch (error) {
       console.error("Error saving content:", error);
+      setError("Failed to save content. Please try again.");
       toast({
         title: "Error saving content",
         description: "An error occurred while trying to save your content",
@@ -141,6 +173,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
         }
       } catch (error) {
         console.error("Error saving content:", error);
+        setError("Failed to save content. Please try again.");
         toast({
           title: "Error saving content",
           description: "An error occurred while trying to save your content",
@@ -159,22 +192,39 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
             Enter a URL to save content to your collection
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} aria-label="Save content form">
           <CardContent>
             <div className="grid w-full items-center gap-4">
               <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="url" id="url-label">URL</Label>
                 <Input
                   id="url"
+                  name="url"
                   placeholder="https://example.com"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   disabled={isLoading}
+                  aria-labelledby="url-label"
+                  aria-required="true"
+                  aria-invalid={error ? "true" : "false"}
+                  aria-describedby={error ? "url-error" : undefined}
                 />
+                {error && (
+                  <Alert variant="destructive" className="mt-2">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription id="url-error">{error}</AlertDescription>
+                  </Alert>
+                )}
               </div>
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button type="submit" disabled={isLoading}>
+            <Button 
+              type="submit" 
+              disabled={isLoading}
+              aria-busy={isLoading}
+              className="focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            >
               {isLoading ? "Processing..." : "Save Content"}
             </Button>
           </CardFooter>
