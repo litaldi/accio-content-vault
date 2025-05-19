@@ -113,9 +113,10 @@ function getFocusableElements(container: HTMLElement): HTMLElement[] {
 
   return Array.from(container.querySelectorAll(selector))
     .filter((el) => {
-      // Filter out hidden elements
-      return el.offsetWidth > 0 && 
-             el.offsetHeight > 0 && 
-             window.getComputedStyle(el).visibility !== 'hidden';
+      // Filter out hidden elements - cast to HTMLElement to access offsetWidth and offsetHeight
+      const element = el as HTMLElement;
+      return element.offsetWidth > 0 && 
+             element.offsetHeight > 0 && 
+             window.getComputedStyle(element).visibility !== 'hidden';
     }) as HTMLElement[];
 }

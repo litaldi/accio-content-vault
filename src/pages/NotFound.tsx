@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft, Home, SitemapIcon } from "lucide-react";
+import { ArrowLeft, Home, Map } from "lucide-react";
 
 const NotFound = () => {
   const location = useLocation();

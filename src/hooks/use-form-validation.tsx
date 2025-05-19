@@ -98,7 +98,8 @@ export const useFormValidation = <T extends Record<string, any>>(
   
   // Form values as a simple object
   const values = Object.entries(fields).reduce((acc, [key, field]) => {
-    acc[key] = field.value;
+    // Using type assertion to tell TypeScript that this operation is safe
+    (acc as any)[key] = field.value;
     return acc;
   }, {} as T);
   
