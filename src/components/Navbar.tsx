@@ -62,11 +62,8 @@ const Navbar: React.FC<NavbarProps> = ({
           <NavigationMenuList>
             {filteredLinks.slice(0, 4).map((link) => (
               <NavigationMenuItem key={link.path}>
-                <Link to={link.path} legacyBehavior passHref>
-                  <NavigationMenuLink
-                    className={navigationMenuTriggerStyle()}
-                    active={isActiveRoute(link.path)}
-                  >
+                <Link to={link.path}>
+                  <NavigationMenuLink className={navigationMenuTriggerStyle()} active={isActiveRoute(link.path)}>
                     {link.name}
                   </NavigationMenuLink>
                 </Link>
@@ -80,7 +77,7 @@ const Navbar: React.FC<NavbarProps> = ({
                   <ul className="grid gap-3 p-4 w-[200px]">
                     {filteredLinks.slice(4).map((link) => (
                       <li key={link.path}>
-                        <Link to={link.path} legacyBehavior passHref>
+                        <Link to={link.path}>
                           <NavigationMenuLink
                             className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
                               isActiveRoute(link.path) ? 'bg-accent text-accent-foreground' : ''
