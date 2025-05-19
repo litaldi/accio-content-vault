@@ -1,112 +1,141 @@
 
-import React, { useState } from 'react';
-import { Tag as TagType } from '@/types';
+import React, { useState, useRef, KeyboardEvent } from 'react';
+import { Tag } from '@/types';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { X, Check, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { X, Plus } from 'lucide-react';
 
 interface TagEditorProps {
-  tags: TagType[];
-  onTagsChange: (newTags: TagType[]) => void;
+  tags: Tag[];
+  onTagsChange: (newTags: Tag[]) => void;
   readOnly?: boolean;
+  maxTags?: number;
+  className?: string;
 }
 
-const TagEditor: React.FC<TagEditorProps> = ({ tags, onTagsChange, readOnly = false }) => {
-  const [newTagName, setNewTagName] = useState('');
-  const [inputFocused, setInputFocused] = useState(false);
+const TagEditor: React.FC<TagEditorProps> = ({ 
+  tags, 
+  onTagsChange, 
+  readOnly = false,
+  maxTags = 10,
+  className = ""
+}) => {
+  const [newTagName, setNewTagName] = useState<string>('');
+  const [isAddingTag, setIsAddingTag] = useState<boolean>(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleAddTag = () => {
-    if (!newTagName.trim()) return;
+    if (!isAddingTag) {
+      setIsAddingTag(true);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 10);
+      return;
+    }
     
-    // Check if tag already exists
-    const tagExists = tags.some(tag => 
-      tag.name.toLowerCase() === newTagName.toLowerCase()
-    );
+    const trimmedTag = newTagName.trim().toLowerCase();
     
-    if (!tagExists) {
-      const newTag: TagType = {
-        id: `user-${Date.now()}`, // In production, this ID would come from the server
-        name: newTagName.trim(),
+    if (trimmedTag && !tags.some(tag => tag.name.toLowerCase() === trimmedTag)) {
+      const newTag: Tag = {
+        id: `temp-${Date.now()}`,
+        name: trimmedTag,
         auto_generated: false,
-        confirmed: true,
       };
       
       onTagsChange([...tags, newTag]);
+      setNewTagName('');
+      
+      if (tags.length + 1 >= maxTags) {
+        setIsAddingTag(false);
+      }
+    } else {
+      setNewTagName('');
     }
-    
-    setNewTagName('');
   };
 
   const handleRemoveTag = (tagId: string) => {
-    const updatedTags = tags.filter(tag => tag.id !== tagId);
-    onTagsChange(updatedTags);
+    onTagsChange(tags.filter(tag => tag.id !== tagId));
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       handleAddTag();
+    } else if (e.key === 'Escape') {
+      setIsAddingTag(false);
+      setNewTagName('');
     }
   };
-  
-  return (
-    <div>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {tags.map(tag => (
-          <div 
-            key={tag.id} 
-            className={`
-              inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
-              ${tag.auto_generated 
-                ? 'bg-accent/20 text-accent-foreground' 
-                : 'bg-primary/20 text-primary-foreground'}
-              ${!readOnly && 'pr-1'}
-              animate-scale-in transition-all duration-200 hover:bg-opacity-30
-            `}
-            role="listitem"
-          >
-            {tag.name}
-            {!readOnly && (
-              <button
-                type="button"
-                onClick={() => handleRemoveTag(tag.id)}
-                className="ml-1 rounded-full p-0.5 hover:bg-accent/30 transition-colors"
-                aria-label={`Remove ${tag.name} tag`}
-              >
-                <X className="h-3 w-3" />
-                <span className="sr-only">Remove {tag.name} tag</span>
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
 
-      {!readOnly && (
-        <div className="flex space-x-2">
-          <div className={`relative flex-grow transition-all duration-200 ${inputFocused ? 'shadow-sm ring-1 ring-primary/20 rounded-md' : ''}`}>
+  return (
+    <div className={`flex flex-wrap gap-2 ${className}`}>
+      {tags.map((tag) => (
+        <Badge
+          key={tag.id}
+          variant={tag.auto_generated ? "outline" : "default"}
+          className={`
+            ${tag.auto_generated ? 'border border-primary/30' : ''} 
+            ${tag.confirmed ? 'border-primary' : ''}
+            ${!readOnly ? 'pr-1' : ''}
+          `}
+        >
+          {tag.name}
+          {!readOnly && (
+            <button
+              type="button"
+              onClick={() => handleRemoveTag(tag.id)}
+              className="ml-1 rounded-full hover:bg-primary/20 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-1"
+              aria-label={`Remove tag ${tag.name}`}
+            >
+              <X className="h-3 w-3" />
+            </button>
+          )}
+        </Badge>
+      ))}
+      
+      {!readOnly && tags.length < maxTags && (
+        isAddingTag ? (
+          <div className="flex">
             <Input
+              ref={inputRef}
+              type="text"
+              placeholder="Add tag..."
               value={newTagName}
               onChange={(e) => setNewTagName(e.target.value)}
               onKeyDown={handleKeyDown}
-              onFocus={() => setInputFocused(true)}
-              onBlur={() => setInputFocused(false)}
-              placeholder="Add a tag..."
-              className="w-full transition-all"
+              onBlur={() => newTagName.trim() ? handleAddTag() : setIsAddingTag(false)}
+              className="h-7 px-2 py-0 text-xs w-32"
+              maxLength={20}
               aria-label="New tag name"
             />
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleAddTag}
+              className="h-7 px-2 py-0"
+              aria-label="Add tag"
+            >
+              <Check className="h-3 w-3" />
+            </Button>
           </div>
+        ) : (
           <Button 
-            type="button" 
             size="sm"
-            onClick={handleAddTag}
-            disabled={!newTagName.trim()}
-            className="btn-with-icon transition-all duration-200"
-            aria-label="Add tag"
+            variant="outline" 
+            onClick={() => setIsAddingTag(true)}
+            className="h-7 px-2 py-0 text-xs"
           >
-            <Plus className="h-4 w-4" />
-            <span>Add</span>
+            <Plus className="h-3 w-3 mr-1" />
+            Add Tag
           </Button>
-        </div>
+        )
+      )}
+      
+      {!readOnly && tags.length >= maxTags && (
+        <span className="text-xs text-muted-foreground">
+          Maximum {maxTags} tags
+        </span>
       )}
     </div>
   );

@@ -1,151 +1,212 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ModeToggle } from '@/components/ModeToggle';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { BarChart, FolderOpen, LogOut, Settings } from 'lucide-react';
-import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
+import { Menu, X, LogOut, Settings, LayoutDashboard, PlusCircle, FolderOpen, BarChart2 } from 'lucide-react';
 
 interface NavbarProps {
   isLoggedIn?: boolean;
   onLogout?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
-  const navigate = useNavigate();
+const Navbar: React.FC<NavbarProps> = ({ 
+  isLoggedIn = false,
+  onLogout
+}) => {
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
-  const { user, signOut } = useAuth();
-  const isLoggedIn = !!user;
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // Handle scroll effect for navbar
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
-      }
-    };
-    
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
-
-  const handleLogout = async () => {
-    if (onLogout) {
-      onLogout();
-    } else {
-      await signOut();
-      navigate('/');
-    }
+  const isActiveRoute = (path: string) => {
+    return location.pathname === path;
   };
-
-  const isActive = (path: string) => location.pathname === path;
-
-  // Get user initials for avatar
-  const getUserInitials = () => {
-    if (user?.email) {
-      return user.email.charAt(0).toUpperCase();
-    }
-    return 'U';
-  };
-
+  
+  const navLinks = [
+    { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="h-4 w-4 mr-2" aria-hidden="true" />, authRequired: true },
+    { name: 'Save Content', path: '/save', icon: <PlusCircle className="h-4 w-4 mr-2" aria-hidden="true" />, authRequired: true },
+    { name: 'Collections', path: '/collections', icon: <FolderOpen className="h-4 w-4 mr-2" aria-hidden="true" />, authRequired: true },
+    { name: 'Analytics', path: '/analytics', icon: <BarChart2 className="h-4 w-4 mr-2" aria-hidden="true" />, authRequired: true },
+    { name: 'About', path: '/about', icon: null, authRequired: false },
+    { name: 'Pricing', path: '/pricing', icon: null, authRequired: false },
+    { name: 'Contact', path: '/contact', icon: null, authRequired: false },
+  ];
+  
+  const filteredLinks = navLinks.filter(link => !link.authRequired || isLoggedIn);
+  
   return (
-    <header className={`sticky top-0 z-40 transition-all duration-300 border-b ${scrolled ? 'bg-background/95 backdrop-blur-md shadow-sm' : 'bg-background border-transparent'}`}>
-      <div className="container flex h-16 items-center justify-between px-4">
-        <div className="flex items-center gap-6">
-          <Link to="/" className="flex items-center gap-2 transition-opacity hover:opacity-90">
-            <span className="text-2xl font-bold text-primary">Accio</span>
-          </Link>
-          
-          {isLoggedIn && (
-            <nav className="hidden md:flex gap-6">
-              {[
-                { path: '/dashboard', label: 'Dashboard' },
-                { path: '/collections', label: 'Collections' },
-                { path: '/analytics', label: 'Analytics' }
-              ].map(item => (
-                <Link 
-                  key={item.path} 
-                  to={item.path} 
-                  className={`text-sm font-medium transition-colors relative py-1 ${
-                    isActive(item.path) 
-                      ? 'text-primary' 
-                      : 'text-muted-foreground hover:text-primary'
-                  }`}
-                >
-                  {item.label}
-                  {isActive(item.path) && (
-                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full" />
-                  )}
+    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center px-4">
+        <Link to="/" className="mr-6 flex items-center space-x-2">
+          <span className="font-bold text-xl">ReadSmart</span>
+        </Link>
+
+        {/* Desktop Navigation */}
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList>
+            {filteredLinks.slice(0, 4).map((link) => (
+              <NavigationMenuItem key={link.path}>
+                <Link to={link.path} legacyBehavior passHref>
+                  <NavigationMenuLink
+                    className={navigationMenuTriggerStyle()}
+                    active={isActiveRoute(link.path)}
+                  >
+                    {link.name}
+                  </NavigationMenuLink>
                 </Link>
-              ))}
-            </nav>
-          )}
-        </div>
-        
-        <div className="flex items-center gap-4">
-          <AccessibilityButton />
+              </NavigationMenuItem>
+            ))}
+            
+            {filteredLinks.length > 4 && (
+              <NavigationMenuItem>
+                <NavigationMenuTrigger>More</NavigationMenuTrigger>
+                <NavigationMenuContent>
+                  <ul className="grid gap-3 p-4 w-[200px]">
+                    {filteredLinks.slice(4).map((link) => (
+                      <li key={link.path}>
+                        <Link to={link.path} legacyBehavior passHref>
+                          <NavigationMenuLink
+                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                              isActiveRoute(link.path) ? 'bg-accent text-accent-foreground' : ''
+                            }`}
+                          >
+                            {link.name}
+                          </NavigationMenuLink>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </NavigationMenuContent>
+              </NavigationMenuItem>
+            )}
+          </NavigationMenuList>
+        </NavigationMenu>
+
+        <div className="flex-1" />
+
+        <div className="flex items-center space-x-2">
           <ModeToggle />
           
           {isLoggedIn ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu">
-                  <Avatar className="h-8 w-8 transition-transform hover:scale-105">
-                    <AvatarFallback className="bg-primary/10 text-primary">{getUserInitials()}</AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56 animate-scale-in">
-                <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer transition-colors">
-                  Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/collections')} className="cursor-pointer transition-colors">
-                  <FolderOpen className="mr-2 h-4 w-4" />
-                  <span>Collections</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/analytics')} className="cursor-pointer transition-colors">
-                  <BarChart className="mr-2 h-4 w-4" />
-                  <span>Analytics</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer transition-colors">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer transition-colors text-destructive focus:text-destructive">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <div className="flex items-center gap-2">
-              <Button 
-                variant="ghost" 
-                onClick={() => navigate('/login')}
-                className="text-sm transition-all"
-              >
-                Log in
+            <div className="hidden sm:flex space-x-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/settings">
+                  <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Settings
+                </Link>
               </Button>
-              <Button 
-                onClick={() => navigate('/register')}
-                className="text-sm transition-all hover:shadow-md"
-              >
-                Sign up
+              
+              {onLogout && (
+                <Button variant="ghost" size="sm" onClick={onLogout}>
+                  <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
+                  Logout
+                </Button>
+              )}
+            </div>
+          ) : (
+            <div className="hidden sm:flex space-x-2">
+              <Button variant="outline" size="sm" asChild>
+                <Link to="/login">Login</Link>
+              </Button>
+              
+              <Button size="sm" asChild>
+                <Link to="/register">Sign Up</Link>
               </Button>
             </div>
           )}
+
+          {/* Mobile Menu Button */}
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden">
+                <span className="sr-only">Toggle menu</span>
+                {isMobileMenuOpen ? (
+                  <X className="h-6 w-6" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-6 w-6" aria-hidden="true" />
+                )}
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left">
+              <SheetHeader>
+                <SheetTitle>ReadSmart</SheetTitle>
+              </SheetHeader>
+              <div className="mt-6 flex flex-col space-y-3">
+                {filteredLinks.map((link) => (
+                  <SheetClose key={link.path} asChild>
+                    <Link 
+                      to={link.path}
+                      className={`flex items-center py-2 px-3 rounded-md transition-colors ${
+                        isActiveRoute(link.path) 
+                          ? 'bg-primary/10 text-primary font-medium' 
+                          : 'hover:bg-accent hover:text-accent-foreground'
+                      }`}
+                    >
+                      {link.icon}
+                      {link.name}
+                    </Link>
+                  </SheetClose>
+                ))}
+                
+                {isLoggedIn ? (
+                  <>
+                    <SheetClose asChild>
+                      <Link
+                        to="/settings"
+                        className="flex items-center py-2 px-3 rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
+                      >
+                        <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
+                        Settings
+                      </Link>
+                    </SheetClose>
+                    
+                    {onLogout && (
+                      <SheetClose asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="flex justify-start py-2 px-3 h-auto font-normal"
+                          onClick={onLogout}
+                        >
+                          <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
+                          Logout
+                        </Button>
+                      </SheetClose>
+                    )}
+                  </>
+                ) : (
+                  <div className="pt-4 mt-4 border-t flex flex-col gap-2">
+                    <SheetClose asChild>
+                      <Button variant="outline" asChild>
+                        <Link to="/login">Login</Link>
+                      </Button>
+                    </SheetClose>
+                    
+                    <SheetClose asChild>
+                      <Button asChild>
+                        <Link to="/register">Sign Up</Link>
+                      </Button>
+                    </SheetClose>
+                  </div>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </header>

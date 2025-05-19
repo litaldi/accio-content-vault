@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy } from "react";
+import React, { Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { HelmetProvider } from 'react-helmet-async';
 import SkipToContent from "./components/SkipToContent";
+import ConnectionStatus from "./components/ConnectionStatus";
 
 // Import components
 import Index from "./pages/Index";
@@ -52,6 +53,7 @@ const App: React.FC = () => {
                 <AccessibilityProvider>
                   <Toaster />
                   <Sonner />
+                  <ConnectionStatus />
                   <BrowserRouter>
                     <SkipToContent />
                     <Routes>
@@ -61,7 +63,7 @@ const App: React.FC = () => {
                       <Route path="/register" element={<Register />} />
                       <Route path="/pricing" element={<Pricing />} />
                       
-                      {/* New static pages */}
+                      {/* Static pages */}
                       <Route path="/about" element={<About />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/privacy" element={<Privacy />} />

@@ -10,6 +10,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Tag } from '@/types';
+import { Badge } from '@/components/ui/badge';
+import { CheckIcon, X } from 'lucide-react';
 
 interface TagConfirmationProps {
   tag: Tag;
@@ -24,31 +26,40 @@ const TagConfirmation: React.FC<TagConfirmationProps> = ({
   onConfirm,
   onClose,
 }) => {
-  const handleConfirm = (confirmed: boolean) => {
-    onConfirm(confirmed);
+  const handleConfirm = () => {
+    onConfirm(true);
     onClose();
   };
-
+  
+  const handleReject = () => {
+    onConfirm(false);
+    onClose();
+  };
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Confirm Tag</DialogTitle>
           <DialogDescription>
-            Does this tag accurately describe the content?
+            Our system has detected the following tag for your content. Is this tag relevant?
           </DialogDescription>
         </DialogHeader>
-        <div className="py-4 flex items-center justify-center">
-          <span className="text-xl font-medium px-4 py-2 bg-accent/20 rounded-full">
+        
+        <div className="py-4 flex justify-center">
+          <Badge variant="outline" className="text-base px-4 py-2 border-2">
             {tag.name}
-          </span>
+          </Badge>
         </div>
-        <DialogFooter className="flex sm:justify-center gap-4">
-          <Button variant="outline" onClick={() => handleConfirm(false)}>
-            No
+        
+        <DialogFooter className="flex flex-col sm:flex-row sm:justify-center gap-2">
+          <Button onClick={handleReject} variant="outline" className="sm:flex-1">
+            <X className="mr-2 h-4 w-4" />
+            Not Relevant
           </Button>
-          <Button onClick={() => handleConfirm(true)}>
-            Yes
+          <Button onClick={handleConfirm} className="sm:flex-1">
+            <CheckIcon className="mr-2 h-4 w-4" />
+            Confirm Tag
           </Button>
         </DialogFooter>
       </DialogContent>
