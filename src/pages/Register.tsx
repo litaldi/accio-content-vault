@@ -27,6 +27,7 @@ import {
 } from '@/components/ui/form';
 import Navbar from '@/components/Navbar';
 import { AlertTriangle, Loader2 } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -34,6 +35,7 @@ const formSchema = z.object({
     message: 'Password must be at least 8 characters' 
   }),
   confirmPassword: z.string(),
+  externalContentConsent: z.boolean().default(false),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords don't match",
   path: ["confirmPassword"],
@@ -50,6 +52,7 @@ const Register = () => {
       email: '',
       password: '',
       confirmPassword: '',
+      externalContentConsent: false,
     },
   });
 
@@ -61,7 +64,7 @@ const Register = () => {
   }, [user, navigate]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await signUp(values.email, values.password);
+    await signUp(values.email, values.password, values.externalContentConsent);
   };
 
   return (
@@ -150,13 +153,39 @@ const Register = () => {
                       </FormItem>
                     )}
                   />
+                  <FormField
+                    control={form.control}
+                    name="externalContentConsent"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            disabled={isLoading}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>
+                            I consent to receiving personalized content recommendations
+                          </FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                   <Button 
                     type="submit" 
                     className="w-full" 
                     disabled={isLoading}
-                    loading={isLoading}
                   >
-                    <span>Create Account</span>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <span>Creating Account...</span>
+                      </>
+                    ) : (
+                      <span>Create Account</span>
+                    )}
                   </Button>
                 </form>
               </Form>
