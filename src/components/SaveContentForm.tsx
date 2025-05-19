@@ -1,5 +1,7 @@
 
 import React, { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useContentService } from '@/services/contentService';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -17,10 +19,14 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
   const [suggestedTag, setSuggestedTag] = useState<Tag | null>(null);
   const [showTagConfirmation, setShowTagConfirmation] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+  const { saveContent } = useContentService();
 
-  // Mock function to generate tags with AI (would be replaced with actual API call)
+  // Function to generate tags with AI
   const generateTagsWithAI = async (url: string): Promise<Tag[]> => {
     // This would be replaced with an actual API call to GPT/OpenAI
+    // For now, we're using the mock implementation
+    
     // Simulating API delay
     await new Promise(resolve => setTimeout(resolve, 1000));
     
@@ -48,6 +54,15 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
       return;
     }
 
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to save content",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       setIsLoading(true);
       
@@ -65,13 +80,23 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
         setShowTagConfirmation(true);
       } else {
         // If no tags were generated, save content with empty tags
-        onSaveContent(processedUrl, []);
-        setUrl('');
+        const savedContent = await saveContent({
+          url: processedUrl,
+          title: processedUrl,
+          description: '',
+          content_type: 'url'
+        }, []);
         
-        toast({
-          title: "Content saved",
-          description: "Your content was saved successfully without tags",
-        });
+        if (savedContent) {
+          setUrl('');
+          
+          toast({
+            title: "Content saved",
+            description: "Your content was saved successfully without tags",
+          });
+          
+          onSaveContent(processedUrl, []);
+        }
       }
     } catch (error) {
       console.error("Error saving content:", error);
@@ -85,18 +110,44 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
     }
   };
 
-  const handleTagConfirmation = (confirmed: boolean) => {
+  const handleTagConfirmation = async (confirmed: boolean) => {
     if (suggestedTag) {
       const confirmedTag = { ...suggestedTag, confirmed };
-      onSaveContent(url, [confirmedTag]);
       
-      toast({
-        title: "Content saved",
-        description: `Your content was saved with the tag: ${confirmedTag.name}`,
-      });
-      
-      setUrl('');
-      setSuggestedTag(null);
+      try {
+        // Process the URL with the confirmed tag
+        let processedUrl = url;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+          processedUrl = 'https://' + url;
+        }
+        
+        const savedContent = await saveContent({
+          url: processedUrl,
+          title: processedUrl,
+          description: '',
+          content_type: 'url'
+        }, [confirmedTag]);
+        
+        if (savedContent) {
+          toast({
+            title: "Content saved",
+            description: `Your content was saved with the tag: ${confirmedTag.name}`,
+          });
+          
+          setUrl('');
+          setSuggestedTag(null);
+          setShowTagConfirmation(false);
+          
+          onSaveContent(processedUrl, [confirmedTag]);
+        }
+      } catch (error) {
+        console.error("Error saving content:", error);
+        toast({
+          title: "Error saving content",
+          description: "An error occurred while trying to save your content",
+          variant: "destructive",
+        });
+      }
     }
   };
 

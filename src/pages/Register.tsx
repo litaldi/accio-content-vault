@@ -1,9 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -42,7 +43,7 @@ const formSchema = z.object({
 const Register = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const { signUp, user, isLoading } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,41 +55,23 @@ const Register = () => {
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    try {
-      setIsLoading(true);
-      
-      // In a real application, this would be a call to Supabase or another auth provider
-      console.log('Registration attempt:', values.email);
-      
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast({
-        title: 'Registration successful',
-        description: 'Your account has been created. Welcome to Accio!',
-      });
-      
-      // Redirect to dashboard
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
       navigate('/dashboard');
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast({
-        title: 'Registration failed',
-        description: 'An error occurred during registration. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsLoading(false);
     }
+  }, [user, navigate]);
+
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    await signUp(values.email, values.password, values.termsAccepted);
   };
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar isLoggedIn={false} />
+      <Navbar isLoggedIn={!!user} />
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md">
+        <Card className="w-full max-w-md animate-fade-up">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
             <CardDescription className="text-center">

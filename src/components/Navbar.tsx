@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -14,14 +15,16 @@ import {
 import { BarChart, FolderOpen, LogOut, Settings, User } from 'lucide-react';
 
 interface NavbarProps {
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
   onLogout?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
+const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const { user, signOut } = useAuth();
+  const isLoggedIn = !!user;
   
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -36,7 +39,24 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
+  const handleLogout = async () => {
+    if (onLogout) {
+      onLogout();
+    } else {
+      await signOut();
+      navigate('/');
+    }
+  };
+
   const isActive = (path: string) => location.pathname === path;
+
+  // Get user initials for avatar
+  const getUserInitials = () => {
+    if (user?.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return 'U';
+  };
 
   return (
     <header className={`sticky top-0 z-40 transition-all duration-300 border-b ${scrolled ? 'bg-background/95 backdrop-blur-md shadow-sm' : 'bg-background border-transparent'}`}>
@@ -80,7 +100,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu">
                   <Avatar className="h-8 w-8 transition-transform hover:scale-105">
-                    <AvatarFallback className="bg-primary/10 text-primary">U</AvatarFallback>
+                    <AvatarFallback className="bg-primary/10 text-primary">{getUserInitials()}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
@@ -101,7 +121,7 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
                   <span>Settings</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={onLogout} className="cursor-pointer transition-colors text-destructive focus:text-destructive">
+                <DropdownMenuItem onClick={handleLogout} className="cursor-pointer transition-colors text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
                   <span>Log out</span>
                 </DropdownMenuItem>
