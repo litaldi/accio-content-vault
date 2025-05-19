@@ -64,7 +64,7 @@ const Navbar: React.FC<NavbarProps> = ({
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex">
+        <div className="hidden md:block">
           <NavigationMenu>
             <NavigationMenuList>
               {filteredLinks.slice(0, 4).map((link) => (
