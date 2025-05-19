@@ -54,7 +54,7 @@ const PricingTier = ({
       variant={isPopular ? "default" : "outline"}
       className="mt-auto"
     >
-      {buttonText}
+      <span>{buttonText}</span>
     </Button>
   </div>
 );
