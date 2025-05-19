@@ -9,7 +9,6 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import {
   Sheet,
@@ -49,6 +48,14 @@ const Navbar: React.FC<NavbarProps> = ({
   
   const filteredLinks = navLinks.filter(link => !link.authRequired || isLoggedIn);
   
+  // Custom styling for menu items
+  const menuItemStyles = (isActive: boolean) => 
+    `inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none disabled:pointer-events-none disabled:opacity-50 ${isActive ? 'bg-accent/50' : ''}`;
+  
+  // Custom styling for dropdown items
+  const dropdownItemStyles = (isActive: boolean) =>
+    `block select-none rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${isActive ? 'bg-accent text-accent-foreground' : ''}`;
+  
   return (
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center px-4">
@@ -57,43 +64,42 @@ const Navbar: React.FC<NavbarProps> = ({
         </Link>
 
         {/* Desktop Navigation */}
-        <NavigationMenu className="hidden md:flex">
-          <NavigationMenuList>
-            {filteredLinks.slice(0, 4).map((link) => (
-              <NavigationMenuItem key={link.path}>
-                <Link 
-                  to={link.path} 
-                  className={navigationMenuTriggerStyle() + 
-                    (isActiveRoute(link.path) ? ' bg-accent/50' : '')}
-                >
-                  {link.name}
-                </Link>
-              </NavigationMenuItem>
-            ))}
-            
-            {filteredLinks.length > 4 && (
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>More</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid gap-3 p-4 w-[200px]">
-                    {filteredLinks.slice(4).map((link) => (
-                      <li key={link.path}>
-                        <Link 
-                          to={link.path}
-                          className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
-                            isActiveRoute(link.path) ? 'bg-accent text-accent-foreground' : ''
-                          }`}
-                        >
-                          {link.name}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-            )}
-          </NavigationMenuList>
-        </NavigationMenu>
+        <div className="hidden md:flex">
+          <NavigationMenu>
+            <NavigationMenuList>
+              {filteredLinks.slice(0, 4).map((link) => (
+                <NavigationMenuItem key={link.path}>
+                  <Link 
+                    to={link.path} 
+                    className={menuItemStyles(isActiveRoute(link.path))}
+                  >
+                    {link.name}
+                  </Link>
+                </NavigationMenuItem>
+              ))}
+              
+              {filteredLinks.length > 4 && (
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>More</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid gap-3 p-4 w-[200px]">
+                      {filteredLinks.slice(4).map((link) => (
+                        <li key={link.path}>
+                          <Link 
+                            to={link.path}
+                            className={dropdownItemStyles(isActiveRoute(link.path))}
+                          >
+                            {link.name}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              )}
+            </NavigationMenuList>
+          </NavigationMenu>
+        </div>
 
         <div className="flex-1" />
 
