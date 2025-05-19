@@ -60,7 +60,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
                 }`}
               >
                 {link.icon}
-                {link.name}
+                <span>{link.name}</span>
               </Link>
             </SheetClose>
           ))}
@@ -73,7 +73,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
                   className="flex items-center py-2 px-3 rounded-md transition-colors hover:bg-accent hover:text-accent-foreground"
                 >
                   <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
-                  Settings
+                  <span>Settings</span>
                 </Link>
               </SheetClose>
               

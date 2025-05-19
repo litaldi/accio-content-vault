@@ -62,7 +62,7 @@ const Index = () => {
                 onClick={() => navigate('/register')}
                 className="bg-white text-primary hover:bg-white/90 focus-visible:ring-offset-primary"
               >
-                Get Started - Free
+                <span>Get Started - Free</span>
               </Button>
               <Button
                 size="lg"
@@ -70,7 +70,7 @@ const Index = () => {
                 onClick={() => navigate('/login')}
                 className="text-white border-white hover:bg-white/10 focus-visible:ring-offset-primary focus-visible:ring-white"
               >
-                Login
+                <span>Login</span>
               </Button>
             </div>
           </div>
@@ -117,7 +117,7 @@ const Index = () => {
                         ? `Next: ${onboardingSteps[currentStep + 1]?.title || 'Get Started'}` 
                         : 'Get Started'}
                     >
-                      {currentStep < onboardingSteps.length - 1 ? "Next" : "Get Started"}
+                      <span>{currentStep < onboardingSteps.length - 1 ? "Next" : "Get Started"}</span>
                     </Button>
                   </div>
                 </CardContent>
@@ -225,7 +225,7 @@ const Index = () => {
                 onClick={() => navigate('/register')}
                 className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
-                Sign Up Free
+                <span>Sign Up Free</span>
               </Button>
               <Button 
                 size="lg" 
@@ -233,7 +233,7 @@ const Index = () => {
                 onClick={() => navigate('/login')}
                 className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
               >
-                Login
+                <span>Login</span>
               </Button>
             </div>
           </div>
