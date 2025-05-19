@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +9,9 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { HelmetProvider } from 'react-helmet-async';
+import SkipToContent from "./components/SkipToContent";
+
+// Import components
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -29,7 +32,14 @@ import Sitemap from "./pages/Sitemap";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Create a client
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
 const App: React.FC = () => {
   return (
@@ -43,6 +53,7 @@ const App: React.FC = () => {
                   <Toaster />
                   <Sonner />
                   <BrowserRouter>
+                    <SkipToContent />
                     <Routes>
                       {/* Public routes */}
                       <Route path="/" element={<Index />} />
