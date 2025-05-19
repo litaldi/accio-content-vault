@@ -1,152 +1,73 @@
+# Welcome to your Lovable project
 
-# Accio - Smart Content Organizer
+## Project info
 
-![Accio Logo](https://lovable.dev/opengraph-image-p98pqg.png)
+**URL**: https://lovable.dev/projects/ef5093c9-8967-40db-8a56-451375f10ece
 
-Accio is an intelligent web application that helps users organize and retrieve their online content with AI-powered tagging and semantic search capabilities. Save articles, PDFs, images, and more in one centralized library, then find exactly what you need when you need it.
+## How can I edit this code?
 
-## 🔗 Live Demo
+There are several ways of editing your application.
 
-[View Live Demo](https://accio.lovable.app) *(Replace with your actual deployment URL)*
+**Use Lovable**
 
-## ✨ Features
+Simply visit the [Lovable Project](https://lovable.dev/projects/ef5093c9-8967-40db-8a56-451375f10ece) and start prompting.
 
-- **Natural Language Search** - Find content by asking questions in plain English
-- **AI-Powered Tagging** - Automatic categorization of content with relevant tags
-- **Multiple Content Types** - Save links, upload PDFs, or add images
-- **One-Click Saving** - Easily save content from anywhere
-- **Semantic Search** - Find content based on meaning, not just keywords
-- **Collections** - Organize content into custom collections
-- **Analytics Dashboard** - Track your content consumption patterns
-- **Responsive Design** - Optimized for all devices from mobile to desktop
-- **Free & Pro Tiers** - Flexible options to meet different needs
+Changes made via Lovable will be committed automatically to this repo.
 
-## 🚀 Installation
+**Use your preferred IDE**
 
-### Prerequisites
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-- Node.js (v16.x or later)
-- npm or yarn
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-### Setup Instructions
+Follow these steps:
 
-```bash
-# Clone the repository
-git clone https://github.com/your-username/accio.git
-cd accio
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-# Install dependencies
-npm install
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-# Start the development server
+# Step 3: Install the necessary dependencies.
+npm i
+
+# Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
 ```
 
-The application will be available at `http://localhost:8080`
+**Edit a file directly in GitHub**
 
-## 📁 Folder Structure
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-```
-src/
-├── components/        # Reusable UI components
-│   ├── home/          # Homepage-specific components
-│   ├── navigation/    # Navigation components
-│   ├── ui/            # Shadcn UI components
-│   └── ...
-├── contexts/          # React Context providers
-├── hooks/             # Custom React hooks
-├── lib/               # Utility libraries and functions
-├── pages/             # Page components
-├── security/          # Security configurations
-├── services/          # API service layers
-├── types/             # TypeScript type definitions
-└── utils/             # Helper functions
-```
+**Use GitHub Codespaces**
 
-## 🛠️ Tech Stack
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-- **Framework**: React with TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS
-- **UI Components**: Shadcn UI
-- **Routing**: React Router DOM
-- **Backend/Auth**: Supabase
-- **Data Fetching**: TanStack Query (React Query)
-- **Charts**: Recharts
-- **Icons**: Lucide React
-- **Form Handling**: React Hook Form with Zod
-- **Testing**: Jest with React Testing Library
+## What technologies are used for this project?
 
-## ♿ Accessibility & Security
+This project is built with:
 
-- WCAG 2.1 compliant components with proper ARIA attributes
-- Comprehensive keyboard navigation support
-- Color contrast compliance
-- Content Security Policy implementation
-- Input sanitization and validation
-- Strict transport security headers
-- Protection against XSS attacks
-- Regular security audits
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-## 🔐 Environment Variables
+## How can I deploy this project?
 
-Create a `.env` file in the root directory with the following variables:
+Simply open [Lovable](https://lovable.dev/projects/ef5093c9-8967-40db-8a56-451375f10ece) and click on Share -> Publish.
 
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
+## Can I connect a custom domain to my Lovable project?
 
-## 📜 Available Scripts
+Yes, you can!
 
-- `npm run dev` - Start the development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview the production build
-- `npm test` - Run tests
-- `npm run test:watch` - Run tests in watch mode
-- `npm run test:coverage` - Generate test coverage report
-- `npm run test:ci` - Run tests in CI environment
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-## 🧪 Testing
-
-This project uses Jest and React Testing Library for unit and component testing. Test files are located in the `src/__tests__` directory.
-
-```bash
-# Run all tests
-npm test
-
-# Run tests in watch mode
-npm run test:watch
-
-# Generate test coverage report
-npm run test:coverage
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add some amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-See our [Contributing Guidelines](CONTRIBUTING.md) for more details.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgements
-
-- [Shadcn UI](https://ui.shadcn.com/) for the excellent component library
-- [Lucide Icons](https://lucide.dev/) for the beautiful icon set
-- [TanStack Query](https://tanstack.com/query) for data fetching utilities
-- [Tailwind CSS](https://tailwindcss.com/) for styling framework
-- [Supabase](https://supabase.io/) for backend services
-- [Lovable](https://lovable.dev/) for development platform
-
----
-
-Made with ❤️ by Your Team Name
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

@@ -47,7 +47,7 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant, size, loading, asChild = false, children, disabled, "aria-disabled": ariaDisabled, ...props }, ref) => {
+  ({ className, variant, size, loading, asChild = false, children, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     const isDisabled = disabled || loading
     
@@ -56,7 +56,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, loading, className }))}
         ref={ref}
         disabled={isDisabled}
-        aria-disabled={isDisabled || ariaDisabled ? true : undefined}
         {...props}
       >
         {children}

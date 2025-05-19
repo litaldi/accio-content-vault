@@ -28,7 +28,7 @@ const PricingTier = ({
   `}>
     {isPopular && (
       <p className="bg-primary/10 text-primary text-sm font-medium rounded-t-lg py-1.5 px-4 -mt-6 -mx-6 mb-6">
-        <span>Most Popular</span>
+        Most Popular
       </p>
     )}
     <h3 className="text-2xl font-semibold">{name}</h3>
@@ -54,7 +54,7 @@ const PricingTier = ({
       variant={isPopular ? "default" : "outline"}
       className="mt-auto"
     >
-      <span>{buttonText}</span>
+      {buttonText}
     </Button>
   </div>
 );

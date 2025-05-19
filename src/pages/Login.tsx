@@ -26,7 +26,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Navbar from '@/components/Navbar';
-import { AlertTriangle, Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -63,11 +62,8 @@ const Login = () => {
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
         {!isConfigured ? (
-          <Alert className="max-w-md w-full border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20">
-            <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
-            <AlertTitle className="text-xl font-bold mb-2 text-yellow-800 dark:text-yellow-300">
-              <span>Supabase Configuration Required</span>
-            </AlertTitle>
+          <Alert className="max-w-md w-full">
+            <AlertTitle className="text-xl font-bold">Supabase Configuration Required</AlertTitle>
             <AlertDescription className="mt-2">
               <p className="mb-4">
                 To use authentication features, you need to connect this project to Supabase.
@@ -79,13 +75,11 @@ const Login = () => {
             </AlertDescription>
           </Alert>
         ) : (
-          <Card className="w-full max-w-md animate-fade-up shadow-lg">
+          <Card className="w-full max-w-md animate-fade-up">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-bold text-center">
-                <span>Login</span>
-              </CardTitle>
+              <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
               <CardDescription className="text-center">
-                <span>Enter your email and password to access your account</span>
+                Enter your email and password to access your account
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -127,28 +121,17 @@ const Login = () => {
                       </FormItem>
                     )}
                   />
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        <span>Logging in...</span>
-                      </>
-                    ) : (
-                      <span>Login</span>
-                    )}
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Logging in...' : 'Login'}
                   </Button>
                 </form>
               </Form>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-2 border-t pt-4">
+            <CardFooter className="flex flex-col space-y-2">
               <div className="text-center text-sm text-muted-foreground">
                 Don't have an account?{' '}
-                <Link to="/register" className="text-primary hover:underline font-medium">
-                  <span>Register</span>
+                <Link to="/register" className="text-primary hover:underline">
+                  Register
                 </Link>
               </div>
             </CardFooter>

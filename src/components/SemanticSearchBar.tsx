@@ -1,40 +1,30 @@
 
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useToast } from '@/hooks/use-toast';
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
+import { Search, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Search, X } from 'lucide-react';
-
-const formSchema = z.object({
-  query: z.string().min(1, "Please enter a search term"),
-});
+import { useToast } from '@/hooks/use-toast';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SemanticSearchBarProps {
-  onSearch: (query: string, semantic: boolean) => void;
+  onSearch: (query: string, isSemanticSearch: boolean) => void;
 }
 
 const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
-  const [isSemanticSearch, setIsSemanticSearch] = useState<boolean>(false);
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isSemanticSearch, setIsSemanticSearch] = useState<boolean>(true);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
   const { toast } = useToast();
-  
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      query: '',
-    },
-  });
-  
-  const { watch, setValue, handleSubmit } = form;
-  const query = watch('query');
-  
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    if (!values.query.trim()) {
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!searchQuery.trim()) {
       toast({
         title: "Search query empty",
         description: "Please enter a search term",
@@ -42,70 +32,82 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
       });
       return;
     }
-    onSearch(values.query.trim(), isSemanticSearch);
+    
+    onSearch(searchQuery, isSemanticSearch);
+    
+    // Track search for analytics
+    console.log('Search query:', searchQuery, 'Semantic search:', isSemanticSearch);
   };
-  
-  const handleClearSearch = () => {
-    setValue('query', '');
-    // Optional: trigger a search with empty query to reset results
-    // onSearch('', isSemanticSearch);
-  };
-  
+
   return (
-    <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-grow">
-            <FormField
-              control={form.control}
-              name="query"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                      <Input
-                        placeholder="Search by keyword, tag, or phrase..."
-                        className="pl-10 pr-10"
-                        autoComplete="off"
-                        aria-label="Search query"
-                        {...field}
-                      />
-                      {query && (
-                        <button
-                          type="button"
-                          onClick={handleClearSearch}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-                          aria-label="Clear search"
-                        >
-                          <X className="h-4 w-4" aria-hidden="true" />
-                        </button>
-                      )}
-                    </div>
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+    <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto animate-fade-in">
+      <div className="flex flex-col w-full items-center space-y-3">
+        <div className={`relative w-full transition-all duration-200 ${isFocused ? 'shadow-sm ring-2 ring-primary/20 rounded-md' : ''}`}>
+          <Search className={`absolute left-2.5 top-2.5 h-4 w-4 transition-colors duration-200 ${isFocused ? 'text-primary' : 'text-muted-foreground'}`} />
+          <Input
+            type="text"
+            placeholder={isSemanticSearch ? "Ask a question about your content..." : "Search by tag or keyword..."}
+            className="w-full pl-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery('')}
+              className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground rounded-full p-0.5 transition-colors"
+              aria-label="Clear search"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M18 6 6 18"></path>
+                <path d="m6 6 12 12"></path>
+              </svg>
+            </button>
+          )}
+        </div>
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center space-x-2">
+            <label className="flex items-center space-x-2 text-sm cursor-pointer group">
+              <input 
+                type="checkbox"
+                className="accent-primary rounded"
+                checked={isSemanticSearch}
+                onChange={(e) => setIsSemanticSearch(e.target.checked)}
+                aria-label="Use semantic search"
+              />
+              <span className="group-hover:text-primary transition-colors">Use semantic search</span>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="text-muted-foreground hover:text-foreground cursor-help">
+                      <Sparkles className="h-3.5 w-3.5" />
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p className="text-xs max-w-xs">
+                      Semantic search understands the meaning of your question rather than just matching keywords.
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </label>
           </div>
-          
-          <Button type="submit" className="min-w-[100px]">
-            <Search className="h-4 w-4 mr-2" aria-hidden="true" />
-            Search
+          <Button 
+            type="submit" 
+            className="btn-with-icon interactive"
+          >
+            {isSemanticSearch ? (
+              <Sparkles className="h-4 w-4" />
+            ) : (
+              <Search className="h-4 w-4" />
+            )}
+            <span>Search</span>
           </Button>
         </div>
-        
-        <div className="flex items-center space-x-2">
-          <Switch
-            id="semantic-search"
-            checked={isSemanticSearch}
-            onCheckedChange={setIsSemanticSearch}
-          />
-          <Label htmlFor="semantic-search" className="cursor-pointer">
-            Use semantic search
-          </Label>
-        </div>
-      </form>
-    </Form>
+      </div>
+    </form>
   );
 };
 

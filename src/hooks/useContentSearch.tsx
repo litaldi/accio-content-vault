@@ -1,88 +1,135 @@
 
-import { useState, useEffect, useCallback } from 'react';
-import { mockContents as initialContents } from '@/lib/mock-data';
-import { SavedContent, Tag } from '@/types';
+import { useState, useEffect } from 'react';
+import { useToast } from '@/hooks/use-toast';
+import { SavedContent, Tag, SearchResult } from '@/types';
+import { useContentService } from '@/services';  // Updated import
+import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/lib/supabase';
 
-export function useContentSearch() {
-  const [searchResults, setSearchResults] = useState<{ content: SavedContent; score?: number; }[]>(
-    initialContents.map(content => ({ content, score: undefined }))
-  );
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [isSemanticSearch, setIsSemanticSearch] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+export interface UseContentSearchReturn {
+  contents: SavedContent[];
+  searchResults: SearchResult[];
+  searchQuery: string;
+  isSemanticSearch: boolean;
+  handleSearch: (query: string, useSemanticSearch: boolean) => void;
+  handleTagsChange: (contentId: string, newTags: Tag[]) => void;
+}
 
-  // Handle search
-  const handleSearch = useCallback(async (query: string, semantic: boolean) => {
-    setSearchQuery(query);
-    setIsSemanticSearch(semantic);
-    setIsLoading(true);
+export const useContentSearch = (): UseContentSearchReturn => {
+  const [contents, setContents] = useState<SavedContent[]>([]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSemanticSearch, setIsSemanticSearch] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+  const { fetchAllContents, updateContentTags } = useContentService();
+  const { user } = useAuth();
 
-    try {
-      // In a real app, this would be an API call to search content
-      // For now, we'll use a mock implementation with a delay to simulate API call
-      await new Promise(resolve => setTimeout(resolve, 800));
+  useEffect(() => {
+    const loadInitialContent = async () => {
+      if (!user) return;
       
-      if (!query.trim()) {
-        setSearchResults(initialContents.map(content => ({ content, score: undefined })));
-        return;
+      setIsLoading(true);
+      try {
+        const fetchedContents = await fetchAllContents();
+        setContents(fetchedContents);
+        setSearchResults(fetchedContents.map(content => ({ content })));
+      } catch (error) {
+        console.error('Error loading content:', error);
+      } finally {
+        setIsLoading(false);
       }
+    };
 
-      const lowerCaseQuery = query.toLowerCase();
-      const filtered = initialContents
-        .filter((content) => {
-          // Basic search looks at title and description
-          if (!semantic) {
-            return (
-              content.title.toLowerCase().includes(lowerCaseQuery) ||
-              content.description.toLowerCase().includes(lowerCaseQuery)
-            );
-          } 
-          // Semantic search also looks at content and tags (simulated)
-          else {
-            // Check if any tag matches
-            const tagMatch = content.tags.some((tag) =>
-              tag.name.toLowerCase().includes(lowerCaseQuery)
-            );
-            
-            return (
-              content.title.toLowerCase().includes(lowerCaseQuery) ||
-              content.description.toLowerCase().includes(lowerCaseQuery) ||
-              tagMatch
-            );
-          }
-        })
-        .map(content => ({
-          content,
-          // For semantic search, we can simulate a relevance score
-          score: semantic ? Math.random() * 0.5 + 0.5 : undefined
-        }));
+    loadInitialContent();
+  }, [user, fetchAllContents]);
 
-      setSearchResults(filtered);
+  const handleSearch = async (query: string, useSemanticSearch: boolean) => {
+    if (!user) return;
+    
+    setSearchQuery(query);
+    setIsSemanticSearch(useSemanticSearch);
+    setIsLoading(true);
+    
+    try {
+      // Save search history
+      await supabase.from('search_history').insert({
+        user_id: user.id,
+        query: query,
+        is_semantic: useSemanticSearch
+      });
+      
+      // For now, we use the mockup search util functions
+      // In the future, this would be replaced with actual search functionality
+      const filteredContents = contents.filter(content => {
+        // Check if query matches title, description or URL
+        const matchesContent = 
+          content.title.toLowerCase().includes(query.toLowerCase()) ||
+          content.description.toLowerCase().includes(query.toLowerCase()) ||
+          content.url.toLowerCase().includes(query.toLowerCase());
+        
+        // Check if query matches any tag
+        const matchesTags = content.tags.some(tag => 
+          tag.name.toLowerCase().includes(query.toLowerCase())
+        );
+        
+        return matchesContent || matchesTags;
+      });
+      
+      // Convert to search results format
+      const results = filteredContents.map(content => ({ 
+        content,
+        score: 1.0 // Simplified scoring for now
+      }));
+      
+      setSearchResults(results);
+      
+      if (results.length === 0 && query) {
+        toast({
+          title: 'No results found',
+          description: `No content matches "${query}"`,
+        });
+      }
     } catch (error) {
-      console.error('Error searching content:', error);
+      console.error('Search error:', error);
+      toast({
+        title: 'Search failed',
+        description: 'An error occurred while searching',
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
-  // Handle tag selection in results
-  const handleTagsChange = useCallback((contentId: string, tags: Tag[]) => {
-    setSearchResults(
-      (prevResults) =>
-        prevResults.map((result) =>
-          result.content.id === contentId 
-            ? { ...result, content: { ...result.content, tags } } 
-            : result
-        )
-    );
-  }, []);
+  const handleTagsChange = async (contentId: string, newTags: Tag[]) => {
+    if (!user) return;
+    
+    try {
+      // Update content tags in the database
+      const updatedContents = await updateContentTags(contentId, newTags, contents);
+      setContents(updatedContents);
+      
+      // Update search results with the new tags as well
+      const updatedResults = searchResults.map(result => {
+        if (result.content.id === contentId) {
+          return { ...result, content: { ...result.content, tags: newTags } };
+        }
+        return result;
+      });
+      
+      setSearchResults(updatedResults);
+    } catch (error) {
+      console.error('Error updating tags:', error);
+    }
+  };
 
   return {
+    contents,
     searchResults,
     searchQuery,
     isSemanticSearch,
-    isLoading,
     handleSearch,
-    handleTagsChange,
+    handleTagsChange
   };
-}
+};
