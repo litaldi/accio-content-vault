@@ -17,6 +17,7 @@ const SkipToContent = () => {
           }, 1000);
         }
       }}
+      aria-label="Skip to main content"
     >
       Skip to content
     </Button>
