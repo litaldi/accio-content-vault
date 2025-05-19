@@ -19,7 +19,7 @@ const CTASection = () => {
             onClick={() => navigate('/register')}
             className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            Sign Up Free
+            <span>Sign Up Free</span>
           </Button>
           <Button 
             size="lg" 
@@ -27,7 +27,7 @@ const CTASection = () => {
             onClick={() => navigate('/login')}
             className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           >
-            Login
+            <span>Login</span>
           </Button>
         </div>
       </div>
