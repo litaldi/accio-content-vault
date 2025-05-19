@@ -129,9 +129,15 @@ const Login = () => {
                     type="submit" 
                     className="w-full" 
                     disabled={isLoading}
-                    loading={isLoading}
                   >
-                    <span>Login</span>
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <span>Logging in...</span>
+                      </>
+                    ) : (
+                      <span>Login</span>
+                    )}
                   </Button>
                 </form>
               </Form>
