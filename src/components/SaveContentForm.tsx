@@ -9,15 +9,35 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from '@/components/ui/label';
 import TagConfirmation from './TagConfirmation';
 import { Tag } from '@/types';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, LinkIcon } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 interface SaveContentFormProps {
   onSaveContent: (url: string, tags: Tag[]) => void;
 }
 
+// Define form validation schema with Zod
+const formSchema = z.object({
+  url: z.string()
+    .trim()
+    .min(1, { message: "URL is required" })
+    .refine((url) => {
+      try {
+        new URL(url.startsWith('http') ? url : `https://${url}`);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }, { message: "Please enter a valid URL" })
+});
+
+type FormValues = z.infer<typeof formSchema>;
+
 const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
-  const [url, setUrl] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [suggestedTag, setSuggestedTag] = useState<Tag | null>(null);
   const [showTagConfirmation, setShowTagConfirmation] = useState(false);
@@ -25,6 +45,14 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const { saveContent } = useContentService();
+
+  // Initialize form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      url: ''
+    }
+  });
 
   // Function to generate tags with AI
   const generateTagsWithAI = async (url: string): Promise<Tag[]> => {
@@ -46,43 +74,9 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
     }
   };
 
-  const validateUrl = (url: string): boolean => {
-    // Basic URL validation - checks if properly formatted
-    try {
-      // Try to create a URL object - if it fails, URL is invalid
-      new URL(url.startsWith('http') ? url : `https://${url}`);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const onSubmit = async (data: FormValues) => {
     // Reset any previous errors
     setError(null);
-    
-    // Input validation
-    if (!url.trim()) {
-      setError("Please enter a URL");
-      toast({
-        title: "URL is required",
-        description: "Please enter a valid URL",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!validateUrl(url)) {
-      setError("Please enter a valid URL");
-      toast({
-        title: "Invalid URL format",
-        description: "Please check your URL and try again",
-        variant: "destructive",
-      });
-      return;
-    }
 
     if (!user) {
       toast({
@@ -97,9 +91,9 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
       setIsLoading(true);
       
       // Process URL - ensure it has http/https prefix
-      let processedUrl = url;
-      if (!url.startsWith('http://') && !url.startsWith('https://')) {
-        processedUrl = 'https://' + url;
+      let processedUrl = data.url;
+      if (!data.url.startsWith('http://') && !data.url.startsWith('https://')) {
+        processedUrl = 'https://' + data.url;
       }
       
       // Generate tags
@@ -118,7 +112,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
         }, []);
         
         if (savedContent) {
-          setUrl('');
+          form.reset();
           
           toast({
             title: "Content saved",
@@ -144,6 +138,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
   const handleTagConfirmation = async (confirmed: boolean) => {
     if (suggestedTag) {
       const confirmedTag = { ...suggestedTag, confirmed };
+      const url = form.getValues('url');
       
       try {
         // Process the URL with the confirmed tag
@@ -165,7 +160,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
             description: `Your content was saved with the tag: ${confirmedTag.name}`,
           });
           
-          setUrl('');
+          form.reset();
           setSuggestedTag(null);
           setShowTagConfirmation(false);
           
@@ -192,43 +187,49 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
             Enter a URL to save content to your collection
           </CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit} aria-label="Save content form">
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <Label htmlFor="url" id="url-label">URL</Label>
-                <Input
-                  id="url"
-                  name="url"
-                  placeholder="https://example.com"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  disabled={isLoading}
-                  aria-labelledby="url-label"
-                  aria-required="true"
-                  aria-invalid={error ? "true" : "false"}
-                  aria-describedby={error ? "url-error" : undefined}
-                />
-                {error && (
-                  <Alert variant="destructive" className="mt-2">
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription id="url-error">{error}</AlertDescription>
-                  </Alert>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} aria-label="Save content form">
+            <CardContent>
+              <FormField
+                control={form.control}
+                name="url"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>URL</FormLabel>
+                    <div className="flex items-center relative">
+                      <LinkIcon className="w-4 h-4 absolute left-3 text-muted-foreground" aria-hidden="true" />
+                      <FormControl>
+                        <Input 
+                          placeholder="https://example.com" 
+                          className="pl-9"
+                          {...field} 
+                          disabled={isLoading}
+                        />
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </div>
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-end">
-            <Button 
-              type="submit" 
-              disabled={isLoading}
-              aria-busy={isLoading}
-              className="focus:ring-2 focus:ring-primary focus:ring-offset-2"
-            >
-              {isLoading ? "Processing..." : "Save Content"}
-            </Button>
-          </CardFooter>
-        </form>
+              />
+              {error && (
+                <Alert variant="destructive" className="mt-2">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+            </CardContent>
+            <CardFooter className="flex justify-end">
+              <Button 
+                type="submit" 
+                disabled={isLoading}
+                aria-busy={isLoading}
+                className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+              >
+                {isLoading ? "Processing..." : "Save Content"}
+              </Button>
+            </CardFooter>
+          </form>
+        </Form>
       </Card>
       
       {suggestedTag && (
