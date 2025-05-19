@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
-import SaveContentForm from '@/components/SaveContentForm';
+import SaveContentForm from '@/components/SaveContent';
 import FileUploadForm from '@/components/FileUploadForm';
 import { SavedContent, Tag } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

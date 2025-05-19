@@ -1,24 +1,12 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentService } from '@/services';
 import { useToast } from '@/hooks/use-toast';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import TagConfirmation from './TagConfirmation';
-import { Tag } from '@/types';
-import { AlertCircle, LinkIcon } from 'lucide-react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-interface SaveContentFormProps {
-  onSaveContent: (url: string, tags: Tag[]) => void;
-}
+import { Tag } from '@/types';
 
 // Define form validation schema with Zod
 const formSchema = z.object({
@@ -37,7 +25,11 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
-const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
+interface UseSaveContentFormProps {
+  onSaveContent: (url: string, tags: Tag[]) => void;
+}
+
+const useSaveContentForm = ({ onSaveContent }: UseSaveContentFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [suggestedTag, setSuggestedTag] = useState<Tag | null>(null);
   const [showTagConfirmation, setShowTagConfirmation] = useState(false);
@@ -45,7 +37,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
   const { toast } = useToast();
   const { user } = useAuth();
   const { saveContent } = useContentService();
-
+  
   // Initialize form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -74,7 +66,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
     }
   };
 
-  const onSubmit = async (data: FormValues) => {
+  const handleSubmit = async (data: FormValues) => {
     // Reset any previous errors
     setError(null);
 
@@ -178,70 +170,16 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
     }
   };
 
-  return (
-    <>
-      <Card className="w-full max-w-xl mx-auto">
-        <CardHeader>
-          <CardTitle>Save New Content</CardTitle>
-          <CardDescription>
-            Enter a URL to save content to your collection
-          </CardDescription>
-        </CardHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} aria-label="Save content form">
-            <CardContent>
-              <FormField
-                control={form.control}
-                name="url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL</FormLabel>
-                    <div className="flex items-center relative">
-                      <LinkIcon className="w-4 h-4 absolute left-3 text-muted-foreground" aria-hidden="true" />
-                      <FormControl>
-                        <Input 
-                          placeholder="https://example.com" 
-                          className="pl-9"
-                          {...field} 
-                          disabled={isLoading}
-                        />
-                      </FormControl>
-                    </div>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {error && (
-                <Alert variant="destructive" className="mt-2">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-            </CardContent>
-            <CardFooter className="flex justify-end">
-              <Button 
-                type="submit" 
-                disabled={isLoading}
-                aria-busy={isLoading}
-                className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              >
-                {isLoading ? "Processing..." : "Save Content"}
-              </Button>
-            </CardFooter>
-          </form>
-        </Form>
-      </Card>
-      
-      {suggestedTag && (
-        <TagConfirmation
-          tag={suggestedTag}
-          isOpen={showTagConfirmation}
-          onConfirm={handleTagConfirmation}
-          onClose={() => setShowTagConfirmation(false)}
-        />
-      )}
-    </>
-  );
+  return {
+    isLoading,
+    error,
+    suggestedTag,
+    showTagConfirmation,
+    setShowTagConfirmation,
+    form,
+    handleSubmit,
+    handleTagConfirmation
+  };
 };
 
-export default SaveContentForm;
+export default useSaveContentForm;
