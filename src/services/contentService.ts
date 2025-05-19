@@ -56,12 +56,13 @@ export const useContentService = () => {
 
         return {
           id: content.id,
+          user_id: content.user_id, // Added this missing property
           title: content.title || '',
           url: content.url || '',
           description: content.description || '',
-          type: content.content_type,
-          file_path: content.file_path || '',
-          file_type: content.file_type || '',
+          // Changed 'type' to proper fields in SavedContent
+          file_url: content.file_path || '',
+          file_type: content.file_type || undefined,
           created_at: content.created_at,
           tags: contentTags as Tag[]
         };
@@ -185,12 +186,13 @@ export const useContentService = () => {
       // Return the saved content with its tags
       return {
         id: content.id,
+        user_id: content.user_id, // Added missing user_id
         title: content.title || '',
         url: content.url || '',
         description: content.description || '',
-        type: content.content_type,
-        file_path: content.file_path || '',
-        file_type: content.file_type || '',
+        // Changed 'type' property to match SavedContent type
+        file_url: content.file_path || '',
+        file_type: content.file_type as "image" | "pdf" | undefined,
         created_at: content.created_at,
         tags: savedTags
       };
