@@ -22,14 +22,14 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
       <Button variant="outline" size="sm" asChild>
         <Link to="/settings">
           <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
-          Settings
+          <span>Settings</span>
         </Link>
       </Button>
       
       {onLogout && (
         <Button variant="ghost" size="sm" onClick={onLogout}>
           <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-          Logout
+          <span>Logout</span>
         </Button>
       )}
     </div>
