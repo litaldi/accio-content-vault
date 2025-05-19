@@ -7,7 +7,6 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
@@ -62,10 +61,12 @@ const Navbar: React.FC<NavbarProps> = ({
           <NavigationMenuList>
             {filteredLinks.slice(0, 4).map((link) => (
               <NavigationMenuItem key={link.path}>
-                <Link to={link.path}>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()} active={isActiveRoute(link.path)}>
-                    {link.name}
-                  </NavigationMenuLink>
+                <Link 
+                  to={link.path} 
+                  className={navigationMenuTriggerStyle() + 
+                    (isActiveRoute(link.path) ? ' bg-accent/50' : '')}
+                >
+                  {link.name}
                 </Link>
               </NavigationMenuItem>
             ))}
@@ -77,14 +78,13 @@ const Navbar: React.FC<NavbarProps> = ({
                   <ul className="grid gap-3 p-4 w-[200px]">
                     {filteredLinks.slice(4).map((link) => (
                       <li key={link.path}>
-                        <Link to={link.path}>
-                          <NavigationMenuLink
-                            className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
-                              isActiveRoute(link.path) ? 'bg-accent text-accent-foreground' : ''
-                            }`}
-                          >
-                            {link.name}
-                          </NavigationMenuLink>
+                        <Link 
+                          to={link.path}
+                          className={`block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground ${
+                            isActiveRoute(link.path) ? 'bg-accent text-accent-foreground' : ''
+                          }`}
+                        >
+                          {link.name}
                         </Link>
                       </li>
                     ))}
