@@ -12,7 +12,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { BarChart, FolderOpen, LogOut, Settings, User } from 'lucide-react';
+import { BarChart, FolderOpen, LogOut, Settings } from 'lucide-react';
+import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
 
 interface NavbarProps {
   isLoggedIn?: boolean;
@@ -93,6 +94,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
         </div>
         
         <div className="flex items-center gap-4">
+          <AccessibilityButton />
           <ModeToggle />
           
           {isLoggedIn ? (
