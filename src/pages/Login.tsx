@@ -134,7 +134,7 @@ const Login = () => {
                   Register
                 </Link>
               </div>
-            </div>
+            </CardFooter>
           </Card>
         )}
       </div>
