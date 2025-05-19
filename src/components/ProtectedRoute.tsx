@@ -57,11 +57,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
               <Button asChild className="flex items-center gap-2">
                 <a href="https://docs.lovable.dev/integrations/supabase" target="_blank" rel="noreferrer">
                   <ExternalLink className="h-4 w-4" />
-                  View Supabase Setup Guide
+                  <span>View Supabase Setup Guide</span>
                 </a>
               </Button>
               <Button variant="outline" asChild>
-                <Link to="/">Go to Home Page</Link>
+                <Link to="/">
+                  <span>Go to Home Page</span>
+                </Link>
               </Button>
             </div>
           </AlertDescription>

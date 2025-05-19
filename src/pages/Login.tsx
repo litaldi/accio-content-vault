@@ -131,7 +131,7 @@ const Login = () => {
                     disabled={isLoading}
                     loading={isLoading}
                   >
-                    Login
+                    <span>Login</span>
                   </Button>
                 </form>
               </Form>

@@ -119,9 +119,11 @@ const AccountSettings = () => {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Button type="button" variant="outline" onClick={() => navigate('/dashboard')}>
-                      Cancel
+                      <span>Cancel</span>
                     </Button>
-                    <Button type="submit">Save Changes</Button>
+                    <Button type="submit">
+                      <span>Save Changes</span>
+                    </Button>
                   </CardFooter>
                 </form>
               </Card>
@@ -165,9 +167,11 @@ const AccountSettings = () => {
                   </CardContent>
                   <CardFooter className="flex justify-between">
                     <Button type="button" variant="outline" onClick={() => navigate('/dashboard')}>
-                      Cancel
+                      <span>Cancel</span>
                     </Button>
-                    <Button type="submit">Update Password</Button>
+                    <Button type="submit">
+                      <span>Update Password</span>
+                    </Button>
                   </CardFooter>
                 </form>
               </Card>
@@ -206,7 +210,7 @@ const AccountSettings = () => {
                         Upgrade to Pro for unlimited content storage, advanced search, and file uploads.
                       </p>
                       <Button onClick={() => navigate('/pricing')}>
-                        Upgrade to Pro
+                        <span>Upgrade to Pro</span>
                       </Button>
                     </div>
                   ) : (
@@ -221,7 +225,7 @@ const AccountSettings = () => {
                       </div>
                       <div className="pt-4">
                         <Button variant="outline" className="w-full">
-                          Manage Subscription
+                          <span>Manage Subscription</span>
                         </Button>
                       </div>
                     </div>
@@ -243,7 +247,7 @@ const AccountSettings = () => {
                 }
               }}
             >
-              Delete Account
+              <span>Delete Account</span>
             </Button>
           </div>
         </div>

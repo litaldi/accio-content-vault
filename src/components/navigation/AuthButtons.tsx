@@ -36,11 +36,15 @@ const AuthButtons: React.FC<AuthButtonsProps> = ({
   ) : (
     <div className="hidden sm:flex space-x-2">
       <Button variant="outline" size="sm" asChild>
-        <Link to="/login">Login</Link>
+        <Link to="/login">
+          <span>Login</span>
+        </Link>
       </Button>
       
       <Button size="sm" asChild>
-        <Link to="/register">Sign Up</Link>
+        <Link to="/register">
+          <span>Sign Up</span>
+        </Link>
       </Button>
     </div>
   );

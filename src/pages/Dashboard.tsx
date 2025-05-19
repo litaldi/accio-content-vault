@@ -54,7 +54,7 @@ const Dashboard = () => {
               aria-label="Add new content"
             >
               <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
-              Add New Content
+              <span>Add New Content</span>
             </Button>
           </div>
           
