@@ -146,7 +146,7 @@ const Login = () => {
               <div className="text-center text-sm text-muted-foreground">
                 Don't have an account?{' '}
                 <Link to="/register" className="text-primary hover:underline font-medium">
-                  Register
+                  <span>Register</span>
                 </Link>
               </div>
             </CardFooter>
