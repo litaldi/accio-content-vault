@@ -40,12 +40,8 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="md:hidden">
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           <span className="sr-only">Toggle menu</span>
-          {isOpen ? (
-            <X className="h-6 w-6" aria-hidden="true" />
-          ) : (
-            <Menu className="h-6 w-6" aria-hidden="true" />
-          )}
         </Button>
       </SheetTrigger>
       <SheetContent side="left">
@@ -89,7 +85,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
                     onClick={onLogout}
                   >
                     <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Logout
+                    <span>Logout</span>
                   </Button>
                 </SheetClose>
               )}
@@ -98,13 +94,17 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
             <div className="pt-4 mt-4 border-t flex flex-col gap-2">
               <SheetClose asChild>
                 <Button variant="outline" asChild>
-                  <Link to="/login">Login</Link>
+                  <Link to="/login">
+                    <span>Login</span>
+                  </Link>
                 </Button>
               </SheetClose>
               
               <SheetClose asChild>
                 <Button asChild>
-                  <Link to="/register">Sign Up</Link>
+                  <Link to="/register">
+                    <span>Sign Up</span>
+                  </Link>
                 </Button>
               </SheetClose>
             </div>
