@@ -21,7 +21,7 @@ const Hero = () => {
             onClick={() => navigate('/register')}
             className="bg-white text-primary hover:bg-white/90 focus-visible:ring-offset-primary"
           >
-            <span>Get Started - Free</span>
+            Get Started - Free
           </Button>
           <Button
             size="lg"
@@ -29,7 +29,7 @@ const Hero = () => {
             onClick={() => navigate('/login')}
             className="text-white border-white hover:bg-white/10 focus-visible:ring-offset-primary focus-visible:ring-white"
           >
-            <span>Login</span>
+            Login
           </Button>
         </div>
       </div>
