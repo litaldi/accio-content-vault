@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   Card,
   CardContent,
@@ -34,7 +35,7 @@ const formSchema = z.object({
 const Login = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { signIn, user, isLoading } = useAuth();
+  const { signIn, user, isLoading, isConfigured } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -60,67 +61,82 @@ const Login = () => {
       <Navbar isLoggedIn={!!user} />
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md animate-fade-up">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
-            <CardDescription className="text-center">
-              Enter your email and password to access your account
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="example@email.com" 
-                          type="email" 
-                          disabled={isLoading} 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="password"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="••••••" 
-                          type="password" 
-                          disabled={isLoading} 
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Logging in...' : 'Login'}
-                </Button>
-              </form>
-            </Form>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-2">
-            <div className="text-center text-sm text-muted-foreground">
-              Don't have an account?{' '}
-              <Link to="/register" className="text-primary hover:underline">
-                Register
-              </Link>
+        {!isConfigured ? (
+          <Alert className="max-w-md w-full">
+            <AlertTitle className="text-xl font-bold">Supabase Configuration Required</AlertTitle>
+            <AlertDescription className="mt-2">
+              <p className="mb-4">
+                To use authentication features, you need to connect this project to Supabase.
+              </p>
+              <p className="mb-4">
+                Please click the green Supabase button in the top-right corner of the Lovable 
+                interface and follow the connection instructions.
+              </p>
+            </AlertDescription>
+          </Alert>
+        ) : (
+          <Card className="w-full max-w-md animate-fade-up">
+            <CardHeader className="space-y-1">
+              <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+              <CardDescription className="text-center">
+                Enter your email and password to access your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                  <FormField
+                    control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Email</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="example@email.com" 
+                            type="email" 
+                            disabled={isLoading} 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="password"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Password</FormLabel>
+                        <FormControl>
+                          <Input 
+                            placeholder="••••••" 
+                            type="password" 
+                            disabled={isLoading} 
+                            {...field} 
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Logging in...' : 'Login'}
+                  </Button>
+                </form>
+              </Form>
+            </CardContent>
+            <CardFooter className="flex flex-col space-y-2">
+              <div className="text-center text-sm text-muted-foreground">
+                Don't have an account?{' '}
+                <Link to="/register" className="text-primary hover:underline">
+                  Register
+                </Link>
+              </div>
             </div>
-          </CardFooter>
-        </Card>
+          </Card>
+        )}
       </div>
     </div>
   );

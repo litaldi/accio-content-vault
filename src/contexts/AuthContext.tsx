@@ -1,13 +1,14 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User, AuthError } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
+  isConfigured: boolean;
   signUp: (email: string, password: string, externalContentConsent: boolean) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -19,9 +20,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isConfigured] = useState(isSupabaseConfigured());
   const { toast } = useToast();
 
   useEffect(() => {
+    if (!isConfigured) {
+      setIsLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
@@ -38,10 +45,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [isConfigured]);
 
   // Sign up new users
   const signUp = async (email: string, password: string, externalContentConsent: boolean) => {
+    if (!isConfigured) {
+      toast({
+        title: "Supabase not configured",
+        description: "Please set up your Supabase credentials to enable authentication.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
@@ -90,6 +106,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Sign in existing users
   const signIn = async (email: string, password: string) => {
+    if (!isConfigured) {
+      toast({
+        title: "Supabase not configured",
+        description: "Please set up your Supabase credentials to enable authentication.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -118,6 +143,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Sign out
   const signOut = async () => {
+    if (!isConfigured) {
+      toast({
+        title: "Supabase not configured",
+        description: "Please set up your Supabase credentials to enable authentication.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signOut();
@@ -142,6 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     session,
     isLoading,
+    isConfigured,
     signUp,
     signIn,
     signOut,
