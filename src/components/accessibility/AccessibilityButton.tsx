@@ -78,8 +78,8 @@ export const AccessibilityButton = () => {
         <div 
           ref={(el) => {
             // Combine refs
-            trapRef.current = el;
-            if (menuRef.current !== null) {
+            if (el) {
+              trapRef.current = el;
               menuRef.current = el;
             }
           }}
@@ -96,9 +96,9 @@ export const AccessibilityButton = () => {
             </h3>
           </div>
           
-          <div className="p-2 space-y-1">
+          <div className="p-2 space-y-1" role="group" aria-labelledby="accessibility-menu-heading">
             <button
-              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
               onClick={increaseTextSize}
               role="menuitem"
               aria-label="Increase text size"
@@ -108,7 +108,7 @@ export const AccessibilityButton = () => {
             </button>
             
             <button
-              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
               onClick={decreaseTextSize}
               role="menuitem"
               aria-label="Decrease text size"
@@ -118,7 +118,7 @@ export const AccessibilityButton = () => {
             </button>
             
             <button
-              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
               onClick={handleHighContrastChange}
               role="menuitem"
               aria-pressed={isHighContrast}
@@ -129,7 +129,7 @@ export const AccessibilityButton = () => {
             </button>
             
             <button
-              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
               onClick={toggleReduceAnimations}
               role="menuitem"
               aria-pressed={areAnimationsReduced}
@@ -142,7 +142,7 @@ export const AccessibilityButton = () => {
             <div className="border-t border-border my-2" aria-hidden="true"></div>
             
             <button
-              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none"
+              className="w-full flex items-center justify-between px-3 py-2 text-sm rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
               onClick={resetToDefaults}
               role="menuitem"
               aria-label="Reset accessibility settings to default values"

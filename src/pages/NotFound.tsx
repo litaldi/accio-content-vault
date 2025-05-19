@@ -60,7 +60,7 @@ const NotFound = () => {
           </div>
           
           <div className="mt-8 text-sm text-muted-foreground">
-            <p>Looking for something specific? Check our <Link to="/sitemap" className="text-primary hover:underline">sitemap</Link>.</p>
+            <p>Looking for something specific? Check our <Link to="/sitemap" className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm">sitemap</Link>.</p>
           </div>
         </div>
       </div>
