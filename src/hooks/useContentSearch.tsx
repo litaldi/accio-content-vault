@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { SavedContent, Tag, SearchResult } from '@/types';
-import { useContentService } from '@/services/contentService';
+import { useContentService } from '@/services';  // Updated import
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
 
