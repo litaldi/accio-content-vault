@@ -1,8 +1,7 @@
 
 import '@testing-library/jest-dom';
 
-// Make sure jest-dom matchers are available globally
-import { expect } from '@jest/globals';
+// No need to import expect from @jest/globals as it's globally available with @types/jest
 import { toHaveNoViolations } from 'jest-axe';
 
 // Add jest-axe matchers
