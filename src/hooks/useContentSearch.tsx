@@ -4,7 +4,9 @@ import { mockContents as initialContents } from '@/lib/mock-data';
 import { SavedContent, Tag } from '@/types';
 
 export function useContentSearch() {
-  const [searchResults, setSearchResults] = useState<SavedContent[]>(initialContents);
+  const [searchResults, setSearchResults] = useState<{ content: SavedContent; score?: number; }[]>(
+    initialContents.map(content => ({ content, score: undefined }))
+  );
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSemanticSearch, setIsSemanticSearch] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -21,33 +23,39 @@ export function useContentSearch() {
       await new Promise(resolve => setTimeout(resolve, 800));
       
       if (!query.trim()) {
-        setSearchResults(initialContents);
+        setSearchResults(initialContents.map(content => ({ content, score: undefined })));
         return;
       }
 
       const lowerCaseQuery = query.toLowerCase();
-      const filtered = initialContents.filter((content) => {
-        // Basic search looks at title and description
-        if (!semantic) {
-          return (
-            content.title.toLowerCase().includes(lowerCaseQuery) ||
-            content.description.toLowerCase().includes(lowerCaseQuery)
-          );
-        } 
-        // Semantic search also looks at content and tags (simulated)
-        else {
-          // Check if any tag matches
-          const tagMatch = content.tags.some((tag) =>
-            tag.name.toLowerCase().includes(lowerCaseQuery)
-          );
-          
-          return (
-            content.title.toLowerCase().includes(lowerCaseQuery) ||
-            content.description.toLowerCase().includes(lowerCaseQuery) ||
-            tagMatch
-          );
-        }
-      });
+      const filtered = initialContents
+        .filter((content) => {
+          // Basic search looks at title and description
+          if (!semantic) {
+            return (
+              content.title.toLowerCase().includes(lowerCaseQuery) ||
+              content.description.toLowerCase().includes(lowerCaseQuery)
+            );
+          } 
+          // Semantic search also looks at content and tags (simulated)
+          else {
+            // Check if any tag matches
+            const tagMatch = content.tags.some((tag) =>
+              tag.name.toLowerCase().includes(lowerCaseQuery)
+            );
+            
+            return (
+              content.title.toLowerCase().includes(lowerCaseQuery) ||
+              content.description.toLowerCase().includes(lowerCaseQuery) ||
+              tagMatch
+            );
+          }
+        })
+        .map(content => ({
+          content,
+          // For semantic search, we can simulate a relevance score
+          score: semantic ? Math.random() * 0.5 + 0.5 : undefined
+        }));
 
       setSearchResults(filtered);
     } catch (error) {
@@ -61,8 +69,10 @@ export function useContentSearch() {
   const handleTagsChange = useCallback((contentId: string, tags: Tag[]) => {
     setSearchResults(
       (prevResults) =>
-        prevResults.map((content) =>
-          content.id === contentId ? { ...content, tags } : content
+        prevResults.map((result) =>
+          result.content.id === contentId 
+            ? { ...result, content: { ...result.content, tags } } 
+            : result
         )
     );
   }, []);
