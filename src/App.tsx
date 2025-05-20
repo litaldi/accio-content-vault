@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SkipLink } from "@/components/accessibility/SkipLink";
+import { AccessibilityMenu } from "@/components/accessibility/AccessibilityMenu";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import '@/i18n'; // Import i18n initialization
 
@@ -61,6 +62,9 @@ const App: React.FC = () => {
                       targetId="main-content" 
                       className="absolute z-50 top-2 left-2 transform -translate-y-16 focus:translate-y-0"
                     />
+                    
+                    {/* Accessibility menu */}
+                    <AccessibilityMenu />
                     
                     {/* Toast notifications */}
                     <Toaster />

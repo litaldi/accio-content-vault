@@ -61,16 +61,19 @@ export default {
 					DEFAULT: "hsl(var(--card))",
 					foreground: "hsl(var(--card-foreground))"
 				},
-				sidebar: {
-					DEFAULT: "hsl(var(--sidebar-background))",
-					foreground: "hsl(var(--sidebar-foreground))",
-					primary: "hsl(var(--sidebar-primary))",
-					'primary-foreground': "hsl(var(--sidebar-primary-foreground))",
-					accent: "hsl(var(--sidebar-accent))",
-					'accent-foreground': "hsl(var(--sidebar-accent-foreground))",
-					border: "hsl(var(--sidebar-border))",
-					ring: "hsl(var(--sidebar-ring))"
-				}
+				// Fine.dev inspired specific colors
+				fine: {
+					'black': '#0A0A0A',
+					'gray-100': '#F6F6F7',
+					'gray-200': '#F1F0FB',
+					'gray-300': '#C8C8C9',
+					'gray-400': '#9F9EA1',
+					'gray-500': '#8E9196',
+					'purple': '#9b87f5',
+					'purple-dark': '#8B5CF6',
+					'pink': '#D946EF',
+					'cyan': '#33C3F0',
+				},
 			},
 			spacing: {
 				'4.5': '1.125rem',
@@ -89,7 +92,8 @@ export default {
 				'subtle': '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)',
 				'elevation-1': '0 1px 2px rgba(16, 24, 40, 0.05)',
 				'elevation-2': '0 1px 3px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06)',
-				'elevation-3': '0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06)'
+				'elevation-3': '0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06)',
+				'fine': '0 8px 32px -4px rgba(0, 0, 0, 0.1), 0 4px 16px -4px rgba(0, 0, 0, 0.06)'
 			},
 			keyframes: {
 				'accordion-down': {
@@ -147,6 +151,25 @@ export default {
 					to: {
 						transform: 'rotate(360deg)'
 					}
+				},
+				// Fine.dev inspired animations
+				glow: {
+					'0%, 100%': {
+						opacity: '0.5',
+						transform: 'scale(1)'
+					},
+					'50%': {
+						opacity: '1',
+						transform: 'scale(1.05)'
+					}
+				},
+				float: {
+					'0%, 100%': {
+						transform: 'translateY(0)'
+					},
+					'50%': {
+						transform: 'translateY(-10px)'
+					}
 				}
 			},
 			animation: {
@@ -157,7 +180,10 @@ export default {
 				'slide-right': 'slideRight 0.4s ease-out forwards',
 				'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 				'shimmer': 'shimmer 2s linear infinite',
-				'spin-slow': 'spin 3s linear infinite'
+				'spin-slow': 'spin 3s linear infinite',
+				// Fine.dev inspired animations
+				'glow': 'glow 5s ease-in-out infinite',
+				'float': 'float 6s ease-in-out infinite'
 			},
 			transitionProperty: {
 				'height': 'height',
@@ -207,7 +233,12 @@ export default {
 						},
 					},
 				},
-			}
+			},
+			fontFamily: {
+				'sans': ['Inter', 'system-ui', 'sans-serif'],
+				'heading': ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
+				'mono': ['Fira Code', 'monospace'],
+			},
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
