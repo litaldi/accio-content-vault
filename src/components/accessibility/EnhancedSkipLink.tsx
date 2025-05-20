@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from 'next-themes';
 
 interface EnhancedSkipLinkProps {
   targetId: string;
@@ -9,6 +10,7 @@ interface EnhancedSkipLinkProps {
 
 export const EnhancedSkipLink = ({ targetId, className = '' }: EnhancedSkipLinkProps) => {
   const { t } = useTranslation();
+  const { theme } = useTheme();
   
   return (
     <a

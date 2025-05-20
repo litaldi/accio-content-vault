@@ -31,14 +31,14 @@ export function ThemeToggle() {
     if (!mounted) return null;
     
     if (theme === 'light') {
-      return <Sun className="h-[1.2rem] w-[1.2rem]" aria-hidden="true" />;
+      return <Sun className="h-[1.2rem] w-[1.2rem] transition-transform duration-500" aria-hidden="true" />;
     }
     
     if (theme === 'dark') {
-      return <Moon className="h-[1.2rem] w-[1.2rem]" aria-hidden="true" />;
+      return <Moon className="h-[1.2rem] w-[1.2rem] transition-transform duration-500" aria-hidden="true" />;
     }
     
-    return <Monitor className="h-[1.2rem] w-[1.2rem]" aria-hidden="true" />;
+    return <Monitor className="h-[1.2rem] w-[1.2rem] transition-transform duration-500" aria-hidden="true" />;
   };
 
   // Prevent hydration mismatch by only showing after mount
@@ -50,7 +50,13 @@ export function ThemeToggle() {
     if (savedHighContrast) {
       document.documentElement.classList.add('high-contrast');
     }
-  }, [])
+    
+    // Check for system preference on initial load
+    if (!localStorage.getItem('theme')) {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    }
+  }, [setTheme])
 
   if (!mounted) {
     // Server-side rendering - return empty button to maintain layout
@@ -79,7 +85,10 @@ export function ThemeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[200px] p-2 backdrop-blur-md bg-card/90 border border-border/40">
         <DropdownMenuItem 
-          onClick={() => setTheme("light")}
+          onClick={() => {
+            setTheme("light");
+            localStorage.setItem('theme', 'light');
+          }}
           aria-selected={theme === 'light'}
           data-testid="theme-light"
           className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
@@ -88,7 +97,10 @@ export function ThemeToggle() {
           <span>{t('common.theme.light')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => setTheme("dark")}
+          onClick={() => {
+            setTheme("dark");
+            localStorage.setItem('theme', 'dark');
+          }}
           aria-selected={theme === 'dark'}
           data-testid="theme-dark"
           className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
@@ -97,7 +109,10 @@ export function ThemeToggle() {
           <span>{t('common.theme.dark')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => setTheme("system")}
+          onClick={() => {
+            setTheme("system");
+            localStorage.removeItem('theme');
+          }}
           aria-selected={theme === 'system'}
           data-testid="theme-system"
           className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
