@@ -19,6 +19,11 @@ export const SkipLink = ({ targetId, className }: SkipLinkProps) => {
       if (!target.hasAttribute('tabindex')) {
         target.setAttribute('tabindex', '-1');
       }
+      
+      // Add a better focus outline for accessibility
+      if (!target.classList.contains('focus-visible:outline-none')) {
+        target.classList.add('focus-visible:outline-none', 'focus-visible:ring-2', 'focus-visible:ring-primary');
+      }
     }
   }, [targetId]);
   
@@ -47,7 +52,7 @@ export const SkipLink = ({ targetId, className }: SkipLinkProps) => {
         setIsVisible(false);
       }}
       className={cn(
-        "fixed top-0 left-0 z-50 p-4 bg-background text-foreground transition-transform",
+        "fixed top-4 left-4 z-50 p-4 bg-background text-foreground transition-transform",
         isVisible ? "transform-none" : "-translate-y-full",
         hasFocus ? "outline-none ring-2 ring-primary" : "",
         className

@@ -18,6 +18,7 @@ export function useBreakpoint(): BreakpointValues {
   });
   
   React.useEffect(() => {
+    // Initial check
     const checkBreakpoint = () => {
       const width = window.innerWidth;
       setBreakpoint({

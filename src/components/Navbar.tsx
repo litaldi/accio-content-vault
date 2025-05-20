@@ -94,7 +94,6 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
         </div>
         
         <div className="flex items-center gap-4">
-          <AccessibilityButton />
           <ModeToggle />
           
           {isLoggedIn ? (

@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SkipLink } from "@/components/accessibility/SkipLink";
+import { AccessibilityButton } from "@/components/accessibility/AccessibilityButton";
 import '@/i18n'; // Import i18n initialization
 
 import Index from "./pages/Index";
@@ -45,6 +46,7 @@ const App: React.FC = () => {
               <AuthProvider>
                 <AccessibilityProvider>
                   <SkipLink targetId="main-content" />
+                  <AccessibilityButton />
                   <Toaster />
                   <Sonner />
                   <BrowserRouter>

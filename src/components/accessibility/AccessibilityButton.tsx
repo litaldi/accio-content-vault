@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme } from 'next-themes';
 import { useOnClickOutside } from '@/hooks/use-click-outside';
+import { cn } from '@/lib/utils';
 
 export const AccessibilityButton = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -39,7 +40,7 @@ export const AccessibilityButton = () => {
     setIsMenuOpen(prev => !prev);
   };
 
-  // Get the current theme name for high contrast toggle
+  // Get the current contrast and animation states
   const isHighContrast = preferences.highContrast;
   const areAnimationsReduced = preferences.reduceAnimations;
 
@@ -56,12 +57,15 @@ export const AccessibilityButton = () => {
   };
   
   return (
-    <div className="relative z-50" aria-label="Accessibility controls">
+    <div className={cn(
+      "fixed z-50",
+      "bottom-4 right-4 md:bottom-6 md:right-6"
+    )} aria-label="Accessibility controls">
       <Button
         ref={buttonRef}
-        variant="ghost"
+        variant="secondary"
         size="icon"
-        className="relative"
+        className="relative shadow-md h-10 w-10 rounded-full"
         onClick={toggleMenu}
         aria-expanded={isMenuOpen}
         aria-label="Accessibility options"
@@ -74,7 +78,7 @@ export const AccessibilityButton = () => {
       {isMenuOpen && (
         <div 
           ref={menuRef}
-          className="absolute right-0 mt-2 w-64 rounded-md bg-popover shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
+          className="absolute right-0 bottom-12 mb-2 w-64 rounded-md bg-popover shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="accessibility-button"

@@ -11,16 +11,30 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { useAccessibility } from "@/contexts/AccessibilityContext"
 
 export function ModeToggle() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
   const { t } = useTranslation()
+  const { preferences } = useAccessibility()
 
   // Prevent hydration mismatch by only showing after mount
   React.useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Handle theme change with high contrast consideration
+  const handleThemeChange = (newTheme: string) => {
+    // If high contrast is enabled, we should maintain that setting
+    if (preferences.highContrast) {
+      setTheme(newTheme);
+      // Apply high contrast class manually to ensure it's maintained
+      document.documentElement.classList.add('high-contrast');
+    } else {
+      setTheme(newTheme);
+    }
+  };
 
   return (
     <DropdownMenu>
@@ -36,15 +50,15 @@ export function ModeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme("light")}>
+        <DropdownMenuItem onClick={() => handleThemeChange("light")}>
           <Sun className="mr-2 h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.light')}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")}>
+        <DropdownMenuItem onClick={() => handleThemeChange("dark")}>
           <Moon className="mr-2 h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.dark')}</span>
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
+        <DropdownMenuItem onClick={() => handleThemeChange("system")}>
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             width="16" 
