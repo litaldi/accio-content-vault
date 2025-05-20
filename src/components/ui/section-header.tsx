@@ -11,6 +11,7 @@ interface SectionHeaderProps {
   className?: string
   eyebrow?: string
   eyebrowClassName?: string
+  id?: string // Added the id property to accept HTML id attributes
 }
 
 export function SectionHeader({
@@ -22,15 +23,19 @@ export function SectionHeader({
   className,
   eyebrow,
   eyebrowClassName,
+  id, // Added the id parameter
 }: SectionHeaderProps) {
   return (
-    <div className={cn(
-      "space-y-3 mb-8 md:mb-12",
-      align === "center" && "text-center mx-auto max-w-3xl",
-      align === "left" && "text-left",
-      align === "right" && "text-right ml-auto",
-      className
-    )}>
+    <div 
+      id={id} // Applied the id attribute to the container div
+      className={cn(
+        "space-y-3 mb-8 md:mb-12",
+        align === "center" && "text-center mx-auto max-w-3xl",
+        align === "left" && "text-left",
+        align === "right" && "text-right ml-auto",
+        className
+      )}
+    >
       {eyebrow && (
         <p className={cn(
           "text-sm font-semibold text-primary uppercase tracking-wider",
