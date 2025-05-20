@@ -68,9 +68,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
 
   // Translate function that safely handles missing keys
   const t = (key: string, options?: Record<string, any>): string => {
+    // Fixed: Ensure we're returning a string, not an object
     const translation = i18n.t(key, options);
-    // If translation returns the key, it means the key wasn't found
-    return translation === key ? `Missing translation: ${key}` : translation;
+    // Make sure we only return strings
+    if (typeof translation === 'string') {
+      return translation === key ? `Missing translation: ${key}` : translation;
+    }
+    return `Missing translation: ${key}`;
   };
 
   // Apply direction and language to HTML element
