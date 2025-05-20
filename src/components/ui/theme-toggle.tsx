@@ -1,6 +1,6 @@
 
 import * as React from "react"
-import { Moon, Sun, Monitor } from "lucide-react"
+import { Moon, Sun, Monitor, Accessibility } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next"
 
@@ -10,6 +10,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 
 export function ThemeToggle() {
@@ -70,18 +71,18 @@ export function ThemeToggle() {
           aria-label={t('common.theme.change')}
           title={t('common.theme.current', { theme: theme || 'system' })}
           data-testid="theme-toggle"
-          className="rounded-full hover:bg-secondary/80 transition-all duration-300"
+          className="rounded-full hover:bg-secondary/80 transition-all duration-300 fine-glow"
         >
           {getThemeIcon()}
           <span className="sr-only">{t('common.theme.change')}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[200px] p-2">
+      <DropdownMenuContent align="end" className="min-w-[200px] p-2 backdrop-blur-md bg-card/90 border border-border/40">
         <DropdownMenuItem 
           onClick={() => setTheme("light")}
           aria-selected={theme === 'light'}
           data-testid="theme-light"
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
         >
           <Sun className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.light')}</span>
@@ -90,7 +91,7 @@ export function ThemeToggle() {
           onClick={() => setTheme("dark")}
           aria-selected={theme === 'dark'}
           data-testid="theme-dark"
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
         >
           <Moon className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.dark')}</span>
@@ -99,33 +100,18 @@ export function ThemeToggle() {
           onClick={() => setTheme("system")}
           aria-selected={theme === 'system'}
           data-testid="theme-system"
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
         >
           <Monitor className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.system')}</span>
         </DropdownMenuItem>
-        <div className="h-px my-2 bg-border"></div>
+        <DropdownMenuSeparator className="my-2 bg-border/50" />
         <DropdownMenuItem 
           onClick={toggleHighContrast}
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
           data-testid="accessibility-contrast"
         >
-          <svg 
-            width="16" 
-            height="16" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            className="h-4 w-4"
-            aria-hidden="true"
-          >
-            <circle cx="12" cy="12" r="10"></circle>
-            <path d="M12 2a10 10 0 1 0 0 20 10 10 0 1 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"></path>
-            <path d="M12 2v20M2 12h20"></path>
-          </svg>
+          <Accessibility className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.accessibility.highContrast', 'High contrast mode')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

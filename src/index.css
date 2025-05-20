@@ -138,7 +138,7 @@
   
   /* Section padding utility for consistent spacing */
   .section-padding {
-    @apply py-12 sm:py-16 md:py-20 px-4;
+    @apply py-12 sm:py-16 md:py-24 lg:py-32 px-4;
   }
   
   /* Reusable container widths */
@@ -162,12 +162,12 @@
   transition-property: none !important;
 }
 
-/* Glass effect */
+/* Glass effect - Fine.dev inspired */
 .glass {
   @apply backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-white/20 dark:border-slate-800/20 shadow-md;
 }
 
-/* Hero section gradient styles */
+/* Hero section gradient styles - Fine.dev inspired */
 .hero-gradient {
   background: linear-gradient(to right, hsl(260, 60%, 55%), hsl(270, 60%, 45%));
 }
@@ -176,7 +176,7 @@
   background: linear-gradient(to left, hsl(260, 60%, 55%), hsl(270, 60%, 45%));
 }
 
-/* Subtle gradient backgrounds */
+/* Subtle gradient backgrounds - Fine.dev inspired */
 .bg-purple-gradient {
   @apply bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20;
 }
@@ -185,7 +185,7 @@
   @apply bg-gradient-to-tr from-purple-100 to-purple-50 dark:from-purple-800/20 dark:to-purple-900/20;
 }
 
-/* Card hover animation */
+/* Card hover animation - Fine.dev inspired */
 .card-hover {
   @apply transition-all duration-300;
 }
@@ -194,7 +194,7 @@
   @apply translate-y-[-2px] shadow-elevation-3;
 }
 
-/* Interactive button */
+/* Interactive button - Fine.dev inspired */
 .interactive {
   @apply transition-transform duration-300 active:scale-95;
 }
@@ -207,7 +207,7 @@
   @apply space-x-0 space-x-reverse;
 }
 
-/* Animation classes */
+/* Animation classes - Fine.dev inspired */
 .animate-fade-in {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -297,7 +297,7 @@
   @apply animate-spin rounded-full border-4 border-muted border-t-primary h-8 w-8;
 }
 
-/* Transitions */
+/* Transitions - Fine.dev inspired */
 .transition-hover {
   @apply transition-all duration-300;
 }
@@ -331,7 +331,7 @@
 
 /* Typography improvements */
 .heading-1 {
-  @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight;
+  @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
 }
 
 .heading-2 {
@@ -358,7 +358,7 @@
   @apply text-sm text-muted-foreground;
 }
 
-/* Button improvements */
+/* Button improvements - Fine.dev inspired */
 .btn-primary {
   @apply bg-primary text-primary-foreground hover:bg-primary/90 
     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2

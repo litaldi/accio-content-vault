@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SkipLink } from "@/components/accessibility/SkipLink";
+import { EnhancedSkipLink } from "@/components/accessibility/EnhancedSkipLink";
 import { AccessibilityMenu } from "@/components/accessibility/AccessibilityMenu";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import '@/i18n'; // Import i18n initialization
@@ -57,10 +58,10 @@ const App: React.FC = () => {
               <TooltipProvider>
                 <AuthProvider>
                   <AccessibilityProvider>
-                    {/* Skip link for keyboard navigation */}
-                    <SkipLink 
+                    {/* Enhanced Skip link for keyboard navigation - Fine.dev inspired */}
+                    <EnhancedSkipLink 
                       targetId="main-content" 
-                      className="absolute z-50 top-2 left-2 transform -translate-y-16 focus:translate-y-0"
+                      className="z-50"
                     />
                     
                     {/* Accessibility menu */}
