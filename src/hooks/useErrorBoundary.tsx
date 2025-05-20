@@ -1,7 +1,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 
-// Updated interface to properly type the fallback prop
+// Updated interface for the fallback prop
 interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode | ((error: Error) => ReactNode);
@@ -35,12 +35,8 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       // Render fallback UI
       if (this.props.fallback) {
         if (typeof this.props.fallback === 'function' && this.state.error) {
-          // Cast the function and its return value correctly
-          return React.createElement(
-            React.Fragment,
-            null,
-            (this.props.fallback as (error: Error) => ReactNode)(this.state.error)
-          );
+          // Use createElement instead of directly calling the function
+          return (this.props.fallback as Function)(this.state.error);
         }
         return this.props.fallback;
       }
