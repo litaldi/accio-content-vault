@@ -5,6 +5,7 @@ export interface BreakpointValues {
   isMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
+  screenWidth: number;
 }
 
 const MOBILE_BREAKPOINT = 768;
@@ -15,6 +16,7 @@ export function useBreakpoint(): BreakpointValues {
     isMobile: false,
     isTablet: false,
     isDesktop: true,
+    screenWidth: typeof window !== 'undefined' ? window.innerWidth : 1200,
   });
   
   React.useEffect(() => {
@@ -25,17 +27,27 @@ export function useBreakpoint(): BreakpointValues {
         isMobile: width < MOBILE_BREAKPOINT,
         isTablet: width >= MOBILE_BREAKPOINT && width < TABLET_BREAKPOINT,
         isDesktop: width >= TABLET_BREAKPOINT,
+        screenWidth: width,
       });
     };
     
     // Check on mount
     checkBreakpoint();
     
-    // Add resize listener
-    window.addEventListener("resize", checkBreakpoint);
+    // Add resize listener with debounce for performance
+    let timeoutId: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(checkBreakpoint, 100);
+    };
+    
+    window.addEventListener("resize", handleResize);
     
     // Cleanup
-    return () => window.removeEventListener("resize", checkBreakpoint);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
   
   return breakpoint;
@@ -44,4 +56,24 @@ export function useBreakpoint(): BreakpointValues {
 export function useIsMobile() {
   const { isMobile } = useBreakpoint();
   return isMobile;
+}
+
+export function useIsTablet() {
+  const { isTablet } = useBreakpoint();
+  return isTablet;
+}
+
+export function useIsDesktop() {
+  const { isDesktop } = useBreakpoint();
+  return isDesktop;
+}
+
+export function useIsSmallScreen() {
+  const { isMobile, isTablet } = useBreakpoint();
+  return isMobile || isTablet;
+}
+
+export function useScreenWidth() {
+  const { screenWidth } = useBreakpoint();
+  return screenWidth;
 }

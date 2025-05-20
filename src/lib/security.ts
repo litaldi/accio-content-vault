@@ -66,3 +66,77 @@ export function sanitizeHTML(html: string): string {
   
   return doc.body.innerHTML;
 }
+
+/**
+ * Validates an email address
+ * @param email Email address to validate
+ * @returns Boolean indicating if the email is valid
+ */
+export function isValidEmail(email: string): boolean {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+/**
+ * Validates a password meets minimum security requirements
+ * @param password Password to validate
+ * @returns Object containing validation status and any error messages
+ */
+export function validatePassword(password: string): { isValid: boolean; message?: string } {
+  if (password.length < 8) {
+    return { isValid: false, message: 'Password must be at least 8 characters long' };
+  }
+  
+  if (!/[A-Z]/.test(password)) {
+    return { isValid: false, message: 'Password must contain at least one uppercase letter' };
+  }
+  
+  if (!/[a-z]/.test(password)) {
+    return { isValid: false, message: 'Password must contain at least one lowercase letter' };
+  }
+  
+  if (!/[0-9]/.test(password)) {
+    return { isValid: false, message: 'Password must contain at least one number' };
+  }
+  
+  if (!/[^A-Za-z0-9]/.test(password)) {
+    return { isValid: false, message: 'Password must contain at least one special character' };
+  }
+  
+  return { isValid: true };
+}
+
+/**
+ * Generates a secure CSRF token
+ * @returns A random token for CSRF protection
+ */
+export function generateCSRFToken(): string {
+  return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+    .map(byte => byte.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+/**
+ * Sets a CSRF token in session storage and returns it
+ * @returns CSRF token for form submission
+ */
+export function getCSRFToken(): string {
+  let token = sessionStorage.getItem('csrf-token');
+  
+  if (!token) {
+    token = generateCSRFToken();
+    sessionStorage.setItem('csrf-token', token);
+  }
+  
+  return token;
+}
+
+/**
+ * Validates a CSRF token against the one in session storage
+ * @param token Token to validate
+ * @returns Boolean indicating if the token is valid
+ */
+export function validateCSRFToken(token: string): boolean {
+  const storedToken = sessionStorage.getItem('csrf-token');
+  return token === storedToken;
+}

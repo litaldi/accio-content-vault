@@ -130,6 +130,84 @@
   [dir="rtl"] .rtl-mirror {
     @apply -scale-x-100;
   }
+  
+  /* Special focus styles for keyboard users */
+  .user-is-tabbing *:focus {
+    @apply outline-none ring-2 ring-primary ring-offset-2;
+  }
+  
+  /* Accessible but invisible content */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  /* Make screen reader only content visible when focused */
+  .sr-only-focusable:not(:focus) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+  
+  .sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+  }
+  
+  /* Improved heading hierarchy and text spacing for readability */
+  h1, h2, h3, h4, h5, h6 {
+    @apply scroll-m-20 font-medium tracking-tight;
+  }
+  
+  h1 {
+    @apply text-4xl font-extrabold lg:text-5xl;
+  }
+  
+  h2 {
+    @apply text-3xl font-bold;
+  }
+  
+  h3 {
+    @apply text-2xl font-semibold;
+  }
+  
+  h4 {
+    @apply text-xl font-semibold;
+  }
+  
+  p {
+    @apply leading-7;
+  }
+  
+  /* Accessible link styles with underline for better visibility */
+  a:not([class]) {
+    @apply underline underline-offset-4 decoration-primary/50 hover:decoration-primary;
+  }
+  
+  /* Readable font enhancements */
+  .readable-font {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    @apply tracking-wide leading-relaxed;
+  }
 }
 
 /* Reduced animations */
@@ -290,4 +368,81 @@
 
 .z-toast {
   z-index: 200;
+}
+
+/* Skip link styles */
+.skip-link {
+  @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 
+    focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground
+    focus:shadow-lg focus:rounded-md focus:no-underline;
+}
+
+/* Form field styles with better accessibility */
+.form-field {
+  @apply flex flex-col space-y-2 mb-4;
+}
+
+.form-field label {
+  @apply text-sm font-medium text-foreground;
+}
+
+.form-field .error {
+  @apply text-sm text-destructive mt-1;
+}
+
+/* Accessible tooltips */
+.tooltip {
+  @apply relative;
+}
+
+.tooltip::before {
+  @apply absolute hidden px-2 py-1 text-xs bg-popover text-popover-foreground 
+    rounded-md shadow-md whitespace-nowrap z-50;
+  content: attr(data-tooltip);
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.tooltip:hover::before,
+.tooltip:focus::before,
+.tooltip:focus-within::before {
+  @apply block;
+}
+
+/* Link styles with enhanced focus states */
+.nav-link {
+  @apply relative transition-colors focus-visible:outline-none;
+}
+
+.nav-link::after {
+  @apply absolute left-0 bottom-0 w-0 h-0.5 bg-primary transition-all duration-300;
+  content: "";
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  @apply w-full;
+}
+
+.nav-link.active::after {
+  @apply w-full;
+}
+
+/* Print-friendly styles */
+@media print {
+  body {
+    @apply text-black bg-white;
+    font-family: serif;
+  }
+  
+  .no-print {
+    display: none;
+  }
+  
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8rem;
+    font-style: italic;
+  }
 }
