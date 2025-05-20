@@ -35,8 +35,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       // Render fallback UI
       if (this.props.fallback) {
         if (typeof this.props.fallback === 'function' && this.state.error) {
-          // Use createElement instead of directly calling the function
-          return (this.props.fallback as Function)(this.state.error);
+          // Properly render the function result as JSX
+          return React.createElement(
+            React.Fragment, 
+            null, 
+            (this.props.fallback as (error: Error) => ReactNode)(this.state.error)
+          );
         }
         return this.props.fallback;
       }
