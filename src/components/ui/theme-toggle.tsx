@@ -23,6 +23,8 @@ export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
   const [mounted, setMounted] = React.useState(false)
   const { t } = useTranslation()
   const { toggleHighContrast, preferences } = useAccessibility();
+  const dropdownRef = React.useRef<HTMLDivElement>(null);
+  const buttonRef = React.useRef<HTMLButtonElement>(null);
   
   // Get current theme icon
   const getThemeIcon = () => {
@@ -37,6 +39,13 @@ export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
     }
     
     return <Monitor className="h-[1.2rem] w-[1.2rem] transition-transform duration-500" aria-hidden="true" />;
+  };
+
+  // Handle keyboard interactions
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      buttonRef.current?.focus();
+    }
   };
 
   // Prevent hydration mismatch by only showing after mount
@@ -64,18 +73,26 @@ export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button 
+          ref={buttonRef}
           variant="ghost" 
           size="icon"
           aria-label={t('common.theme.change')}
           title={t('common.theme.current', { theme: theme || 'system' })}
           data-testid="theme-toggle"
-          className="rounded-full hover:bg-secondary/80 transition-all duration-300 fine-glow"
+          className="rounded-full hover:bg-secondary/80 transition-all duration-300 fine-glow focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
           {getThemeIcon()}
           <span className="sr-only">{t('common.theme.change')}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[200px] p-2 backdrop-blur-md bg-card/90 border border-border/40">
+      <DropdownMenuContent 
+        ref={dropdownRef}
+        align="end" 
+        className="min-w-[200px] p-2 backdrop-blur-md bg-card/90 border border-border/40"
+        onKeyDown={handleKeyDown}
+        onEscapeKeyDown={() => buttonRef.current?.focus()}
+        onInteractOutside={() => buttonRef.current?.focus()}
+      >
         <DropdownMenuItem 
           onClick={() => {
             setTheme("light");
@@ -83,7 +100,7 @@ export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
           }}
           aria-selected={theme === 'light'}
           data-testid="theme-light"
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors focus:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Sun className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.light')}</span>
@@ -95,7 +112,7 @@ export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
           }}
           aria-selected={theme === 'dark'}
           data-testid="theme-dark"
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors focus:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Moon className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.dark')}</span>
@@ -107,7 +124,7 @@ export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
           }}
           aria-selected={theme === 'system'}
           data-testid="theme-system"
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors focus:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
         >
           <Monitor className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.theme.system')}</span>
@@ -115,7 +132,7 @@ export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
         <DropdownMenuSeparator className="my-2 bg-border/50" />
         <DropdownMenuItem 
           onClick={toggleHighContrast}
-          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
+          className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors focus:bg-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
           data-testid="accessibility-contrast"
           aria-pressed={preferences.highContrast}
         >
