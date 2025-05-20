@@ -13,6 +13,7 @@ import { SkipLink } from "@/components/accessibility/SkipLink";
 import '@/i18n'; // Import i18n initialization
 
 import Index from "./pages/Index";
+import LandingPage from "./pages/LandingPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -48,7 +49,8 @@ const App: React.FC = () => {
                   <Sonner />
                   <BrowserRouter>
                     <Routes>
-                      <Route path="/" element={<Index />} />
+                      <Route path="/" element={<LandingPage />} />
+                      <Route path="/home" element={<Index />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
                       
