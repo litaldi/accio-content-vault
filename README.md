@@ -5,7 +5,7 @@ Accio is a modern web application designed to help users save, organize, and ret
 
 ![Accio](https://lovable.dev/opengraph-image-p98pqg.png)
 
-## Features
+## 🌟 Features
 
 - **Content Saving**: Easily save articles, web pages, and other online content with a single click
 - **AI-Powered Organization**: Automatically tag and categorize content using semantic analysis
@@ -13,19 +13,22 @@ Accio is a modern web application designed to help users save, organize, and ret
 - **Collections**: Organize saved content into custom collections for better management
 - **Responsive Design**: Access your content from any device with a fully responsive interface
 - **Dark Mode**: Toggle between light and dark themes for comfortable reading in any environment
+- **Accessibility**: WCAG 2.1 AA compliant with full keyboard navigation and screen reader support
+- **Internationalization**: Support for multiple languages and RTL layouts
+- **Security**: Input sanitization, CSRF protection, and secure authentication flows
 
-## Installation
+## 📋 Requirements
 
-### Prerequisites
-
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - npm or yarn
 
-### Local Development Setup
+## 🚀 Quick Start
+
+### Local Development
 
 1. Clone the repository:
    ```bash
-   git clone <your-repository-url>
+   git clone <repository-url>
    cd accio
    ```
 
@@ -43,94 +46,133 @@ Accio is a modern web application designed to help users save, organize, and ret
    yarn dev
    ```
 
-4. Open your browser and navigate to `http://localhost:8080`
+4. Open your browser and navigate to `http://localhost:5173`
 
-## Project Structure
+## 🏗️ Project Structure
 
 ```
 accio/
 ├── public/            # Static files
 ├── src/               # Source code
 │   ├── components/    # Reusable UI components
+│   │   ├── ui/        # Core UI components based on shadcn/ui
+│   │   └── ...        # Feature-specific components
 │   ├── contexts/      # React contexts for state management
 │   ├── hooks/         # Custom React hooks
-│   ├── integrations/  # Third-party integrations
 │   ├── lib/           # Utility libraries
 │   ├── pages/         # Page components
 │   ├── services/      # API services
 │   └── types/         # TypeScript type definitions
-├── supabase/          # Supabase configuration
+├── tests/             # Test files
 └── ...
 ```
 
-## Technologies Used
+## 🔧 Technologies
 
 - **Framework**: React with TypeScript
 - **Build Tool**: Vite
 - **UI Components**: shadcn/ui (built on Radix UI)
 - **Styling**: Tailwind CSS
-- **Backend**: Supabase (authentication, database, storage)
-- **State Management**: React Context API, React Query
+- **State Management**: React Context API with React Query
 - **Routing**: React Router
 - **Icons**: Lucide React
+- **Internationalization**: i18next
+- **Testing**: Jest with Testing Library
 
-## Usage
+## 🔐 Environment Variables
+
+For local development and production, the following environment variables are needed:
+
+```
+VITE_SUPABASE_URL=<your-supabase-url>
+VITE_SUPABASE_ANON_KEY=<your-supabase-anon-key>
+```
+
+## 📱 Features
 
 ### Authentication
 
-The application offers user registration and login functionality. To use personalized features, users need to create an account and log in.
+The application offers user registration and login functionality:
 
-### Saving Content
+1. Create an account with email/password
+2. Log in to access personalized features
+3. Reset password if forgotten
 
-1. Navigate to the "Save" page
-2. Enter a URL to save
-3. Review the auto-generated tags and summary
-4. Add your own tags if needed
-5. Save the content to your library
+### Content Management
 
-### Searching and Organizing
+#### Saving Content
 
-- Use the search bar to find saved content
-- Enable semantic search for concept-based searching
-- Organize content into collections
-- View analytics about your saved content
+1. Enter a URL to save content from the web
+2. Upload PDFs or images directly
+3. Review auto-generated tags and summary
+4. Add custom tags and notes
 
-## Development
+#### Search & Organization
+
+- Full-text search across all saved content
+- Semantic search for concept-based queries
+- Filter by tags, date, and content type
+- Create collections to group related content
+
+### Settings & Preferences
+
+- Toggle between light and dark themes
+- Change language settings
+- Customize accessibility options
+- Manage account details
+
+## 👨‍💻 Development
+
+### Code Style
+
+This project follows established React and TypeScript best practices:
+
+- Functional components with hooks
+- Strong typing with TypeScript
+- Clean, modular code structure
+- Component-driven design
 
 ### Adding New Features
 
-Follow these guidelines when adding new features:
+Follow these steps when adding new features:
 
-1. Create modular components in the `components` directory
+1. Create modular components in the appropriate directory
 2. Use TypeScript for type safety
-3. Style with Tailwind CSS
-4. Add new pages in the `pages` directory
-5. Update routes in `App.tsx`
+3. Style with Tailwind CSS following design patterns
+4. Add tests for new functionality
+5. Update documentation as needed
 
-### Environment Variables
+### Testing
 
-The application uses the following environment variables:
+Run the test suite with:
 
-- `VITE_SUPABASE_URL`: Supabase project URL
-- `VITE_SUPABASE_ANON_KEY`: Supabase anonymous key
+```bash
+npm run test
+# or
+yarn test
+```
 
-## Deployment
+## 🚢 Deployment
 
-The application can be deployed using the Lovable platform:
+### Build for Production
 
-1. Navigate to your project in Lovable
-2. Click on Share -> Publish
-3. Follow the deployment instructions
+```bash
+npm run build
+# or
+yarn build
+```
 
-## Contributing
+The output will be in the `dist` directory, ready for deployment.
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## 🤝 Contributing
 
-## License
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 📄 License
 
-## Acknowledgments
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
 
 - Built with [Lovable](https://lovable.dev)
 - UI components from [shadcn/ui](https://ui.shadcn.com/)

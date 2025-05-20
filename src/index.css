@@ -2,7 +2,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
+@import './styles/a11y.css';
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -10,101 +12,60 @@
 
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
- 
+
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
- 
-    --primary: 221.2 83.2% 53.3%;
+
+    --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
- 
+
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
- 
+
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
- 
+
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
- 
+
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
- 
+    --ring: 222.2 84% 4.9%;
+
     --radius: 0.5rem;
   }
- 
+
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
- 
+
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
- 
+
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
- 
-    --primary: 217.2 91.2% 59.8%;
+
+    --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
- 
+
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
- 
+
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
- 
+
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
- 
-    --destructive: 0 62.8% 60.6%;
+
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
- 
+
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.5% 60%;
-  }
-  
-  /* High contrast mode - with improved contrast ratios */
-  .high-contrast.dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 0%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 0%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 60 100% 50%;
-    --primary-foreground: 0 0% 0%;
-    --secondary: 240 100% 50%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 100%;
-    --accent: 120 100% 25%;
-    --accent-foreground: 0 0% 100%;
-    --border: 0 0% 50%;
-    --input: 0 0% 50%;
-    --ring: 60 100% 50%;
-  }
-
-  .high-contrast:not(.dark) {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 240 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 95%;
-    --muted-foreground: 0 0% 0%;
-    --accent: 120 100% 25%;
-    --accent-foreground: 0 0% 100%;
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 240 100% 50%;
+    --ring: 212.7 26.8% 83.9%;
   }
 }
 
@@ -112,337 +73,75 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Focus styles for better visibility and accessibility */
-  :focus-visible {
+  /* Improve focus styles */
+  *:focus-visible {
     @apply outline-none ring-2 ring-primary ring-offset-2;
   }
   
-  /* RTL support for controls */
-  [dir="rtl"] .rtl-flip {
-    @apply rotate-180;
-  }
-  
-  [dir="rtl"] .rtl-mirror {
-    @apply -scale-x-100;
-  }
-  
-  /* Special focus styles for keyboard users */
-  .user-is-tabbing *:focus {
-    @apply outline-none ring-2 ring-primary ring-offset-2;
-  }
-  
-  /* Accessible but invisible content */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-  
-  /* Make screen reader only content visible when focused */
-  .sr-only-focusable:not(:focus) {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
-  }
-  
-  .sr-only-focusable:focus {
-    position: static;
-    width: auto;
-    height: auto;
-    padding: 0;
-    margin: 0;
-    overflow: visible;
-    clip: auto;
-    white-space: normal;
-  }
-  
-  /* Improved heading hierarchy and text spacing for readability */
   h1, h2, h3, h4, h5, h6 {
-    @apply scroll-m-20 font-medium tracking-tight;
+    @apply scroll-m-20 font-semibold;
   }
   
   h1 {
-    @apply text-4xl font-extrabold lg:text-5xl;
+    @apply text-4xl md:text-5xl mb-6;
   }
   
   h2 {
-    @apply text-3xl font-bold;
+    @apply text-3xl md:text-4xl mb-4;
   }
   
   h3 {
-    @apply text-2xl font-semibold;
-  }
-  
-  h4 {
-    @apply text-xl font-semibold;
+    @apply text-2xl md:text-3xl mb-3;
   }
   
   p {
     @apply leading-7;
   }
   
-  /* Accessible link styles with underline for better visibility */
-  a:not([class]) {
-    @apply underline underline-offset-4 decoration-primary/50 hover:decoration-primary;
+  /* Improve code block styling */
+  code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm;
   }
   
-  /* Readable font enhancements */
-  .readable-font {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    @apply tracking-wide leading-relaxed;
+  /* Improve blockquote styling */
+  blockquote {
+    @apply border-l-4 border-border pl-4 italic;
   }
-}
-
-/* Reduced animations */
-.reduce-animations * {
-  animation: none !important;
-  transition: none !important;
-  transition-property: none !important;
-}
-
-/* Hero section gradient styles */
-.hero-gradient {
-  background: linear-gradient(to right, hsl(221.2, 83.2%, 53.3%), hsl(215, 80%, 40%));
-}
-
-[dir="rtl"] .hero-gradient {
-  background: linear-gradient(to left, hsl(221.2, 83.2%, 53.3%), hsl(215, 80%, 40%));
-}
-
-/* Card hover animation */
-.card-hover {
-  @apply transition-all duration-300;
-}
-
-.card-hover:hover {
-  @apply translate-y-[-2px] shadow-md;
-}
-
-/* Interactive button */
-.interactive {
-  @apply transition-transform duration-300 active:scale-95;
-}
-
-.btn-with-icon {
-  @apply inline-flex items-center space-x-2;
-}
-
-[dir="rtl"] .btn-with-icon {
-  @apply space-x-0 space-x-reverse;
 }
 
 /* Animation classes */
+@layer components {
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  .animate-slide-in {
+    animation: slideIn 0.3s ease-out forwards;
+  }
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-@keyframes fadeUp {
-  from { 
-    opacity: 0;
+@keyframes slideIn {
+  from {
     transform: translateY(20px);
+    opacity: 0;
   }
-  to { 
-    opacity: 1;
+  to {
     transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from { 
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to { 
     opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-[dir="rtl"] .animate-slide-in-left {
-  animation: slideInRight 0.4s ease-out;
-}
-
-[dir="ltr"] .animate-slide-in-left {
-  animation: slideInLeft 0.4s ease-out;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.animate-fade-up {
-  animation: fadeUp 0.4s ease-out;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.4s ease-out;
-}
-
-/* Loading indicators */
-.loading-spinner {
-  @apply animate-spin rounded-full border-4 border-muted border-t-primary h-8 w-8;
-}
-
-/* Transitions */
-.transition-hover {
-  @apply transition-all duration-300;
-}
-
-/* Accessibility improvements */
-.sr-only-focusable:not(:focus) {
-  @apply sr-only;
-}
-
-.sr-only-focusable:focus {
-  @apply not-sr-only static p-2 bg-background text-foreground;
-}
-
-/* Improved dropdown menu for better accessibility */
-.dropdown-menu:focus-within {
-  @apply outline-none ring-2 ring-primary ring-offset-2;
-}
-
-/* Z-index utility classes for proper layering */
-.z-dropdown {
-  z-index: 50;
-}
-
-.z-modal {
-  z-index: 100;
-}
-
-.z-toast {
-  z-index: 200;
-}
-
-/* Skip link styles */
-.skip-link {
-  @apply sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 
-    focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground
-    focus:shadow-lg focus:rounded-md focus:no-underline;
-}
-
-/* Form field styles with better accessibility */
-.form-field {
-  @apply flex flex-col space-y-2 mb-4;
-}
-
-.form-field label {
-  @apply text-sm font-medium text-foreground;
-}
-
-.form-field .error {
-  @apply text-sm text-destructive mt-1;
-}
-
-/* Accessible tooltips */
-.tooltip {
-  @apply relative;
-}
-
-.tooltip::before {
-  @apply absolute hidden px-2 py-1 text-xs bg-popover text-popover-foreground 
-    rounded-md shadow-md whitespace-nowrap z-50;
-  content: attr(data-tooltip);
-  bottom: 120%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.tooltip:hover::before,
-.tooltip:focus::before,
-.tooltip:focus-within::before {
-  @apply block;
-}
-
-/* Link styles with enhanced focus states */
-.nav-link {
-  @apply relative transition-colors focus-visible:outline-none;
-}
-
-.nav-link::after {
-  @apply absolute left-0 bottom-0 w-0 h-0.5 bg-primary transition-all duration-300;
-  content: "";
-}
-
-.nav-link:hover::after,
-.nav-link:focus-visible::after {
-  @apply w-full;
-}
-
-.nav-link.active::after {
-  @apply w-full;
-}
-
-/* Print-friendly styles */
-@media print {
-  body {
-    @apply text-black bg-white;
-    font-family: serif;
-  }
-  
-  .no-print {
-    display: none;
-  }
-  
-  a::after {
-    content: " (" attr(href) ")";
-    font-size: 0.8rem;
-    font-style: italic;
   }
 }

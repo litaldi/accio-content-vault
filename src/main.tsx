@@ -3,6 +3,10 @@ import React from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import { useErrorBoundary } from './hooks/useErrorBoundary';
+
+// Get ErrorBoundary component
+const { ErrorBoundary } = useErrorBoundary();
 
 // Set up any global handlers or polyfills for accessibility
 if (typeof window !== 'undefined') {
@@ -22,15 +26,14 @@ if (typeof window !== 'undefined') {
   // Add focus-visible polyfill for browsers that don't support it
   if (!('focusVisible' in document.documentElement.style)) {
     // Using dynamic import with proper error handling
-    import('focus-visible')
-      .then(() => {
-        console.log('Focus-visible polyfill loaded');
-      })
-      .catch(error => {
-        console.warn('Failed to load focus-visible polyfill:', error);
-        // Apply alternative focus styles as fallback
-        document.documentElement.classList.add('focus-fallback');
-      });
+    try {
+      // This is just a fallback message, we don't actually have focus-visible installed
+      console.log('Browser doesn\'t support focus-visible. Using fallback focus styles.');
+      // Apply alternative focus styles as fallback
+      document.documentElement.classList.add('focus-fallback');
+    } catch (error) {
+      console.warn('Failed to apply focus styles:', error);
+    }
   }
   
   // Add skip link handler for better keyboard navigation
@@ -70,8 +73,11 @@ if (typeof window !== 'undefined') {
   });
 }
 
+// Create root with error boundary
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>
 );
