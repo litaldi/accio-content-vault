@@ -13,96 +13,78 @@ export default {
 	theme: {
 		container: {
 			center: true,
-			padding: {
-				DEFAULT: "1rem",
-				sm: "1.5rem",
-				md: "2rem",
-			},
+			padding: '2rem',
 			screens: {
-				sm: "640px",
-				md: "768px", 
-				lg: "1024px",
-				xl: "1280px",
-				"2xl": "1400px",
+				'2xl': '1400px'
 			}
 		},
 		extend: {
 			colors: {
-				border: "hsl(var(--border))",
-				input: "hsl(var(--input))",
-				ring: "hsl(var(--ring))",
-				background: "hsl(var(--background))",
-				foreground: "hsl(var(--foreground))",
+				border: 'hsl(var(--border))',
+				input: 'hsl(var(--input))',
+				ring: 'hsl(var(--ring))',
+				background: 'hsl(var(--background))',
+				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: "hsl(var(--primary))",
-					foreground: "hsl(var(--primary-foreground))"
+					DEFAULT: 'hsl(var(--primary))',
+					foreground: 'hsl(var(--primary-foreground))'
 				},
 				secondary: {
-					DEFAULT: "hsl(var(--secondary))",
-					foreground: "hsl(var(--secondary-foreground))"
+					DEFAULT: 'hsl(var(--secondary))',
+					foreground: 'hsl(var(--secondary-foreground))'
 				},
 				destructive: {
-					DEFAULT: "hsl(var(--destructive))",
-					foreground: "hsl(var(--destructive-foreground))"
+					DEFAULT: 'hsl(var(--destructive))',
+					foreground: 'hsl(var(--destructive-foreground))'
 				},
 				muted: {
-					DEFAULT: "hsl(var(--muted))",
-					foreground: "hsl(var(--muted-foreground))"
+					DEFAULT: 'hsl(var(--muted))',
+					foreground: 'hsl(var(--muted-foreground))'
 				},
 				accent: {
-					DEFAULT: "hsl(var(--accent))",
-					foreground: "hsl(var(--accent-foreground))"
+					DEFAULT: 'hsl(var(--accent))',
+					foreground: 'hsl(var(--accent-foreground))'
 				},
 				popover: {
-					DEFAULT: "hsl(var(--popover))",
-					foreground: "hsl(var(--popover-foreground))"
+					DEFAULT: 'hsl(var(--popover))',
+					foreground: 'hsl(var(--popover-foreground))'
 				},
 				card: {
-					DEFAULT: "hsl(var(--card))",
-					foreground: "hsl(var(--card-foreground))"
+					DEFAULT: 'hsl(var(--card))',
+					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Fine.dev inspired specific colors
-				fine: {
-					'black': '#0A0A0A',
-					'gray-100': '#F6F6F7',
-					'gray-200': '#F1F0FB',
-					'gray-300': '#C8C8C9',
-					'gray-400': '#9F9EA1',
-					'gray-500': '#8E9196',
-					'purple': '#9b87f5',
-					'purple-dark': '#8B5CF6',
-					'pink': '#D946EF',
-					'cyan': '#33C3F0',
-				},
-			},
-			spacing: {
-				'4.5': '1.125rem',
-				'5.5': '1.375rem',
-				'6.5': '1.625rem',
-				'7.5': '1.875rem',
-				'8.5': '2.125rem',
-				'9.5': '2.375rem',
+				sidebar: {
+					DEFAULT: 'hsl(var(--sidebar-background))',
+					foreground: 'hsl(var(--sidebar-foreground))',
+					primary: 'hsl(var(--sidebar-primary))',
+					'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+					accent: 'hsl(var(--sidebar-accent))',
+					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+					border: 'hsl(var(--sidebar-border))',
+					ring: 'hsl(var(--sidebar-ring))'
+				}
 			},
 			borderRadius: {
-				lg: "var(--radius)",
-				md: "calc(var(--radius) - 2px)",
-				sm: "calc(var(--radius) - 4px)"
-			},
-			boxShadow: {
-				'subtle': '0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05)',
-				'elevation-1': '0 1px 2px rgba(16, 24, 40, 0.05)',
-				'elevation-2': '0 1px 3px rgba(16, 24, 40, 0.1), 0 1px 2px rgba(16, 24, 40, 0.06)',
-				'elevation-3': '0 4px 8px -2px rgba(16, 24, 40, 0.1), 0 2px 4px -2px rgba(16, 24, 40, 0.06)',
-				'fine': '0 8px 32px -4px rgba(0, 0, 0, 0.1), 0 4px 16px -4px rgba(0, 0, 0, 0.06)'
+				lg: 'var(--radius)',
+				md: 'calc(var(--radius) - 2px)',
+				sm: 'calc(var(--radius) - 4px)'
 			},
 			keyframes: {
 				'accordion-down': {
-					from: { height: '0' },
-					to: { height: 'var(--radix-accordion-content-height)' }
+					from: {
+						height: '0'
+					},
+					to: {
+						height: 'var(--radix-accordion-content-height)'
+					}
 				},
 				'accordion-up': {
-					from: { height: 'var(--radix-accordion-content-height)' },
-					to: { height: '0' }
+					from: {
+						height: 'var(--radix-accordion-content-height)'
+					},
+					to: {
+						height: '0'
+					}
 				},
 				fadeIn: {
 					from: { opacity: '0' },
@@ -151,25 +133,6 @@ export default {
 					to: {
 						transform: 'rotate(360deg)'
 					}
-				},
-				// Fine.dev inspired animations
-				glow: {
-					'0%, 100%': {
-						opacity: '0.5',
-						transform: 'scale(1)'
-					},
-					'50%': {
-						opacity: '1',
-						transform: 'scale(1.05)'
-					}
-				},
-				float: {
-					'0%, 100%': {
-						transform: 'translateY(0)'
-					},
-					'50%': {
-						transform: 'translateY(-10px)'
-					}
 				}
 			},
 			animation: {
@@ -180,65 +143,12 @@ export default {
 				'slide-right': 'slideRight 0.4s ease-out forwards',
 				'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
 				'shimmer': 'shimmer 2s linear infinite',
-				'spin-slow': 'spin 3s linear infinite',
-				// Fine.dev inspired animations
-				'glow': 'glow 5s ease-in-out infinite',
-				'float': 'float 6s ease-in-out infinite'
+				'spin-slow': 'spin 3s linear infinite'
 			},
 			transitionProperty: {
 				'height': 'height',
-				'spacing': 'margin, padding',
-				'width': 'width',
-				'max-height': 'max-height',
-			},
-			typography: {
-				DEFAULT: {
-					css: {
-						maxWidth: '72ch',
-						color: 'hsl(var(--foreground))',
-						'[class~="lead"]': {
-							color: 'hsl(var(--muted-foreground))',
-						},
-						a: {
-							color: 'hsl(var(--primary))',
-							textDecoration: 'underline',
-							textUnderlineOffset: '4px',
-							fontWeight: '500',
-						},
-						'a:hover': {
-							color: 'hsl(var(--primary)/0.9)',
-						},
-						h1: {
-							color: 'hsl(var(--foreground))',
-							fontWeight: '700',
-						},
-						h2: {
-							color: 'hsl(var(--foreground))',
-							fontWeight: '600',
-						},
-						h3: {
-							color: 'hsl(var(--foreground))',
-							fontWeight: '600',
-						},
-						h4: {
-							color: 'hsl(var(--foreground))',
-							fontWeight: '600',
-						},
-						code: {
-							color: 'hsl(var(--foreground))',
-						},
-						blockquote: {
-							color: 'hsl(var(--foreground)/0.9)',
-							borderLeftColor: 'hsl(var(--border))',
-						},
-					},
-				},
-			},
-			fontFamily: {
-				'sans': ['Inter', 'system-ui', 'sans-serif'],
-				'heading': ['Satoshi', 'Inter', 'system-ui', 'sans-serif'],
-				'mono': ['Fira Code', 'monospace'],
-			},
+				'spacing': 'margin, padding'
+			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],

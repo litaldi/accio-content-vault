@@ -12,7 +12,6 @@ interface AuthContextType {
   signUp: (email: string, password: string, externalContentConsent: boolean) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  refreshSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -24,47 +23,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isConfigured] = useState(isSupabaseConfigured());
   const { toast } = useToast();
 
-  // Function to refresh the session
-  const refreshSession = async () => {
-    try {
-      const { data, error } = await supabase.auth.refreshSession();
-      if (error) throw error;
-      setSession(data.session);
-      setUser(data.session?.user ?? null);
-    } catch (error) {
-      console.error('Error refreshing session:', error);
-    }
-  };
-
   useEffect(() => {
     if (!isConfigured) {
       setIsLoading(false);
       return;
     }
 
-    // Set up the auth state change listener first
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event);
-      
-      // Update state synchronously
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
-      
-      // If user signs in or token refreshes, we might want to fetch additional data
-      // But don't call other Supabase functions directly inside this callback!
-      if (session?.user && (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED')) {
-        // Use setTimeout to avoid potential deadlocks with Supabase client
-        setTimeout(() => {
-          console.log('Fetching user profile data...');
-          // You could call a function here to fetch user profile data
-          // But do it in a setTimeout to avoid potential deadlocks
-        }, 0);
-      }
     });
 
-    // Then get the initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log('Auth state changed:', event);
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
@@ -89,25 +63,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        options: {
-          data: {
-            external_content_consent: externalContentConsent,
-          }
-        }
       });
 
       if (error) throw error;
 
       if (data.user) {
-        toast({
-          title: 'Registration successful!',
-          description: 'Welcome to Accio! Your account has been created.',
-        });
-      } else {
-        toast({
-          title: 'Check your email',
-          description: 'A confirmation link has been sent to your email address.',
-        });
+        // Create user profile with consent preference
+        const { error: profileError } = await supabase
+          .from('user_profiles')
+          .insert({
+            user_id: data.user.id,
+            external_content_consent: externalContentConsent,
+            subscription_tier: 'free',
+          });
+
+        if (profileError) {
+          console.error('Error creating user profile:', profileError);
+          toast({
+            title: 'Profile setup incomplete',
+            description: 'Your account was created but profile preferences could not be saved.',
+            variant: 'destructive',
+          });
+        } else {
+          toast({
+            title: 'Registration successful!',
+            description: 'Welcome to Accio! Your account has been created.',
+          });
+        }
       }
     } catch (error) {
       const authError = error as AuthError;
@@ -198,7 +180,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signUp,
     signIn,
     signOut,
-    refreshSession,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

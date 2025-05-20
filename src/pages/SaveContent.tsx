@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
@@ -8,14 +7,11 @@ import FileUploadForm from '@/components/FileUploadForm';
 import { SavedContent, Tag } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link, FileText } from 'lucide-react';
-import TagConfirmation from '@/components/TagConfirmation';
 
 const SaveContent = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("url");
-  const [suggestedTag, setSuggestedTag] = useState<Tag | null>(null);
-  const [showTagConfirmation, setShowTagConfirmation] = useState<boolean>(false);
   
   // This would be replaced with actual authentication check
   const isLoggedIn = true;
@@ -34,14 +30,8 @@ const SaveContent = () => {
         description: 'Your content has been added to your collection',
       });
       
-      // If tags were generated, show the confirmation dialog
-      if (tags && tags.length > 0) {
-        setSuggestedTag(tags[0]);
-        setShowTagConfirmation(true);
-      } else {
-        // If no tags, redirect to dashboard after saving
-        navigate('/dashboard');
-      }
+      // Redirect to dashboard after saving
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error saving content:', error);
       toast({
@@ -49,25 +39,6 @@ const SaveContent = () => {
         description: 'Failed to save your content. Please try again.',
         variant: 'destructive',
       });
-    }
-  };
-
-  const handleTagConfirmation = async (confirmed: boolean) => {
-    if (suggestedTag) {
-      // In a real app, this would update the tag's confirmed status in the database
-      console.log('Tag confirmation:', suggestedTag.name, confirmed ? 'accurate' : 'inaccurate');
-      
-      toast({
-        title: confirmed ? 'Tag confirmed' : 'Tag rejected',
-        description: confirmed 
-          ? `Thank you for confirming that "${suggestedTag.name}" is accurate.` 
-          : `Thank you for the feedback. We'll improve our tagging for similar content.`,
-      });
-      
-      // Close dialog and redirect to dashboard
-      setShowTagConfirmation(false);
-      setSuggestedTag(null);
-      navigate('/dashboard');
     }
   };
 
@@ -89,16 +60,8 @@ const SaveContent = () => {
         description: 'Your file has been added to your collection',
       });
       
-      // For files, we would typically generate tags as well
-      // For demo purposes, let's create a mock tag
-      const mockTag: Tag = {
-        id: 'file-tag-1',
-        name: fileDetails.file_type === 'pdf' ? 'document' : 'image',
-        auto_generated: true
-      };
-      
-      setSuggestedTag(mockTag);
-      setShowTagConfirmation(true);
+      // Redirect to dashboard after upload
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error processing file:', error);
       toast({
@@ -119,7 +82,7 @@ const SaveContent = () => {
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       
       <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center" id="page-title">Save New Content</h1>
+        <h1 className="text-3xl font-bold mb-8 text-center">Save New Content</h1>
         
         <Tabs defaultValue="url" value={activeTab} onValueChange={setActiveTab} className="w-full max-w-xl mx-auto mb-8">
           <TabsList className="grid w-full grid-cols-2">
@@ -160,15 +123,6 @@ const SaveContent = () => {
           </div>
         </div>
       </main>
-      
-      {suggestedTag && (
-        <TagConfirmation
-          tag={suggestedTag}
-          isOpen={showTagConfirmation}
-          onConfirm={handleTagConfirmation}
-          onClose={() => setShowTagConfirmation(false)}
-        />
-      )}
     </div>
   );
 };

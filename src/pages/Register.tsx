@@ -26,17 +26,11 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import Navbar from '@/components/Navbar';
-import { Eye, EyeOff } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
-  password: z.string()
-    .min(8, { message: 'Password must be at least 8 characters' })
-    .regex(/[A-Z]/, { message: 'Password must include at least one uppercase letter' })
-    .regex(/[a-z]/, { message: 'Password must include at least one lowercase letter' })
-    .regex(/[0-9]/, { message: 'Password must include at least one number' }),
+  password: z.string().min(8, { message: 'Password must be at least 8 characters' }),
   confirmPassword: z.string(),
   termsAccepted: z.boolean().refine(val => val === true, {
     message: 'You must accept the terms to continue',
@@ -49,9 +43,7 @@ const formSchema = z.object({
 const Register = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { signUp, user, isLoading, isConfigured } = useAuth();
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { signUp, user, isLoading } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -74,28 +66,12 @@ const Register = () => {
     await signUp(values.email, values.password, values.termsAccepted);
   };
 
-  if (!isConfigured) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar isLoggedIn={false} />
-        
-        <div className="flex-grow flex items-center justify-center p-4">
-          <Alert className="max-w-md">
-            <AlertDescription>
-              Supabase is not configured. Please set up your Supabase credentials to enable authentication.
-            </AlertDescription>
-          </Alert>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar isLoggedIn={!!user} />
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md animate-fade-up shadow-md">
+        <Card className="w-full max-w-md animate-fade-up">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
             <CardDescription className="text-center">
@@ -117,8 +93,6 @@ const Register = () => {
                           type="email" 
                           disabled={isLoading} 
                           {...field} 
-                          aria-required="true"
-                          autoComplete="email"
                         />
                       </FormControl>
                       <FormMessage />
@@ -132,37 +106,13 @@ const Register = () => {
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input 
-                            placeholder="••••••••" 
-                            type={showPassword ? "text" : "password"}
-                            disabled={isLoading} 
-                            {...field} 
-                            aria-required="true"
-                            autoComplete="new-password"
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setShowPassword(!showPassword)}
-                            className="absolute right-0 top-0 h-full px-3"
-                            tabIndex={-1}
-                          >
-                            {showPassword ? (
-                              <EyeOff className="h-4 w-4" aria-hidden="true" />
-                            ) : (
-                              <Eye className="h-4 w-4" aria-hidden="true" />
-                            )}
-                            <span className="sr-only">
-                              {showPassword ? "Hide password" : "Show password"}
-                            </span>
-                          </Button>
-                        </div>
+                        <Input 
+                          placeholder="••••••••" 
+                          type="password" 
+                          disabled={isLoading} 
+                          {...field} 
+                        />
                       </FormControl>
-                      <FormDescription className="text-xs">
-                        Password must be at least 8 characters with uppercase, lowercase and numbers
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -174,33 +124,12 @@ const Register = () => {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <div className="relative">
-                          <Input 
-                            placeholder="••••••••" 
-                            type={showConfirmPassword ? "text" : "password"}
-                            disabled={isLoading} 
-                            {...field} 
-                            aria-required="true"
-                            autoComplete="new-password"
-                          />
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                            className="absolute right-0 top-0 h-full px-3"
-                            tabIndex={-1}
-                          >
-                            {showConfirmPassword ? (
-                              <EyeOff className="h-4 w-4" aria-hidden="true" />
-                            ) : (
-                              <Eye className="h-4 w-4" aria-hidden="true" />
-                            )}
-                            <span className="sr-only">
-                              {showConfirmPassword ? "Hide password" : "Show password"}
-                            </span>
-                          </Button>
-                        </div>
+                        <Input 
+                          placeholder="••••••••" 
+                          type="password" 
+                          disabled={isLoading} 
+                          {...field} 
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -216,11 +145,10 @@ const Register = () => {
                           checked={field.value}
                           onCheckedChange={field.onChange}
                           disabled={isLoading}
-                          id="terms"
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
-                        <FormLabel htmlFor="terms">
+                        <FormLabel>
                           I agree to the terms and consent to saving content from external sources
                         </FormLabel>
                         <FormDescription>
@@ -231,12 +159,7 @@ const Register = () => {
                     </FormItem>
                   )}
                 />
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={isLoading}
-                  aria-busy={isLoading}
-                >
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? 'Creating account...' : 'Register'}
                 </Button>
               </form>
@@ -245,7 +168,7 @@ const Register = () => {
           <CardFooter className="flex flex-col space-y-2">
             <div className="text-center text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary hover:underline font-medium">
+              <Link to="/login" className="text-primary hover:underline">
                 Login
               </Link>
             </div>

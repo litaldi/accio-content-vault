@@ -26,7 +26,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Navbar from '@/components/Navbar';
-import { ExternalLink } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -73,18 +72,10 @@ const Login = () => {
                 Please click the green Supabase button in the top-right corner of the Lovable 
                 interface and follow the connection instructions.
               </p>
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={() => window.open('https://docs.lovable.dev/integrations/supabase/', '_blank')}
-              >
-                <ExternalLink size={16} />
-                <span>Supabase integration docs</span>
-              </Button>
             </AlertDescription>
           </Alert>
         ) : (
-          <Card className="w-full max-w-md animate-fade-up shadow-md">
+          <Card className="w-full max-w-md animate-fade-up">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
               <CardDescription className="text-center">
@@ -106,8 +97,6 @@ const Login = () => {
                             type="email" 
                             disabled={isLoading} 
                             {...field} 
-                            aria-required="true"
-                            autoComplete="email"
                           />
                         </FormControl>
                         <FormMessage />
@@ -119,33 +108,21 @@ const Login = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex justify-between items-center">
-                          <FormLabel>Password</FormLabel>
-                          <Link to="/forgot-password" className="text-xs text-primary hover:underline" tabIndex={-1}>
-                            Forgot password?
-                          </Link>
-                        </div>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="••••••" 
                             type="password" 
                             disabled={isLoading} 
                             {...field} 
-                            aria-required="true"
-                            autoComplete="current-password"
                           />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button 
-                    type="submit" 
-                    className="w-full" 
-                    disabled={isLoading}
-                    aria-busy={isLoading}
-                  >
-                    {isLoading ? 'Signing in...' : 'Sign In'}
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Logging in...' : 'Login'}
                   </Button>
                 </form>
               </Form>
@@ -153,7 +130,7 @@ const Login = () => {
             <CardFooter className="flex flex-col space-y-2">
               <div className="text-center text-sm text-muted-foreground">
                 Don't have an account?{' '}
-                <Link to="/register" className="text-primary hover:underline font-medium">
+                <Link to="/register" className="text-primary hover:underline">
                   Register
                 </Link>
               </div>
