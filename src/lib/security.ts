@@ -20,79 +20,6 @@ export function sanitizeInput(input: string): string {
 }
 
 /**
- * Sanitizes HTML content with a more permissive approach
- * Use only when you need to allow certain HTML tags
- * @param html HTML content to sanitize
- * @returns Sanitized HTML with safe tags only
- */
-export function sanitizeHTML(html: string): string {
-  if (!html) return '';
-  
-  // Create a DOMParser to parse the HTML
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  
-  // Remove potentially dangerous tags and attributes
-  const dangerousTags = ['script', 'iframe', 'object', 'embed', 'form', 'base', 'link', 'meta'];
-  const dangerousAttrs = [
-    'onerror', 'onload', 'onclick', 'onmouseover', 'onmouseout', 'onkeydown', 'onkeypress',
-    'onkeyup', 'onchange', 'onfocus', 'onblur', 'onsubmit', 'onreset', 'onselect',
-    'javascript:', 'data:', 'vbscript:'
-  ];
-  
-  // Remove dangerous tags
-  dangerousTags.forEach(tag => {
-    const elements = doc.getElementsByTagName(tag);
-    while (elements.length > 0) {
-      elements[0].parentNode?.removeChild(elements[0]);
-    }
-  });
-  
-  // Remove dangerous attributes from all elements
-  const allElements = doc.getElementsByTagName('*');
-  for (let i = 0; i < allElements.length; i++) {
-    const elem = allElements[i];
-    
-    // Remove event handler attributes
-    for (let j = 0; j < elem.attributes.length; j++) {
-      const attr = elem.attributes[j];
-      if (dangerousAttrs.some(dangerous => attr.name.toLowerCase().indexOf(dangerous) > -1)) {
-        elem.removeAttribute(attr.name);
-        j--; // Adjust index since we removed an attribute
-      }
-    }
-    
-    // Sanitize URLs in attributes
-    ['href', 'src', 'background', 'action'].forEach(urlAttr => {
-      if (elem.hasAttribute(urlAttr)) {
-        const url = elem.getAttribute(urlAttr);
-        if (url && (
-          url.toLowerCase().startsWith('javascript:') || 
-          url.toLowerCase().startsWith('data:') ||
-          url.toLowerCase().startsWith('vbscript:')
-        )) {
-          elem.removeAttribute(urlAttr);
-        }
-      }
-    });
-    
-    // Remove style attributes that could contain JavaScript
-    if (elem.hasAttribute('style')) {
-      const style = elem.getAttribute('style');
-      if (style && (
-        style.toLowerCase().includes('expression') || 
-        style.toLowerCase().includes('javascript:') ||
-        style.toLowerCase().includes('behavior:')
-      )) {
-        elem.removeAttribute('style');
-      }
-    }
-  }
-  
-  return doc.body.innerHTML;
-}
-
-/**
  * Validates an email address
  * @param email The email to validate
  * @returns boolean indicating if the email is valid
@@ -121,16 +48,11 @@ export function validatePassword(password: string): { valid: boolean; message?: 
   const hasLowercase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
   
-  if (!hasUppercase) {
-    return { valid: false, message: 'Password must contain at least one uppercase letter' };
-  }
-  
-  if (!hasLowercase) {
-    return { valid: false, message: 'Password must contain at least one lowercase letter' };
-  }
-  
-  if (!hasNumber) {
-    return { valid: false, message: 'Password must contain at least one number' };
+  if (!hasUppercase || !hasLowercase || !hasNumber) {
+    return { 
+      valid: false, 
+      message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' 
+    };
   }
   
   return { valid: true };
@@ -141,25 +63,15 @@ export function validatePassword(password: string): { valid: boolean; message?: 
  * @returns A random string token
  */
 export function generateCSRFToken(): string {
-  return Array.from(
-    new Uint8Array(32),
-    byte => byte.toString(16).padStart(2, '0')
-  ).join('');
-}
-
-/**
- * Detects and blocks common bot patterns
- * Simple bot detection - for more advanced protection, use reCAPTCHA or similar
- * @returns boolean indicating if the current user might be a bot
- */
-export function detectBot(): boolean {
-  if (typeof navigator === 'undefined') return false;
+  // Use crypto API for better randomness when available
+  if (window.crypto && window.crypto.getRandomValues) {
+    return Array.from(
+      window.crypto.getRandomValues(new Uint8Array(16)),
+      byte => byte.toString(16).padStart(2, '0')
+    ).join('');
+  }
   
-  const userAgent = navigator.userAgent.toLowerCase();
-  const botPatterns = [
-    'bot', 'spider', 'crawler', 'scraper', 'wget', 'curl', 
-    'phantom', 'headless', 'selenium', 'puppeteer'
-  ];
-  
-  return botPatterns.some(pattern => userAgent.includes(pattern));
+  // Fallback for older browsers
+  return Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
 }

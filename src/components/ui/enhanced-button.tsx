@@ -62,6 +62,7 @@ const EnhancedButton = React.forwardRef<HTMLButtonElement, EnhancedButtonProps>(
         className={cn(buttonVariants({ variant, size, loading, className }))}
         ref={ref}
         disabled={isDisabled}
+        aria-busy={loading}
         {...props}
       >
         <span className="flex items-center justify-center gap-1.5">

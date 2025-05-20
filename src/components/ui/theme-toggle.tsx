@@ -3,6 +3,7 @@ import * as React from "react"
 import { Moon, Sun, Monitor, Accessibility } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useTranslation } from "react-i18next"
+import { useAccessibility } from "@/contexts/AccessibilityContext"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -13,18 +14,15 @@ import {
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 
-export function ThemeToggle() {
+interface ThemeToggleProps {
+  initialHighContrast?: boolean;
+}
+
+export function ThemeToggle({ initialHighContrast = false }: ThemeToggleProps) {
   const { setTheme, theme, systemTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
   const { t } = useTranslation()
-  
-  // Handle high contrast mode
-  const toggleHighContrast = () => {
-    document.documentElement.classList.toggle('high-contrast');
-    // Store preference in localStorage
-    const isHighContrast = document.documentElement.classList.contains('high-contrast');
-    localStorage.setItem('highContrast', isHighContrast ? 'true' : 'false');
-  }
+  const { toggleHighContrast, preferences } = useAccessibility();
   
   // Get current theme icon
   const getThemeIcon = () => {
@@ -44,12 +42,6 @@ export function ThemeToggle() {
   // Prevent hydration mismatch by only showing after mount
   React.useEffect(() => {
     setMounted(true)
-    
-    // Apply high contrast if saved in preferences
-    const savedHighContrast = localStorage.getItem('highContrast') === 'true';
-    if (savedHighContrast) {
-      document.documentElement.classList.add('high-contrast');
-    }
     
     // Check for system preference on initial load
     if (!localStorage.getItem('theme')) {
@@ -125,6 +117,7 @@ export function ThemeToggle() {
           onClick={toggleHighContrast}
           className="flex items-center gap-2 py-2 px-3 rounded-md cursor-pointer hover:bg-accent transition-colors"
           data-testid="accessibility-contrast"
+          aria-pressed={preferences.highContrast}
         >
           <Accessibility className="h-4 w-4" aria-hidden="true" />
           <span>{t('common.accessibility.highContrast', 'High contrast mode')}</span>
