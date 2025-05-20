@@ -9,8 +9,17 @@ export function useFocus<T extends HTMLElement = HTMLElement>(
   
   useEffect(() => {
     if (shouldFocus && ref.current) {
-      ref.current.focus(options);
+      // Ensure the element exists and is focusable
+      try {
+        ref.current.focus(options);
+      } catch (error) {
+        console.error("Error focusing element:", error);
+      }
     }
+    
+    return () => {
+      // Clean up any focus-related side effects if needed
+    };
   }, [shouldFocus, options]);
   
   return ref;

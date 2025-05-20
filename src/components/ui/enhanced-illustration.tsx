@@ -37,15 +37,27 @@ export function EnhancedIllustration({
     return 'share'; // Default fallback
   };
 
+  // Error handling - show fallback if provided
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    console.warn(`Image failed to load: ${name}`);
+    if (fallback && e.currentTarget.parentElement) {
+      e.currentTarget.style.display = 'none';
+    }
+  };
+
   if (isUrl) {
     return (
-      <ResponsiveImage
-        src={name}
-        alt={alt}
-        className={className}
-        priority={priority}
-        aspectRatio={aspectRatio}
-      />
+      <div className={cn("relative", className)}>
+        <ResponsiveImage
+          src={name}
+          alt={alt}
+          className="w-full h-auto"
+          priority={priority}
+          aspectRatio={aspectRatio}
+          onError={handleImageError}
+        />
+        {fallback && <div className="fallback-content">{fallback}</div>}
+      </div>
     );
   }
 
