@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
@@ -7,15 +7,20 @@ import SaveContentForm from '@/components/SaveContent';
 import FileUploadForm from '@/components/FileUploadForm';
 import { SavedContent, Tag } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link, FileText } from 'lucide-react';
-import TagConfirmation from '@/components/TagConfirmation';
+import { Link, FileText, HelpCircle } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Button } from '@/components/ui/button';
 
 const SaveContent = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("url");
-  const [suggestedTag, setSuggestedTag] = useState<Tag | null>(null);
-  const [showTagConfirmation, setShowTagConfirmation] = useState<boolean>(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(true);
   
   // This would be replaced with actual authentication check
   const isLoggedIn = true;
@@ -34,14 +39,8 @@ const SaveContent = () => {
         description: 'Your content has been added to your collection',
       });
       
-      // If tags were generated, show the confirmation dialog
-      if (tags && tags.length > 0) {
-        setSuggestedTag(tags[0]);
-        setShowTagConfirmation(true);
-      } else {
-        // If no tags, redirect to dashboard after saving
-        navigate('/dashboard');
-      }
+      // Redirect to dashboard after saving
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error saving content:', error);
       toast({
@@ -49,25 +48,6 @@ const SaveContent = () => {
         description: 'Failed to save your content. Please try again.',
         variant: 'destructive',
       });
-    }
-  };
-
-  const handleTagConfirmation = async (confirmed: boolean) => {
-    if (suggestedTag) {
-      // In a real app, this would update the tag's confirmed status in the database
-      console.log('Tag confirmation:', suggestedTag.name, confirmed ? 'accurate' : 'inaccurate');
-      
-      toast({
-        title: confirmed ? 'Tag confirmed' : 'Tag rejected',
-        description: confirmed 
-          ? `Thank you for confirming that "${suggestedTag.name}" is accurate.` 
-          : `Thank you for the feedback. We'll improve our tagging for similar content.`,
-      });
-      
-      // Close dialog and redirect to dashboard
-      setShowTagConfirmation(false);
-      setSuggestedTag(null);
-      navigate('/dashboard');
     }
   };
 
@@ -89,16 +69,8 @@ const SaveContent = () => {
         description: 'Your file has been added to your collection',
       });
       
-      // For files, we would typically generate tags as well
-      // For demo purposes, let's create a mock tag
-      const mockTag: Tag = {
-        id: 'file-tag-1',
-        name: fileDetails.file_type === 'pdf' ? 'document' : 'image',
-        auto_generated: true
-      };
-      
-      setSuggestedTag(mockTag);
-      setShowTagConfirmation(true);
+      // Redirect to dashboard after upload
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error processing file:', error);
       toast({
@@ -119,56 +91,99 @@ const SaveContent = () => {
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       
       <main className="flex-grow container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-center" id="page-title">Save New Content</h1>
+        <div className="mb-8 text-center">
+          <h1 className="text-3xl font-bold mb-2">Save New Content</h1>
+          <p className="text-muted-foreground max-w-md mx-auto">
+            Add content to your collection by URL or by uploading files directly
+          </p>
+        </div>
         
-        <Tabs defaultValue="url" value={activeTab} onValueChange={setActiveTab} className="w-full max-w-xl mx-auto mb-8">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="url" className="flex items-center gap-2">
-              <Link className="h-4 w-4" />
-              URL / Link
-            </TabsTrigger>
-            <TabsTrigger value="file" className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Upload File
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="url" className="mt-6">
-            <SaveContentForm onSaveContent={handleSaveContent} />
-          </TabsContent>
-          <TabsContent value="file" className="mt-6">
-            <FileUploadForm onUploadComplete={handleFileUploadComplete} />
-          </TabsContent>
-        </Tabs>
-        
-        <div className="mt-10 max-w-xl mx-auto text-center">
-          <h2 className="text-xl font-medium mb-4">How it works</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="md:col-span-2">
+            <Card className="shadow-sm">
+              <CardContent className="pt-6">
+                <Tabs defaultValue="url" value={activeTab} onValueChange={setActiveTab} className="w-full">
+                  <TabsList className="grid w-full grid-cols-2 mb-6">
+                    <TabsTrigger value="url" className="flex items-center gap-2">
+                      <Link className="h-4 w-4" />
+                      URL / Link
+                    </TabsTrigger>
+                    <TabsTrigger value="file" className="flex items-center gap-2">
+                      <FileText className="h-4 w-4" />
+                      Upload File
+                    </TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="url" className="pt-2 pb-4 space-y-4 animate-fade-in">
+                    <SaveContentForm onSaveContent={handleSaveContent} />
+                  </TabsContent>
+                  <TabsContent value="file" className="pt-2 pb-4 space-y-4 animate-fade-in">
+                    <FileUploadForm onUploadComplete={handleFileUploadComplete} />
+                  </TabsContent>
+                </Tabs>
+              </CardContent>
+            </Card>
+          </div>
           
-          <div className="space-y-4 text-sm text-muted-foreground">
-            <p>
-              {activeTab === 'url' ? (
-                <>Enter the URL of the content you want to save. Accio will automatically
-                extract information and suggest tags.</>
-              ) : (
-                <>Upload a PDF document or image file. Accio will process it and
-                allow you to organize it with your other saved content.</>
-              )}
-            </p>
-            <p>
-              You can confirm or reject the suggested tags to help improve
-              Accio's tagging system.
-            </p>
+          <div className="md:col-span-1">
+            <Collapsible open={isHelpOpen} onOpenChange={setIsHelpOpen} className="border rounded-lg shadow-sm bg-card">
+              <div className="p-4 flex items-center justify-between border-b">
+                <h3 className="text-lg font-medium flex items-center gap-2">
+                  <HelpCircle className="h-5 w-5 text-primary" />
+                  How It Works
+                </h3>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="w-9 p-0">
+                    <span className="sr-only">Toggle</span>
+                    {isHelpOpen ? (
+                      <span className="text-xl">−</span>
+                    ) : (
+                      <span className="text-xl">+</span>
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
+              
+              <CollapsibleContent className="p-4 space-y-4 text-sm text-muted-foreground">
+                {activeTab === 'url' ? (
+                  <>
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-foreground">URL/Link</h4>
+                      <p>
+                        Enter the URL of the content you want to save. Accio will automatically
+                        extract information and suggest relevant tags.
+                      </p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Works with articles, blog posts, and research papers</li>
+                        <li>Extracts metadata like title, author, and publication date</li>
+                        <li>Suggests relevant tags based on content analysis</li>
+                      </ul>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      <h4 className="font-medium text-foreground">File Upload</h4>
+                      <p>
+                        Upload PDF documents or image files directly to your collection. Accio
+                        will process them and extract searchable text when possible.
+                      </p>
+                      <ul className="list-disc pl-5 space-y-1">
+                        <li>Supports PDF documents and image files (PNG, JPG, WEBP)</li>
+                        <li>OCR available for text extraction from images</li>
+                        <li>Maximum file size: 10MB</li>
+                      </ul>
+                    </div>
+                  </>
+                )}
+                <p>
+                  You can review and confirm the suggested tags to help improve
+                  Accio's tagging system.
+                </p>
+              </CollapsibleContent>
+            </Collapsible>
           </div>
         </div>
       </main>
-      
-      {suggestedTag && (
-        <TagConfirmation
-          tag={suggestedTag}
-          isOpen={showTagConfirmation}
-          onConfirm={handleTagConfirmation}
-          onClose={() => setShowTagConfirmation(false)}
-        />
-      )}
     </div>
   );
 };

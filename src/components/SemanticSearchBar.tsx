@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState } from 'react';
 import { Search, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -13,26 +13,13 @@ import {
 
 interface SemanticSearchBarProps {
   onSearch: (query: string, isSemanticSearch: boolean) => void;
-  initialQuery?: string;
-  autoFocus?: boolean;
 }
 
-const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ 
-  onSearch, 
-  initialQuery = '', 
-  autoFocus = false 
-}) => {
-  const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
+const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
+  const [searchQuery, setSearchQuery] = useState<string>('');
   const [isSemanticSearch, setIsSemanticSearch] = useState<boolean>(true);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    if (autoFocus && inputRef.current) {
-      inputRef.current.focus();
-    }
-  }, [autoFocus]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,12 +39,6 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({
     console.log('Search query:', searchQuery, 'Semantic search:', isSemanticSearch);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch(e);
-    }
-  };
-
   return (
     <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto animate-fade-in">
       <div className="flex flex-col w-full items-center space-y-3">
@@ -71,9 +52,6 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
-            onKeyDown={handleKeyDown}
-            ref={inputRef}
-            aria-label="Search content"
           />
           {searchQuery && (
             <button

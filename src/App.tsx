@@ -1,5 +1,5 @@
 
-import React, { Suspense } from "react";
+import React, { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,117 +8,105 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
-import { LanguageProvider } from "@/contexts/LanguageContext";
-import { SkipLink } from "@/components/accessibility/SkipLink";
-import { EnhancedSkipLink } from "@/components/accessibility/EnhancedSkipLink";
-import { AccessibilityMenu } from "@/components/accessibility/AccessibilityMenu";
-import { ErrorBoundary } from "@/components/ErrorBoundary";
-import '@/i18n'; // Import i18n initialization
+import { HelmetProvider } from 'react-helmet-async';
+import SkipToContent from "./components/SkipToContent";
 
-// Loading fallback
-const LoadingFallback = () => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="loading-spinner" aria-label="Loading content"></div>
-  </div>
-);
-
-// Lazy-loaded pages for better performance
-const Index = React.lazy(() => import("./pages/Index"));
-const LandingPage = React.lazy(() => import("./pages/LandingPage"));
-const EnterpriseLanding = React.lazy(() => import("./pages/EnterpriseLanding"));
-const Login = React.lazy(() => import("./pages/Login"));
-const Register = React.lazy(() => import("./pages/Register"));
-const Dashboard = React.lazy(() => import("./pages/Dashboard"));
-const SaveContent = React.lazy(() => import("./pages/SaveContent"));
-const NotFound = React.lazy(() => import("./pages/NotFound"));
-const Pricing = React.lazy(() => import("./pages/Pricing"));
-const AccountSettings = React.lazy(() => import("./pages/AccountSettings"));
-const Analytics = React.lazy(() => import("./pages/Analytics"));
-const Collections = React.lazy(() => import("./pages/Collections"));
-const ProtectedRoute = React.lazy(() => import("./components/ProtectedRoute"));
+// Import components
+import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import SaveContent from "./pages/SaveContent";
+import NotFound from "./pages/NotFound";
+import Pricing from "./pages/Pricing";
+import AccountSettings from "./pages/AccountSettings";
+import Analytics from "./pages/Analytics";
+import Collections from "./pages/Collections";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import AccessibilityStatement from "./pages/AccessibilityStatement";
+import FAQ from "./pages/FAQ";
+import Sitemap from "./pages/Sitemap";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000, // 1 minute
-      refetchOnWindowFocus: false,
-      retry: 1, // Only retry once to avoid excessive retries on server errors
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
     },
-  }
+  },
 });
 
 const App: React.FC = () => {
   return (
     <React.StrictMode>
-      <ErrorBoundary>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <LanguageProvider>
-              <TooltipProvider>
-                <AuthProvider>
-                  <AccessibilityProvider>
-                    {/* Enhanced Skip link for keyboard navigation - Fine.dev inspired */}
-                    <EnhancedSkipLink 
-                      targetId="main-content" 
-                      className="z-50"
-                    />
-                    
-                    {/* Accessibility menu */}
-                    <AccessibilityMenu />
-                    
-                    {/* Toast notifications */}
-                    <Toaster />
-                    <Sonner />
-                    
-                    <BrowserRouter>
-                      <Suspense fallback={<LoadingFallback />}>
-                        <Routes>
-                          <Route path="/" element={<LandingPage />} />
-                          <Route path="/home" element={<Index />} />
-                          <Route path="/enterprise" element={<EnterpriseLanding />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/register" element={<Register />} />
-                          
-                          {/* Protected routes - require authentication */}
-                          <Route path="/dashboard" element={
-                            <ProtectedRoute>
-                              <Dashboard />
-                            </ProtectedRoute>
-                          } />
-                          <Route path="/save" element={
-                            <ProtectedRoute>
-                              <SaveContent />
-                            </ProtectedRoute>
-                          } />
-                          <Route path="/settings" element={
-                            <ProtectedRoute>
-                              <AccountSettings />
-                            </ProtectedRoute>
-                          } />
-                          <Route path="/analytics" element={
-                            <ProtectedRoute>
-                              <Analytics />
-                            </ProtectedRoute>
-                          } />
-                          <Route path="/collections" element={
-                            <ProtectedRoute>
-                              <Collections />
-                            </ProtectedRoute>
-                          } />
-                          
-                          <Route path="/pricing" element={<Pricing />} />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </Suspense>
-                    </BrowserRouter>
-                  </AccessibilityProvider>
-                </AuthProvider>
-              </TooltipProvider>
-            </LanguageProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <TooltipProvider>
+            <HelmetProvider>
+              <AuthProvider>
+                <AccessibilityProvider>
+                  <Toaster />
+                  <Sonner />
+                  <BrowserRouter>
+                    <SkipToContent />
+                    <Routes>
+                      {/* Public routes */}
+                      <Route path="/" element={<Index />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route path="/pricing" element={<Pricing />} />
+                      
+                      {/* New static pages */}
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="/accessibility" element={<AccessibilityStatement />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/sitemap" element={<Sitemap />} />
+                      
+                      {/* Protected routes - require authentication */}
+                      <Route path="/dashboard" element={
+                        <ProtectedRoute>
+                          <Dashboard />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/save" element={
+                        <ProtectedRoute>
+                          <SaveContent />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/settings" element={
+                        <ProtectedRoute>
+                          <AccountSettings />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/analytics" element={
+                        <ProtectedRoute>
+                          <Analytics />
+                        </ProtectedRoute>
+                      } />
+                      <Route path="/collections" element={
+                        <ProtectedRoute>
+                          <Collections />
+                        </ProtectedRoute>
+                      } />
+                      
+                      {/* Catch all route - 404 */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </BrowserRouter>
+                </AccessibilityProvider>
+              </AuthProvider>
+            </HelmetProvider>
+          </TooltipProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </React.StrictMode>
   );
 };

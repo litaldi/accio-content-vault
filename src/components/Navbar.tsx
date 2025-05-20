@@ -83,7 +83,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                       : 'text-muted-foreground hover:text-primary'
                   }`}
                 >
-                  <span>{item.label}</span>
+                  {item.label}
                   {isActive(item.path) && (
                     <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full" />
                   )}
@@ -108,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 animate-scale-in">
                 <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer transition-colors">
-                  <span>Dashboard</span>
+                  Dashboard
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/collections')} className="cursor-pointer transition-colors">
                   <FolderOpen className="mr-2 h-4 w-4" />
@@ -136,13 +136,13 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                 onClick={() => navigate('/login')}
                 className="text-sm transition-all"
               >
-                <span>Log in</span>
+                Log in
               </Button>
               <Button 
                 onClick={() => navigate('/register')}
                 className="text-sm transition-all hover:shadow-md"
               >
-                <span>Sign up</span>
+                Sign up
               </Button>
             </div>
           )}

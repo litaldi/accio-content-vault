@@ -1,137 +1,73 @@
+# Welcome to your Lovable project
 
-# Accio - Smart Content Organizer
+## Project info
 
-Accio is a modern web application designed to help users save, organize, and retrieve online content using AI-powered organization.
+**URL**: https://lovable.dev/projects/ef5093c9-8967-40db-8a56-451375f10ece
 
-![Accio](https://lovable.dev/opengraph-image-p98pqg.png)
+## How can I edit this code?
 
-## Features
+There are several ways of editing your application.
 
-- **Content Saving**: Easily save articles, web pages, and other online content with a single click
-- **AI-Powered Organization**: Automatically tag and categorize content using semantic analysis
-- **Smart Search**: Find your saved content quickly with powerful search capabilities including semantic search
-- **Collections**: Organize saved content into custom collections for better management
-- **Responsive Design**: Access your content from any device with a fully responsive interface
-- **Dark Mode**: Toggle between light and dark themes for comfortable reading in any environment
+**Use Lovable**
 
-## Installation
+Simply visit the [Lovable Project](https://lovable.dev/projects/ef5093c9-8967-40db-8a56-451375f10ece) and start prompting.
 
-### Prerequisites
+Changes made via Lovable will be committed automatically to this repo.
 
-- Node.js (v14 or higher)
-- npm or yarn
+**Use your preferred IDE**
 
-### Local Development Setup
+If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
 
-1. Clone the repository:
-   ```bash
-   git clone <your-repository-url>
-   cd accio
-   ```
+The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn install
-   ```
+Follow these steps:
 
-3. Start the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+```sh
+# Step 1: Clone the repository using the project's Git URL.
+git clone <YOUR_GIT_URL>
 
-4. Open your browser and navigate to `http://localhost:8080`
+# Step 2: Navigate to the project directory.
+cd <YOUR_PROJECT_NAME>
 
-## Project Structure
+# Step 3: Install the necessary dependencies.
+npm i
 
-```
-accio/
-├── public/            # Static files
-├── src/               # Source code
-│   ├── components/    # Reusable UI components
-│   ├── contexts/      # React contexts for state management
-│   ├── hooks/         # Custom React hooks
-│   ├── integrations/  # Third-party integrations
-│   ├── lib/           # Utility libraries
-│   ├── pages/         # Page components
-│   ├── services/      # API services
-│   └── types/         # TypeScript type definitions
-├── supabase/          # Supabase configuration
-└── ...
+# Step 4: Start the development server with auto-reloading and an instant preview.
+npm run dev
 ```
 
-## Technologies Used
+**Edit a file directly in GitHub**
 
-- **Framework**: React with TypeScript
-- **Build Tool**: Vite
-- **UI Components**: shadcn/ui (built on Radix UI)
-- **Styling**: Tailwind CSS
-- **Backend**: Supabase (authentication, database, storage)
-- **State Management**: React Context API, React Query
-- **Routing**: React Router
-- **Icons**: Lucide React
+- Navigate to the desired file(s).
+- Click the "Edit" button (pencil icon) at the top right of the file view.
+- Make your changes and commit the changes.
 
-## Usage
+**Use GitHub Codespaces**
 
-### Authentication
+- Navigate to the main page of your repository.
+- Click on the "Code" button (green button) near the top right.
+- Select the "Codespaces" tab.
+- Click on "New codespace" to launch a new Codespace environment.
+- Edit files directly within the Codespace and commit and push your changes once you're done.
 
-The application offers user registration and login functionality. To use personalized features, users need to create an account and log in.
+## What technologies are used for this project?
 
-### Saving Content
+This project is built with:
 
-1. Navigate to the "Save" page
-2. Enter a URL to save
-3. Review the auto-generated tags and summary
-4. Add your own tags if needed
-5. Save the content to your library
+- Vite
+- TypeScript
+- React
+- shadcn-ui
+- Tailwind CSS
 
-### Searching and Organizing
+## How can I deploy this project?
 
-- Use the search bar to find saved content
-- Enable semantic search for concept-based searching
-- Organize content into collections
-- View analytics about your saved content
+Simply open [Lovable](https://lovable.dev/projects/ef5093c9-8967-40db-8a56-451375f10ece) and click on Share -> Publish.
 
-## Development
+## Can I connect a custom domain to my Lovable project?
 
-### Adding New Features
+Yes, you can!
 
-Follow these guidelines when adding new features:
+To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
-1. Create modular components in the `components` directory
-2. Use TypeScript for type safety
-3. Style with Tailwind CSS
-4. Add new pages in the `pages` directory
-5. Update routes in `App.tsx`
-
-### Environment Variables
-
-The application uses the following environment variables:
-
-- `VITE_SUPABASE_URL`: Supabase project URL
-- `VITE_SUPABASE_ANON_KEY`: Supabase anonymous key
-
-## Deployment
-
-The application can be deployed using the Lovable platform:
-
-1. Navigate to your project in Lovable
-2. Click on Share -> Publish
-3. Follow the deployment instructions
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- Built with [Lovable](https://lovable.dev)
-- UI components from [shadcn/ui](https://ui.shadcn.com/)
-- Icons from [Lucide](https://lucide.dev/)
+Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)

@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Navbar from '@/components/Navbar';
-import { ExternalLink } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -63,8 +63,11 @@ const Login = () => {
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
         {!isConfigured ? (
-          <Alert className="max-w-md w-full">
-            <AlertTitle className="text-xl font-bold">Supabase Configuration Required</AlertTitle>
+          <Alert className="max-w-md w-full border-yellow-400 bg-yellow-50 dark:bg-yellow-900/20">
+            <AlertTriangle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+            <AlertTitle className="text-xl font-bold mb-2 text-yellow-800 dark:text-yellow-300">
+              Supabase Configuration Required
+            </AlertTitle>
             <AlertDescription className="mt-2">
               <p className="mb-4">
                 To use authentication features, you need to connect this project to Supabase.
@@ -73,18 +76,10 @@ const Login = () => {
                 Please click the green Supabase button in the top-right corner of the Lovable 
                 interface and follow the connection instructions.
               </p>
-              <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
-                onClick={() => window.open('https://docs.lovable.dev/integrations/supabase/', '_blank')}
-              >
-                <ExternalLink size={16} />
-                <span>Supabase integration docs</span>
-              </Button>
             </AlertDescription>
           </Alert>
         ) : (
-          <Card className="w-full max-w-md animate-fade-up shadow-md">
+          <Card className="w-full max-w-md animate-fade-up shadow-lg">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
               <CardDescription className="text-center">
@@ -106,8 +101,6 @@ const Login = () => {
                             type="email" 
                             disabled={isLoading} 
                             {...field} 
-                            aria-required="true"
-                            autoComplete="email"
                           />
                         </FormControl>
                         <FormMessage />
@@ -119,20 +112,13 @@ const Login = () => {
                     name="password"
                     render={({ field }) => (
                       <FormItem>
-                        <div className="flex justify-between items-center">
-                          <FormLabel>Password</FormLabel>
-                          <Link to="/forgot-password" className="text-xs text-primary hover:underline" tabIndex={-1}>
-                            Forgot password?
-                          </Link>
-                        </div>
+                        <FormLabel>Password</FormLabel>
                         <FormControl>
                           <Input 
                             placeholder="••••••" 
                             type="password" 
                             disabled={isLoading} 
                             {...field} 
-                            aria-required="true"
-                            autoComplete="current-password"
                           />
                         </FormControl>
                         <FormMessage />
@@ -143,14 +129,14 @@ const Login = () => {
                     type="submit" 
                     className="w-full" 
                     disabled={isLoading}
-                    aria-busy={isLoading}
+                    loading={isLoading}
                   >
-                    {isLoading ? 'Signing in...' : 'Sign In'}
+                    Login
                   </Button>
                 </form>
               </Form>
             </CardContent>
-            <CardFooter className="flex flex-col space-y-2">
+            <CardFooter className="flex flex-col space-y-2 border-t pt-4">
               <div className="text-center text-sm text-muted-foreground">
                 Don't have an account?{' '}
                 <Link to="/register" className="text-primary hover:underline font-medium">
