@@ -17,7 +17,7 @@ export function ThemeToggle() {
   const [mounted, setMounted] = React.useState(false)
   const { t } = useTranslation()
   
-  // Get current theme icon with MUI-style approach
+  // Get current theme icon
   const getThemeIcon = () => {
     if (!mounted) return null;
     
@@ -35,12 +35,6 @@ export function ThemeToggle() {
   // Prevent hydration mismatch by only showing after mount
   React.useEffect(() => {
     setMounted(true)
-    
-    // Check system preference on initial load (MUI-style approach)
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if (!localStorage.getItem('theme')) {
-      setTheme(prefersDark ? 'dark' : 'light');
-    }
   }, [])
 
   if (!mounted) {
@@ -62,7 +56,6 @@ export function ThemeToggle() {
           aria-label={t('common.theme.change')}
           title={t('common.theme.current', { theme: theme || 'system' })}
           data-testid="theme-toggle"
-          className="transition-colors hover:bg-accent/80"
         >
           {getThemeIcon()}
           <span className="sr-only">{t('common.theme.change')}</span>
@@ -70,10 +63,7 @@ export function ThemeToggle() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem 
-          onClick={() => {
-            setTheme("light")
-            localStorage.setItem('theme', 'light')
-          }}
+          onClick={() => setTheme("light")}
           aria-selected={theme === 'light'}
           data-testid="theme-light"
         >
@@ -81,10 +71,7 @@ export function ThemeToggle() {
           <span>{t('common.theme.light')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => {
-            setTheme("dark")
-            localStorage.setItem('theme', 'dark')
-          }}
+          onClick={() => setTheme("dark")}
           aria-selected={theme === 'dark'}
           data-testid="theme-dark"
         >
@@ -92,10 +79,7 @@ export function ThemeToggle() {
           <span>{t('common.theme.dark')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
-          onClick={() => {
-            setTheme("system")
-            localStorage.removeItem('theme')
-          }}
+          onClick={() => setTheme("system")}
           aria-selected={theme === 'system'}
           data-testid="theme-system"
         >

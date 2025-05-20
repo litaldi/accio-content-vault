@@ -2,6 +2,7 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
 import enTranslation from './locales/en';
 import arTranslation from './locales/ar';
 import heTranslation from './locales/he';
@@ -20,8 +21,10 @@ const getInitialLanguage = (): string => {
   }
 };
 
-// Initialize i18next - following MUI's internationalization patterns
+// Initialize i18next
 i18n
+  // Load translations from server/static files
+  .use(Backend)
   // Detect user language
   .use(LanguageDetector)
   // Pass the i18n instance to react-i18next
