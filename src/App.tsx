@@ -12,6 +12,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SkipLink } from "@/components/accessibility/SkipLink";
 import '@/i18n'; // Import i18n initialization
 
+// Pages
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
 import EnterpriseLanding from "./pages/EnterpriseLanding";
@@ -45,9 +46,16 @@ const App: React.FC = () => {
             <TooltipProvider>
               <AuthProvider>
                 <AccessibilityProvider>
-                  <SkipLink targetId="main-content" />
+                  {/* Skip link for keyboard navigation */}
+                  <SkipLink 
+                    targetId="main-content" 
+                    className="absolute z-50 top-2 left-2 transform -translate-y-16 focus:translate-y-0"
+                  />
+                  
+                  {/* Toast notifications */}
                   <Toaster />
                   <Sonner />
+                  
                   <BrowserRouter>
                     <Routes>
                       <Route path="/" element={<LandingPage />} />
