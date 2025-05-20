@@ -2,6 +2,7 @@
 import * as React from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
+import { useTranslation } from "react-i18next"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -14,6 +15,7 @@ import {
 export function ModeToggle() {
   const { setTheme, theme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
+  const { t } = useTranslation()
 
   // Prevent hydration mismatch by only showing after mount
   React.useEffect(() => {
@@ -26,7 +28,8 @@ export function ModeToggle() {
         <Button 
           variant="ghost" 
           size="icon"
-          aria-label={`Change theme, current theme is ${mounted ? theme : 'system'}`}
+          aria-label={t('common.theme.change')}
+          title={t('common.theme.current', { theme: mounted ? theme : 'system' })}
         >
           <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" aria-hidden="true" />
           <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" aria-hidden="true" />
@@ -35,11 +38,11 @@ export function ModeToggle() {
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun className="mr-2 h-4 w-4" aria-hidden="true" />
-          <span>Light</span>
+          <span>{t('common.theme.light')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
           <Moon className="mr-2 h-4 w-4" aria-hidden="true" />
-          <span>Dark</span>
+          <span>{t('common.theme.dark')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
           <svg 
@@ -59,7 +62,7 @@ export function ModeToggle() {
             <line x1="8" x2="16" y1="21" y2="21" />
             <line x1="12" x2="12" y1="17" y2="21" />
           </svg>
-          <span>System</span>
+          <span>{t('common.theme.system')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

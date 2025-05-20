@@ -66,7 +66,7 @@
     --ring: 224.3 76.5% 60%;
   }
   
-  /* High contrast mode */
+  /* High contrast mode - with improved contrast ratios */
   .high-contrast.dark {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
@@ -116,6 +116,20 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  
+  /* Focus styles for better visibility and accessibility */
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2;
+  }
+  
+  /* RTL support for controls */
+  [dir="rtl"] .rtl-flip {
+    @apply rotate-180;
+  }
+  
+  [dir="rtl"] .rtl-mirror {
+    @apply -scale-x-100;
+  }
 }
 
 /* Reduced animations */
@@ -128,6 +142,10 @@
 /* Hero section gradient styles */
 .hero-gradient {
   background: linear-gradient(to right, hsl(221.2, 83.2%, 53.3%), hsl(215, 80%, 40%));
+}
+
+[dir="rtl"] .hero-gradient {
+  background: linear-gradient(to left, hsl(221.2, 83.2%, 53.3%), hsl(215, 80%, 40%));
 }
 
 /* Card hover animation */
@@ -146,6 +164,10 @@
 
 .btn-with-icon {
   @apply inline-flex items-center space-x-2;
+}
+
+[dir="rtl"] .btn-with-icon {
+  @apply space-x-0 space-x-reverse;
 }
 
 /* Animation classes */
@@ -198,6 +220,25 @@
   }
 }
 
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+[dir="rtl"] .animate-slide-in-left {
+  animation: slideInRight 0.4s ease-out;
+}
+
+[dir="ltr"] .animate-slide-in-left {
+  animation: slideInLeft 0.4s ease-out;
+}
+
 .animate-fade-in {
   animation: fadeIn 0.4s ease-in-out;
 }
@@ -214,10 +255,6 @@
   animation: slideUp 0.4s ease-out;
 }
 
-.animate-slide-in-left {
-  animation: slideInLeft 0.4s ease-out;
-}
-
 /* Loading indicators */
 .loading-spinner {
   @apply animate-spin rounded-full border-4 border-muted border-t-primary h-8 w-8;
@@ -226,4 +263,31 @@
 /* Transitions */
 .transition-hover {
   @apply transition-all duration-300;
+}
+
+/* Accessibility improvements */
+.sr-only-focusable:not(:focus) {
+  @apply sr-only;
+}
+
+.sr-only-focusable:focus {
+  @apply not-sr-only static p-2 bg-background text-foreground;
+}
+
+/* Improved dropdown menu for better accessibility */
+.dropdown-menu:focus-within {
+  @apply outline-none ring-2 ring-primary ring-offset-2;
+}
+
+/* Z-index utility classes for proper layering */
+.z-dropdown {
+  z-index: 50;
+}
+
+.z-modal {
+  z-index: 100;
+}
+
+.z-toast {
+  z-index: 200;
 }
