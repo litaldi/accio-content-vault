@@ -1,79 +1,52 @@
 
 import * as React from "react"
 
-export interface BreakpointValues {
-  isMobile: boolean;
-  isTablet: boolean;
-  isDesktop: boolean;
-  screenWidth: number;
-}
-
-const MOBILE_BREAKPOINT = 768;
-const TABLET_BREAKPOINT = 1024;
-
-export function useBreakpoint(): BreakpointValues {
-  const [breakpoint, setBreakpoint] = React.useState<BreakpointValues>({
-    isMobile: false,
-    isTablet: false,
-    isDesktop: true,
-    screenWidth: typeof window !== 'undefined' ? window.innerWidth : 1200,
-  });
-  
-  React.useEffect(() => {
-    // Initial check
-    const checkBreakpoint = () => {
-      const width = window.innerWidth;
-      setBreakpoint({
-        isMobile: width < MOBILE_BREAKPOINT,
-        isTablet: width >= MOBILE_BREAKPOINT && width < TABLET_BREAKPOINT,
-        isDesktop: width >= TABLET_BREAKPOINT,
-        screenWidth: width,
-      });
-    };
-    
-    // Check on mount
-    checkBreakpoint();
-    
-    // Add resize listener with debounce for performance
-    let timeoutId: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(checkBreakpoint, 100);
-    };
-    
-    window.addEventListener("resize", handleResize);
-    
-    // Cleanup
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-  
-  return breakpoint;
-}
+const MOBILE_BREAKPOINT = 768
 
 export function useIsMobile() {
-  const { isMobile } = useBreakpoint();
-  return isMobile;
+  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
+    
+    // Initialize on mount
+    checkMobile()
+    
+    // Add resize listener
+    window.addEventListener("resize", checkMobile)
+    
+    // Clean up
+    return () => window.removeEventListener("resize", checkMobile)
+  }, [])
+
+  return !!isMobile
 }
 
-export function useIsTablet() {
-  const { isTablet } = useBreakpoint();
-  return isTablet;
-}
+// Additional hook for responsive design breakpoints
+export function useBreakpoint() {
+  const [breakpoint, setBreakpoint] = React.useState<'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'>('md')
 
-export function useIsDesktop() {
-  const { isDesktop } = useBreakpoint();
-  return isDesktop;
-}
+  React.useEffect(() => {
+    const checkBreakpoint = () => {
+      const width = window.innerWidth
+      if (width < 640) return setBreakpoint('xs')
+      if (width < 768) return setBreakpoint('sm')
+      if (width < 1024) return setBreakpoint('md')
+      if (width < 1280) return setBreakpoint('lg')
+      if (width < 1536) return setBreakpoint('xl')
+      return setBreakpoint('2xl')
+    }
+    
+    checkBreakpoint()
+    window.addEventListener("resize", checkBreakpoint)
+    
+    return () => window.removeEventListener("resize", checkBreakpoint)
+  }, [])
 
-export function useIsSmallScreen() {
-  const { isMobile, isTablet } = useBreakpoint();
-  return isMobile || isTablet;
-}
-
-export function useScreenWidth() {
-  const { screenWidth } = useBreakpoint();
-  return screenWidth;
+  return {
+    breakpoint,
+    isMobile: breakpoint === 'xs' || breakpoint === 'sm',
+    isTablet: breakpoint === 'md',
+    isDesktop: breakpoint === 'lg' || breakpoint === 'xl' || breakpoint === '2xl',
+  }
 }

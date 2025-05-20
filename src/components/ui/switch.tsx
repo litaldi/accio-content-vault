@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import * as SwitchPrimitives from "@radix-ui/react-switch"
 
@@ -7,33 +6,22 @@ import { cn } from "@/lib/utils"
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
   React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => {
-  // Generate an id for association with a label if one doesn't exist
-  const [id] = React.useState(() => props.id || `switch-${Math.random().toString(36).substring(2, 9)}`);
-
-  return (
-    <SwitchPrimitives.Root
+>(({ className, ...props }, ref) => (
+  <SwitchPrimitives.Root
+    className={cn(
+      "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
+      className
+    )}
+    {...props}
+    ref={ref}
+  >
+    <SwitchPrimitives.Thumb
       className={cn(
-        "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
-        className
+        "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
       )}
-      {...props}
-      id={id}
-      ref={ref}
-      aria-label={props["aria-label"] || "Toggle switch"}
-    >
-      <SwitchPrimitives.Thumb
-        className={cn(
-          "pointer-events-none block h-5 w-5 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0",
-          // Add different visuals for each state to help with accessibility
-          "after:absolute after:inset-0 after:flex after:items-center after:justify-center",
-          "data-[state=checked]:after:content-['✓'] data-[state=checked]:after:text-[10px] data-[state=checked]:after:text-primary-foreground data-[state=checked]:after:opacity-0",
-          "data-[state=unchecked]:after:content-['×'] data-[state=unchecked]:after:text-[10px] data-[state=unchecked]:after:text-muted-foreground data-[state=unchecked]:after:opacity-0"
-        )}
-      />
-    </SwitchPrimitives.Root>
-  )
-})
+    />
+  </SwitchPrimitives.Root>
+))
 Switch.displayName = SwitchPrimitives.Root.displayName
 
 export { Switch }

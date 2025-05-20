@@ -1,6 +1,6 @@
 
 /**
- * Security utilities for input sanitization and validation
+ * Security utilities for input sanitization, validation, and protection
  */
 
 /**
@@ -20,123 +20,58 @@ export function sanitizeInput(input: string): string {
 }
 
 /**
- * Sanitizes HTML content with a more permissive approach
- * Use only when you need to allow certain HTML tags
- * @param html HTML content to sanitize
- * @returns Sanitized HTML with safe tags only
- */
-export function sanitizeHTML(html: string): string {
-  if (!html) return '';
-  
-  // Create a DOMParser to parse the HTML
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(html, 'text/html');
-  
-  // Remove potentially dangerous tags and attributes
-  const dangerousTags = ['script', 'iframe', 'object', 'embed', 'form'];
-  const dangerousAttrs = ['onerror', 'onload', 'onclick', 'onmouseover', 'onmouseout', 'onkeydown', 'onkeypress'];
-  
-  dangerousTags.forEach(tag => {
-    const elements = doc.getElementsByTagName(tag);
-    while (elements.length > 0) {
-      elements[0].parentNode?.removeChild(elements[0]);
-    }
-  });
-  
-  // Remove dangerous attributes from all elements
-  const allElements = doc.getElementsByTagName('*');
-  for (let i = 0; i < allElements.length; i++) {
-    const elem = allElements[i];
-    dangerousAttrs.forEach(attr => {
-      if (elem.hasAttribute(attr)) {
-        elem.removeAttribute(attr);
-      }
-    });
-    
-    // Sanitize URLs in attributes
-    ['href', 'src'].forEach(urlAttr => {
-      if (elem.hasAttribute(urlAttr)) {
-        const url = elem.getAttribute(urlAttr);
-        if (url && (url.startsWith('javascript:') || url.startsWith('data:'))) {
-          elem.removeAttribute(urlAttr);
-        }
-      }
-    });
-  }
-  
-  return doc.body.innerHTML;
-}
-
-/**
  * Validates an email address
- * @param email Email address to validate
- * @returns Boolean indicating if the email is valid
+ * @param email The email to validate
+ * @returns boolean indicating if the email is valid
  */
-export function isValidEmail(email: string): boolean {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export function validateEmail(email: string): boolean {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   return emailRegex.test(email);
 }
 
 /**
- * Validates a password meets minimum security requirements
- * @param password Password to validate
- * @returns Object containing validation status and any error messages
+ * Checks if a password meets minimum complexity requirements
+ * @param password The password to check
+ * @returns An object with validity status and optional error message
  */
-export function validatePassword(password: string): { isValid: boolean; message?: string } {
+export function validatePassword(password: string): { valid: boolean; message?: string } {
+  if (!password) {
+    return { valid: false, message: 'Password is required' };
+  }
+  
   if (password.length < 8) {
-    return { isValid: false, message: 'Password must be at least 8 characters long' };
+    return { valid: false, message: 'Password must be at least 8 characters long' };
   }
   
-  if (!/[A-Z]/.test(password)) {
-    return { isValid: false, message: 'Password must contain at least one uppercase letter' };
+  // Check for at least one uppercase letter, one lowercase letter, and one number
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  
+  if (!hasUppercase || !hasLowercase || !hasNumber) {
+    return { 
+      valid: false, 
+      message: 'Password must contain at least one uppercase letter, one lowercase letter, and one number' 
+    };
   }
   
-  if (!/[a-z]/.test(password)) {
-    return { isValid: false, message: 'Password must contain at least one lowercase letter' };
-  }
-  
-  if (!/[0-9]/.test(password)) {
-    return { isValid: false, message: 'Password must contain at least one number' };
-  }
-  
-  if (!/[^A-Za-z0-9]/.test(password)) {
-    return { isValid: false, message: 'Password must contain at least one special character' };
-  }
-  
-  return { isValid: true };
+  return { valid: true };
 }
 
 /**
- * Generates a secure CSRF token
- * @returns A random token for CSRF protection
+ * Creates a secure token for CSRF protection
+ * @returns A random string token
  */
 export function generateCSRFToken(): string {
-  return Array.from(crypto.getRandomValues(new Uint8Array(32)))
-    .map(byte => byte.toString(16).padStart(2, '0'))
-    .join('');
-}
-
-/**
- * Sets a CSRF token in session storage and returns it
- * @returns CSRF token for form submission
- */
-export function getCSRFToken(): string {
-  let token = sessionStorage.getItem('csrf-token');
-  
-  if (!token) {
-    token = generateCSRFToken();
-    sessionStorage.setItem('csrf-token', token);
+  // Use crypto API for better randomness when available
+  if (window.crypto && window.crypto.getRandomValues) {
+    return Array.from(
+      window.crypto.getRandomValues(new Uint8Array(16)),
+      byte => byte.toString(16).padStart(2, '0')
+    ).join('');
   }
   
-  return token;
-}
-
-/**
- * Validates a CSRF token against the one in session storage
- * @param token Token to validate
- * @returns Boolean indicating if the token is valid
- */
-export function validateCSRFToken(token: string): boolean {
-  const storedToken = sessionStorage.getItem('csrf-token');
-  return token === storedToken;
+  // Fallback for older browsers
+  return Math.random().toString(36).substring(2, 15) + 
+         Math.random().toString(36).substring(2, 15);
 }

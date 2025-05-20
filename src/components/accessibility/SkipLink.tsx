@@ -1,65 +1,51 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { useAccessibility } from "@/contexts/AccessibilityContext";
 
 interface SkipLinkProps {
   targetId: string;
   className?: string;
+  label?: string;
 }
 
-export const SkipLink = ({ targetId, className }: SkipLinkProps) => {
-  const [hasFocus, setHasFocus] = useState(false);
-  const [isVisible, setIsVisible] = useState(false);
+export const SkipLink = ({ targetId, className, label }: SkipLinkProps) => {
+  const { t } = useTranslation();
+  const { preferences } = useAccessibility();
+  const defaultLabel = t('common.skip_to_content', 'Skip to content');
   
-  // Ensure the target element is focusable
-  useEffect(() => {
-    const target = document.getElementById(targetId);
-    if (target) {
-      // Make sure the target is focusable
-      if (!target.hasAttribute('tabindex')) {
-        target.setAttribute('tabindex', '-1');
-      }
-      
-      // Add a better focus outline for accessibility
-      if (!target.classList.contains('focus-visible:outline-none')) {
-        target.classList.add('focus-visible:outline-none', 'focus-visible:ring-2', 'focus-visible:ring-primary');
-      }
-    }
-  }, [targetId]);
-  
+  // Improved keyboard handling and focus management
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
-    
-    const target = document.getElementById(targetId);
-    if (target) {
-      target.focus();
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.tabIndex = -1;
+      element.focus();
+      element.classList.add('outline-focus');
       
-      // Scroll to the target element (for browsers that don't auto-scroll on focus)
-      target.scrollIntoView({ behavior: 'smooth' });
+      // Clean up after focus moves elsewhere
+      element.addEventListener('blur', () => {
+        element.removeAttribute('tabIndex');
+        element.classList.remove('outline-focus');
+      }, { once: true });
     }
-  };
+  }
   
   return (
     <a
       href={`#${targetId}`}
-      onClick={handleClick}
-      onFocus={() => {
-        setHasFocus(true);
-        setIsVisible(true);
-      }}
-      onBlur={() => {
-        setHasFocus(false);
-        setIsVisible(false);
-      }}
       className={cn(
-        "fixed top-4 left-4 z-50 p-4 bg-background text-foreground transition-transform",
-        isVisible ? "transform-none" : "-translate-y-full",
-        hasFocus ? "outline-none ring-2 ring-primary" : "",
+        "sr-only focus:not-sr-only focus:absolute focus:z-50 focus:p-4 focus:bg-background focus:text-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:rounded-md",
+        "top-4 left-4 transition-transform",
+        preferences.highContrast ? "focus:ring-4 focus:ring-offset-4" : "",
         className
       )}
-      aria-label={`Skip to ${targetId.replace(/-/g, " ")}`}
+      data-testid="skip-link"
+      onClick={handleClick}
+      aria-label={label || defaultLabel}
     >
-      Skip to {targetId.replace(/-/g, " ")}
+      {label || defaultLabel}
     </a>
   );
 };

@@ -2,70 +2,109 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import './styles/a11y.css';
-
+ 
 @layer base {
   :root {
-    --background: 210 50% 98%;
-    --foreground: 210 40% 20%;
+    --background: 0 0% 99%;
+    --foreground: 240 10% 8%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 40% 20%;
-
+    --card-foreground: 240 10% 8%;
+ 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 40% 20%;
-
-    --primary: 210 80% 50%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 210 40% 20%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 210 30% 40%;
-
-    --accent: 210 80% 95%;
-    --accent-foreground: 210 80% 30%;
-
-    --destructive: 0 84.2% 60.2%;
+    --popover-foreground: 240 10% 8%;
+ 
+    --primary: 260 60% 55%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 260 20% 96%;
+    --secondary-foreground: 240 10% 8%;
+ 
+    --muted: 260 15% 94%;
+    --muted-foreground: 240 5% 45%;
+ 
+    --accent: 260 30% 88%;
+    --accent-foreground: 240 10% 8%;
+ 
+    --destructive: 0 84% 60%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 210 40% 90%;
-    --input: 210 40% 90%;
-    --ring: 210 80% 50%;
-
-    --radius: 0.75rem;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 260 60% 55%;
+ 
+    --radius: 1rem;
+  }
+ 
+  .dark {
+    --background: 240 10% 5%;
+    --foreground: 210 20% 98%;
+ 
+    --card: 240 10% 7%;
+    --card-foreground: 210 20% 98%;
+ 
+    --popover: 240 10% 7%;
+    --popover-foreground: 210 20% 98%;
+ 
+    --primary: 260 50% 65%;
+    --primary-foreground: 240 5% 10%;
+ 
+    --secondary: 260 14% 16%;
+    --secondary-foreground: 210 20% 98%;
+ 
+    --muted: 260 14% 16%;
+    --muted-foreground: 240 5% 65%;
+ 
+    --accent: 260 14% 20%;
+    --accent-foreground: 210 20% 98%;
+ 
+    --destructive: 0 70% 58%;
+    --destructive-foreground: 210 20% 98%;
+ 
+    --border: 240 5% 26%;
+    --input: 240 5% 26%;
+    --ring: 260 50% 65%;
+  }
+  
+  /* High contrast mode - with improved contrast ratios */
+  .high-contrast.dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 0%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 270 100% 70%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 240 100% 50%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 270 100% 30%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 50%;
+    --input: 0 0% 50%;
+    --ring: 270 100% 70%;
   }
 
-  .dark {
-    --background: 210 40% 5%;
-    --foreground: 210 40% 98%;
-
-    --card: 210 40% 8%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 210 40% 8%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 80% 50%;
+  .high-contrast:not(.dark) {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+    --primary: 270 100% 50%;
     --primary-foreground: 0 0% 100%;
-
-    --secondary: 210 40% 20%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 210 40% 20%;
-    --muted-foreground: 210 40% 70%;
-
-    --accent: 210 40% 20%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 210 40% 25%;
-    --input: 210 40% 25%;
-    --ring: 210 80% 50%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 0%;
+    --accent: 270 100% 30%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 0%;
+    --input: 0 0% 0%;
+    --ring: 270 100% 50%;
   }
 }
 
@@ -74,89 +113,377 @@
     @apply border-border;
   }
   
+  html {
+    @apply scroll-smooth;
+  }
+  
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Improve focus styles */
-  *:focus-visible {
+  /* Focus styles for better visibility and accessibility */
+  :focus-visible {
     @apply outline-none ring-2 ring-primary ring-offset-2;
   }
   
-  h1, h2, h3, h4, h5, h6 {
-    @apply scroll-m-20 font-semibold;
+  /* RTL support for controls */
+  [dir="rtl"] .rtl-flip {
+    @apply rotate-180;
   }
   
-  h1 {
-    @apply text-4xl md:text-5xl mb-6;
+  [dir="rtl"] .rtl-mirror {
+    @apply -scale-x-100;
   }
   
-  h2 {
-    @apply text-3xl md:text-4xl mb-4;
+  /* Section padding utility for consistent spacing */
+  .section-padding {
+    @apply py-12 sm:py-16 md:py-24 lg:py-32 px-4;
   }
   
-  h3 {
-    @apply text-2xl md:text-3xl mb-3;
+  /* Reusable container widths */
+  .container-sm {
+    @apply max-w-3xl mx-auto;
   }
   
-  p {
-    @apply leading-7;
+  .container-md {
+    @apply max-w-5xl mx-auto;
   }
   
-  /* Improve code block styling */
-  code {
-    @apply bg-muted px-1.5 py-0.5 rounded text-sm;
-  }
-  
-  /* Improve blockquote styling */
-  blockquote {
-    @apply border-l-4 border-border pl-4 italic;
+  .container-lg {
+    @apply max-w-7xl mx-auto;
   }
 }
 
-/* Animation classes */
-@layer components {
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-out forwards;
-  }
-  
-  .animate-slide-in {
-    animation: slideIn 0.3s ease-out forwards;
-  }
+/* Reduced animations */
+.reduce-animations * {
+  animation: none !important;
+  transition: none !important;
+  transition-property: none !important;
+}
 
-  .card-hover {
-    @apply transition-all duration-200 hover:shadow-md hover:shadow-blue-100 dark:hover:shadow-blue-900/20;
-  }
+/* Glass effect - Fine.dev inspired */
+.glass {
+  @apply backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-white/20 dark:border-slate-800/20 shadow-md;
+}
+
+/* Hero section gradient styles - Fine.dev inspired */
+.hero-gradient {
+  background: linear-gradient(to right, hsl(260, 60%, 55%), hsl(270, 60%, 45%));
+}
+
+[dir="rtl"] .hero-gradient {
+  background: linear-gradient(to left, hsl(260, 60%, 55%), hsl(270, 60%, 45%));
+}
+
+/* Subtle gradient backgrounds - Fine.dev inspired */
+.bg-purple-gradient {
+  @apply bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20;
+}
+
+.bg-purple-gradient-reverse {
+  @apply bg-gradient-to-tr from-purple-100 to-purple-50 dark:from-purple-800/20 dark:to-purple-900/20;
+}
+
+/* Card hover animation - Fine.dev inspired */
+.card-hover {
+  @apply transition-all duration-300;
+}
+
+.card-hover:hover {
+  @apply translate-y-[-2px] shadow-elevation-3;
+}
+
+/* Interactive button - Fine.dev inspired */
+.interactive {
+  @apply transition-transform duration-300 active:scale-95;
+}
+
+.btn-with-icon {
+  @apply inline-flex items-center space-x-2;
+}
+
+[dir="rtl"] .btn-with-icon {
+  @apply space-x-0 space-x-reverse;
+}
+
+/* Animation classes - Fine.dev inspired */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.4s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
+[dir="rtl"] .animate-slide-in-left {
+  animation: slideInRight 0.4s ease-out;
+}
+
+[dir="ltr"] .animate-slide-in-left {
+  animation: slideInLeft 0.4s ease-out;
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes slideIn {
-  from {
+@keyframes fadeUp {
+  from { 
+    opacity: 0;
     transform: translateY(20px);
-    opacity: 0;
   }
-  to {
-    transform: translateY(0);
+  to { 
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Custom utility classes */
-@layer utilities {
-  .bg-blue-gradient {
-    @apply bg-gradient-to-r from-blue-100 to-blue-50;
+@keyframes scaleIn {
+  from { 
+    opacity: 0;
+    transform: scale(0.9);
   }
+  to { 
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
-  .text-gradient {
-    @apply bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-transparent;
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Loading indicators */
+.loading-spinner {
+  @apply animate-spin rounded-full border-4 border-muted border-t-primary h-8 w-8;
+}
+
+/* Transitions - Fine.dev inspired */
+.transition-hover {
+  @apply transition-all duration-300;
+}
+
+/* Accessibility improvements */
+.sr-only-focusable:not(:focus) {
+  @apply sr-only;
+}
+
+.sr-only-focusable:focus {
+  @apply not-sr-only static p-2 bg-background text-foreground;
+}
+
+/* Improved dropdown menu for better accessibility */
+.dropdown-menu:focus-within {
+  @apply outline-none ring-2 ring-primary ring-offset-2;
+}
+
+/* Z-index utility classes for proper layering */
+.z-dropdown {
+  z-index: 50;
+}
+
+.z-modal {
+  z-index: 100;
+}
+
+.z-toast {
+  z-index: 200;
+}
+
+/* Typography improvements */
+.heading-1 {
+  @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+}
+
+.heading-2 {
+  @apply text-2xl sm:text-3xl md:text-4xl font-bold;
+}
+
+.heading-3 {
+  @apply text-xl sm:text-2xl font-semibold;
+}
+
+.heading-4 {
+  @apply text-lg sm:text-xl font-semibold;
+}
+
+.body-lg {
+  @apply text-lg text-muted-foreground;
+}
+
+.body-md {
+  @apply text-base text-muted-foreground;
+}
+
+.body-sm {
+  @apply text-sm text-muted-foreground;
+}
+
+/* Button improvements - Fine.dev inspired */
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    disabled:pointer-events-none disabled:opacity-50;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    disabled:pointer-events-none disabled:opacity-50;
+}
+
+.btn-outline {
+  @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground
+    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+    disabled:pointer-events-none disabled:opacity-50;
+}
+
+/* Form controls with consistent styling */
+.form-control {
+  @apply flex flex-col gap-1.5;
+}
+
+.form-label {
+  @apply text-sm font-medium;
+}
+
+.form-description {
+  @apply text-xs text-muted-foreground;
+}
+
+.form-error {
+  @apply text-xs text-destructive mt-1;
+}
+
+/* Fine.dev inspired styles */
+
+/* Fine Glow - subtle glow effect for cards and sections */
+.fine-glow {
+  @apply relative overflow-hidden;
+}
+
+.fine-glow::before {
+  @apply content-[''] absolute -top-[50%] -left-[50%] right-[50%] bottom-[50%] rounded-full bg-gradient-to-br from-primary/20 to-transparent opacity-0 blur-xl transition-opacity duration-1000;
+}
+
+.fine-glow:hover::before {
+  @apply opacity-100;
+}
+
+/* Fine gradients */
+.fine-gradient-purple {
+  @apply bg-gradient-to-br from-[#D946EF] to-[#8B5CF6];
+}
+
+.fine-gradient-blue {
+  @apply bg-gradient-to-br from-[#6366F1] to-[#2563EB];
+}
+
+.fine-gradient-subtle {
+  @apply bg-gradient-to-br from-background via-accent/20 to-background;
+}
+
+/* Fine card */
+.fine-card {
+  @apply relative overflow-hidden rounded-2xl border border-border/40 bg-card/80 backdrop-blur-sm transition-all duration-300;
+}
+
+.fine-card:hover {
+  @apply border-primary/20 shadow-lg shadow-primary/5;
+}
+
+/* Fine button */
+.fine-button {
+  @apply relative overflow-hidden rounded-full bg-primary px-6 py-2.5 text-primary-foreground transition-all duration-300;
+}
+
+.fine-button::before {
+  @apply absolute inset-0 bg-gradient-to-r from-primary/0 via-primary-foreground/20 to-primary/0 opacity-0 transition-opacity content-[''];
+  background-size: 200% 100%;
+  background-position: right center;
+}
+
+.fine-button:hover::before {
+  @apply opacity-100;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: right center;
+  }
+  to {
+    background-position: left center;
+  }
+}
+
+/* Text gradient - for headings */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-primary to-[#8B5CF6];
+}
+
+.dark .text-gradient {
+  @apply from-primary to-[#9b87f5];
+}
+
+/* Custom scrollbar (matches Fine.dev style) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--primary)/0.2) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-primary/20 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary/40;
 }
