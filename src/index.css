@@ -2,109 +2,76 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
- 
+
 @layer base {
   :root {
-    --background: 250 33% 98%;
-    --foreground: 240 10% 15%;
-
+    /* Light theme colors (MUI-inspired) */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 15%;
- 
+    --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 15%;
- 
-    --primary: 260 60% 55%;
-    --primary-foreground: 210 40% 98%;
- 
-    --secondary: 260 20% 92%;
-    --secondary-foreground: 240 10% 15%;
- 
-    --muted: 260 15% 94%;
-    --muted-foreground: 240 5% 45%;
- 
-    --accent: 260 30% 88%;
-    --accent-foreground: 240 10% 15%;
- 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 240 6% 90%;
-    --input: 240 6% 90%;
-    --ring: 260 60% 55%;
- 
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 5.9% 10%;
     --radius: 0.5rem;
   }
- 
+
   .dark {
-    --background: 240 10% 8%;
-    --foreground: 210 20% 98%;
- 
-    --card: 240 10% 12%;
-    --card-foreground: 210 20% 98%;
- 
-    --popover: 240 10% 12%;
-    --popover-foreground: 210 20% 98%;
- 
-    --primary: 260 50% 65%;
-    --primary-foreground: 240 5% 10%;
- 
-    --secondary: 260 14% 16%;
-    --secondary-foreground: 210 20% 98%;
- 
-    --muted: 260 14% 16%;
-    --muted-foreground: 240 5% 65%;
- 
-    --accent: 260 14% 20%;
-    --accent-foreground: 210 20% 98%;
- 
-    --destructive: 0 70% 58%;
-    --destructive-foreground: 210 20% 98%;
- 
-    --border: 240 5% 20%;
-    --input: 240 5% 20%;
-    --ring: 260 50% 65%;
+    /* Dark theme colors (MUI-inspired) */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
   }
   
-  /* High contrast mode - with improved contrast ratios */
-  .high-contrast.dark {
+  /* High contrast theme (MUI-inspired) */
+  .high-contrast {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
     --card: 0 0% 0%;
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 0%;
     --popover-foreground: 0 0% 100%;
-    --primary: 270 100% 70%;
+    --primary: 0 0% 100%;
     --primary-foreground: 0 0% 0%;
-    --secondary: 240 100% 50%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 100%;
-    --accent: 270 100% 30%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 20%;
     --accent-foreground: 0 0% 100%;
-    --border: 0 0% 50%;
-    --input: 0 0% 50%;
-    --ring: 270 100% 70%;
-  }
-
-  .high-contrast:not(.dark) {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 270 100% 50%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 90%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 95%;
-    --muted-foreground: 0 0% 0%;
-    --accent: 270 100% 30%;
-    --accent-foreground: 0 0% 100%;
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 270 100% 50%;
+    --destructive: 0 100% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 0% 80%;
+    --input: 0 0% 80%;
+    --ring: 0 0% 100%;
   }
 }
 
@@ -112,284 +79,49 @@
   * {
     @apply border-border;
   }
-  
-  html {
-    @apply scroll-smooth;
-  }
-  
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Focus styles for better visibility and accessibility */
+  /* Add a reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+  
+  /* For manually enabling reduced animations */
+  .reduce-animations * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  /* RTL direction fixes */
+  [dir="rtl"] .flip-in-rtl {
+    transform: scaleX(-1);
+  }
+  
+  /* Accessibility focus styles */
   :focus-visible {
-    @apply outline-none ring-2 ring-primary ring-offset-2;
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
   
-  /* RTL support for controls */
-  [dir="rtl"] .rtl-flip {
-    @apply rotate-180;
+  /* Skip link styles */
+  .skip-link:focus {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    padding: 1rem;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    text-decoration: none;
   }
-  
-  [dir="rtl"] .rtl-mirror {
-    @apply -scale-x-100;
-  }
-  
-  /* Section padding utility for consistent spacing */
-  .section-padding {
-    @apply py-12 sm:py-16 md:py-20 px-4;
-  }
-  
-  /* Reusable container widths */
-  .container-sm {
-    @apply max-w-3xl mx-auto;
-  }
-  
-  .container-md {
-    @apply max-w-5xl mx-auto;
-  }
-  
-  .container-lg {
-    @apply max-w-7xl mx-auto;
-  }
-}
-
-/* Reduced animations */
-.reduce-animations * {
-  animation: none !important;
-  transition: none !important;
-  transition-property: none !important;
-}
-
-/* Glass effect */
-.glass {
-  @apply backdrop-blur-md bg-white/80 dark:bg-slate-900/80 border border-white/20 dark:border-slate-800/20 shadow-md;
-}
-
-/* Hero section gradient styles */
-.hero-gradient {
-  background: linear-gradient(to right, hsl(260, 60%, 55%), hsl(270, 60%, 45%));
-}
-
-[dir="rtl"] .hero-gradient {
-  background: linear-gradient(to left, hsl(260, 60%, 55%), hsl(270, 60%, 45%));
-}
-
-/* Subtle gradient backgrounds */
-.bg-purple-gradient {
-  @apply bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20;
-}
-
-.bg-purple-gradient-reverse {
-  @apply bg-gradient-to-tr from-purple-100 to-purple-50 dark:from-purple-800/20 dark:to-purple-900/20;
-}
-
-/* Card hover animation */
-.card-hover {
-  @apply transition-all duration-300;
-}
-
-.card-hover:hover {
-  @apply translate-y-[-2px] shadow-elevation-3;
-}
-
-/* Interactive button */
-.interactive {
-  @apply transition-transform duration-300 active:scale-95;
-}
-
-.btn-with-icon {
-  @apply inline-flex items-center space-x-2;
-}
-
-[dir="rtl"] .btn-with-icon {
-  @apply space-x-0 space-x-reverse;
-}
-
-/* Animation classes */
-.animate-fade-in {
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.animate-fade-up {
-  animation: fadeUp 0.4s ease-out;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.3s ease-out;
-}
-
-.animate-slide-up {
-  animation: slideUp 0.4s ease-out;
-}
-
-[dir="rtl"] .animate-slide-in-left {
-  animation: slideInRight 0.4s ease-out;
-}
-
-[dir="ltr"] .animate-slide-in-left {
-  animation: slideInLeft 0.4s ease-out;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeUp {
-  from { 
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to { 
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from { 
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to { 
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Loading indicators */
-.loading-spinner {
-  @apply animate-spin rounded-full border-4 border-muted border-t-primary h-8 w-8;
-}
-
-/* Transitions */
-.transition-hover {
-  @apply transition-all duration-300;
-}
-
-/* Accessibility improvements */
-.sr-only-focusable:not(:focus) {
-  @apply sr-only;
-}
-
-.sr-only-focusable:focus {
-  @apply not-sr-only static p-2 bg-background text-foreground;
-}
-
-/* Improved dropdown menu for better accessibility */
-.dropdown-menu:focus-within {
-  @apply outline-none ring-2 ring-primary ring-offset-2;
-}
-
-/* Z-index utility classes for proper layering */
-.z-dropdown {
-  z-index: 50;
-}
-
-.z-modal {
-  z-index: 100;
-}
-
-.z-toast {
-  z-index: 200;
-}
-
-/* Typography improvements */
-.heading-1 {
-  @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight;
-}
-
-.heading-2 {
-  @apply text-2xl sm:text-3xl md:text-4xl font-bold;
-}
-
-.heading-3 {
-  @apply text-xl sm:text-2xl font-semibold;
-}
-
-.heading-4 {
-  @apply text-lg sm:text-xl font-semibold;
-}
-
-.body-lg {
-  @apply text-lg text-muted-foreground;
-}
-
-.body-md {
-  @apply text-base text-muted-foreground;
-}
-
-.body-sm {
-  @apply text-sm text-muted-foreground;
-}
-
-/* Button improvements */
-.btn-primary {
-  @apply bg-primary text-primary-foreground hover:bg-primary/90 
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-    disabled:pointer-events-none disabled:opacity-50;
-}
-
-.btn-secondary {
-  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-    disabled:pointer-events-none disabled:opacity-50;
-}
-
-.btn-outline {
-  @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground
-    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-    disabled:pointer-events-none disabled:opacity-50;
-}
-
-/* Form controls with consistent styling */
-.form-control {
-  @apply flex flex-col gap-1.5;
-}
-
-.form-label {
-  @apply text-sm font-medium;
-}
-
-.form-description {
-  @apply text-xs text-muted-foreground;
-}
-
-.form-error {
-  @apply text-xs text-destructive mt-1;
 }
