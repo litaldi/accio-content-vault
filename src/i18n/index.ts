@@ -14,7 +14,7 @@ i18n
       ar: { translation: arTranslation },
       he: { translation: heTranslation }
     },
-    lng: localStorage.getItem('appLanguage') || 'en',
+    lng: typeof localStorage !== 'undefined' ? (localStorage.getItem('appLanguage') || 'en') : 'en',
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false // React already safes from XSS
