@@ -1,8 +1,9 @@
 
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Keyboard } from 'lucide-react';
+import { Keyboard, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface AccessibilityTogglesProps {
   isHighContrast: boolean;
@@ -20,29 +21,33 @@ export function AccessibilityToggles({
   const { t } = useTranslation();
   
   // Handlers for keyboard interactions
-  const handleHighContrastKeyDown = (e: React.KeyboardEvent) => {
+  const handleHighContrastKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       toggleHighContrast();
     }
   };
   
-  const handleReducedMotionKeyDown = (e: React.KeyboardEvent) => {
+  const handleReducedMotionKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       toggleReducedMotion();
     }
   };
   
-  const handleHelpKeyDown = (e: React.KeyboardEvent) => {
+  const handleHelpKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      window.open('https://www.w3.org/WAI/people-use-web/user-stories/', '_blank');
+      window.open('https://www.w3.org/WAI/people-use-web/user-stories/', '_blank', 'noopener,noreferrer');
     }
   };
   
   return (
-    <div className="grid grid-cols-1 gap-2" role="group" aria-label={t('common.accessibility.toggleOptions', 'Accessibility Toggle Options')}>
+    <div 
+      className="grid grid-cols-1 gap-2" 
+      role="group" 
+      aria-label={t('common.accessibility.toggleOptions', 'Accessibility Toggle Options')}
+    >
       <Button
         variant={isHighContrast ? "default" : "outline"}
         className="justify-start h-10 px-3 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
@@ -95,15 +100,42 @@ export function AccessibilityToggles({
         {t('common.accessibility.reducedMotion', 'Reduced motion')}
       </Button>
       
-      <Button
-        variant="ghost"
-        className="justify-start h-10 px-3 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-        onClick={() => window.open('https://www.w3.org/WAI/people-use-web/user-stories/', '_blank')}
-        onKeyDown={handleHelpKeyDown}
-      >
-        <Keyboard className="mr-2 h-4 w-4" aria-hidden="true" />
-        {t('common.accessibility.keyboardHelp', 'Keyboard navigation help')}
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className="justify-start h-10 px-3 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onClick={() => window.open('https://www.w3.org/WAI/people-use-web/user-stories/', '_blank', 'noopener,noreferrer')}
+              onKeyDown={handleHelpKeyDown}
+            >
+              <Keyboard className="mr-2 h-4 w-4" aria-hidden="true" />
+              {t('common.accessibility.keyboardHelp', 'Keyboard navigation help')}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p className="max-w-xs">Learn more about web accessibility and how to navigate with a keyboard.</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+      
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant="ghost"
+              className="justify-start h-10 px-3 rounded-md focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              onClick={() => window.open('/accessibility-statement', '_blank', 'noopener,noreferrer')}
+            >
+              <HelpCircle className="mr-2 h-4 w-4" aria-hidden="true" />
+              {t('common.accessibility.statement', 'Accessibility statement')}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            <p className="max-w-xs">View our accessibility statement and commitment to inclusive design.</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     </div>
   );
 }

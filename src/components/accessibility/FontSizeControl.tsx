@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ZoomIn, ZoomOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,27 +14,46 @@ export function FontSizeControl({ fontSize, changeFontSize }: FontSizeControlPro
   const { t } = useTranslation();
   
   // Handlers for keyboard interactions
-  const handleDecreaseKeyDown = (e: React.KeyboardEvent) => {
+  const handleDecreaseKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       changeFontSize(Math.max(70, fontSize - 10));
     }
   };
   
-  const handleIncreaseKeyDown = (e: React.KeyboardEvent) => {
+  const handleIncreaseKeyDown = (e: KeyboardEvent<HTMLButtonElement>) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       changeFontSize(Math.min(150, fontSize + 10));
     }
   };
+
+  const handleSliderKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    // Handle arrow keys for more precise control
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      changeFontSize(Math.max(70, fontSize - 5));
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      changeFontSize(Math.min(150, fontSize + 5));
+    }
+  };
   
   return (
-    <div className="space-y-2" role="group" aria-labelledby="font-size-label">
+    <div 
+      className="space-y-2" 
+      role="group" 
+      aria-labelledby="font-size-label"
+    >
       <div className="flex items-center justify-between">
         <label id="font-size-label" className="text-sm font-medium">
           {t('common.accessibility.fontSize', 'Font Size')}
         </label>
-        <span className="text-xs text-muted-foreground" aria-live="polite">
+        <span 
+          className="text-xs text-muted-foreground" 
+          aria-live="polite"
+          aria-atomic="true"
+        >
           {fontSize}%
         </span>
       </div>
@@ -62,6 +81,7 @@ export function FontSizeControl({ fontSize, changeFontSize }: FontSizeControlPro
           aria-valuemax={150}
           aria-valuenow={fontSize}
           aria-valuetext={`${fontSize}%`}
+          onKeyDown={handleSliderKeyDown}
           className="flex-1"
         />
         <Button
