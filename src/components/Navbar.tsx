@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -152,7 +151,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout }) => {
                   >
                     <Avatar className="h-8 w-8 transition-transform hover:scale-105">
                       {user?.photoURL ? (
-                        <AvatarImage src={user.photoURL} alt="Profile" />
+                        <AvatarImage src={(user as any).photoURL} alt="Profile" />
                       ) : null}
                       <AvatarFallback className="bg-primary/10 text-primary">{getUserInitials()}</AvatarFallback>
                     </Avatar>

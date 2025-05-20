@@ -21,9 +21,16 @@ if (typeof window !== 'undefined') {
   
   // Add focus-visible polyfill for browsers that don't support it
   if (!('focusVisible' in document.documentElement.style)) {
-    import('focus-visible').then(() => {
-      console.log('Focus-visible polyfill loaded');
-    });
+    // Using dynamic import with proper error handling
+    import('focus-visible')
+      .then(() => {
+        console.log('Focus-visible polyfill loaded');
+      })
+      .catch(error => {
+        console.warn('Failed to load focus-visible polyfill:', error);
+        // Apply alternative focus styles as fallback
+        document.documentElement.classList.add('focus-fallback');
+      });
   }
   
   // Add skip link handler for better keyboard navigation
