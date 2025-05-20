@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,14 +31,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
 const Index: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { direction } = useDirection();
   const isMobile = useIsMobile();
   
   const handleLogout = async () => {
-    await logout();
+    await signOut();
     navigate('/login');
   };
   
