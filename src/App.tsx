@@ -14,6 +14,7 @@ import '@/i18n'; // Import i18n initialization
 
 import Index from "./pages/Index";
 import LandingPage from "./pages/LandingPage";
+import EnterpriseLanding from "./pages/EnterpriseLanding";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
@@ -51,6 +52,7 @@ const App: React.FC = () => {
                     <Routes>
                       <Route path="/" element={<LandingPage />} />
                       <Route path="/home" element={<Index />} />
+                      <Route path="/enterprise" element={<EnterpriseLanding />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
                       

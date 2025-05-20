@@ -34,6 +34,7 @@ const LandingPage: React.FC = () => {
             <a href="#testimonials" className="text-foreground hover:text-primary transition-colors">Testimonials</a>
             <a href="#faq" className="text-foreground hover:text-primary transition-colors">FAQ</a>
             <a href="#pricing" className="text-foreground hover:text-primary transition-colors">Pricing</a>
+            <a href="/enterprise" className="text-foreground hover:text-primary transition-colors">Enterprise</a>
           </div>
           <div className="flex items-center space-x-4">
             <Button variant="outline" onClick={() => navigate('/login')}>
@@ -65,6 +66,9 @@ const LandingPage: React.FC = () => {
                   See how it works
                 </Button>
               </div>
+              <p className="text-sm text-muted-foreground pt-2">
+                Looking for enterprise solutions? <a href="/enterprise" className="text-primary hover:underline">Visit Accio Enterprise</a>
+              </p>
             </div>
             <div className="relative h-[300px] md:h-[500px] rounded-lg overflow-hidden shadow-xl">
               <OptimizedImage 
@@ -354,7 +358,7 @@ const LandingPage: React.FC = () => {
                 <li><a href="#features" className="text-foreground hover:text-primary transition-colors">Features</a></li>
                 <li><a href="#pricing" className="text-foreground hover:text-primary transition-colors">Pricing</a></li>
                 <li><a href="/integrations" className="text-foreground hover:text-primary transition-colors">Integrations</a></li>
-                <li><a href="/roadmap" className="text-foreground hover:text-primary transition-colors">Roadmap</a></li>
+                <li><a href="/enterprise" className="text-foreground hover:text-primary transition-colors">Enterprise</a></li>
               </ul>
             </div>
             
