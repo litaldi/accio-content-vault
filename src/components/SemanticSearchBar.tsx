@@ -13,10 +13,16 @@ import {
 
 interface SemanticSearchBarProps {
   onSearch: (query: string, isSemanticSearch: boolean) => void;
+  initialQuery?: string;
+  loading?: boolean;
 }
 
-const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState<string>('');
+const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ 
+  onSearch, 
+  initialQuery = "", 
+  loading = false 
+}) => {
+  const [searchQuery, setSearchQuery] = useState<string>(initialQuery);
   const [isSemanticSearch, setIsSemanticSearch] = useState<boolean>(true);
   const [isFocused, setIsFocused] = useState<boolean>(false);
   const { toast } = useToast();
@@ -43,15 +49,22 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
     <form onSubmit={handleSearch} className="w-full max-w-xl mx-auto animate-fade-in">
       <div className="flex flex-col w-full items-center space-y-3">
         <div className={`relative w-full transition-all duration-200 ${isFocused ? 'shadow-sm ring-2 ring-primary/20 rounded-md' : ''}`}>
-          <Search className={`absolute left-2.5 top-2.5 h-4 w-4 transition-colors duration-200 ${isFocused ? 'text-primary' : 'text-muted-foreground'}`} />
+          <Search 
+            className={`absolute left-2.5 top-2.5 h-4 w-4 transition-colors duration-200 ${isFocused ? 'text-primary' : 'text-muted-foreground'}`}
+            aria-hidden="true"
+          />
           <Input
             type="text"
-            placeholder={isSemanticSearch ? "Ask a question about your content..." : "Search by tag or keyword..."}
+            placeholder={isSemanticSearch 
+              ? "Ask a question about your content..." 
+              : "Search by tag or keyword..."
+            }
             className="w-full pl-9"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            aria-label="Search content"
           />
           {searchQuery && (
             <button
@@ -97,13 +110,20 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
           <Button 
             type="submit" 
             className="btn-with-icon interactive"
+            disabled={loading}
+            aria-label={isSemanticSearch ? "Search semantically" : "Search by keywords"}
           >
-            {isSemanticSearch ? (
+            {loading ? (
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            ) : isSemanticSearch ? (
               <Sparkles className="h-4 w-4" />
             ) : (
               <Search className="h-4 w-4" />
             )}
-            <span>Search</span>
+            <span>{loading ? "Searching..." : "Search"}</span>
           </Button>
         </div>
       </div>
