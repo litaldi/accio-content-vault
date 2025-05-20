@@ -35,27 +35,22 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       // Render fallback UI
       if (this.props.fallback) {
         if (typeof this.props.fallback === 'function' && this.state.error) {
-          // Create a wrapper component to handle functional fallbacks
-          // This ensures TypeScript understands we're rendering a React element, not a function
-          const FallbackComponent = () => {
-            const fallbackFn = this.props.fallback as (error: Error) => ReactNode;
-            return <>{fallbackFn(this.state.error!)}</>;
-          };
-          return <FallbackComponent />;
+          // Using a JSX element directly to render the function result
+          return <>{(this.props.fallback as Function)(this.state.error)}</>;
         }
         return this.props.fallback;
       }
       
       // Default error UI
       return (
-        <div className="p-6 bg-destructive/10 rounded-lg border border-destructive text-center">
-          <h2 className="text-xl font-semibold mb-2">Something went wrong</h2>
-          <p className="text-muted-foreground mb-4">
+        <div className="p-6 bg-blue-50 rounded-lg border border-blue-200 text-center shadow-sm">
+          <h2 className="text-xl font-semibold mb-2 text-blue-700">Something went wrong</h2>
+          <p className="text-blue-600 mb-4">
             The application encountered an unexpected error.
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md"
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
           >
             Reload page
           </button>
