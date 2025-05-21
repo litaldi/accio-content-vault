@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -7,33 +6,26 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Link, FileText, Search, Tag } from 'lucide-react';
 
 // Define the steps for onboarding
-const onboardingSteps = [
-  {
-    title: "Save Content",
-    description: "Save articles, webpages, and files with a single click.",
-    icon: <Link className="h-8 w-8 text-primary" aria-hidden="true" />,
-  },
-  {
-    title: "AI Tagging",
-    description: "Accio automatically tags your content for easy organization.",
-    icon: <Tag className="h-8 w-8 text-primary" aria-hidden="true" />,
-  },
-  {
-    title: "Upload Files",
-    description: "Upload PDFs and images directly to your collection.",
-    icon: <FileText className="h-8 w-8 text-primary" aria-hidden="true" />,
-  },
-  {
-    title: "Smart Search",
-    description: "Find content with keywords or natural language questions.",
-    icon: <Search className="h-8 w-8 text-primary" aria-hidden="true" />,
-  }
-];
-
+const onboardingSteps = [{
+  title: "Save Content",
+  description: "Save articles, webpages, and files with a single click.",
+  icon: <Link className="h-8 w-8 text-primary" aria-hidden="true" />
+}, {
+  title: "AI Tagging",
+  description: "Accio automatically tags your content for easy organization.",
+  icon: <Tag className="h-8 w-8 text-primary" aria-hidden="true" />
+}, {
+  title: "Upload Files",
+  description: "Upload PDFs and images directly to your collection.",
+  icon: <FileText className="h-8 w-8 text-primary" aria-hidden="true" />
+}, {
+  title: "Smart Search",
+  description: "Find content with keywords or natural language questions.",
+  icon: <Search className="h-8 w-8 text-primary" aria-hidden="true" />
+}];
 const Index = () => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-
   const handleNextStep = () => {
     if (currentStep < onboardingSteps.length - 1) {
       setCurrentStep(currentStep + 1);
@@ -41,9 +33,7 @@ const Index = () => {
       navigate('/register');
     }
   };
-
-  return (
-    <div className="min-h-screen flex flex-col">
+  return <div className="min-h-screen flex flex-col">
       <Navbar isLoggedIn={false} />
       
       <main className="flex-grow" id="main-content">
@@ -57,19 +47,10 @@ const Index = () => {
               Accio organizes your online content with AI-powered tagging and powerful search.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button
-                size="lg"
-                onClick={() => navigate('/register')}
-                className="bg-white text-primary hover:bg-white/90 focus-visible:ring-offset-primary"
-              >
+              <Button size="lg" onClick={() => navigate('/register')} className="bg-white text-primary hover:bg-white/90 focus-visible:ring-offset-primary">
                 Get Started - Free
               </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                onClick={() => navigate('/login')}
-                className="text-white border-white hover:bg-white/10 focus-visible:ring-offset-primary focus-visible:ring-white"
-              >
+              <Button size="lg" variant="outline" onClick={() => navigate('/login')} className="border-white hover:bg-white/10 focus-visible:ring-offset-primary focus-visible:ring-white text-sky-50">
                 Login
               </Button>
             </div>
@@ -89,14 +70,7 @@ const Index = () => {
                 <CardContent className="p-0">
                   {/* Progress indicator */}
                   <div className="flex" aria-hidden="true">
-                    {onboardingSteps.map((_, index) => (
-                      <div
-                        key={index}
-                        className={`h-1 flex-1 ${
-                          index <= currentStep ? "bg-primary" : "bg-muted"
-                        }`}
-                      />
-                    ))}
+                    {onboardingSteps.map((_, index) => <div key={index} className={`h-1 flex-1 ${index <= currentStep ? "bg-primary" : "bg-muted"}`} />)}
                   </div>
                   
                   {/* Content */}
@@ -110,13 +84,7 @@ const Index = () => {
                     <p className="text-lg text-muted-foreground mb-8">
                       {onboardingSteps[currentStep].description}
                     </p>
-                    <Button
-                      size="lg"
-                      onClick={handleNextStep}
-                      aria-label={currentStep < onboardingSteps.length - 1 
-                        ? `Next: ${onboardingSteps[currentStep + 1]?.title || 'Get Started'}` 
-                        : 'Get Started'}
-                    >
+                    <Button size="lg" onClick={handleNextStep} aria-label={currentStep < onboardingSteps.length - 1 ? `Next: ${onboardingSteps[currentStep + 1]?.title || 'Get Started'}` : 'Get Started'}>
                       {currentStep < onboardingSteps.length - 1 ? "Next" : "Get Started"}
                     </Button>
                   </div>
@@ -125,26 +93,12 @@ const Index = () => {
             </div>
             
             <div className="grid md:grid-cols-4 gap-8 text-center mt-16">
-              {onboardingSteps.map((step, index) => (
-                <div
-                  key={index}
-                  className={`p-6 rounded-lg border ${
-                    index === currentStep
-                      ? "border-primary bg-primary/5"
-                      : "border-border bg-card"
-                  } cursor-pointer transition-colors`}
-                  onClick={() => setCurrentStep(index)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      setCurrentStep(index);
-                    }
-                  }}
-                  tabIndex={0}
-                  role="button"
-                  aria-selected={index === currentStep}
-                  aria-label={`View ${step.title} details`}
-                >
+              {onboardingSteps.map((step, index) => <div key={index} className={`p-6 rounded-lg border ${index === currentStep ? "border-primary bg-primary/5" : "border-border bg-card"} cursor-pointer transition-colors`} onClick={() => setCurrentStep(index)} onKeyDown={e => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setCurrentStep(index);
+              }
+            }} tabIndex={0} role="button" aria-selected={index === currentStep} aria-label={`View ${step.title} details`}>
                   <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4" aria-hidden="true">
                     {step.icon}
                   </div>
@@ -152,8 +106,7 @@ const Index = () => {
                   <p className="text-muted-foreground">
                     {step.description}
                   </p>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </section>
@@ -220,19 +173,10 @@ const Index = () => {
               Join Accio today and never lose important content again.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button 
-                size="lg" 
-                onClick={() => navigate('/register')}
-                className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              >
+              <Button size="lg" onClick={() => navigate('/register')} className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                 Sign Up Free
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                onClick={() => navigate('/login')}
-                className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              >
+              <Button size="lg" variant="outline" onClick={() => navigate('/login')} className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
                 Login
               </Button>
             </div>
@@ -250,8 +194,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
