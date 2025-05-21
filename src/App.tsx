@@ -31,6 +31,9 @@ import Terms from "./pages/Terms";
 import AccessibilityStatement from "./pages/AccessibilityStatement";
 import FAQ from "./pages/FAQ";
 import Sitemap from "./pages/Sitemap";
+import Blog from "./pages/Blog";
+import Features from "./pages/Features";
+import Playground from "./pages/Playground";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Create a client with improved error handling
@@ -85,9 +88,12 @@ const App: React.FC = () => {
                         <Route path="/register" element={<Register />} />
                         <Route path="/pricing" element={<Pricing />} />
                         
-                        {/* New static pages */}
+                        {/* New and existing static pages */}
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
+                        <Route path="/features" element={<Features />} />
+                        <Route path="/blog" element={<Blog />} />
+                        <Route path="/playground" element={<Playground />} />
                         <Route path="/privacy" element={<Privacy />} />
                         <Route path="/terms" element={<Terms />} />
                         <Route path="/accessibility" element={<AccessibilityStatement />} />

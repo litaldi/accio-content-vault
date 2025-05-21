@@ -1,44 +1,17 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
-interface NavbarDesktopLinksProps {
-  isLoggedIn: boolean;
-  currentPath: string;
-}
-
-const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, currentPath }) => {
-  const isActive = (path: string) => currentPath === path;
-  
-  if (isLoggedIn) {
-    return (
-      <nav className="hidden md:flex gap-6">
-        {[
-          { path: '/dashboard', label: 'Dashboard' },
-          { path: '/collections', label: 'Collections' },
-          { path: '/analytics', label: 'Analytics' }
-        ].map(item => (
-          <Link 
-            key={item.path} 
-            to={item.path} 
-            className={`text-sm font-medium transition-colors relative py-1 ${
-              isActive(item.path) 
-                ? 'text-primary' 
-                : 'text-muted-foreground hover:text-primary'
-            }`}
-            aria-current={isActive(item.path) ? 'page' : undefined}
-          >
-            {item.label}
-            {isActive(item.path) && (
-              <span className="absolute bottom-0 left-0 w-full h-0.5 bg-primary rounded-full" aria-hidden="true" />
-            )}
-          </Link>
-        ))}
-      </nav>
-    );
-  }
-  
+const NavbarDesktopLinks: React.FC = () => {
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
@@ -47,24 +20,75 @@ const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, cur
             About
           </Link>
         </NavigationMenuItem>
+        
+        <NavigationMenuItem>
+          <Link to="/features" className={navigationMenuTriggerStyle()}>
+            Features
+          </Link>
+        </NavigationMenuItem>
+        
         <NavigationMenuItem>
           <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <div className="w-[400px] p-4 grid grid-cols-2 gap-3">
-              <Link to="/pricing" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                <div className="text-sm font-medium leading-none">Pricing</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">View our pricing plans and options</p>
-              </Link>
-              <Link to="/faq" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                <div className="text-sm font-medium leading-none">FAQ</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">Get answers to common questions</p>
-              </Link>
-              <Link to="/contact" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
-                <div className="text-sm font-medium leading-none">Contact</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">Get in touch with our support team</p>
-              </Link>
+            <div className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
+              <NavigationMenuLink asChild>
+                <Link
+                  to="/blog"
+                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                >
+                  <div className="text-sm font-medium leading-none">Blog</div>
+                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                    Latest updates, tips, and insights
+                  </p>
+                </Link>
+              </NavigationMenuLink>
+              <NavigationMenuLink asChild>
+                <Link
+                  to="/playground"
+                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                >
+                  <div className="text-sm font-medium leading-none">Playground</div>
+                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                    Try out Accio's features
+                  </p>
+                </Link>
+              </NavigationMenuLink>
+              <NavigationMenuLink asChild>
+                <Link
+                  to="/faq"
+                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                >
+                  <div className="text-sm font-medium leading-none">FAQ</div>
+                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                    Answers to common questions
+                  </p>
+                </Link>
+              </NavigationMenuLink>
+              <NavigationMenuLink asChild>
+                <Link
+                  to="/accessibility"
+                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                >
+                  <div className="text-sm font-medium leading-none">Accessibility</div>
+                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                    Our commitment to accessibility
+                  </p>
+                </Link>
+              </NavigationMenuLink>
             </div>
           </NavigationMenuContent>
+        </NavigationMenuItem>
+        
+        <NavigationMenuItem>
+          <Link to="/pricing" className={navigationMenuTriggerStyle()}>
+            Pricing
+          </Link>
+        </NavigationMenuItem>
+        
+        <NavigationMenuItem>
+          <Link to="/contact" className={navigationMenuTriggerStyle()}>
+            Contact
+          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
