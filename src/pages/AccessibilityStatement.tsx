@@ -100,14 +100,10 @@ const AccessibilityStatement = () => {
           <h2 className="text-2xl font-bold mb-4">Need Additional Help?</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button asChild>
-              <Link to="/contact">
-                Contact Support
-              </Link>
+              <Link to="/contact">Contact Support</Link>
             </Button>
             <Button variant="outline" asChild>
-              <Link to="/faq">
-                Visit FAQ
-              </Link>
+              <Link to="/faq">Visit FAQ</Link>
             </Button>
           </div>
         </div>
