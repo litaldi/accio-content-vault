@@ -72,11 +72,14 @@ describe('useTagService', () => {
 
     it('should process tags for existing and new tags', async () => {
       // Mock scenario where first tag exists and second needs to be created
+      // Fixed implementation to avoid duplicate property names
+      const mockEqFn = jest.fn();
+      mockEqFn
+        .mockResolvedValueOnce({ data: [{ id: 'tag1', name: 'react', auto_generated: false }], error: null })
+        .mockResolvedValueOnce({ data: [], error: null });
+        
       mockSupabase.select.mockImplementation(() => ({
-        eq: jest.fn().mockReturnThis(),
-        // Fixed duplicate eq by properly chaining the mock implementation
-        eq: jest.fn().mockResolvedValueOnce({ data: [{ id: 'tag1', name: 'react', auto_generated: false }], error: null })
-          .mockResolvedValueOnce({ data: [], error: null }),
+        eq: mockEqFn
       }));
       
       mockSupabase.insert.mockImplementation(() => ({
