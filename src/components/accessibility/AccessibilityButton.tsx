@@ -3,20 +3,17 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { EyeIcon, Type, ZoomIn } from 'lucide-react';
+import { EyeIcon, Type } from 'lucide-react';
 
 /**
  * AccessibilityButton component that provides accessibility controls for the application.
  */
 export const AccessibilityButton = () => {
   const { 
-    increaseFontSize, 
-    decreaseFontSize, 
-    resetFontSize, 
-    currentFontSize, 
-    increaseContrast, 
-    resetContrast,
-    highContrast
+    preferences,
+    increaseTextSize, 
+    decreaseTextSize, 
+    toggleHighContrast
   } = useAccessibility();
 
   return (
@@ -27,15 +24,14 @@ export const AccessibilityButton = () => {
             <Button 
               variant="ghost" 
               size="icon"
-              onClick={increaseFontSize}
+              onClick={increaseTextSize}
               aria-label="Increase font size"
             >
               <Type className="h-[1.2rem] w-[1.2rem]" />
-              <span className="sr-only">Increase font size</span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Adjust text size (Current: {Math.round(currentFontSize * 100)}%)</p>
+            <p>Adjust text size (Current: {Math.round(preferences.fontSize)}%)</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -46,18 +42,15 @@ export const AccessibilityButton = () => {
             <Button 
               variant="ghost"
               size="icon"
-              onClick={highContrast ? resetContrast : increaseContrast}
-              aria-label={highContrast ? "Reset contrast" : "Increase contrast"}
-              className={highContrast ? "bg-accent" : ""}
+              onClick={toggleHighContrast}
+              aria-label={preferences.highContrast ? "Reset contrast" : "Increase contrast"}
+              className={preferences.highContrast ? "bg-accent" : ""}
             >
               <EyeIcon className="h-[1.2rem] w-[1.2rem]" />
-              <span className="sr-only">
-                {highContrast ? "Reset contrast" : "Increase contrast"}
-              </span>
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>{highContrast ? "Reset contrast" : "Increase contrast"}</p>
+            <p>{preferences.highContrast ? "Reset contrast" : "Increase contrast"}</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
