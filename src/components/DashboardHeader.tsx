@@ -8,19 +8,27 @@ const DashboardHeader: React.FC = () => {
   const navigate = useNavigate();
   
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
       <h1 className="text-3xl font-bold">My Content</h1>
-      <div className="flex gap-2">
-        <Button onClick={() => navigate('/collections')} variant="outline" className="flex items-center gap-2">
-          <FolderOpen className="h-4 w-4" />
+      <div className="flex flex-wrap gap-2">
+        <Button 
+          onClick={() => navigate('/collections')} 
+          variant="outline"
+        >
+          <FolderOpen className="h-4 w-4 mr-2" />
           Collections
         </Button>
-        <Button onClick={() => navigate('/analytics')} variant="outline" className="flex items-center gap-2">
-          <BarChart className="h-4 w-4" />
+        <Button 
+          onClick={() => navigate('/analytics')} 
+          variant="outline"
+        >
+          <BarChart className="h-4 w-4 mr-2" />
           Analytics
         </Button>
-        <Button onClick={() => navigate('/save')} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" />
+        <Button 
+          onClick={() => navigate('/save')}
+        >
+          <Plus className="h-4 w-4 mr-2" />
           Save New
         </Button>
       </div>
