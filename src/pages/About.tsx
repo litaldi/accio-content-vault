@@ -89,14 +89,10 @@ const About = () => {
           <h2 className="text-2xl font-bold mb-4">Ready to get started?</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button size="lg" asChild>
-              <Link to="/register">
-                Create an Account
-              </Link>
+              <Link to="/register">Create an Account</Link>
             </Button>
             <Button variant="outline" size="lg" asChild>
-              <Link to="/contact">
-                Contact Us
-              </Link>
+              <Link to="/contact">Contact Us</Link>
             </Button>
           </div>
         </div>
