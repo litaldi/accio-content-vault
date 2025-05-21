@@ -43,7 +43,7 @@ const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, cur
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
         <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+          <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
             <Link to="/about">About</Link>
           </NavigationMenuLink>
         </NavigationMenuItem>
