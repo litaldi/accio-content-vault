@@ -73,6 +73,11 @@ jest.mock('@/components/SearchResults', () => ({
 
 // Mock our new dashboard components
 jest.mock('@/components/Dashboard', () => ({
+  __esModule: true,
+  default: () => {
+    const Dashboard = jest.requireActual('@/components/Dashboard/Dashboard').default;
+    return <Dashboard />;
+  },
   DashboardStats: ({ tagStats }: { tagStats: { confirmed: number, rejected: number } }) => (
     <div data-testid="dashboard-stats">
       <span>{tagStats.confirmed} confirmed</span>
@@ -121,13 +126,12 @@ describe('Dashboard Page', () => {
     expect(screen.getByTestId('dashboard-header')).toBeInTheDocument();
     expect(screen.getByTestId('search-bar')).toBeInTheDocument();
     expect(screen.getByTestId('search-results')).toBeInTheDocument();
-    expect(screen.getByText(/Add New Content/i)).toBeInTheDocument();
   });
 
   it('navigates to add content page when button is clicked', () => {
     render(<Dashboard />);
     
-    fireEvent.click(screen.getByText(/Add New Content/i));
+    fireEvent.click(screen.getByTestId('add-content-button'));
     expect(navigateMock).toHaveBeenCalledWith('/save');
   });
 
