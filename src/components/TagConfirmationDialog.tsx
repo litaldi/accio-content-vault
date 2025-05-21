@@ -45,13 +45,13 @@ const TagConfirmationDialog = ({ tag, onConfirm, onClose }: TagConfirmationDialo
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleReject}>
-            <span className="flex items-center">
+            <span className="inline-flex items-center">
               <ThumbsDown className="h-4 w-4 mr-2" />
               Not accurate
             </span>
           </AlertDialogCancel>
           <AlertDialogAction onClick={handleConfirm}>
-            <span className="flex items-center">
+            <span className="inline-flex items-center">
               <ThumbsUp className="h-4 w-4 mr-2" />
               Yes, it's accurate
             </span>
