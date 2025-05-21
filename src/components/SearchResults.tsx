@@ -100,18 +100,22 @@ const SearchResults = ({
           <CardFooter className="flex gap-2 flex-wrap">
             {content.url && (
               <Button variant="outline" size="sm" asChild>
-                <a href={content.url} target="_blank" rel="noopener noreferrer" className="flex items-center">
-                  <ExternalLink className="h-3 w-3 mr-2" />
-                  <span>Open Original</span>
+                <a href={content.url} target="_blank" rel="noopener noreferrer">
+                  <span className="flex items-center">
+                    <ExternalLink className="h-3 w-3 mr-2" />
+                    Open Original
+                  </span>
                 </a>
               </Button>
             )}
             
             {content.file_url && (
               <Button variant="outline" size="sm" asChild>
-                <a href={content.file_url} target="_blank" rel="noopener noreferrer" className="flex items-center">
-                  {getFileIcon(content.file_type)}
-                  <span className="ml-2">View {content.file_type}</span>
+                <a href={content.file_url} target="_blank" rel="noopener noreferrer">
+                  <span className="flex items-center">
+                    {getFileIcon(content.file_type)}
+                    <span className="ml-2">View {content.file_type}</span>
+                  </span>
                 </a>
               </Button>
             )}
