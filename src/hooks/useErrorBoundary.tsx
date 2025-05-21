@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 
 interface ErrorBoundaryProps {
@@ -17,6 +18,13 @@ export function useErrorBoundary() {
   }, []);
 
   /**
+   * A component that renders fallback UI when an error is caught
+   */
+  const FallbackComponent = ({ children, error }: { children: React.ReactNode, error: Error }) => {
+    return <>{children}</>;
+  };
+
+  /**
    * ErrorBoundary component that catches errors in its children
    * and displays a fallback UI when an error occurs
    */
@@ -24,8 +32,12 @@ export function useErrorBoundary() {
     if (error) {
       // If the fallback is a function, render it with the error
       if (typeof fallback === 'function') {
-        // Explicitly render the result of the function call
-        return <>{fallback(error)}</>;
+        // Wrap the function result in a fragment to ensure it's a valid ReactNode
+        return (
+          <FallbackComponent error={error}>
+            {fallback(error)}
+          </FallbackComponent>
+        );
       }
       // Otherwise, render the fallback directly
       return <>{fallback}</>;

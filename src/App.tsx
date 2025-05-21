@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { HelmetProvider } from 'react-helmet-async';
 import SkipToContent from "./components/SkipToContent";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 // Import components
 import Index from "./pages/Index";
@@ -31,82 +32,102 @@ import FAQ from "./pages/FAQ";
 import Sitemap from "./pages/Sitemap";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Create a client
+// Create a client with improved error handling
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
       retry: 1,
+      onError: (error) => {
+        console.error('Query error:', error);
+      }
     },
+    mutations: {
+      onError: (error) => {
+        console.error('Mutation error:', error);
+      }
+    }
   },
 });
 
 const App: React.FC = () => {
   return (
     <React.StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <TooltipProvider>
-            <HelmetProvider>
-              <AuthProvider>
-                <AccessibilityProvider>
-                  <Toaster />
-                  <Sonner />
-                  <BrowserRouter>
-                    <SkipToContent />
-                    <Routes>
-                      {/* Public routes */}
-                      <Route path="/" element={<Index />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/pricing" element={<Pricing />} />
-                      
-                      {/* New static pages */}
-                      <Route path="/about" element={<About />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/privacy" element={<Privacy />} />
-                      <Route path="/terms" element={<Terms />} />
-                      <Route path="/accessibility" element={<AccessibilityStatement />} />
-                      <Route path="/faq" element={<FAQ />} />
-                      <Route path="/sitemap" element={<Sitemap />} />
-                      
-                      {/* Protected routes - require authentication */}
-                      <Route path="/dashboard" element={
-                        <ProtectedRoute>
-                          <Dashboard />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/save" element={
-                        <ProtectedRoute>
-                          <SaveContent />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/settings" element={
-                        <ProtectedRoute>
-                          <AccountSettings />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/analytics" element={
-                        <ProtectedRoute>
-                          <Analytics />
-                        </ProtectedRoute>
-                      } />
-                      <Route path="/collections" element={
-                        <ProtectedRoute>
-                          <Collections />
-                        </ProtectedRoute>
-                      } />
-                      
-                      {/* Catch all route - 404 */}
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </BrowserRouter>
-                </AccessibilityProvider>
-              </AuthProvider>
-            </HelmetProvider>
-          </TooltipProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <TooltipProvider>
+              <HelmetProvider>
+                <AuthProvider>
+                  <AccessibilityProvider>
+                    <Toaster />
+                    <Sonner />
+                    <BrowserRouter>
+                      <SkipToContent />
+                      <Routes>
+                        {/* Public routes */}
+                        <Route path="/" element={<Index />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/pricing" element={<Pricing />} />
+                        
+                        {/* New static pages */}
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/terms" element={<Terms />} />
+                        <Route path="/accessibility" element={<AccessibilityStatement />} />
+                        <Route path="/faq" element={<FAQ />} />
+                        <Route path="/sitemap" element={<Sitemap />} />
+                        
+                        {/* Protected routes - require authentication */}
+                        <Route path="/dashboard" element={
+                          <ProtectedRoute>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading dashboard...</div>}>
+                              <Dashboard />
+                            </Suspense>
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/save" element={
+                          <ProtectedRoute>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading content form...</div>}>
+                              <SaveContent />
+                            </Suspense>
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/settings" element={
+                          <ProtectedRoute>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading settings...</div>}>
+                              <AccountSettings />
+                            </Suspense>
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/analytics" element={
+                          <ProtectedRoute>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading analytics...</div>}>
+                              <Analytics />
+                            </Suspense>
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/collections" element={
+                          <ProtectedRoute>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading collections...</div>}>
+                              <Collections />
+                            </Suspense>
+                          </ProtectedRoute>
+                        } />
+                        
+                        {/* Catch all route - 404 */}
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </BrowserRouter>
+                  </AccessibilityProvider>
+                </AuthProvider>
+              </HelmetProvider>
+            </TooltipProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </ErrorBoundary>
     </React.StrictMode>
   );
 };
