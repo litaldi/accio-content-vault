@@ -12,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { BarChart, FolderOpen, LogOut, Settings } from 'lucide-react';
+import { BarChart, FolderOpen, LogOut, Settings, Menu } from 'lucide-react';
 import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
 import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -21,7 +21,6 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Menu } from 'lucide-react';
 
 interface NavbarProps {
   isLoggedIn?: boolean;

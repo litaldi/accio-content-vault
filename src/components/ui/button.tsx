@@ -50,6 +50,11 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, loading, asChild = false, children, disabled, "aria-disabled": ariaDisabled, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     const isDisabled = disabled || loading
+
+    // Ensure children is valid for Slot component when asChild is true
+    const childrenContent = asChild && React.Children.count(children) > 1 ? 
+      <span>{children}</span> : 
+      children;
     
     return (
       <Comp
@@ -59,7 +64,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-disabled={isDisabled || ariaDisabled ? true : undefined}
         {...props}
       >
-        {children}
+        {childrenContent}
         {loading && (
           <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 invisible hidden items-center justify-center">
             <svg 
