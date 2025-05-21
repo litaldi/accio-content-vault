@@ -51,14 +51,18 @@ const NotFound = () => {
               className="flex items-center gap-2"
               aria-label="Go back to previous page"
             >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Go Back
+              <span className="inline-flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                Go Back
+              </span>
             </Button>
             
             <Button size="lg" asChild>
               <Link to="/" className="flex items-center gap-2" aria-label="Return to homepage">
-                <Home className="h-4 w-4" aria-hidden="true" />
-                Return Home
+                <span className="inline-flex items-center gap-2">
+                  <Home className="h-4 w-4" aria-hidden="true" />
+                  Return Home
+                </span>
               </Link>
             </Button>
           </div>

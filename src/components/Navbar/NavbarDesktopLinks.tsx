@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -12,83 +13,96 @@ import {
 } from "@/components/ui/navigation-menu";
 
 interface NavbarDesktopLinksProps {
-  isLoggedIn?: boolean;
-  currentPath?: string;
+  isLoggedIn: boolean;
+  currentPath: string;
 }
 
 const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, currentPath }) => {
+  // Public routes available to all users
+  const publicLinks = [
+    { path: '/about', label: 'About' },
+    { path: '/pricing', label: 'Pricing' },
+    { path: '/contact', label: 'Contact' },
+    { path: '/faq', label: 'FAQ' }
+  ];
+
+  // Private routes for logged-in users
+  const privateLinks = [
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/collections', label: 'Collections' },
+    { path: '/analytics', label: 'Analytics' }
+  ];
+
+  // Determine which links to show based on auth state
+  const links = isLoggedIn ? [...privateLinks] : [...publicLinks];
+
   return (
-    <NavigationMenu className="hidden md:flex">
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link to="/about" className={navigationMenuTriggerStyle()}>
-            About
-          </Link>
-        </NavigationMenuItem>
-        
-        <NavigationMenuItem>
-          <Link to="/features" className={navigationMenuTriggerStyle()}>
-            Features
-          </Link>
-        </NavigationMenuItem>
-        
-        <NavigationMenuItem>
-          <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <div className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
+    <nav className="hidden md:flex">
+      <NavigationMenu>
+        <NavigationMenuList>
+          {links.map((link) => (
+            <NavigationMenuItem key={link.path}>
               <Link
-                to="/blog"
-                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                to={link.path}
+                className={cn(
+                  navigationMenuTriggerStyle(),
+                  "bg-transparent transition-colors",
+                  currentPath === link.path && "bg-accent text-accent-foreground"
+                )}
               >
-                <div className="text-sm font-medium leading-none">Blog</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                  Latest updates, tips, and insights
-                </p>
+                <span>{link.label}</span>
               </Link>
-              <Link
-                to="/playground"
-                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-              >
-                <div className="text-sm font-medium leading-none">Playground</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                  Try out Accio's features
-                </p>
-              </Link>
-              <Link
-                to="/faq"
-                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-              >
-                <div className="text-sm font-medium leading-none">FAQ</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                  Answers to common questions
-                </p>
-              </Link>
-              <Link
-                to="/accessibility"
-                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-              >
-                <div className="text-sm font-medium leading-none">Accessibility</div>
-                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                  Our commitment to accessibility
-                </p>
-              </Link>
-            </div>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        
-        <NavigationMenuItem>
-          <Link to="/pricing" className={navigationMenuTriggerStyle()}>
-            Pricing
-          </Link>
-        </NavigationMenuItem>
-        
-        <NavigationMenuItem>
-          <Link to="/contact" className={navigationMenuTriggerStyle()}>
-            Contact
-          </Link>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+            </NavigationMenuItem>
+          ))}
+          
+          {/* Features submenu with dropdown */}
+          <NavigationMenuItem>
+            <NavigationMenuTrigger>
+              <span>Features</span>
+            </NavigationMenuTrigger>
+            <NavigationMenuContent>
+              <ul className="grid gap-3 p-4 w-[400px] md:w-[500px] lg:w-[600px] grid-cols-2">
+                <li className="col-span-2">
+                  <NavigationMenuLink asChild>
+                    <Link
+                      to="/features"
+                      className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                    >
+                      <span className="mb-2 mt-4 text-lg font-medium">
+                        All Features
+                      </span>
+                      <span className="text-sm leading-tight text-muted-foreground">
+                        Explore all of our powerful features
+                      </span>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link to="/features/ai-tagging" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                      <div className="text-sm font-medium leading-none">AI Tagging</div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Automatic content tagging with AI
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+                <li>
+                  <NavigationMenuLink asChild>
+                    <Link to="/features/semantic-search" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                      <div className="text-sm font-medium leading-none">Semantic Search</div>
+                      <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Find content by meaning, not just keywords
+                      </p>
+                    </Link>
+                  </NavigationMenuLink>
+                </li>
+              </ul>
+            </NavigationMenuContent>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+    </nav>
   );
 };
 
