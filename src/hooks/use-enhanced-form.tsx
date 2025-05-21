@@ -1,7 +1,7 @@
 
 import { useState, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, UseFormReturn, FieldValues, DefaultValues } from 'react-hook-form';
+import { useForm, UseFormReturn, FieldValues, DefaultValues, SubmitHandler } from 'react-hook-form';
 import { ZodType, ZodTypeDef } from 'zod';
 
 interface UseEnhancedFormProps<TFormValues extends FieldValues> {
@@ -11,12 +11,29 @@ interface UseEnhancedFormProps<TFormValues extends FieldValues> {
   onError?: (error: any) => void;
 }
 
-interface UseEnhancedFormReturn<TFormValues extends FieldValues> extends UseFormReturn<TFormValues> {
+// Modified interface to not extend UseFormReturn to avoid type conflicts
+interface UseEnhancedFormReturn<TFormValues extends FieldValues> {
+  // Include all UseFormReturn properties
+  control: UseFormReturn<TFormValues>['control'];
+  formState: UseFormReturn<TFormValues>['formState'];
+  getValues: UseFormReturn<TFormValues>['getValues'];
+  setValue: UseFormReturn<TFormValues>['setValue'];
+  setError: UseFormReturn<TFormValues>['setError'];
+  clearErrors: UseFormReturn<TFormValues>['clearErrors'];
+  trigger: UseFormReturn<TFormValues>['trigger'];
+  register: UseFormReturn<TFormValues>['register'];
+  watch: UseFormReturn<TFormValues>['watch'];
+  reset: () => void;
+  unregister: UseFormReturn<TFormValues>['unregister'];
+  getFieldState: UseFormReturn<TFormValues>['getFieldState'];
+  resetField: UseFormReturn<TFormValues>['resetField'];
+  setFocus: UseFormReturn<TFormValues>['setFocus'];
+  
+  // Our custom properties
   isSubmitting: boolean;
   isSubmitSuccessful: boolean;
   submitError: string | null;
   handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>;
-  reset: () => void;
 }
 
 /**
@@ -41,6 +58,10 @@ export function useEnhancedForm<TFormValues extends FieldValues>({
 
   const handleFormSubmit = useCallback(
     async (e?: React.BaseSyntheticEvent) => {
+      if (e?.preventDefault) {
+        e.preventDefault();
+      }
+      
       // Clear previous submission state
       setSubmitError(null);
 
