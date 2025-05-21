@@ -102,6 +102,14 @@ jest.mock('@/components/home/CTASection', () => {
   };
 });
 
+// Mock tooltip components to avoid test issues
+jest.mock('@/components/ui/tooltip', () => ({
+  TooltipProvider: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Tooltip: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  TooltipTrigger: ({ children, asChild }: { children: React.ReactNode, asChild?: boolean }) => <div>{children}</div>,
+  TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
 describe('Index Page', () => {
   it('should render the landing page with correct headings', () => {
     render(<Index />);

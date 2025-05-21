@@ -9,37 +9,37 @@ const features = [
     title: "Natural Language Search",
     description: "Ask questions in plain English and find the right content instantly.",
     icon: Search,
-    delay: "0"
+    delay: 0
   },
   {
     title: "AI-Powered Tagging",
     description: "Automatically categorize your content with relevant tags using advanced AI.",
     icon: Tag,
-    delay: "150"
+    delay: 150
   },
   {
     title: "Multiple Content Types",
     description: "Save links, PDFs, images, and more in your unified library.",
     icon: FileText,
-    delay: "300"
+    delay: 300
   },
   {
     title: "One-Click Saving",
     description: "Save content from anywhere with a simple click or share.",
     icon: Bookmark,
-    delay: "0"
+    delay: 0
   },
   {
     title: "Cloud Sync",
     description: "Access your content from any device securely.",
     icon: Cloud,
-    delay: "150"
+    delay: 150
   },
   {
     title: "Fast Performance",
     description: "Enjoy lightning-fast search results and smooth interactions.",
     icon: Zap,
-    delay: "300"
+    delay: 300
   }
 ];
 
@@ -47,10 +47,19 @@ const FeaturesSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: false, threshold: 0.1 });
 
+  // Keyboard navigation for feature cards
+  const handleCardKeyDown = (e: React.KeyboardEvent, index: number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      // Add functionality here if cards should be clickable
+      console.log(`Feature ${index + 1} activated via keyboard`);
+    }
+  };
+
   return (
     <section 
       ref={sectionRef}
-      className="py-20 px-4 bg-secondary" 
+      className="py-20 px-4 bg-gradient-to-b from-secondary to-secondary/50" 
       aria-labelledby="features-heading"
       id="features-section"
     >
@@ -68,12 +77,17 @@ const FeaturesSection = () => {
           {features.map((feature, index) => (
             <Card 
               key={feature.title} 
-              className={`p-6 card-hover shadow-sm transition-all border-l-4 border-l-primary overflow-hidden relative h-full
-                transition-all duration-500 delay-${feature.delay} ${isInView ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'}`}
+              className={`p-6 card-hover shadow-sm border-l-4 border-l-primary overflow-hidden relative h-full
+                transition-all duration-500 ${isInView ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform translate-y-10'}`}
+              style={{ transitionDelay: `${feature.delay}ms` }}
+              tabIndex={0}
+              onKeyDown={(e) => handleCardKeyDown(e, index)}
+              role="region"
+              aria-label={feature.title}
             >
-              <div className="bg-gradient-to-br from-primary/10 to-transparent absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 transform rotate-12"></div>
-              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-4 relative z-10">
-                <feature.icon className="h-5 w-5 text-primary" aria-hidden="true" />
+              <div className="bg-gradient-to-br from-primary/10 to-transparent absolute top-0 right-0 w-32 h-32 rounded-full -mr-16 -mt-16 transform rotate-12" aria-hidden="true"></div>
+              <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 relative z-10">
+                <feature.icon className="h-6 w-6 text-primary" aria-hidden="true" />
               </div>
               <h3 className="text-xl font-semibold mb-3 relative z-10">
                 {feature.title}

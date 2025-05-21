@@ -5,6 +5,7 @@ interface UseInViewOptions {
   threshold?: number;
   rootMargin?: string;
   once?: boolean;
+  delay?: number;
 }
 
 export function useInView(
@@ -13,6 +14,7 @@ export function useInView(
     threshold = 0,
     rootMargin = '0px',
     once = true,
+    delay = 0
   }: UseInViewOptions = {}
 ): boolean {
   const [isInView, setIsInView] = useState(false);
@@ -21,12 +23,26 @@ export function useInView(
     const observer = new IntersectionObserver(
       ([entry]) => {
         const inView = entry.isIntersecting;
-        setIsInView(inView);
         
-        // If the element has been seen and the once option is true,
-        // unobserve the element
-        if (inView && once) {
-          observer.unobserve(entry.target);
+        if (inView) {
+          // Apply delay if specified
+          if (delay > 0) {
+            const timer = setTimeout(() => {
+              setIsInView(true);
+            }, delay);
+            return () => clearTimeout(timer);
+          } else {
+            setIsInView(true);
+          }
+          
+          // If the element has been seen and the once option is true,
+          // unobserve the element
+          if (once) {
+            observer.unobserve(entry.target);
+          }
+        } else if (!once) {
+          // Only toggle off visibility if once is false
+          setIsInView(false);
         }
       },
       {
@@ -45,7 +61,7 @@ export function useInView(
         observer.unobserve(element);
       }
     };
-  }, [elementRef, threshold, rootMargin, once]);
+  }, [elementRef, threshold, rootMargin, once, delay]);
 
   return isInView;
 }
