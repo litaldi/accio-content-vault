@@ -10,12 +10,20 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => jest.fn(),
 }));
 
+// Mock Footer component
+jest.mock('@/components/Footer', () => {
+  return function MockFooter() {
+    return <footer data-testid="mock-footer">Footer</footer>;
+  };
+});
+
 describe('Index Page', () => {
   it('should render the landing page with correct headings', () => {
     render(<Index />);
     expect(screen.getByText('Remember everything you discover online')).toBeInTheDocument();
     expect(screen.getByText('How Accio Works')).toBeInTheDocument();
     expect(screen.getByText('Powerful Features')).toBeInTheDocument();
+    expect(screen.getByText('About Accio')).toBeInTheDocument();
   });
 
   it('should display onboarding steps with navigation', () => {
@@ -61,6 +69,19 @@ describe('Index Page', () => {
   it('should have proper document title and metadata', () => {
     render(<Index />);
     expect(document.title).toBe('Accio - Remember Everything You Discover Online');
+  });
+
+  it('should have navigation links to main sections', () => {
+    render(<Index />);
+    
+    // Check for links to main pages
+    expect(screen.getByText('About Accio')).toBeInTheDocument();
+    expect(screen.getByText('Questions? Get in Touch')).toBeInTheDocument();
+    expect(screen.getByText('Frequently Asked Questions')).toBeInTheDocument();
+    
+    // Check for buttons linking to pages
+    expect(screen.getByRole('button', { name: /contact us/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /view all faqs/i })).toBeInTheDocument();
   });
 
   it('should have no accessibility violations', async () => {

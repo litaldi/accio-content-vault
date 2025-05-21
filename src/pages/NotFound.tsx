@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft, Home, Map } from "lucide-react";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 
 const NotFound = () => {
   const location = useLocation();
@@ -22,13 +24,15 @@ const NotFound = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Helmet>
-        <title>Page Not Found | ReadSmart</title>
+        <title>Page Not Found | Accio</title>
         <meta name="description" content="The page you're looking for doesn't exist or has been moved." />
       </Helmet>
       
-      <div className="min-h-screen flex items-center justify-center bg-background" role="main" id="main-content">
+      <Navbar isLoggedIn={false} />
+      
+      <main className="flex-grow flex items-center justify-center bg-background" role="main" id="main-content">
         <div className="text-center px-4 max-w-md">
           <div className="mb-6" aria-hidden="true">
             <h1 className="text-7xl font-bold text-primary">404</h1>
@@ -63,8 +67,10 @@ const NotFound = () => {
             <p>Looking for something specific? Check our <Link to="/sitemap" className="text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm">sitemap</Link>.</p>
           </div>
         </div>
-      </div>
-    </>
+      </main>
+      
+      <Footer />
+    </div>
   );
 };
 

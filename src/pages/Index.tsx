@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 import SkipToContent from '@/components/SkipToContent';
 import { Card, CardContent } from '@/components/ui/card';
-import { Link, FileText, Search, Tag } from 'lucide-react';
+import { Link, FileText, Search, Tag, ChevronRight, ArrowRight, MessageSquare } from 'lucide-react';
 
 // Define the steps for onboarding
 const onboardingSteps = [{
@@ -90,7 +91,12 @@ const Index = () => {
                 <CardContent className="p-0">
                   {/* Progress indicator */}
                   <div className="flex" aria-hidden="true">
-                    {onboardingSteps.map((_, index) => <div key={index} className={`h-1 flex-1 ${index <= currentStep ? "bg-primary" : "bg-muted"}`} />)}
+                    {onboardingSteps.map((_, index) => (
+                      <div 
+                        key={index} 
+                        className={`h-1 flex-1 ${index <= currentStep ? "bg-primary" : "bg-muted"}`} 
+                      />
+                    ))}
                   </div>
                   
                   {/* Content */}
@@ -112,7 +118,7 @@ const Index = () => {
               </Card>
             </div>
             
-            <div className="grid md:grid-cols-4 gap-8 text-center mt-16">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center mt-16">
               {onboardingSteps.map((step, index) => (
                 <div 
                   key={index} 
@@ -196,6 +202,219 @@ const Index = () => {
           </div>
         </section>
 
+        {/* About Section */}
+        <section className="py-16 px-4 bg-background" aria-labelledby="about-heading">
+          <div className="max-w-6xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 id="about-heading" className="text-3xl font-bold mb-4">About Accio</h2>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Accio was built to solve the problem of information overload. In today's digital world, we consume vast amounts of content daily but struggle to remember and retrieve it when needed.
+                </p>
+                <p className="text-lg text-muted-foreground mb-6">
+                  Our mission is to give you a second brain that intelligently organizes everything you discover online, making it instantly searchable and retrievable.
+                </p>
+                <Button 
+                  onClick={() => navigate('/about')}
+                  variant="outline"
+                  className="group"
+                >
+                  Learn more about us
+                  <ChevronRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </Button>
+              </div>
+              <div className="bg-muted rounded-lg p-8">
+                <blockquote className="italic text-lg">
+                  "Accio has transformed how I manage research for my projects. Finding information I saved months ago is now instantaneous."
+                </blockquote>
+                <div className="mt-4">
+                  <p className="font-medium">— Sarah Johnson</p>
+                  <p className="text-sm text-muted-foreground">Product Designer</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Pricing Preview Section */}
+        <section className="py-16 px-4 bg-muted/50" aria-labelledby="pricing-heading">
+          <div className="max-w-6xl mx-auto text-center">
+            <h2 id="pricing-heading" className="text-3xl font-bold mb-4">Simple, Transparent Pricing</h2>
+            <p className="text-xl text-muted-foreground mb-12 max-w-2xl mx-auto">
+              Choose the plan that works for your needs
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {/* Free Plan */}
+              <Card className="border-2 transition-all hover:border-primary/50 hover:shadow-md">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-medium mb-2">Free</h3>
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold">$0</span>
+                    <span className="text-muted-foreground">/month</span>
+                  </div>
+                  <ul className="space-y-2 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Save up to 100 items</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Basic search</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>AI-powered tagging</span>
+                    </li>
+                  </ul>
+                  <Button onClick={() => navigate('/register')} className="w-full">Get Started</Button>
+                </CardContent>
+              </Card>
+              
+              {/* Pro Plan */}
+              <Card className="border-2 border-primary relative transition-all hover:shadow-md">
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
+                  Most Popular
+                </div>
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-medium mb-2">Pro</h3>
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold">$9.99</span>
+                    <span className="text-muted-foreground">/month</span>
+                  </div>
+                  <ul className="space-y-2 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Unlimited saves</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Advanced semantic search</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Priority AI analysis</span>
+                    </li>
+                  </ul>
+                  <Button onClick={() => navigate('/pricing')} className="w-full">Choose Pro</Button>
+                </CardContent>
+              </Card>
+              
+              {/* Team Plan */}
+              <Card className="border-2 transition-all hover:border-primary/50 hover:shadow-md">
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-medium mb-2">Team</h3>
+                  <div className="mb-4">
+                    <span className="text-3xl font-bold">$19.99</span>
+                    <span className="text-muted-foreground">/month</span>
+                  </div>
+                  <ul className="space-y-2 mb-6 text-sm">
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Everything in Pro</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Team collaboration</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <svg className="h-5 w-5 text-primary flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      <span>Advanced analytics</span>
+                    </li>
+                  </ul>
+                  <Button onClick={() => navigate('/pricing')} variant="outline" className="w-full">Choose Team</Button>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="mt-8">
+              <Button
+                variant="link"
+                onClick={() => navigate('/pricing')}
+                className="text-primary flex items-center gap-2"
+              >
+                View full pricing details
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Section */}
+        <section className="py-16 px-4 bg-background" aria-labelledby="contact-heading">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 id="contact-heading" className="text-3xl font-bold mb-4">Questions? Get in Touch</h2>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Our support team is always ready to help with any questions you might have.
+            </p>
+            <Button 
+              size="lg"
+              onClick={() => navigate('/contact')}
+              className="flex items-center gap-2"
+            >
+              <MessageSquare className="h-5 w-5" aria-hidden="true" />
+              Contact Us
+            </Button>
+          </div>
+        </section>
+
+        {/* FAQ Section Preview */}
+        <section className="py-16 px-4 bg-muted/50" aria-labelledby="faq-heading">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 id="faq-heading" className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+              <p className="text-xl text-muted-foreground mb-8">
+                Find quick answers to common questions
+              </p>
+            </div>
+
+            <div className="space-y-6">
+              <div className="p-6 bg-background border rounded-lg">
+                <h3 className="text-xl font-medium mb-2">How does AI tagging work?</h3>
+                <p className="text-muted-foreground">
+                  Our AI system automatically analyzes your saved content to extract key topics and themes, then assigns relevant tags to help organize your library.
+                </p>
+              </div>
+              
+              <div className="p-6 bg-background border rounded-lg">
+                <h3 className="text-xl font-medium mb-2">Can I use Accio on mobile devices?</h3>
+                <p className="text-muted-foreground">
+                  Yes! Accio works on all devices with a modern web browser, including smartphones and tablets.
+                </p>
+              </div>
+            </div>
+            
+            <div className="text-center mt-8">
+              <Button
+                variant="outline"
+                onClick={() => navigate('/faq')}
+                className="flex items-center gap-2 mx-auto"
+              >
+                View all FAQs
+                <ChevronRight className="h-4 w-4" aria-hidden="true" />
+              </Button>
+            </div>
+          </div>
+        </section>
+
         {/* CTA Section */}
         <section className="py-16 px-4 bg-background" aria-labelledby="cta-heading">
           <div className="max-w-4xl mx-auto text-center">
@@ -215,16 +434,7 @@ const Index = () => {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-background border-t border-border py-8 px-4" role="contentinfo">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center">
-            <p className="text-sm text-muted-foreground">
-              &copy; {new Date().getFullYear()} Accio. All rights reserved.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

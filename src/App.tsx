@@ -11,6 +11,7 @@ import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { HelmetProvider } from 'react-helmet-async';
 import SkipToContent from "./components/SkipToContent";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Footer from "./components/Footer";
 
 // Import components
 import Index from "./pages/Index";
@@ -53,6 +54,15 @@ const queryClient = new QueryClient({
     }
   },
 });
+
+// Layout component for consistent page structure
+const PageLayout = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="min-h-screen flex flex-col">
+      {children}
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   return (
