@@ -94,16 +94,13 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
               </TooltipProvider>
             </label>
           </div>
-          <Button 
-            type="submit" 
-            className="btn-with-icon interactive"
-          >
+          <Button type="submit" className="btn-with-icon interactive">
             {isSemanticSearch ? (
               <Sparkles className="h-4 w-4" />
             ) : (
               <Search className="h-4 w-4" />
             )}
-            <span>Search</span>
+            <span className="ml-2">Search</span>
           </Button>
         </div>
       </div>

@@ -54,7 +54,7 @@ const Dashboard = () => {
               className="w-full md:w-auto"
             >
               <Plus className="h-4 w-4" />
-              <span>Add New Content</span>
+              <span className="ml-2">Add New Content</span>
             </Button>
           </div>
         </div>
