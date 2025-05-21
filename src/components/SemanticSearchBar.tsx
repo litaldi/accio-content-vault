@@ -96,9 +96,9 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
           </div>
           <Button type="submit">
             {isSemanticSearch ? (
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="h-4 w-4 mr-2" />
             ) : (
-              <Search className="h-4 w-4" />
+              <Search className="h-4 w-4 mr-2" />
             )}
             <span>Search</span>
           </Button>

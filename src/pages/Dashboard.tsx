@@ -8,8 +8,7 @@ import SearchQueryInfo from '@/components/SearchQueryInfo';
 import SearchResults from '@/components/SearchResults';
 import { useNavigate } from 'react-router-dom';
 import { useContentSearch } from '@/hooks/useContentSearch';
-import { Button } from '@/components/ui/button';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Helmet } from "react-helmet-async";
 
 const Dashboard = () => {
@@ -29,10 +28,6 @@ const Dashboard = () => {
   const handleLogout = () => {
     // In a real app, this would call Supabase auth.signOut()
     navigate('/');
-  };
-  
-  const handleAddContent = () => {
-    navigate('/save');
   };
 
   return (
