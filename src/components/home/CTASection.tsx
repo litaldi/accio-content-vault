@@ -4,6 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Check, Sparkles } from 'lucide-react';
 import { useInView } from '@/hooks/use-in-view';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 
 const CTASection = () => {
   const navigate = useNavigate();
@@ -44,14 +50,23 @@ const CTASection = () => {
           </p>
           
           <div className="flex flex-col sm:flex-row justify-center gap-4 mb-6">
-            <Button 
-              size="lg" 
-              onClick={() => navigate('/register')} 
-              className="group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-md transform transition-all hover:shadow-lg hover:-translate-y-1"
-            >
-              Sign Up Free
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-            </Button>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button 
+                    size="lg" 
+                    onClick={() => navigate('/register')} 
+                    className="group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-md transform transition-all hover:shadow-lg hover:-translate-y-1"
+                  >
+                    Sign Up Free
+                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>No credit card required</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Button 
               size="lg" 
               variant="outline" 
