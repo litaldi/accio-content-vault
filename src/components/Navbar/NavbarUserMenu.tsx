@@ -34,21 +34,29 @@ const NavbarUserMenu: React.FC<NavbarUserMenuProps> = ({ handleLogout, getUserIn
           Dashboard
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate('/collections')} className="cursor-pointer transition-colors">
-          <FolderOpen className="mr-2 h-4 w-4" aria-hidden="true" />
-          <span>Collections</span>
+          <span className="inline-flex items-center">
+            <FolderOpen className="mr-2 h-4 w-4" aria-hidden="true" />
+            <span>Collections</span>
+          </span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate('/analytics')} className="cursor-pointer transition-colors">
-          <BarChart className="mr-2 h-4 w-4" aria-hidden="true" />
-          <span>Analytics</span>
+          <span className="inline-flex items-center">
+            <BarChart className="mr-2 h-4 w-4" aria-hidden="true" />
+            <span>Analytics</span>
+          </span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer transition-colors">
-          <Settings className="mr-2 h-4 w-4" aria-hidden="true" />
-          <span>Settings</span>
+          <span className="inline-flex items-center">
+            <Settings className="mr-2 h-4 w-4" aria-hidden="true" />
+            <span>Settings</span>
+          </span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout} className="cursor-pointer transition-colors text-destructive focus:text-destructive">
-          <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
-          <span>Log out</span>
+          <span className="inline-flex items-center">
+            <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
+            <span>Log out</span>
+          </span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
