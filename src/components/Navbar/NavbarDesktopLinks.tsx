@@ -36,50 +36,42 @@ const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, cur
           <NavigationMenuTrigger>Resources</NavigationMenuTrigger>
           <NavigationMenuContent>
             <div className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-2">
-              <NavigationMenuLink asChild>
-                <Link
-                  to="/blog"
-                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                >
-                  <div className="text-sm font-medium leading-none">Blog</div>
-                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                    Latest updates, tips, and insights
-                  </p>
-                </Link>
-              </NavigationMenuLink>
-              <NavigationMenuLink asChild>
-                <Link
-                  to="/playground"
-                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                >
-                  <div className="text-sm font-medium leading-none">Playground</div>
-                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                    Try out Accio's features
-                  </p>
-                </Link>
-              </NavigationMenuLink>
-              <NavigationMenuLink asChild>
-                <Link
-                  to="/faq"
-                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                >
-                  <div className="text-sm font-medium leading-none">FAQ</div>
-                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                    Answers to common questions
-                  </p>
-                </Link>
-              </NavigationMenuLink>
-              <NavigationMenuLink asChild>
-                <Link
-                  to="/accessibility"
-                  className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-                >
-                  <div className="text-sm font-medium leading-none">Accessibility</div>
-                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
-                    Our commitment to accessibility
-                  </p>
-                </Link>
-              </NavigationMenuLink>
+              <Link
+                to="/blog"
+                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+              >
+                <div className="text-sm font-medium leading-none">Blog</div>
+                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                  Latest updates, tips, and insights
+                </p>
+              </Link>
+              <Link
+                to="/playground"
+                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+              >
+                <div className="text-sm font-medium leading-none">Playground</div>
+                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                  Try out Accio's features
+                </p>
+              </Link>
+              <Link
+                to="/faq"
+                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+              >
+                <div className="text-sm font-medium leading-none">FAQ</div>
+                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                  Answers to common questions
+                </p>
+              </Link>
+              <Link
+                to="/accessibility"
+                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+              >
+                <div className="text-sm font-medium leading-none">Accessibility</div>
+                <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                  Our commitment to accessibility
+                </p>
+              </Link>
             </div>
           </NavigationMenuContent>
         </NavigationMenuItem>
