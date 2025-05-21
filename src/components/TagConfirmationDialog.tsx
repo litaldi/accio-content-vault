@@ -45,12 +45,16 @@ const TagConfirmationDialog = ({ tag, onConfirm, onClose }: TagConfirmationDialo
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={handleReject}>
-            <ThumbsDown className="h-4 w-4 mr-2" />
-            Not accurate
+            <div className="flex items-center">
+              <ThumbsDown className="h-4 w-4 mr-2" />
+              Not accurate
+            </div>
           </AlertDialogCancel>
           <AlertDialogAction onClick={handleConfirm}>
-            <ThumbsUp className="h-4 w-4 mr-2" />
-            Yes, it's accurate
+            <div className="flex items-center">
+              <ThumbsUp className="h-4 w-4 mr-2" />
+              Yes, it's accurate
+            </div>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
