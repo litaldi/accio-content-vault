@@ -25,9 +25,7 @@ const DashboardHeader: React.FC = () => {
           <BarChart className="h-4 w-4 mr-2" />
           Analytics
         </Button>
-        <Button 
-          onClick={() => navigate('/save')}
-        >
+        <Button onClick={() => navigate('/save')}>
           <Plus className="h-4 w-4 mr-2" />
           Save New
         </Button>
