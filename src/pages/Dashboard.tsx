@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
@@ -129,8 +128,10 @@ const Dashboard = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm">
-                <SlidersHorizontal className="h-4 w-4 mr-1" />
-                Sort
+                <div className="inline-flex items-center">
+                  <SlidersHorizontal className="h-4 w-4 mr-1" />
+                  Sort
+                </div>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -185,8 +186,10 @@ const Dashboard = () => {
                   Start by adding your first piece of content using the "Add New Content" button.
                 </p>
                 <Button onClick={() => navigate('/save')}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add New Content
+                  <div className="inline-flex items-center">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add New Content
+                  </div>
                 </Button>
               </div>
             )}
