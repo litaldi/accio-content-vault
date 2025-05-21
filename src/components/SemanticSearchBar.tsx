@@ -80,7 +80,7 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
               <span className="group-hover:text-primary transition-colors">Use semantic search</span>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger asChild>
                     <span className="text-muted-foreground hover:text-foreground cursor-help">
                       <Sparkles className="h-3.5 w-3.5" />
                     </span>

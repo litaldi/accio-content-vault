@@ -20,7 +20,7 @@ export const AccessibilityButton = () => {
     <div className="flex items-center">
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button 
               variant="ghost" 
               size="icon"
@@ -38,7 +38,7 @@ export const AccessibilityButton = () => {
       
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button 
               variant="ghost"
               size="icon"

@@ -12,24 +12,24 @@ const DashboardHeader: React.FC = () => {
       <h1 className="text-3xl font-bold">My Content</h1>
       <div className="flex flex-wrap gap-2">
         <Button 
-          onClick={() => navigate('/collections')} 
           variant="outline"
+          onClick={() => navigate('/collections')} 
         >
-          <FolderOpen className="h-4 w-4" />
-          <span>Collections</span>
+          <FolderOpen className="h-4 w-4 mr-2" />
+          Collections
         </Button>
         <Button 
-          onClick={() => navigate('/analytics')} 
           variant="outline"
+          onClick={() => navigate('/analytics')} 
         >
-          <BarChart className="h-4 w-4" />
-          <span>Analytics</span>
+          <BarChart className="h-4 w-4 mr-2" />
+          Analytics
         </Button>
         <Button 
           onClick={() => navigate('/save')}
         >
-          <Plus className="h-4 w-4" />
-          <span>Save New</span>
+          <Plus className="h-4 w-4 mr-2" />
+          Save New
         </Button>
       </div>
     </div>

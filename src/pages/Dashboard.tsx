@@ -47,16 +47,6 @@ const Dashboard = () => {
       <main className="flex-grow container mx-auto px-4 py-8" id="main-content">
         <div className="flex flex-col gap-4 mb-6">
           <DashboardHeader />
-          
-          <div className="flex justify-end">
-            <Button 
-              onClick={handleAddContent}
-              className="w-full md:w-auto"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Add New Content</span>
-            </Button>
-          </div>
         </div>
         
         <div className="mb-8">
