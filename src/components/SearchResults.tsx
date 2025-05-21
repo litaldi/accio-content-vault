@@ -1,57 +1,122 @@
 
 import React from 'react';
-import ContentList from '@/components/ContentList';
-import TagEditor from '@/components/TagEditor';
-import { SavedContent, Tag } from '@/types';
-import { Card } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
+import { format } from 'date-fns';
+import { Calendar, ExternalLink, FileText, Image, Check, Tag as TagIcon } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { SavedContent, Tag as TagType } from '@/types';
+import { cn } from '@/lib/utils';
 
 interface SearchResultsProps {
-  searchResults: { content: SavedContent, score?: number }[];
+  searchResults: { content: SavedContent; score?: number }[];
   searchQuery: string;
-  onTagsChange: (contentId: string, newTags: Tag[]) => void;
+  onTagsChange: (contentId: string, tags: TagType[]) => void;
+  onTagConfirmRequest?: (tag: TagType) => void;
 }
 
-const SearchResults: React.FC<SearchResultsProps> = ({ 
+const SearchResults = ({ 
   searchResults, 
   searchQuery, 
-  onTagsChange 
-}) => {
-  if (!searchResults.length) {
+  onTagsChange, 
+  onTagConfirmRequest 
+}: SearchResultsProps) => {
+  // No results state
+  if (searchResults.length === 0 && searchQuery) {
     return (
-      <div className="flex flex-col items-center justify-center py-16 text-center animate-fade-in">
-        <div className="rounded-full bg-muted w-20 h-20 flex items-center justify-center mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-muted-foreground">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.3-4.3"></path>
-          </svg>
-        </div>
-        <h3 className="text-lg font-medium mb-2">No results found</h3>
-        <p className="text-muted-foreground max-w-sm">
-          Try adjusting your search or using different keywords
-        </p>
+      <div className="py-10 text-center">
+        <h3 className="text-lg font-medium mb-1">No results found</h3>
+        <p className="text-muted-foreground">Try a different search term or browse all content</p>
       </div>
     );
   }
 
+  const getFileIcon = (fileType?: string) => {
+    if (fileType === 'image') return <Image className="h-5 w-5" />;
+    return <FileText className="h-5 w-5" />;
+  };
+
+  const handleTagClick = (tag: TagType, contentId: string) => {
+    // If the tag is auto-generated and not confirmed yet, show confirmation dialog
+    if (tag.auto_generated && !tag.confirmed && onTagConfirmRequest) {
+      onTagConfirmRequest(tag);
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      {searchResults.map((result, index) => (
-        <div key={result.content.id} className={`animate-slide-up`} style={{ animationDelay: `${index * 0.05}s` }}>
-          <Card className="overflow-hidden border transition-all duration-300 hover:shadow-md">
-            <div className="p-4">
-              <ContentList 
-                contents={[result.content]} 
-                searchQuery={searchQuery} 
-              />
-              <div className="mt-3 px-1">
-                <TagEditor 
-                  tags={result.content.tags}
-                  onTagsChange={(newTags) => onTagsChange(result.content.id, newTags)}
-                />
-              </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {searchResults.map(({ content, score }) => (
+        <Card key={content.id} className={cn("h-full flex flex-col", 
+          score && score > 0.8 && "border-primary/30 dark:border-primary/20"
+        )}>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-lg line-clamp-2">
+              {content.title || 'Untitled Content'}
+            </CardTitle>
+            <CardDescription className="flex items-center gap-1 text-xs">
+              <Calendar className="h-3 w-3" />
+              {format(new Date(content.created_at), 'MMM d, yyyy')}
+              
+              {score && (
+                <Badge variant="outline" className="ml-auto">
+                  Match: {Math.round(score * 100)}%
+                </Badge>
+              )}
+            </CardDescription>
+          </CardHeader>
+          
+          <CardContent className="pb-2 flex-grow">
+            <p className="text-sm text-muted-foreground line-clamp-3 mb-3">
+              {content.description || 'No description provided.'}
+            </p>
+            
+            {/* Tags */}
+            <div className="flex flex-wrap gap-2 mt-2">
+              {content.tags.map((tag) => (
+                <Badge 
+                  key={tag.id} 
+                  variant={tag.auto_generated && !tag.confirmed ? "outline" : "default"}
+                  className={cn(
+                    "cursor-pointer group",
+                    tag.auto_generated && !tag.confirmed && "border-yellow-500 bg-yellow-50 hover:bg-yellow-100 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300"
+                  )}
+                  onClick={() => handleTagClick(tag, content.id)}
+                >
+                  {tag.auto_generated && !tag.confirmed && (
+                    <TagIcon className="h-3 w-3 mr-1 text-yellow-600 dark:text-yellow-400" />
+                  )}
+                  {tag.name}
+                  {tag.auto_generated && !tag.confirmed && onTagConfirmRequest && (
+                    <span className="ml-1 text-xs opacity-70 group-hover:opacity-100">
+                      (Verify?)
+                    </span>
+                  )}
+                </Badge>
+              ))}
             </div>
-          </Card>
-        </div>
+          </CardContent>
+          
+          <CardFooter>
+            {content.url && (
+              <Button variant="outline" size="sm" asChild className="w-full">
+                <a href={content.url} target="_blank" rel="noopener noreferrer">
+                  <ExternalLink className="h-3 w-3 mr-2" />
+                  Open Original
+                </a>
+              </Button>
+            )}
+            
+            {content.file_url && (
+              <Button variant="outline" size="sm" asChild className="w-full">
+                <a href={content.file_url} target="_blank" rel="noopener noreferrer">
+                  {getFileIcon(content.file_type)}
+                  <span className="ml-2">View {content.file_type}</span>
+                </a>
+              </Button>
+            )}
+          </CardFooter>
+        </Card>
       ))}
     </div>
   );
