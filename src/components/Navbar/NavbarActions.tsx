@@ -40,13 +40,13 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({
             onClick={() => navigate('/login')}
             className="text-sm transition-all"
           >
-            <span>Log in</span>
+            Log in
           </Button>
           <Button 
             onClick={() => navigate('/register')}
             className="text-sm transition-all hover:shadow-md"
           >
-            <span>Sign up</span>
+            Sign up
           </Button>
         </div>
       )}

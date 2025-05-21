@@ -62,9 +62,7 @@ const NavbarMobileMenu: React.FC<NavbarMobileMenuProps> = ({ isLoggedIn, handleL
                 onClick={handleLogout}
                 className="justify-start pl-0 text-lg font-medium text-destructive hover:text-destructive hover:bg-transparent"
               >
-                <span className="inline-flex items-center">
-                  Log out
-                </span>
+                Log out
               </Button>
             </>
           )}

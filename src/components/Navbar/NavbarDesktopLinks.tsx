@@ -50,16 +50,14 @@ const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, cur
                   currentPath === link.path && "bg-accent text-accent-foreground"
                 )}
               >
-                <span>{link.label}</span>
+                {link.label}
               </Link>
             </NavigationMenuItem>
           ))}
           
           {/* Features submenu with dropdown */}
           <NavigationMenuItem>
-            <NavigationMenuTrigger>
-              <span>Features</span>
-            </NavigationMenuTrigger>
+            <NavigationMenuTrigger>Features</NavigationMenuTrigger>
             <NavigationMenuContent>
               <ul className="grid gap-3 p-4 w-[400px] md:w-[500px] lg:w-[600px] grid-cols-2">
                 <li className="col-span-2">
