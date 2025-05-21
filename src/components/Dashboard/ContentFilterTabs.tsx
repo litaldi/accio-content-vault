@@ -35,10 +35,10 @@ const ContentFilterTabs: React.FC<ContentFilterTabsProps> = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm">
-            <div className="inline-flex items-center">
+            <span className="inline-flex items-center">
               <SlidersHorizontal className="h-4 w-4 mr-1" />
               Sort
-            </div>
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

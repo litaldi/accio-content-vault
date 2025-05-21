@@ -101,10 +101,10 @@ const SearchResults = ({
             {content.url && (
               <Button variant="outline" size="sm" asChild>
                 <a href={content.url} target="_blank" rel="noopener noreferrer">
-                  <div className="inline-flex items-center">
+                  <span className="inline-flex items-center">
                     <ExternalLink className="h-3 w-3 mr-2" />
                     Open Original
-                  </div>
+                  </span>
                 </a>
               </Button>
             )}
@@ -112,10 +112,10 @@ const SearchResults = ({
             {content.file_url && (
               <Button variant="outline" size="sm" asChild>
                 <a href={content.file_url} target="_blank" rel="noopener noreferrer">
-                  <div className="inline-flex items-center">
+                  <span className="inline-flex items-center">
                     {getFileIcon(content.file_type)}
                     <span className="ml-2">View {content.file_type}</span>
-                  </div>
+                  </span>
                 </a>
               </Button>
             )}

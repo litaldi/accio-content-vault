@@ -18,10 +18,10 @@ const EmptyState: React.FC<EmptyStateProps> = ({ onAddContent }) => {
         Start by adding your first piece of content using the "Add New Content" button.
       </p>
       <Button onClick={onAddContent}>
-        <div className="inline-flex items-center">
+        <span className="inline-flex items-center">
           <Plus className="h-4 w-4 mr-2" />
           Add New Content
-        </div>
+        </span>
       </Button>
     </div>
   );

@@ -15,19 +15,25 @@ const DashboardHeader: React.FC = () => {
           variant="outline"
           onClick={() => navigate('/collections')}
         >
-          <FolderOpen className="h-4 w-4 mr-2" />
-          Collections
+          <span className="inline-flex items-center">
+            <FolderOpen className="h-4 w-4 mr-2" />
+            Collections
+          </span>
         </Button>
         <Button 
           variant="outline"
           onClick={() => navigate('/analytics')}
         >
-          <BarChart className="h-4 w-4 mr-2" />
-          Analytics
+          <span className="inline-flex items-center">
+            <BarChart className="h-4 w-4 mr-2" />
+            Analytics
+          </span>
         </Button>
         <Button onClick={() => navigate('/save')}>
-          <Plus className="h-4 w-4 mr-2" />
-          Add New Content
+          <span className="inline-flex items-center">
+            <Plus className="h-4 w-4 mr-2" />
+            Add New Content
+          </span>
         </Button>
       </div>
     </div>
