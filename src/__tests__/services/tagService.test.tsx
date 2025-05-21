@@ -1,7 +1,7 @@
 
 import { renderHook } from '@testing-library/react';
 import { useTagService } from '@/services/tagService';
-import { setupMocks } from './tagService/__setup__';
+import { setupMocks } from './__setup__';
 
 // Import the individual test files
 import './tagService/processTags.test';

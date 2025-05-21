@@ -1,7 +1,7 @@
 
 import { renderHook, act } from '@testing-library/react';
 import { useTagService } from '@/services/tagService';
-import { setupMocks, mockSupabase, sampleTags, mockRequireAuth } from './__setup__';
+import { setupMocks, mockSupabase, sampleTags, mockRequireAuth } from '../__setup__';
 
 describe('useTagService - processTags', () => {
   beforeEach(() => {
