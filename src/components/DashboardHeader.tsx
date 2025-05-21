@@ -13,14 +13,14 @@ const DashboardHeader: React.FC = () => {
       <div className="flex flex-wrap gap-2">
         <Button 
           variant="outline"
-          onClick={() => navigate('/collections')} 
+          onClick={() => navigate('/collections')}
         >
           <FolderOpen className="h-4 w-4 mr-2" />
           Collections
         </Button>
         <Button 
           variant="outline"
-          onClick={() => navigate('/analytics')} 
+          onClick={() => navigate('/analytics')}
         >
           <BarChart className="h-4 w-4 mr-2" />
           Analytics
