@@ -10,6 +10,11 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => jest.fn(),
 }));
 
+// Mock the useInView hook
+jest.mock('@/hooks/use-in-view', () => ({
+  useInView: () => true
+}));
+
 // Mock Footer component
 jest.mock('@/components/Footer', () => {
   return function MockFooter() {
