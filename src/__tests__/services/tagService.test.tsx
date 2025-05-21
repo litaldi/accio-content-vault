@@ -2,7 +2,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { useTagService } from '@/services/tagService';
 import { useBaseService } from '@/services/baseService';
-import { Tag } from '@/types';
+import { Tag, SavedContent } from '@/types';
 
 // Mock useBaseService
 jest.mock('@/services/baseService', () => ({
@@ -13,7 +13,14 @@ jest.mock('@/services/baseService', () => ({
 jest.mock('@/services/contentFetchService', () => ({
   useContentFetchService: jest.fn().mockReturnValue({
     fetchAllContents: jest.fn().mockResolvedValue([
-      { id: '1', title: 'Content 1', tags: [] }
+      { 
+        id: '1', 
+        title: 'Content 1', 
+        user_id: 'user-123',
+        description: 'Test description',
+        created_at: '2023-01-01',
+        tags: [] 
+      }
     ]),
   }),
 }));
@@ -110,7 +117,15 @@ describe('useTagService', () => {
     it('should return original contents if not authenticated', async () => {
       mockRequireAuth.mockReturnValueOnce(false);
       
-      const mockContents = [{ id: '1', title: 'Test', tags: [] }];
+      // Create a proper SavedContent mock
+      const mockContents: SavedContent[] = [{ 
+        id: '1', 
+        title: 'Test', 
+        user_id: 'user-123',
+        description: 'Test description',
+        created_at: '2023-01-01',
+        tags: [] 
+      }];
       
       const { result } = renderHook(() => useTagService());
       
@@ -128,9 +143,24 @@ describe('useTagService', () => {
         eq: jest.fn().mockResolvedValue({ error: null }),
       }));
       
-      const mockContents = [
-        { id: '1', title: 'Test 1', tags: [] },
-        { id: '2', title: 'Test 2', tags: [] }
+      // Create a proper SavedContent mock
+      const mockContents: SavedContent[] = [
+        { 
+          id: '1', 
+          title: 'Test 1', 
+          user_id: 'user-123',
+          description: 'Test description 1',
+          created_at: '2023-01-01',
+          tags: [] 
+        },
+        { 
+          id: '2', 
+          title: 'Test 2', 
+          user_id: 'user-123',
+          description: 'Test description 2',
+          created_at: '2023-01-02',
+          tags: [] 
+        }
       ];
       
       // Mock processTags implementation
@@ -164,7 +194,15 @@ describe('useTagService', () => {
         eq: jest.fn().mockResolvedValue({ error: new Error('Delete error') }),
       }));
       
-      const mockContents = [{ id: '1', title: 'Test', tags: [] }];
+      // Create a proper SavedContent mock
+      const mockContents: SavedContent[] = [{ 
+        id: '1', 
+        title: 'Test', 
+        user_id: 'user-123',
+        description: 'Test description',
+        created_at: '2023-01-01',
+        tags: [] 
+      }];
       
       const { result } = renderHook(() => useTagService());
       

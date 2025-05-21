@@ -74,7 +74,8 @@ describe('TagEditor', () => {
     // Click remove button on first tag
     const firstTag = screen.getByText('React').closest('[role="listitem"]');
     if (firstTag) {
-      const removeButton = within(firstTag).getByLabelText('Remove React tag');
+      // Fix: Cast to HTMLElement to satisfy TypeScript
+      const removeButton = within(firstTag as HTMLElement).getByLabelText('Remove React tag');
       fireEvent.click(removeButton);
       
       expect(onTagsChangeMock).toHaveBeenCalledWith(

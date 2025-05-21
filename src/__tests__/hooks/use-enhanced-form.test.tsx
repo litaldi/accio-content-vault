@@ -4,10 +4,24 @@ import { useEnhancedForm } from '@/hooks/use-enhanced-form';
 import { z } from 'zod';
 import { waitFor } from '@testing-library/react';
 
-// Mock event with preventDefault
-const mockEvent = {
+// Create a more complete mock event that satisfies BaseSyntheticEvent
+const createMockEvent = () => ({
   preventDefault: jest.fn(),
-};
+  stopPropagation: jest.fn(),
+  nativeEvent: {} as Event,
+  target: document.createElement('form'),
+  currentTarget: document.createElement('form'),
+  bubbles: true,
+  cancelable: true,
+  defaultPrevented: false,
+  eventPhase: 0,
+  isTrusted: true,
+  timeStamp: Date.now(),
+  type: 'submit',
+  isDefaultPrevented: () => false,
+  isPropagationStopped: () => false,
+  persist: () => {},
+});
 
 describe('useEnhancedForm', () => {
   // Create a simple validation schema for testing
@@ -50,15 +64,15 @@ describe('useEnhancedForm', () => {
       result.current.setValue('email', 'invalid-email');
     });
 
-    // Try to submit the form
+    // Try to submit the form with proper mock event
     await act(async () => {
-      await result.current.handleSubmit(mockEvent);
+      await result.current.handleSubmit(createMockEvent());
     });
 
     // Check validation errors
     expect(result.current.formState.errors.name).toBeDefined();
     expect(result.current.formState.errors.email).toBeDefined();
-    expect(mockEvent.preventDefault).toHaveBeenCalled();
+    expect(createMockEvent().preventDefault).toHaveBeenCalled();
   });
 
   it('should call onSubmit when form is valid', async () => {
@@ -76,9 +90,9 @@ describe('useEnhancedForm', () => {
       result.current.setValue('email', 'john@example.com');
     });
 
-    // Submit the form
+    // Submit the form with proper mock event
     await act(async () => {
-      await result.current.handleSubmit(mockEvent);
+      await result.current.handleSubmit(createMockEvent());
     });
 
     // Check if onSubmit was called with the form values
@@ -107,9 +121,9 @@ describe('useEnhancedForm', () => {
       result.current.setValue('email', 'john@example.com');
     });
 
-    // Submit the form
+    // Submit the form with proper mock event
     await act(async () => {
-      await result.current.handleSubmit(mockEvent);
+      await result.current.handleSubmit(createMockEvent());
     });
 
     // Check error handling
@@ -136,7 +150,7 @@ describe('useEnhancedForm', () => {
 
     // Submit successfully
     await act(async () => {
-      await result.current.handleSubmit(mockEvent);
+      await result.current.handleSubmit(createMockEvent());
     });
 
     expect(result.current.isSubmitSuccessful).toBe(true);
