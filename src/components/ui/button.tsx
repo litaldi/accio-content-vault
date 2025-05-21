@@ -51,22 +51,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : "button"
     const isDisabled = disabled || loading
     
-    // Fix: When using asChild, make sure we have a single child
-    const content = React.useMemo(() => {
-      if (!asChild) {
-        return children;
-      }
-      
-      const childArray = React.Children.toArray(children);
-      // If there's only one child element, return it directly
-      if (childArray.length === 1) {
-        return children;
-      }
-      
-      // If there are multiple children, wrap them in a fragment
-      return <span className="inline-flex items-center gap-2">{children}</span>;
-    }, [asChild, children]);
-    
     return (
       <Comp
         className={cn(buttonVariants({ variant, size, loading, className }))}
@@ -75,7 +59,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         aria-disabled={isDisabled || ariaDisabled ? true : undefined}
         {...props}
       >
-        {content}
+        {children}
         {loading && (
           <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 invisible hidden items-center justify-center">
             <svg 
