@@ -71,6 +71,29 @@ jest.mock('@/components/SearchResults', () => ({
   ),
 }));
 
+// Mock our new dashboard components
+jest.mock('@/components/Dashboard', () => ({
+  DashboardStats: ({ tagStats }: { tagStats: { confirmed: number, rejected: number } }) => (
+    <div data-testid="dashboard-stats">
+      <span>{tagStats.confirmed} confirmed</span>
+      <span>{tagStats.rejected} rejected</span>
+    </div>
+  ),
+  EmptyState: ({ onAddContent }: { onAddContent: () => void }) => (
+    <div data-testid="empty-state">
+      <button onClick={onAddContent} data-testid="add-content-button">Add New Content</button>
+    </div>
+  ),
+  ContentFilterTabs: ({ activeTab, onTabChange }: { activeTab: string, onTabChange: (tab: string) => void }) => (
+    <div data-testid="content-filter-tabs">
+      <button onClick={() => onTabChange('all')}>All</button>
+      <button onClick={() => onTabChange('links')}>Links</button>
+      <button onClick={() => onTabChange('files')}>Files</button>
+    </div>
+  ),
+  LoadingIndicator: () => <div data-testid="loading-indicator">Loading...</div>
+}));
+
 describe('Dashboard Page', () => {
   const navigateMock = jest.fn();
   const searchMock = jest.fn();
@@ -137,13 +160,13 @@ describe('Dashboard Page', () => {
       searchQuery: 'test',
       isSemanticSearch: true,
       isLoading: true,
-      handleSearch: searchMock,
-      handleTagsChange: tagsChangeMock
+      handleSearch: jest.fn(),
+      handleTagsChange: jest.fn()
     });
     
     render(<Dashboard />);
     
-    expect(screen.getByText(/Searching content/i)).toBeInTheDocument();
+    expect(screen.getByTestId('loading-indicator')).toBeInTheDocument();
     expect(screen.queryByTestId('search-results')).not.toBeInTheDocument();
   });
 
