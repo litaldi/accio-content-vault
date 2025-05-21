@@ -26,7 +26,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import Navbar from '@/components/Navbar';
-import { AlertTriangle, Loader2 } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
