@@ -4,6 +4,9 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "test:ci": "jest --ci --coverage"
+    "test:ci": "jest --ci --coverage",
+    "test:a11y": "jest --testPathPattern=.*\\.a11y\\.test\\.(ts|tsx)$",
+    "test:unit": "jest --testPathPattern=.*\\.test\\.(ts|tsx)$ --testPathIgnorePatterns=.*\\.a11y\\.test\\.(ts|tsx)$",
+    "test:update": "jest --updateSnapshot"
   }
 }
