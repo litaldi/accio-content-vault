@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Info, Users, Lightbulb } from "lucide-react";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 const About = () => {
   return (
@@ -13,6 +15,8 @@ const About = () => {
         <title>About Us | ReadSmart</title>
         <meta name="description" content="Learn more about ReadSmart, our mission, vision and the team behind the platform." />
       </Helmet>
+      
+      <Navbar />
 
       <div className="container px-4 py-8 mx-auto max-w-6xl">
         <div className="mb-8 space-y-4">
@@ -97,6 +101,8 @@ const About = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </>
   );
 };
