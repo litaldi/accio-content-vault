@@ -26,7 +26,9 @@ const NavbarMobileMenu: React.FC<NavbarMobileMenuProps> = ({ isLoggedIn, handleL
     <Sheet>
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Menu">
-          <Menu className="h-5 w-5" />
+          <span>
+            <Menu className="h-5 w-5" />
+          </span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right">
@@ -62,7 +64,7 @@ const NavbarMobileMenu: React.FC<NavbarMobileMenuProps> = ({ isLoggedIn, handleL
                 onClick={handleLogout}
                 className="justify-start pl-0 text-lg font-medium text-destructive hover:text-destructive hover:bg-transparent"
               >
-                Log out
+                <span>Log out</span>
               </Button>
             </>
           )}
