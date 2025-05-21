@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Helmet } from "react-helmet-async";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Info, Users, Lightbulb } from "lucide-react";
@@ -9,6 +9,8 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 
 const About = () => {
+  const navigate = useNavigate();
+
   return (
     <>
       <Helmet>
@@ -88,11 +90,11 @@ const About = () => {
         <div className="text-center py-8">
           <h2 className="text-2xl font-bold mb-4">Ready to get started?</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link to="/register">Create an Account</Link>
+            <Button size="lg" onClick={() => navigate('/register')}>
+              Create an Account
             </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link to="/contact">Contact Us</Link>
+            <Button variant="outline" size="lg" onClick={() => navigate('/contact')}>
+              Contact Us
             </Button>
           </div>
         </div>

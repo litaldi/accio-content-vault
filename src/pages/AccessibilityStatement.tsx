@@ -99,11 +99,11 @@ const AccessibilityStatement = () => {
         <div className="text-center py-8">
           <h2 className="text-2xl font-bold mb-4">Need Additional Help?</h2>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild>
-              <Link to="/contact">Contact Support</Link>
+            <Button onClick={() => window.location.href = '/contact'}>
+              Contact Support
             </Button>
-            <Button variant="outline" asChild>
-              <Link to="/faq">Visit FAQ</Link>
+            <Button variant="outline" onClick={() => window.location.href = '/faq'}>
+              Visit FAQ
             </Button>
           </div>
         </div>
