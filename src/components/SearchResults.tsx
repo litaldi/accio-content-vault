@@ -99,7 +99,7 @@ const SearchResults = ({
           
           <CardFooter>
             {content.url && (
-              <Button variant="outline" size="sm" asChild className="w-full">
+              <Button variant="outline" size="sm" asChild>
                 <a href={content.url} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="h-3 w-3 mr-2" />
                   Open Original
@@ -108,7 +108,7 @@ const SearchResults = ({
             )}
             
             {content.file_url && (
-              <Button variant="outline" size="sm" asChild className="w-full">
+              <Button variant="outline" size="sm" asChild>
                 <a href={content.file_url} target="_blank" rel="noopener noreferrer">
                   {getFileIcon(content.file_type)}
                   <span className="ml-2">View {content.file_type}</span>
