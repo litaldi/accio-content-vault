@@ -5,13 +5,17 @@ import {
   NavigationMenu,
   NavigationMenuContent,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
-const NavbarDesktopLinks: React.FC = () => {
+interface NavbarDesktopLinksProps {
+  isLoggedIn?: boolean;
+  currentPath?: string;
+}
+
+const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, currentPath }) => {
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList>
