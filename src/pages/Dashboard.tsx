@@ -45,16 +45,18 @@ const Dashboard = () => {
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       
       <main className="flex-grow container mx-auto px-4 py-8" id="main-content">
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+        <div className="flex flex-col gap-4 mb-6">
           <DashboardHeader />
           
-          <Button 
-            onClick={handleAddContent}
-            className="w-full md:w-auto"
-          >
-            <Plus className="h-4 w-4 mr-2" aria-hidden="true" />
-            Add New Content
-          </Button>
+          <div className="flex justify-end">
+            <Button 
+              onClick={handleAddContent}
+              className="w-full md:w-auto"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Add New Content</span>
+            </Button>
+          </div>
         </div>
         
         <div className="mb-8">

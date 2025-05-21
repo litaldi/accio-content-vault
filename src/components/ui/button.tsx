@@ -50,11 +50,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, loading, asChild = false, children, disabled, "aria-disabled": ariaDisabled, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
     const isDisabled = disabled || loading
-
-    // Ensure children is valid for Slot component when asChild is true
-    const childrenContent = asChild && React.Children.count(children) > 1 ? 
-      <span>{children}</span> : 
-      children;
+    
+    // When using asChild, we need to ensure that there's exactly one child
+    // If there are multiple children, wrap them in a fragment first
+    const childrenContent = React.useMemo(() => {
+      if (!asChild) return children;
+      
+      // Check if children is a single element
+      const childArray = React.Children.toArray(children);
+      if (childArray.length === 1) return children;
+      
+      // If multiple children, wrap in a span
+      return <span>{children}</span>;
+    }, [asChild, children]);
     
     return (
       <Comp
