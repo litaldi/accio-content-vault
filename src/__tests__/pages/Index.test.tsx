@@ -20,8 +20,9 @@ jest.mock('@/components/Footer', () => {
 // Mock all home components to simplify testing
 jest.mock('@/components/home/HeroSection', () => {
   return function MockHeroSection() {
-    return <section data-testid="hero-section">
+    return <section data-testid="hero-section" id="hero-section">
       <h1>Remember everything you discover online</h1>
+      <a href="#onboarding-section">Learn how Accio works</a>
     </section>;
   };
 });
@@ -36,7 +37,7 @@ jest.mock('@/components/home/OnboardingSection', () => {
     ];
     
     return (
-      <section data-testid="onboarding-section">
+      <section data-testid="onboarding-section" id="onboarding-section">
         <h2>How Accio Works</h2>
         {steps.map((step, i) => (
           <div key={i} role="button" aria-label={`View ${step.title} details`}>{step.title}</div>
@@ -49,7 +50,7 @@ jest.mock('@/components/home/OnboardingSection', () => {
 
 jest.mock('@/components/home/FeaturesSection', () => {
   return function MockFeaturesSection() {
-    return <section data-testid="features-section">
+    return <section data-testid="features-section" id="features-section">
       <h2>Powerful Features</h2>
     </section>;
   };
@@ -57,7 +58,7 @@ jest.mock('@/components/home/FeaturesSection', () => {
 
 jest.mock('@/components/home/AboutSection', () => {
   return function MockAboutSection() {
-    return <section data-testid="about-section">
+    return <section data-testid="about-section" id="about-section">
       <h2>About Accio</h2>
     </section>;
   };
@@ -65,13 +66,13 @@ jest.mock('@/components/home/AboutSection', () => {
 
 jest.mock('@/components/home/PricingSection', () => {
   return function MockPricingSection() {
-    return <section data-testid="pricing-section"></section>;
+    return <section data-testid="pricing-section" id="pricing-section"></section>;
   };
 });
 
 jest.mock('@/components/home/ContactSection', () => {
   return function MockContactSection() {
-    return <section data-testid="contact-section">
+    return <section data-testid="contact-section" id="contact-section">
       <h2>Questions? Get in Touch</h2>
       <button>Contact Us</button>
     </section>;
@@ -80,7 +81,7 @@ jest.mock('@/components/home/ContactSection', () => {
 
 jest.mock('@/components/home/FAQSection', () => {
   return function MockFAQSection() {
-    return <section data-testid="faq-section">
+    return <section data-testid="faq-section" id="faq-section">
       <h2>Frequently Asked Questions</h2>
       <button>View all FAQs</button>
     </section>;
@@ -89,7 +90,7 @@ jest.mock('@/components/home/FAQSection', () => {
 
 jest.mock('@/components/home/CTASection', () => {
   return function MockCTASection() {
-    return <section data-testid="cta-section">
+    return <section data-testid="cta-section" id="cta-section">
       <button>Sign Up Free</button>
       <button>Login</button>
     </section>;
@@ -150,6 +151,11 @@ describe('Index Page', () => {
     // Check for buttons linking to pages
     expect(screen.getByRole('button', { name: /contact us/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /view all faqs/i })).toBeInTheDocument();
+  });
+
+  it('should have anchor links for smooth scrolling', () => {
+    render(<Index />);
+    expect(screen.getByText('Learn how Accio works')).toBeInTheDocument();
   });
 
   it('should have no accessibility violations', async () => {

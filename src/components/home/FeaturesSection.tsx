@@ -1,23 +1,29 @@
 
 import React from 'react';
 import { Card } from '@/components/ui/card';
-import { Link, FileText, Search, Tag } from 'lucide-react';
+import { Link, FileText, Search, Tag, Bookmark, Cloud, Zap } from 'lucide-react';
 
 const FeaturesSection = () => {
   return (
-    <section className="py-16 px-4 bg-secondary" aria-labelledby="features-heading">
+    <section 
+      className="py-16 px-4 bg-secondary" 
+      aria-labelledby="features-heading"
+      id="features-section"
+    >
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12 animate-fade-in">
           <h2 id="features-heading" className="text-3xl font-bold mb-4">Powerful Features</h2>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Accio brings powerful tools to help you organize and retrieve your digital content
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 gap-8">
-          <Card className="p-6 card-hover shadow-sm transition-all">
-            <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+        <div className="grid md:grid-cols-3 gap-8">
+          <Card className="p-6 card-hover shadow-sm transition-all border-l-4 border-l-primary">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Search className="h-5 w-5 text-primary" aria-hidden="true" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">
               Natural Language Search
             </h3>
             <p className="text-muted-foreground">
@@ -25,9 +31,11 @@ const FeaturesSection = () => {
             </p>
           </Card>
           
-          <Card className="p-6 card-hover shadow-sm transition-all">
-            <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+          <Card className="p-6 card-hover shadow-sm transition-all border-l-4 border-l-primary">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Tag className="h-5 w-5 text-primary" aria-hidden="true" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">
               AI-Powered Tagging
             </h3>
             <p className="text-muted-foreground">
@@ -35,9 +43,11 @@ const FeaturesSection = () => {
             </p>
           </Card>
           
-          <Card className="p-6 card-hover shadow-sm transition-all">
-            <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+          <Card className="p-6 card-hover shadow-sm transition-all border-l-4 border-l-primary">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <FileText className="h-5 w-5 text-primary" aria-hidden="true" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">
               Multiple Content Types
             </h3>
             <p className="text-muted-foreground">
@@ -45,13 +55,39 @@ const FeaturesSection = () => {
             </p>
           </Card>
           
-          <Card className="p-6 card-hover shadow-sm transition-all">
-            <h3 className="text-xl font-semibold mb-2 flex items-center gap-2">
+          <Card className="p-6 card-hover shadow-sm transition-all border-l-4 border-l-primary">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Link className="h-5 w-5 text-primary" aria-hidden="true" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">
               One-Click Saving
             </h3>
             <p className="text-muted-foreground">
               Save content from anywhere with a simple click or share from other apps.
+            </p>
+          </Card>
+          
+          <Card className="p-6 card-hover shadow-sm transition-all border-l-4 border-l-primary">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <Cloud className="h-5 w-5 text-primary" aria-hidden="true" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">
+              Cloud Sync
+            </h3>
+            <p className="text-muted-foreground">
+              Access your content from any device with secure cloud synchronization.
+            </p>
+          </Card>
+          
+          <Card className="p-6 card-hover shadow-sm transition-all border-l-4 border-l-primary">
+            <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+              <Zap className="h-5 w-5 text-primary" aria-hidden="true" />
+            </div>
+            <h3 className="text-xl font-semibold mb-2">
+              Fast Performance
+            </h3>
+            <p className="text-muted-foreground">
+              Enjoy lightning-fast search results and smooth interactions on all devices.
             </p>
           </Card>
         </div>
