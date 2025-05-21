@@ -22,7 +22,7 @@ const NavbarUserMenu: React.FC<NavbarUserMenuProps> = ({ handleLogout, getUserIn
   
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full" aria-label="User menu">
           <Avatar className="h-8 w-8 transition-transform hover:scale-105">
             <AvatarFallback className="bg-primary/10 text-primary">{getUserInitials()}</AvatarFallback>

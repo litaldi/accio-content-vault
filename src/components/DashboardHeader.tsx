@@ -27,7 +27,7 @@ const DashboardHeader: React.FC = () => {
         </Button>
         <Button onClick={() => navigate('/save')}>
           <Plus className="h-4 w-4 mr-2" />
-          Save New
+          Add New Content
         </Button>
       </div>
     </div>

@@ -81,8 +81,10 @@ const SemanticSearchBar: React.FC<SemanticSearchBarProps> = ({ onSearch }) => {
               
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger>
-                    <Sparkles className="h-3.5 w-3.5" />
+                  <TooltipTrigger asChild>
+                    <button type="button" className="inline-flex">
+                      <Sparkles className="h-3.5 w-3.5" />
+                    </button>
                   </TooltipTrigger>
                   <TooltipContent>
                     <p className="text-xs max-w-xs">
