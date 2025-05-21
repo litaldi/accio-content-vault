@@ -74,6 +74,7 @@ describe('useTagService', () => {
       // Mock scenario where first tag exists and second needs to be created
       mockSupabase.select.mockImplementation(() => ({
         eq: jest.fn().mockReturnThis(),
+        // Fixed duplicate eq by properly chaining the mock implementation
         eq: jest.fn().mockResolvedValueOnce({ data: [{ id: 'tag1', name: 'react', auto_generated: false }], error: null })
           .mockResolvedValueOnce({ data: [], error: null }),
       }));
