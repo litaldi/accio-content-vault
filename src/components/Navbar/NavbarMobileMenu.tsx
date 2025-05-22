@@ -8,19 +8,36 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { Separator } from "@/components/ui/separator";
 
 interface NavbarMobileMenuProps {
   isLoggedIn: boolean;
   handleLogout: () => void;
 }
 
+/**
+ * Mobile menu component displayed on smaller screens
+ * Shows different navigation options based on authentication state
+ */
 const NavbarMobileMenu: React.FC<NavbarMobileMenuProps> = ({ isLoggedIn, handleLogout }) => {
-  const navigationLinks = [
+  // Public routes available to all users
+  const publicLinks = [
     { path: '/about', label: 'About' },
     { path: '/pricing', label: 'Pricing' },
     { path: '/contact', label: 'Contact' },
     { path: '/faq', label: 'FAQ' }
   ];
+
+  // Private routes for authenticated users
+  const privateLinks = [
+    { path: '/dashboard', label: 'Dashboard' },
+    { path: '/collections', label: 'Collections' },
+    { path: '/analytics', label: 'Analytics' },
+    { path: '/settings', label: 'Settings' }
+  ];
+
+  // Determine which links to display based on authentication state
+  const navigationLinks = isLoggedIn ? privateLinks : publicLinks;
 
   return (
     <Sheet>
@@ -36,6 +53,7 @@ const NavbarMobileMenu: React.FC<NavbarMobileMenuProps> = ({ isLoggedIn, handleL
           <Link to="/" className="text-lg font-medium py-2 transition-colors hover:text-primary">
             Home
           </Link>
+          
           {navigationLinks.map(item => (
             <Link 
               key={item.path} 
@@ -45,20 +63,10 @@ const NavbarMobileMenu: React.FC<NavbarMobileMenuProps> = ({ isLoggedIn, handleL
               {item.label}
             </Link>
           ))}
+          
           {isLoggedIn && (
             <>
-              <Link to="/dashboard" className="text-lg font-medium py-2 transition-colors hover:text-primary">
-                Dashboard
-              </Link>
-              <Link to="/collections" className="text-lg font-medium py-2 transition-colors hover:text-primary">
-                Collections
-              </Link>
-              <Link to="/analytics" className="text-lg font-medium py-2 transition-colors hover:text-primary">
-                Analytics
-              </Link>
-              <Link to="/settings" className="text-lg font-medium py-2 transition-colors hover:text-primary">
-                Settings
-              </Link>
+              <Separator className="my-2" />
               <Button 
                 variant="ghost" 
                 onClick={handleLogout}

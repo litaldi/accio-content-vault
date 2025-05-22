@@ -2,7 +2,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import NavbarUserMenu from './NavbarUserMenu';
@@ -15,6 +14,10 @@ interface NavbarActionsProps {
   getUserInitials: () => string;
 }
 
+/**
+ * Component that displays actions in the navbar based on authentication state
+ * Shows login/signup buttons for anonymous users and user menu for authenticated users
+ */
 const NavbarActions: React.FC<NavbarActionsProps> = ({ 
   isLoggedIn, 
   isMobile, 
@@ -22,6 +25,9 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({
   getUserInitials 
 }) => {
   const navigate = useNavigate();
+
+  const handleLogin = () => navigate('/login');
+  const handleSignup = () => navigate('/register');
 
   return (
     <div className="flex items-center gap-4">
@@ -37,13 +43,13 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({
         <div className="hidden md:flex items-center gap-2">
           <Button 
             variant="ghost" 
-            onClick={() => navigate('/login')}
+            onClick={handleLogin}
             className="text-sm transition-all"
           >
             <span>Log in</span>
           </Button>
           <Button 
-            onClick={() => navigate('/register')}
+            onClick={handleSignup}
             className="text-sm transition-all hover:shadow-md"
           >
             <span>Sign up</span>
