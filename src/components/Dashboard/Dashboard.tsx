@@ -1,18 +1,22 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Helmet } from "react-helmet-async";
 import { Tag as TagType } from '@/types';
 import { useAuth } from '@/contexts/AuthContext';
 import { useContentSearch } from '@/hooks/useContentSearch';
+import { measurePerformance } from '@/utils/performance';
 
-// Existing components
+// Core components that should load immediately
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import SemanticSearchBar from '@/components/SemanticSearchBar';
 import DashboardHeader from '@/components/DashboardHeader';
 import SearchQueryInfo from '@/components/SearchQueryInfo';
-import SearchResults from '@/components/SearchResults';
-import TagConfirmationDialog from '@/components/TagConfirmationDialog';
+
+// Lazy-loaded components for performance optimization
+import LazySemantic from '@/components/LazySemantic';
+const SearchResults = React.lazy(() => import('@/components/SearchResults'));
+const TagConfirmationDialog = React.lazy(() => import('@/components/TagConfirmationDialog'));
 
 // Dashboard components
 import { 
@@ -67,15 +71,17 @@ const Dashboard = () => {
     }
   };
 
-  // Filter content based on active tab
-  const filteredResults = searchResults.filter(result => {
-    if (activeTab === 'all') return true;
-    
-    // Filter by content type
-    if (activeTab === 'links' && !result.content.file_url) return true;
-    if (activeTab === 'files' && result.content.file_url) return true;
-    
-    return false;
+  // Filter content based on active tab - Use performance measurement
+  const filteredResults = measurePerformance('FilterResults', () => {
+    return searchResults.filter(result => {
+      if (activeTab === 'all') return true;
+      
+      // Filter by content type
+      if (activeTab === 'links' && !result.content.file_url) return true;
+      if (activeTab === 'files' && result.content.file_url) return true;
+      
+      return false;
+    });
   });
 
   // Check if user is authenticated, if not redirect to login
@@ -90,6 +96,13 @@ const Dashboard = () => {
       <Helmet>
         <title>Dashboard | Accio</title>
         <meta name="description" content="Manage and search your saved content." />
+        
+        {/* Preload critical resources */}
+        <link rel="preload" href="/assets/logo.svg" as="image" />
+        
+        {/* Add preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </Helmet>
 
       <Navbar isLoggedIn={!!user} onLogout={handleLogout} />
@@ -101,7 +114,7 @@ const Dashboard = () => {
         </div>
         
         <div className="mb-8">
-          <SemanticSearchBar onSearch={(query) => handleSearch(query, true)} />
+          <LazySemantic onSearch={(query, semantic) => handleSearch(query, semantic)} />
         </div>
 
         <ContentFilterTabs 
@@ -119,12 +132,14 @@ const Dashboard = () => {
               resultsCount={filteredResults.length} 
             />
             
-            <SearchResults 
-              searchResults={filteredResults} 
-              searchQuery={searchQuery} 
-              onTagsChange={handleTagsChange}
-              onTagConfirmRequest={setTagToConfirm} 
-            />
+            <Suspense fallback={<LoadingIndicator />}>
+              <SearchResults 
+                searchResults={filteredResults} 
+                searchQuery={searchQuery} 
+                onTagsChange={handleTagsChange}
+                onTagConfirmRequest={setTagToConfirm} 
+              />
+            </Suspense>
             
             {/* Show empty state when no content */}
             {filteredResults.length === 0 && !isLoading && !searchQuery && (
@@ -134,13 +149,15 @@ const Dashboard = () => {
         )}
       </main>
       
-      {/* Tag confirmation dialog */}
+      {/* Tag confirmation dialog - Only load when needed */}
       {tagToConfirm && (
-        <TagConfirmationDialog 
-          tag={tagToConfirm} 
-          onConfirm={handleTagConfirm}
-          onClose={() => setTagToConfirm(null)}
-        />
+        <Suspense fallback={null}>
+          <TagConfirmationDialog 
+            tag={tagToConfirm} 
+            onConfirm={handleTagConfirm}
+            onClose={() => setTagToConfirm(null)}
+          />
+        </Suspense>
       )}
       
       <Footer />
