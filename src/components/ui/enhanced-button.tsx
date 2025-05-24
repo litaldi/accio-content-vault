@@ -38,6 +38,11 @@ export const EnhancedButton = React.forwardRef<
       return null;
     }
 
+    // Check if the child element can accept a disabled prop
+    const childProps = React.isValidElement(children) && typeof children.type !== 'string' 
+      ? { disabled: isDisabled }
+      : {};
+
     return (
       <Slot
         ref={ref}
@@ -48,9 +53,7 @@ export const EnhancedButton = React.forwardRef<
         )}
         {...props}
       >
-        {React.cloneElement(children, {
-          disabled: isDisabled,
-        })}
+        {React.cloneElement(children, childProps)}
       </Slot>
     );
   }
