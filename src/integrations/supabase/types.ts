@@ -90,6 +90,36 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          created_at: string
+          email_notifications: boolean
+          id: string
+          in_app_notifications: boolean
+          push_notifications: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_notifications?: boolean
+          id?: string
+          in_app_notifications?: boolean
+          push_notifications?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_notifications?: boolean
+          id?: string
+          in_app_notifications?: boolean
+          push_notifications?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount: number | null
@@ -125,6 +155,47 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      reminder_notifications: {
+        Row: {
+          content_count: number
+          error_message: string | null
+          id: string
+          notification_type: string
+          reminder_id: string
+          sent_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          content_count?: number
+          error_message?: string | null
+          id?: string
+          notification_type: string
+          reminder_id: string
+          sent_at?: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          content_count?: number
+          error_message?: string | null
+          id?: string
+          notification_type?: string
+          reminder_id?: string
+          sent_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_notifications_reminder_id_fkey"
+            columns: ["reminder_id"]
+            isOneToOne: false
+            referencedRelation: "tag_reminders"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       search_history: {
         Row: {
@@ -221,6 +292,65 @@ export type Database = {
           },
         ]
       }
+      tag_reminders: {
+        Row: {
+          created_at: string
+          day_of_month: number | null
+          day_of_week: number | null
+          description: string | null
+          frequency: string
+          id: string
+          is_active: boolean
+          last_sent_at: string | null
+          next_scheduled_at: string | null
+          tag_id: string
+          time_of_day: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          day_of_month?: number | null
+          day_of_week?: number | null
+          description?: string | null
+          frequency: string
+          id?: string
+          is_active?: boolean
+          last_sent_at?: string | null
+          next_scheduled_at?: string | null
+          tag_id: string
+          time_of_day?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          day_of_month?: number | null
+          day_of_week?: number | null
+          description?: string | null
+          frequency?: string
+          id?: string
+          is_active?: boolean
+          last_sent_at?: string | null
+          next_scheduled_at?: string | null
+          tag_id?: string
+          time_of_day?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tag_reminders_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       tags: {
         Row: {
           auto_generated: boolean
@@ -277,7 +407,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      calculate_next_reminder_time: {
+        Args: {
+          frequency: string
+          day_of_week: number
+          day_of_month: number
+          time_of_day: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never

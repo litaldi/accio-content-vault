@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Helmet } from 'react-helmet-async';
-import { Plus, Search, Archive, BarChart3, Clock, Heart, Mic, Wifi } from 'lucide-react';
+import { Plus, Search, Archive, BarChart3, Clock, Heart, Mic, Wifi, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -130,8 +130,8 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Quick Actions with Offline Access */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+          {/* Quick Actions with Offline Access and Reminders */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
             <ResponsiveCard
               className="hover:shadow-md transition-shadow cursor-pointer"
               onClick={() => navigate('/save')}
@@ -158,6 +158,21 @@ const Dashboard = () => {
                 <div>
                   <h3 className="font-semibold text-sm">Search</h3>
                   <p className="text-xs text-muted-foreground">Find anything</p>
+                </div>
+              </CardContent>
+            </ResponsiveCard>
+
+            <ResponsiveCard
+              className="hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => navigate('/reminders')}
+            >
+              <CardContent className="flex items-center gap-3 p-4">
+                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <Bell className="h-5 w-5 text-orange-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-sm">Reminders</h3>
+                  <p className="text-xs text-muted-foreground">Tag alerts</p>
                 </div>
               </CardContent>
             </ResponsiveCard>
