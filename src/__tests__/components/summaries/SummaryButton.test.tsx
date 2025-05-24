@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@/utils/test-utils';
+import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils';
 import { SummaryButton } from '@/components/summaries/SummaryButton';
 import { SummaryService } from '@/services/summaryService';
 import { useToast } from '@/hooks/use-toast';
@@ -17,7 +17,11 @@ describe('SummaryButton', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseToast.mockReturnValue({ toast: mockToast });
+    mockUseToast.mockReturnValue({ 
+      toast: mockToast,
+      dismiss: jest.fn(),
+      toasts: []
+    });
   });
 
   const defaultProps = {

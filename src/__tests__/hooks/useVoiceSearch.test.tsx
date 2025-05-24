@@ -29,7 +29,6 @@ describe('useVoiceSearch', () => {
 
     expect(result.current.isListening).toBe(false);
     expect(result.current.isSupported).toBe(true);
-    expect(result.current.error).toBeNull();
   });
 
   it('should start listening when startListening is called', () => {

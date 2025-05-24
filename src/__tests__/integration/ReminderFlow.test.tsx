@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@/utils/test-utils';
+import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils';
 import { ReminderManager } from '@/components/reminders/ReminderManager';
 import { ReminderService } from '@/services/reminderService';
 

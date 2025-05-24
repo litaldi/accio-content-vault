@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { axe, toHaveNoViolations } from 'jest-axe';
 import { render } from './test-utils';
+import { axe, toHaveNoViolations } from 'jest-axe';
 
 // Add jest-axe matchers
 expect.extend(toHaveNoViolations);
@@ -33,3 +33,5 @@ export function createA11yTest(
     await testComponentForA11yViolations(Component, { ...defaultProps, ...props });
   };
 }
+
+export { axe };

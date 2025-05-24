@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render, screen, fireEvent } from '@/utils/test-utils';
+import { render, screen, fireEvent } from '@/__tests__/utils/test-utils';
 import { VoiceSearchButton } from '@/components/VoiceSearch/VoiceSearchButton';
 
 // Mock the voice search service

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@/utils/test-utils';
+import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils';
 import { SummaryDisplay } from '@/components/summaries/SummaryDisplay';
 import { SummaryService } from '@/services/summaryService';
 

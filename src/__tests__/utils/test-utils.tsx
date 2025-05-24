@@ -1,13 +1,9 @@
 
 import React, { ReactElement } from 'react';
-import { render, RenderOptions, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { axe, toHaveNoViolations } from 'jest-axe';
 import '@testing-library/jest-dom';
-
-// Add jest-axe matchers
-expect.extend(toHaveNoViolations);
 
 // Create a wrapper with all providers needed for tests
 const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
@@ -29,4 +25,3 @@ const customRender = (
 // Re-export everything from React Testing Library
 export * from '@testing-library/react';
 export { customRender as render };
-export { axe };

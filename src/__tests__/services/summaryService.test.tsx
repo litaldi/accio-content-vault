@@ -32,14 +32,15 @@ describe('SummaryService', () => {
         updated_at: '2024-01-01T00:00:00Z'
       };
 
-      mockSupabase.functions.invoke.mockResolvedValue({
+      const mockInvoke = jest.fn().mockResolvedValue({
         data: mockResponse,
         error: null
       });
+      mockSupabase.functions.invoke = mockInvoke;
 
       const result = await SummaryService.generateSummary('content-123', 'Test content', 'medium');
 
-      expect(mockSupabase.functions.invoke).toHaveBeenCalledWith('generate-summary', {
+      expect(mockInvoke).toHaveBeenCalledWith('generate-summary', {
         body: {
           contentId: 'content-123',
           text: 'Test content',
@@ -50,10 +51,11 @@ describe('SummaryService', () => {
     });
 
     it('should handle errors during generation', async () => {
-      mockSupabase.functions.invoke.mockResolvedValue({
+      const mockInvoke = jest.fn().mockResolvedValue({
         data: null,
         error: new Error('API Error')
       });
+      mockSupabase.functions.invoke = mockInvoke;
 
       await expect(
         SummaryService.generateSummary('content-123', 'Test content')

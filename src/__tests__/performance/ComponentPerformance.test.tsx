@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { render, screen } from '@/utils/test-utils';
+import { render, screen } from '@/__tests__/utils/test-utils';
 import { performance } from '@/utils/performance';
 import { SummaryDisplay } from '@/components/summaries/SummaryDisplay';
 

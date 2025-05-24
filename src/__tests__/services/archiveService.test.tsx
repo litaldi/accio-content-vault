@@ -13,7 +13,11 @@ describe('useArchiveService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    mockUseToast.mockReturnValue({ toast: mockToast });
+    mockUseToast.mockReturnValue({ 
+      toast: mockToast,
+      dismiss: jest.fn(),
+      toasts: []
+    });
     
     // Clear localStorage
     localStorage.clear();

@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { render } from '@/utils/test-utils';
-import { axe } from '@/utils/a11y-test';
+import { render } from '@/__tests__/utils/test-utils';
+import { axe } from '@/__tests__/utils/a11y-test';
 import { SummaryButton } from '@/components/summaries/SummaryButton';
 import { VoiceSearchButton } from '@/components/VoiceSearch/VoiceSearchButton';
 import { Button } from '@/components/ui/button';

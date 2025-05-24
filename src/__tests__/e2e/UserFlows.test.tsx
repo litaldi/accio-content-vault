@@ -1,9 +1,10 @@
 
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@/utils/test-utils';
+import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils';
 import { BrowserRouter } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import { useAuth } from '@/contexts/AuthContext';
+import type { User } from '@supabase/supabase-js';
 
 // Mock authentication
 jest.mock('@/contexts/AuthContext');
@@ -14,10 +15,13 @@ jest.mock('@/hooks/useOfflineContent');
 jest.mock('@/hooks/useVoiceSearch');
 
 describe('End-to-End User Flows', () => {
-  const mockUser = {
+  const mockUser: User = {
     id: 'user-123',
     email: 'test@example.com',
-    created_at: '2024-01-01T00:00:00Z'
+    created_at: '2024-01-01T00:00:00Z',
+    app_metadata: {},
+    user_metadata: {},
+    aud: 'authenticated'
   };
 
   beforeEach(() => {
@@ -26,7 +30,7 @@ describe('End-to-End User Flows', () => {
       signIn: jest.fn(),
       signOut: jest.fn(),
       signUp: jest.fn(),
-      loading: false
+      isLoading: false
     });
   });
 
