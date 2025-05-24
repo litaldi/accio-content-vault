@@ -2,9 +2,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { AuthProvider } from '@/contexts/AuthContext';
 import Index from './pages/Index';
 import Dashboard from './pages/Dashboard';
 import AccessibilityStatement from './pages/AccessibilityStatement';
+import Login from './pages/Login';
 import { AccessibleLayout } from './components/layout/AccessibleLayout';
 import { EnhancedOnboardingFlow } from './components/onboarding/EnhancedOnboardingFlow';
 
@@ -34,24 +36,29 @@ function App() {
 
   if (showOnboarding) {
     return (
-      <EnhancedOnboardingFlow 
-        onComplete={handleCompleteOnboarding} 
-        onSkip={handleSkipOnboarding}
-      />
+      <AuthProvider>
+        <EnhancedOnboardingFlow 
+          onComplete={handleCompleteOnboarding} 
+          onSkip={handleSkipOnboarding}
+        />
+      </AuthProvider>
     );
   }
 
   return (
     <HelmetProvider>
-      <BrowserRouter>
-        <AccessibleLayout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/accessibility" element={<AccessibilityStatement />} />
-          </Routes>
-        </AccessibleLayout>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <AccessibleLayout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/accessibility" element={<AccessibilityStatement />} />
+            </Routes>
+          </AccessibleLayout>
+        </BrowserRouter>
+      </AuthProvider>
     </HelmetProvider>
   );
 }

@@ -1,130 +1,72 @@
 
-import React, { useState, useRef, useEffect } from 'react';
-import { EnhancedTooltip } from '@/components/ui/enhanced-tooltip';
-import { HelpCircle, Info, Lightbulb } from 'lucide-react';
+import React from 'react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
+import { Info, AlertTriangle, HelpCircle } from 'lucide-react';
 
 interface SmartTooltipProps {
   children: React.ReactNode;
   content: React.ReactNode;
-  type?: 'help' | 'info' | 'tip';
-  position?: 'auto' | 'top' | 'bottom' | 'left' | 'right';
-  showDelay?: number;
-  hideDelay?: number;
+  side?: 'top' | 'right' | 'bottom' | 'left';
+  delayDuration?: number;
+  type?: 'default' | 'info' | 'warning' | 'help';
   className?: string;
 }
 
-export const SmartTooltip: React.FC<SmartTooltipProps> = ({
+const SmartTooltip: React.FC<SmartTooltipProps> = ({
   children,
   content,
-  type = 'info',
-  position = 'auto',
-  showDelay = 500,
-  hideDelay = 200,
+  side = 'top',
+  delayDuration = 700,
+  type = 'default',
   className
 }) => {
-  const [visible, setVisible] = useState(false);
-  const [actualPosition, setActualPosition] = useState(position);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
-
-  const icons = {
-    help: <HelpCircle className="h-3 w-3" />,
-    info: <Info className="h-3 w-3" />,
-    tip: <Lightbulb className="h-3 w-3" />
+  const getIcon = () => {
+    switch (type) {
+      case 'info':
+        return <Info className="h-3 w-3 mr-1" />;
+      case 'warning':
+        return <AlertTriangle className="h-3 w-3 mr-1 text-yellow-500" />;
+      case 'help':
+        return <HelpCircle className="h-3 w-3 mr-1" />;
+      default:
+        return null;
+    }
   };
 
-  const variants = {
-    help: 'info',
-    info: 'default',
-    tip: 'warning'
-  } as const;
-
-  useEffect(() => {
-    if (position === 'auto' && triggerRef.current && visible) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const viewportWidth = window.innerWidth;
-      
-      let newPosition = 'top';
-      
-      if (rect.top < 100) {
-        newPosition = 'bottom';
-      } else if (rect.bottom > viewportHeight - 100) {
-        newPosition = 'top';
-      } else if (rect.left < 100) {
-        newPosition = 'right';
-      } else if (rect.right > viewportWidth - 100) {
-        newPosition = 'left';
-      }
-      
-      setActualPosition(newPosition as any);
+  const getVariantStyles = () => {
+    switch (type) {
+      case 'warning':
+        return 'bg-yellow-50 text-yellow-900 border-yellow-200';
+      case 'info':
+        return 'bg-blue-50 text-blue-900 border-blue-200';
+      default:
+        return '';
     }
-  }, [position, visible]);
-
-  const handleShow = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      setVisible(true);
-    }, showDelay);
-  };
-
-  const handleHide = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-    timeoutRef.current = setTimeout(() => {
-      setVisible(false);
-    }, hideDelay);
   };
 
   return (
-    <div
-      ref={triggerRef}
-      onMouseEnter={handleShow}
-      onMouseLeave={handleHide}
-      onFocus={handleShow}
-      onBlur={handleHide}
-      className={cn("inline-block", className)}
-    >
-      <EnhancedTooltip
-        content={
-          <div className="flex items-start gap-2 max-w-xs">
-            <div className="flex-shrink-0 mt-0.5">
-              {icons[type]}
-            </div>
-            <div className="text-sm">{content}</div>
+    <TooltipProvider>
+      <Tooltip delayDuration={delayDuration}>
+        <TooltipTrigger asChild>
+          {children}
+        </TooltipTrigger>
+        <TooltipContent 
+          side={side}
+          className={cn(
+            'max-w-xs text-sm',
+            getVariantStyles(),
+            className
+          )}
+        >
+          <div className="flex items-start">
+            {getIcon()}
+            <div>{content}</div>
           </div>
-        }
-        variant={variants[type]}
-        side={actualPosition === 'auto' ? 'top' : actualPosition}
-        delayDuration={0}
-      >
-        {children}
-      </EnhancedTooltip>
-    </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 
-// Quick help icon component
-export const HelpIcon: React.FC<{ content: React.ReactNode; className?: string }> = ({
-  content,
-  className
-}) => (
-  <SmartTooltip content={content} type="help">
-    <button
-      type="button"
-      className={cn(
-        "inline-flex items-center justify-center w-4 h-4 rounded-full",
-        "text-muted-foreground hover:text-foreground transition-colors",
-        "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-        className
-      )}
-      aria-label="Help"
-    >
-      <HelpCircle className="h-3 w-3" />
-    </button>
-  </SmartTooltip>
-);
+export default SmartTooltip;

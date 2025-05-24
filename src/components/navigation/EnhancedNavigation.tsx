@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +19,20 @@ const EnhancedNavigation: React.FC = () => {
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  
+  // Safely use auth context with fallback
+  let user = null;
+  let signOut = () => {};
+  
+  try {
+    const authContext = useAuth();
+    user = authContext.user;
+    signOut = authContext.signOut;
+  } catch (error) {
+    // Auth context not available, continue with defaults
+    console.warn('AuthProvider not available, navigation will work in guest mode');
+  }
+
   const { preferences } = useAccessibility();
   const isLoggedIn = !!user;
 

@@ -35,7 +35,8 @@ const ActionFeedback: React.FC<ActionFeedbackProps> = ({
 
   React.useEffect(() => {
     toast({
-      title: (
+      title: title,
+      description: description ? (
         <div className="flex items-center gap-2">
           <Icon className={cn(
             "h-4 w-4",
@@ -44,10 +45,9 @@ const ActionFeedback: React.FC<ActionFeedbackProps> = ({
             type === 'warning' && "text-yellow-500",
             type === 'info' && "text-primary"
           )} />
-          <span>{title}</span>
+          <span>{description}</span>
         </div>
-      ),
-      description: description,
+      ) : undefined,
       duration: duration,
       action: actionable ? (
         <div 
