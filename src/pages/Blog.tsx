@@ -41,7 +41,7 @@ const blogPosts = [
 
 const Blog = () => {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Helmet>
         <title>Blog | Accio</title>
         <meta name="description" content="Latest updates, tips, and insights about Accio and content management." />
@@ -49,7 +49,7 @@ const Blog = () => {
       
       <Navbar isLoggedIn={false} />
 
-      <main className="container mx-auto px-4 py-12">
+      <main className="flex-1 container mx-auto px-4 py-12">
         <div className="mb-12">
           <h1 className="text-4xl font-bold mb-4">Blog & Updates</h1>
           <p className="text-xl text-muted-foreground max-w-2xl">
@@ -162,7 +162,7 @@ const Blog = () => {
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 };
 
