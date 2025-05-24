@@ -1,11 +1,14 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Clock, Tag, X, Mic } from 'lucide-react';
+import { Search, Clock, Tag, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { VoiceSearchButton } from '@/components/VoiceSearch/VoiceSearchButton';
+import { VoiceSearchIndicator } from '@/components/VoiceSearch/VoiceSearchIndicator';
+import { useVoiceSearch } from '@/hooks/useVoiceSearch';
 
 interface SearchSuggestion {
   id: string;
@@ -30,9 +33,19 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   const [query, setQuery] = useState(searchQuery);
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Voice search integration
+  const { isListening, transcript, isSupported } = useVoiceSearch({
+    onTranscript: (text, isFinal) => {
+      setQuery(text);
+      if (isFinal && text.trim()) {
+        handleSearch(text.trim());
+      }
+    },
+    minConfidence: 0.6,
+  });
 
   // Mock suggestions - in real app, these would come from your API
   const suggestions: SearchSuggestion[] = [
@@ -53,11 +66,15 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
     }
   }, [query, onSearchChange]);
 
+  useEffect(() => {
+    setQuery(transcript);
+  }, [transcript]);
+
   const handleSearch = (searchTerm: string = query) => {
     if (!searchTerm.trim()) {
       toast({
         title: "Search query empty",
-        description: "Please enter a search term",
+        description: "Please enter a search term or use voice search",
         variant: "destructive",
       });
       return;
@@ -77,53 +94,6 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
     handleSearch(suggestion.text);
   };
 
-  const handleVoiceSearch = () => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-      const recognition = new SpeechRecognition();
-      
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
-      
-      recognition.onstart = () => {
-        setIsListening(true);
-        toast({
-          title: "Voice search active",
-          description: "Listening... Speak your search query",
-        });
-      };
-      
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setQuery(transcript);
-        handleSearch(transcript);
-        setIsListening(false);
-      };
-      
-      recognition.onerror = () => {
-        setIsListening(false);
-        toast({
-          title: "Voice search failed",
-          description: "Please try typing your search instead",
-          variant: "destructive",
-        });
-      };
-      
-      recognition.onend = () => {
-        setIsListening(false);
-      };
-      
-      recognition.start();
-    } else {
-      toast({
-        title: "Voice search not supported",
-        description: "Your browser doesn't support voice search",
-        variant: "destructive",
-      });
-    }
-  };
-
   const clearQuery = () => {
     setQuery('');
     setShowSuggestions(false);
@@ -131,7 +101,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
+    <div className="relative w-full max-w-2xl mx-auto space-y-2">
       <form onSubmit={(e) => { e.preventDefault(); handleSearch(); }}>
         <div className={`relative flex items-center transition-all duration-200 ${
           isFocused ? 'shadow-lg ring-2 ring-primary/20' : 'shadow-md'
@@ -144,7 +114,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
             ref={inputRef}
             type="text"
             placeholder={placeholder}
-            className="pl-10 pr-20 border-0 shadow-none focus-visible:ring-0"
+            className="pl-10 pr-24 border-0 shadow-none focus-visible:ring-0"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => {
@@ -171,16 +141,17 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
               </Button>
             )}
             
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className={`h-6 w-6 p-0 ${isListening ? 'text-red-500' : ''}`}
-              onClick={handleVoiceSearch}
-              title="Voice search"
-            >
-              <Mic className={`h-3 w-3 ${isListening ? 'animate-pulse' : ''}`} />
-            </Button>
+            {isSupported && (
+              <VoiceSearchButton
+                onTranscript={(text, isFinal) => {
+                  setQuery(text);
+                  if (isFinal && text.trim()) {
+                    handleSearch(text.trim());
+                  }
+                }}
+                size="sm"
+              />
+            )}
             
             <Button 
               type="submit" 
@@ -192,6 +163,14 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
           </div>
         </div>
       </form>
+
+      {/* Voice Search Indicator */}
+      {isSupported && (isListening || transcript) && (
+        <VoiceSearchIndicator
+          isListening={isListening}
+          transcript={transcript}
+        />
+      )}
 
       {/* Search Suggestions */}
       {showSuggestions && (filteredSuggestions.length > 0 || query.length === 0) && (

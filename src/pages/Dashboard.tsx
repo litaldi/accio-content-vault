@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Helmet } from 'react-helmet-async';
-import { Plus, Search, Archive, BarChart3, Clock, Heart } from 'lucide-react';
+import { Plus, Search, Archive, BarChart3, Clock, Heart, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,10 +12,21 @@ import { ResponsiveCard } from '@/components/ui/responsive-card';
 import { RecentlyViewed } from '@/components/sections/RecentlyViewed';
 import { TagSuggestions } from '@/components/suggestions/TagSuggestions';
 import { ContentActions } from '@/components/actions/ContentActions';
+import { VoiceSearchButton } from '@/components/VoiceSearch/VoiceSearchButton';
+import { useVoiceSearch } from '@/hooks/useVoiceSearch';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Voice search integration
+  const { isListening, isSupported } = useVoiceSearch({
+    onTranscript: (text, isFinal) => {
+      if (isFinal && text.trim()) {
+        navigate(`/search?q=${encodeURIComponent(text.trim())}`);
+      }
+    },
+  });
 
   // Mock data for demonstration
   const recentItems = [
@@ -84,6 +94,12 @@ const Dashboard = () => {
 
   const handleTagSuggestionClick = (tag: string) => {
     navigate(`/search?tag=${tag}`);
+  };
+
+  const handleVoiceSearch = (text: string, isFinal: boolean) => {
+    if (isFinal && text.trim()) {
+      navigate(`/search?q=${encodeURIComponent(text.trim())}`);
+    }
   };
 
   return (
@@ -169,16 +185,34 @@ const Dashboard = () => {
           </ResponsiveCard>
         </div>
 
-        {/* Search Bar */}
+        {/* Enhanced Search Bar with Voice */}
         <div className="mb-8">
           <div className="relative max-w-md mx-auto">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search your content..."
-              className="pl-10"
+              className="pl-10 pr-12"
               onFocus={() => navigate('/search')}
             />
+            {isSupported && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                <VoiceSearchButton
+                  onTranscript={handleVoiceSearch}
+                  variant="ghost"
+                  size="sm"
+                />
+              </div>
+            )}
           </div>
+          
+          {isListening && (
+            <div className="text-center mt-2">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full text-sm">
+                <Mic className="h-4 w-4 animate-pulse" />
+                Listening for search...
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
