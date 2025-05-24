@@ -1,374 +1,212 @@
-import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+
+import React, { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { Helmet } from 'react-helmet-async';
-import { Plus, Search, Archive, BarChart3, Clock, Heart, Mic, Wifi, Bell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { useNavigate } from 'react-router-dom';
+import { Plus, Search, TrendingUp, Sparkles } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useContentSearch } from '@/hooks/useContentSearch';
 import MainMenu from '@/components/navigation/MainMenu';
 import { ResponsiveLayout } from '@/components/ui/responsive-layout';
 import { ResponsiveCard } from '@/components/ui/responsive-card';
-import { RecentlyViewed } from '@/components/sections/RecentlyViewed';
-import { EnhancedTagSuggestions } from '@/components/suggestions/EnhancedTagSuggestions';
-import { SmartRecommendations } from '@/components/suggestions/SmartRecommendations';
-import { ContentActions } from '@/components/actions/ContentActions';
-import { VoiceSearchButton } from '@/components/VoiceSearch/VoiceSearchButton';
-import { useVoiceSearch } from '@/hooks/useVoiceSearch';
-import { useOfflineContent } from '@/hooks/useOfflineContent';
-import OfflineIndicator from '@/components/OfflineIndicator';
-import ImprovedFooter from '@/components/Footer/ImprovedFooter';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { AIInsights } from '@/components/ai/AIInsights';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const { user } = useAuth();
-  const navigate = useNavigate();
-
-  // Offline content integration
-  const {
-    offlineContents,
-    isOnline,
-    isLoading: syncLoading,
-    syncWithServer
-  } = useOfflineContent();
-
-  // Voice search integration
-  const { isListening, isSupported } = useVoiceSearch({
-    onTranscript: (text, isFinal) => {
-      if (isFinal && text.trim()) {
-        navigate(`/search?q=${encodeURIComponent(text.trim())}`);
-      }
-    },
-  });
+  const { searchResults, handleSearch } = useContentSearch();
+  const [selectedContent, setSelectedContent] = useState<any>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Mock data for demonstration
-  const recentItems = [
-    {
-      id: '1',
-      user_id: 'user1',
-      title: "How to Build a Personal Knowledge Base",
-      url: "https://example.com/knowledge-base",
-      description: "A comprehensive guide to organizing information...",
-      tags: [
-        { id: 'tag1', name: 'productivity', auto_generated: false, confirmed: true },
-        { id: 'tag2', name: 'knowledge-management', auto_generated: true, confirmed: true }
-      ],
-      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    },
-    {
-      id: '2',
-      user_id: 'user1',
-      title: "React Best Practices 2024",
-      url: "https://example.com/react-practices",
-      description: "Modern React patterns and optimization techniques...",
-      tags: [
-        { id: 'tag3', name: 'react', auto_generated: false, confirmed: true },
-        { id: 'tag4', name: 'development', auto_generated: false, confirmed: true }
-      ],
-      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    },
-    {
-      id: '3',
-      user_id: 'user1',
-      title: "Design System Notes",
-      url: "",
-      description: "Key principles for building consistent design systems...",
-      tags: [
-        { id: 'tag5', name: 'design', auto_generated: false, confirmed: true },
-        { id: 'tag6', name: 'ui-ux', auto_generated: true, confirmed: false }
-      ],
-      created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
-    }
-  ];
+  const mockContent = searchResults.map(item => item.content);
 
-  const handleViewContent = (content: any) => {
-    console.log('Viewing content:', content);
-    // In a real app, this would navigate to content detail or open a modal
+  const stats = useMemo(() => ({
+    totalItems: mockContent.length,
+    thisWeek: mockContent.filter(item => {
+      const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      return new Date(item.created_at) > weekAgo;
+    }).length,
+    totalTags: new Set(mockContent.flatMap(item => item.tags.map(tag => tag.name))).size,
+    recentActivity: mockContent.slice(0, 5)
+  }), [mockContent]);
+
+  const handleContentClick = (content: any) => {
+    setSelectedContent(content);
   };
 
-  const handleViewAllRecent = () => {
-    navigate('/search?filter=recent');
+  const handleSearchResults = (results: any[]) => {
+    // Update search results in the main view
+    console.log('AI search results:', results);
   };
 
-  const handleTagSuggestionClick = (tag: string) => {
-    navigate(`/search?tag=${tag}`);
-  };
-
-  const handleVoiceSearch = (text: string, isFinal: boolean) => {
-    if (isFinal && text.trim()) {
-      navigate(`/search?q=${encodeURIComponent(text.trim())}`);
-    }
+  const handleApplyTags = (tags: string[]) => {
+    console.log('Applying suggested tags:', tags);
+    // Here you would typically update the content with new tags
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <div className="min-h-screen bg-background">
       <Helmet>
         <title>Dashboard - Accio</title>
-        <meta name="description" content="Your personal content library dashboard" />
+        <meta name="description" content="Your personal content dashboard with AI-powered insights" />
       </Helmet>
       
       <MainMenu />
       
-      <main className="flex-grow">
-        <ResponsiveLayout maxWidth="2xl" padding="lg" verticalSpacing="lg">
-          {/* Welcome Header with Offline Status */}
-          <div className="mb-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-              <div>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
-                  Welcome back, {user?.email?.split('@')[0] || 'there'}!
-                </h1>
-                <p className="text-base sm:text-lg text-muted-foreground">
-                  Your personal knowledge library awaits
-                </p>
-              </div>
-              
-              <OfflineIndicator
-                isOnline={isOnline}
-                isLoading={syncLoading}
-                onSync={syncWithServer}
-              />
+      <ResponsiveLayout maxWidth="7xl" padding="lg" verticalSpacing="lg">
+        {/* Welcome Header */}
+        <div className="mb-8">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Welcome back, {user?.user_metadata?.name || 'there'}! 👋
+          </h1>
+          <p className="text-base sm:text-lg text-muted-foreground">
+            Discover insights and manage your knowledge with AI assistance
+          </p>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <ResponsiveCard className="p-4">
+            <div className="text-2xl font-bold text-primary">{stats.totalItems}</div>
+            <div className="text-sm text-muted-foreground">Total Items</div>
+          </ResponsiveCard>
+          <ResponsiveCard className="p-4">
+            <div className="text-2xl font-bold text-green-600">{stats.thisWeek}</div>
+            <div className="text-sm text-muted-foreground">This Week</div>
+          </ResponsiveCard>
+          <ResponsiveCard className="p-4">
+            <div className="text-2xl font-bold text-blue-600">{stats.totalTags}</div>
+            <div className="text-sm text-muted-foreground">Unique Tags</div>
+          </ResponsiveCard>
+          <ResponsiveCard className="p-4">
+            <div className="text-2xl font-bold text-purple-600">
+              <Sparkles className="h-6 w-6 inline" />
             </div>
-          </div>
+            <div className="text-sm text-muted-foreground">AI Ready</div>
+          </ResponsiveCard>
+        </div>
 
-          {/* Quick Actions with Offline Access and Reminders */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 mb-8">
-            <ResponsiveCard
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => navigate('/save')}
-            >
-              <CardContent className="flex items-center gap-3 p-4">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Plus className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">Save Content</h3>
-                  <p className="text-xs text-muted-foreground">Add new items</p>
-                </div>
-              </CardContent>
-            </ResponsiveCard>
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="ai-insights" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="ai-insights" className="gap-2">
+              <Sparkles className="h-4 w-4" />
+              AI Insights
+            </TabsTrigger>
+            <TabsTrigger value="content" className="gap-2">
+              <Search className="h-4 w-4" />
+              Content
+            </TabsTrigger>
+            <TabsTrigger value="activity" className="gap-2">
+              <TrendingUp className="h-4 w-4" />
+              Activity
+            </TabsTrigger>
+            <TabsTrigger value="quick-actions" className="gap-2">
+              <Plus className="h-4 w-4" />
+              Actions
+            </TabsTrigger>
+          </TabsList>
 
-            <ResponsiveCard
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => navigate('/search')}
-            >
-              <CardContent className="flex items-center gap-3 p-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Search className="h-5 w-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">Search</h3>
-                  <p className="text-xs text-muted-foreground">Find anything</p>
-                </div>
-              </CardContent>
-            </ResponsiveCard>
+          <TabsContent value="ai-insights">
+            <AIInsights
+              currentContent={selectedContent}
+              allContent={mockContent}
+              onContentClick={handleContentClick}
+              onSearchResults={handleSearchResults}
+              onApplyTags={handleApplyTags}
+            />
+          </TabsContent>
 
-            <ResponsiveCard
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => navigate('/reminders')}
-            >
-              <CardContent className="flex items-center gap-3 p-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <Bell className="h-5 w-5 text-orange-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">Reminders</h3>
-                  <p className="text-xs text-muted-foreground">Tag alerts</p>
-                </div>
-              </CardContent>
-            </ResponsiveCard>
-
-            <ResponsiveCard
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => navigate('/offline')}
-            >
-              <CardContent className="flex items-center gap-3 p-4">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                  <Wifi className="h-5 w-5 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">Offline Access</h3>
-                  <p className="text-xs text-muted-foreground">{offlineContents.length} cached</p>
-                </div>
-              </CardContent>
-            </ResponsiveCard>
-
-            <ResponsiveCard
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => navigate('/search?filter=favorites')}
-            >
-              <CardContent className="flex items-center gap-3 p-4">
-                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                  <Heart className="h-5 w-5 text-red-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">Favorites</h3>
-                  <p className="text-xs text-muted-foreground">Pinned items</p>
-                </div>
-              </CardContent>
-            </ResponsiveCard>
-
-            <ResponsiveCard
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => navigate('/analytics')}
-            >
-              <CardContent className="flex items-center gap-3 p-4">
-                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                  <BarChart3 className="h-5 w-5 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">Insights</h3>
-                  <p className="text-xs text-muted-foreground">View stats</p>
-                </div>
-              </CardContent>
-            </ResponsiveCard>
-          </div>
-
-          {/* Enhanced Search Bar with Voice */}
-          <div className="mb-8">
-            <div className="relative max-w-md mx-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search your content..."
-                className="pl-10 pr-12"
-                onFocus={() => navigate('/search')}
-              />
-              {isSupported && (
-                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                  <VoiceSearchButton
-                    onTranscript={handleVoiceSearch}
-                    variant="ghost"
-                    size="sm"
-                  />
-                </div>
-              )}
+          <TabsContent value="content">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mockContent.slice(0, 9).map((item) => (
+                <ResponsiveCard 
+                  key={item.id} 
+                  className="p-4 cursor-pointer hover:shadow-md transition-shadow"
+                  onClick={() => handleContentClick(item)}
+                >
+                  <h3 className="font-semibold text-sm mb-2 line-clamp-2">{item.title}</h3>
+                  <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
+                    {item.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {item.tags.slice(0, 3).map((tag: any) => (
+                      <Badge key={tag.id} variant="secondary" className="text-xs">
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </ResponsiveCard>
+              ))}
             </div>
-            
-            {isListening && (
-              <div className="text-center mt-2">
-                <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-full text-sm">
-                  <Mic className="h-4 w-4 animate-pulse" />
-                  Listening for search...
-                </div>
-              </div>
-            )}
-          </div>
+          </TabsContent>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Recent Items */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Clock className="h-5 w-5" />
-                    Recently Saved
-                  </CardTitle>
-                  <CardDescription>
-                    Your latest content additions
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {recentItems.map((item) => (
-                    <div
-                      key={item.id}
-                      className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-medium text-sm line-clamp-1 flex-1">{item.title}</h3>
-                        <div className="flex items-center gap-2 ml-2">
-                          <span className="text-xs text-muted-foreground whitespace-nowrap">
-                            {new Date(item.created_at).toLocaleDateString()}
-                          </span>
-                          <ContentActions 
-                            contentId={item.id}
-                            onView={() => handleViewContent(item)}
-                            compact
-                          />
-                        </div>
-                      </div>
-                      <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
-                        {item.description}
+          <TabsContent value="activity">
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Recent Activity</h3>
+              {stats.recentActivity.map((item) => (
+                <ResponsiveCard key={item.id} className="p-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <h4 className="font-medium text-sm mb-1">{item.title}</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Saved {new Date(item.created_at).toLocaleDateString()}
                       </p>
-                      <div className="flex flex-wrap gap-1">
-                        {item.tags.map((tag) => (
-                          <span
-                            key={tag.id}
-                            className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-md"
-                          >
-                            {tag.name}
-                          </span>
-                        ))}
-                      </div>
                     </div>
-                  ))}
-                  
-                  <Button
-                    variant="ghost"
-                    className="w-full"
-                    onClick={() => navigate('/collections')}
-                  >
-                    View All Content
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            <div className="space-y-6">
-              {/* Recently Viewed */}
-              <RecentlyViewed
-                recentItems={recentItems.slice(0, 2)}
-                onViewAll={handleViewAllRecent}
-                onItemClick={handleViewContent}
-              />
-
-              {/* Enhanced Tag Suggestions */}
-              <EnhancedTagSuggestions 
-                allContent={recentItems}
-                onTagClick={handleTagSuggestionClick}
-              />
-
-              {/* Smart Recommendations */}
-              <SmartRecommendations
-                allContent={recentItems}
-                onContentClick={handleViewContent}
-                maxRecommendations={3}
-              />
-
-              {/* Quick Stats with Offline Info */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quick Stats</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Total Items</span>
-                      <span className="font-semibold">47</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Offline Ready</span>
-                      <span className="font-semibold text-green-600">{offlineContents.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">This Week</span>
-                      <span className="font-semibold text-green-600">+8</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Favorites</span>
-                      <span className="font-semibold">12</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">Tags Used</span>
-                      <span className="font-semibold">23</span>
+                    <div className="flex flex-wrap gap-1 ml-4">
+                      {item.tags.slice(0, 2).map((tag: any) => (
+                        <Badge key={tag.id} variant="outline" className="text-xs">
+                          {tag.name}
+                        </Badge>
+                      ))}
                     </div>
                   </div>
-                </CardContent>
-              </Card>
+                </ResponsiveCard>
+              ))}
             </div>
-          </div>
-        </ResponsiveLayout>
-      </main>
-      
-      <ImprovedFooter />
+          </TabsContent>
+
+          <TabsContent value="quick-actions">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <ResponsiveCard className="p-6 text-center">
+                <Plus className="h-8 w-8 mx-auto mb-3 text-primary" />
+                <h3 className="font-semibold mb-2">Save Content</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Add new articles, videos, or notes
+                </p>
+                <Button asChild className="w-full">
+                  <Link to="/save-content">Save Now</Link>
+                </Button>
+              </ResponsiveCard>
+
+              <ResponsiveCard className="p-6 text-center">
+                <Search className="h-8 w-8 mx-auto mb-3 text-blue-600" />
+                <h3 className="font-semibold mb-2">Advanced Search</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Find content with AI assistance
+                </p>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/search">Search</Link>
+                </Button>
+              </ResponsiveCard>
+
+              <ResponsiveCard className="p-6 text-center">
+                <TrendingUp className="h-8 w-8 mx-auto mb-3 text-green-600" />
+                <h3 className="font-semibold mb-2">Analytics</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  View your content insights
+                </p>
+                <Button asChild variant="outline" className="w-full">
+                  <Link to="/analytics">View Analytics</Link>
+                </Button>
+              </ResponsiveCard>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </ResponsiveLayout>
     </div>
   );
 };
