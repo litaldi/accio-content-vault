@@ -5,7 +5,6 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -41,7 +40,6 @@ const formSchema = z.object({
 });
 
 const Register = () => {
-  const { toast } = useToast();
   const navigate = useNavigate();
   const { signUp, user, isLoading } = useAuth();
 
@@ -162,9 +160,8 @@ const Register = () => {
                   type="submit" 
                   className="w-full" 
                   disabled={isLoading}
-                  loading={isLoading}
                 >
-                  Register
+                  {isLoading ? 'Creating account...' : 'Register'}
                 </Button>
               </form>
             </Form>

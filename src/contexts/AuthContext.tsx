@@ -1,14 +1,13 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Session, User, AuthError } from '@supabase/supabase-js';
-import { supabase, isSupabaseConfigured } from '@/lib/supabase';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  isConfigured: boolean;
   signUp: (email: string, password: string, externalContentConsent: boolean) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -20,76 +19,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isConfigured] = useState(isSupabaseConfigured());
   const { toast } = useToast();
 
   useEffect(() => {
-    if (!isConfigured) {
-      setIsLoading(false);
-      return;
-    }
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        console.log('Auth state changed:', event);
+        setSession(session);
+        setUser(session?.user ?? null);
+        setIsLoading(false);
+      }
+    );
 
-    // Get initial session
+    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
     });
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('Auth state changed:', event);
-      setSession(session);
-      setUser(session?.user ?? null);
-      setIsLoading(false);
-    });
-
     return () => subscription.unsubscribe();
-  }, [isConfigured]);
+  }, []);
 
   // Sign up new users
   const signUp = async (email: string, password: string, externalContentConsent: boolean) => {
-    if (!isConfigured) {
-      toast({
-        title: "Supabase not configured",
-        description: "Please set up your Supabase credentials to enable authentication.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            external_content_consent: externalContentConsent
+          }
+        }
       });
 
       if (error) throw error;
 
       if (data.user) {
-        // Create user profile with consent preference
-        const { error: profileError } = await supabase
-          .from('user_profiles')
-          .insert({
-            user_id: data.user.id,
-            external_content_consent: externalContentConsent,
-            subscription_tier: 'free',
-          });
-
-        if (profileError) {
-          console.error('Error creating user profile:', profileError);
-          toast({
-            title: 'Profile setup incomplete',
-            description: 'Your account was created but profile preferences could not be saved.',
-            variant: 'destructive',
-          });
-        } else {
-          toast({
-            title: 'Registration successful!',
-            description: 'Welcome to Accio! Your account has been created.',
-          });
-        }
+        toast({
+          title: 'Registration successful!',
+          description: 'Welcome to Accio! Your account has been created.',
+        });
       }
     } catch (error) {
       const authError = error as AuthError;
@@ -106,15 +79,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Sign in existing users
   const signIn = async (email: string, password: string) => {
-    if (!isConfigured) {
-      toast({
-        title: "Supabase not configured",
-        description: "Please set up your Supabase credentials to enable authentication.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
@@ -143,15 +107,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Sign out
   const signOut = async () => {
-    if (!isConfigured) {
-      toast({
-        title: "Supabase not configured",
-        description: "Please set up your Supabase credentials to enable authentication.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signOut();
@@ -176,7 +131,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     user,
     session,
     isLoading,
-    isConfigured,
     signUp,
     signIn,
     signOut,

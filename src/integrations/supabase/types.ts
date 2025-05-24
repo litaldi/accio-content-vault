@@ -9,6 +9,87 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      content_tags: {
+        Row: {
+          confirmed: boolean
+          content_id: string
+          created_at: string
+          id: string
+          tag_id: string
+        }
+        Insert: {
+          confirmed?: boolean
+          content_id: string
+          created_at?: string
+          id?: string
+          tag_id: string
+        }
+        Update: {
+          confirmed?: boolean
+          content_id?: string
+          created_at?: string
+          id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_tags_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "contents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contents: {
+        Row: {
+          content_type: string
+          created_at: string
+          description: string | null
+          file_path: string | null
+          file_type: string | null
+          id: string
+          is_deleted: boolean
+          title: string | null
+          updated_at: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          content_type: string
+          created_at?: string
+          description?: string | null
+          file_path?: string | null
+          file_type?: string | null
+          id?: string
+          is_deleted?: boolean
+          title?: string | null
+          updated_at?: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          content_type?: string
+          created_at?: string
+          description?: string | null
+          file_path?: string | null
+          file_type?: string | null
+          id?: string
+          is_deleted?: boolean
+          title?: string | null
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount: number | null
@@ -45,6 +126,30 @@ export type Database = {
         }
         Relationships: []
       }
+      search_history: {
+        Row: {
+          created_at: string
+          id: string
+          is_semantic: boolean
+          query: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_semantic?: boolean
+          query: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_semantic?: boolean
+          query?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       subscribers: {
         Row: {
           created_at: string
@@ -78,6 +183,92 @@ export type Database = {
           subscription_tier?: string | null
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      tag_analytics: {
+        Row: {
+          confirmed_count: number
+          id: string
+          rejected_count: number
+          search_count: number
+          tag_id: string
+          updated_at: string
+        }
+        Insert: {
+          confirmed_count?: number
+          id?: string
+          rejected_count?: number
+          search_count?: number
+          tag_id: string
+          updated_at?: string
+        }
+        Update: {
+          confirmed_count?: number
+          id?: string
+          rejected_count?: number
+          search_count?: number
+          tag_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tag_analytics_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tags: {
+        Row: {
+          auto_generated: boolean
+          created_at: string
+          id: string
+          name: string
+          user_id: string | null
+        }
+        Insert: {
+          auto_generated?: boolean
+          created_at?: string
+          id?: string
+          name: string
+          user_id?: string | null
+        }
+        Update: {
+          auto_generated?: boolean
+          created_at?: string
+          id?: string
+          name?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_profiles: {
+        Row: {
+          created_at: string
+          external_content_consent: boolean
+          id: string
+          subscription_tier: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          external_content_consent?: boolean
+          id?: string
+          subscription_tier?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          external_content_consent?: boolean
+          id?: string
+          subscription_tier?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
