@@ -3,20 +3,19 @@ import React from 'react';
 import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { ArrowRight, Users, Clock, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
 const CTASection: React.FC = () => {
   return (
-    <Spacing.Section size="lg" className="bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground">
-      <Spacing.Container size="lg">
+    <section className="py-24 lg:py-32 bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center max-w-4xl mx-auto">
-          <Typography.H2 className="mb-6 text-white">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6 text-white">
             Ready to Transform Your Knowledge Management?
-          </Typography.H2>
-          <Typography.Body size="lg" className="mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
+          </h2>
+          <p className="text-lg sm:text-xl leading-relaxed mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
             Join 10,000+ professionals who've already discovered the power of organized, AI-enhanced knowledge. 
             Your future self will thank you.
-          </Typography.Body>
+          </p>
 
           {/* Benefits List */}
           <div className="flex flex-wrap justify-center gap-6 mb-12 text-sm">
@@ -69,7 +68,7 @@ const CTASection: React.FC = () => {
             <div className="flex items-center justify-center gap-3">
               <Clock className="h-6 w-6 text-primary-foreground/80" />
               <div>
-                <div className="text-2xl font-bold text-white">< 30 sec</div>
+                <div className="text-2xl font-bold text-white">&lt; 30 sec</div>
                 <div className="text-sm text-primary-foreground/80">Setup Time</div>
               </div>
             </div>
@@ -84,14 +83,14 @@ const CTASection: React.FC = () => {
 
           {/* Urgency Message */}
           <div className="mt-8 p-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
-            <Typography.Body className="text-primary-foreground/90 mb-0">
+            <p className="text-primary-foreground/90 leading-relaxed mb-0">
               💡 <strong>Pro tip:</strong> The sooner you start organizing, the more time you'll save. 
               Users typically save 5+ hours per week within their first month.
-            </Typography.Body>
+            </p>
           </div>
         </div>
-      </Spacing.Container>
-    </Spacing.Section>
+      </div>
+    </section>
   );
 };
 
