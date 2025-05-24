@@ -29,13 +29,15 @@ const formSchema = z.object({
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
 });
 
-const Login = () => {
+type FormData = z.infer<typeof formSchema>;
+
+const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, user, isLoading } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
@@ -51,7 +53,7 @@ const Login = () => {
     }
   }, [user, isLoading, navigate, location.state]);
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+  const onSubmit = async (values: FormData) => {
     if (isSubmitting) return;
     
     setIsSubmitting(true);
@@ -86,7 +88,7 @@ const Login = () => {
       </header>
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
-        <Card className="w-full max-w-md animate-fade-up shadow-lg">
+        <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
             <CardDescription className="text-center">
