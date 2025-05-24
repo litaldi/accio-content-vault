@@ -2,11 +2,11 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
-import ImprovedHeroSection from '@/components/home/ImprovedHeroSection';
+import MarketingHeroSection from '@/components/home/MarketingHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import CTASection from '@/components/home/CTASection';
-import PricingSection from '@/components/home/PricingSection';
+import MarketingPricingSection from '@/components/home/MarketingPricingSection';
 import FAQSection from '@/components/home/FAQSection';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import { Helmet } from 'react-helmet-async';
@@ -15,25 +15,25 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col w-full">
       <Helmet>
-        <title>Accio - Your Personal Knowledge Library</title>
-        <meta name="description" content="Transform the internet into your curated knowledge base. Save, organize, and rediscover content with AI-powered intelligence." />
-        <meta name="keywords" content="knowledge management, AI, content organization, search, productivity" />
-        <meta property="og:title" content="Accio - Your Personal Knowledge Library" />
-        <meta property="og:description" content="Transform the internet into your curated knowledge base with AI-powered intelligence." />
+        <title>Accio - Stop Losing Your Best Ideas. Start Building Brilliance.</title>
+        <meta name="description" content="Transform chaos into your AI-powered knowledge engine. Save anything, find everything, achieve 10x productivity. Trusted by 10K+ professionals." />
+        <meta name="keywords" content="knowledge management, AI, productivity, content organization, search, bookmarks, notes, research" />
+        <meta property="og:title" content="Accio - Stop Losing Your Best Ideas. Start Building Brilliance." />
+        <meta property="og:description" content="Turn scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve more." />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Accio - Your Personal Knowledge Library" />
-        <meta name="twitter:description" content="Save, organize, and rediscover content with AI-powered intelligence." />
+        <meta name="twitter:title" content="Accio - Your AI Knowledge Engine" />
+        <meta name="twitter:description" content="Save anything, find everything, achieve 10x productivity with AI-powered organization." />
         <link rel="canonical" href="https://yoursite.com/" />
       </Helmet>
       
       <PrimaryNavigation />
       
       <main id="main-content" className="flex-grow w-full" role="main">
-        <ImprovedHeroSection />
+        <MarketingHeroSection />
         <ImprovedPageShowcase />
         <FeaturesSection />
-        <PricingSection />
+        <MarketingPricingSection />
         <FAQSection />
         <CTASection />
       </main>
