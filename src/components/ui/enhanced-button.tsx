@@ -47,8 +47,8 @@ export const EnhancedButton = React.forwardRef<
           loading && "opacity-50 cursor-not-allowed",
           className
         )}
-        disabled={isDisabled}
         {...props}
+        {...(isDisabled && { disabled: isDisabled })}
       >
         {children}
       </Slot>
