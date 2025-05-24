@@ -38,7 +38,7 @@ export const EnhancedButton = React.forwardRef<
       return null;
     }
 
-    // Use Slot to properly forward the ref and props
+    // Use Slot to properly forward the ref and props without cloning
     return (
       <Slot
         ref={ref}
@@ -47,9 +47,8 @@ export const EnhancedButton = React.forwardRef<
           loading && "opacity-50 cursor-not-allowed",
           className
         )}
+        disabled={isDisabled}
         {...props}
-        // Only add disabled if the child can accept it (not for links)
-        {...(children.type !== 'a' && { disabled: isDisabled })}
       >
         {children}
       </Slot>
