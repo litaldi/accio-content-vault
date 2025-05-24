@@ -1,65 +1,59 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import { Accessibility, Check } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuCheckboxItem,
-} from '@/components/ui/dropdown-menu';
+import { Eye, Volume2, Type } from 'lucide-react';
 
-export const AccessibilityButton: React.FC = () => {
+const AccessibilityButton: React.FC = () => {
   const { preferences, updatePreferences } = useAccessibility();
 
+  const toggleHighContrast = () => {
+    updatePreferences({ highContrast: !preferences.highContrast });
+  };
+
+  const toggleReducedMotion = () => {
+    updatePreferences({ reducedMotion: !preferences.reducedMotion });
+  };
+
+  const cycleFontSize = () => {
+    const sizes: Array<'small' | 'medium' | 'large'> = ['small', 'medium', 'large'];
+    const currentIndex = sizes.indexOf(preferences.fontSize);
+    const nextIndex = (currentIndex + 1) % sizes.length;
+    updatePreferences({ fontSize: sizes[nextIndex] });
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-10 w-10"
-          aria-label="Accessibility settings"
-        >
-          <Accessibility className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg z-50">
-        <DropdownMenuLabel>Accessibility Options</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        
-        <DropdownMenuCheckboxItem
-          checked={preferences.reduceAnimations}
-          onCheckedChange={(checked) => updatePreferences({ reduceAnimations: checked })}
-        >
-          Reduce Animations
-        </DropdownMenuCheckboxItem>
-        
-        <DropdownMenuCheckboxItem
-          checked={preferences.highContrast}
-          onCheckedChange={(checked) => updatePreferences({ highContrast: checked })}
-        >
-          High Contrast
-        </DropdownMenuCheckboxItem>
-        
-        <DropdownMenuCheckboxItem
-          checked={preferences.largeText}
-          onCheckedChange={(checked) => updatePreferences({ largeText: checked })}
-        >
-          Large Text
-        </DropdownMenuCheckboxItem>
-        
-        <DropdownMenuCheckboxItem
-          checked={preferences.keyboardNavigation}
-          onCheckedChange={(checked) => updatePreferences({ keyboardNavigation: checked })}
-        >
-          Enhanced Keyboard Navigation
-        </DropdownMenuCheckboxItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="flex gap-2 p-2 bg-background border rounded">
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={toggleHighContrast}
+        aria-label="Toggle high contrast"
+        className={preferences.highContrast ? 'bg-accent' : ''}
+      >
+        <Eye className="h-4 w-4" />
+      </Button>
+      
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={toggleReducedMotion}
+        aria-label="Toggle reduced motion"
+        className={preferences.reducedMotion ? 'bg-accent' : ''}
+      >
+        <Volume2 className="h-4 w-4" />
+      </Button>
+      
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={cycleFontSize}
+        aria-label={`Current font size: ${preferences.fontSize}`}
+      >
+        <Type className="h-4 w-4" />
+      </Button>
+    </div>
   );
 };
+
+export default AccessibilityButton;

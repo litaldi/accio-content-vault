@@ -29,37 +29,6 @@ export const EnhancedButton = React.forwardRef<
 }, ref) => {
   const isDisabled = disabled || loading;
 
-  // When using asChild, we need to pass props differently to avoid conflicts
-  if (asChild) {
-    const buttonProps = {
-      ...props,
-      ref,
-      className: cn(
-        "gap-2",
-        loading && "opacity-50 cursor-not-allowed",
-        className
-      ),
-      ...(isDisabled && { 'aria-disabled': true })
-    };
-
-    return (
-      <Button asChild {...buttonProps}>
-        {loading ? (
-          <span>
-            <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-            {loadingText}
-          </span>
-        ) : (
-          <span>
-            {leftIcon}
-            {children}
-            {rightIcon}
-          </span>
-        )}
-      </Button>
-    );
-  }
-
   return (
     <Button
       ref={ref}
@@ -69,6 +38,7 @@ export const EnhancedButton = React.forwardRef<
         loading && "opacity-50 cursor-not-allowed",
         className
       )}
+      asChild={asChild}
       {...props}
     >
       {loading ? (

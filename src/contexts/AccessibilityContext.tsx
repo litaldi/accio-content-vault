@@ -1,39 +1,18 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AccessibilityPreferences {
   highContrast: boolean;
-  reduceAnimations: boolean;
-  fontSize: 'normal' | 'large' | 'xl';
+  reducedMotion: boolean;
+  fontSize: 'small' | 'medium' | 'large';
 }
 
 interface AccessibilityContextType {
   preferences: AccessibilityPreferences;
-  updatePreferences: (prefs: Partial<AccessibilityPreferences>) => void;
+  updatePreferences: (preferences: Partial<AccessibilityPreferences>) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
-
-export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [preferences, setPreferences] = useState<AccessibilityPreferences>({
-    highContrast: false,
-    reduceAnimations: false,
-    fontSize: 'normal',
-  });
-
-  const updatePreferences = (prefs: Partial<AccessibilityPreferences>) => {
-    setPreferences(prev => ({ ...prev, ...prefs }));
-  };
-
-  return (
-    <AccessibilityContext.Provider value={{
-      preferences,
-      updatePreferences
-    }}>
-      {children}
-    </AccessibilityContext.Provider>
-  );
-};
 
 export const useAccessibility = () => {
   const context = useContext(AccessibilityContext);
@@ -41,4 +20,26 @@ export const useAccessibility = () => {
     throw new Error('useAccessibility must be used within an AccessibilityProvider');
   }
   return context;
+};
+
+interface AccessibilityProviderProps {
+  children: ReactNode;
+}
+
+export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
+  const [preferences, setPreferences] = useState<AccessibilityPreferences>({
+    highContrast: false,
+    reducedMotion: false,
+    fontSize: 'medium',
+  });
+
+  const updatePreferences = (newPreferences: Partial<AccessibilityPreferences>) => {
+    setPreferences(prev => ({ ...prev, ...newPreferences }));
+  };
+
+  return (
+    <AccessibilityContext.Provider value={{ preferences, updatePreferences }}>
+      {children}
+    </AccessibilityContext.Provider>
+  );
 };
