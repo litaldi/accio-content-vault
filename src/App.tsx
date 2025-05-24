@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +12,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import SkipToContent from "./components/SkipToContent";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ShareTargetHandler from "./components/ShareTargetHandler";
+import { setupGlobalErrorHandlers } from "@/utils/errorHandling";
 
 // Import components
 import Index from "./pages/Index";
@@ -36,12 +37,20 @@ import Features from "./pages/Features";
 import Playground from "./pages/Playground";
 import ProtectedRoute from "./components/ProtectedRoute";
 
-// Create a client with improved error handling
+// Create a client with improved error handling and performance optimization
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
+      retry: (failureCount, error) => {
+        // Don't retry on 4xx errors
+        if (error && typeof error === 'object' && 'status' in error) {
+          const status = error.status as number;
+          if (status >= 400 && status < 500) return false;
+        }
+        return failureCount < 3;
+      },
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
       meta: {
         onError: (error) => {
           console.error('Query error:', error);
@@ -49,6 +58,7 @@ const queryClient = new QueryClient({
       }
     },
     mutations: {
+      retry: 1,
       meta: {
         onError: (error) => {
           console.error('Mutation error:', error);
@@ -59,6 +69,27 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
+  useEffect(() => {
+    // Set up global error handlers
+    setupGlobalErrorHandlers();
+    
+    // Performance monitoring
+    if ('performance' in window && 'observer' in window.PerformanceObserver.prototype) {
+      const observer = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          if (entry.entryType === 'largest-contentful-paint') {
+            console.log('LCP:', entry.startTime);
+          }
+          if (entry.entryType === 'first-input') {
+            console.log('FID:', entry.processingStart - entry.startTime);
+          }
+        }
+      });
+      
+      observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+    }
+  }, []);
+
   return (
     <React.StrictMode>
       <ErrorBoundary>
@@ -95,35 +126,35 @@ const App: React.FC = () => {
                         {/* Protected routes - require authentication */}
                         <Route path="/dashboard" element={
                           <ProtectedRoute>
-                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading dashboard...</div>}>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen" role="status" aria-label="Loading dashboard">Loading dashboard...</div>}>
                               <Dashboard />
                             </Suspense>
                           </ProtectedRoute>
                         } />
                         <Route path="/save" element={
                           <ProtectedRoute>
-                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading content form...</div>}>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen" role="status" aria-label="Loading content form">Loading content form...</div>}>
                               <SaveContent />
                             </Suspense>
                           </ProtectedRoute>
                         } />
                         <Route path="/settings" element={
                           <ProtectedRoute>
-                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading settings...</div>}>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen" role="status" aria-label="Loading settings">Loading settings...</div>}>
                               <AccountSettings />
                             </Suspense>
                           </ProtectedRoute>
                         } />
                         <Route path="/analytics" element={
                           <ProtectedRoute>
-                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading analytics...</div>}>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen" role="status" aria-label="Loading analytics">Loading analytics...</div>}>
                               <Analytics />
                             </Suspense>
                           </ProtectedRoute>
                         } />
                         <Route path="/collections" element={
                           <ProtectedRoute>
-                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading collections...</div>}>
+                            <Suspense fallback={<div className="flex items-center justify-center min-h-screen" role="status" aria-label="Loading collections">Loading collections...</div>}>
                               <Collections />
                             </Suspense>
                           </ProtectedRoute>

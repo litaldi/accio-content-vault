@@ -1,72 +1,105 @@
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { logError } from '@/utils/errorHandling';
 
 interface ErrorBoundaryProps {
   children: React.ReactNode;
   fallback: React.ReactNode | ((error: Error) => React.ReactNode);
+  onError?: (error: Error) => void;
+}
+
+interface ErrorInfo {
+  componentStack: string;
 }
 
 /**
- * Custom hook for creating an error boundary to gracefully handle errors in React components
- * @returns an object with ErrorBoundary component and other utility functions
+ * Enhanced error boundary hook with better error handling and logging
  */
 export function useErrorBoundary() {
   const [error, setError] = useState<Error | null>(null);
+  const [errorInfo, setErrorInfo] = useState<ErrorInfo | null>(null);
 
   const resetError = useCallback(() => {
     setError(null);
+    setErrorInfo(null);
+  }, []);
+
+  // Handle errors caught by the boundary
+  const handleError = useCallback((error: Error, errorInfo?: ErrorInfo) => {
+    setError(error);
+    setErrorInfo(errorInfo || null);
+    logError(error, { errorInfo });
   }, []);
 
   /**
-   * A component that renders fallback UI when an error is caught
+   * Enhanced ErrorBoundary component that properly catches React errors
    */
-  const FallbackComponent = ({ children, error }: { children: React.ReactNode, error: Error }) => {
-    return <>{children}</>;
-  };
-
-  /**
-   * ErrorBoundary component that catches errors in its children
-   * and displays a fallback UI when an error occurs
-   */
-  const ErrorBoundary = ({ children, fallback }: ErrorBoundaryProps) => {
-    if (error) {
-      // If the fallback is a function, render it with the error
-      if (typeof fallback === 'function') {
-        // Wrap the function result in a fragment to ensure it's a valid ReactNode
-        return (
-          <FallbackComponent error={error}>
-            {fallback(error)}
-          </FallbackComponent>
-        );
+  const ErrorBoundary = React.useMemo(() => {
+    return class ErrorBoundaryClass extends React.Component<
+      ErrorBoundaryProps,
+      { hasError: boolean; error: Error | null; errorInfo: ErrorInfo | null }
+    > {
+      constructor(props: ErrorBoundaryProps) {
+        super(props);
+        this.state = { hasError: false, error: null, errorInfo: null };
       }
-      // Otherwise, render the fallback directly
-      return <>{fallback}</>;
-    }
 
-    // We need to use React.Fragment to properly handle children
-    return (
-      <React.Fragment>
-        {React.Children.map(children, child => {
-          // If child is not a valid React element, return as is
-          if (!React.isValidElement(child)) {
-            return child;
+      static getDerivedStateFromError(error: Error) {
+        return { hasError: true, error };
+      }
+
+      componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+        this.setState({ errorInfo });
+        logError(error, { errorInfo });
+        this.props.onError?.(error);
+      }
+
+      componentDidUpdate(prevProps: ErrorBoundaryProps) {
+        // Reset error state when children change (for retry functionality)
+        if (this.state.hasError && prevProps.children !== this.props.children) {
+          this.setState({ hasError: false, error: null, errorInfo: null });
+        }
+      }
+
+      render() {
+        if (this.state.hasError && this.state.error) {
+          if (typeof this.props.fallback === 'function') {
+            return this.props.fallback(this.state.error);
           }
+          return this.props.fallback;
+        }
 
-          // Clone the element and add error handling
-          return React.cloneElement(child as React.ReactElement, {
-            onError: (e: Error) => {
-              console.error('Error caught by ErrorBoundary:', e);
-              setError(e);
-            }
-          });
-        })}
-      </React.Fragment>
-    );
-  };
+        return this.props.children;
+      }
+    };
+  }, []);
+
+  // Set up global error handlers
+  useEffect(() => {
+    const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
+      const error = event.reason instanceof Error ? event.reason : new Error(String(event.reason));
+      handleError(error);
+    };
+
+    const handleGlobalError = (event: ErrorEvent) => {
+      const error = new Error(event.message);
+      error.stack = event.error?.stack;
+      handleError(error);
+    };
+
+    window.addEventListener('unhandledrejection', handleUnhandledRejection);
+    window.addEventListener('error', handleGlobalError);
+
+    return () => {
+      window.removeEventListener('unhandledrejection', handleUnhandledRejection);
+      window.removeEventListener('error', handleGlobalError);
+    };
+  }, [handleError]);
 
   return {
     error,
-    setError,
+    errorInfo,
+    setError: handleError,
     resetError,
     ErrorBoundary
   };

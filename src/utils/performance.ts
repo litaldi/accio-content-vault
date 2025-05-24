@@ -1,113 +1,107 @@
 
 /**
- * Performance utility functions for monitoring and optimizing app performance
+ * Performance utilities for optimizing user experience
  */
 
-/**
- * Measure the performance of a function execution
- * 
- * @param name - Name of the performance measurement
- * @param fn - Function to measure
- * @returns The result of the function
- */
-export function measurePerformance<T>(name: string, fn: () => T): T {
-  const startTime = performance.now();
-  const result = fn();
-  const endTime = performance.now();
-  
-  console.log(`⚡️ Performance [${name}]: ${(endTime - startTime).toFixed(2)}ms`);
-  
-  return result;
-}
-
-/**
- * Debounce function to limit how often a function can be called
- * 
- * @param fn - Function to debounce
- * @param delay - Delay in milliseconds
- * @returns Debounced function
- */
-export function debounce<T extends (...args: any[]) => any>(
-  fn: T,
+// Debounce function to limit API calls
+export const debounce = <T extends (...args: any[]) => any>(
+  func: T,
   delay: number
-): (...args: Parameters<T>) => void {
-  let timeoutId: ReturnType<typeof setTimeout>;
+): ((...args: Parameters<T>) => void) => {
+  let timeoutId: NodeJS.Timeout;
   
-  return function(...args: Parameters<T>): void {
+  return (...args: Parameters<T>) => {
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => fn(...args), delay);
+    timeoutId = setTimeout(() => func.apply(null, args), delay);
   };
-}
+};
 
-/**
- * Throttle function to limit how often a function can be called
- * 
- * @param fn - Function to throttle
- * @param limit - Limit in milliseconds
- * @returns Throttled function
- */
-export function throttle<T extends (...args: any[]) => any>(
-  fn: T,
+// Throttle function for scroll events
+export const throttle = <T extends (...args: any[]) => any>(
+  func: T,
   limit: number
-): (...args: Parameters<T>) => void {
-  let lastCall = 0;
+): ((...args: Parameters<T>) => void) => {
+  let inThrottle: boolean;
   
-  return function(...args: Parameters<T>): void {
-    const now = Date.now();
-    
-    if (now - lastCall >= limit) {
-      fn(...args);
-      lastCall = now;
+  return (...args: Parameters<T>) => {
+    if (!inThrottle) {
+      func.apply(null, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
     }
   };
-}
+};
 
-/**
- * Get Core Web Vitals metrics
- * 
- * @returns Promise that resolves to web vitals metrics
- */
-export async function getCoreWebVitals(): Promise<Record<string, number>> {
-  if ('web-vitals' in window) {
-    // In a real implementation, you would use the web-vitals library
-    // This is a placeholder for demonstration purposes
+// Performance measurement utility
+export const measurePerformance = <T>(
+  label: string,
+  fn: () => T
+): T => {
+  const start = performance.now();
+  const result = fn();
+  const end = performance.now();
+  
+  console.log(`Performance [${label}]: ${(end - start).toFixed(2)}ms`);
+  return result;
+};
+
+// Lazy loading intersection observer
+export const createIntersectionObserver = (
+  callback: (entries: IntersectionObserverEntry[]) => void,
+  options?: IntersectionObserverInit
+) => {
+  return new IntersectionObserver(callback, {
+    rootMargin: '50px',
+    threshold: 0.1,
+    ...options
+  });
+};
+
+// Memory usage monitoring
+export const getMemoryUsage = () => {
+  if ('memory' in performance) {
+    const memory = (performance as any).memory;
     return {
-      LCP: 0, // Largest Contentful Paint
-      FID: 0, // First Input Delay
-      CLS: 0, // Cumulative Layout Shift
-      FCP: 0, // First Contentful Paint
-      TTFB: 0, // Time to First Byte
+      used: Math.round(memory.usedJSHeapSize / 1048576), // MB
+      total: Math.round(memory.totalJSHeapSize / 1048576), // MB
+      limit: Math.round(memory.jsHeapSizeLimit / 1048576) // MB
+    };
+  }
+  return null;
+};
+
+// Image optimization helper
+export const optimizeImageLoading = (img: HTMLImageElement) => {
+  // Add loading="lazy" if not already set
+  if (!img.loading) {
+    img.loading = 'lazy';
+  }
+  
+  // Add decode="async" for better performance
+  img.decoding = 'async';
+  
+  // Preload critical images
+  if (img.classList.contains('critical')) {
+    img.loading = 'eager';
+  }
+};
+
+// Bundle size analyzer helper
+export const analyzeBundleSize = () => {
+  const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+  
+  if (entries.length > 0) {
+    const navigation = entries[0];
+    
+    return {
+      dns: navigation.domainLookupEnd - navigation.domainLookupStart,
+      connection: navigation.connectEnd - navigation.connectStart,
+      request: navigation.responseStart - navigation.requestStart,
+      response: navigation.responseEnd - navigation.responseStart,
+      dom: navigation.domContentLoadedEventEnd - navigation.responseEnd,
+      total: navigation.loadEventEnd - navigation.navigationStart
     };
   }
   
-  return Promise.resolve({});
-}
-
-/**
- * Lazy load images when they come into view
- * 
- * @param imageSelector - CSS selector for images to lazy load
- */
-export function setupLazyLoading(imageSelector: string = 'img.lazy'): void {
-  if ('IntersectionObserver' in window) {
-    const lazyImageObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const lazyImage = entry.target as HTMLImageElement;
-          if (lazyImage.dataset.src) {
-            lazyImage.src = lazyImage.dataset.src;
-            lazyImage.classList.remove('lazy');
-            lazyImageObserver.unobserve(lazyImage);
-          }
-        }
-      });
-    });
-
-    document.querySelectorAll(imageSelector).forEach((image) => {
-      lazyImageObserver.observe(image);
-    });
-  } else {
-    // Fallback for browsers that don't support Intersection Observer
-    console.warn('IntersectionObserver not supported, lazy loading disabled');
-  }
-}
+  return null;
+};
