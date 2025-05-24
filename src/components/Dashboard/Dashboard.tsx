@@ -1,166 +1,143 @@
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Helmet } from "react-helmet-async";
-import { Tag as TagType } from '@/types';
-import { useAuth } from '@/contexts/AuthContext';
-import { useContentSearch } from '@/hooks/useContentSearch';
-import { measurePerformance } from '@/utils/performance';
-
-// Core components that should load immediately
+import { useQuery } from '@tanstack/react-query';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import DashboardHeader from '@/components/DashboardHeader';
-import SearchQueryInfo from '@/components/SearchQueryInfo';
+import { ImprovedEmptyState } from './ImprovedEmptyState';
+import WelcomeHeader from './WelcomeHeader';
+import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
+import ContentList from '@/components/ContentList';
+import SearchBar from '@/components/SearchBar';
+import DashboardStats from './DashboardStats';
+import ContentFilterTabs from './ContentFilterTabs';
+import LoadingIndicator from './LoadingIndicator';
+import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
+import { SavedContent } from '@/types';
 
-// Lazy-loaded components for performance optimization
-import LazySemantic from '@/components/LazySemantic';
-const SearchResults = React.lazy(() => import('@/components/SearchResults'));
-const TagConfirmationDialog = React.lazy(() => import('@/components/TagConfirmationDialog'));
-
-// Dashboard components
-import { 
-  DashboardStats,
-  EmptyState,
-  ContentFilterTabs,
-  LoadingIndicator
-} from './';
+// Mock data for demonstration
+const mockContent: SavedContent[] = [];
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const { 
-    searchResults, 
-    searchQuery, 
-    isSemanticSearch,
-    isLoading,
-    handleSearch, 
-    handleTagsChange 
-  } = useContentSearch();
-  
-  const [tagToConfirm, setTagToConfirm] = useState<TagType | null>(null);
-  const [activeTab, setActiveTab] = useState('all');
+  const { showSuccess, showInfo } = useEnhancedToast();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedTab, setSelectedTab] = useState('all');
+  const [isFirstVisit, setIsFirstVisit] = useState(true);
 
-  // Stats for tag confirmation
-  const [tagStats, setTagStats] = useState({
-    confirmed: 0,
-    rejected: 0
+  // Mock authentication check
+  const isLoggedIn = true;
+  const userName = "Alex"; // This would come from auth context
+
+  // Mock query for content
+  const { data: content = mockContent, isLoading } = useQuery({
+    queryKey: ['saved-content'],
+    queryFn: async () => {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return mockContent;
+    },
   });
 
-  // Handle logout
-  const handleLogout = async () => {
-    try {
-      await signOut();
-      navigate('/');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
-  // Handle tag confirmation
-  const handleTagConfirm = (confirmed: boolean) => {
-    if (tagToConfirm) {
-      // Update stats
-      setTagStats(prev => ({
-        confirmed: confirmed ? prev.confirmed + 1 : prev.confirmed,
-        rejected: !confirmed ? prev.rejected + 1 : prev.rejected
-      }));
-      
-      // Close dialog
-      setTagToConfirm(null);
-    }
-  };
-
-  // Filter content based on active tab - Use performance measurement
-  const filteredResults = measurePerformance('FilterResults', () => {
-    return searchResults.filter(result => {
-      if (activeTab === 'all') return true;
-      
-      // Filter by content type
-      if (activeTab === 'links' && !result.content.file_url) return true;
-      if (activeTab === 'files' && result.content.file_url) return true;
-      
-      return false;
-    });
-  });
-
-  // Check if user is authenticated, if not redirect to login
+  // Check if this is user's first visit
   useEffect(() => {
-    if (!user) {
-      navigate('/login');
+    const hasVisited = localStorage.getItem('hasVisitedDashboard');
+    if (!hasVisited && content.length === 0) {
+      setIsFirstVisit(true);
+      localStorage.setItem('hasVisitedDashboard', 'true');
+      showInfo(
+        "Welcome to your dashboard! 🎉", 
+        "This is where all your saved content will appear. Start by adding your first piece of content."
+      );
+    } else {
+      setIsFirstVisit(false);
     }
-  }, [user, navigate]);
+  }, [content.length, showInfo]);
+
+  const handleAddContent = () => {
+    navigate('/save');
+    showSuccess(
+      "Let's add some content!",
+      "You'll be redirected to the save page where you can add URLs or upload files."
+    );
+  };
+
+  const handleLogout = () => {
+    // Mock logout functionality
+    navigate('/');
+  };
+
+  const filteredContent = content.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         item.content?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesTab = selectedTab === 'all' || item.tags?.some(tag => 
+      tag.name.toLowerCase() === selectedTab.toLowerCase()
+    );
+    return matchesSearch && matchesTab;
+  });
+
+  const recentActivity = content.filter(item => {
+    const itemDate = new Date(item.created_at);
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    return itemDate > weekAgo;
+  }).length;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col bg-background">
+        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+        <div className="flex-grow">
+          <LoadingIndicator />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Helmet>
-        <title>Dashboard | Accio</title>
-        <meta name="description" content="Manage and search your saved content." />
-        
-        {/* Preload critical resources */}
-        <link rel="preload" href="/assets/logo.svg" as="image" />
-        
-        {/* Add preconnect for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-      </Helmet>
-
-      <Navbar isLoggedIn={!!user} onLogout={handleLogout} />
+      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       
-      <main className="flex-grow container mx-auto px-4 py-8" id="main-content">
-        <div className="flex flex-col gap-4 mb-6">
-          <DashboardHeader />
-          <DashboardStats tagStats={tagStats} />
-        </div>
+      <main className="flex-grow container mx-auto px-4 py-8">
+        <BreadcrumbNav />
         
-        <div className="mb-8">
-          <LazySemantic onSearch={(query, semantic) => handleSearch(query, semantic)} />
-        </div>
-
-        <ContentFilterTabs 
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-        />
-
-        {isLoading ? (
-          <LoadingIndicator />
+        {content.length === 0 ? (
+          <ImprovedEmptyState onAddContent={handleAddContent} />
         ) : (
           <>
-            <SearchQueryInfo 
-              searchQuery={searchQuery} 
-              isSemanticSearch={isSemanticSearch} 
-              resultsCount={filteredResults.length} 
+            <WelcomeHeader
+              userName={userName}
+              totalContent={content.length}
+              recentActivity={recentActivity}
+              onAddContent={handleAddContent}
             />
             
-            <Suspense fallback={<LoadingIndicator />}>
-              <SearchResults 
-                searchResults={filteredResults} 
-                searchQuery={searchQuery} 
-                onTagsChange={handleTagsChange}
-                onTagConfirmRequest={setTagToConfirm} 
-              />
-            </Suspense>
-            
-            {/* Show empty state when no content */}
-            {filteredResults.length === 0 && !isLoading && !searchQuery && (
-              <EmptyState onAddContent={() => navigate('/save')} />
-            )}
+            <div className="grid lg:grid-cols-4 gap-8">
+              <div className="lg:col-span-3 space-y-6">
+                <SearchBar
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                  placeholder="Search your knowledge base..."
+                />
+                
+                <ContentFilterTabs
+                  selectedTab={selectedTab}
+                  onTabChange={setSelectedTab}
+                  content={content}
+                />
+                
+                <ContentList 
+                  content={filteredContent}
+                  isLoading={false}
+                />
+              </div>
+              
+              <div className="lg:col-span-1">
+                <DashboardStats content={content} />
+              </div>
+            </div>
           </>
         )}
       </main>
-      
-      {/* Tag confirmation dialog - Only load when needed */}
-      {tagToConfirm && (
-        <Suspense fallback={null}>
-          <TagConfirmationDialog 
-            tag={tagToConfirm} 
-            onConfirm={handleTagConfirm}
-            onClose={() => setTagToConfirm(null)}
-          />
-        </Suspense>
-      )}
-      
-      <Footer />
     </div>
   );
 };
