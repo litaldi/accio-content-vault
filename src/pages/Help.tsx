@@ -3,13 +3,15 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import NavigationButtons from '@/components/navigation/NavigationButtons';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
-import { Button } from '@/components/ui/button';
+import ButtonAccessibilityChecker from '@/components/debug/ButtonAccessibilityChecker';
+import { AccessibleButton } from '@/components/ui/accessible-button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, MessageCircle, BookOpen, Video, Mail, Phone, Search } from 'lucide-react';
+import { MessageCircle, BookOpen, Video, Mail, Search } from 'lucide-react';
 import { useState } from 'react';
 
 const Help = () => {
@@ -89,22 +91,18 @@ const Help = () => {
         <div className="container mx-auto px-4 max-w-6xl">
           {/* Header */}
           <div className="mb-16">
-            <div className="flex items-center gap-4 mb-6">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => navigate(-1)}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-            </div>
+            <NavigationButtons />
             
-            <h1 className="text-4xl font-bold mb-4">Help & Support</h1>
+            <h1 className="text-4xl font-bold mb-4 mt-6">Help & Support</h1>
             <p className="text-xl text-muted-foreground max-w-2xl">
               Find answers to common questions or get in touch with our support team
             </p>
+          </div>
+
+          {/* Accessibility Checker for Development */}
+          <div className="mb-16">
+            <h2 className="text-2xl font-semibold mb-6">Development Tools</h2>
+            <ButtonAccessibilityChecker />
           </div>
 
           {/* Support Channels */}
@@ -115,19 +113,21 @@ const Help = () => {
                 <Card key={channel.title} className="text-center">
                   <CardHeader>
                     <div className="w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                      <channel.icon className="h-6 w-6 text-primary" />
+                      <channel.icon className="h-6 w-6 text-primary" aria-hidden="true" />
                     </div>
                     <CardTitle className="text-lg">{channel.title}</CardTitle>
                     <CardDescription>{channel.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button 
+                    <AccessibleButton 
                       variant="outline" 
-                      className="w-full"
+                      fullWidth
                       disabled={!channel.available}
+                      aria-label={`${channel.action} - ${channel.description}`}
+                      description={channel.available ? `Access ${channel.title.toLowerCase()}` : 'This feature is coming soon'}
                     >
                       {channel.action}
-                    </Button>
+                    </AccessibleButton>
                   </CardContent>
                 </Card>
               ))}
@@ -139,12 +139,13 @@ const Help = () => {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold">Frequently Asked Questions</h2>
               <div className="relative w-96">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
                 <Input
                   placeholder="Search FAQs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
+                  aria-label="Search frequently asked questions"
                 />
               </div>
             </div>
@@ -190,37 +191,65 @@ const Help = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium mb-2">
-                      Name
+                      Name *
                     </label>
-                    <Input id="name" placeholder="Your name" />
+                    <Input 
+                      id="name" 
+                      placeholder="Your name" 
+                      required
+                      aria-describedby="name-help"
+                    />
+                    <p id="name-help" className="sr-only">Enter your full name</p>
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium mb-2">
-                      Email
+                      Email *
                     </label>
-                    <Input id="email" type="email" placeholder="your@email.com" />
+                    <Input 
+                      id="email" 
+                      type="email" 
+                      placeholder="your@email.com" 
+                      required
+                      aria-describedby="email-help"
+                    />
+                    <p id="email-help" className="sr-only">Enter your email address for replies</p>
                   </div>
                 </div>
                 
                 <div>
                   <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                    Subject
+                    Subject *
                   </label>
-                  <Input id="subject" placeholder="How can we help?" />
+                  <Input 
+                    id="subject" 
+                    placeholder="How can we help?" 
+                    required
+                    aria-describedby="subject-help"
+                  />
+                  <p id="subject-help" className="sr-only">Brief description of your question or issue</p>
                 </div>
                 
                 <div>
                   <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Message
+                    Message *
                   </label>
                   <Textarea 
                     id="message" 
                     placeholder="Describe your issue or question..."
                     rows={6}
+                    required
+                    aria-describedby="message-help"
                   />
+                  <p id="message-help" className="sr-only">Provide detailed information about your question or issue</p>
                 </div>
                 
-                <Button className="w-full">Send Message</Button>
+                <AccessibleButton 
+                  fullWidth
+                  aria-label="Send support message"
+                  description="Submit your support request to our team"
+                >
+                  Send Message
+                </AccessibleButton>
               </CardContent>
             </Card>
           </div>

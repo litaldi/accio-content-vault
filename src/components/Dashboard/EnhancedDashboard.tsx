@@ -5,14 +5,15 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import NavigationButtons from '@/components/navigation/NavigationButtons';
 import { DashboardContent } from './DashboardContent';
 import { ImprovedEmptyState } from './ImprovedEmptyState';
 import NotificationCenter from './NotificationCenter';
 import { ContentSkeleton } from '@/components/ui/content-skeleton';
-import { Button } from '@/components/ui/button';
+import { AccessibleButton } from '@/components/ui/accessible-button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Bell, Search, Settings, HelpCircle, Home, ArrowLeft } from 'lucide-react';
+import { Bell, Search, Settings, HelpCircle, Plus } from 'lucide-react';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
 import { SavedContent } from '@/types';
 
@@ -124,45 +125,41 @@ const EnhancedDashboard = () => {
             <div className="container mx-auto px-4 py-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => navigate('/')}
-                    className="flex items-center gap-2"
-                  >
-                    <Home className="h-4 w-4" />
-                    Home
-                  </Button>
+                  <NavigationButtons showBackButton={false} />
                   <div className="h-4 w-px bg-border" />
                   <h1 className="text-2xl font-bold">Dashboard</h1>
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <Button
+                  <AccessibleButton
                     variant="outline"
                     size="sm"
                     onClick={handleSearch}
-                    className="flex items-center gap-2"
+                    leftIcon={<Search className="h-4 w-4" />}
+                    aria-label="Search your content library"
+                    description="Search through your saved content using AI-powered search"
                   >
-                    <Search className="h-4 w-4" />
-                    Search
-                  </Button>
+                    <span className="hidden sm:inline">Search</span>
+                  </AccessibleButton>
                   
                   <div className="relative">
-                    <Button
+                    <AccessibleButton
                       variant="outline"
                       size="sm"
                       onClick={() => setShowNotifications(!showNotifications)}
-                      className="flex items-center gap-2"
+                      leftIcon={<Bell className="h-4 w-4" />}
+                      aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
+                      aria-expanded={showNotifications}
+                      aria-haspopup="dialog"
+                      description="View your notifications and updates"
                     >
-                      <Bell className="h-4 w-4" />
-                      Notifications
+                      <span className="hidden sm:inline">Notifications</span>
                       {unreadCount > 0 && (
-                        <Badge variant="destructive" className="ml-1 text-xs">
+                        <Badge variant="destructive" className="ml-1 text-xs" aria-hidden="true">
                           {unreadCount}
                         </Badge>
                       )}
-                    </Button>
+                    </AccessibleButton>
                     
                     {showNotifications && (
                       <div className="absolute right-0 top-full mt-2 w-96 z-50">
@@ -176,25 +173,38 @@ const EnhancedDashboard = () => {
                     )}
                   </div>
                   
-                  <Button
+                  <AccessibleButton
                     variant="outline"
                     size="sm"
                     onClick={() => navigate('/settings')}
-                    className="flex items-center gap-2"
+                    leftIcon={<Settings className="h-4 w-4" />}
+                    aria-label="Open settings"
+                    description="Access your account settings and preferences"
                   >
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </Button>
+                    <span className="hidden sm:inline">Settings</span>
+                  </AccessibleButton>
                   
-                  <Button
+                  <AccessibleButton
                     variant="outline"
                     size="sm"
                     onClick={() => navigate('/help')}
-                    className="flex items-center gap-2"
+                    leftIcon={<HelpCircle className="h-4 w-4" />}
+                    aria-label="Get help and support"
+                    description="Access help documentation and contact support"
                   >
-                    <HelpCircle className="h-4 w-4" />
-                    Help
-                  </Button>
+                    <span className="hidden sm:inline">Help</span>
+                  </AccessibleButton>
+
+                  <AccessibleButton
+                    variant="default"
+                    size="sm"
+                    onClick={handleAddContent}
+                    leftIcon={<Plus className="h-4 w-4" />}
+                    aria-label="Add new content"
+                    description="Save new URLs, upload files, or create notes"
+                  >
+                    <span className="hidden sm:inline">Add Content</span>
+                  </AccessibleButton>
                 </div>
               </div>
             </div>

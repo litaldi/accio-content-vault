@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -8,6 +7,7 @@ import { QueryProvider } from '@/providers/QueryProvider';
 import Index from './pages/Index';
 import Dashboard from './pages/Dashboard';
 import Search from './pages/Search';
+import Save from './pages/Save';
 import Help from './pages/Help';
 import AccessibilityStatement from './pages/AccessibilityStatement';
 import Login from './pages/Login';
@@ -47,6 +47,7 @@ function AppContent() {
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/search" element={<Search />} />
+            <Route path="/save" element={<Save />} />
             <Route path="/help" element={<Help />} />
             <Route path="/features" element={<Features />} />
             <Route path="/pricing" element={<Pricing />} />
