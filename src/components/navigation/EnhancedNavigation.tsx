@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -11,7 +10,7 @@ import { Menu, X, Home, BookOpen, BarChart, Users, Settings, LogOut, Plus } from
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { focusStyles } from '@/components/ui/design-system';
+import { copy } from '@/utils/copy';
 
 const EnhancedNavigation: React.FC = () => {
   const location = useLocation();
