@@ -11,6 +11,7 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import ResponsiveAccessibilityButton from '@/components/accessibility/ResponsiveAccessibilityButton';
+import SkipLinks from '@/components/accessibility/SkipLinks';
 
 // Pages
 import Index from '@/pages/Index';
@@ -52,9 +53,10 @@ function App() {
               <TooltipProvider>
                 <AuthProvider>
                   <Router>
+                    <SkipLinks />
                     <EnhancedAccessibility />
                     <ResponsiveAccessibilityButton />
-                    <div className="min-h-screen flex flex-col w-full">
+                    <div className="min-h-screen flex flex-col w-full" role="application">
                       <Routes>
                         <Route path="/" element={<Index />} />
                         <Route path="/login" element={<Login />} />
