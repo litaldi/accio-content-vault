@@ -31,7 +31,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-const Login: React.FC = () => {
+function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const { signIn, user, isLoading } = useAuth();
@@ -156,6 +156,6 @@ const Login: React.FC = () => {
       </div>
     </div>
   );
-};
+}
 
 export default Login;
