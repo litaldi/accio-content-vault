@@ -9,6 +9,9 @@ interface OnboardingContextType {
     role: string;
     primaryGoal: string;
     contentTypes: string[];
+    appType?: string;
+    experienceLevel?: string;
+    mainObjective?: string;
   };
   shouldShowOnboarding: boolean;
   completeOnboarding: (preferences?: any) => void;

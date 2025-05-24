@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @import './styles/accessibility.css';
+@import url('./styles/onboarding-accessibility.css');
 
 @layer base {
   :root {

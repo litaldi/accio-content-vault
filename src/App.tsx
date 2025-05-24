@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -13,7 +12,7 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import ResponsiveAccessibilityButton from '@/components/accessibility/ResponsiveAccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
-import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
+import { EnhancedOnboardingFlow } from '@/components/onboarding/EnhancedOnboardingFlow';
 import { useOnboardingContext } from '@/contexts/OnboardingContext';
 
 // Pages
@@ -51,7 +50,7 @@ const AppContent = () => {
 
   if (shouldShowOnboarding) {
     return (
-      <OnboardingFlow
+      <EnhancedOnboardingFlow
         onComplete={completeOnboarding}
         onSkip={skipOnboarding}
       />
