@@ -3,11 +3,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
-import { EnhancedHeroSection } from '@/components/home/EnhancedHeroSection';
-import { FeaturesSection } from '@/components/home/FeaturesSection';
-import { CTASection } from '@/components/home/CTASection';
-import { PricingSection } from '@/components/home/PricingSection';
-import { FAQSection } from '@/components/home/FAQSection';
+import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
+import FeaturesSection from '@/components/home/FeaturesSection';
+import CTASection from '@/components/home/CTASection';
+import PricingSection from '@/components/home/PricingSection';
+import FAQSection from '@/components/home/FAQSection';
 import Footer from '@/components/Footer';
 
 const Index = () => {
