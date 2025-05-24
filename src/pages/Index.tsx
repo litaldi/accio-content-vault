@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import MainNavbar from '@/components/Navbar/MainNavbar';
+import SimplifiedNavbar from '@/components/Navbar/SimplifiedNavbar';
 import ImprovedHeroSection from '@/components/home/ImprovedHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
@@ -34,7 +34,7 @@ const Index = () => {
       </Helmet>
       
       <div className="min-h-screen flex flex-col">
-        <MainNavbar />
+        <SimplifiedNavbar />
         
         <main id="main-content" className="flex-grow" role="main">
           <ImprovedHeroSection />

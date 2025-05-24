@@ -5,7 +5,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import Navbar from "@/components/Navbar";
+import SimplifiedNavbar from "@/components/Navbar/SimplifiedNavbar";
 import Footer from "@/components/Footer";
 
 // Sample blog posts for demonstration
@@ -47,7 +47,7 @@ const Blog = () => {
         <meta name="description" content="Latest updates, tips, and insights about Accio and content management." />
       </Helmet>
       
-      <Navbar isLoggedIn={false} />
+      <SimplifiedNavbar />
 
       <main className="flex-1 container mx-auto px-4 py-12">
         <div className="mb-12">
