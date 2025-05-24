@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
-import MarketingHeroSection from '@/components/home/MarketingHeroSection';
+import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import OptimizedHeroSection from '@/components/home/OptimizedHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import CTASection from '@/components/home/CTASection';
@@ -27,10 +27,10 @@ const Index = () => {
         <link rel="canonical" href="https://yoursite.com/" />
       </Helmet>
       
-      <PrimaryNavigation />
+      <EnhancedNavigation />
       
       <main id="main-content" className="flex-grow w-full" role="main">
-        <MarketingHeroSection />
+        <OptimizedHeroSection />
         <ImprovedPageShowcase />
         <FeaturesSection />
         <MarketingPricingSection />

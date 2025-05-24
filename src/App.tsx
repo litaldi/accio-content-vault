@@ -1,3 +1,4 @@
+
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -8,6 +9,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
+import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import BlogPost from './pages/BlogPost';
 
 // Pages
@@ -48,6 +50,7 @@ function App() {
               <TooltipProvider>
                 <AuthProvider>
                   <Router>
+                    <EnhancedAccessibility />
                     <div className="min-h-screen flex flex-col w-full">
                       <Routes>
                         <Route path="/" element={<Index />} />
