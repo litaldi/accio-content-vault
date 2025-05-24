@@ -87,8 +87,10 @@ const Blog = () => {
                   <span className="text-sm font-medium">By {blogPosts[0].author}</span>
                   <Button variant="outline" className="group" asChild>
                     <Link to={`/blog/${blogPosts[0].id}`}>
-                      Read More
-                      <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                      <span className="flex items-center">
+                        Read More
+                        <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                      </span>
                     </Link>
                   </Button>
                 </div>
@@ -129,8 +131,10 @@ const Blog = () => {
                     <span className="text-sm">By {post.author}</span>
                     <Button variant="ghost" size="sm" className="group" asChild>
                       <Link to={`/blog/${post.id}`}>
-                        Read More
-                        <ChevronRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                        <span className="flex items-center">
+                          Read More
+                          <ChevronRight className="ml-1 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                        </span>
                       </Link>
                     </Button>
                   </div>
