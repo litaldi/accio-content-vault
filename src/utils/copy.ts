@@ -19,7 +19,7 @@ export const copy = {
     blog: 'Blog'
   },
 
-  // Buttons - consistent with proper punctuation
+  // Buttons - consistent with proper punctuation and clear CTAs
   buttons: {
     save: 'Save',
     cancel: 'Cancel',
@@ -36,7 +36,28 @@ export const copy = {
     chatSupport: 'Chat with Support',
     tryFree: 'Try It Free',
     startFreeTrial: 'Start Free Trial',
-    contactSales: 'Contact Sales'
+    contactSales: 'Contact Sales',
+    viewDemo: 'View Demo',
+    exploreFeatures: 'Explore Features'
+  },
+
+  // Marketing Headlines - benefit-focused
+  headlines: {
+    hero: 'Stop Losing Your Best Ideas. Start Building Brilliance.',
+    subhero: 'Transform scattered bookmarks, tabs, and notes into an AI-powered knowledge engine that makes you 10x more productive.',
+    features: 'Powerful Features for Modern Knowledge Management',
+    pricing: 'Simple, Transparent Pricing',
+    about: 'Building the Future of Knowledge Management'
+  },
+
+  // Value Propositions - user benefit focused
+  benefits: {
+    saveAnything: 'Save from any website in 1 click',
+    aiOrganization: 'AI organizes everything automatically',
+    findFast: 'Find anything in seconds, not hours',
+    crossDevice: 'Works seamlessly across all devices',
+    timeBack: 'Get 5+ hours back each week',
+    neverLose: 'Never lose important information again'
   },
 
   // Error messages - user-friendly and actionable
@@ -96,6 +117,22 @@ export const copy = {
       label: 'Password',
       placeholder: 'Enter your password'
     }
+  },
+
+  // Social Proof
+  socialProof: {
+    userCount: '10,000+',
+    rating: '4.9/5',
+    reviews: '2,500+',
+    companies: 'Google, Microsoft, Netflix, and 500+ other companies'
+  },
+
+  // Trust Indicators
+  trust: {
+    security: 'Enterprise-grade security',
+    uptime: '99.9% uptime guarantee',
+    support: '24/7 customer support',
+    noCard: 'No credit card required'
   },
 
   // Common phrases and labels

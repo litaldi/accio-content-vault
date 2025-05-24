@@ -10,7 +10,6 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
-import BlogPost from './pages/BlogPost';
 import ResponsiveAccessibilityButton from '@/components/accessibility/ResponsiveAccessibilityButton';
 
 // Pages
@@ -24,6 +23,7 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import FAQ from '@/pages/FAQ';
 import Blog from '@/pages/Blog';
+import BlogPost from './pages/BlogPost';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import AccessibilityStatement from '@/pages/AccessibilityStatement';
@@ -60,9 +60,10 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/features" element={<Features />} />
+                        <Route path="/pricing" element={<Pricing />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/contact" element={<Contact />} />
-                        <Route path="/pricing" element={<Pricing />} />
                         <Route path="/faq" element={<FAQ />} />
                         <Route path="/blog" element={<Blog />} />
                         <Route path="/blog/:id" element={<BlogPost />} />
@@ -73,15 +74,20 @@ function App() {
                         <Route path="/upgrade" element={<Upgrade />} />
                         <Route path="/reminders" element={<Reminders />} />
                         <Route path="/offline" element={<OfflinePage />} />
+                        
+                        {/* Dashboard sub-routes - all redirect to main dashboard */}
                         <Route path="/save" element={<Dashboard />} />
                         <Route path="/save-content" element={<Dashboard />} />
                         <Route path="/collections" element={<Dashboard />} />
                         <Route path="/analytics" element={<Dashboard />} />
                         <Route path="/search" element={<Dashboard />} />
                         <Route path="/settings" element={<Dashboard />} />
+                        
+                        {/* Catch all route */}
                         <Route path="*" element={<NotFound />} />
                       </Routes>
                     </div>
+                    <Toaster />
                   </Router>
                 </AuthProvider>
               </TooltipProvider>
@@ -90,7 +96,6 @@ function App() {
           </AccessibilityProvider>
         </ThemeProvider>
       </HelmetProvider>
-      <Toaster />
     </ErrorBoundary>
   );
 }
