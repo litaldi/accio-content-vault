@@ -24,6 +24,11 @@ export const AIInsights: React.FC<AIInsightsProps> = ({
   onApplyTags,
   className
 }) => {
+  console.log('AIInsights rendering with:', { 
+    currentContent: !!currentContent, 
+    allContentLength: allContent.length 
+  });
+
   return (
     <div className={className}>
       <Card className="mb-6">
@@ -39,20 +44,17 @@ export const AIInsights: React.FC<AIInsightsProps> = ({
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Natural Language Search */}
         <NaturalLanguageSearch
           allContent={allContent}
           onSearch={onSearchResults}
         />
 
-        {/* Smart Recommendations */}
         <SmartRecommendations
           currentContent={currentContent}
           allContent={allContent}
           onContentClick={onContentClick}
         />
 
-        {/* Auto Categorization - Full width */}
         {currentContent && (
           <div className="lg:col-span-2">
             <AutoCategorization

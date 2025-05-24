@@ -20,6 +20,8 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
   onContentClick,
   className
 }) => {
+  console.log('SmartRecommendations rendering');
+  
   const recommendations = currentContent 
     ? smartRecommendationService.generateRecommendations(currentContent, allContent)
     : [];
@@ -27,12 +29,27 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
   const trendingContent = smartRecommendationService.getTrendingContent(allContent);
 
   if (recommendations.length === 0 && trendingContent.length === 0) {
-    return null;
+    return (
+      <div className={className}>
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Sparkles className="h-5 w-5 text-primary" />
+              Smart Recommendations
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground">
+              No recommendations available yet. Add more content to get personalized suggestions.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
     <div className={className}>
-      {/* Smart Recommendations */}
       {recommendations.length > 0 && (
         <Card className="mb-4">
           <CardHeader>
@@ -44,7 +61,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
           <CardContent className="space-y-3">
             {recommendations.map((rec, index) => (
               <div
-                key={rec.content.id}
+                key={`rec-${rec.content.id}-${index}`}
                 className="p-3 rounded-lg border hover:bg-accent cursor-pointer transition-colors"
                 onClick={() => onContentClick(rec.content)}
               >
@@ -61,7 +78,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
                 </p>
                 <div className="flex flex-wrap gap-1">
                   {rec.content.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag.id} variant="secondary" className="text-xs">
+                    <Badge key={`tag-${tag.id}`} variant="secondary" className="text-xs">
                       {tag.name}
                     </Badge>
                   ))}
@@ -72,7 +89,6 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
         </Card>
       )}
 
-      {/* Trending Content */}
       {trendingContent.length > 0 && (
         <Card>
           <CardHeader>
@@ -84,7 +100,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
           <CardContent className="space-y-3">
             {trendingContent.map((content) => (
               <div
-                key={content.id}
+                key={`trending-${content.id}`}
                 className="p-3 rounded-lg border hover:bg-accent cursor-pointer transition-colors"
                 onClick={() => onContentClick(content)}
               >
@@ -99,7 +115,7 @@ export const SmartRecommendations: React.FC<SmartRecommendationsProps> = ({
                 </p>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {content.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag.id} variant="secondary" className="text-xs">
+                    <Badge key={`trending-tag-${tag.id}`} variant="secondary" className="text-xs">
                       {tag.name}
                     </Badge>
                   ))}
