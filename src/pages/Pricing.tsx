@@ -2,8 +2,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
-import { Button } from '@/components/ui/button';
 import { CheckIcon, XIcon } from 'lucide-react';
+import SubscriptionButton from '@/components/pricing/SubscriptionButton';
+import { useSubscription } from '@/hooks/useSubscription';
+import { useAuth } from '@/contexts/AuthContext';
 
 const PricingTier = ({ 
   name, 
@@ -11,16 +13,16 @@ const PricingTier = ({
   description, 
   features, 
   isPopular = false,
-  buttonText = "Get Started",
-  onButtonClick
+  tier,
+  currentTier
 }: { 
   name: string; 
   price: string; 
   description: string; 
   features: { included: boolean; text: string }[];
   isPopular?: boolean;
-  buttonText?: string;
-  onButtonClick: () => void;
+  tier: 'free' | 'pro' | 'team';
+  currentTier: string;
 }) => (
   <div className={`
     flex flex-col p-6 mx-auto max-w-lg text-center rounded-lg border shadow
@@ -41,48 +43,44 @@ const PricingTier = ({
       {features.map((feature, index) => (
         <li key={index} className="flex items-center">
           {feature.included ? (
-            <CheckIcon className="h-5 w-5 text-green-500 mr-2" />
+            <CheckIcon className="h-5 w-5 text-green-500 mr-2 flex-shrink-0" />
           ) : (
-            <XIcon className="h-5 w-5 text-muted-foreground mr-2" />
+            <XIcon className="h-5 w-5 text-muted-foreground mr-2 flex-shrink-0" />
           )}
           <span>{feature.text}</span>
         </li>
       ))}
     </ul>
-    <Button 
-      onClick={onButtonClick}
-      variant={isPopular ? "default" : "outline"}
-      className="mt-auto"
-    >
-      {buttonText}
-    </Button>
+    <SubscriptionButton 
+      tier={tier}
+      currentTier={currentTier}
+      isPopular={isPopular}
+    />
   </div>
 );
 
 const Pricing = () => {
   const navigate = useNavigate();
-  
-  // In a real app, this would check Supabase auth
-  const isLoggedIn = true;
+  const { user } = useAuth();
+  const { currentTier, isLoading } = useSubscription();
 
-  const handleFreeTierClick = () => {
-    if (isLoggedIn) {
-      navigate('/dashboard');
-    } else {
-      navigate('/register');
-    }
-  };
-
-  const handleProTierClick = () => {
-    // In a real app, this would redirect to Stripe checkout
-    console.log('Pro subscription selected');
-    // For now, just show an alert
-    alert('This would redirect to payment processing in the real app');
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar isLoggedIn={!!user} />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading subscription details...</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar isLoggedIn={isLoggedIn} />
+      <Navbar isLoggedIn={!!user} />
       
       <main className="flex-grow py-16 px-4">
         <div className="max-w-6xl mx-auto">
@@ -91,42 +89,64 @@ const Pricing = () => {
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Choose the plan that works best for you. All plans include a 14-day free trial.
             </p>
+            {user && currentTier !== 'free' && (
+              <div className="mt-4 p-3 bg-primary/10 text-primary rounded-lg inline-block">
+                Current Plan: {currentTier === 'pro' ? 'Pro' : currentTier === 'team' ? 'Team' : 'Free'}
+              </div>
+            )}
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <PricingTier 
               name="Free"
               price="Free"
               description="Perfect for getting started with basic organization"
               features={[
-                { included: true, text: "Save up to 50 items" },
+                { included: true, text: "Save up to 100 items" },
                 { included: true, text: "Basic keyword search" },
                 { included: true, text: "Manual tagging" },
-                { included: false, text: "AI-powered tagging" },
-                { included: false, text: "Semantic search" },
+                { included: true, text: "AI-powered tagging" },
+                { included: false, text: "Advanced semantic search" },
                 { included: false, text: "File uploads" },
-                { included: false, text: "Content exports" },
+                { included: false, text: "Priority support" },
               ]}
-              buttonText="Get Started"
-              onButtonClick={handleFreeTierClick}
+              tier="free"
+              currentTier={currentTier}
             />
             
             <PricingTier 
               name="Pro"
-              price="$8.99"
+              price="$9.99"
               description="For power users who need advanced features"
               features={[
                 { included: true, text: "Unlimited saved items" },
                 { included: true, text: "Advanced semantic search" },
                 { included: true, text: "AI-powered tagging" },
                 { included: true, text: "File uploads (PDF, images)" },
-                { included: true, text: "Export to CSV or PDF" },
+                { included: true, text: "Content summarization" },
                 { included: true, text: "Priority support" },
-                { included: true, text: "Early access to new features" },
+                { included: true, text: "Export capabilities" },
               ]}
               isPopular={true}
-              buttonText="Upgrade to Pro"
-              onButtonClick={handleProTierClick}
+              tier="pro"
+              currentTier={currentTier}
+            />
+
+            <PricingTier 
+              name="Team"
+              price="$19.99"
+              description="For teams and organizations"
+              features={[
+                { included: true, text: "Everything in Pro" },
+                { included: true, text: "Team collaboration" },
+                { included: true, text: "Shared collections" },
+                { included: true, text: "Advanced analytics" },
+                { included: true, text: "Team management" },
+                { included: true, text: "Priority support" },
+                { included: true, text: "Custom integrations" },
+              ]}
+              tier="team"
+              currentTier={currentTier}
             />
           </div>
           
@@ -143,14 +163,21 @@ const Pricing = () => {
               <div>
                 <h3 className="text-lg font-medium mb-2">What happens when I reach my storage limit?</h3>
                 <p className="text-muted-foreground">
-                  On the Free plan, you'll need to delete some content before adding more. Pro users have unlimited storage.
+                  On the Free plan, you'll need to delete some content before adding more. Pro and Team users have unlimited storage.
                 </p>
               </div>
               
               <div>
                 <h3 className="text-lg font-medium mb-2">Is there a trial period?</h3>
                 <p className="text-muted-foreground">
-                  Yes, all plans include a 14-day free trial of Pro features. No credit card required to start your trial.
+                  Yes, all paid plans include a 14-day free trial. No credit card required to start your trial.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-medium mb-2">How secure is my data?</h3>
+                <p className="text-muted-foreground">
+                  We use enterprise-grade security with end-to-end encryption. Your data is stored securely and never shared with third parties.
                 </p>
               </div>
             </div>

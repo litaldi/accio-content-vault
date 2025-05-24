@@ -4,9 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
+import SubscriptionButton from '@/components/pricing/SubscriptionButton';
+import { useSubscription } from '@/hooks/useSubscription';
 
 const PricingSection = () => {
   const navigate = useNavigate();
+  const { currentTier } = useSubscription();
   
   return (
     <section className="py-16 px-4 bg-muted/50" aria-labelledby="pricing-heading">
@@ -45,7 +48,7 @@ const PricingSection = () => {
                   <span>AI-powered tagging</span>
                 </li>
               </ul>
-              <Button onClick={() => navigate('/register')} className="w-full">Get Started</Button>
+              <SubscriptionButton tier="free" currentTier={currentTier} />
             </CardContent>
           </Card>
           
@@ -80,7 +83,7 @@ const PricingSection = () => {
                   <span>Priority AI analysis</span>
                 </li>
               </ul>
-              <Button onClick={() => navigate('/pricing')} className="w-full">Choose Pro</Button>
+              <SubscriptionButton tier="pro" currentTier={currentTier} isPopular />
             </CardContent>
           </Card>
           
@@ -112,7 +115,7 @@ const PricingSection = () => {
                   <span>Advanced analytics</span>
                 </li>
               </ul>
-              <Button onClick={() => navigate('/pricing')} variant="outline" className="w-full">Choose Team</Button>
+              <SubscriptionButton tier="team" currentTier={currentTier} />
             </CardContent>
           </Card>
         </div>

@@ -8,26 +8,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { useSubscription } from '@/hooks/useSubscription';
+import SubscriptionButton from '@/components/pricing/SubscriptionButton';
 
 const AccountSettings = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [email, setEmail] = useState('user@example.com'); // Would come from auth context
+  const { subscription, currentTier, isLoading } = useSubscription();
+  const [email, setEmail] = useState('user@example.com');
   const [name, setName] = useState('Demo User');
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  
-  // In a real app, subscription details would come from Supabase/Stripe
-  const [subscription] = useState({
-    tier: 'free',
-    endDate: null,
-    isActive: true,
-  });
 
   const handleProfileUpdate = (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would update the user's profile in Supabase
     console.log('Updating profile:', { email, name });
     
     toast({
@@ -57,7 +52,6 @@ const AccountSettings = () => {
       return;
     }
     
-    // In a real app, this would update the user's password in Supabase
     console.log('Updating password');
     
     toast({
@@ -65,15 +59,21 @@ const AccountSettings = () => {
       description: 'Your password has been successfully changed.',
     });
     
-    // Reset form
     setCurrentPassword('');
     setNewPassword('');
     setConfirmPassword('');
   };
 
   const handleLogout = () => {
-    // In a real app, this would sign the user out via Supabase auth
     navigate('/');
+  };
+
+  const getSubscriptionDisplayName = (tier: string) => {
+    switch (tier) {
+      case 'pro': return 'Pro Plan';
+      case 'team': return 'Team Plan';
+      default: return 'Free Plan';
+    }
   };
 
   return (
@@ -177,54 +177,79 @@ const AccountSettings = () => {
               <Card>
                 <CardHeader>
                   <CardTitle>Subscription Plan</CardTitle>
-                  <CardDescription>Manage your subscription</CardDescription>
+                  <CardDescription>Manage your subscription and billing</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="p-4 bg-secondary rounded-lg">
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <h3 className="font-semibold text-lg">
-                          {subscription.tier === 'free' ? 'Free Plan' : 'Pro Plan'}
-                        </h3>
-                        <p className="text-muted-foreground">
-                          {subscription.tier === 'free' 
-                            ? 'Limited features with basic functionality' 
-                            : 'Full access to all premium features'}
-                        </p>
-                      </div>
-                      <div className={`px-3 py-1 rounded text-xs font-medium ${
-                        subscription.tier === 'free' ? 'bg-muted' : 'bg-primary/20 text-primary'
-                      }`}>
-                        {subscription.tier === 'free' ? 'CURRENT PLAN' : 'PRO'}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {subscription.tier === 'free' ? (
-                    <div className="text-center p-4">
-                      <p className="mb-4">
-                        Upgrade to Pro for unlimited content storage, advanced search, and file uploads.
-                      </p>
-                      <Button onClick={() => navigate('/pricing')}>
-                        Upgrade to Pro
-                      </Button>
+                <CardContent className="space-y-6">
+                  {isLoading ? (
+                    <div className="text-center py-8">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                      <p className="text-muted-foreground">Loading subscription details...</p>
                     </div>
                   ) : (
-                    <div className="space-y-4">
-                      <div className="flex justify-between">
-                        <span>Billing cycle</span>
-                        <span className="font-medium">Monthly</span>
+                    <>
+                      <div className="p-4 bg-secondary rounded-lg">
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <h3 className="font-semibold text-lg">
+                              {getSubscriptionDisplayName(currentTier)}
+                            </h3>
+                            <p className="text-muted-foreground">
+                              {currentTier === 'free' 
+                                ? 'Limited features with basic functionality' 
+                                : 'Full access to premium features'}
+                            </p>
+                            {subscription?.subscription_end && (
+                              <p className="text-sm text-muted-foreground mt-1">
+                                {subscription.subscribed ? 'Renews' : 'Expires'} on {' '}
+                                {new Date(subscription.subscription_end).toLocaleDateString()}
+                              </p>
+                            )}
+                          </div>
+                          <div className={`px-3 py-1 rounded text-xs font-medium ${
+                            currentTier === 'free' ? 'bg-muted' : 'bg-primary/20 text-primary'
+                          }`}>
+                            {currentTier === 'free' ? 'FREE' : currentTier.toUpperCase()}
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex justify-between">
-                        <span>Next payment</span>
-                        <span className="font-medium">June 15, 2025</span>
-                      </div>
-                      <div className="pt-4">
-                        <Button variant="outline" className="w-full">
-                          Manage Subscription
-                        </Button>
-                      </div>
-                    </div>
+                      
+                      {currentTier === 'free' ? (
+                        <div className="text-center p-6">
+                          <h4 className="text-lg font-medium mb-2">Upgrade for More Features</h4>
+                          <p className="text-muted-foreground mb-6">
+                            Get unlimited content storage, advanced search, file uploads, and more.
+                          </p>
+                          <div className="space-y-3">
+                            <SubscriptionButton tier="pro" currentTier={currentTier} isPopular />
+                            <SubscriptionButton tier="team" currentTier={currentTier} />
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div className="flex justify-between py-2 border-b">
+                              <span className="text-muted-foreground">Plan</span>
+                              <span className="font-medium">{getSubscriptionDisplayName(currentTier)}</span>
+                            </div>
+                            <div className="flex justify-between py-2 border-b">
+                              <span className="text-muted-foreground">Status</span>
+                              <span className={`font-medium ${subscription?.subscribed ? 'text-green-600' : 'text-red-600'}`}>
+                                {subscription?.subscribed ? 'Active' : 'Inactive'}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <div className="pt-4 space-y-3">
+                            <Button variant="outline" className="w-full" disabled>
+                              Manage Billing (Coming Soon)
+                            </Button>
+                            {currentTier !== 'team' && (
+                              <SubscriptionButton tier="team" currentTier={currentTier} />
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </CardContent>
               </Card>
