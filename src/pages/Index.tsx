@@ -2,12 +2,16 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
-import OptimizedHeroSection from '@/components/home/OptimizedHeroSection';
+import MarketingHeroSection from '@/components/home/MarketingHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import CTASection from '@/components/home/CTASection';
 import MarketingPricingSection from '@/components/home/MarketingPricingSection';
 import FAQSection from '@/components/home/FAQSection';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import SocialProofSection from '@/components/home/SocialProofSection';
+import UseCasesSection from '@/components/home/UseCasesSection';
+import TrustSignalsSection from '@/components/home/TrustSignalsSection';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import { Helmet } from 'react-helmet-async';
 
@@ -30,10 +34,14 @@ const Index = () => {
       <EnhancedNavigation />
       
       <main id="main-content" className="flex-grow w-full" role="main">
-        <OptimizedHeroSection />
+        <MarketingHeroSection />
+        <SocialProofSection />
         <ImprovedPageShowcase />
         <FeaturesSection />
+        <UseCasesSection />
+        <TestimonialsSection />
         <MarketingPricingSection />
+        <TrustSignalsSection />
         <FAQSection />
         <CTASection />
       </main>

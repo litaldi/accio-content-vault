@@ -1,0 +1,168 @@
+
+import React from 'react';
+import { Card, CardContent } from '@/components/ui/card';
+import { 
+  Shield, 
+  Lock, 
+  Zap, 
+  Globe, 
+  Award, 
+  Users,
+  Clock,
+  FileText
+} from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Typography, Spacing } from '@/components/ui/design-system';
+
+const TrustSignalsSection: React.FC = () => {
+  const trustSignals = [
+    {
+      icon: Shield,
+      title: 'Enterprise Security',
+      description: 'Bank-level encryption and security protocols',
+      badges: ['SOC 2 Compliant', 'GDPR Ready']
+    },
+    {
+      icon: Lock,
+      title: 'Data Protection',
+      description: 'Your data is encrypted at rest and in transit',
+      badges: ['256-bit Encryption', 'Zero Knowledge']
+    },
+    {
+      icon: Zap,
+      title: '99.99% Uptime',
+      description: 'Reliable performance you can count on',
+      badges: ['SLA Guarantee', 'Global CDN']
+    },
+    {
+      icon: Globe,
+      title: 'Global Compliance',
+      description: 'Meets international privacy standards',
+      badges: ['CCPA', 'Privacy Shield']
+    }
+  ];
+
+  const performanceStats = [
+    {
+      icon: Users,
+      number: '10,000+',
+      label: 'Active Users',
+      description: 'Trusted by professionals worldwide'
+    },
+    {
+      icon: Clock,
+      number: '99.99%',
+      label: 'Uptime',
+      description: 'Reliable service 24/7/365'
+    },
+    {
+      icon: Award,
+      number: '4.9/5',
+      label: 'User Rating',
+      description: 'Highest customer satisfaction'
+    },
+    {
+      icon: FileText,
+      number: '2M+',
+      label: 'Items Organized',
+      description: 'Helping teams stay organized'
+    }
+  ];
+
+  return (
+    <Spacing.Section size="lg" className="bg-muted/20">
+      <Spacing.Container size="lg">
+        <div className="text-center mb-16">
+          <Typography.H2 className="mb-6">
+            Enterprise-Grade Security & Performance
+          </Typography.H2>
+          <Typography.Body size="lg" className="max-w-2xl mx-auto text-muted-foreground">
+            Your data security and privacy are our top priorities. We maintain the highest standards of protection and compliance.
+          </Typography.Body>
+        </div>
+
+        {/* Trust Signals Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {trustSignals.map((signal, index) => (
+            <Card key={index} className="text-center border-border/50 bg-background/80 backdrop-blur-sm hover:shadow-lg transition-all duration-300">
+              <CardContent className="p-6">
+                <div className="w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
+                  <signal.icon className="h-6 w-6 text-primary" />
+                </div>
+                <Typography.Body className="font-semibold mb-2">
+                  {signal.title}
+                </Typography.Body>
+                <Typography.Caption className="text-muted-foreground mb-4 leading-relaxed">
+                  {signal.description}
+                </Typography.Caption>
+                <div className="space-y-2">
+                  {signal.badges.map((badge, badgeIndex) => (
+                    <Badge key={badgeIndex} variant="outline" className="text-xs">
+                      {badge}
+                    </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Performance Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {performanceStats.map((stat, index) => (
+            <div key={index} className="text-center group">
+              <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <stat.icon className="h-8 w-8 text-primary" />
+              </div>
+              <Typography.H3 className="text-primary mb-2">
+                {stat.number}
+              </Typography.H3>
+              <Typography.Body className="font-semibold mb-2">
+                {stat.label}
+              </Typography.Body>
+              <Typography.Caption className="text-muted-foreground">
+                {stat.description}
+              </Typography.Caption>
+            </div>
+          ))}
+        </div>
+
+        {/* Security Certifications */}
+        <div className="text-center bg-background/80 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
+          <Typography.H3 className="mb-4">
+            Certified & Compliant
+          </Typography.H3>
+          <Typography.Body className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+            We maintain the highest standards of security and compliance to protect your data and ensure peace of mind.
+          </Typography.Body>
+          <div className="flex flex-wrap justify-center gap-4">
+            {[
+              'SOC 2 Type II',
+              'GDPR Compliant',
+              'ISO 27001',
+              'CCPA Ready',
+              'Privacy Shield',
+              'HIPAA Compatible'
+            ].map((cert, index) => (
+              <Badge key={index} variant="outline" className="px-4 py-2">
+                {cert}
+              </Badge>
+            ))}
+          </div>
+        </div>
+
+        {/* Money Back Guarantee */}
+        <div className="text-center mt-12">
+          <div className="inline-flex items-center gap-4 bg-green-50 border border-green-200 rounded-full px-6 py-3">
+            <Shield className="h-5 w-5 text-green-600" />
+            <Typography.Body className="font-semibold text-green-800">
+              30-Day Money-Back Guarantee • No Questions Asked
+            </Typography.Body>
+          </div>
+        </div>
+      </Spacing.Container>
+    </Spacing.Section>
+  );
+};
+
+export default TrustSignalsSection;
