@@ -1,12 +1,12 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import TagConfirmation from '@/components/TagConfirmation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, Share } from 'lucide-react';
+import { AlertCircle, Share, CheckCircle, Loader2, Sparkles } from 'lucide-react';
 import { Tag } from '@/types';
 import { Form } from '@/components/ui/form';
 import UrlInput from './UrlInput';
@@ -19,6 +19,7 @@ interface SaveContentFormProps {
 const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
   const location = useLocation();
   const { toast } = useToast();
+  const [isSuccess, setIsSuccess] = useState(false);
   
   const { 
     isLoading, 
@@ -29,14 +30,19 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
     handleSubmit,
     handleTagConfirmation,
     setShowTagConfirmation
-  } = useSaveContentForm({ onSaveContent });
+  } = useSaveContentForm({ 
+    onSaveContent: async (url: string, tags: Tag[]) => {
+      await onSaveContent(url, tags);
+      setIsSuccess(true);
+      setTimeout(() => setIsSuccess(false), 3000);
+    }
+  });
 
   // Handle shared content from other apps
   useEffect(() => {
     const sharedData = location.state as { sharedUrl?: string; sharedTitle?: string; sharedText?: string } | null;
     
     if (sharedData?.sharedUrl) {
-      // Pre-fill the form with shared content
       form.setValue('url', sharedData.sharedUrl);
       
       toast({
@@ -45,44 +51,69 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
         duration: 4000,
       });
 
-      // Clear the state to prevent re-processing
       window.history.replaceState(null, '', location.pathname);
     }
   }, [location.state, form, toast]);
 
   return (
     <>
-      <Card className="w-full max-w-xl mx-auto">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Share className="h-5 w-5" />
+      <Card className="w-full max-w-2xl mx-auto shadow-lg border-2 hover:border-primary/20 transition-all duration-300">
+        <CardHeader className="text-center pb-6">
+          <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
+            <Share className="h-8 w-8 text-white" />
+          </div>
+          <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
             Save New Content
+            <Sparkles className="h-5 w-5 text-primary" />
           </CardTitle>
-          <CardDescription>
+          <CardDescription className="text-base leading-relaxed max-w-md mx-auto">
             Enter a URL to save content to your collection. You can also share content 
             directly from other apps using the share button.
           </CardDescription>
         </CardHeader>
+        
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} aria-label="Save content form">
-            <CardContent>
+            <CardContent className="space-y-6">
               <UrlInput form={form} isLoading={isLoading} />
               
+              {/* Enhanced feedback states */}
               {error && (
-                <Alert variant="destructive" className="mt-2">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
+                <Alert variant="destructive" className="border-l-4 border-l-destructive">
+                  <AlertCircle className="h-5 w-5" />
+                  <AlertDescription className="text-base">{error}</AlertDescription>
                 </Alert>
               )}
+
+              {isSuccess && (
+                <Alert className="border-l-4 border-l-green-500 bg-green-50 text-green-800">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <AlertDescription className="text-base font-medium">
+                    Content saved successfully! 🎉
+                  </AlertDescription>
+                </Alert>
+              )}
+
+              {isLoading && (
+                <div className="flex items-center justify-center py-8 text-muted-foreground">
+                  <Loader2 className="h-6 w-6 animate-spin mr-3" />
+                  <span className="text-base">Analyzing content and generating tags...</span>
+                </div>
+              )}
             </CardContent>
-            <CardFooter className="flex justify-end">
+            
+            <CardFooter className="flex justify-between pt-6">
+              <div className="text-sm text-muted-foreground">
+                <Sparkles className="inline h-4 w-4 mr-1" />
+                AI will suggest relevant tags
+              </div>
               <Button 
                 type="submit" 
-                disabled={isLoading}
+                disabled={isLoading || isSuccess}
                 loading={isLoading}
-                className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                className="focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 px-8"
               >
-                Save Content
+                {isLoading ? "Saving..." : isSuccess ? "Saved!" : "Save Content"}
               </Button>
             </CardFooter>
           </form>
