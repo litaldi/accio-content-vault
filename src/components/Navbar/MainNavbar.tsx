@@ -155,42 +155,42 @@ const MainNavbar: React.FC = () => {
                   </li>
                 ))}
                 
-                {/* Features Dropdown */}
+                {/* More Dropdown */}
                 <li>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button 
                         variant="ghost" 
                         className="px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                        aria-label="More options"
+                        aria-label="More navigation options"
                       >
                         More
                         <ChevronDown className="ml-1 h-4 w-4" aria-hidden="true" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuContent align="end" className="w-56 bg-popover border border-border shadow-lg">
                       {!isLoggedIn ? (
                         <>
                           <DropdownMenuItem asChild>
-                            <Link to="/blog">Blog</Link>
+                            <Link to="/blog" className="cursor-pointer">Blog</Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link to="/faq">FAQ</Link>
+                            <Link to="/faq" className="cursor-pointer">FAQ</Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link to="/privacy">Privacy Policy</Link>
+                            <Link to="/privacy" className="cursor-pointer">Privacy Policy</Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link to="/terms">Terms of Service</Link>
+                            <Link to="/terms" className="cursor-pointer">Terms of Service</Link>
                           </DropdownMenuItem>
                         </>
                       ) : (
                         <>
                           <DropdownMenuItem asChild>
-                            <Link to="/playground">Playground</Link>
+                            <Link to="/playground" className="cursor-pointer">Playground</Link>
                           </DropdownMenuItem>
                           <DropdownMenuItem asChild>
-                            <Link to="/save">Save Content</Link>
+                            <Link to="/save" className="cursor-pointer">Save Content</Link>
                           </DropdownMenuItem>
                         </>
                       )}
@@ -213,7 +213,7 @@ const MainNavbar: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     className="relative h-8 w-8 rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" 
-                    aria-label="User menu"
+                    aria-label="User account menu"
                   >
                     <Avatar className="h-8 w-8 transition-transform hover:scale-105">
                       <AvatarFallback className="bg-primary/10 text-primary">
@@ -222,25 +222,25 @@ const MainNavbar: React.FC = () => {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                <DropdownMenuContent align="end" className="w-56 bg-popover border border-border shadow-lg">
+                  <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer">
                     <Home className="mr-2 h-4 w-4" aria-hidden="true" />
                     Dashboard
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/collections')}>
+                  <DropdownMenuItem onClick={() => navigate('/collections')} className="cursor-pointer">
                     <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
                     Collections
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/analytics')}>
+                  <DropdownMenuItem onClick={() => navigate('/analytics')} className="cursor-pointer">
                     <BarChart className="mr-2 h-4 w-4" aria-hidden="true" />
                     Analytics
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/settings')}>
+                  <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" aria-hidden="true" />
                     Settings
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-destructive focus:text-destructive">
                     <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
                     Sign Out
                   </DropdownMenuItem>
@@ -272,7 +272,7 @@ const MainNavbar: React.FC = () => {
                     variant="ghost" 
                     size="icon" 
                     className="md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                    aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+                    aria-label={mobileMenuOpen ? "Close navigation menu" : "Open navigation menu"}
                   >
                     {mobileMenuOpen ? (
                       <X className="h-5 w-5" aria-hidden="true" />
