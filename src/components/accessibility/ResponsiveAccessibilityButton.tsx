@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { useResponsiveLayout } from '@/hooks/use-responsive-layout';
 import AccessibilityPanel from './AccessibilityPanel';
 import { announceToScreenReader } from '@/utils/accessibility';
 import { cn } from '@/lib/utils';
-import { accessibilityIcon } from 'lucide-react';
+import { Accessibility } from 'lucide-react';
 
 const ResponsiveAccessibilityButton: React.FC = () => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
@@ -85,18 +84,15 @@ const ResponsiveAccessibilityButton: React.FC = () => {
         aria-expanded={isPanelOpen}
         aria-haspopup="dialog"
       >
-        {/* Universal Accessibility Symbol */}
-        <svg
+        {/* Use Accessibility icon from lucide-react */}
+        <Accessibility
           className={cn(
             "fill-current",
             isMobile ? "h-6 w-6" : "h-5 w-5"
           )}
-          viewBox="0 0 24 24"
           role="img"
           aria-hidden="true"
-        >
-          <path d="M12 2a2 2 0 0 1 2 2a2 2 0 0 1-2 2a2 2 0 0 1-2-2a2 2 0 0 1 2-2m9 7h-6v2h6v-2m-9 3.5c-1.25 0-2.5-.5-3.5-1.5L7 13.5c1.5 1.5 3.5 2.5 5.5 2.5s4-1 5.5-2.5L16.5 12c-1 1-2.25 1.5-3.5 1.5m-4.5-2h2v7h-2v-7m5 0h2v7h-2v-7z"/>
-        </svg>
+        />
         
         {/* Screen reader description */}
         <span id="accessibility-button-description" className="sr-only">
