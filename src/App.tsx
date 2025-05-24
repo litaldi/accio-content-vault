@@ -73,20 +73,25 @@ const App: React.FC = () => {
     // Set up global error handlers
     setupGlobalErrorHandlers();
     
-    // Performance monitoring
-    if ('performance' in window && 'observer' in window.PerformanceObserver.prototype) {
+    // Performance monitoring with proper type checking
+    if ('performance' in window && 'PerformanceObserver' in window) {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
           if (entry.entryType === 'largest-contentful-paint') {
             console.log('LCP:', entry.startTime);
           }
-          if (entry.entryType === 'first-input') {
-            console.log('FID:', entry.processingStart - entry.startTime);
+          if (entry.entryType === 'first-input' && 'processingStart' in entry) {
+            const fidEntry = entry as PerformanceEventTiming;
+            console.log('FID:', fidEntry.processingStart - fidEntry.startTime);
           }
         }
       });
       
-      observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+      try {
+        observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+      } catch (error) {
+        console.warn('Performance observer not supported:', error);
+      }
     }
   }, []);
 

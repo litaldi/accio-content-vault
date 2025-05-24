@@ -86,7 +86,7 @@ export const optimizeImageLoading = (img: HTMLImageElement) => {
   }
 };
 
-// Bundle size analyzer helper
+// Bundle size analyzer helper with proper type checking
 export const analyzeBundleSize = () => {
   const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
   
@@ -99,7 +99,7 @@ export const analyzeBundleSize = () => {
       request: navigation.responseStart - navigation.requestStart,
       response: navigation.responseEnd - navigation.responseStart,
       dom: navigation.domContentLoadedEventEnd - navigation.responseEnd,
-      total: navigation.loadEventEnd - navigation.navigationStart
+      total: navigation.loadEventEnd - navigation.fetchStart
     };
   }
   

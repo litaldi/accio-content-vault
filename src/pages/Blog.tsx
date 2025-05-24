@@ -47,7 +47,7 @@ const Blog = () => {
         <meta name="description" content="Latest updates, tips, and insights about Accio and content management." />
       </Helmet>
       
-      <Navbar />
+      <Navbar isLoggedIn={false} />
 
       <main className="container mx-auto px-4 py-12">
         <div className="mb-12">

@@ -6,7 +6,7 @@ import SaveContentForm from '@/components/SaveContent/SaveContentForm';
 import FileUploadForm from '@/components/FileUploadForm';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 import { SaveContentHeader } from '@/components/SaveContent/SaveContentHeader';
-import { SaveContentProgress } from '@/components/SaveContent/SaveContentProgress';
+import SaveContentProgress from '@/components/SaveContent/SaveContentProgress';
 import { SaveContentMain } from '@/components/SaveContent/SaveContentMain';
 import { SaveContentSidebar } from '@/components/SaveContent/SaveContentSidebar';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';

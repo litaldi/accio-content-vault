@@ -18,7 +18,7 @@ const About = () => {
         <meta name="description" content="Learn more about ReadSmart, our mission, vision and the team behind the platform." />
       </Helmet>
       
-      <Navbar />
+      <Navbar isLoggedIn={false} />
 
       <div className="container px-4 py-8 mx-auto max-w-6xl">
         <div className="mb-8 space-y-4">

@@ -22,7 +22,7 @@ const AccessibilityStatement = () => {
         <meta name="description" content="Our commitment to digital accessibility at ReadSmart. Learn about our accessibility features and standards compliance." />
       </Helmet>
       
-      <Navbar />
+      <Navbar isLoggedIn={false} />
 
       <div className="container px-4 py-8 mx-auto max-w-5xl">
         <div className="mb-8 space-y-4">

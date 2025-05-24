@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { NavbarActions } from './Navbar/NavbarActions';
-import { NavbarLogo } from './Navbar/NavbarLogo';
-import { NavbarDesktopLinks } from './Navbar/NavbarDesktopLinks';
-import { NavbarMobileMenu } from './Navbar/NavbarMobileMenu';
+import NavbarActions from './Navbar/NavbarActions';
+import NavbarLogo from './Navbar/NavbarLogo';
+import NavbarDesktopLinks from './Navbar/NavbarDesktopLinks';
+import NavbarMobileMenu from './Navbar/NavbarMobileMenu';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 
 interface NavbarProps {

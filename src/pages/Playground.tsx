@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -97,7 +96,7 @@ const Playground = () => {
         <meta name="description" content="Try out Accio's features in this interactive playground. See how our AI-powered tagging and semantic search work." />
       </Helmet>
       
-      <Navbar />
+      <Navbar isLoggedIn={false} />
 
       <main className="container mx-auto px-4 py-12">
         <div className="mb-12 text-center">

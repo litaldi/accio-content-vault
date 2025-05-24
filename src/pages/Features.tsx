@@ -164,7 +164,7 @@ const Features = () => {
         <meta name="description" content="Explore the powerful features of Accio that help you save, organize, and rediscover valuable online content." />
       </Helmet>
       
-      <Navbar />
+      <Navbar isLoggedIn={false} />
 
       <main className="container mx-auto px-4">
         <div className="py-16 text-center">
