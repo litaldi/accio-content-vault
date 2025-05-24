@@ -14,6 +14,7 @@ import Index from "./pages/Index";
 // Lazy load all pages for better performance
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const SaveContent = lazy(() => import("./pages/SaveContent"));
+const Search = lazy(() => import("./pages/Search"));
 const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const About = lazy(() => import("./pages/About"));
