@@ -61,6 +61,8 @@ export interface TagEditorProps {
   tags: Tag[];
   onTagsChange: (newTags: Tag[]) => void;
   readOnly?: boolean;
+  maxTags?: number;
+  variant?: 'default' | 'compact';
 }
 
 export interface Collection {

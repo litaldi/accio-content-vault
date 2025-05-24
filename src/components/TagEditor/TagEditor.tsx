@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { TagEditorProps } from '@/types';
-import { TagHeader } from './TagHeader';
-import { TagList } from './TagList';
-import { TagInput } from './TagInput';
+import TagHeader from './TagHeader';
+import TagList from './TagList';
+import TagInput from './TagInput';
 import { useTagEditor } from './useTagEditor';
 
 const TagEditor: React.FC<TagEditorProps> = ({ 
@@ -14,38 +14,54 @@ const TagEditor: React.FC<TagEditorProps> = ({
   variant = 'default'
 }) => {
   const {
-    inputValue,
-    setInputValue,
+    newTagName,
+    setNewTagName,
+    inputFocused,
+    setInputFocused,
+    activeIndex,
+    inputRef,
+    tagsContainerRef,
+    canAddMore,
     handleAddTag,
     handleRemoveTag,
-    handleInputKeyDown,
-    isMaxTagsReached
+    handleKeyDown,
+    handleTagKeyDown,
   } = useTagEditor({ tags, onTagsChange, maxTags });
+
+  const isCompact = variant === 'compact';
 
   return (
     <div className="space-y-4">
-      <TagHeader readOnly={readOnly} />
+      <TagHeader 
+        isCompact={isCompact}
+        readOnly={readOnly} 
+        tagCount={tags.length}
+        maxTags={maxTags}
+      />
       
       <TagList 
         tags={tags}
-        onRemoveTag={handleRemoveTag}
         readOnly={readOnly}
+        activeIndex={activeIndex}
+        containerRef={tagsContainerRef}
+        onRemoveTag={handleRemoveTag}
+        onTagKeyDown={handleTagKeyDown}
       />
       
       {!readOnly && (
         <TagInput
-          value={inputValue}
-          onChange={setInputValue}
-          onAddTag={handleAddTag}
-          onKeyDown={handleInputKeyDown}
-          isMaxTagsReached={isMaxTagsReached}
+          newTagName={newTagName}
+          canAddMore={canAddMore}
           maxTags={maxTags}
-          variant={variant}
+          isCompact={isCompact}
+          inputFocused={inputFocused}
+          inputRef={inputRef}
+          onNewTagNameChange={setNewTagName}
+          onKeyDown={handleKeyDown}
+          onFocus={() => setInputFocused(true)}
+          onBlur={() => setInputFocused(false)}
+          onAddTag={handleAddTag}
         />
-      )}
-      
-      {readOnly && tags.length === 0 && (
-        <p className="text-muted-foreground text-sm">No tags added yet</p>
       )}
     </div>
   );
