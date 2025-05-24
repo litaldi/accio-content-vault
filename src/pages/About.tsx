@@ -1,80 +1,91 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import ImprovedFooter from '@/components/Footer/ImprovedFooter';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
-const About: React.FC = () => {
+const About = () => {
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Helmet>
         <title>About - Accio Knowledge Library</title>
-        <meta name="description" content="Learn about Accio's mission to revolutionize personal knowledge management." />
+        <meta name="description" content="Learn about Accio's mission to transform how people organize and access knowledge." />
       </Helmet>
-
-      <div className="min-h-screen bg-background py-16">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+      
+      <EnhancedNavigation />
+      
+      <main className="flex-grow py-16">
+        <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-16">
-            <h1 className="text-4xl lg:text-6xl font-bold text-foreground mb-6">
-              About Accio
-            </h1>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6">About Accio</h1>
             <p className="text-xl text-muted-foreground">
-              Building the future of personal knowledge management
+              Transforming how people organize and access knowledge
             </p>
           </div>
-
-          <div className="prose prose-lg mx-auto dark:prose-invert max-w-none">
-            <div className="space-y-8">
-              <div>
-                <p className="text-lg leading-relaxed">
-                  Accio was born from a simple frustration: the inability to easily find and organize 
-                  the wealth of information we encounter daily. Our mission is to create the most 
-                  intuitive and powerful knowledge management platform that grows with you.
-                </p>
-              </div>
-              
-              <div>
-                <h2 className="text-3xl font-bold mb-4">Our Vision</h2>
-                <p className="text-lg leading-relaxed">
-                  We envision a world where every piece of knowledge you encounter can be effortlessly 
-                  captured, organized, and retrieved when you need it most. Accio bridges the gap 
-                  between information overload and actionable knowledge.
-                </p>
-              </div>
-
-              <div>
-                <h2 className="text-3xl font-bold mb-4">Why Accio?</h2>
-                <p className="text-lg leading-relaxed">
-                  Named after the summoning charm from the wizarding world, Accio brings your scattered 
-                  knowledge together instantly. Just as the spell summons objects to your hand, our 
-                  platform brings the right information to your fingertips.
-                </p>
-              </div>
-
-              <div>
-                <h2 className="text-3xl font-bold mb-4">Our Features</h2>
-                <div className="grid md:grid-cols-2 gap-6 mt-6">
-                  <div className="bg-card p-6 rounded-lg border">
-                    <h3 className="text-xl font-semibold mb-3">Smart Organization</h3>
-                    <p>AI-powered tagging and categorization that learns from your behavior.</p>
-                  </div>
-                  <div className="bg-card p-6 rounded-lg border">
-                    <h3 className="text-xl font-semibold mb-3">Instant Search</h3>
-                    <p>Find anything in seconds with our advanced search capabilities.</p>
-                  </div>
-                  <div className="bg-card p-6 rounded-lg border">
-                    <h3 className="text-xl font-semibold mb-3">Cross-Platform</h3>
-                    <p>Access your knowledge library from anywhere, on any device.</p>
-                  </div>
-                  <div className="bg-card p-6 rounded-lg border">
-                    <h3 className="text-xl font-semibold mb-3">Collaboration</h3>
-                    <p>Share collections and collaborate with your team seamlessly.</p>
-                  </div>
+          
+          <div className="prose prose-lg max-w-none dark:prose-invert">
+            <section className="mb-12">
+              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
+              <p className="text-lg text-muted-foreground mb-6">
+                We believe that knowledge should be easily accessible and well-organized. Accio was created to solve the problem of scattered information across multiple platforms, helping people build their personal knowledge libraries with the power of AI.
+              </p>
+              <p className="text-lg text-muted-foreground">
+                Our goal is to make knowledge management effortless, allowing you to focus on learning and creating rather than organizing.
+              </p>
+            </section>
+            
+            <section className="mb-12">
+              <h2 className="text-3xl font-bold mb-6">Why Accio?</h2>
+              <div className="grid md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">Save Everything</h3>
+                  <p className="text-muted-foreground">
+                    Never lose important content again. Save from any website, upload files, and keep everything in one place.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">AI-Powered</h3>
+                  <p className="text-muted-foreground">
+                    Let AI do the heavy lifting. Automatic tagging, categorization, and smart search make finding content effortless.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">Privacy First</h3>
+                  <p className="text-muted-foreground">
+                    Your knowledge is yours. We use enterprise-grade security and never sell your data.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">Always Accessible</h3>
+                  <p className="text-muted-foreground">
+                    Access your knowledge library from any device, anywhere, with real-time sync across platforms.
+                  </p>
                 </div>
               </div>
-            </div>
+            </section>
+            
+            <section className="text-center">
+              <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
+              <p className="text-lg text-muted-foreground mb-8">
+                Join thousands of users who have transformed their knowledge management with Accio.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button asChild size="lg">
+                  <Link to="/register">Start Free Trial</Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/features">Explore Features</Link>
+                </Button>
+              </div>
+            </section>
           </div>
         </div>
-      </div>
-    </>
+      </main>
+      
+      <ImprovedFooter />
+    </div>
   );
 };
 

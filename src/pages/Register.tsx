@@ -1,80 +1,67 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const { signUp, isLoading } = useAuth();
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await signUp(email, password, name);
-    } catch (error) {
-      console.error('Registration error:', error);
-    }
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Helmet>
+        <title>Sign Up - Accio Knowledge Library</title>
+        <meta name="description" content="Create your free Accio account and start building your knowledge library today." />
+      </Helmet>
+      
       <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Create an account</CardTitle>
-          <CardDescription className="text-center">
-            Enter your details to get started with Accio
+        <CardHeader className="text-center">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+              <span className="text-primary-foreground font-bold">A</span>
+            </div>
+            <span className="text-2xl font-bold text-primary">Accio</span>
+          </div>
+          <CardTitle>Create your account</CardTitle>
+          <CardDescription>
+            Start building your knowledge library today
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your name"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email"
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" loading={isLoading} disabled={isLoading}>
-              {isLoading ? 'Creating Account...' : 'Create Account'}
-            </Button>
-          </form>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{' '}
-            <Link to="/login" className="text-primary hover:underline">
-              Sign in
-            </Link>
+        <CardContent className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium mb-2">Full Name</label>
+            <Input id="name" placeholder="Enter your full name" />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
+            <Input id="email" type="email" placeholder="Enter your email" />
+          </div>
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium mb-2">Password</label>
+            <Input id="password" type="password" placeholder="Create a password" />
+          </div>
+          <Button className="w-full">Create Account</Button>
+          
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">
+              Already have an account?{' '}
+              <Link to="/login" className="text-primary hover:underline">
+                Sign in
+              </Link>
+            </p>
+          </div>
+          
+          <div className="text-center">
+            <p className="text-xs text-muted-foreground">
+              By creating an account, you agree to our{' '}
+              <Link to="/terms" className="text-primary hover:underline">
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link to="/privacy" className="text-primary hover:underline">
+                Privacy Policy
+              </Link>
+            </p>
           </div>
         </CardContent>
       </Card>
