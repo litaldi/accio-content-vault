@@ -322,7 +322,7 @@ const MegaMenu: React.FC = () => {
             {/* User Account or Auth */}
             {isLoggedIn ? (
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger>
                   <Button 
                     variant="ghost" 
                     className={cn(
@@ -383,7 +383,7 @@ const MegaMenu: React.FC = () => {
 
             {/* Mobile Menu Trigger */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
+              <SheetTrigger>
                 <Button 
                   variant="ghost" 
                   size="icon" 
