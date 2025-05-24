@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Helmet } from 'react-helmet-async';
-import { Plus, Search, Archive, BarChart3, Clock, Heart, Mic } from 'lucide-react';
+import { Plus, Search, Archive, BarChart3, Clock, Heart, Mic, Wifi } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -14,10 +15,20 @@ import { TagSuggestions } from '@/components/suggestions/TagSuggestions';
 import { ContentActions } from '@/components/actions/ContentActions';
 import { VoiceSearchButton } from '@/components/VoiceSearch/VoiceSearchButton';
 import { useVoiceSearch } from '@/hooks/useVoiceSearch';
+import { useOfflineContent } from '@/hooks/useOfflineContent';
+import OfflineIndicator from '@/components/OfflineIndicator';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Offline content integration
+  const {
+    offlineContents,
+    isOnline,
+    isLoading: syncLoading,
+    syncWithServer
+  } = useOfflineContent();
 
   // Voice search integration
   const { isListening, isSupported } = useVoiceSearch({
@@ -112,18 +123,28 @@ const Dashboard = () => {
       <MainMenu />
       
       <ResponsiveLayout maxWidth="2xl" padding="lg" verticalSpacing="lg">
-        {/* Welcome Header */}
+        {/* Welcome Header with Offline Status */}
         <div className="mb-8">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
-            Welcome back, {user?.email?.split('@')[0] || 'there'}!
-          </h1>
-          <p className="text-base sm:text-lg text-muted-foreground">
-            Your personal knowledge library awaits
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
+                Welcome back, {user?.email?.split('@')[0] || 'there'}!
+              </h1>
+              <p className="text-base sm:text-lg text-muted-foreground">
+                Your personal knowledge library awaits
+              </p>
+            </div>
+            
+            <OfflineIndicator
+              isOnline={isOnline}
+              isLoading={syncLoading}
+              onSync={syncWithServer}
+            />
+          </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {/* Quick Actions with Offline Access */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
           <ResponsiveCard
             className="hover:shadow-md transition-shadow cursor-pointer"
             onClick={() => navigate('/save')}
@@ -150,6 +171,21 @@ const Dashboard = () => {
               <div>
                 <h3 className="font-semibold text-sm">Search</h3>
                 <p className="text-xs text-muted-foreground">Find anything</p>
+              </div>
+            </CardContent>
+          </ResponsiveCard>
+
+          <ResponsiveCard
+            className="hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => navigate('/offline')}
+          >
+            <CardContent className="flex items-center gap-3 p-4">
+              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                <Wifi className="h-5 w-5 text-green-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-sm">Offline Access</h3>
+                <p className="text-xs text-muted-foreground">{offlineContents.length} cached</p>
               </div>
             </CardContent>
           </ResponsiveCard>
@@ -288,7 +324,7 @@ const Dashboard = () => {
               onTagClick={handleTagSuggestionClick}
             />
 
-            {/* Quick Stats */}
+            {/* Quick Stats with Offline Info */}
             <Card>
               <CardHeader>
                 <CardTitle>Quick Stats</CardTitle>
@@ -298,6 +334,10 @@ const Dashboard = () => {
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Total Items</span>
                     <span className="font-semibold">47</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Offline Ready</span>
+                    <span className="font-semibold text-green-600">{offlineContents.length}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">This Week</span>
