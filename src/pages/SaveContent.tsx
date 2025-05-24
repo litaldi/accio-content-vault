@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '@/components/Navbar';
 import SaveContentForm from '@/components/SaveContent';
 import FileUploadForm from '@/components/FileUploadForm';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
-import ProgressIndicator from '@/components/ui/progress-indicator';
+import { ProgressIndicator } from '@/components/ui/progress-indicator';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
 import { SavedContent, Tag } from '@/types';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -19,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const SaveContent = () => {
-  const { showSuccess, showError, showDelight } = useEnhancedToast();
+  const { showSuccess, showError, showCelebration } = useEnhancedToast();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<string>("url");
   const [isHelpOpen, setIsHelpOpen] = useState(true);
@@ -48,7 +47,7 @@ const SaveContent = () => {
       console.log('Saving content with URL:', url);
       console.log('Tags:', tags);
       
-      showDelight(
+      showCelebration(
         'Content saved successfully! 🎉',
         'Your knowledge library is growing. Ready to add more?'
       );
@@ -80,7 +79,7 @@ const SaveContent = () => {
       
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      showDelight(
+      showCelebration(
         'File uploaded successfully! ✨',
         'Your file has been processed and added to your collection.'
       );

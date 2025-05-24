@@ -1,6 +1,6 @@
 
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
+import { CheckCircle, AlertCircle, Info, AlertTriangle, X, Sparkles } from 'lucide-react';
 
 export const useEnhancedToast = () => {
   const { toast } = useToast();
@@ -62,12 +62,25 @@ export const useEnhancedToast = () => {
     });
   };
 
+  const showCelebration = (title: string, description?: string) => {
+    toast({
+      title,
+      description,
+      duration: 5000,
+      className: "border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-900",
+      action: (
+        <Sparkles className="h-4 w-4 text-purple-600 animate-pulse" />
+      ),
+    });
+  };
+
   return {
     showSuccess,
     showError,
     showWarning,
     showInfo,
     showLoading,
+    showCelebration,
     toast
   };
 };
