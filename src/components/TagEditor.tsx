@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { Tag as TagType } from '@/types';
 import { Input } from '@/components/ui/input';
@@ -116,7 +117,7 @@ const TagEditor: React.FC<TagEditorProps> = ({
   const throttledAddTag = throttle(handleAddTag, 300);
   
   return (
-    <div className={`tag-editor ${className}`} ref={trapRef}>
+    <div className={`tag-editor ${className}`} ref={trapRef as React.RefObject<HTMLDivElement>}>
       {/* Visually hidden announcer for screen readers */}
       <div 
         id="tag-announcer" 
