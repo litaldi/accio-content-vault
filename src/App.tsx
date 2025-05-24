@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { OnboardingProvider } from '@/contexts/OnboardingContext';
+import { QueryProvider } from '@/providers/QueryProvider';
 import Index from './pages/Index';
 import Dashboard from './pages/Dashboard';
 import AccessibilityStatement from './pages/AccessibilityStatement';
@@ -62,11 +63,13 @@ function AppContent() {
 
 function App() {
   return (
-    <AuthProvider>
-      <OnboardingProvider>
-        <AppContent />
-      </OnboardingProvider>
-    </AuthProvider>
+    <QueryProvider>
+      <AuthProvider>
+        <OnboardingProvider>
+          <AppContent />
+        </OnboardingProvider>
+      </AuthProvider>
+    </QueryProvider>
   );
 }
 

@@ -10,7 +10,6 @@ expect.extend(toHaveNoViolations);
 
 export interface A11yTestOptions {
   rules?: Record<string, any>;
-  tags?: string[];
   timeout?: number;
 }
 
@@ -30,7 +29,6 @@ const defaultA11yOptions: A11yTestOptions = {
     // Ensure keyboard accessibility
     'keyboard': { enabled: true }
   },
-  tags: ['wcag2a', 'wcag2aa', 'wcag21aa'],
   timeout: 5000
 };
 
@@ -43,8 +41,7 @@ export const testAccessibility = async (
   
   try {
     const results = await axe(component.container, {
-      rules: mergedOptions.rules,
-      tags: mergedOptions.tags
+      rules: mergedOptions.rules
     });
     
     expect(results).toHaveNoViolations();
