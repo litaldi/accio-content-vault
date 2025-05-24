@@ -22,7 +22,7 @@ export const SaveContentProgress: React.FC<SaveContentProgressProps> = ({
 
   return (
     <div className="mb-8">
-      <ProgressIndicator steps={saveSteps} currentStep={saveProgress} />
+      <ProgressIndicator steps={saveSteps} />
     </div>
   );
 };
