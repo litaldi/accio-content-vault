@@ -61,12 +61,18 @@ const checkButtonFunctionality = (button: HTMLElement): string[] => {
   const issues: string[] = [];
   
   // Check for click handlers or navigation
-  const hasOnClick = button.onclick !== null;
-  const hasEventListeners = button.getEventListeners?.('click')?.length > 0;
+  const hasOnClick = (button as any).onclick !== null;
+  // Note: We can't reliably check for event listeners in all browsers
   const hasHref = button.getAttribute('href');
-  const hasFormAction = button.closest('form') !== null && button.type === 'submit';
+  const hasFormAction = button.closest('form') !== null && 
+    (button as HTMLInputElement).type === 'submit';
   
-  if (!hasOnClick && !hasEventListeners && !hasHref && !hasFormAction) {
+  // For input elements, check if they have proper type
+  const isInputElement = button.tagName === 'INPUT';
+  const inputType = isInputElement ? (button as HTMLInputElement).type : null;
+  const isSubmitButton = isInputElement && (inputType === 'submit' || inputType === 'button');
+  
+  if (!hasOnClick && !hasHref && !hasFormAction && !isSubmitButton) {
     issues.push('Button appears to have no functionality (no click handler, href, or form action)');
   }
   
