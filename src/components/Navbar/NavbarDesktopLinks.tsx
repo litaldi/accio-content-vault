@@ -77,7 +77,7 @@ const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, cur
                 </li>
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link to="/features/ai-tagging" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                    <Link to="/features#ai-tagging" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                       <div className="text-sm font-medium leading-none">AI Tagging</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                         Automatic content tagging with AI
@@ -87,7 +87,7 @@ const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, cur
                 </li>
                 <li>
                   <NavigationMenuLink asChild>
-                    <Link to="/features/semantic-search" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                    <Link to="/features#semantic-search" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
                       <div className="text-sm font-medium leading-none">Semantic Search</div>
                       <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
                         Find content by meaning, not just keywords
@@ -95,9 +95,74 @@ const NavbarDesktopLinks: React.FC<NavbarDesktopLinksProps> = ({ isLoggedIn, cur
                     </Link>
                   </NavigationMenuLink>
                 </li>
+                {isLoggedIn && (
+                  <>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link to="/playground" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                          <div className="text-sm font-medium leading-none">Playground</div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Test and experiment with features
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                    <li>
+                      <NavigationMenuLink asChild>
+                        <Link to="/save" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                          <div className="text-sm font-medium leading-none">Save Content</div>
+                          <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                            Add content to your library
+                          </p>
+                        </Link>
+                      </NavigationMenuLink>
+                    </li>
+                  </>
+                )}
               </ul>
             </NavigationMenuContent>
           </NavigationMenuItem>
+
+          {/* Additional navigation for helpful pages */}
+          {!isLoggedIn && (
+            <NavigationMenuItem>
+              <NavigationMenuTrigger>More</NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid gap-3 p-4 w-[300px] grid-cols-1">
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Link to="/blog" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Blog</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Latest news and updates
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Link to="/privacy" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Privacy</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          How we protect your data
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Link to="/terms" className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground">
+                        <div className="text-sm font-medium leading-none">Terms</div>
+                        <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                          Terms of service
+                        </p>
+                      </Link>
+                    </NavigationMenuLink>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+          )}
         </NavigationMenuList>
       </NavigationMenu>
     </nav>
