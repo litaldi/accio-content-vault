@@ -1,114 +1,92 @@
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
-
-interface KeyboardShortcut {
-  key: string;
-  ctrlKey?: boolean;
-  altKey?: boolean;
-  shiftKey?: boolean;
-  action: () => void;
-  description: string;
-}
 
 export const useKeyboardShortcuts = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const showShortcutsHelp = useCallback(() => {
-    toast({
-      title: "Keyboard Shortcuts",
-      description: (
-        <div className="text-sm space-y-1">
-          <div><kbd className="bg-muted px-1 rounded">Ctrl+K</kbd> - Quick search</div>
-          <div><kbd className="bg-muted px-1 rounded">Ctrl+N</kbd> - Save new content</div>
-          <div><kbd className="bg-muted px-1 rounded">Ctrl+D</kbd> - Go to dashboard</div>
-          <div><kbd className="bg-muted px-1 rounded">Ctrl+/</kbd> - Show this help</div>
-          <div><kbd className="bg-muted px-1 rounded">Escape</kbd> - Close dialogs</div>
-        </div>
-      ),
-      duration: 8000,
-    });
-  }, [toast]);
-
-  const shortcuts: KeyboardShortcut[] = [
-    {
-      key: 'k',
-      ctrlKey: true,
-      action: () => {
-        const searchInput = document.querySelector('input[placeholder*="Search"]') as HTMLInputElement;
-        if (searchInput) {
-          searchInput.focus();
-          searchInput.select();
-        }
-      },
-      description: 'Quick search'
-    },
-    {
-      key: 'n',
-      ctrlKey: true,
-      action: () => navigate('/save'),
-      description: 'Save new content'
-    },
-    {
-      key: 'd',
-      ctrlKey: true,
-      action: () => navigate('/dashboard'),
-      description: 'Go to dashboard'
-    },
-    {
-      key: '/',
-      ctrlKey: true,
-      action: showShortcutsHelp,
-      description: 'Show keyboard shortcuts'
-    },
-    {
-      key: 'Escape',
-      action: () => {
-        // Close any open dialogs or modals
-        const closeButtons = document.querySelectorAll('[data-dialog-close], [aria-label="Close"]');
-        const lastCloseButton = closeButtons[closeButtons.length - 1] as HTMLElement;
-        if (lastCloseButton) {
-          lastCloseButton.click();
-        }
-      },
-      description: 'Close dialogs'
-    }
-  ];
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Don't trigger shortcuts when user is typing in input fields
-      if (
-        event.target instanceof HTMLInputElement ||
-        event.target instanceof HTMLTextAreaElement ||
-        (event.target as HTMLElement)?.isContentEditable
-      ) {
-        // Exception: allow Ctrl+K for search even in input fields
-        if (!(event.key === 'k' && event.ctrlKey)) {
-          return;
-        }
+      // Only trigger if Cmd (Mac) or Ctrl (Windows/Linux) is pressed
+      if (!(event.metaKey || event.ctrlKey)) return;
+
+      // Don't trigger if user is typing in an input field
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.contentEditable === 'true') {
+        return;
       }
 
-      const matchingShortcut = shortcuts.find(shortcut => {
-        return (
-          shortcut.key.toLowerCase() === event.key.toLowerCase() &&
-          !!shortcut.ctrlKey === event.ctrlKey &&
-          !!shortcut.altKey === event.altKey &&
-          !!shortcut.shiftKey === event.shiftKey
-        );
-      });
-
-      if (matchingShortcut) {
-        event.preventDefault();
-        matchingShortcut.action();
+      switch (event.key.toLowerCase()) {
+        case 's':
+          event.preventDefault();
+          navigate('/save?type=url');
+          toast({
+            title: "Quick Save",
+            description: "Ready to save a webpage",
+          });
+          break;
+        case 'u':
+          event.preventDefault();
+          navigate('/save?type=file');
+          toast({
+            title: "Upload File",
+            description: "Ready to upload documents",
+          });
+          break;
+        case 'n':
+          event.preventDefault();
+          navigate('/save?type=note');
+          toast({
+            title: "New Note",
+            description: "Ready to create a note",
+          });
+          break;
+        case 'k':
+          event.preventDefault();
+          // Focus search bar if it exists
+          const searchInput = document.querySelector('input[type="search"], input[placeholder*="search" i]') as HTMLInputElement;
+          if (searchInput) {
+            searchInput.focus();
+            toast({
+              title: "Search",
+              description: "Search bar focused",
+            });
+          }
+          break;
+        case '/':
+          event.preventDefault();
+          // Also focus search as alternative
+          const searchInputAlt = document.querySelector('input[type="search"], input[placeholder*="search" i]') as HTMLInputElement;
+          if (searchInputAlt) {
+            searchInputAlt.focus();
+          }
+          break;
+        case 'h':
+          event.preventDefault();
+          navigate('/');
+          break;
+        case 'd':
+          event.preventDefault();
+          navigate('/dashboard');
+          break;
       }
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [navigate, showShortcutsHelp]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigate, toast]);
 
-  return { shortcuts, showShortcutsHelp };
+  // Return available shortcuts for help text
+  const shortcuts = {
+    'Cmd/Ctrl + S': 'Save webpage',
+    'Cmd/Ctrl + U': 'Upload file',
+    'Cmd/Ctrl + N': 'New note',
+    'Cmd/Ctrl + K': 'Search',
+    'Cmd/Ctrl + H': 'Home',
+    'Cmd/Ctrl + D': 'Dashboard'
+  };
+
+  return { shortcuts };
 };
