@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { render, screen } from '@/__tests__/utils/test-utils';
-import { performance } from '@/utils/performance';
+import { performanceUtils } from '@/utils/performance';
 import { SummaryDisplay } from '@/components/summaries/SummaryDisplay';
 
 // Mock performance measurement
 jest.mock('@/utils/performance', () => ({
-  performance: {
+  performanceUtils: {
     measureRender: jest.fn(),
     measureFunction: jest.fn(),
   }
@@ -18,7 +18,7 @@ describe('Component Performance', () => {
   });
 
   it('should measure render performance for SummaryDisplay', () => {
-    const mockMeasureRender = performance.measureRender as jest.Mock;
+    const mockMeasureRender = performanceUtils.measureRender as jest.Mock;
     
     render(
       <SummaryDisplay 

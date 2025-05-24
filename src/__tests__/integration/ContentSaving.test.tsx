@@ -4,7 +4,7 @@ import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils
 import SaveContent from '@/pages/SaveContent';
 import { useContentSaveService } from '@/services/contentSaveService';
 import { useAuth } from '@/contexts/AuthContext';
-import type { User } from '@supabase/supabase-js';
+import type { User, Session } from '@supabase/supabase-js';
 
 // Mock dependencies
 jest.mock('@/services/contentSaveService');
@@ -24,11 +24,21 @@ describe('Content Saving Integration', () => {
     aud: 'authenticated'
   };
 
+  const mockSession: Session = {
+    access_token: 'mock-access-token',
+    refresh_token: 'mock-refresh-token',
+    expires_in: 3600,
+    expires_at: Date.now() / 1000 + 3600,
+    token_type: 'bearer',
+    user: mockUser
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
     
     mockUseAuth.mockReturnValue({
       user: mockUser,
+      session: mockSession,
       signIn: jest.fn(),
       signOut: jest.fn(),
       signUp: jest.fn(),
@@ -119,6 +129,7 @@ describe('Content Saving Integration', () => {
   it('should require authentication', () => {
     mockUseAuth.mockReturnValue({
       user: null,
+      session: null,
       signIn: jest.fn(),
       signOut: jest.fn(),
       signUp: jest.fn(),

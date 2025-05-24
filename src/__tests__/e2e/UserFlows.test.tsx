@@ -4,7 +4,7 @@ import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils
 import { BrowserRouter } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import { useAuth } from '@/contexts/AuthContext';
-import type { User } from '@supabase/supabase-js';
+import type { User, Session } from '@supabase/supabase-js';
 
 // Mock authentication
 jest.mock('@/contexts/AuthContext');
@@ -24,9 +24,19 @@ describe('End-to-End User Flows', () => {
     aud: 'authenticated'
   };
 
+  const mockSession: Session = {
+    access_token: 'mock-access-token',
+    refresh_token: 'mock-refresh-token',
+    expires_in: 3600,
+    expires_at: Date.now() / 1000 + 3600,
+    token_type: 'bearer',
+    user: mockUser
+  };
+
   beforeEach(() => {
     mockUseAuth.mockReturnValue({
       user: mockUser,
+      session: mockSession,
       signIn: jest.fn(),
       signOut: jest.fn(),
       signUp: jest.fn(),

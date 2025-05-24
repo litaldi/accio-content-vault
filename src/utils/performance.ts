@@ -41,12 +41,12 @@ export function measurePerformance<T>(
   return result;
 }
 
-// Export a performance object for compatibility with existing code
-export const performance = {
+// Export a performance utilities object to avoid conflicts with global performance
+export const performanceUtils = {
   measureRender: (component: string) => {
     console.log(`Measuring render performance for ${component}`);
   },
-  measureFunction: (fn: Function, label: string) => {
+  measureFunction: <T>(fn: () => T, label: string): T => {
     return measurePerformance(label, fn);
   }
 };
