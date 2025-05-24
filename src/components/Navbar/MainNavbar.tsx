@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import { Menu, X, ChevronDown, Home, BookOpen, Users, BarChart, Settings, LogOut } from 'lucide-react';
+import { Menu, X, ChevronDown, Home, BookOpen, Users, BarChart, Settings, LogOut, Search, Plus } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -73,19 +73,18 @@ const MainNavbar: React.FC = () => {
     return user.email.charAt(0).toUpperCase();
   };
 
-  // Navigation links based on authentication state
+  // Enhanced navigation links for better prominence
   const publicLinks = [
-    { path: '/about', label: 'About', icon: BookOpen },
-    { path: '/features', label: 'Features', icon: Users },
-    { path: '/pricing', label: 'Pricing', icon: BarChart },
-    { path: '/contact', label: 'Contact', icon: Settings }
+    { path: '/features', label: 'Features', icon: BookOpen, description: 'Explore our tools' },
+    { path: '/pricing', label: 'Pricing', icon: BarChart, description: 'Simple plans' },
+    { path: '/about', label: 'About', icon: Users, description: 'Our story' }
   ];
 
   const privateLinks = [
-    { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/collections', label: 'Collections', icon: BookOpen },
-    { path: '/analytics', label: 'Analytics', icon: BarChart },
-    { path: '/settings', label: 'Settings', icon: Settings }
+    { path: '/dashboard', label: 'Dashboard', icon: Home, description: 'Your content hub' },
+    { path: '/save', label: 'Save Content', icon: Plus, description: 'Add new items' },
+    { path: '/collections', label: 'Collections', icon: BookOpen, description: 'Organize content' },
+    { path: '/analytics', label: 'Analytics', icon: BarChart, description: 'Usage insights' }
   ];
 
   const currentLinks = isLoggedIn ? privateLinks : publicLinks;
@@ -132,72 +131,101 @@ const MainNavbar: React.FC = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Enhanced Desktop Navigation */}
           {!isMobile && (
-            <nav className="hidden md:flex items-center gap-6" role="navigation" aria-label="Main navigation">
-              <ul className="flex items-center gap-1" role="list">
+            <nav className="hidden md:flex items-center gap-2" role="navigation" aria-label="Main navigation">
+              <div className="flex items-center gap-1">
                 {currentLinks.map((link) => (
-                  <li key={link.path}>
-                    <Link
-                      to={link.path}
-                      className={cn(
-                        "px-3 py-2 rounded-md text-sm font-medium transition-colors",
-                        "hover:bg-accent hover:text-accent-foreground",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                        isActiveLink(link.path) 
-                          ? "bg-accent text-accent-foreground" 
-                          : "text-muted-foreground"
-                      )}
-                      aria-current={isActiveLink(link.path) ? 'page' : undefined}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    className={cn(
+                      "group flex flex-col items-center px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                      "hover:bg-accent hover:text-accent-foreground min-w-[100px]",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                      isActiveLink(link.path) 
+                        ? "bg-accent text-accent-foreground shadow-sm" 
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
+                    aria-current={isActiveLink(link.path) ? 'page' : undefined}
+                  >
+                    <link.icon className="h-4 w-4 mb-1" aria-hidden="true" />
+                    <span className="text-xs font-medium">{link.label}</span>
+                    {!isActiveLink(link.path) && (
+                      <span className="text-[10px] text-muted-foreground/70 opacity-0 group-hover:opacity-100 transition-opacity">
+                        {link.description}
+                      </span>
+                    )}
+                  </Link>
                 ))}
                 
-                {/* More Dropdown */}
-                <li>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        className="px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                        aria-label="More navigation options"
-                      >
-                        More
-                        <ChevronDown className="ml-1 h-4 w-4" aria-hidden="true" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-56 bg-popover border border-border shadow-lg">
-                      {!isLoggedIn ? (
-                        <>
-                          <DropdownMenuItem asChild>
-                            <Link to="/blog" className="cursor-pointer">Blog</Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link to="/faq" className="cursor-pointer">FAQ</Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link to="/privacy" className="cursor-pointer">Privacy Policy</Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link to="/terms" className="cursor-pointer">Terms of Service</Link>
-                          </DropdownMenuItem>
-                        </>
-                      ) : (
-                        <>
-                          <DropdownMenuItem asChild>
-                            <Link to="/playground" className="cursor-pointer">Playground</Link>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem asChild>
-                            <Link to="/save" className="cursor-pointer">Save Content</Link>
-                          </DropdownMenuItem>
-                        </>
+                {/* Enhanced More Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      className={cn(
+                        "group flex flex-col items-center px-4 py-2 text-sm font-medium min-w-[100px]",
+                        "text-muted-foreground hover:text-foreground hover:bg-accent",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                       )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </li>
-              </ul>
+                      aria-label="More navigation options"
+                    >
+                      <ChevronDown className="h-4 w-4 mb-1" aria-hidden="true" />
+                      <span className="text-xs font-medium">More</span>
+                      <span className="text-[10px] text-muted-foreground/70 opacity-0 group-hover:opacity-100 transition-opacity">
+                        Additional pages
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56 bg-popover border border-border shadow-lg">
+                    {!isLoggedIn ? (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link to="/contact" className="cursor-pointer flex items-center">
+                            <Users className="mr-2 h-4 w-4" />
+                            Contact Us
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/faq" className="cursor-pointer flex items-center">
+                            <BookOpen className="mr-2 h-4 w-4" />
+                            FAQ
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/blog" className="cursor-pointer flex items-center">
+                            <BookOpen className="mr-2 h-4 w-4" />
+                            Blog
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem asChild>
+                          <Link to="/privacy" className="cursor-pointer text-sm">Privacy Policy</Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/terms" className="cursor-pointer text-sm">Terms of Service</Link>
+                        </DropdownMenuItem>
+                      </>
+                    ) : (
+                      <>
+                        <DropdownMenuItem asChild>
+                          <Link to="/playground" className="cursor-pointer flex items-center">
+                            <Search className="mr-2 h-4 w-4" />
+                            Playground
+                          </Link>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem asChild>
+                          <Link to="/settings" className="cursor-pointer flex items-center">
+                            <Settings className="mr-2 h-4 w-4" />
+                            Settings
+                          </Link>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </nav>
           )}
           
@@ -227,6 +255,10 @@ const MainNavbar: React.FC = () => {
                     <Home className="mr-2 h-4 w-4" aria-hidden="true" />
                     Dashboard
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/save')} className="cursor-pointer">
+                    <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+                    Save Content
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate('/collections')} className="cursor-pointer">
                     <BookOpen className="mr-2 h-4 w-4" aria-hidden="true" />
                     Collections
@@ -235,6 +267,7 @@ const MainNavbar: React.FC = () => {
                     <BarChart className="mr-2 h-4 w-4" aria-hidden="true" />
                     Analytics
                   </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" aria-hidden="true" />
                     Settings
@@ -264,7 +297,7 @@ const MainNavbar: React.FC = () => {
               </div>
             )}
             
-            {/* Mobile menu trigger */}
+            {/* Enhanced Mobile menu trigger */}
             {isMobile && (
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
@@ -298,20 +331,25 @@ const MainNavbar: React.FC = () => {
                       Home
                     </Link>
                     
+                    {/* Enhanced mobile navigation items */}
                     {currentLinks.map((link) => (
                       <Link 
                         key={link.path}
                         to={link.path} 
                         className={cn(
-                          "flex items-center gap-3 text-base font-medium py-2 transition-colors hover:text-primary",
-                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm",
-                          isActiveLink(link.path) && "text-primary"
+                          "flex items-center gap-3 p-3 rounded-lg transition-all duration-200",
+                          "hover:bg-accent hover:text-accent-foreground",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                          isActiveLink(link.path) && "bg-accent text-accent-foreground"
                         )}
                         onClick={() => setMobileMenuOpen(false)}
                         aria-current={isActiveLink(link.path) ? 'page' : undefined}
                       >
-                        <link.icon className="h-4 w-4" aria-hidden="true" />
-                        {link.label}
+                        <link.icon className="h-5 w-5" aria-hidden="true" />
+                        <div className="flex flex-col">
+                          <span className="font-medium">{link.label}</span>
+                          <span className="text-xs text-muted-foreground">{link.description}</span>
+                        </div>
                       </Link>
                     ))}
                     
