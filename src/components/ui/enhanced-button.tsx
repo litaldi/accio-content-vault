@@ -38,21 +38,22 @@ export const EnhancedButton = React.forwardRef<
       return null;
     }
 
-    // Clone the child element and add our props
-    const childElement = React.cloneElement(children, {
-      ref,
-      className: cn(
-        "inline-flex items-center justify-center gap-2",
-        loading && "opacity-50 cursor-not-allowed",
-        className,
-        children.props.className
-      ),
-      ...props,
-      // Only add disabled if the child can accept it (not for links)
-      ...(children.type !== 'a' && { disabled: isDisabled })
-    });
-
-    return childElement;
+    // Use Slot to properly forward the ref and props
+    return (
+      <Slot
+        ref={ref}
+        className={cn(
+          "inline-flex items-center justify-center gap-2",
+          loading && "opacity-50 cursor-not-allowed",
+          className
+        )}
+        {...props}
+        // Only add disabled if the child can accept it (not for links)
+        {...(children.type !== 'a' && { disabled: isDisabled })}
+      >
+        {children}
+      </Slot>
+    );
   }
 
   return (
