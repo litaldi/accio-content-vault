@@ -13,7 +13,9 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
+  session: any; // Add session property for test compatibility
   isLoading: boolean;
+  isConfigured?: boolean; // Add for test compatibility
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (email: string, password: string, name?: string) => Promise<void>;
@@ -38,6 +40,7 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const login = async (email: string, password: string) => {
@@ -45,7 +48,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       // Mock login implementation
       console.log('Login attempt:', email);
-      setUser({ id: '1', email, name: 'Test User' });
+      const mockUser: User = { id: '1', email, name: 'Test User' };
+      setUser(mockUser);
+      setSession({ user: mockUser, access_token: 'mock-token' });
     } finally {
       setIsLoading(false);
     }
@@ -57,6 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     setUser(null);
+    setSession(null);
   };
 
   const signOut = () => {
@@ -68,7 +74,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       // Mock register implementation
       console.log('Register attempt:', email);
-      setUser({ id: '1', email, name: name || 'New User' });
+      const mockUser: User = { id: '1', email, name: name || 'New User' };
+      setUser(mockUser);
+      setSession({ user: mockUser, access_token: 'mock-token' });
     } finally {
       setIsLoading(false);
     }
@@ -81,7 +89,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   return (
     <AuthContext.Provider value={{ 
       user, 
+      session,
       isLoading,
+      isConfigured: true,
       login, 
       logout, 
       register,
