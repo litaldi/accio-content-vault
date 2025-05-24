@@ -113,7 +113,8 @@ export const NotificationSettings: React.FC<NotificationSettingsProps> = ({
         <div className="space-y-4">
           {notificationOptions.map((option, index) => {
             const IconComponent = option.icon;
-            const isEnabled = preferences?.[option.key] ?? false;
+            const value = preferences?.[option.key];
+            const isEnabled = typeof value === 'boolean' ? value : false;
 
             return (
               <div key={option.key}>

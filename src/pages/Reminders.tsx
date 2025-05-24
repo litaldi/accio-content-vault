@@ -17,7 +17,7 @@ const Reminders = () => {
       <MainMenu />
       
       <main className="flex-grow">
-        <ResponsiveLayout maxWidth="4xl" padding="lg" verticalSpacing="lg">
+        <ResponsiveLayout maxWidth="xl" padding="lg" verticalSpacing="lg">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-foreground mb-2">
               Tag Reminders

@@ -67,7 +67,10 @@ export class ReminderService {
       throw error;
     }
 
-    return data || [];
+    return (data || []).map(item => ({
+      ...item,
+      frequency: item.frequency as TagReminder['frequency'],
+    }));
   }
 
   static async createTagReminder(reminder: Omit<TagReminder, 'id' | 'user_id' | 'created_at' | 'updated_at' | 'last_sent_at' | 'next_scheduled_at'>): Promise<TagReminder> {
@@ -91,7 +94,10 @@ export class ReminderService {
       throw error;
     }
 
-    return data;
+    return {
+      ...data,
+      frequency: data.frequency as TagReminder['frequency'],
+    };
   }
 
   static async updateTagReminder(id: string, updates: Partial<TagReminder>): Promise<TagReminder> {
@@ -113,7 +119,10 @@ export class ReminderService {
       throw error;
     }
 
-    return data;
+    return {
+      ...data,
+      frequency: data.frequency as TagReminder['frequency'],
+    };
   }
 
   static async deleteTagReminder(id: string): Promise<void> {
@@ -165,6 +174,10 @@ export class ReminderService {
       throw error;
     }
 
-    return data || [];
+    return (data || []).map(item => ({
+      ...item,
+      notification_type: item.notification_type as ReminderNotification['notification_type'],
+      status: item.status as ReminderNotification['status'],
+    }));
   }
 }
