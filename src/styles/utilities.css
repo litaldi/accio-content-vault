@@ -1,0 +1,99 @@
+
+/* Utility Classes */
+
+/* Enhanced spacing utilities */
+.section-spacing {
+  @apply py-20 px-4;
+}
+
+.content-container {
+  @apply max-w-7xl mx-auto;
+}
+
+/* Safe area utilities */
+.safe-area-inset {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Enhanced focus utilities */
+.focus-ring {
+  @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
+/* Skip link utility */
+.skip-link {
+  @apply absolute -top-full left-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded focus:top-4 transition-all;
+}
+
+/* Touch target utilities */
+@media (max-width: 768px) {
+  .touch-friendly,
+  button, 
+  [role="button"],
+  input[type="button"],
+  input[type="submit"],
+  a[href] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    touch-action: manipulation;
+  }
+}
+
+/* Scroll utilities */
+.scroll-smooth-enhanced {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+}
+
+/* Visual utilities */
+.glass-effect {
+  @apply bg-background/80 backdrop-blur-md border border-border/50;
+}
+
+/* Layout utilities */
+.container-padding {
+  @apply px-4 sm:px-6 lg:px-8;
+}
+
+.section-padding {
+  @apply py-16 md:py-20 lg:py-24;
+}
+
+/* Responsive utilities */
+.responsive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.responsive-flex {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* State utilities */
+.loading-state {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.disabled-state {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Border utilities */
+.border-gradient {
+  @apply relative;
+}
+
+.border-gradient::before {
+  content: '';
+  @apply absolute inset-0 rounded-lg p-px bg-gradient-to-r from-primary to-primary/50;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
