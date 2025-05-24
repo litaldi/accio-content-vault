@@ -8,10 +8,13 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import ResponsiveAccessibilityButton from '@/components/accessibility/ResponsiveAccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
+import { OnboardingFlow } from '@/components/onboarding/OnboardingFlow';
+import { useOnboardingContext } from '@/contexts/OnboardingContext';
 
 // Pages
 import Index from '@/pages/Index';
@@ -43,58 +46,77 @@ const queryClient = new QueryClient({
   },
 });
 
+const AppContent = () => {
+  const { shouldShowOnboarding, completeOnboarding, skipOnboarding } = useOnboardingContext();
+
+  if (shouldShowOnboarding) {
+    return (
+      <OnboardingFlow
+        onComplete={completeOnboarding}
+        onSkip={skipOnboarding}
+      />
+    );
+  }
+
+  return (
+    <Router>
+      <SkipLinks />
+      <EnhancedAccessibility />
+      <ResponsiveAccessibilityButton />
+      <div className="min-h-screen flex flex-col w-full" role="application">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/features" element={<Features />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogPost />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/accessibility" element={<AccessibilityStatement />} />
+          <Route path="/sitemap" element={<Sitemap />} />
+          <Route path="/upgrade" element={<Upgrade />} />
+          <Route path="/reminders" element={<Reminders />} />
+          <Route path="/offline" element={<OfflinePage />} />
+          
+          {/* Dashboard sub-routes - all redirect to main dashboard */}
+          <Route path="/save" element={<Dashboard />} />
+          <Route path="/save-content" element={<Dashboard />} />
+          <Route path="/collections" element={<Dashboard />} />
+          <Route path="/analytics" element={<Dashboard />} />
+          <Route path="/search" element={<Dashboard />} />
+          <Route path="/settings" element={<Dashboard />} />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+      <Toaster />
+    </Router>
+  );
+};
+
 function App() {
   return (
     <ErrorBoundary>
       <HelmetProvider>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AccessibilityProvider>
-            <QueryClientProvider client={queryClient}>
-              <TooltipProvider>
-                <AuthProvider>
-                  <Router>
-                    <SkipLinks />
-                    <EnhancedAccessibility />
-                    <ResponsiveAccessibilityButton />
-                    <div className="min-h-screen flex flex-col w-full" role="application">
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/features" element={<Features />} />
-                        <Route path="/pricing" element={<Pricing />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/faq" element={<FAQ />} />
-                        <Route path="/blog" element={<Blog />} />
-                        <Route path="/blog/:id" element={<BlogPost />} />
-                        <Route path="/privacy" element={<Privacy />} />
-                        <Route path="/terms" element={<Terms />} />
-                        <Route path="/accessibility" element={<AccessibilityStatement />} />
-                        <Route path="/sitemap" element={<Sitemap />} />
-                        <Route path="/upgrade" element={<Upgrade />} />
-                        <Route path="/reminders" element={<Reminders />} />
-                        <Route path="/offline" element={<OfflinePage />} />
-                        
-                        {/* Dashboard sub-routes - all redirect to main dashboard */}
-                        <Route path="/save" element={<Dashboard />} />
-                        <Route path="/save-content" element={<Dashboard />} />
-                        <Route path="/collections" element={<Dashboard />} />
-                        <Route path="/analytics" element={<Dashboard />} />
-                        <Route path="/search" element={<Dashboard />} />
-                        <Route path="/settings" element={<Dashboard />} />
-                        
-                        {/* Catch all route */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </div>
-                    <Toaster />
-                  </Router>
-                </AuthProvider>
-              </TooltipProvider>
-              <ReactQueryDevtools initialIsOpen={false} />
-            </QueryClientProvider>
+            <OnboardingProvider>
+              <QueryClientProvider client={queryClient}>
+                <TooltipProvider>
+                  <AuthProvider>
+                    <AppContent />
+                  </AuthProvider>
+                </TooltipProvider>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </QueryClientProvider>
+            </OnboardingProvider>
           </AccessibilityProvider>
         </ThemeProvider>
       </HelmetProvider>
