@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -10,6 +11,7 @@ import Search from './pages/Search';
 import Save from './pages/Save';
 import Help from './pages/Help';
 import AccessibilityStatement from './pages/AccessibilityStatement';
+import AccessibilityTest from './pages/AccessibilityTest';
 import Login from './pages/Login';
 import Features from './pages/Features';
 import Pricing from './pages/Pricing';
@@ -59,6 +61,7 @@ function AppContent() {
             <Route path="/terms" element={<Terms />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/accessibility" element={<AccessibilityStatement />} />
+            <Route path="/accessibility-test" element={<AccessibilityTest />} />
           </Routes>
         </AccessibleLayout>
       </BrowserRouter>
