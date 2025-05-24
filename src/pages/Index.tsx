@@ -8,7 +8,7 @@ import FeaturesSection from '@/components/home/FeaturesSection';
 import CTASection from '@/components/home/CTASection';
 import PricingSection from '@/components/home/PricingSection';
 import FAQSection from '@/components/home/FAQSection';
-import ResponsiveFooter from '@/components/Footer/ResponsiveFooter';
+import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
@@ -44,7 +44,7 @@ const Index = () => {
         <CTASection />
       </main>
       
-      <ResponsiveFooter />
+      <ImprovedFooter />
     </div>
   );
 };
