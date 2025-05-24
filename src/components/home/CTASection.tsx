@@ -16,9 +16,9 @@ const CTASection: React.FC = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" variant="secondary" asChild>
-            <Link to="/register" className="inline-flex items-center gap-2">
+            <Link to="/register">
               Start Free Today
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 ml-2" />
             </Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
