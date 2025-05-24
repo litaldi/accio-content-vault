@@ -1,109 +1,92 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export interface AccessibilityPreferences {
-  fontSize: number; // Base font size in percentage (100 = default)
-  highContrast: boolean; // Whether high contrast mode is enabled
-  reduceAnimations: boolean; // Whether animations should be reduced/paused
+  reduceAnimations: boolean;
+  highContrast: boolean;
+  largeText: boolean;
+  keyboardNavigation: boolean;
 }
 
 interface AccessibilityContextType {
   preferences: AccessibilityPreferences;
-  increaseTextSize: () => void;
-  decreaseTextSize: () => void;
-  toggleHighContrast: () => void;
-  toggleReduceAnimations: () => void;
-  resetToDefaults: () => void;
+  updatePreferences: (updates: Partial<AccessibilityPreferences>) => void;
+  resetPreferences: () => void;
 }
 
 const defaultPreferences: AccessibilityPreferences = {
-  fontSize: 100,
-  highContrast: false,
   reduceAnimations: false,
+  highContrast: false,
+  largeText: false,
+  keyboardNavigation: false,
 };
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
 export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [preferences, setPreferences] = useState<AccessibilityPreferences>(defaultPreferences);
-
-  // Load preferences from localStorage on mount
-  useEffect(() => {
-    const savedPreferences = localStorage.getItem('accessibilityPreferences');
-    if (savedPreferences) {
-      try {
-        setPreferences(JSON.parse(savedPreferences));
-      } catch (error) {
-        console.error('Failed to parse saved accessibility preferences', error);
-      }
+  const [preferences, setPreferences] = useState<AccessibilityPreferences>(() => {
+    // Load preferences from localStorage if available
+    try {
+      const saved = localStorage.getItem('accessibility-preferences');
+      return saved ? { ...defaultPreferences, ...JSON.parse(saved) } : defaultPreferences;
+    } catch {
+      return defaultPreferences;
     }
+  });
+
+  // Detect user system preferences
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const highContrastQuery = window.matchMedia('(prefers-contrast: high)');
+    
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      setPreferences(prev => ({ ...prev, reduceAnimations: e.matches }));
+    };
+    
+    const handleContrastChange = (e: MediaQueryListEvent) => {
+      setPreferences(prev => ({ ...prev, highContrast: e.matches }));
+    };
+
+    // Set initial values
+    setPreferences(prev => ({
+      ...prev,
+      reduceAnimations: mediaQuery.matches,
+      highContrast: highContrastQuery.matches,
+    }));
+
+    mediaQuery.addEventListener('change', handleMotionChange);
+    highContrastQuery.addEventListener('change', handleContrastChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleMotionChange);
+      highContrastQuery.removeEventListener('change', handleContrastChange);
+    };
   }, []);
 
-  // Save preferences to localStorage whenever they change
+  // Save preferences to localStorage
   useEffect(() => {
-    localStorage.setItem('accessibilityPreferences', JSON.stringify(preferences));
-    
-    // Apply font size to the document
-    document.documentElement.style.fontSize = `${preferences.fontSize}%`;
-    
-    // Apply high contrast mode
-    if (preferences.highContrast) {
-      document.documentElement.classList.add('high-contrast');
-    } else {
-      document.documentElement.classList.remove('high-contrast');
+    try {
+      localStorage.setItem('accessibility-preferences', JSON.stringify(preferences));
+    } catch {
+      // Handle localStorage errors gracefully
     }
-    
-    // Apply reduced animations
-    if (preferences.reduceAnimations) {
-      document.documentElement.classList.add('reduce-animations');
-    } else {
-      document.documentElement.classList.remove('reduce-animations');
-    }
+
+    // Apply CSS classes to document body for global accessibility features
+    document.body.classList.toggle('reduce-animations', preferences.reduceAnimations);
+    document.body.classList.toggle('high-contrast', preferences.highContrast);
+    document.body.classList.toggle('large-text', preferences.largeText);
   }, [preferences]);
 
-  const increaseTextSize = () => {
-    setPreferences(prev => ({
-      ...prev,
-      fontSize: Math.min(prev.fontSize + 10, 150), // Maximum 150% font size
-    }));
+  const updatePreferences = (updates: Partial<AccessibilityPreferences>) => {
+    setPreferences(prev => ({ ...prev, ...updates }));
   };
 
-  const decreaseTextSize = () => {
-    setPreferences(prev => ({
-      ...prev,
-      fontSize: Math.max(prev.fontSize - 10, 80), // Minimum 80% font size
-    }));
-  };
-
-  const toggleHighContrast = () => {
-    setPreferences(prev => ({
-      ...prev,
-      highContrast: !prev.highContrast,
-    }));
-  };
-
-  const toggleReduceAnimations = () => {
-    setPreferences(prev => ({
-      ...prev,
-      reduceAnimations: !prev.reduceAnimations,
-    }));
-  };
-
-  const resetToDefaults = () => {
+  const resetPreferences = () => {
     setPreferences(defaultPreferences);
   };
 
   return (
-    <AccessibilityContext.Provider
-      value={{
-        preferences,
-        increaseTextSize,
-        decreaseTextSize,
-        toggleHighContrast,
-        toggleReduceAnimations,
-        resetToDefaults,
-      }}
-    >
+    <AccessibilityContext.Provider value={{ preferences, updatePreferences, resetPreferences }}>
       {children}
     </AccessibilityContext.Provider>
   );
@@ -111,7 +94,7 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useAccessibility = (): AccessibilityContextType => {
   const context = useContext(AccessibilityContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAccessibility must be used within an AccessibilityProvider');
   }
   return context;

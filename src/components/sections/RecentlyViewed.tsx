@@ -2,54 +2,57 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Clock, ArrowRight } from 'lucide-react';
-import { SavedContent } from '@/types';
-import { formatDistanceToNow } from 'date-fns';
+import { Clock, ExternalLink } from 'lucide-react';
 
 interface RecentlyViewedProps {
-  recentItems: SavedContent[];
+  recentItems: any[];
   onViewAll: () => void;
-  onItemClick: (content: SavedContent) => void;
+  onItemClick: (item: any) => void;
 }
 
 export const RecentlyViewed: React.FC<RecentlyViewedProps> = ({
   recentItems,
   onViewAll,
-  onItemClick,
+  onItemClick
 }) => {
-  if (recentItems.length === 0) {
-    return null;
-  }
-
   return (
     <Card>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-        <CardTitle className="flex items-center gap-2 text-sm font-medium">
-          <Clock className="h-4 w-4" />
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-lg">
+          <Clock className="h-5 w-5" />
           Recently Viewed
         </CardTitle>
-        <Button variant="ghost" size="sm" onClick={onViewAll} className="h-8 px-2">
-          <span className="text-xs">View All</span>
-          <ArrowRight className="h-3 w-3 ml-1" />
-        </Button>
       </CardHeader>
       <CardContent className="space-y-3">
-        {recentItems.slice(0, 3).map((item) => (
-          <div
-            key={item.id}
-            className="flex items-start gap-3 p-2 rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
-            onClick={() => onItemClick(item)}
-          >
-            <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-medium line-clamp-1 mb-1">
-                {item.title}
-              </h4>
-              <p className="text-xs text-muted-foreground">
-                Viewed {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
-              </p>
-            </div>
-          </div>
-        ))}
+        {recentItems.length > 0 ? (
+          <>
+            {recentItems.map((item) => (
+              <div
+                key={item.id}
+                className="p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+                onClick={() => onItemClick(item)}
+              >
+                <h4 className="font-medium text-sm mb-1 line-clamp-1">{item.title}</h4>
+                <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+                  {item.description}
+                </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(item.created_at).toLocaleDateString()}
+                  </span>
+                  <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                </div>
+              </div>
+            ))}
+            <Button variant="ghost" size="sm" onClick={onViewAll} className="w-full">
+              View All
+            </Button>
+          </>
+        ) : (
+          <p className="text-sm text-muted-foreground text-center py-4">
+            No recent items to show
+          </p>
+        )}
       </CardContent>
     </Card>
   );

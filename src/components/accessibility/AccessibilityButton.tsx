@@ -1,59 +1,65 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { EyeIcon, Type } from 'lucide-react';
+import { Accessibility, Check } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+} from '@/components/ui/dropdown-menu';
 
-/**
- * AccessibilityButton component that provides accessibility controls for the application.
- */
-export const AccessibilityButton = () => {
-  const { 
-    preferences,
-    increaseTextSize, 
-    decreaseTextSize, 
-    toggleHighContrast
-  } = useAccessibility();
+export const AccessibilityButton: React.FC = () => {
+  const { preferences, updatePreferences } = useAccessibility();
 
   return (
-    <div className="flex items-center">
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={increaseTextSize}
-              aria-label="Increase font size"
-            >
-              <Type className="h-[1.2rem] w-[1.2rem]" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Adjust text size (Current: {Math.round(preferences.fontSize)}%)</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-      
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button 
-              variant="ghost"
-              size="icon"
-              onClick={toggleHighContrast}
-              aria-label={preferences.highContrast ? "Reset contrast" : "Increase contrast"}
-              className={preferences.highContrast ? "bg-accent" : ""}
-            >
-              <EyeIcon className="h-[1.2rem] w-[1.2rem]" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{preferences.highContrast ? "Reset contrast" : "Increase contrast"}</p>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </div>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-10 w-10"
+          aria-label="Accessibility settings"
+        >
+          <Accessibility className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg z-50">
+        <DropdownMenuLabel>Accessibility Options</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        
+        <DropdownMenuCheckboxItem
+          checked={preferences.reduceAnimations}
+          onCheckedChange={(checked) => updatePreferences({ reduceAnimations: checked })}
+        >
+          Reduce Animations
+        </DropdownMenuCheckboxItem>
+        
+        <DropdownMenuCheckboxItem
+          checked={preferences.highContrast}
+          onCheckedChange={(checked) => updatePreferences({ highContrast: checked })}
+        >
+          High Contrast
+        </DropdownMenuCheckboxItem>
+        
+        <DropdownMenuCheckboxItem
+          checked={preferences.largeText}
+          onCheckedChange={(checked) => updatePreferences({ largeText: checked })}
+        >
+          Large Text
+        </DropdownMenuCheckboxItem>
+        
+        <DropdownMenuCheckboxItem
+          checked={preferences.keyboardNavigation}
+          onCheckedChange={(checked) => updatePreferences({ keyboardNavigation: checked })}
+        >
+          Enhanced Keyboard Navigation
+        </DropdownMenuCheckboxItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

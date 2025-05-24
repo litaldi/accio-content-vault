@@ -1,58 +1,48 @@
 
-import React from 'react';
-import { Mic, MicOff, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useVoiceSearch } from '@/hooks/useVoiceSearch';
-import { cn } from '@/lib/utils';
+import { Mic, MicOff } from 'lucide-react';
 
 interface VoiceSearchButtonProps {
-  onTranscript: (transcript: string, isFinal: boolean) => void;
-  className?: string;
-  size?: 'sm' | 'default' | 'lg';
+  onTranscript: (text: string, isFinal: boolean) => void;
   variant?: 'default' | 'ghost' | 'outline';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
 }
 
 export const VoiceSearchButton: React.FC<VoiceSearchButtonProps> = ({
   onTranscript,
-  className,
-  size = 'sm',
   variant = 'ghost',
+  size = 'icon'
 }) => {
-  const { isListening, isSupported, toggleListening } = useVoiceSearch({
-    onTranscript,
-    autoSearch: false,
-  });
+  const [isListening, setIsListening] = useState(false);
 
-  if (!isSupported) {
-    return null;
-  }
+  const handleClick = () => {
+    if (isListening) {
+      setIsListening(false);
+      // Stop listening logic here
+    } else {
+      setIsListening(true);
+      // Start listening logic here
+      // For now, simulate a transcript
+      setTimeout(() => {
+        onTranscript('test search', true);
+        setIsListening(false);
+      }, 2000);
+    }
+  };
 
   return (
     <Button
-      type="button"
       variant={variant}
       size={size}
-      className={cn(
-        'transition-all duration-200',
-        isListening && 'text-red-500 bg-red-50 dark:bg-red-900/20',
-        className
-      )}
-      onClick={toggleListening}
-      title={isListening ? 'Stop voice search' : 'Start voice search'}
+      onClick={handleClick}
+      className={isListening ? 'text-red-600' : ''}
+      aria-label={isListening ? 'Stop voice search' : 'Start voice search'}
     >
       {isListening ? (
-        <MicOff className={cn(
-          'animate-pulse',
-          size === 'sm' && 'h-3 w-3',
-          size === 'default' && 'h-4 w-4',
-          size === 'lg' && 'h-5 w-5'
-        )} />
+        <MicOff className="h-4 w-4" />
       ) : (
-        <Mic className={cn(
-          size === 'sm' && 'h-3 w-3',
-          size === 'default' && 'h-4 w-4',
-          size === 'lg' && 'h-5 w-5'
-        )} />
+        <Mic className="h-4 w-4" />
       )}
     </Button>
   );

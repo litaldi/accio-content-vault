@@ -1,64 +1,37 @@
 
 import React from 'react';
-import { useLocation } from 'react-router-dom';
-import NavbarActions from './Navbar/NavbarActions';
-import NavbarLogo from './Navbar/NavbarLogo';
-import NavbarDesktopLinks from './Navbar/NavbarDesktopLinks';
-import NavbarMobileMenu from './Navbar/NavbarMobileMenu';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
-import { useAuth } from '@/contexts/AuthContext';
+import { Link } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 interface NavbarProps {
-  isLoggedIn?: boolean;
-  onLogout?: () => void;
+  isLoggedIn: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
-  const { preferences } = useAccessibility();
-  const { user } = useAuth();
-  const location = useLocation();
-
-  // Use auth context if isLoggedIn prop is not provided
-  const loggedIn = isLoggedIn ?? !!user;
-
-  const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
-    }
-  };
-
-  const getUserInitials = () => {
-    if (!user?.email) return 'U';
-    return user.email.charAt(0).toUpperCase();
-  };
-
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
   return (
-    <header 
-      className={`sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${
-        preferences.highContrast ? 'border-foreground' : ''
-      }`}
-      role="banner"
-    >
-      <div className="container mx-auto px-4">
-        <nav 
-          className="flex h-16 items-center justify-between"
-          role="navigation"
-          aria-label="Main navigation"
-        >
-          <NavbarLogo />
-          <NavbarDesktopLinks isLoggedIn={loggedIn} currentPath={location.pathname} />
-          <div className="flex items-center gap-4">
-            <NavbarActions 
-              isLoggedIn={loggedIn} 
-              isMobile={false}
-              handleLogout={handleLogout}
-              getUserInitials={getUserInitials}
-            />
-            <NavbarMobileMenu isLoggedIn={loggedIn} handleLogout={handleLogout} />
-          </div>
-        </nav>
+    <nav className="bg-background border-b">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="flex items-center justify-between h-16">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-lg">A</span>
+            </div>
+            <span className="text-xl font-bold text-primary">Accio</span>
+          </Link>
+          
+          {!isLoggedIn && (
+            <div className="flex items-center gap-3">
+              <Button asChild variant="ghost">
+                <Link to="/login">Sign In</Link>
+              </Button>
+              <Button asChild>
+                <Link to="/register">Get Started</Link>
+              </Button>
+            </div>
+          )}
+        </div>
       </div>
-    </header>
+    </nav>
   );
 };
 
