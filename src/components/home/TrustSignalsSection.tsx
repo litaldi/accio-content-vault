@@ -12,7 +12,6 @@ import {
   FileText
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
 const TrustSignalsSection: React.FC = () => {
   const trustSignals = [
@@ -70,15 +69,15 @@ const TrustSignalsSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section size="lg" className="bg-muted/20">
-      <Spacing.Container size="lg">
+    <section className="py-20 lg:py-24 bg-muted/20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center mb-16">
-          <Typography.H2 className="mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6">
             Enterprise-Grade Security & Performance
-          </Typography.H2>
-          <Typography.Body size="lg" className="max-w-2xl mx-auto text-muted-foreground">
+          </h2>
+          <p className="text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto text-muted-foreground">
             Your data security and privacy are our top priorities. We maintain the highest standards of protection and compliance.
-          </Typography.Body>
+          </p>
         </div>
 
         {/* Trust Signals Grid */}
@@ -89,12 +88,12 @@ const TrustSignalsSection: React.FC = () => {
                 <div className="w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
                   <signal.icon className="h-6 w-6 text-primary" />
                 </div>
-                <Typography.Body className="font-semibold mb-2">
+                <p className="font-semibold mb-2">
                   {signal.title}
-                </Typography.Body>
-                <Typography.Caption className="text-muted-foreground mb-4 leading-relaxed">
+                </p>
+                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
                   {signal.description}
-                </Typography.Caption>
+                </p>
                 <div className="space-y-2">
                   {signal.badges.map((badge, badgeIndex) => (
                     <Badge key={badgeIndex} variant="outline" className="text-xs">
@@ -114,27 +113,27 @@ const TrustSignalsSection: React.FC = () => {
               <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                 <stat.icon className="h-8 w-8 text-primary" />
               </div>
-              <Typography.H3 className="text-primary mb-2">
+              <h3 className="text-2xl sm:text-3xl font-bold leading-tight text-primary mb-2">
                 {stat.number}
-              </Typography.H3>
-              <Typography.Body className="font-semibold mb-2">
+              </h3>
+              <p className="font-semibold mb-2">
                 {stat.label}
-              </Typography.Body>
-              <Typography.Caption className="text-muted-foreground">
+              </p>
+              <p className="text-sm text-muted-foreground">
                 {stat.description}
-              </Typography.Caption>
+              </p>
             </div>
           ))}
         </div>
 
         {/* Security Certifications */}
         <div className="text-center bg-background/80 backdrop-blur-sm rounded-2xl border border-border/50 p-8">
-          <Typography.H3 className="mb-4">
+          <h3 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
             Certified & Compliant
-          </Typography.H3>
-          <Typography.Body className="text-muted-foreground mb-6 max-w-2xl mx-auto">
+          </h3>
+          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
             We maintain the highest standards of security and compliance to protect your data and ensure peace of mind.
-          </Typography.Body>
+          </p>
           <div className="flex flex-wrap justify-center gap-4">
             {[
               'SOC 2 Type II',
@@ -155,13 +154,13 @@ const TrustSignalsSection: React.FC = () => {
         <div className="text-center mt-12">
           <div className="inline-flex items-center gap-4 bg-green-50 border border-green-200 rounded-full px-6 py-3">
             <Shield className="h-5 w-5 text-green-600" />
-            <Typography.Body className="font-semibold text-green-800">
+            <p className="font-semibold text-green-800 mb-0">
               30-Day Money-Back Guarantee • No Questions Asked
-            </Typography.Body>
+            </p>
           </div>
         </div>
-      </Spacing.Container>
-    </Spacing.Section>
+      </div>
+    </section>
   );
 };
 

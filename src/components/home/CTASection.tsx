@@ -22,11 +22,11 @@ const CTASection: React.FC = () => {
             {[
               "Start free, upgrade when ready",
               "No credit card required",
-              "Setup in under 30 seconds",
+              "Set up in under 30 seconds",
               "Cancel anytime, keep your data"
             ].map((benefit, index) => (
               <div key={index} className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                <CheckCircle className="h-4 w-4 text-green-300" />
+                <CheckCircle className="h-4 w-4 text-green-300 flex-shrink-0" />
                 <span className="font-medium text-white">{benefit}</span>
               </div>
             ))}
@@ -59,21 +59,21 @@ const CTASection: React.FC = () => {
           {/* Social Proof */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
             <div className="flex items-center justify-center gap-3">
-              <Users className="h-6 w-6 text-primary-foreground/80" />
+              <Users className="h-6 w-6 text-primary-foreground/80 flex-shrink-0" />
               <div>
                 <div className="text-2xl font-bold text-white">10,000+</div>
                 <div className="text-sm text-primary-foreground/80">Happy Users</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3">
-              <Clock className="h-6 w-6 text-primary-foreground/80" />
+              <Clock className="h-6 w-6 text-primary-foreground/80 flex-shrink-0" />
               <div>
                 <div className="text-2xl font-bold text-white">&lt; 30 sec</div>
                 <div className="text-sm text-primary-foreground/80">Setup Time</div>
               </div>
             </div>
             <div className="flex items-center justify-center gap-3">
-              <CheckCircle className="h-6 w-6 text-green-300" />
+              <CheckCircle className="h-6 w-6 text-green-300 flex-shrink-0" />
               <div>
                 <div className="text-2xl font-bold text-white">Free</div>
                 <div className="text-sm text-primary-foreground/80">Forever Plan</div>

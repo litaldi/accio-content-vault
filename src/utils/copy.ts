@@ -10,12 +10,15 @@ export const copy = {
     dashboard: 'Dashboard',
     saveContent: 'Save Content',
     settings: 'Settings',
-    analytics: 'Analytics'
+    analytics: 'Analytics',
+    features: 'Features',
+    pricing: 'Pricing',
+    about: 'About'
   },
 
   // Buttons - consistent with proper punctuation
   buttons: {
-    save: 'Save Content',
+    save: 'Save',
     cancel: 'Cancel',
     delete: 'Delete',
     edit: 'Edit',
@@ -24,7 +27,11 @@ export const copy = {
     learnMore: 'Learn More',
     signUp: 'Sign Up',
     signIn: 'Sign In',
-    signOut: 'Sign Out'
+    signOut: 'Sign Out',
+    createAccount: 'Create My Free Account',
+    scheduleDemo: 'Schedule a Demo',
+    chatSupport: 'Chat with Support',
+    tryFree: 'Try It Free'
   },
 
   // Error messages - user-friendly and actionable
@@ -75,7 +82,28 @@ export const copy = {
     search: {
       placeholder: 'Search your saved content...',
       help: 'Try searching by title, tags, or content keywords.'
+    },
+    email: {
+      label: 'Email Address',
+      placeholder: 'your@email.com'
+    },
+    password: {
+      label: 'Password',
+      placeholder: 'Enter your password'
     }
+  },
+
+  // Common phrases and labels
+  common: {
+    or: 'or',
+    and: 'and',
+    required: 'required',
+    optional: 'optional',
+    free: 'Free',
+    popular: 'Most Popular',
+    recommended: 'Recommended',
+    comingSoon: 'Coming Soon',
+    beta: 'Beta'
   },
 
   // Accessibility announcements
@@ -85,6 +113,9 @@ export const copy = {
     success: 'Action completed successfully.',
     newContent: 'New content has been added.',
     navigationMenu: 'Main navigation menu',
-    skipToContent: 'Skip to main content'
+    skipToContent: 'Skip to main content',
+    closeDialog: 'Close dialog',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu'
   }
 };

@@ -9,7 +9,6 @@ import {
 import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { MessageCircle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
 const FAQSection: React.FC = () => {
   const faqs = [
@@ -48,15 +47,15 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section size="lg">
-      <Spacing.Container size="lg">
+    <section className="py-20 lg:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center mb-16">
-          <Typography.H2 className="mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6">
             Frequently Asked Questions
-          </Typography.H2>
-          <Typography.Body size="lg" className="max-w-2xl mx-auto text-muted-foreground">
+          </h2>
+          <p className="text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto text-muted-foreground">
             Got questions? We've got answers. If you can't find what you're looking for, our friendly support team is here to help.
-          </Typography.Body>
+          </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
@@ -68,14 +67,14 @@ const FAQSection: React.FC = () => {
                 className="border border-border/50 rounded-lg px-6 bg-background/80 backdrop-blur-sm"
               >
                 <AccordionTrigger className="text-left hover:no-underline py-6">
-                  <Typography.Body className="font-semibold text-foreground mb-0">
+                  <p className="font-semibold text-foreground mb-0 text-left">
                     {faq.question}
-                  </Typography.Body>
+                  </p>
                 </AccordionTrigger>
                 <AccordionContent className="pb-6">
-                  <Typography.Body className="text-muted-foreground leading-relaxed mb-0">
+                  <p className="text-muted-foreground leading-relaxed mb-0">
                     {faq.answer}
-                  </Typography.Body>
+                  </p>
                 </AccordionContent>
               </AccordionItem>
             ))}
@@ -86,12 +85,12 @@ const FAQSection: React.FC = () => {
         <div className="text-center mt-16">
           <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 max-w-2xl mx-auto">
             <MessageCircle className="h-12 w-12 text-primary mx-auto mb-4" />
-            <Typography.H3 className="mb-4">
+            <h3 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
               Still have questions?
-            </Typography.H3>
-            <Typography.Body className="text-muted-foreground mb-6">
+            </h3>
+            <p className="text-muted-foreground mb-6">
               Our friendly support team is here to help. Get answers in minutes, not hours.
-            </Typography.Body>
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <EnhancedButton asChild variant="outline" size="lg">
                 <Link to="/contact">
@@ -108,8 +107,8 @@ const FAQSection: React.FC = () => {
             </div>
           </div>
         </div>
-      </Spacing.Container>
-    </Spacing.Section>
+      </div>
+    </section>
   );
 };
 

@@ -1,18 +1,17 @@
 
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
 const SocialProofSection: React.FC = () => {
   const companies = [
-    { name: 'Google', logo: '🏢' },
-    { name: 'Microsoft', logo: '🏢' },
-    { name: 'Netflix', logo: '🎬' },
-    { name: 'Figma', logo: '🎨' },
-    { name: 'Notion', logo: '📝' },
-    { name: 'Slack', logo: '💬' },
-    { name: 'Spotify', logo: '🎵' },
-    { name: 'Airbnb', logo: '🏠' }
+    { name: 'TechFlow', logo: '🏢' },
+    { name: 'CreativeHub', logo: '🎨' },
+    { name: 'DataSync', logo: '📊' },
+    { name: 'DesignLab', logo: '✨' },
+    { name: 'CloudBase', logo: '☁️' },
+    { name: 'StartupCo', logo: '🚀' },
+    { name: 'InnovateLab', logo: '💡' },
+    { name: 'TeamFlow', logo: '🤝' }
   ];
 
   const pressMentions = [
@@ -29,17 +28,17 @@ const SocialProofSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section size="md" className="border-b border-border/50">
-      <Spacing.Container size="lg">
+    <section className="py-16 border-b border-border/50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Company Logos */}
         <div className="text-center mb-12">
-          <Typography.Body className="text-muted-foreground mb-8 font-medium">
+          <p className="text-muted-foreground mb-8 font-medium">
             Trusted by knowledge workers at leading companies
-          </Typography.Body>
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
             {companies.map((company, index) => (
               <div key={index} className="flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity">
-                <span className="text-2xl">{company.logo}</span>
+                <span className="text-2xl" aria-hidden="true">{company.logo}</span>
                 <span className="text-lg font-semibold text-foreground/80">{company.name}</span>
               </div>
             ))}
@@ -48,9 +47,9 @@ const SocialProofSection: React.FC = () => {
 
         {/* Press Mentions */}
         <div className="text-center mb-12">
-          <Typography.Body className="text-muted-foreground mb-6 font-medium">
+          <p className="text-muted-foreground mb-6 font-medium">
             Featured in
-          </Typography.Body>
+          </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             {pressMentions.map((mention, index) => (
               <Badge key={index} variant="outline" className="px-4 py-2 text-sm">
@@ -66,13 +65,13 @@ const SocialProofSection: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
           {stats.map((stat, index) => (
             <div key={index} className="space-y-2">
-              <Typography.H3 className="text-primary">{stat.number}</Typography.H3>
-              <Typography.Body className="text-muted-foreground">{stat.label}</Typography.Body>
+              <h3 className="text-2xl sm:text-3xl font-bold leading-tight text-primary">{stat.number}</h3>
+              <p className="text-base leading-relaxed mb-4 text-muted-foreground">{stat.label}</p>
             </div>
           ))}
         </div>
-      </Spacing.Container>
-    </Spacing.Section>
+      </div>
+    </section>
   );
 };
 
