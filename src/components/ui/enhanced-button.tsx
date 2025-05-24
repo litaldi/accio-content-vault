@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button, type ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { Slot } from '@radix-ui/react-slot';
 
 interface EnhancedButtonProps extends ButtonProps {
   loading?: boolean;
@@ -13,7 +12,6 @@ interface EnhancedButtonProps extends ButtonProps {
 
 /**
  * Enhanced Button component with loading states and icons
- * Properly handles single child requirement when using asChild
  */
 export const EnhancedButton = React.forwardRef<
   HTMLButtonElement,
@@ -26,34 +24,9 @@ export const EnhancedButton = React.forwardRef<
   rightIcon, 
   disabled, 
   className,
-  asChild = false,
   ...props 
 }, ref) => {
   const isDisabled = disabled || loading;
-
-  // When asChild is true, we need to ensure we only pass a single child
-  if (asChild) {
-    if (!React.isValidElement(children)) {
-      console.warn('EnhancedButton with asChild prop expects a single React element as children');
-      return null;
-    }
-
-    // Use Slot to properly forward the ref and props without cloning
-    return (
-      <Slot
-        ref={ref}
-        className={cn(
-          "inline-flex items-center justify-center gap-2",
-          loading && "opacity-50 cursor-not-allowed",
-          className
-        )}
-        {...props}
-        {...(isDisabled && { disabled: isDisabled })}
-      >
-        {children}
-      </Slot>
-    );
-  }
 
   return (
     <Button

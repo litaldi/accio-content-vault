@@ -1,61 +1,66 @@
 
-import React from 'react';
-import { useErrorBoundary } from '@/hooks/useErrorBoundary';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle, RefreshCw } from 'lucide-react';
 
-interface ErrorBoundaryProps {
-  children: React.ReactNode;
+interface Props {
+  children: ReactNode;
 }
 
-/**
- * App-wide error boundary component that catches and displays errors gracefully
- * Uses the useErrorBoundary hook for error state management
- */
-const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children }) => {
-  const { ErrorBoundary: ErrorBoundaryComponent } = useErrorBoundary();
+interface State {
+  hasError: boolean;
+  error?: Error;
+}
 
-  // Error fallback UI
-  const fallback = (error: Error) => (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <div className="max-w-md w-full bg-card p-6 rounded-lg shadow-lg border border-border text-center">
-        <div className="mb-4 flex justify-center">
-          <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-            <AlertTriangle className="h-8 w-8 text-red-600" aria-hidden="true" />
-          </div>
-        </div>
-        <h2 className="text-2xl font-bold mb-2">Something went wrong</h2>
-        <p className="text-muted-foreground mb-4">
-          We've encountered an unexpected error and are working to fix it.
-        </p>
-        <div className="bg-muted rounded p-4 mb-4 overflow-x-auto">
-          <code className="text-sm">{error.message}</code>
-        </div>
-        <div className="flex gap-4 justify-center">
-          <Button
-            onClick={() => window.location.reload()}
-            className="w-full"
-            variant="default"
-          >
-            Refresh Page
-          </Button>
-          <Button
-            onClick={() => window.location.href = '/'}
-            className="w-full"
-            variant="outline"
-          >
-            Go Home
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+class ErrorBoundary extends Component<Props, State> {
+  public state: State = {
+    hasError: false
+  };
 
-  return (
-    <ErrorBoundaryComponent fallback={fallback}>
-      {children}
-    </ErrorBoundaryComponent>
-  );
-};
+  public static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
+  }
+
+  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Uncaught error:', error, errorInfo);
+  }
+
+  public render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex items-center justify-center p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader className="text-center">
+              <AlertTriangle className="h-12 w-12 text-destructive mx-auto mb-4" />
+              <CardTitle>Something went wrong</CardTitle>
+              <CardDescription>
+                We're sorry, but something unexpected happened. Please try refreshing the page.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button 
+                onClick={() => window.location.reload()} 
+                className="w-full"
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh Page
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => this.setState({ hasError: false })}
+                className="w-full"
+              >
+                Try Again
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 export default ErrorBoundary;

@@ -1,19 +1,16 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { SmartRecommendations } from './SmartRecommendations';
-import { NaturalLanguageSearch } from './NaturalLanguageSearch';
-import { AutoCategorization } from './AutoCategorization';
-import { SavedContent } from '@/types';
-import { Sparkles } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Sparkles, TrendingUp, BookOpen } from 'lucide-react';
 
 interface AIInsightsProps {
-  currentContent?: SavedContent;
-  allContent: SavedContent[];
-  onContentClick: (content: SavedContent) => void;
-  onSearchResults: (results: SavedContent[]) => void;
+  currentContent?: any;
+  allContent: any[];
+  onContentClick: (content: any) => void;
+  onSearchResults: (results: any[]) => void;
   onApplyTags: (tags: string[]) => void;
-  className?: string;
 }
 
 export const AIInsights: React.FC<AIInsightsProps> = ({
@@ -22,49 +19,84 @@ export const AIInsights: React.FC<AIInsightsProps> = ({
   onContentClick,
   onSearchResults,
   onApplyTags,
-  className
 }) => {
-  console.log('AIInsights rendering with:', { 
-    currentContent: !!currentContent, 
-    allContentLength: allContent.length 
-  });
+  const suggestedTags = ['productivity', 'learning', 'technology'];
+  const relatedContent = allContent.slice(0, 3);
 
   return (
-    <div className={className}>
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-6 w-6 text-primary" />
-            AI-Powered Content Intelligence
-          </CardTitle>
-          <p className="text-sm text-muted-foreground">
-            Discover, organize, and connect your content with artificial intelligence
-          </p>
-        </CardHeader>
-      </Card>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Card>
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Content Insights</CardTitle>
+            <Sparkles className="h-4 w-4 ml-auto text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{allContent.length}</div>
+            <p className="text-xs text-muted-foreground">
+              Total items saved
+            </p>
+          </CardContent>
+        </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <NaturalLanguageSearch
-          allContent={allContent}
-          onSearch={onSearchResults}
-        />
+        <Card>
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Popular Tags</CardTitle>
+            <TrendingUp className="h-4 w-4 ml-auto text-primary" />
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-1">
+              {suggestedTags.map((tag) => (
+                <Badge key={tag} variant="secondary" className="text-xs">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-        <SmartRecommendations
-          currentContent={currentContent}
-          allContent={allContent}
-          onContentClick={onContentClick}
-        />
-
-        {currentContent && (
-          <div className="lg:col-span-2">
-            <AutoCategorization
-              content={currentContent}
-              allContent={allContent}
-              onApplySuggestion={onApplyTags}
-            />
-          </div>
-        )}
+        <Card>
+          <CardHeader className="flex flex-row items-center space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Suggestions</CardTitle>
+            <BookOpen className="h-4 w-4 ml-auto text-primary" />
+          </CardHeader>
+          <CardContent>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onApplyTags(suggestedTags)}
+              className="w-full"
+            >
+              Apply AI Tags
+            </Button>
+          </CardContent>
+        </Card>
       </div>
+
+      {relatedContent.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Related Content</CardTitle>
+            <CardDescription>
+              Content that might interest you based on your recent activity
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              {relatedContent.map((item) => (
+                <div
+                  key={item.id}
+                  className="p-2 rounded border cursor-pointer hover:bg-muted/50"
+                  onClick={() => onContentClick(item)}
+                >
+                  <h4 className="font-medium text-sm">{item.title}</h4>
+                  <p className="text-xs text-muted-foreground">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };

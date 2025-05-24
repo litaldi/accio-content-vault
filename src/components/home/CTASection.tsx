@@ -6,31 +6,24 @@ import { Link } from 'react-router-dom';
 
 const CTASection: React.FC = () => {
   return (
-    <section className="py-16 lg:py-24 bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-            Ready to Transform Your Knowledge Management?
-          </h2>
-          <p className="text-lg mb-8 opacity-90">
-            Join thousands of users who have already revolutionized how they save, 
-            organize, and discover information.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" variant="secondary" className="text-lg px-8">
-              <Link to="/register" className="inline-flex items-center gap-2">
-                Start Your Free Trial
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </Button>
-            
-            <Button asChild variant="outline" size="lg" className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              <Link to="/contact">
-                Contact Sales
-              </Link>
-            </Button>
-          </div>
+    <section className="py-16 bg-primary text-primary-foreground">
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-3xl font-bold mb-4">
+          Ready to Build Your Knowledge Library?
+        </h2>
+        <p className="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+          Join thousands of knowledge workers who are already organizing their digital lives with Accio
+        </p>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <Button size="lg" variant="secondary" asChild>
+            <Link to="/register" className="inline-flex items-center gap-2">
+              Start Free Today
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+          <Button size="lg" variant="outline" asChild>
+            <Link to="/contact">Contact Sales</Link>
+          </Button>
         </div>
       </div>
     </section>

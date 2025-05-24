@@ -2,11 +2,30 @@
 import { useState, useEffect } from 'react';
 
 export const useOfflineContent = () => {
-  const [offlineContents, setOfflineContents] = useState<any[]>([]);
-  const [offlineTags, setOfflineTags] = useState<any[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isLoading, setIsLoading] = useState(false);
-  const [canAccessOffline, setCanAccessOffline] = useState(true);
+
+  const mockOfflineContent = [
+    {
+      id: '1',
+      title: 'Offline Article 1',
+      description: 'This content is available offline',
+      isOfflineOnly: false,
+      cached_at: new Date().toISOString(),
+    },
+    {
+      id: '2',
+      title: 'Local Draft',
+      description: 'This was created while offline',
+      isOfflineOnly: true,
+      cached_at: new Date().toISOString(),
+    }
+  ];
+
+  const mockOfflineTags = [
+    { id: '1', name: 'offline' },
+    { id: '2', name: 'cached' }
+  ];
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -14,9 +33,6 @@ export const useOfflineContent = () => {
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-
-    // Check if offline features are supported
-    setCanAccessOffline('indexedDB' in window && 'serviceWorker' in navigator);
 
     return () => {
       window.removeEventListener('online', handleOnline);
@@ -26,18 +42,17 @@ export const useOfflineContent = () => {
 
   const syncWithServer = async () => {
     setIsLoading(true);
-    // Sync logic would go here
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+    // Simulate sync
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsLoading(false);
   };
 
   return {
-    offlineContents,
-    offlineTags,
+    offlineContents: mockOfflineContent,
+    offlineTags: mockOfflineTags,
     isOnline,
     isLoading,
     syncWithServer,
-    canAccessOffline
+    canAccessOffline: 'serviceWorker' in navigator && 'indexedDB' in window,
   };
 };

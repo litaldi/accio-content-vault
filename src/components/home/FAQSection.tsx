@@ -1,58 +1,52 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 
 const FAQSection: React.FC = () => {
   const faqs = [
     {
-      question: 'How does Accio work?',
-      answer: 'Accio allows you to save content from anywhere on the web using our browser extension or mobile apps. Our AI then automatically organizes and tags your content, making it easy to find later with our powerful search.'
+      question: 'What is Accio?',
+      answer: 'Accio is a personal knowledge management platform that helps you save, organize, and rediscover content from across the web using AI-powered features.'
+    },
+    {
+      question: 'How does the AI search work?',
+      answer: 'Our AI uses semantic search to understand the meaning and context of your content, allowing you to find relevant information even when exact keywords don\'t match.'
+    },
+    {
+      question: 'Can I import my existing bookmarks?',
+      answer: 'Yes! We support importing bookmarks from all major browsers and bookmark services to help you get started quickly.'
     },
     {
       question: 'Is my data secure?',
-      answer: 'Yes, we take security seriously. All data is encrypted in transit and at rest. We follow industry best practices and are committed to protecting your privacy.'
+      answer: 'Absolutely. We use enterprise-grade encryption and security practices to protect your data. You own your content and can export it at any time.'
     },
     {
-      question: 'Can I use Accio offline?',
-      answer: 'Yes, Accio works offline on mobile devices. Your saved content is synced when you go back online, ensuring you always have access to your knowledge library.'
-    },
-    {
-      question: 'How accurate is the AI tagging?',
-      answer: 'Our AI tagging is highly accurate and continuously improving. You can always edit or add your own tags, and the system learns from your preferences over time.'
-    },
-    {
-      question: 'Can I export my data?',
-      answer: 'Absolutely. You own your data and can export it at any time in multiple formats including JSON, CSV, and HTML.'
-    },
-    {
-      question: 'Is there a free trial?',
-      answer: 'Yes, we offer a 14-day free trial of our Pro plan with no credit card required. You can also use our free plan indefinitely with basic features.'
+      question: 'Do you offer team features?',
+      answer: 'Yes, our Pro plan includes team collaboration features, shared collections, and admin controls for organizations.'
     }
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-accent/30">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+    <section className="py-16">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+          <p className="text-xl text-muted-foreground">
             Everything you need to know about Accio
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {faqs.map((faq, index) => (
-            <Card key={index}>
-              <CardHeader>
-                <CardTitle className="text-lg">{faq.question}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground">{faq.answer}</p>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="max-w-3xl mx-auto">
+          <Accordion type="single" collapsible>
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
         </div>
       </div>
     </section>

@@ -1,31 +1,21 @@
 
 import React from 'react';
-import { Card } from '@/components/ui/card';
+import { Card, type CardProps } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
-import { useResponsive } from '@/hooks/use-responsive';
 
-interface ResponsiveCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  mobileFullWidth?: boolean;
-  compactOnMobile?: boolean;
+interface ResponsiveCardProps extends CardProps {
   children: React.ReactNode;
 }
 
-export const ResponsiveCard = React.forwardRef<HTMLDivElement, ResponsiveCardProps>(({
-  className,
-  mobileFullWidth = false,
-  compactOnMobile = false,
+export const ResponsiveCard: React.FC<ResponsiveCardProps> = ({
   children,
+  className,
   ...props
-}, ref) => {
-  const { isMobile } = useResponsive();
-
+}) => {
   return (
     <Card
-      ref={ref}
       className={cn(
-        "transition-all duration-200",
-        mobileFullWidth && isMobile && "w-full",
-        compactOnMobile && isMobile && "p-2",
+        'transition-all duration-200 hover:shadow-md',
         className
       )}
       {...props}
@@ -33,6 +23,4 @@ export const ResponsiveCard = React.forwardRef<HTMLDivElement, ResponsiveCardPro
       {children}
     </Card>
   );
-});
-
-ResponsiveCard.displayName = "ResponsiveCard";
+};

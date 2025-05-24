@@ -1,44 +1,39 @@
 
-import { Suspense, lazy } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { ThemeProvider } from 'next-themes';
 import { HelmetProvider } from 'react-helmet-async';
-import { ThemeProvider } from "next-themes";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import ErrorBoundary from "@/components/ErrorBoundary";
-import ShareTargetHandler from "@/components/ShareTargetHandler";
-import PrimaryNavigation from "@/components/navigation/PrimaryNavigation";
-import AppFooter from "@/components/layout/AppFooter";
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
-// Lazy load components for better performance
-const Index = lazy(() => import("./pages/Index"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Login = lazy(() => import("./pages/Login"));
-const Register = lazy(() => import("./pages/Register"));
-const SaveContent = lazy(() => import("./pages/SaveContent"));
-const Search = lazy(() => import("./pages/Search"));
-const Collections = lazy(() => import("./pages/Collections"));
-const Analytics = lazy(() => import("./pages/Analytics"));
-const AccountSettings = lazy(() => import("./pages/AccountSettings"));
-const OfflinePage = lazy(() => import("./pages/OfflinePage"));
-const Reminders = lazy(() => import("./pages/Reminders"));
-const Upgrade = lazy(() => import("./pages/Upgrade"));
-const Features = lazy(() => import("./pages/Features"));
-const About = lazy(() => import("./pages/About"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Pricing = lazy(() => import("./pages/Pricing"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+// Pages
+import Index from '@/pages/Index';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import Dashboard from '@/pages/Dashboard';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import Pricing from '@/pages/Pricing';
+import FAQ from '@/pages/FAQ';
+import Blog from '@/pages/Blog';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
+import AccessibilityStatement from '@/pages/AccessibilityStatement';
+import Sitemap from '@/pages/Sitemap';
+import NotFound from '@/pages/NotFound';
+import Upgrade from '@/pages/Upgrade';
+import Reminders from '@/pages/Reminders';
+import OfflinePage from '@/pages/OfflinePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000, // 1 minute
-      retry: 1,
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -51,115 +46,45 @@ function App() {
           <AccessibilityProvider>
             <QueryClientProvider client={queryClient}>
               <TooltipProvider>
-                <BrowserRouter>
-                  <AuthProvider>
-                    <div className="min-h-screen bg-background flex flex-col">
-                      <ShareTargetHandler />
-                      <PrimaryNavigation />
-                      <main className="flex-1">
-                        <Suspense fallback={
-                          <div className="min-h-screen flex items-center justify-center">
-                            <div className="text-center">
-                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                              <p className="text-muted-foreground">Loading...</p>
-                            </div>
-                          </div>
-                        }>
-                          <Routes>
-                            <Route path="/" element={<Index />} />
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/register" element={<Register />} />
-                            <Route path="/features" element={<Features />} />
-                            <Route path="/pricing" element={<Pricing />} />
-                            <Route path="/about" element={<About />} />
-                            <Route path="/contact" element={<Contact />} />
-                            <Route 
-                              path="/dashboard" 
-                              element={
-                                <ProtectedRoute>
-                                  <Dashboard />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/save" 
-                              element={
-                                <ProtectedRoute>
-                                  <SaveContent />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/search" 
-                              element={
-                                <ProtectedRoute>
-                                  <Search />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/collections" 
-                              element={
-                                <ProtectedRoute>
-                                  <Collections />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/analytics" 
-                              element={
-                                <ProtectedRoute>
-                                  <Analytics />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/reminders" 
-                              element={
-                                <ProtectedRoute>
-                                  <Reminders />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/settings" 
-                              element={
-                                <ProtectedRoute>
-                                  <AccountSettings />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/offline" 
-                              element={
-                                <ProtectedRoute>
-                                  <OfflinePage />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route 
-                              path="/upgrade" 
-                              element={
-                                <ProtectedRoute>
-                                  <Upgrade />
-                                </ProtectedRoute>
-                              } 
-                            />
-                            <Route path="*" element={<NotFound />} />
-                          </Routes>
-                        </Suspense>
-                      </main>
-                      <AppFooter />
+                <AuthProvider>
+                  <Router>
+                    <div className="min-h-screen flex flex-col w-full">
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/pricing" element={<Pricing />} />
+                        <Route path="/faq" element={<FAQ />} />
+                        <Route path="/blog" element={<Blog />} />
+                        <Route path="/blog/:id" element={<Blog />} />
+                        <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/terms" element={<Terms />} />
+                        <Route path="/accessibility" element={<AccessibilityStatement />} />
+                        <Route path="/sitemap" element={<Sitemap />} />
+                        <Route path="/upgrade" element={<Upgrade />} />
+                        <Route path="/reminders" element={<Reminders />} />
+                        <Route path="/offline" element={<OfflinePage />} />
+                        <Route path="/save" element={<Dashboard />} />
+                        <Route path="/save-content" element={<Dashboard />} />
+                        <Route path="/collections" element={<Dashboard />} />
+                        <Route path="/analytics" element={<Dashboard />} />
+                        <Route path="/search" element={<Dashboard />} />
+                        <Route path="/settings" element={<Dashboard />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
                     </div>
-                    <Toaster />
-                    <Sonner />
-                  </AuthProvider>
-                </BrowserRouter>
+                  </Router>
+                </AuthProvider>
               </TooltipProvider>
+              <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>
           </AccessibilityProvider>
         </ThemeProvider>
       </HelmetProvider>
+      <Toaster />
     </ErrorBoundary>
   );
 }

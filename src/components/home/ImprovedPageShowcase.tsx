@@ -1,43 +1,54 @@
 
 import React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
-import { cn } from '@/lib/utils';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Search, BookOpen, Share, Zap } from 'lucide-react';
 
 const ImprovedPageShowcase: React.FC = () => {
-  const { preferences } = useAccessibility();
+  const features = [
+    {
+      icon: Search,
+      title: 'Smart Search',
+      description: 'Find content instantly with AI-powered semantic search that understands context and meaning.'
+    },
+    {
+      icon: BookOpen,
+      title: 'Organized Knowledge',
+      description: 'Automatically categorize and tag your content for effortless organization and discovery.'
+    },
+    {
+      icon: Share,
+      title: 'Easy Sharing',
+      description: 'Collaborate with teams and share knowledge collections with simple, secure sharing options.'
+    },
+    {
+      icon: Zap,
+      title: 'Quick Capture',
+      description: 'Save content from anywhere with our browser extension, mobile app, or direct URL input.'
+    }
+  ];
 
   return (
-    <section className="py-16 lg:py-24 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-            See Accio in Action
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Experience how easy it is to build your personal knowledge library
+    <section className="py-16 bg-muted/30">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Powerful Features for Modern Knowledge Workers</h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Everything you need to build and maintain your personal knowledge base
           </p>
         </div>
         
-        <div className="relative max-w-5xl mx-auto">
-          <Card className={cn(
-            "overflow-hidden shadow-2xl border-0",
-            preferences.reduceAnimations ? '' : 'hover:scale-[1.02] transition-transform duration-300'
-          )}>
-            <CardContent className="p-0">
-              <div className="aspect-video bg-gradient-to-br from-primary/10 via-accent/5 to-secondary/10 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="text-2xl">🎯</span>
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">Interactive Demo Coming Soon</h3>
-                  <p className="text-muted-foreground">
-                    Explore the full Accio experience
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {features.map((feature, index) => (
+            <Card key={index} className="text-center">
+              <CardHeader>
+                <feature.icon className="h-8 w-8 mx-auto mb-3 text-primary" />
+                <CardTitle className="text-lg">{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription>{feature.description}</CardDescription>
+              </CardContent>
+            </Card>
+          ))}
         </div>
       </div>
     </section>

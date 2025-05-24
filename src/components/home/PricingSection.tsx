@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Check } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -11,12 +11,12 @@ const PricingSection: React.FC = () => {
       name: 'Free',
       price: '$0',
       period: 'forever',
-      description: 'Perfect for personal use',
+      description: 'Perfect for getting started',
       features: [
-        'Up to 100 saved items',
+        'Save up to 100 items',
         'Basic search',
-        'Manual tagging',
-        'Web app access'
+        'Tag organization',
+        'Mobile app access'
       ],
       buttonText: 'Get Started',
       buttonVariant: 'outline' as const
@@ -24,84 +24,59 @@ const PricingSection: React.FC = () => {
     {
       name: 'Pro',
       price: '$9',
-      period: 'per month',
+      period: 'month',
       description: 'For power users',
       features: [
         'Unlimited saved items',
-        'AI-powered search',
-        'Auto-tagging',
-        'Browser extension',
-        'Mobile apps',
-        'Priority support'
+        'Advanced AI search',
+        'Smart suggestions',
+        'Priority support',
+        'Export functionality',
+        'Team collaboration'
       ],
-      buttonText: 'Start Free Trial',
+      buttonText: 'Upgrade to Pro',
       buttonVariant: 'default' as const,
       popular: true
-    },
-    {
-      name: 'Team',
-      price: '$19',
-      period: 'per user/month',
-      description: 'For teams and organizations',
-      features: [
-        'Everything in Pro',
-        'Team collaboration',
-        'Shared collections',
-        'Admin controls',
-        'Advanced analytics',
-        'Custom integrations'
-      ],
-      buttonText: 'Contact Sales',
-      buttonVariant: 'outline' as const
     }
   ];
 
   return (
-    <section className="py-16 lg:py-24 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-            Simple, Transparent Pricing
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Choose the plan that fits your needs. Upgrade or downgrade at any time.
+    <section className="py-16 bg-muted/30">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Simple, Transparent Pricing</h2>
+          <p className="text-xl text-muted-foreground">
+            Start free, upgrade when you need more
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-lg scale-105' : ''}`}>
+            <Card key={index} className={plan.popular ? 'border-primary shadow-lg' : ''}>
               {plan.popular && (
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
-                    Most Popular
-                  </span>
+                <div className="bg-primary text-primary-foreground text-center py-2 text-sm font-medium">
+                  Most Popular
                 </div>
               )}
-              
               <CardHeader className="text-center">
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <div className="mt-4">
                   <span className="text-4xl font-bold">{plan.price}</span>
                   <span className="text-muted-foreground">/{plan.period}</span>
                 </div>
-                <p className="text-muted-foreground mt-2">{plan.description}</p>
+                <CardDescription>{plan.description}</CardDescription>
               </CardHeader>
-              
-              <CardContent>
-                <ul className="space-y-3 mb-6">
+              <CardContent className="space-y-6">
+                <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (
                     <li key={featureIndex} className="flex items-center gap-3">
-                      <Check className="h-5 w-5 text-green-600 flex-shrink-0" />
+                      <Check className="h-4 w-4 text-green-500" />
                       <span className="text-sm">{feature}</span>
                     </li>
                   ))}
                 </ul>
-                
-                <Button asChild variant={plan.buttonVariant} className="w-full">
-                  <Link to="/register">
-                    {plan.buttonText}
-                  </Link>
+                <Button className="w-full" variant={plan.buttonVariant} asChild>
+                  <Link to="/register">{plan.buttonText}</Link>
                 </Button>
               </CardContent>
             </Card>
