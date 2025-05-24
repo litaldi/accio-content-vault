@@ -28,7 +28,7 @@ describe('NotFound', () => {
     render(<NotFound />);
     // We can't directly test Helmet's effect on document.title in Jest,
     // but we can check if the Helmet component renders with the right title
-    expect(document.title).toBe('Page Not Found | ReadSmart');
+    expect(document.title).toBe('Page Not Found | Accio');
   });
 
   it('should have no accessibility violations', async () => {

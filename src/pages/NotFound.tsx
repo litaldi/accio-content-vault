@@ -5,8 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { ArrowLeft, Home, Map } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const NotFound = () => {
   const location = useLocation();
@@ -30,7 +28,13 @@ const NotFound = () => {
         <meta name="description" content="The page you're looking for doesn't exist or has been moved." />
       </Helmet>
       
-      <Navbar isLoggedIn={false} />
+      <header className="border-b bg-background">
+        <div className="container mx-auto px-4 py-3">
+          <Link to="/" className="text-lg font-semibold">
+            Accio
+          </Link>
+        </div>
+      </header>
       
       <main className="flex-grow flex items-center justify-center bg-background" role="main" id="main-content">
         <div className="text-center px-4 max-w-md">
@@ -73,7 +77,11 @@ const NotFound = () => {
         </div>
       </main>
       
-      <Footer />
+      <footer className="border-t bg-background">
+        <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
+          <p>&copy; 2024 Accio. All rights reserved.</p>
+        </div>
+      </footer>
     </div>
   );
 };
