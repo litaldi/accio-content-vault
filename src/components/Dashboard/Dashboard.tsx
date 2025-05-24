@@ -7,11 +7,16 @@ import { ImprovedEmptyState } from './ImprovedEmptyState';
 import WelcomeHeader from './WelcomeHeader';
 import BreadcrumbNav from '@/components/navigation/BreadcrumbNav';
 import ContentList from '@/components/ContentList';
-import SearchBar from '@/components/SearchBar';
 import DashboardStats from './DashboardStats';
 import ContentFilterTabs from './ContentFilterTabs';
 import LoadingIndicator from './LoadingIndicator';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
+import { ContentSkeleton } from '@/components/ui/content-skeleton';
+import QuickFilters from './QuickFilters';
+import EnhancedSearchBar from '@/components/SearchBar/EnhancedSearchBar';
+import RecentActivity from './RecentActivity';
+import AchievementSystem from './AchievementSystem';
 import { SavedContent } from '@/types';
 
 // Mock data for demonstration
@@ -22,7 +27,11 @@ const Dashboard = () => {
   const { showSuccess, showInfo } = useEnhancedToast();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTab, setSelectedTab] = useState('all');
+  const [activeFilters, setActiveFilters] = useState<string[]>([]);
   const [isFirstVisit, setIsFirstVisit] = useState(true);
+
+  // Initialize keyboard shortcuts
+  useKeyboardShortcuts();
 
   // Mock authentication check
   const isLoggedIn = true;
@@ -70,13 +79,51 @@ const Dashboard = () => {
     setSearchQuery(query);
   };
 
+  const handleFilterToggle = (filterId: string) => {
+    setActiveFilters(prev => 
+      prev.includes(filterId)
+        ? prev.filter(id => id !== filterId)
+        : [...prev, filterId]
+    );
+  };
+
+  const handleClearFilters = () => {
+    setActiveFilters([]);
+  };
+
+  const handleViewContent = (content: SavedContent) => {
+    // Navigate to content detail view
+    console.log('Viewing content:', content);
+  };
+
+  const handleViewAllActivity = () => {
+    // Navigate to full activity view
+    console.log('View all activity');
+  };
+
+  // Apply filters to content
   const filteredContent = content.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          item.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTab = selectedTab === 'all' || item.tags?.some(tag => 
       tag.name.toLowerCase() === selectedTab.toLowerCase()
     );
-    return matchesSearch && matchesTab;
+    
+    // Apply quick filters
+    let matchesFilters = true;
+    if (activeFilters.includes('recent')) {
+      const threeDaysAgo = new Date();
+      threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+      matchesFilters = matchesFilters && new Date(item.created_at) > threeDaysAgo;
+    }
+    if (activeFilters.includes('this-week')) {
+      const weekAgo = new Date();
+      weekAgo.setDate(weekAgo.getDate() - 7);
+      matchesFilters = matchesFilters && new Date(item.created_at) > weekAgo;
+    }
+    // Add more filter logic as needed
+    
+    return matchesSearch && matchesTab && matchesFilters;
   });
 
   const recentActivity = content.filter(item => {
@@ -84,7 +131,7 @@ const Dashboard = () => {
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
     return itemDate > weekAgo;
-  }).length;
+  });
 
   // Calculate tag stats for DashboardStats
   const tagStats = {
@@ -98,8 +145,12 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen flex flex-col bg-background">
         <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-        <div className="flex-grow">
-          <LoadingIndicator />
+        <div className="flex-grow container mx-auto px-4 py-8">
+          <BreadcrumbNav />
+          <div className="space-y-8">
+            <div className="h-24 bg-muted/30 rounded-lg animate-pulse" />
+            <ContentSkeleton count={3} />
+          </div>
         </div>
       </div>
     );
@@ -119,14 +170,22 @@ const Dashboard = () => {
             <WelcomeHeader
               userName={userName}
               totalContent={content.length}
-              recentActivity={recentActivity}
+              recentActivity={recentActivity.length}
               onAddContent={handleAddContent}
             />
             
             <div className="grid lg:grid-cols-4 gap-8">
               <div className="lg:col-span-3 space-y-6">
-                <SearchBar
+                <EnhancedSearchBar
                   onSearch={handleSearch}
+                  searchQuery={searchQuery}
+                  onSearchChange={setSearchQuery}
+                />
+                
+                <QuickFilters
+                  activeFilters={activeFilters}
+                  onFilterToggle={handleFilterToggle}
+                  onClearAll={handleClearFilters}
                 />
                 
                 <ContentFilterTabs
@@ -140,8 +199,19 @@ const Dashboard = () => {
                 />
               </div>
               
-              <div className="lg:col-span-1">
+              <div className="lg:col-span-1 space-y-6">
                 <DashboardStats tagStats={tagStats} />
+                
+                <RecentActivity
+                  recentContent={recentActivity}
+                  onViewContent={handleViewContent}
+                  onViewAll={handleViewAllActivity}
+                />
+                
+                <AchievementSystem
+                  content={content}
+                  isVisible={content.length > 0}
+                />
               </div>
             </div>
           </>
