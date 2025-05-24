@@ -78,10 +78,10 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
           {!isOpen ? (
             <EnhancedButton
               onClick={() => setIsOpen(true)}
-              variant="premium"
+              variant="default"
               size="lg"
               className="rounded-full w-14 h-14 shadow-2xl hover:shadow-3xl"
-              icon={<MessageSquare className="h-5 w-5" />}
+              leftIcon={<MessageSquare className="h-5 w-5" />}
               aria-label="Give feedback"
             />
           ) : (
@@ -112,7 +112,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                         size="sm"
                         onClick={() => handleQuickRating('positive')}
                         className="flex-1"
-                        icon={<ThumbsUp className="h-4 w-4" />}
+                        leftIcon={<ThumbsUp className="h-4 w-4" />}
                       >
                         Good
                       </EnhancedButton>
@@ -121,7 +121,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                         size="sm"
                         onClick={() => handleQuickRating('negative')}
                         className="flex-1"
-                        icon={<ThumbsDown className="h-4 w-4" />}
+                        leftIcon={<ThumbsDown className="h-4 w-4" />}
                       >
                         Needs work
                       </EnhancedButton>
@@ -184,7 +184,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                         loading={isSubmitting}
                         size="sm"
                         className="flex-1"
-                        icon={<Send className="h-4 w-4" />}
+                        leftIcon={<Send className="h-4 w-4" />}
                       >
                         Send
                       </EnhancedButton>
@@ -218,7 +218,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
             onClick={() => handleSubmit()}
             loading={isSubmitting}
             className="w-full"
-            icon={<Send className="h-4 w-4" />}
+            leftIcon={<Send className="h-4 w-4" />}
           >
             Send Feedback
           </EnhancedButton>
