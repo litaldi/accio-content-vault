@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import SimplifiedNavbar from '@/components/Navbar/SimplifiedNavbar';
+import MainMenu from '@/components/navigation/MainMenu';
 import ImprovedHeroSection from '@/components/home/ImprovedHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
@@ -19,7 +19,7 @@ const Index = () => {
   };
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col w-full">
       <Helmet>
         <title>Accio - Your Personal Knowledge Library</title>
         <meta name="description" content="Transform the internet into your curated knowledge base. Save, organize, and rediscover content with AI-powered intelligence." />
@@ -33,21 +33,19 @@ const Index = () => {
         <link rel="canonical" href="https://yoursite.com/" />
       </Helmet>
       
-      <div className="min-h-screen flex flex-col">
-        <SimplifiedNavbar />
-        
-        <main id="main-content" className="flex-grow" role="main">
-          <ImprovedHeroSection />
-          <ImprovedPageShowcase />
-          <FeaturesSection />
-          <PricingSection />
-          <FAQSection />
-          <CTASection />
-        </main>
-        
-        <EnhancedFooter />
-      </div>
-    </>
+      <MainMenu />
+      
+      <main id="main-content" className="flex-grow w-full" role="main">
+        <ImprovedHeroSection />
+        <ImprovedPageShowcase />
+        <FeaturesSection />
+        <PricingSection />
+        <FAQSection />
+        <CTASection />
+      </main>
+      
+      <EnhancedFooter />
+    </div>
   );
 };
 
