@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import MainMenu from '@/components/navigation/MainMenu';
+import MegaMenu from '@/components/navigation/MegaMenu';
 import ImprovedHeroSection from '@/components/home/ImprovedHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import CTASection from '@/components/home/CTASection';
 import PricingSection from '@/components/home/PricingSection';
 import FAQSection from '@/components/home/FAQSection';
-import EnhancedFooter from '@/components/Footer/EnhancedFooter';
+import ResponsiveFooter from '@/components/Footer/ResponsiveFooter';
 import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
@@ -33,7 +33,7 @@ const Index = () => {
         <link rel="canonical" href="https://yoursite.com/" />
       </Helmet>
       
-      <MainMenu />
+      <MegaMenu />
       
       <main id="main-content" className="flex-grow w-full" role="main">
         <ImprovedHeroSection />
@@ -44,7 +44,7 @@ const Index = () => {
         <CTASection />
       </main>
       
-      <EnhancedFooter />
+      <ResponsiveFooter />
     </div>
   );
 };
