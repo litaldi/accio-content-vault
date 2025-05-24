@@ -1,38 +1,27 @@
 
 import React from 'react';
-import { Rocket } from 'lucide-react';
-
-const motivationalQuotes = [
-  "Knowledge is power, but organized knowledge is unstoppable! 🚀",
-  "Every expert was once a beginner who never gave up learning 💡",
-  "Your future self will thank you for organizing your knowledge today ⭐",
-  "Small steps in learning lead to giant leaps in understanding 🎯"
-];
+import { Sparkles } from 'lucide-react';
 
 const MotivationalHeader: React.FC = () => {
-  const currentQuote = motivationalQuotes[Math.floor(Math.random() * motivationalQuotes.length)];
-
   return (
-    <div className="mb-12">
-      <h2 className="text-4xl md:text-6xl font-bold mb-6 text-foreground">
-        <span className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Your Knowledge Journey
+    <div className="text-center space-y-6">
+      <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent leading-tight">
+        Your knowledge journey
+        <br />
+        <span className="text-4xl md:text-5xl text-primary relative">
+          starts here
+          <Sparkles className="absolute -top-2 -right-8 h-8 w-8 text-primary/70 animate-pulse" />
         </span>
-        <span className="block text-3xl md:text-4xl font-semibold text-muted-foreground mt-3">
-          Starts with One Piece of Content
-        </span>
-      </h2>
-      <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-        Transform scattered information into an organized, AI-powered knowledge hub. 
-        <span className="font-semibold text-foreground block mt-2">
-          Every expert was once a beginner who took the first step.
-        </span>
+      </h1>
+      
+      <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+        Transform the web into your personal knowledge library. Save anything that matters, 
+        let AI organize it perfectly, and find exactly what you need in seconds.
       </p>
       
-      {/* Motivational element */}
-      <div className="inline-flex items-center gap-3 bg-gradient-to-r from-primary/10 to-purple/10 rounded-full px-6 py-3 border border-primary/20 mb-8">
-        <Rocket className="h-5 w-5 text-primary animate-pulse" />
-        <span className="text-sm font-medium text-foreground">{currentQuote}</span>
+      <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-full px-6 py-3 mx-auto w-fit">
+        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+        <span className="font-medium">Ready when you are • No setup required</span>
       </div>
     </div>
   );
