@@ -2,7 +2,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Helmet } from 'react-helmet-async';
-import { Plus, Search, Archive, BarChart3, Clock } from 'lucide-react';
+import { Plus, Search, Archive, BarChart3, Clock, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -10,6 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import MainMenu from '@/components/navigation/MainMenu';
 import { ResponsiveLayout } from '@/components/ui/responsive-layout';
 import { ResponsiveCard } from '@/components/ui/responsive-card';
+import { RecentlyViewed } from '@/components/sections/RecentlyViewed';
+import { TagSuggestions } from '@/components/suggestions/TagSuggestions';
+import { ContentActions } from '@/components/actions/ContentActions';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -18,28 +21,40 @@ const Dashboard = () => {
   // Mock data for demonstration
   const recentItems = [
     {
-      id: 1,
+      id: '1',
+      user_id: 'user1',
       title: "How to Build a Personal Knowledge Base",
-      type: "article",
-      tags: ["productivity", "knowledge-management", "tools"],
-      savedAt: "2 hours ago",
-      preview: "A comprehensive guide to organizing information..."
+      url: "https://example.com/knowledge-base",
+      description: "A comprehensive guide to organizing information...",
+      tags: [
+        { id: 'tag1', name: 'productivity', auto_generated: false, confirmed: true },
+        { id: 'tag2', name: 'knowledge-management', auto_generated: true, confirmed: true }
+      ],
+      created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
     },
     {
-      id: 2,
+      id: '2',
+      user_id: 'user1',
       title: "React Best Practices 2024",
-      type: "pdf",
-      tags: ["react", "development", "best-practices"],
-      savedAt: "1 day ago",
-      preview: "Modern React patterns and optimization techniques..."
+      url: "https://example.com/react-practices",
+      description: "Modern React patterns and optimization techniques...",
+      tags: [
+        { id: 'tag3', name: 'react', auto_generated: false, confirmed: true },
+        { id: 'tag4', name: 'development', auto_generated: false, confirmed: true }
+      ],
+      created_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
     },
     {
-      id: 3,
+      id: '3',
+      user_id: 'user1',
       title: "Design System Notes",
-      type: "note",
-      tags: ["design", "ui-ux", "notes"],
-      savedAt: "3 days ago",
-      preview: "Key principles for building consistent design systems..."
+      url: "",
+      description: "Key principles for building consistent design systems...",
+      tags: [
+        { id: 'tag5', name: 'design', auto_generated: false, confirmed: true },
+        { id: 'tag6', name: 'ui-ux', auto_generated: true, confirmed: false }
+      ],
+      created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(), // 3 days ago
     }
   ];
 
@@ -50,6 +65,26 @@ const Dashboard = () => {
     { name: "research", count: 5 },
     { name: "inspiration", count: 4 }
   ];
+
+  const tagSuggestions = [
+    { name: "productivity", frequency: 12, trending: true },
+    { name: "development", frequency: 8, trending: false },
+    { name: "design", frequency: 6, trending: true },
+    { name: "research", frequency: 5, trending: false },
+  ];
+
+  const handleViewContent = (content: any) => {
+    console.log('Viewing content:', content);
+    // In a real app, this would navigate to content detail or open a modal
+  };
+
+  const handleViewAllRecent = () => {
+    navigate('/search?filter=recent');
+  };
+
+  const handleTagSuggestionClick = (tag: string) => {
+    navigate(`/search?tag=${tag}`);
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -105,15 +140,15 @@ const Dashboard = () => {
 
           <ResponsiveCard
             className="hover:shadow-md transition-shadow cursor-pointer"
-            onClick={() => navigate('/collections')}
+            onClick={() => navigate('/search?filter=favorites')}
           >
             <CardContent className="flex items-center gap-3 p-4">
-              <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                <Archive className="h-5 w-5 text-green-600" />
+              <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                <Heart className="h-5 w-5 text-red-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-sm">Collections</h3>
-                <p className="text-xs text-muted-foreground">Browse tags</p>
+                <h3 className="font-semibold text-sm">Favorites</h3>
+                <p className="text-xs text-muted-foreground">Pinned items</p>
               </div>
             </CardContent>
           </ResponsiveCard>
@@ -163,24 +198,31 @@ const Dashboard = () => {
                 {recentItems.map((item) => (
                   <div
                     key={item.id}
-                    className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors cursor-pointer"
+                    className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-medium text-sm line-clamp-1">{item.title}</h3>
-                      <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
-                        {item.savedAt}
-                      </span>
+                      <h3 className="font-medium text-sm line-clamp-1 flex-1">{item.title}</h3>
+                      <div className="flex items-center gap-2 ml-2">
+                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                          {new Date(item.created_at).toLocaleDateString()}
+                        </span>
+                        <ContentActions 
+                          contentId={item.id}
+                          onView={() => handleViewContent(item)}
+                          compact
+                        />
+                      </div>
                     </div>
                     <p className="text-xs text-muted-foreground mb-3 line-clamp-2">
-                      {item.preview}
+                      {item.description}
                     </p>
                     <div className="flex flex-wrap gap-1">
                       {item.tags.map((tag) => (
                         <span
-                          key={tag}
+                          key={tag.id}
                           className="px-2 py-1 bg-primary/10 text-primary text-xs rounded-md"
                         >
-                          {tag}
+                          {tag.name}
                         </span>
                       ))}
                     </div>
@@ -198,43 +240,22 @@ const Dashboard = () => {
             </Card>
           </div>
 
-          {/* Popular Tags */}
-          <div>
-            <Card>
-              <CardHeader>
-                <CardTitle>Popular Tags</CardTitle>
-                <CardDescription>
-                  Your most used categories
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {popularTags.map((tag) => (
-                    <div
-                      key={tag.name}
-                      className="flex items-center justify-between p-2 rounded-lg hover:bg-accent/50 transition-colors cursor-pointer"
-                      onClick={() => navigate(`/search?tag=${tag.name}`)}
-                    >
-                      <span className="font-medium text-sm">{tag.name}</span>
-                      <span className="text-xs text-muted-foreground bg-muted px-2 py-1 rounded">
-                        {tag.count}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                
-                <Button
-                  variant="ghost"
-                  className="w-full mt-4"
-                  onClick={() => navigate('/tags')}
-                >
-                  View All Tags
-                </Button>
-              </CardContent>
-            </Card>
+          <div className="space-y-6">
+            {/* Recently Viewed */}
+            <RecentlyViewed
+              recentItems={recentItems.slice(0, 2)}
+              onViewAll={handleViewAllRecent}
+              onItemClick={handleViewContent}
+            />
+
+            {/* Tag Suggestions */}
+            <TagSuggestions 
+              suggestions={tagSuggestions}
+              onTagClick={handleTagSuggestionClick}
+            />
 
             {/* Quick Stats */}
-            <Card className="mt-6">
+            <Card>
               <CardHeader>
                 <CardTitle>Quick Stats</CardTitle>
               </CardHeader>
@@ -247,6 +268,10 @@ const Dashboard = () => {
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">This Week</span>
                     <span className="font-semibold text-green-600">+8</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm text-muted-foreground">Favorites</span>
+                    <span className="font-semibold">12</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-sm text-muted-foreground">Tags Used</span>

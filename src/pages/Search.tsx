@@ -9,6 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import MainMenu from '@/components/navigation/MainMenu';
 import { ResponsiveLayout } from '@/components/ui/responsive-layout';
 import { ResponsiveCard } from '@/components/ui/responsive-card';
+import { MultiTagFilter } from '@/components/filters/MultiTagFilter';
+import { TagSuggestions } from '@/components/suggestions/TagSuggestions';
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -47,9 +49,16 @@ const Search = () => {
     }
   ];
 
-  const popularTags = [
+  const availableTags = [
     "productivity", "development", "design", "research", "tools",
-    "knowledge-management", "react", "ui-ux", "performance"
+    "knowledge-management", "react", "ui-ux", "performance", "documentation"
+  ];
+
+  const tagSuggestions = [
+    { name: "productivity", frequency: 12, trending: true },
+    { name: "development", frequency: 8, trending: false },
+    { name: "design", frequency: 6, trending: true },
+    { name: "research", frequency: 5, trending: false },
   ];
 
   const recentSearches = [
@@ -59,13 +68,31 @@ const Search = () => {
     "knowledge management"
   ];
 
-  const toggleTag = (tag: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tag)
-        ? prev.filter(t => t !== tag)
-        : [...prev, tag]
-    );
+  const handleTagsChange = (tags: string[]) => {
+    setSelectedTags(tags);
   };
+
+  const handleClearFilters = () => {
+    setSelectedTags([]);
+  };
+
+  const handleTagSuggestionClick = (tag: string) => {
+    if (!selectedTags.includes(tag)) {
+      setSelectedTags([...selectedTags, tag]);
+    }
+  };
+
+  // Filter results based on selected tags
+  const filteredResults = searchResults.filter(result => {
+    const matchesQuery = !query || 
+      result.title.toLowerCase().includes(query.toLowerCase()) ||
+      result.preview.toLowerCase().includes(query.toLowerCase());
+    
+    const matchesTags = selectedTags.length === 0 || 
+      selectedTags.every(tag => result.tags.includes(tag));
+    
+    return matchesQuery && matchesTags;
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -87,7 +114,7 @@ const Search = () => {
         </div>
 
         {/* Search Input */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="relative max-w-2xl mx-auto">
             <SearchIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
@@ -99,7 +126,17 @@ const Search = () => {
           </div>
         </div>
 
-        {!query && (
+        {/* Multi-Tag Filter */}
+        <div className="mb-6">
+          <MultiTagFilter
+            availableTags={availableTags}
+            selectedTags={selectedTags}
+            onTagsChange={handleTagsChange}
+            onClear={handleClearFilters}
+          />
+        </div>
+
+        {!query && selectedTags.length === 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Recent Searches */}
             <ResponsiveCard>
@@ -122,37 +159,21 @@ const Search = () => {
               </CardContent>
             </ResponsiveCard>
 
-            {/* Popular Tags */}
-            <ResponsiveCard>
-              <CardContent className="p-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Tag className="h-5 w-5 text-muted-foreground" />
-                  <h3 className="font-semibold">Browse by Tags</h3>
-                </div>
-                <div className="flex flex-wrap gap-2">
-                  {popularTags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant={selectedTags.includes(tag) ? "default" : "secondary"}
-                      className="cursor-pointer hover:bg-primary/80"
-                      onClick={() => toggleTag(tag)}
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </ResponsiveCard>
+            {/* Tag Suggestions */}
+            <TagSuggestions 
+              suggestions={tagSuggestions}
+              onTagClick={handleTagSuggestionClick}
+            />
           </div>
         )}
 
-        {query && (
+        {(query || selectedTags.length > 0) && (
           <>
             {/* Search Filters */}
             <div className="flex flex-wrap items-center gap-4 mb-6 p-4 bg-muted/30 rounded-lg">
               <div className="flex items-center gap-2">
                 <Filter className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Filters:</span>
+                <span className="text-sm font-medium">Sort by:</span>
               </div>
               
               <select
@@ -164,36 +185,19 @@ const Search = () => {
                 <option value="recent">Most Recent</option>
                 <option value="title">Alphabetical</option>
               </select>
-
-              {selectedTags.length > 0 && (
-                <div className="flex flex-wrap gap-1">
-                  {selectedTags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="default"
-                      className="cursor-pointer"
-                      onClick={() => toggleTag(tag)}
-                    >
-                      {tag} ×
-                    </Badge>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Search Results */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <p className="text-sm text-muted-foreground">
-                  Found {searchResults.length} results for "{query}"
+                  Found {filteredResults.length} results
+                  {query && ` for "${query}"`}
+                  {selectedTags.length > 0 && ` with tags: ${selectedTags.join(', ')}`}
                 </p>
-                <Button variant="ghost" size="sm">
-                  <SortDesc className="h-4 w-4 mr-2" />
-                  Sort by {sortBy}
-                </Button>
               </div>
 
-              {searchResults.map((result) => (
+              {filteredResults.map((result) => (
                 <ResponsiveCard
                   key={result.id}
                   className="hover:shadow-md transition-shadow cursor-pointer"
@@ -221,9 +225,9 @@ const Search = () => {
                       {result.tags.map((tag) => (
                         <Badge
                           key={tag}
-                          variant="outline"
+                          variant={selectedTags.includes(tag) ? "default" : "outline"}
                           className="text-xs cursor-pointer hover:bg-accent"
-                          onClick={() => toggleTag(tag)}
+                          onClick={() => handleTagSuggestionClick(tag)}
                         >
                           {tag}
                         </Badge>
@@ -235,14 +239,17 @@ const Search = () => {
             </div>
 
             {/* No Results State */}
-            {searchResults.length === 0 && (
+            {filteredResults.length === 0 && (
               <div className="text-center py-12">
                 <SearchIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-semibold mb-2">No results found</h3>
                 <p className="text-muted-foreground mb-4">
                   Try adjusting your search terms or removing filters
                 </p>
-                <Button variant="outline" onClick={() => setQuery('')}>
+                <Button variant="outline" onClick={() => {
+                  setQuery('');
+                  setSelectedTags([]);
+                }}>
                   Clear Search
                 </Button>
               </div>
