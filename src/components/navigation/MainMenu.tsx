@@ -11,15 +11,17 @@ import { ModeToggle } from '@/components/ui/mode-toggle';
 import { 
   Home, 
   BookOpen, 
-  Search, 
-  Settings, 
   Plus, 
   BarChart3, 
   Menu, 
   X, 
   LogOut,
-  User,
-  Archive
+  Settings,
+  Search,
+  Archive,
+  Contact,
+  HelpCircle,
+  FileText
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -43,7 +45,6 @@ interface MenuItem {
   label: string;
   icon: React.ComponentType<{ className?: string }>;
   description: string;
-  priority: 'high' | 'medium' | 'low';
 }
 
 const MainMenu: React.FC = () => {
@@ -56,7 +57,7 @@ const MainMenu: React.FC = () => {
   const isLoggedIn = !!user;
   const isMobile = useIsMobile();
 
-  // Enhanced scroll effect with performance optimization
+  // Optimized scroll handler
   useEffect(() => {
     let ticking = false;
     
@@ -82,21 +83,31 @@ const MainMenu: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Clear, prioritized menu items
+  // Clear navigation structure - all main items visible
   const publicMenuItems: MenuItem[] = [
     {
       path: '/features',
       label: 'Features',
       icon: BookOpen,
-      description: 'Explore what Accio can do',
-      priority: 'high'
+      description: 'Explore what Accio can do'
     },
     {
       path: '/pricing',
       label: 'Pricing',
       icon: BarChart3,
-      description: 'Simple, transparent plans',
-      priority: 'high'
+      description: 'Simple, transparent plans'
+    },
+    {
+      path: '/contact',
+      label: 'Contact',
+      icon: Contact,
+      description: 'Get in touch with us'
+    },
+    {
+      path: '/faq',
+      label: 'FAQ',
+      icon: HelpCircle,
+      description: 'Frequently asked questions'
     }
   ];
 
@@ -105,34 +116,41 @@ const MainMenu: React.FC = () => {
       path: '/dashboard',
       label: 'Home',
       icon: Home,
-      description: 'Your content dashboard',
-      priority: 'high'
+      description: 'Your content dashboard'
     },
     {
       path: '/save',
       label: 'Save',
       icon: Plus,
-      description: 'Save new content',
-      priority: 'high'
+      description: 'Save new content'
+    },
+    {
+      path: '/search',
+      label: 'Search',
+      icon: Search,
+      description: 'Find your content'
     },
     {
       path: '/collections',
       label: 'Collections',
       icon: Archive,
-      description: 'Organize your content',
-      priority: 'medium'
+      description: 'Organize your content'
     },
     {
       path: '/analytics',
       label: 'Insights',
       icon: BarChart3,
-      description: 'View your analytics',
-      priority: 'medium'
+      description: 'View your analytics'
+    },
+    {
+      path: '/settings',
+      label: 'Settings',
+      icon: Settings,
+      description: 'Account preferences'
     }
   ];
 
   const currentMenuItems = isLoggedIn ? authenticatedMenuItems : publicMenuItems;
-  const highPriorityItems = currentMenuItems.filter(item => item.priority === 'high');
 
   const handleLogout = async () => {
     await signOut();
@@ -154,7 +172,7 @@ const MainMenu: React.FC = () => {
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300 border-b",
         scrolled 
-          ? 'bg-background/95 backdrop-blur-xl shadow-lg border-border/50' 
+          ? 'bg-background/95 backdrop-blur-xl shadow-sm border-border/50' 
           : 'bg-background/80 backdrop-blur-sm border-transparent',
         preferences.highContrast && 'border-foreground bg-background'
       )}
@@ -163,7 +181,7 @@ const MainMenu: React.FC = () => {
     >
       <div className="container flex h-16 sm:h-18 items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         
-        {/* Logo - Enhanced for all screen sizes */}
+        {/* Logo */}
         <div className="flex items-center min-w-0">
           <Link 
             to="/" 
@@ -186,35 +204,87 @@ const MainMenu: React.FC = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation - Clean and prioritized */}
+        {/* Desktop Navigation - All main items visible */}
         <nav 
-          className="hidden md:flex items-center gap-1 lg:gap-2" 
+          className="hidden lg:flex items-center gap-1" 
           role="navigation" 
           aria-label="Primary navigation"
         >
-          {highPriorityItems.map((item) => (
+          {currentMenuItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={cn(
-                "group flex items-center gap-2 px-3 lg:px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200",
-                "hover:bg-accent/80 hover:text-accent-foreground hover:scale-105",
+                "group flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                "hover:bg-accent/80 hover:text-accent-foreground",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                "active:scale-95",
+                "min-h-[44px] min-w-[44px]", // Touch-friendly sizing
                 isActiveLink(item.path) 
-                  ? "bg-primary/10 text-primary shadow-sm border border-primary/20" 
+                  ? "bg-primary/10 text-primary shadow-sm" 
                   : "text-muted-foreground hover:text-foreground"
               )}
               aria-current={isActiveLink(item.path) ? 'page' : undefined}
               title={item.description}
             >
-              <item.icon className="h-4 w-4 transition-transform group-hover:scale-110" aria-hidden="true" />
+              <item.icon className="h-4 w-4" aria-hidden="true" />
               <span className="font-medium">{item.label}</span>
             </Link>
           ))}
         </nav>
 
-        {/* Right Actions - Clean and accessible */}
+        {/* Tablet Navigation - Condensed but visible */}
+        <nav 
+          className="hidden md:flex lg:hidden items-center gap-1" 
+          role="navigation" 
+          aria-label="Primary navigation"
+        >
+          {currentMenuItems.slice(0, 4).map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={cn(
+                "group flex items-center justify-center p-2 rounded-lg text-sm font-medium transition-all duration-200",
+                "hover:bg-accent/80 hover:text-accent-foreground",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                "min-h-[44px] min-w-[44px]", // Touch-friendly sizing
+                isActiveLink(item.path) 
+                  ? "bg-primary/10 text-primary shadow-sm" 
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+              aria-current={isActiveLink(item.path) ? 'page' : undefined}
+              title={`${item.label} - ${item.description}`}
+            >
+              <item.icon className="h-5 w-5" aria-hidden="true" />
+              <span className="sr-only">{item.label}</span>
+            </Link>
+          ))}
+          {currentMenuItems.length > 4 && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  className="min-h-[44px] min-w-[44px] p-2"
+                  aria-label="More navigation options"
+                >
+                  <Menu className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                {currentMenuItems.slice(4).map((item) => (
+                  <DropdownMenuItem key={item.path} asChild>
+                    <Link to={item.path} className="flex items-center gap-2">
+                      <item.icon className="h-4 w-4" />
+                      {item.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+        </nav>
+
+        {/* Right Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           
           {/* Theme and Accessibility Controls */}
@@ -230,7 +300,7 @@ const MainMenu: React.FC = () => {
                 <Button 
                   variant="ghost" 
                   className={cn(
-                    "relative h-9 w-9 rounded-full transition-all duration-200",
+                    "relative h-10 w-10 rounded-full transition-all duration-200",
                     "hover:scale-105 hover:shadow-md",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   )}
@@ -245,7 +315,7 @@ const MainMenu: React.FC = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent 
                 align="end" 
-                className="w-56 bg-background/95 backdrop-blur-sm border shadow-xl"
+                className="w-56 bg-background border shadow-xl"
                 sideOffset={8}
               >
                 <DropdownMenuLabel className="font-medium">
@@ -256,29 +326,6 @@ const MainMenu: React.FC = () => {
                     </p>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                
-                {/* Quick Actions */}
-                <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer">
-                  <Home className="mr-2 h-4 w-4" aria-hidden="true" />
-                  <span>Home</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/save')} className="cursor-pointer">
-                  <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
-                  <span>Save Content</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate('/collections')} className="cursor-pointer">
-                  <Archive className="mr-2 h-4 w-4" aria-hidden="true" />
-                  <span>Collections</span>
-                </DropdownMenuItem>
-                
-                <DropdownMenuSeparator />
-                
-                <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer">
-                  <Settings className="mr-2 h-4 w-4" aria-hidden="true" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-                
                 <DropdownMenuSeparator />
                 
                 <DropdownMenuItem 
@@ -295,13 +342,13 @@ const MainMenu: React.FC = () => {
               <Button 
                 variant="ghost" 
                 onClick={() => navigate('/login')}
-                className="text-sm font-medium px-4 hover:scale-105 transition-transform"
+                className="text-sm font-medium px-4 min-h-[44px]"
               >
                 Sign In
               </Button>
               <Button 
                 onClick={() => navigate('/register')}
-                className="text-sm font-medium px-4 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                className="text-sm font-medium px-4 min-h-[44px] shadow-lg hover:shadow-xl"
               >
                 Get Started
               </Button>
@@ -315,7 +362,7 @@ const MainMenu: React.FC = () => {
                 variant="ghost" 
                 size="icon" 
                 className={cn(
-                  "md:hidden h-9 w-9 transition-all duration-200",
+                  "md:hidden h-10 w-10 transition-all duration-200",
                   "hover:bg-accent hover:scale-105 active:scale-95",
                   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 )}
@@ -331,7 +378,7 @@ const MainMenu: React.FC = () => {
             
             <SheetContent 
               side="right" 
-              className="w-[320px] sm:w-[350px] bg-background/95 backdrop-blur-xl border-l"
+              className="w-[300px] bg-background border-l"
             >
               <SheetHeader className="text-left border-b pb-4 mb-6">
                 <SheetTitle className="flex items-center gap-2 text-lg font-semibold">
@@ -352,12 +399,13 @@ const MainMenu: React.FC = () => {
                       "flex items-center gap-3 p-4 rounded-lg transition-all duration-200",
                       "hover:bg-accent/80 active:scale-95",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                      isActiveLink('/') && "bg-primary/10 text-primary border border-primary/20"
+                      "min-h-[60px]", // Touch-friendly height
+                      isActiveLink('/') && "bg-primary/10 text-primary"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                     aria-current={isActiveLink('/') ? 'page' : undefined}
                   >
-                    <Home className="h-5 w-5" aria-hidden="true" />
+                    <Home className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
                     <div className="flex flex-col min-w-0">
                       <span className="font-medium">Home</span>
                       <span className="text-xs text-muted-foreground">Back to homepage</span>
@@ -374,7 +422,8 @@ const MainMenu: React.FC = () => {
                       "flex items-center gap-3 p-4 rounded-lg transition-all duration-200",
                       "hover:bg-accent/80 active:scale-95",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                      isActiveLink(item.path) && "bg-primary/10 text-primary border border-primary/20"
+                      "min-h-[60px]", // Touch-friendly height
+                      isActiveLink(item.path) && "bg-primary/10 text-primary"
                     )}
                     onClick={() => setMobileMenuOpen(false)}
                     aria-current={isActiveLink(item.path) ? 'page' : undefined}
@@ -386,27 +435,6 @@ const MainMenu: React.FC = () => {
                     </div>
                   </Link>
                 ))}
-                
-                {/* Settings for authenticated users */}
-                {isLoggedIn && (
-                  <Link 
-                    to="/settings" 
-                    className={cn(
-                      "flex items-center gap-3 p-4 rounded-lg transition-all duration-200",
-                      "hover:bg-accent/80 active:scale-95",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                      isActiveLink('/settings') && "bg-primary/10 text-primary border border-primary/20"
-                    )}
-                    onClick={() => setMobileMenuOpen(false)}
-                    aria-current={isActiveLink('/settings') ? 'page' : undefined}
-                  >
-                    <Settings className="h-5 w-5" aria-hidden="true" />
-                    <div className="flex flex-col">
-                      <span className="font-medium">Settings</span>
-                      <span className="text-xs text-muted-foreground">Account preferences</span>
-                    </div>
-                  </Link>
-                )}
               </nav>
               
               {/* Mobile Theme Controls */}
@@ -424,7 +452,7 @@ const MainMenu: React.FC = () => {
                         navigate('/register');
                         setMobileMenuOpen(false);
                       }}
-                      className="w-full justify-center shadow-lg hover:shadow-xl transition-all"
+                      className="w-full justify-center shadow-lg hover:shadow-xl transition-all min-h-[48px]"
                     >
                       Get Started
                     </Button>
@@ -434,7 +462,7 @@ const MainMenu: React.FC = () => {
                         navigate('/login');
                         setMobileMenuOpen(false);
                       }}
-                      className="w-full justify-center"
+                      className="w-full justify-center min-h-[48px]"
                     >
                       Sign In
                     </Button>
@@ -443,7 +471,7 @@ const MainMenu: React.FC = () => {
                   <Button 
                     variant="ghost" 
                     onClick={handleLogout}
-                    className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
+                    className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10 min-h-[48px]"
                   >
                     <LogOut className="mr-2 h-4 w-4" aria-hidden="true" />
                     Sign Out
