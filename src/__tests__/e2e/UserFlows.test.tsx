@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils
 import { BrowserRouter } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import { useAuth } from '@/contexts/AuthContext';
-import type { User, Session } from '@supabase/supabase-js';
+import type { User } from '@/types';
 
 // Mock authentication
 jest.mock('@/contexts/AuthContext');
@@ -17,13 +17,10 @@ describe('End-to-End User Flows', () => {
   const mockUser: User = {
     id: 'user-123',
     email: 'test@example.com',
-    created_at: '2024-01-01T00:00:00Z',
-    app_metadata: {},
-    user_metadata: {},
-    aud: 'authenticated'
+    created_at: '2024-01-01T00:00:00Z'
   };
 
-  const mockSession: Session = {
+  const mockSession = {
     access_token: 'mock-access-token',
     refresh_token: 'mock-refresh-token',
     expires_in: 3600,

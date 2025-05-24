@@ -44,6 +44,21 @@ export interface ButtonProps
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, loading = false, children, disabled, ...props }, ref) => {
+    // When asChild is true and loading is true, we can't use Slot because it expects exactly one child
+    // In this case, we'll ignore the loading state to prevent React.Children.only error
+    if (asChild && loading) {
+      console.warn("Button: loading prop is ignored when asChild is true to prevent React.Children.only error")
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </Slot>
+      )
+    }
+    
     const Comp = asChild ? Slot : "button"
     return (
       <Comp
@@ -52,7 +67,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || loading}
         {...props}
       >
-        {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {loading && !asChild && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {children}
       </Comp>
     )
