@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { ContentSkeleton } from '@/components/ui/content-skeleton';
@@ -14,6 +14,17 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   const location = useLocation();
   const { toast } = useToast();
 
+  // Show toast only once when redirecting
+  useEffect(() => {
+    if (!isLoading && !user) {
+      toast({
+        title: "Authentication required",
+        description: "Please log in to access this page.",
+        variant: "destructive",
+      });
+    }
+  }, [isLoading, user, toast]);
+
   // Show loading state while checking authentication
   if (isLoading) {
     return (
@@ -25,14 +36,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     );
   }
 
-  // If not authenticated, show toast and redirect to login
+  // If not authenticated, redirect to login
   if (!user) {
-    toast({
-      title: "Authentication required",
-      description: "Please log in to access this page.",
-      variant: "destructive",
-    });
-    
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
