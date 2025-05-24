@@ -1,36 +1,46 @@
 
 import { useState, useEffect } from 'react';
 
-interface ResponsiveLayoutState {
+interface ResponsiveLayout {
   isMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
-  width: number;
+  screenWidth: number;
+  screenHeight: number;
 }
 
-export const useResponsiveLayout = (): ResponsiveLayoutState => {
-  const [state, setState] = useState<ResponsiveLayoutState>({
+export const useResponsiveLayout = (): ResponsiveLayout => {
+  const [layout, setLayout] = useState<ResponsiveLayout>({
     isMobile: false,
     isTablet: false,
     isDesktop: true,
-    width: typeof window !== 'undefined' ? window.innerWidth : 1024,
+    screenWidth: typeof window !== 'undefined' ? window.innerWidth : 1024,
+    screenHeight: typeof window !== 'undefined' ? window.innerHeight : 768,
   });
 
   useEffect(() => {
-    const handleResize = () => {
+    const updateLayout = () => {
       const width = window.innerWidth;
-      setState({
-        width,
+      const height = window.innerHeight;
+      
+      setLayout({
         isMobile: width < 768,
         isTablet: width >= 768 && width < 1024,
         isDesktop: width >= 1024,
+        screenWidth: width,
+        screenHeight: height,
       });
     };
 
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    // Initial check
+    updateLayout();
+
+    // Add event listener
+    window.addEventListener('resize', updateLayout);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', updateLayout);
   }, []);
 
-  return state;
+  return layout;
 };

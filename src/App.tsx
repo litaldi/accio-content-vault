@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
@@ -11,6 +10,7 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import BlogPost from './pages/BlogPost';
+import ResponsiveAccessibilityButton from '@/components/accessibility/ResponsiveAccessibilityButton';
 
 // Pages
 import Index from '@/pages/Index';
@@ -51,6 +51,7 @@ function App() {
                 <AuthProvider>
                   <Router>
                     <EnhancedAccessibility />
+                    <ResponsiveAccessibilityButton />
                     <div className="min-h-screen flex flex-col w-full">
                       <Routes>
                         <Route path="/" element={<Index />} />
