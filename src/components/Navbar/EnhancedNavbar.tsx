@@ -23,12 +23,20 @@ const EnhancedNavbar: React.FC<EnhancedNavbarProps> = ({ onLogout }) => {
   const isLoggedIn = !!user;
   const isMobile = useIsMobile();
   
-  // Handle scroll effect for navbar
+  // Handle scroll effect for navbar with performance optimization
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      if (isScrolled !== scrolled) {
-        setScrolled(isScrolled);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const isScrolled = window.scrollY > 10;
+          if (isScrolled !== scrolled) {
+            setScrolled(isScrolled);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
     
@@ -53,12 +61,13 @@ const EnhancedNavbar: React.FC<EnhancedNavbarProps> = ({ onLogout }) => {
     <>
       <SkipToContent />
       <header 
-        className={`sticky top-0 z-40 transition-all duration-300 border-b ${
+        className={`sticky top-0 z-50 w-full transition-all duration-300 border-b ${
           scrolled 
             ? 'bg-background/95 backdrop-blur-md shadow-sm border-border' 
             : 'bg-background border-transparent'
         } ${preferences.highContrast ? 'border-foreground bg-background' : ''}`}
         role="banner"
+        aria-label="Main navigation"
       >
         <div className="container flex h-16 items-center justify-between px-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-6">
