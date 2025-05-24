@@ -51,14 +51,14 @@ const EnhancedNavigation: React.FC = () => {
   };
 
   const navigationLinks = isLoggedIn ? [
-    { path: '/dashboard', label: 'Dashboard', icon: Home },
-    { path: '/save', label: 'Save Content', icon: Plus },
+    { path: '/dashboard', label: copy.nav.dashboard, icon: Home },
+    { path: '/save', label: copy.nav.saveContent, icon: Plus },
     { path: '/collections', label: 'Collections', icon: BookOpen },
-    { path: '/analytics', label: 'Analytics', icon: BarChart }
+    { path: '/analytics', label: copy.nav.analytics, icon: BarChart }
   ] : [
-    { path: '/features', label: 'Features', icon: BookOpen },
-    { path: '/pricing', label: 'Pricing', icon: BarChart },
-    { path: '/about', label: 'About', icon: Users }
+    { path: '/features', label: copy.nav.features, icon: BookOpen },
+    { path: '/pricing', label: copy.nav.pricing, icon: BarChart },
+    { path: '/about', label: copy.nav.about, icon: Users }
   ];
 
   const isActiveLink = (path: string) => location.pathname === path;
@@ -134,16 +134,16 @@ const EnhancedNavigation: React.FC = () => {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                   <Home className="mr-2 h-4 w-4" />
-                  Dashboard
+                  {copy.nav.dashboard}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => navigate('/settings')}>
                   <Settings className="mr-2 h-4 w-4" />
-                  Settings
+                  {copy.nav.settings}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
-                  Sign Out
+                  {copy.buttons.signOut}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -154,13 +154,13 @@ const EnhancedNavigation: React.FC = () => {
                 onClick={() => navigate('/login')}
                 className={focusStyles}
               >
-                Sign In
+                {copy.buttons.signIn}
               </Button>
               <Button 
                 onClick={() => navigate('/register')}
                 className={focusStyles}
               >
-                Get Started
+                {copy.buttons.getStarted}
               </Button>
             </div>
           )}
@@ -203,10 +203,10 @@ const EnhancedNavigation: React.FC = () => {
                 {!isLoggedIn && (
                   <div className="flex flex-col gap-2 pt-4 border-t">
                     <Button onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
-                      Get Started
+                      {copy.buttons.getStarted}
                     </Button>
                     <Button variant="outline" onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
-                      Sign In
+                      {copy.buttons.signIn}
                     </Button>
                   </div>
                 )}

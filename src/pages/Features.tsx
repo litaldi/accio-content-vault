@@ -1,198 +1,129 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { Link } from 'react-router-dom';
+import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import ImprovedFooter from '@/components/Footer/ImprovedFooter';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { 
-  Search, 
-  BookOpen, 
-  Archive, 
-  Tags, 
-  Smartphone, 
-  Shield, 
   Zap, 
-  Users, 
+  Search, 
+  Tags, 
+  Share2, 
+  FileText, 
   BarChart3,
-  Star,
-  CheckCircle,
+  Shield,
+  Smartphone,
+  Globe,
   ArrowRight
 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { Link } from 'react-router-dom';
 
-interface Feature {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-  benefits: string[];
-  category: 'Core' | 'Advanced' | 'Pro';
-}
-
-const Features: React.FC = () => {
-  const { preferences } = useAccessibility();
-
-  const features: Feature[] = [
+const Features = () => {
+  const mainFeatures = [
+    {
+      icon: Zap,
+      title: 'AI-Powered Organization',
+      description: 'Our AI automatically tags, categorizes, and organizes your content so you can find what you need instantly.',
+      benefits: ['Smart auto-tagging', 'Content categorization', 'Intelligent suggestions']
+    },
     {
       icon: Search,
-      title: 'Intelligent Search',
-      description: 'Find your content instantly with powerful AI-powered search capabilities.',
-      benefits: ['Full-text search', 'Smart filtering', 'Quick results', 'Search history'],
-      category: 'Core'
-    },
-    {
-      icon: BookOpen,
-      title: 'Content Organization',
-      description: 'Organize your knowledge with collections, tags, and smart categorization.',
-      benefits: ['Custom collections', 'Auto-tagging', 'Nested folders', 'Smart sorting'],
-      category: 'Core'
-    },
-    {
-      icon: Archive,
-      title: 'Universal Saving',
-      description: 'Save content from anywhere - web pages, documents, notes, and more.',
-      benefits: ['Browser extension', 'Mobile app', 'API integration', 'Bulk import'],
-      category: 'Core'
+      title: 'Powerful Search',
+      description: 'Find anything in your knowledge base with our advanced search that understands context and meaning.',
+      benefits: ['Natural language search', 'Filter by tags/date', 'Full-text search']
     },
     {
       icon: Tags,
-      title: 'Smart Tagging',
-      description: 'Automatically tag and categorize your content for better organization.',
-      benefits: ['AI auto-tagging', 'Custom tags', 'Tag suggestions', 'Bulk tagging'],
-      category: 'Advanced'
+      title: 'Smart Tagging System',
+      description: 'Organize content with intelligent tags that help you build connections between related information.',
+      benefits: ['Auto-suggested tags', 'Custom tag creation', 'Tag relationships']
     },
     {
-      icon: Smartphone,
-      title: 'Cross-Platform Sync',
-      description: 'Access your knowledge library from any device, anywhere.',
-      benefits: ['Real-time sync', 'Offline access', 'Mobile apps', 'Web interface'],
-      category: 'Core'
-    },
-    {
-      icon: Shield,
-      title: 'Privacy & Security',
-      description: 'Your data is encrypted and secure with enterprise-grade protection.',
-      benefits: ['End-to-end encryption', 'GDPR compliant', 'Secure sharing', 'Data export'],
-      category: 'Core'
-    },
-    {
-      icon: Zap,
-      title: 'Quick Actions',
-      description: 'Streamline your workflow with keyboard shortcuts and quick commands.',
-      benefits: ['Keyboard shortcuts', 'Quick save', 'Batch operations', 'Command palette'],
-      category: 'Advanced'
-    },
-    {
-      icon: Users,
+      icon: Share2,
       title: 'Team Collaboration',
-      description: 'Share knowledge and collaborate with your team seamlessly.',
-      benefits: ['Shared collections', 'Team workspaces', 'Permission controls', 'Activity feeds'],
-      category: 'Pro'
+      description: 'Share collections and collaborate with your team on research and knowledge gathering.',
+      benefits: ['Shared collections', 'Team workspaces', 'Permission controls']
+    },
+    {
+      icon: FileText,
+      title: 'Multiple Content Types',
+      description: 'Save articles, PDFs, images, notes, and more in one unified knowledge management system.',
+      benefits: ['Web articles', 'PDF documents', 'Images & screenshots']
     },
     {
       icon: BarChart3,
       title: 'Analytics & Insights',
-      description: 'Understand your knowledge patterns with detailed analytics.',
-      benefits: ['Usage statistics', 'Content insights', 'Search analytics', 'Team metrics'],
-      category: 'Pro'
+      description: 'Track your knowledge growth and discover patterns in your learning and research habits.',
+      benefits: ['Usage analytics', 'Content insights', 'Learning patterns']
     }
   ];
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'Core': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'Advanced': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
-      case 'Pro': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
-    }
-  };
+  const additionalFeatures = [
+    { icon: Shield, title: 'Enterprise Security', description: 'Bank-level encryption and security' },
+    { icon: Smartphone, title: 'Mobile Access', description: 'Access your knowledge anywhere' },
+    { icon: Globe, title: 'Web Clipper', description: 'Save content from any website' }
+  ];
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col w-full">
       <Helmet>
-        <title>Features - Accio Knowledge Library</title>
-        <meta name="description" content="Discover all the powerful features that make Accio the perfect knowledge management solution for individuals and teams." />
+        <title>Features - Accio</title>
+        <meta name="description" content="Discover all the powerful features that make Accio the ultimate knowledge management solution." />
       </Helmet>
-
-      <div className={cn(
-        "min-h-screen bg-background",
-        preferences.highContrast && 'contrast-more'
-      )}>
-        
+      
+      <EnhancedNavigation />
+      
+      <main className="flex-grow w-full" role="main">
         {/* Hero Section */}
-        <section className="py-16 lg:py-24">
+        <section className="py-20 lg:py-24 bg-gradient-to-br from-primary/5 to-primary/10">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="text-center max-w-3xl mx-auto">
-              <h1 className={cn(
-                "text-4xl lg:text-6xl font-bold text-foreground mb-6 leading-tight",
-                preferences.reduceAnimations ? '' : 'animate-fade-in'
-              )}>
-                Powerful Features for
-                <span className="text-primary block">Knowledge Management</span>
+            <div className="text-center max-w-4xl mx-auto">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight mb-6">
+                Powerful Features for Modern Knowledge Management
               </h1>
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Everything you need to capture, organize, and find your knowledge. 
-                From simple note-taking to advanced team collaboration.
+              <p className="text-xl leading-relaxed mb-8 text-muted-foreground">
+                Everything you need to capture, organize, and rediscover your knowledge with AI-powered intelligence.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg" className="text-lg px-8">
-                  <Link to="/register">
-                    Start Free Trial
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="text-lg px-8">
-                  <Link to="/pricing">View Pricing</Link>
-                </Button>
-              </div>
+              <Button asChild size="lg">
+                <Link to="/register">
+                  Start Free Trial
+                  <ArrowRight className="h-5 w-5 ml-2" />
+                </Link>
+              </Button>
             </div>
           </div>
         </section>
 
-        {/* Features Grid */}
-        <section className="py-16">
+        {/* Main Features */}
+        <section className="py-20 lg:py-24">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
             <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                Everything You Need
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Core Features
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Comprehensive features designed to make knowledge management effortless and efficient.
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Built for professionals who value their time and knowledge
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {features.map((feature, index) => (
-                <Card 
-                  key={feature.title}
-                  className={cn(
-                    "h-full hover:shadow-lg transition-all duration-300 border-border/50",
-                    preferences.reduceAnimations ? '' : 'hover:scale-[1.02]'
-                  )}
-                >
+              {mainFeatures.map((feature, index) => (
+                <Card key={index} className="h-full">
                   <CardHeader>
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="p-3 rounded-lg bg-primary/10 text-primary">
-                        <feature.icon className="h-6 w-6" aria-hidden="true" />
-                      </div>
-                      <Badge className={getCategoryColor(feature.category)}>
-                        {feature.category}
-                      </Badge>
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      <feature.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle className="text-xl font-semibold mb-2">
-                      {feature.title}
-                    </CardTitle>
-                    <CardDescription className="text-muted-foreground leading-relaxed">
-                      {feature.description}
-                    </CardDescription>
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-2" role="list">
-                      {feature.benefits.map((benefit) => (
-                        <li key={benefit} className="flex items-center gap-2 text-sm">
-                          <CheckCircle className="h-4 w-4 text-green-600 flex-shrink-0" aria-hidden="true" />
-                          <span>{benefit}</span>
+                    <p className="text-muted-foreground mb-4">{feature.description}</p>
+                    <ul className="space-y-2">
+                      {feature.benefits.map((benefit, i) => (
+                        <li key={i} className="flex items-center gap-2 text-sm">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                          {benefit}
                         </li>
                       ))}
                     </ul>
@@ -203,33 +134,54 @@ const Features: React.FC = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-16 bg-accent/50">
+        {/* Additional Features */}
+        <section className="py-20 bg-muted/20">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-            <div className="text-center max-w-3xl mx-auto">
-              <Star className="h-12 w-12 text-primary mx-auto mb-6" />
-              <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
-                Ready to Get Started?
+            <div className="text-center mb-16">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Everything You Need
               </h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Join thousands of users who have transformed their knowledge management with Accio.
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {additionalFeatures.map((feature, index) => (
+                <div key={index} className="text-center">
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <feature.icon className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-muted-foreground">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-20 lg:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+            <div className="text-center">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-4">
+                Ready to Transform Your Knowledge Management?
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Join thousands of professionals who have already discovered the power of organized knowledge.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg" className="text-lg px-8">
-                  <Link to="/register">
-                    Start Your Free Trial
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+                <Button asChild size="lg">
+                  <Link to="/register">Get Started Free</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="text-lg px-8">
-                  <Link to="/contact">Contact Sales</Link>
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/contact">Schedule Demo</Link>
                 </Button>
               </div>
             </div>
           </div>
         </section>
-      </div>
-    </>
+      </main>
+      
+      <ImprovedFooter />
+    </div>
   );
 };
 

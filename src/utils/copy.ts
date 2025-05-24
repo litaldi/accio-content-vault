@@ -13,7 +13,10 @@ export const copy = {
     analytics: 'Analytics',
     features: 'Features',
     pricing: 'Pricing',
-    about: 'About'
+    about: 'About',
+    contact: 'Contact',
+    faq: 'FAQ',
+    blog: 'Blog'
   },
 
   // Buttons - consistent with proper punctuation
@@ -31,7 +34,9 @@ export const copy = {
     createAccount: 'Create My Free Account',
     scheduleDemo: 'Schedule a Demo',
     chatSupport: 'Chat with Support',
-    tryFree: 'Try It Free'
+    tryFree: 'Try It Free',
+    startFreeTrial: 'Start Free Trial',
+    contactSales: 'Contact Sales'
   },
 
   // Error messages - user-friendly and actionable
