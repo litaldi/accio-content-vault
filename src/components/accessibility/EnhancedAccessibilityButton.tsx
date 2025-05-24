@@ -1,4 +1,3 @@
-
 import React, { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
@@ -18,7 +17,7 @@ const EnhancedAccessibilityButton: React.FC = () => {
   const { preferences, updatePreferences, resetPreferences } = useAccessibility();
   const { theme, setTheme } = useTheme();
   const [open, setOpen] = useState(false);
-  const popoverRef = useFocusTrap({ enabled: open });
+  const popoverRef = useFocusTrap();
 
   // Count active features for the badge
   const activeFeatures = [

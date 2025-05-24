@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Tag as TagType } from '@/types';
 import { Input } from '@/components/ui/input';
@@ -33,7 +32,7 @@ const TagEditor: React.FC<TagEditorProps> = ({
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const tagsContainerRef = useRef<HTMLDivElement>(null);
-  const { trapRef } = useFocusTrap({ enabled: inputFocused });
+  const trapRef = useFocusTrap();
   
   const isCompact = variant === 'compact';
   const canAddMore = maxTags ? tags.length < maxTags : true;
