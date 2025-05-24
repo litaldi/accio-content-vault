@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
@@ -6,7 +5,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from '@/components/ui/button';
 import TagConfirmation from '@/components/TagConfirmation';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, Share, CheckCircle, Loader2, Sparkles, Globe, Zap, Magic } from 'lucide-react';
+import { AlertCircle, Share, CheckCircle, Loader2, Sparkles, Globe, Zap, Wand2 } from 'lucide-react';
 import { Tag } from '@/types';
 import { Form } from '@/components/ui/form';
 import UrlInput from './UrlInput';
@@ -25,7 +24,7 @@ const SaveContentForm: React.FC<SaveContentFormProps> = ({ onSaveContent }) => {
   
   const loadingSteps = [
     { icon: <Globe className="h-4 w-4" />, text: "Fetching content..." },
-    { icon: <Magic className="h-4 w-4" />, text: "Analyzing with AI..." },
+    { icon: <Wand2 className="h-4 w-4" />, text: "Analyzing with AI..." },
     { icon: <Sparkles className="h-4 w-4" />, text: "Generating tags..." },
     { icon: <CheckCircle className="h-4 w-4" />, text: "Almost ready!" }
   ];
