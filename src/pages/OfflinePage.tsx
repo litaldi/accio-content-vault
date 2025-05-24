@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import OfflineContentList from '@/components/OfflineContentList';
 import OfflineIndicator from '@/components/OfflineIndicator';
 import MainMenu from '@/components/navigation/MainMenu';
-import { Download, Wifi, Database, Sync } from 'lucide-react';
+import { Download, Wifi, Database, RefreshCw } from 'lucide-react';
 
 const OfflinePage: React.FC = () => {
   const {
@@ -81,7 +81,7 @@ const OfflinePage: React.FC = () => {
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Tags Cached</CardTitle>
-              <Sync className="h-4 w-4 text-muted-foreground" />
+              <RefreshCw className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{offlineTags.length}</div>
