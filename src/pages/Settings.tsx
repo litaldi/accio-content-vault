@@ -1,15 +1,17 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useNavigate } from 'react-router-dom';
 import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { useOnboardingContext } from '@/contexts/OnboardingContext';
-import { PlayCircle, User, Bell, Shield, Palette } from 'lucide-react';
+import { PlayCircle, User, Bell, Shield, Palette, ArrowLeft, Home } from 'lucide-react';
 
 const Settings = () => {
+  const navigate = useNavigate();
   const { resetOnboarding } = useOnboardingContext();
 
   const handleRestartOnboarding = () => {
@@ -26,10 +28,39 @@ const Settings = () => {
       
       <EnhancedNavigation />
       
+      {/* Enhanced Header with Navigation */}
+      <div className="border-b bg-card/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate('/dashboard')}
+                className="flex items-center gap-2"
+              >
+                <Home className="h-4 w-4" />
+                Dashboard
+              </Button>
+              <div className="h-4 w-px bg-border" />
+              <h1 className="text-2xl font-bold">Settings</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <main className="flex-grow py-16">
         <div className="container mx-auto px-4 max-w-4xl">
-          <div className="mb-16">
-            <h1 className="text-4xl font-bold mb-4">Settings</h1>
+          <div className="mb-8">
             <p className="text-xl text-muted-foreground">
               Manage your account and preferences
             </p>
@@ -40,7 +71,7 @@ const Settings = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <PlayCircle className="h-5 w-5" />
-                  Onboarding
+                  Onboarding & Tutorial
                 </CardTitle>
                 <CardDescription>
                   Restart the onboarding process to learn about Accio's features
@@ -106,6 +137,13 @@ const Settings = () => {
                   </div>
                   <Switch defaultChecked />
                 </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Push notifications</p>
+                    <p className="text-sm text-muted-foreground">Get notified on your devices</p>
+                  </div>
+                  <Switch />
+                </div>
               </CardContent>
             </Card>
 
@@ -134,6 +172,13 @@ const Settings = () => {
                   </div>
                   <Button variant="outline" size="sm">Export</Button>
                 </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Account deletion</p>
+                    <p className="text-sm text-muted-foreground">Permanently delete your account</p>
+                  </div>
+                  <Button variant="destructive" size="sm">Delete</Button>
+                </div>
               </CardContent>
             </Card>
 
@@ -141,7 +186,7 @@ const Settings = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Palette className="h-5 w-5" />
-                  Appearance
+                  Appearance & Accessibility
                 </CardTitle>
                 <CardDescription>
                   Customize how Accio looks and feels
@@ -159,6 +204,20 @@ const Settings = () => {
                   <div>
                     <p className="font-medium">Compact view</p>
                     <p className="text-sm text-muted-foreground">Show more content on screen</p>
+                  </div>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">High contrast mode</p>
+                    <p className="text-sm text-muted-foreground">Improve readability</p>
+                  </div>
+                  <Switch />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium">Reduce motion</p>
+                    <p className="text-sm text-muted-foreground">Minimize animations</p>
                   </div>
                   <Switch />
                 </div>

@@ -3,7 +3,26 @@
  * Comprehensive accessibility testing utilities
  */
 
-import { axe, AxeResults } from 'jest-axe';
+// Define our own AxeResults interface since jest-axe doesn't export it properly
+interface AxeViolation {
+  id: string;
+  description: string;
+}
+
+interface AxeIncomplete {
+  id: string;
+  description: string;
+}
+
+interface AxePass {
+  id: string;
+}
+
+interface AxeResults {
+  violations: AxeViolation[];
+  incomplete: AxeIncomplete[];
+  passes: AxePass[];
+}
 
 export interface AccessibilityAuditResult {
   issues: string[];
@@ -14,7 +33,10 @@ export interface AccessibilityAuditResult {
 // Real-time accessibility audit for development
 export const runAccessibilityAudit = async (): Promise<AccessibilityAuditResult> => {
   try {
-    const results = await axe(document.body, {
+    // Dynamic import to avoid build issues
+    const { axe } = await import('jest-axe');
+    
+    const results: AxeResults = await axe(document.body, {
       rules: {
         'color-contrast': { enabled: true },
         'keyboard': { enabled: true },

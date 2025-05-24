@@ -7,6 +7,8 @@ import { OnboardingProvider } from '@/contexts/OnboardingContext';
 import { QueryProvider } from '@/providers/QueryProvider';
 import Index from './pages/Index';
 import Dashboard from './pages/Dashboard';
+import Search from './pages/Search';
+import Help from './pages/Help';
 import AccessibilityStatement from './pages/AccessibilityStatement';
 import Login from './pages/Login';
 import Features from './pages/Features';
@@ -44,6 +46,8 @@ function AppContent() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/search" element={<Search />} />
+            <Route path="/help" element={<Help />} />
             <Route path="/features" element={<Features />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/about" element={<About />} />
