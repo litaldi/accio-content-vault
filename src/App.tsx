@@ -11,7 +11,7 @@ import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 import { HelmetProvider } from 'react-helmet-async';
 import SkipToContent from "./components/SkipToContent";
 import ErrorBoundary from "./components/ErrorBoundary";
-import Footer from "./components/Footer";
+import ShareTargetHandler from "./components/ShareTargetHandler";
 
 // Import components
 import Index from "./pages/Index";
@@ -58,15 +58,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Layout component for consistent page structure
-const PageLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
-  );
-};
-
 const App: React.FC = () => {
   return (
     <React.StrictMode>
@@ -81,6 +72,7 @@ const App: React.FC = () => {
                     <Sonner />
                     <BrowserRouter>
                       <SkipToContent />
+                      <ShareTargetHandler />
                       <Routes>
                         {/* Public routes */}
                         <Route path="/" element={<Index />} />

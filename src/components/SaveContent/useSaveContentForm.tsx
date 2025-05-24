@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Tag } from '@/types';
+import { aiTaggingService } from '@/services/aiTaggingService';
 
 // Define form validation schema with Zod
 const formSchema = z.object({
@@ -46,23 +47,23 @@ const useSaveContentForm = ({ onSaveContent }: UseSaveContentFormProps) => {
     }
   });
 
-  // Function to generate tags with AI
-  const generateTagsWithAI = async (url: string): Promise<Tag[]> => {
-    // This would be replaced with an actual API call to GPT/OpenAI
-    // For now, we're using the mock implementation
-    
-    // Simulating API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Sample tags based on URL patterns (for demo purposes)
-    if (url.includes('github')) {
-      return [{ id: '1', name: 'programming', auto_generated: true }];
-    } else if (url.includes('medium')) {
-      return [{ id: '2', name: 'article', auto_generated: true }];
-    } else if (url.includes('youtube')) {
-      return [{ id: '3', name: 'video', auto_generated: true }];
-    } else {
-      return [{ id: '4', name: 'web', auto_generated: true }];
+  // Function to extract metadata from URL
+  const extractMetadata = async (url: string): Promise<{title: string, description: string}> => {
+    try {
+      // In a real implementation, you'd use a service to extract metadata
+      // For now, we'll extract basic info from the URL
+      const urlObj = new URL(url);
+      const domain = urlObj.hostname.replace('www.', '');
+      
+      return {
+        title: `Content from ${domain}`,
+        description: `Saved content from ${url}`
+      };
+    } catch {
+      return {
+        title: 'Saved Content',
+        description: 'Content saved from external source'
+      };
     }
   };
 
@@ -88,8 +89,16 @@ const useSaveContentForm = ({ onSaveContent }: UseSaveContentFormProps) => {
         processedUrl = 'https://' + data.url;
       }
       
-      // Generate tags
-      const tags = await generateTagsWithAI(processedUrl);
+      // Extract metadata
+      const metadata = await extractMetadata(processedUrl);
+      
+      // Generate tags using AI service
+      const tags = await aiTaggingService.generateTags({
+        content: metadata.description,
+        url: processedUrl,
+        title: metadata.title,
+        description: metadata.description
+      });
       
       if (tags.length > 0) {
         setSuggestedTag(tags[0]);
@@ -98,8 +107,8 @@ const useSaveContentForm = ({ onSaveContent }: UseSaveContentFormProps) => {
         // If no tags were generated, save content with empty tags
         const savedContent = await saveContent({
           url: processedUrl,
-          title: processedUrl,
-          description: '',
+          title: metadata.title,
+          description: metadata.description,
           content_type: 'url'
         }, []);
         
@@ -133,30 +142,40 @@ const useSaveContentForm = ({ onSaveContent }: UseSaveContentFormProps) => {
       const url = form.getValues('url');
       
       try {
+        // Record tag feedback
+        await aiTaggingService.recordTagFeedback(
+          suggestedTag.id,
+          confirmed ? 'accepted' : 'rejected'
+        );
+        
         // Process the URL with the confirmed tag
         let processedUrl = url;
         if (!url.startsWith('http://') && !url.startsWith('https://')) {
           processedUrl = 'https://' + url;
         }
         
+        const metadata = await extractMetadata(processedUrl);
+        
         const savedContent = await saveContent({
           url: processedUrl,
-          title: processedUrl,
-          description: '',
+          title: metadata.title,
+          description: metadata.description,
           content_type: 'url'
-        }, [confirmedTag]);
+        }, confirmed ? [confirmedTag] : []);
         
         if (savedContent) {
           toast({
             title: "Content saved",
-            description: `Your content was saved with the tag: ${confirmedTag.name}`,
+            description: confirmed 
+              ? `Your content was saved with the tag: ${confirmedTag.name}`
+              : "Your content was saved without the suggested tag",
           });
           
           form.reset();
           setSuggestedTag(null);
           setShowTagConfirmation(false);
           
-          onSaveContent(processedUrl, [confirmedTag]);
+          onSaveContent(processedUrl, confirmed ? [confirmedTag] : []);
         }
       } catch (error) {
         console.error("Error saving content:", error);

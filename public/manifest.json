@@ -1,0 +1,44 @@
+
+{
+  "name": "Accio - Content Organizer",
+  "short_name": "Accio",
+  "description": "Save, organize, and find your content with AI-powered tagging",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "url": "url",
+      "title": "title",
+      "text": "text"
+    }
+  },
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Save Content",
+      "short_name": "Save",
+      "description": "Save new content",
+      "url": "/save",
+      "icons": [{ "src": "/favicon.ico", "sizes": "96x96" }]
+    },
+    {
+      "name": "Dashboard",
+      "short_name": "Dashboard",
+      "description": "View saved content",
+      "url": "/dashboard",
+      "icons": [{ "src": "/favicon.ico", "sizes": "96x96" }]
+    }
+  ]
+}
