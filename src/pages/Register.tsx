@@ -25,7 +25,6 @@ import {
   FormMessage,
   FormDescription,
 } from '@/components/ui/form';
-import Navbar from '@/components/Navbar';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -42,6 +41,7 @@ const formSchema = z.object({
 const Register = () => {
   const navigate = useNavigate();
   const { signUp, user, isLoading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -55,18 +55,44 @@ const Register = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
+    if (user && !isLoading) {
+      navigate('/dashboard', { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, isLoading, navigate]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await signUp(values.email, values.password, values.termsAccepted);
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      await signUp(values.email, values.password, values.termsAccepted);
+      // On successful signup, user will be redirected by useEffect
+    } catch (error) {
+      // Error handling is done in the AuthContext
+      console.error('Registration error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar isLoggedIn={!!user} />
+      <header className="border-b bg-background">
+        <div className="container mx-auto px-4 py-3">
+          <Link to="/" className="text-lg font-semibold">
+            Accio
+          </Link>
+        </div>
+      </header>
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
         <Card className="w-full max-w-md animate-fade-up shadow-lg">
@@ -89,7 +115,7 @@ const Register = () => {
                         <Input 
                           placeholder="example@email.com" 
                           type="email" 
-                          disabled={isLoading} 
+                          disabled={isSubmitting} 
                           {...field} 
                         />
                       </FormControl>
@@ -107,7 +133,7 @@ const Register = () => {
                         <Input 
                           placeholder="••••••••" 
                           type="password" 
-                          disabled={isLoading} 
+                          disabled={isSubmitting} 
                           {...field} 
                         />
                       </FormControl>
@@ -125,7 +151,7 @@ const Register = () => {
                         <Input 
                           placeholder="••••••••" 
                           type="password" 
-                          disabled={isLoading} 
+                          disabled={isSubmitting} 
                           {...field} 
                         />
                       </FormControl>
@@ -142,7 +168,7 @@ const Register = () => {
                         <Checkbox
                           checked={field.value}
                           onCheckedChange={field.onChange}
-                          disabled={isLoading}
+                          disabled={isSubmitting}
                         />
                       </FormControl>
                       <div className="space-y-1 leading-none">
@@ -159,9 +185,9 @@ const Register = () => {
                 <Button 
                   type="submit" 
                   className="w-full" 
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                 >
-                  {isLoading ? 'Creating account...' : 'Register'}
+                  {isSubmitting ? 'Creating account...' : 'Register'}
                 </Button>
               </form>
             </Form>

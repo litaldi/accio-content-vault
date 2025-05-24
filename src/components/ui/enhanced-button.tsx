@@ -33,6 +33,11 @@ export const EnhancedButton = React.forwardRef<
 
   // When asChild is true, we need to ensure we only pass a single child
   if (asChild) {
+    if (!React.isValidElement(children)) {
+      console.warn('EnhancedButton with asChild prop expects a single React element as children');
+      return null;
+    }
+
     return (
       <Slot
         ref={ref}
@@ -43,12 +48,9 @@ export const EnhancedButton = React.forwardRef<
         )}
         {...props}
       >
-        {React.isValidElement(children) ? 
-          React.cloneElement(children as React.ReactElement, {
-            disabled: isDisabled,
-          }) : 
-          <span>{children}</span>
-        }
+        {React.cloneElement(children, {
+          disabled: isDisabled,
+        })}
       </Slot>
     );
   }

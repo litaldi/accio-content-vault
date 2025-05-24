@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -23,7 +23,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import Navbar from '@/components/Navbar';
 
 const formSchema = z.object({
   email: z.string().email({ message: 'Please enter a valid email address' }),
@@ -32,7 +31,9 @@ const formSchema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { signIn, user, isLoading } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,23 +45,50 @@ const Login = () => {
 
   // Redirect if already logged in
   useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
+    if (user && !isLoading) {
+      const from = location.state?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, isLoading, navigate, location.state]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    await signIn(values.email, values.password);
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      await signIn(values.email, values.password);
+      // Navigation will be handled by the useEffect above
+    } catch (error) {
+      // Error handling is done in the AuthContext
+      console.error('Login error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navbar isLoggedIn={!!user} />
+      <header className="border-b bg-background">
+        <div className="container mx-auto px-4 py-3">
+          <Link to="/" className="text-lg font-semibold">
+            Accio
+          </Link>
+        </div>
+      </header>
       
       <div className="flex-grow flex items-center justify-center px-4 py-12">
         <Card className="w-full max-w-md animate-fade-up shadow-lg">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Login</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
             <CardDescription className="text-center">
               Enter your email and password to access your account
             </CardDescription>
@@ -78,7 +106,7 @@ const Login = () => {
                         <Input 
                           placeholder="example@email.com" 
                           type="email" 
-                          disabled={isLoading} 
+                          disabled={isSubmitting} 
                           {...field} 
                         />
                       </FormControl>
@@ -96,7 +124,7 @@ const Login = () => {
                         <Input 
                           placeholder="••••••" 
                           type="password" 
-                          disabled={isLoading} 
+                          disabled={isSubmitting} 
                           {...field} 
                         />
                       </FormControl>
@@ -107,9 +135,9 @@ const Login = () => {
                 <Button 
                   type="submit" 
                   className="w-full" 
-                  disabled={isLoading}
+                  disabled={isSubmitting}
                 >
-                  {isLoading ? 'Logging in...' : 'Login'}
+                  {isSubmitting ? 'Signing in...' : 'Sign In'}
                 </Button>
               </form>
             </Form>

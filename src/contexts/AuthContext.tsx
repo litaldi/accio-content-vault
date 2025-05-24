@@ -72,6 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: authError.message || 'An error occurred during registration. Please try again.',
         variant: 'destructive',
       });
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -100,6 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: authError.message || 'Invalid email or password. Please try again.',
         variant: 'destructive',
       });
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -122,6 +124,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         description: 'An error occurred while signing out. Please try again.',
         variant: 'destructive',
       });
+      throw error;
     } finally {
       setIsLoading(false);
     }
