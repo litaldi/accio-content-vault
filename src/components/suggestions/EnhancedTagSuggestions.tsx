@@ -29,8 +29,8 @@ export const EnhancedTagSuggestions: React.FC<EnhancedTagSuggestionsProps> = ({
 
   // Convert to array and sort by count
   const suggestions: TagSuggestion[] = Object.entries(tagCounts)
-    .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count)
+    .map(([name, count]) => ({ name, count: Number(count) }))
+    .sort((a, b) => Number(b.count) - Number(a.count))
     .slice(0, 6);
 
   if (suggestions.length === 0) {

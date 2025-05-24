@@ -3,8 +3,10 @@ import { useState, useEffect } from 'react';
 
 export const useOfflineContent = () => {
   const [offlineContents, setOfflineContents] = useState<any[]>([]);
+  const [offlineTags, setOfflineTags] = useState<any[]>([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isLoading, setIsLoading] = useState(false);
+  const [canAccessOffline, setCanAccessOffline] = useState(true);
 
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
@@ -12,6 +14,9 @@ export const useOfflineContent = () => {
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
+
+    // Check if offline features are supported
+    setCanAccessOffline('indexedDB' in window && 'serviceWorker' in navigator);
 
     return () => {
       window.removeEventListener('online', handleOnline);
@@ -29,8 +34,10 @@ export const useOfflineContent = () => {
 
   return {
     offlineContents,
+    offlineTags,
     isOnline,
     isLoading,
-    syncWithServer
+    syncWithServer,
+    canAccessOffline
   };
 };

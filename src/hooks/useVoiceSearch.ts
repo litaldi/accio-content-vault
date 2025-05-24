@@ -3,9 +3,10 @@ import { useState, useEffect } from 'react';
 
 interface UseVoiceSearchProps {
   onTranscript: (text: string, isFinal: boolean) => void;
+  minConfidence?: number;
 }
 
-export const useVoiceSearch = ({ onTranscript }: UseVoiceSearchProps) => {
+export const useVoiceSearch = ({ onTranscript, minConfidence = 0.7 }: UseVoiceSearchProps) => {
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(false);
   const [transcript, setTranscript] = useState('');
