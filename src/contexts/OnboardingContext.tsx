@@ -19,7 +19,7 @@ interface OnboardingContextType {
   resetOnboarding: () => void;
 }
 
-const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
+export const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
 export const OnboardingProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const onboarding = useOnboarding();
