@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   id: string;
-  email: string;
+  email?: string; // Make email optional to match the main User type
   name?: string;
   user_metadata?: {
     name?: string;

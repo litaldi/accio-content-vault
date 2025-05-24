@@ -1,9 +1,9 @@
+
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils';
 import { BrowserRouter } from 'react-router-dom';
 import Dashboard from '@/pages/Dashboard';
 import { useAuth } from '@/contexts/AuthContext';
-import type { User } from '@/types';
 
 // Mock authentication
 jest.mock('@/contexts/AuthContext');
@@ -14,7 +14,7 @@ jest.mock('@/hooks/useOfflineContent');
 jest.mock('@/hooks/useVoiceSearch');
 
 describe('End-to-End User Flows', () => {
-  const mockUser: User = {
+  const mockUser = {
     id: 'user-123',
     email: 'test@example.com',
     created_at: '2024-01-01T00:00:00Z'
