@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import NavbarActions from './Navbar/NavbarActions';
 import NavbarLogo from './Navbar/NavbarLogo';
 import NavbarDesktopLinks from './Navbar/NavbarDesktopLinks';
@@ -7,12 +8,19 @@ import NavbarMobileMenu from './Navbar/NavbarMobileMenu';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 
 interface NavbarProps {
-  isLoggedIn: boolean;
+  isLoggedIn?: boolean;
   onLogout?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn = false, onLogout }) => {
   const { preferences } = useAccessibility();
+  const location = useLocation();
+
+  const handleLogout = () => {
+    if (onLogout) {
+      onLogout();
+    }
+  };
 
   return (
     <header 
@@ -28,10 +36,15 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
           aria-label="Main navigation"
         >
           <NavbarLogo />
-          <NavbarDesktopLinks isLoggedIn={isLoggedIn} />
+          <NavbarDesktopLinks isLoggedIn={isLoggedIn} currentPath={location.pathname} />
           <div className="flex items-center gap-4">
-            <NavbarActions isLoggedIn={isLoggedIn} onLogout={onLogout} />
-            <NavbarMobileMenu isLoggedIn={isLoggedIn} />
+            <NavbarActions 
+              isLoggedIn={isLoggedIn} 
+              isMobile={false}
+              handleLogout={handleLogout}
+              getUserInitials={() => 'U'}
+            />
+            <NavbarMobileMenu isLoggedIn={isLoggedIn} handleLogout={handleLogout} />
           </div>
         </nav>
       </div>
