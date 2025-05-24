@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import Navbar from '@/components/Navbar';
 import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
@@ -15,6 +15,7 @@ import { ArrowRight, FileText, Users, Settings, BarChart, FolderOpen, HelpCircle
 
 const Index = () => {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     signOut();
@@ -73,11 +74,12 @@ const Index = () => {
                         <CardDescription>{page.description}</CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <Button asChild className="w-full">
-                          <Link to={page.path}>
-                            Visit {page.title}
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </Link>
+                        <Button 
+                          onClick={() => navigate(page.path)}
+                          className="w-full"
+                        >
+                          <span>Visit {page.title}</span>
+                          <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       </CardContent>
                     </Card>
@@ -95,11 +97,12 @@ const Index = () => {
                       <CardDescription>Sign up to start building your knowledge library</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <Button asChild className="w-full">
-                        <Link to="/register">
-                          Sign Up Free
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
+                      <Button 
+                        onClick={() => navigate('/register')}
+                        className="w-full"
+                      >
+                        <span>Sign Up Free</span>
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </CardContent>
                   </Card>
@@ -109,11 +112,13 @@ const Index = () => {
                       <CardDescription>Already have an account? Welcome back!</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <Button asChild variant="outline" className="w-full">
-                        <Link to="/login">
-                          Sign In
-                          <ArrowRight className="ml-2 h-4 w-4" />
-                        </Link>
+                      <Button 
+                        onClick={() => navigate('/login')}
+                        variant="outline" 
+                        className="w-full"
+                      >
+                        <span>Sign In</span>
+                        <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </CardContent>
                   </Card>
@@ -135,11 +140,14 @@ const Index = () => {
                     </CardHeader>
                     <CardContent className="pt-0">
                       <CardDescription className="text-sm mb-3">{page.description}</CardDescription>
-                      <Button asChild variant="ghost" size="sm" className="w-full">
-                        <Link to={page.path}>
-                          Visit
-                          <ArrowRight className="ml-2 h-3 w-3" />
-                        </Link>
+                      <Button 
+                        onClick={() => navigate(page.path)}
+                        variant="ghost" 
+                        size="sm" 
+                        className="w-full"
+                      >
+                        <span>Visit</span>
+                        <ArrowRight className="ml-2 h-3 w-3" />
                       </Button>
                     </CardContent>
                   </Card>
