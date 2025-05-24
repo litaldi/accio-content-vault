@@ -126,7 +126,7 @@ const Features: React.FC = () => {
             <div className="text-center max-w-3xl mx-auto">
               <h1 className={cn(
                 "text-4xl lg:text-6xl font-bold text-foreground mb-6 leading-tight",
-                preferences.reducedMotion ? '' : 'animate-fade-in'
+                preferences.reduceAnimations ? '' : 'animate-fade-in'
               )}>
                 Powerful Features for
                 <span className="text-primary block">Knowledge Management</span>
@@ -168,7 +168,7 @@ const Features: React.FC = () => {
                   key={feature.title}
                   className={cn(
                     "h-full hover:shadow-lg transition-all duration-300 border-border/50",
-                    preferences.reducedMotion ? '' : 'hover:scale-[1.02]'
+                    preferences.reduceAnimations ? '' : 'hover:scale-[1.02]'
                   )}
                 >
                   <CardHeader>
