@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface User {
   id: string;
-  email?: string; // Make email optional to match the main User type
+  email?: string;
   name?: string;
   user_metadata?: {
     name?: string;
@@ -13,9 +13,9 @@ interface User {
 
 interface AuthContextType {
   user: User | null;
-  session: any; // Add session property for test compatibility
+  session: any;
   isLoading: boolean;
-  isConfigured?: boolean; // Add for test compatibility
+  isConfigured?: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (email: string, password: string, name?: string) => Promise<void>;
@@ -46,7 +46,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (email: string, password: string) => {
     setIsLoading(true);
     try {
-      // Mock login implementation
       console.log('Login attempt:', email);
       const mockUser: User = { id: '1', email, name: 'Test User' };
       setUser(mockUser);
@@ -72,7 +71,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const register = async (email: string, password: string, name?: string) => {
     setIsLoading(true);
     try {
-      // Mock register implementation
       console.log('Register attempt:', email);
       const mockUser: User = { id: '1', email, name: name || 'New User' };
       setUser(mockUser);

@@ -15,17 +15,17 @@ const CTASection: React.FC = () => {
           Join thousands of knowledge workers who are already organizing their digital lives with Accio
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button size="lg" variant="secondary" asChild>
-            <Link to="/register">
-              <span className="inline-flex items-center gap-2">
-                Start Free Today
-                <ArrowRight className="h-4 w-4" />
-              </span>
-            </Link>
-          </Button>
-          <Button size="lg" variant="outline" asChild>
-            <Link to="/contact">Contact Sales</Link>
-          </Button>
+          <Link to="/register">
+            <Button size="lg" variant="secondary" className="inline-flex items-center gap-2">
+              Start Free Today
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+          <Link to="/contact">
+            <Button size="lg" variant="outline">
+              Contact Sales
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

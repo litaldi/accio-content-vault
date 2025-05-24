@@ -1,6 +1,7 @@
+
 export interface User {
   id: string;
-  email?: string; // Make email optional to match Supabase User type
+  email?: string;
   created_at: string;
   subscription_tier?: "free" | "pro";
 }
@@ -17,10 +18,10 @@ export interface SavedContent {
   file_size?: number;
   created_at: string;
   tags: Tag[];
-  embedding?: number[]; // Vector embedding for semantic search
-  summary?: string; // AI-generated summary
-  collection_ids?: string[]; // Collections this content belongs to
-  has_summary?: boolean; // Whether content has AI summary available
+  embedding?: number[];
+  summary?: string;
+  collection_ids?: string[];
+  has_summary?: boolean;
 }
 
 export interface Tag {
@@ -44,7 +45,7 @@ export interface SearchStats {
 
 export interface SearchResult {
   content: SavedContent;
-  score?: number; // Relevance score for semantic search
+  score?: number;
 }
 
 export interface FileUploadProps {
@@ -68,5 +69,5 @@ export interface Collection {
   description: string;
   content_ids: string[];
   created_at: string;
-  parent_id?: string; // For nested collections
+  parent_id?: string;
 }

@@ -66,8 +66,8 @@ const Register = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full" loading={isLoading}>
-              Create Account
+            <Button type="submit" className="w-full" loading={isLoading} disabled={isLoading}>
+              {isLoading ? 'Creating Account...' : 'Create Account'}
             </Button>
           </form>
           <div className="mt-4 text-center text-sm">

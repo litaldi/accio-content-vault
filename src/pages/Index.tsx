@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import MegaMenu from '@/components/navigation/MegaMenu';
+import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
 import ImprovedHeroSection from '@/components/home/ImprovedHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
@@ -12,12 +12,6 @@ import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import { Helmet } from 'react-helmet-async';
 
 const Index = () => {
-  const { signOut } = useAuth();
-
-  const handleLogout = () => {
-    signOut();
-  };
-
   return (
     <div className="min-h-screen flex flex-col w-full">
       <Helmet>
@@ -33,7 +27,7 @@ const Index = () => {
         <link rel="canonical" href="https://yoursite.com/" />
       </Helmet>
       
-      <MegaMenu />
+      <PrimaryNavigation />
       
       <main id="main-content" className="flex-grow w-full" role="main">
         <ImprovedHeroSection />
