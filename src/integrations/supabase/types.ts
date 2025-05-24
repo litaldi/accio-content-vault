@@ -9,6 +9,47 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      content_summaries: {
+        Row: {
+          confidence_score: number | null
+          content_id: string
+          generated_at: string
+          id: string
+          summary_text: string
+          summary_type: string
+          updated_at: string
+          word_count: number | null
+        }
+        Insert: {
+          confidence_score?: number | null
+          content_id: string
+          generated_at?: string
+          id?: string
+          summary_text: string
+          summary_type?: string
+          updated_at?: string
+          word_count?: number | null
+        }
+        Update: {
+          confidence_score?: number | null
+          content_id?: string
+          generated_at?: string
+          id?: string
+          summary_text?: string
+          summary_type?: string
+          updated_at?: string
+          word_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_content_summaries_content"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "contents"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       content_tags: {
         Row: {
           confirmed: boolean
@@ -55,6 +96,7 @@ export type Database = {
           description: string | null
           file_path: string | null
           file_type: string | null
+          has_summary: boolean | null
           id: string
           is_deleted: boolean
           title: string | null
@@ -68,6 +110,7 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           file_type?: string | null
+          has_summary?: boolean | null
           id?: string
           is_deleted?: boolean
           title?: string | null
@@ -81,6 +124,7 @@ export type Database = {
           description?: string | null
           file_path?: string | null
           file_type?: string | null
+          has_summary?: boolean | null
           id?: string
           is_deleted?: boolean
           title?: string | null

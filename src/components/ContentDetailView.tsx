@@ -5,6 +5,7 @@ import { SavedContent } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
 import { File, FileText, Image, Link, Calendar } from 'lucide-react';
 import ContentSummarizer from './ContentSummarizer';
+import { SummaryDisplay } from './summaries/SummaryDisplay';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from './ui/button';
 
@@ -35,6 +36,10 @@ const ContentDetailView: React.FC<ContentDetailViewProps> = ({ content, isOpen, 
     }
   };
 
+  const getContentText = () => {
+    return [content.title, content.description].filter(Boolean).join(' ');
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={() => onClose()}>
       <DialogContent className="sm:max-w-[700px]">
@@ -55,9 +60,10 @@ const ContentDetailView: React.FC<ContentDetailViewProps> = ({ content, isOpen, 
         </DialogHeader>
         
         <Tabs defaultValue="details" value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="summary">AI Summary</TabsTrigger>
+            <TabsTrigger value="legacy-summary">Legacy Summary</TabsTrigger>
           </TabsList>
           
           <TabsContent value="details" className="pt-4">
@@ -120,7 +126,17 @@ const ContentDetailView: React.FC<ContentDetailViewProps> = ({ content, isOpen, 
           </TabsContent>
           
           <TabsContent value="summary" className="pt-4">
-            <ContentSummarizer text={content.description} />
+            <SummaryDisplay 
+              contentId={content.id} 
+              contentText={getContentText()}
+            />
+          </TabsContent>
+          
+          <TabsContent value="legacy-summary" className="pt-4">
+            <ContentSummarizer 
+              text={getContentText()} 
+              contentId={content.id}
+            />
           </TabsContent>
         </Tabs>
       </DialogContent>

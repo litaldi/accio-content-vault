@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { SavedContent, Tag } from '@/types';
 import { formatDistanceToNow } from 'date-fns';
-import { File, FileText, Image, Link } from 'lucide-react';
+import { File, FileText, Image, Link, Sparkles } from 'lucide-react';
+import { SummaryButton } from './summaries/SummaryButton';
 import ContentDetailView from './ContentDetailView';
 
 interface ContentListProps {
@@ -38,6 +39,10 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
 
   const handleCardClick = (content: SavedContent) => {
     setSelectedContent(content);
+  };
+
+  const getContentText = (content: SavedContent) => {
+    return [content.title, content.description].filter(Boolean).join(' ');
   };
 
   if (contents.length === 0) {
@@ -83,29 +88,45 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
             <div className={`flex-1 ${(content.image_url || (content.file_type === 'image' && content.file_url)) ? 'md:w-3/4' : 'w-full'}`}>
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 flex-1">
                     {renderContentIcon(content)}
-                    <div>
-                      <CardTitle className="line-clamp-2">
-                        {content.url ? (
-                          <span className="hover:text-primary transition-colors">
-                            {searchQuery 
-                              ? highlightText(content.title, searchQuery) 
-                              : content.title}
-                          </span>
-                        ) : (
-                          <span>
-                            {searchQuery 
-                              ? highlightText(content.title, searchQuery) 
-                              : content.title}
-                          </span>
-                        )}
-                      </CardTitle>
-                      <CardDescription className="text-xs mt-1">
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="line-clamp-2 flex-1">
+                          {content.url ? (
+                            <span className="hover:text-primary transition-colors">
+                              {searchQuery 
+                                ? highlightText(content.title, searchQuery) 
+                                : content.title}
+                            </span>
+                          ) : (
+                            <span>
+                              {searchQuery 
+                                ? highlightText(content.title, searchQuery) 
+                                : content.title}
+                            </span>
+                          )}
+                        </CardTitle>
+                        <div className="ml-2" onClick={(e) => e.stopPropagation()}>
+                          <SummaryButton 
+                            contentId={content.id}
+                            contentText={getContentText(content)}
+                            size="sm"
+                            variant="ghost"
+                          />
+                        </div>
+                      </div>
+                      <CardDescription className="text-xs mt-1 flex items-center gap-2">
                         {formatDistanceToNow(new Date(content.created_at), { addSuffix: true })}
                         {content.file_size && (
                           <span className="ml-2">
                             {(content.file_size / 1024 / 1024).toFixed(2)} MB
+                          </span>
+                        )}
+                        {content.has_summary && (
+                          <span className="flex items-center gap-1 text-primary">
+                            <Sparkles className="h-3 w-3" />
+                            Summary
                           </span>
                         )}
                       </CardDescription>
