@@ -1,4 +1,3 @@
-
 import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -12,7 +11,8 @@ import { ThemeProvider } from "next-themes";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import ShareTargetHandler from "@/components/ShareTargetHandler";
-import SkipToContent from "@/components/SkipToContent";
+import PrimaryNavigation from "@/components/navigation/PrimaryNavigation";
+import AppFooter from "@/components/layout/AppFooter";
 
 // Lazy load components for better performance
 const Index = lazy(() => import("./pages/Index"));
@@ -27,6 +27,9 @@ const AccountSettings = lazy(() => import("./pages/AccountSettings"));
 const OfflinePage = lazy(() => import("./pages/OfflinePage"));
 const Reminders = lazy(() => import("./pages/Reminders"));
 const Upgrade = lazy(() => import("./pages/Upgrade"));
+const Features = lazy(() => import("./pages/Features"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient({
@@ -48,96 +51,102 @@ function App() {
               <TooltipProvider>
                 <BrowserRouter>
                   <AuthProvider>
-                    <SkipToContent />
-                    <ShareTargetHandler />
-                    <div className="min-h-screen bg-background">
-                      <Suspense fallback={
-                        <div className="min-h-screen flex items-center justify-center">
-                          <div className="text-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                            <p className="text-muted-foreground">Loading...</p>
+                    <div className="min-h-screen bg-background flex flex-col">
+                      <ShareTargetHandler />
+                      <PrimaryNavigation />
+                      <main className="flex-1">
+                        <Suspense fallback={
+                          <div className="min-h-screen flex items-center justify-center">
+                            <div className="text-center">
+                              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+                              <p className="text-muted-foreground">Loading...</p>
+                            </div>
                           </div>
-                        </div>
-                      }>
-                        <Routes>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/register" element={<Register />} />
-                          <Route 
-                            path="/dashboard" 
-                            element={
-                              <ProtectedRoute>
-                                <Dashboard />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/save" 
-                            element={
-                              <ProtectedRoute>
-                                <SaveContent />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/search" 
-                            element={
-                              <ProtectedRoute>
-                                <Search />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/collections" 
-                            element={
-                              <ProtectedRoute>
-                                <Collections />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/analytics" 
-                            element={
-                              <ProtectedRoute>
-                                <Analytics />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/reminders" 
-                            element={
-                              <ProtectedRoute>
-                                <Reminders />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/settings" 
-                            element={
-                              <ProtectedRoute>
-                                <AccountSettings />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/offline" 
-                            element={
-                              <ProtectedRoute>
-                                <OfflinePage />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route 
-                            path="/upgrade" 
-                            element={
-                              <ProtectedRoute>
-                                <Upgrade />
-                              </ProtectedRoute>
-                            } 
-                          />
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </Suspense>
+                        }>
+                          <Routes>
+                            <Route path="/" element={<Index />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/register" element={<Register />} />
+                            <Route path="/features" element={<Features />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/contact" element={<Contact />} />
+                            <Route 
+                              path="/dashboard" 
+                              element={
+                                <ProtectedRoute>
+                                  <Dashboard />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/save" 
+                              element={
+                                <ProtectedRoute>
+                                  <SaveContent />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/search" 
+                              element={
+                                <ProtectedRoute>
+                                  <Search />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/collections" 
+                              element={
+                                <ProtectedRoute>
+                                  <Collections />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/analytics" 
+                              element={
+                                <ProtectedRoute>
+                                  <Analytics />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/reminders" 
+                              element={
+                                <ProtectedRoute>
+                                  <Reminders />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/settings" 
+                              element={
+                                <ProtectedRoute>
+                                  <AccountSettings />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/offline" 
+                              element={
+                                <ProtectedRoute>
+                                  <OfflinePage />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route 
+                              path="/upgrade" 
+                              element={
+                                <ProtectedRoute>
+                                  <Upgrade />
+                                </ProtectedRoute>
+                              } 
+                            />
+                            <Route path="*" element={<NotFound />} />
+                          </Routes>
+                        </Suspense>
+                      </main>
+                      <AppFooter />
                     </div>
                     <Toaster />
                     <Sonner />
