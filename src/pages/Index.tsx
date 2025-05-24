@@ -22,7 +22,7 @@ const Index = () => {
       <Navbar isLoggedIn={!!user} onLogout={handleLogout} />
       
       <main className="flex-grow">
-        <EnhancedHeroSection isLoggedIn={!!user} />
+        <EnhancedHeroSection />
         <FeaturesSection />
         <PricingSection />
         <FAQSection />
