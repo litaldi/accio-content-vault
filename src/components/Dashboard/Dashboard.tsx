@@ -66,9 +66,13 @@ const Dashboard = () => {
     navigate('/');
   };
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
   const filteredContent = content.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.content?.toLowerCase().includes(searchQuery.toLowerCase());
+                         item.description?.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTab = selectedTab === 'all' || item.tags?.some(tag => 
       tag.name.toLowerCase() === selectedTab.toLowerCase()
     );
@@ -81,6 +85,14 @@ const Dashboard = () => {
     weekAgo.setDate(weekAgo.getDate() - 7);
     return itemDate > weekAgo;
   }).length;
+
+  // Calculate tag stats for DashboardStats
+  const tagStats = {
+    confirmed: content.reduce((count, item) => 
+      count + item.tags.filter(tag => tag.confirmed === true).length, 0),
+    rejected: content.reduce((count, item) => 
+      count + item.tags.filter(tag => tag.confirmed === false).length, 0)
+  };
 
   if (isLoading) {
     return (
@@ -114,25 +126,22 @@ const Dashboard = () => {
             <div className="grid lg:grid-cols-4 gap-8">
               <div className="lg:col-span-3 space-y-6">
                 <SearchBar
-                  searchQuery={searchQuery}
-                  onSearchChange={setSearchQuery}
-                  placeholder="Search your knowledge base..."
+                  onSearch={handleSearch}
                 />
                 
                 <ContentFilterTabs
-                  selectedTab={selectedTab}
+                  activeTab={selectedTab}
                   onTabChange={setSelectedTab}
-                  content={content}
                 />
                 
                 <ContentList 
-                  content={filteredContent}
+                  contents={filteredContent}
                   isLoading={false}
                 />
               </div>
               
               <div className="lg:col-span-1">
-                <DashboardStats content={content} />
+                <DashboardStats tagStats={tagStats} />
               </div>
             </div>
           </>

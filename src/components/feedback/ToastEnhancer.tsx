@@ -8,13 +8,13 @@ export const useEnhancedToast = () => {
 
   const showSuccess = (message: string, description?: string) => {
     toast({
-      title: (
+      title: message,
+      description: (
         <div className="flex items-center gap-2">
-          <CheckCircle className="h-5 w-5 text-green-600" />
-          <span className="font-semibold">{message}</span>
+          <CheckCircle className="h-4 w-4 text-green-600" />
+          <span>{description}</span>
         </div>
       ),
-      description,
       className: "border-l-4 border-l-green-500 bg-green-50 text-green-900",
       duration: 4000,
     });
@@ -22,13 +22,13 @@ export const useEnhancedToast = () => {
 
   const showError = (message: string, description?: string) => {
     toast({
-      title: (
+      title: message,
+      description: (
         <div className="flex items-center gap-2">
-          <AlertCircle className="h-5 w-5 text-red-600" />
-          <span className="font-semibold">{message}</span>
+          <AlertCircle className="h-4 w-4 text-red-600" />
+          <span>{description}</span>
         </div>
       ),
-      description,
       variant: "destructive",
       className: "border-l-4 border-l-red-500",
       duration: 6000,
@@ -37,13 +37,13 @@ export const useEnhancedToast = () => {
 
   const showInfo = (message: string, description?: string) => {
     toast({
-      title: (
+      title: message,
+      description: (
         <div className="flex items-center gap-2">
-          <Info className="h-5 w-5 text-blue-600" />
-          <span className="font-semibold">{message}</span>
+          <Info className="h-4 w-4 text-blue-600" />
+          <span>{description}</span>
         </div>
       ),
-      description,
       className: "border-l-4 border-l-blue-500 bg-blue-50 text-blue-900",
       duration: 5000,
     });
@@ -51,13 +51,13 @@ export const useEnhancedToast = () => {
 
   const showWarning = (message: string, description?: string) => {
     toast({
-      title: (
+      title: message,
+      description: (
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5 text-yellow-600" />
-          <span className="font-semibold">{message}</span>
+          <AlertTriangle className="h-4 w-4 text-yellow-600" />
+          <span>{description}</span>
         </div>
       ),
-      description,
       className: "border-l-4 border-l-yellow-500 bg-yellow-50 text-yellow-900",
       duration: 5000,
     });
@@ -65,13 +65,13 @@ export const useEnhancedToast = () => {
 
   const showDelight = (message: string, description?: string) => {
     toast({
-      title: (
+      title: message,
+      description: (
         <div className="flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-purple-600" />
-          <span className="font-semibold">{message}</span>
+          <Sparkles className="h-4 w-4 text-purple-600" />
+          <span>{description}</span>
         </div>
       ),
-      description,
       className: "border-l-4 border-l-purple-500 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-900",
       duration: 6000,
     });
