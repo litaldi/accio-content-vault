@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Navbar from '@/components/Navbar';
@@ -8,8 +7,8 @@ import { EnhancedNavigation } from '@/components/navigation/EnhancedNavigation';
 import { ImprovedOnboarding } from '@/components/onboarding/ImprovedOnboarding';
 import { EnhancedFeedback, useFeedback } from '@/components/feedback/EnhancedFeedback';
 import { useAccessibility } from '@/hooks/useAccessibility';
+import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
 import {
-  HeroSection,
   OnboardingSection,
   FeaturesSection,
   AboutSection,
@@ -106,17 +105,17 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen flex flex-col ${isKeyboardUser ? 'keyboard-user' : ''}`} ref={pageRef}>
+    <div className={`min-h-screen flex flex-col ${isKeyboardUser ? 'keyboard-user' : ''} scroll-smooth-enhanced`} ref={pageRef}>
       <Helmet>
-        <title>Accio - Remember Everything You Discover Online</title>
-        <meta name="description" content="Accio organizes your online content with AI-powered tagging and powerful search." />
-        <meta name="keywords" content="content organizer, AI tagging, online bookmarks, save articles, bookmark manager" />
-        <meta property="og:title" content="Accio - Remember Everything You Discover Online" />
-        <meta property="og:description" content="Accio organizes your online content with AI-powered tagging and powerful search." />
+        <title>Accio - Your Personal Knowledge Library</title>
+        <meta name="description" content="Transform the internet into your personal knowledge library. Save, organize, and find anything instantly with AI-powered tools." />
+        <meta name="keywords" content="knowledge management, AI organization, content library, smart bookmarks, digital note-taking" />
+        <meta property="og:title" content="Accio - Your Personal Knowledge Library" />
+        <meta property="og:description" content="Transform the internet into your personal knowledge library with AI-powered organization." />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Accio - Remember Everything You Discover Online" />
-        <meta name="twitter:description" content="Accio organizes your online content with AI-powered tagging and powerful search." />
+        <meta name="twitter:title" content="Accio - Your Personal Knowledge Library" />
+        <meta name="twitter:description" content="Save, organize, and find anything instantly with AI-powered tools." />
         
         {/* Enhanced metadata for better SEO and accessibility */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
@@ -125,21 +124,22 @@ const Index = () => {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="color-scheme" content="light dark" />
         
-        {/* Preconnect for performance */}
+        {/* Performance optimizations */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="//api.accio.dev" />
       </Helmet>
       
       <SkipToContent />
       <Navbar isLoggedIn={false} />
       
-      {/* Enhanced Navigation */}
-      <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-30">
+      {/* Enhanced Navigation with better positioning */}
+      <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-30 safe-area-inset">
         <EnhancedNavigation isLoggedIn={false} />
       </div>
       
-      {/* Feedback Container */}
-      <div className="fixed top-4 right-4 z-50 space-y-2 max-w-md">
+      {/* Enhanced Feedback Container with better positioning */}
+      <div className="fixed top-4 right-4 z-50 space-y-2 max-w-md safe-area-inset">
         {feedbacks.map((feedback) => (
           <EnhancedFeedback
             key={feedback.id}
@@ -149,24 +149,34 @@ const Index = () => {
         ))}
       </div>
 
-      {/* Onboarding Modal */}
+      {/* Improved Onboarding Modal with better UX */}
       {showOnboarding && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-background rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div 
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 safe-area-inset"
+          role="dialog"
+          aria-labelledby="onboarding-title"
+          aria-modal="true"
+        >
+          <div className="bg-background rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border">
             <ImprovedOnboarding onComplete={handleOnboardingComplete} />
           </div>
         </div>
       )}
       
       <main className="flex-grow overflow-x-hidden" id="main-content">
-        <HeroSection />
-        <OnboardingSection />
-        <FeaturesSection />
-        <AboutSection />
-        <PricingSection />
-        <FAQSection />
-        <ContactSection />
-        <CTASection />
+        {/* Use enhanced hero section */}
+        <EnhancedHeroSection />
+        
+        {/* Keep existing sections but with improved spacing */}
+        <div className="space-y-0">
+          <OnboardingSection />
+          <FeaturesSection />
+          <AboutSection />
+          <PricingSection />
+          <FAQSection />
+          <ContactSection />
+          <CTASection />
+        </div>
       </main>
 
       <Footer />
