@@ -11,7 +11,7 @@ import { Menu, X, Home, BookOpen, BarChart, Users, Settings, LogOut, Plus } from
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { Typography, Spacing, focusStyles } from '@/components/ui/design-system';
+import { focusStyles } from '@/components/ui/design-system';
 
 const EnhancedNavigation: React.FC = () => {
   const location = useLocation();
@@ -74,7 +74,7 @@ const EnhancedNavigation: React.FC = () => {
       )}
       role="banner"
     >
-      <Spacing.Container className="flex h-16 items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex h-16 items-center justify-between">
         {/* Enhanced Logo */}
         <Link 
           to="/" 
@@ -85,8 +85,8 @@ const EnhancedNavigation: React.FC = () => {
             <span className="text-primary-foreground font-bold text-xl">A</span>
           </div>
           <div className="hidden sm:flex flex-col">
-            <Typography.H4 className="text-primary leading-none mb-0">Accio</Typography.H4>
-            <Typography.Caption className="leading-none">Knowledge Library</Typography.Caption>
+            <h4 className="text-lg font-bold text-primary leading-none mb-0">Accio</h4>
+            <p className="text-sm text-muted-foreground leading-none">Knowledge Library</p>
           </div>
         </Link>
 
@@ -214,7 +214,7 @@ const EnhancedNavigation: React.FC = () => {
             </SheetContent>
           </Sheet>
         </div>
-      </Spacing.Container>
+      </div>
     </header>
   );
 };
