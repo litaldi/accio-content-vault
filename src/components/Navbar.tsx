@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 
 interface NavbarProps {
   isLoggedIn: boolean;
+  onLogout?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
+const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, onLogout }) => {
   return (
     <nav className="bg-background border-b">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -19,13 +20,19 @@ const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
             <span className="text-xl font-bold text-primary">Accio</span>
           </Link>
           
-          {!isLoggedIn && (
+          {!isLoggedIn ? (
             <div className="flex items-center gap-3">
               <Button asChild variant="ghost">
                 <Link to="/login">Sign In</Link>
               </Button>
               <Button asChild>
                 <Link to="/register">Get Started</Link>
+              </Button>
+            </div>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" onClick={onLogout}>
+                Logout
               </Button>
             </div>
           )}

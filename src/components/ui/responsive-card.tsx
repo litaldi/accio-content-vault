@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { Card, CardProps } from '@/components/ui/card';
+import { Card, type CardProps } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useResponsive } from '@/hooks/use-responsive';
 
-interface ResponsiveCardProps extends CardProps {
+interface ResponsiveCardProps extends React.HTMLAttributes<HTMLDivElement> {
   mobileFullWidth?: boolean;
   compactOnMobile?: boolean;
+  children: React.ReactNode;
 }
 
 export const ResponsiveCard: React.FC<ResponsiveCardProps> = ({
