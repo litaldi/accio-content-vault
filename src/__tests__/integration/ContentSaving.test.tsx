@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils';
 import SaveContent from '@/pages/SaveContent';
@@ -42,7 +41,11 @@ describe('Content Saving Integration', () => {
       signIn: jest.fn(),
       signOut: jest.fn(),
       signUp: jest.fn(),
-      isLoading: false
+      login: jest.fn(),
+      logout: jest.fn(),
+      register: jest.fn(),
+      isLoading: false,
+      isConfigured: true
     });
 
     mockUseContentSaveService.mockReturnValue({
@@ -133,7 +136,11 @@ describe('Content Saving Integration', () => {
       signIn: jest.fn(),
       signOut: jest.fn(),
       signUp: jest.fn(),
-      isLoading: false
+      login: jest.fn(),
+      logout: jest.fn(),
+      register: jest.fn(),
+      isLoading: false,
+      isConfigured: true
     });
 
     render(<SaveContent />);

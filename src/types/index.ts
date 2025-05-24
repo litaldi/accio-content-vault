@@ -1,7 +1,6 @@
-
 export interface User {
   id: string;
-  email: string;
+  email?: string; // Make email optional to match Supabase User type
   created_at: string;
   subscription_tier?: "free" | "pro";
 }

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@/__tests__/utils/test-utils';
 import { BrowserRouter } from 'react-router-dom';
@@ -40,7 +39,11 @@ describe('End-to-End User Flows', () => {
       signIn: jest.fn(),
       signOut: jest.fn(),
       signUp: jest.fn(),
-      isLoading: false
+      login: jest.fn(),
+      logout: jest.fn(),
+      register: jest.fn(),
+      isLoading: false,
+      isConfigured: true
     });
   });
 
