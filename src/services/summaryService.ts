@@ -50,7 +50,13 @@ export class SummaryService {
       throw error;
     }
 
-    return data;
+    if (!data) return null;
+
+    // Type cast the database result to our interface
+    return {
+      ...data,
+      summary_type: data.summary_type as 'auto' | 'manual' | 'ai_enhanced'
+    } as ContentSummary;
   }
 
   // Update summary
@@ -73,7 +79,11 @@ export class SummaryService {
       throw error;
     }
 
-    return data;
+    // Type cast the database result to our interface
+    return {
+      ...data,
+      summary_type: data.summary_type as 'auto' | 'manual' | 'ai_enhanced'
+    } as ContentSummary;
   }
 
   // Delete summary

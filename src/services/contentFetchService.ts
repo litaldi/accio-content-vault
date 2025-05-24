@@ -60,6 +60,7 @@ export const useContentFetchService = () => {
           file_url: content.file_path || '',
           file_type: content.file_type || undefined,
           created_at: content.created_at,
+          has_summary: content.has_summary || false,
           tags: contentTags as Tag[]
         };
       });

@@ -114,10 +114,14 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({ 
-        summary: summaryText,
-        wordCount,
-        confidenceScore,
-        id: summary.id 
+        id: summary.id,
+        summary_text: summaryText,
+        summary_type: 'auto',
+        confidence_score: confidenceScore,
+        word_count: wordCount,
+        generated_at: summary.generated_at,
+        updated_at: summary.updated_at,
+        content_id: contentId
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

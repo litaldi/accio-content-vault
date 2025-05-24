@@ -21,6 +21,7 @@ export interface SavedContent {
   embedding?: number[]; // Vector embedding for semantic search
   summary?: string; // AI-generated summary
   collection_ids?: string[]; // Collections this content belongs to
+  has_summary?: boolean; // Whether content has AI summary available
 }
 
 export interface Tag {
