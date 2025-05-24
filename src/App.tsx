@@ -1,125 +1,58 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { ThemeProvider } from 'next-themes';
+
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import { OnboardingProvider } from '@/contexts/OnboardingContext';
-import ErrorBoundary from '@/components/ErrorBoundary';
-import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
-import ResponsiveAccessibilityButton from '@/components/accessibility/ResponsiveAccessibilityButton';
-import SkipLinks from '@/components/accessibility/SkipLinks';
-import { EnhancedOnboardingFlow } from '@/components/onboarding/EnhancedOnboardingFlow';
-import { useOnboardingContext } from '@/contexts/OnboardingContext';
+import Index from './pages/Index';
+import Dashboard from './pages/Dashboard';
+import AccessibilityStatement from './pages/AccessibilityStatement';
+import { AccessibleLayout } from './components/layout/AccessibleLayout';
+import { EnhancedOnboardingFlow } from './components/onboarding/EnhancedOnboardingFlow';
 
-// Pages
-import Index from '@/pages/Index';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import Dashboard from '@/pages/Dashboard';
-import Features from '@/pages/Features';
-import Pricing from '@/pages/Pricing';
-import About from '@/pages/About';
-import Contact from '@/pages/Contact';
-import FAQ from '@/pages/FAQ';
-import Blog from '@/pages/Blog';
-import BlogPost from './pages/BlogPost';
-import Privacy from '@/pages/Privacy';
-import Terms from '@/pages/Terms';
-import AccessibilityStatement from '@/pages/AccessibilityStatement';
-import Sitemap from '@/pages/Sitemap';
-import NotFound from '@/pages/NotFound';
-import Upgrade from '@/pages/Upgrade';
-import Reminders from '@/pages/Reminders';
-import OfflinePage from '@/pages/OfflinePage';
+function App() {
+  const [showOnboarding, setShowOnboarding] = React.useState(false);
+  
+  // This would normally check if the user has completed onboarding
+  React.useEffect(() => {
+    const hasCompletedOnboarding = localStorage.getItem('onboarding-completed') === 'true';
+    if (!hasCompletedOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
+  
+  const handleCompleteOnboarding = (preferences?: any) => {
+    localStorage.setItem('onboarding-completed', 'true');
+    if (preferences) {
+      localStorage.setItem('user-preferences', JSON.stringify(preferences));
+    }
+    setShowOnboarding(false);
+  };
+  
+  const handleSkipOnboarding = () => {
+    localStorage.setItem('onboarding-completed', 'true');
+    setShowOnboarding(false);
+  };
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
-const AppContent = () => {
-  const { shouldShowOnboarding, completeOnboarding, skipOnboarding } = useOnboardingContext();
-
-  if (shouldShowOnboarding) {
+  if (showOnboarding) {
     return (
-      <EnhancedOnboardingFlow
-        onComplete={completeOnboarding}
-        onSkip={skipOnboarding}
+      <EnhancedOnboardingFlow 
+        onComplete={handleCompleteOnboarding} 
+        onSkip={handleSkipOnboarding}
       />
     );
   }
 
   return (
-    <Router>
-      <SkipLinks />
-      <EnhancedAccessibility />
-      <ResponsiveAccessibilityButton />
-      <div className="min-h-screen flex flex-col w-full" role="application">
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/features" element={<Features />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:id" element={<BlogPost />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/terms" element={<Terms />} />
-          <Route path="/accessibility" element={<AccessibilityStatement />} />
-          <Route path="/sitemap" element={<Sitemap />} />
-          <Route path="/upgrade" element={<Upgrade />} />
-          <Route path="/reminders" element={<Reminders />} />
-          <Route path="/offline" element={<OfflinePage />} />
-          
-          {/* Dashboard sub-routes - all redirect to main dashboard */}
-          <Route path="/save" element={<Dashboard />} />
-          <Route path="/save-content" element={<Dashboard />} />
-          <Route path="/collections" element={<Dashboard />} />
-          <Route path="/analytics" element={<Dashboard />} />
-          <Route path="/search" element={<Dashboard />} />
-          <Route path="/settings" element={<Dashboard />} />
-          
-          {/* Catch all route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
-      <Toaster />
-    </Router>
-  );
-};
-
-function App() {
-  return (
-    <ErrorBoundary>
-      <HelmetProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <AccessibilityProvider>
-            <OnboardingProvider>
-              <QueryClientProvider client={queryClient}>
-                <TooltipProvider>
-                  <AuthProvider>
-                    <AppContent />
-                  </AuthProvider>
-                </TooltipProvider>
-                <ReactQueryDevtools initialIsOpen={false} />
-              </QueryClientProvider>
-            </OnboardingProvider>
-          </AccessibilityProvider>
-        </ThemeProvider>
-      </HelmetProvider>
-    </ErrorBoundary>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AccessibleLayout>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/accessibility" element={<AccessibilityStatement />} />
+          </Routes>
+        </AccessibleLayout>
+      </BrowserRouter>
+    </HelmetProvider>
   );
 }
 

@@ -1,122 +1,107 @@
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-type FocusTrapOptions = {
+interface UseFocusTrapOptions {
   enabled?: boolean;
-  autoFocus?: boolean;
-  returnFocus?: boolean;
-  escapeDeactivates?: boolean;
-  onEscape?: () => void;
-};
+  initialFocus?: boolean;
+  returnFocusOnUnmount?: boolean;
+}
 
-/**
- * Hook for trapping focus within a designated element (like modals, dialogs)
- * Ensures keyboard navigation stays within the trapped element
- */
-export function useFocusTrap(options: FocusTrapOptions = {}) {
-  const {
-    enabled = true,
-    autoFocus = true,
-    returnFocus = true,
-    escapeDeactivates = true,
-    onEscape,
-  } = options;
+export function useFocusTrap(
+  options: UseFocusTrapOptions = {
+    enabled: true,
+    initialFocus: true,
+    returnFocusOnUnmount: true,
+  }
+) {
+  const { enabled = true, initialFocus = true, returnFocusOnUnmount = true } = options;
   
-  const trapRef = useRef<HTMLDivElement>(null);
-  const previouslyFocusedElement = useRef<HTMLElement | null>(null);
+  const containerRef = useRef<HTMLElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
+  // Store the currently focused element when the trap is enabled
+  useEffect(() => {
+    if (enabled && returnFocusOnUnmount) {
+      previousFocusRef.current = document.activeElement as HTMLElement;
+    }
+  }, [enabled, returnFocusOnUnmount]);
+
+  // Set up the focus trap
   useEffect(() => {
     if (!enabled) return;
-    
-    // Store the element that had focus before the trap was activated
-    if (returnFocus) {
-      previouslyFocusedElement.current = document.activeElement as HTMLElement;
-    }
 
-    // Auto-focus the first focusable element when trap is activated
-    if (autoFocus && trapRef.current) {
-      const focusableElements = getFocusableElements(trapRef.current);
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Focus the first focusable element if initialFocus is true
+    if (initialFocus) {
+      const focusableElements = getFocusableElements(container);
       if (focusableElements.length > 0) {
         focusableElements[0].focus();
       } else {
-        // If no focusable elements, focus the trap container itself
-        trapRef.current.tabIndex = -1;
-        trapRef.current.focus();
+        // If no focusable element is found, focus the container itself
+        container.setAttribute('tabindex', '-1');
+        container.focus();
       }
     }
 
-    return () => {
-      // Return focus to the previously focused element when trap is deactivated
-      if (returnFocus && previouslyFocusedElement.current) {
-        previouslyFocusedElement.current.focus();
-      }
-    };
-  }, [enabled, autoFocus, returnFocus]);
-
-  useEffect(() => {
-    if (!enabled || !trapRef.current) return;
-
+    // Handle tab key to trap focus
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Handle Escape key
-      if (escapeDeactivates && e.key === 'Escape') {
-        e.preventDefault();
-        if (onEscape) onEscape();
-        return;
-      }
+      if (e.key !== 'Tab') return;
 
-      // Handle Tab key for focus trapping
-      if (e.key === 'Tab' && trapRef.current) {
-        const focusableElements = getFocusableElements(trapRef.current);
-        if (focusableElements.length === 0) return;
+      const focusableElements = getFocusableElements(container);
+      if (focusableElements.length === 0) return;
 
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
-        const { activeElement } = document;
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
 
-        // Shift+Tab on first element should wrap to last element
-        if (e.shiftKey && activeElement === firstElement) {
-          e.preventDefault();
+      if (e.shiftKey) {
+        // If shift + tab and focus is on first element, move to last element
+        if (document.activeElement === firstElement) {
           lastElement.focus();
-        } 
-        // Tab on last element should wrap to first element
-        else if (!e.shiftKey && activeElement === lastElement) {
           e.preventDefault();
+        }
+      } else {
+        // If tab and focus is on last element, move to first element
+        if (document.activeElement === lastElement) {
           firstElement.focus();
+          e.preventDefault();
         }
       }
     };
 
-    // Add event listener for keydown
     document.addEventListener('keydown', handleKeyDown);
+
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [enabled, escapeDeactivates, onEscape]);
 
-  return { trapRef };
+      // Return focus to the previously focused element when the trap is disabled
+      if (returnFocusOnUnmount && previousFocusRef.current) {
+        previousFocusRef.current.focus();
+      }
+    };
+  }, [enabled, initialFocus, returnFocusOnUnmount]);
+
+  return containerRef;
 }
 
 // Helper function to get all focusable elements within a container
 function getFocusableElements(container: HTMLElement): HTMLElement[] {
-  // Selector for all potentially focusable elements
-  const selector = [
+  const focusableSelectors = [
     'a[href]',
     'button:not([disabled])',
-    'textarea:not([disabled])',
-    'input:not([disabled])',
+    'input:not([disabled]):not([type="hidden"])',
     'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[contenteditable="true"]',
     '[tabindex]:not([tabindex="-1"])',
-    'audio[controls]',
-    'video[controls]',
-    '[contenteditable]:not([contenteditable="false"])',
-  ].join(',');
+  ];
 
-  return Array.from(container.querySelectorAll(selector))
-    .filter((el) => {
-      // Filter out hidden elements - cast to HTMLElement to access offsetWidth and offsetHeight
-      const element = el as HTMLElement;
-      return element.offsetWidth > 0 && 
-             element.offsetHeight > 0 && 
-             window.getComputedStyle(element).visibility !== 'hidden';
-    }) as HTMLElement[];
+  return Array.from(
+    container.querySelectorAll<HTMLElement>(focusableSelectors.join(', '))
+  ).filter((element) => {
+    // Additional check for visibility and display
+    const style = window.getComputedStyle(element);
+    return style.display !== 'none' && style.visibility !== 'hidden';
+  });
 }
