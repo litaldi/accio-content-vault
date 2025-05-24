@@ -87,10 +87,30 @@ ImprovedCardDescription.displayName = "ImprovedCardDescription"
 
 const ImprovedCardContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("text-card-foreground", className)} {...props} />
-))
+  React.HTMLAttributes<HTMLDivElement> & {
+    padding?: "none" | "sm" | "md" | "lg" | "xl"
+  }
+>(({ className, padding, ...props }, ref) => {
+  const paddingClasses = {
+    none: "",
+    sm: "p-4",
+    md: "p-6", 
+    lg: "p-8",
+    xl: "p-10"
+  }
+
+  return (
+    <div 
+      ref={ref} 
+      className={cn(
+        "text-card-foreground", 
+        padding && paddingClasses[padding],
+        className
+      )} 
+      {...props} 
+    />
+  )
+})
 ImprovedCardContent.displayName = "ImprovedCardContent"
 
 const ImprovedCardFooter = React.forwardRef<
