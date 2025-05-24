@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/co
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { copy } from '@/utils/copy';
+import { focusStyles } from '@/components/ui/design-system';
 
 const EnhancedNavigation: React.FC = () => {
   const location = useLocation();
