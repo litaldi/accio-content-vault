@@ -56,7 +56,7 @@ const Dashboard = () => {
       
       <MainMenu />
       
-      <ResponsiveLayout maxWidth="7xl" padding="lg" verticalSpacing="lg">
+      <ResponsiveLayout maxWidth="2xl" padding="lg" verticalSpacing="lg">
         {/* Welcome Header */}
         <div className="mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2">
