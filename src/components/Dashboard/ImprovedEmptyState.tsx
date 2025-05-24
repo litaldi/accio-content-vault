@@ -10,7 +10,7 @@ import {
   BenefitsSection,
   SocialProofFooter,
   SuccessStory
-} from './EmptyState/';
+} from './EmptyState/index';
 
 interface ImprovedEmptyStateProps {
   onAddContent: () => void;
