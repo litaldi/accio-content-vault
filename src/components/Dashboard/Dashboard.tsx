@@ -136,7 +136,7 @@ const Dashboard = () => {
                 
                 <ContentList 
                   contents={filteredContent}
-                  isLoading={false}
+                  searchQuery={searchQuery}
                 />
               </div>
               
