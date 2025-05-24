@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface AccessibilityPreferences {
   highContrast: boolean;
   reducedMotion: boolean;
+  reduceAnimations: boolean;
   fontSize: 'small' | 'medium' | 'large';
 }
 
@@ -30,6 +31,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
   const [preferences, setPreferences] = useState<AccessibilityPreferences>({
     highContrast: false,
     reducedMotion: false,
+    reduceAnimations: false,
     fontSize: 'medium',
   });
 

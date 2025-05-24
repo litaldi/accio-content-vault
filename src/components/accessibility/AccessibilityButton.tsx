@@ -57,3 +57,4 @@ const AccessibilityButton: React.FC = () => {
 };
 
 export default AccessibilityButton;
+export { AccessibilityButton };

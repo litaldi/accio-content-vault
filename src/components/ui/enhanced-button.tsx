@@ -29,6 +29,25 @@ export const EnhancedButton = React.forwardRef<
 }, ref) => {
   const isDisabled = disabled || loading;
 
+  if (asChild) {
+    // When asChild is true, we need to pass only one child to the Slot
+    return (
+      <Button
+        ref={ref}
+        disabled={isDisabled}
+        className={cn(
+          "gap-2",
+          loading && "opacity-50 cursor-not-allowed",
+          className
+        )}
+        asChild={asChild}
+        {...props}
+      >
+        {children}
+      </Button>
+    );
+  }
+
   return (
     <Button
       ref={ref}
@@ -38,7 +57,6 @@ export const EnhancedButton = React.forwardRef<
         loading && "opacity-50 cursor-not-allowed",
         className
       )}
-      asChild={asChild}
       {...props}
     >
       {loading ? (
