@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -8,7 +7,7 @@ import {
   DialogTitle,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { meetsWCAGAA } from '@/utils/color-contrast';
+import { meetsContrastRequirement } from '@/utils/accessibility';
 import { cn } from '@/lib/utils';
 import { useTheme } from './ThemeProvider';
 
@@ -24,7 +23,7 @@ export const ThemingChecker: React.FC = () => {
     spacingIssues: [],
     fontIssues: [],
   });
-  const { isDark, theme } = useTheme();
+  const { theme } = useTheme();
 
   const checkThemeConsistency = () => {
     // Get CSS variables
@@ -62,7 +61,7 @@ export const ThemingChecker: React.FC = () => {
           
           if (bgColor) {
             const bgHex = hslToHex(bgColor.value.trim());
-            const meetsMinimumContrast = meetsWCAGAA(colorHex, bgHex);
+            const meetsMinimumContrast = meetsContrastRequirement(colorHex, bgHex);
             
             if (!meetsMinimumContrast) {
               contrastIssues.push(
@@ -152,9 +151,6 @@ export const ThemingChecker: React.FC = () => {
           <div className="space-y-6 py-4">
             <div>
               <h3 className="text-lg font-medium">Current Theme: {theme}</h3>
-              <p className="text-muted-foreground text-sm">
-                Mode: {isDark ? 'Dark' : 'Light'}
-              </p>
             </div>
             
             <div>

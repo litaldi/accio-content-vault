@@ -38,6 +38,43 @@ export const prefersHighContrast = (): boolean => {
 };
 
 /**
+ * Checks if an element is focusable
+ */
+export const isFocusable = (element: HTMLElement): boolean => {
+  const focusableSelectors = [
+    'button:not([disabled])',
+    '[href]',
+    'input:not([disabled]):not([type="hidden"])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+    '[contenteditable="true"]'
+  ];
+  
+  return focusableSelectors.some(selector => element.matches(selector)) &&
+    !element.hasAttribute('hidden') &&
+    element.offsetParent !== null;
+};
+
+/**
+ * Gets all focusable elements within a container
+ */
+export const getFocusableElements = (container: HTMLElement): HTMLElement[] => {
+  const focusableSelectors = [
+    'button:not([disabled])',
+    '[href]',
+    'input:not([disabled]):not([type="hidden"])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+    '[contenteditable="true"]'
+  ];
+  
+  const elements = container.querySelectorAll(focusableSelectors.join(', '));
+  return Array.from(elements).filter(el => isFocusable(el as HTMLElement)) as HTMLElement[];
+};
+
+/**
  * Calculates contrast ratio between two colors
  */
 export const getContrastRatio = (color1: string, color2: string): number => {
@@ -64,6 +101,49 @@ export const meetsContrastRequirement = (
 };
 
 /**
+ * Generates a unique ID with prefix
+ */
+export const generateId = (prefix: string = 'id'): string => {
+  return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
+};
+
+/**
+ * Handles arrow key navigation for lists
+ */
+export const handleArrowNavigation = (
+  event: KeyboardEvent,
+  elements: HTMLElement[],
+  currentIndex: number,
+  direction: 'horizontal' | 'vertical' = 'vertical'
+): number => {
+  const isVertical = direction === 'vertical';
+  const upKey = isVertical ? 'ArrowUp' : 'ArrowLeft';
+  const downKey = isVertical ? 'ArrowDown' : 'ArrowRight';
+  
+  if (event.key === upKey) {
+    event.preventDefault();
+    return currentIndex > 0 ? currentIndex - 1 : elements.length - 1;
+  } else if (event.key === downKey) {
+    event.preventDefault();
+    return currentIndex < elements.length - 1 ? currentIndex + 1 : 0;
+  }
+  
+  return currentIndex;
+};
+
+/**
+ * Creates a live region for announcements
+ */
+export const createLiveRegion = (priority: 'polite' | 'assertive' = 'polite'): HTMLElement => {
+  const region = document.createElement('div');
+  region.setAttribute('aria-live', priority);
+  region.setAttribute('aria-atomic', 'true');
+  region.className = 'sr-only';
+  document.body.appendChild(region);
+  return region;
+};
+
+/**
  * Focuses an element and scrolls it into view if needed
  */
 export const focusElement = (element: HTMLElement, scrollIntoView: boolean = true): void => {
@@ -81,12 +161,10 @@ export const focusElement = (element: HTMLElement, scrollIntoView: boolean = tru
  * Traps focus within a container (useful for modals)
  */
 export const trapFocus = (container: HTMLElement): (() => void) => {
-  const focusableElements = container.querySelectorAll(
-    'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
-  );
+  const focusableElements = getFocusableElements(container);
   
-  const firstElement = focusableElements[0] as HTMLElement;
-  const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
   
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Tab') {
@@ -105,6 +183,11 @@ export const trapFocus = (container: HTMLElement): (() => void) => {
   };
   
   container.addEventListener('keydown', handleKeyDown);
+  
+  // Focus first element by default
+  if (firstElement) {
+    firstElement.focus();
+  }
   
   // Return cleanup function
   return () => {

@@ -9,11 +9,13 @@ export interface ToastActionElement {
 
 export interface ToastProps {
   id: string;
-  title?: React.ReactNode;
-  description?: React.ReactNode;
+  title?: string;
+  description?: string;
   action?: ToastActionElement;
+  open?: boolean;
   onOpenChange?: (open: boolean) => void;
   variant?: 'default' | 'destructive' | 'success';
+  duration?: number;
   className?: string;
 }
 
@@ -113,6 +115,7 @@ export const reducer = (state: State, action: Action): State => {
           t.id === toastId || toastId === undefined
             ? {
                 ...t,
+                open: false,
               }
             : t
         ),
@@ -160,6 +163,7 @@ function toast({ ...props }: Toast) {
     toast: {
       ...props,
       id,
+      open: true,
       onOpenChange: (open) => {
         if (!open) dismiss()
       },
