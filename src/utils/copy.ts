@@ -1,4 +1,3 @@
-
 /**
  * Centralized copy and microcopy for consistent messaging
  * Tone: Friendly, clear, action-oriented, and supportive
@@ -17,7 +16,8 @@ export const copy = {
     about: 'About',
     contact: 'Contact',
     help: 'Help',
-    blog: 'Blog'
+    blog: 'Blog',
+    analytics: 'Analytics'
   },
 
   // Buttons - Action-oriented and consistent
@@ -31,6 +31,7 @@ export const copy = {
     learnMore: 'Learn More',
     signUp: 'Sign Up',
     logIn: 'Log In',
+    signIn: 'Sign In',
     signOut: 'Sign Out',
     createAccount: 'Create Account',
     scheduleDemo: 'Schedule Demo',

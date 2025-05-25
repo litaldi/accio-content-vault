@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -81,7 +80,6 @@ export const useAccessibility = () => {
     toast({
       title: "Accessibility updated",
       description: "Your preferences have been saved.",
-      duration: 2000,
     });
   };
 

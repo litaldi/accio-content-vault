@@ -9,11 +9,10 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      duration: 4000,
       className: "border-green-200 bg-green-50 text-green-900",
-      action: (
-        <CheckCircle className="h-4 w-4 text-green-600" />
-      ),
+      action: {
+        action: <CheckCircle className="h-4 w-4 text-green-600" />
+      },
     });
   };
 
@@ -21,11 +20,10 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      duration: 6000,
       variant: "destructive",
-      action: (
-        <AlertCircle className="h-4 w-4" />
-      ),
+      action: {
+        action: <AlertCircle className="h-4 w-4" />
+      },
     });
   };
 
@@ -33,11 +31,10 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      duration: 5000,
       className: "border-yellow-200 bg-yellow-50 text-yellow-900",
-      action: (
-        <AlertTriangle className="h-4 w-4 text-yellow-600" />
-      ),
+      action: {
+        action: <AlertTriangle className="h-4 w-4 text-yellow-600" />
+      },
     });
   };
 
@@ -45,11 +42,10 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      duration: 4000,
       className: "border-blue-200 bg-blue-50 text-blue-900",
-      action: (
-        <Info className="h-4 w-4 text-blue-600" />
-      ),
+      action: {
+        action: <Info className="h-4 w-4 text-blue-600" />
+      },
     });
   };
 
@@ -57,7 +53,6 @@ export const useEnhancedToast = () => {
     return toast({
       title,
       description,
-      duration: Infinity,
       className: "border-gray-200 bg-gray-50 text-gray-900",
     });
   };
@@ -66,11 +61,10 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      duration: 5000,
       className: "border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-900",
-      action: (
-        <Sparkles className="h-4 w-4 text-purple-600 animate-pulse" />
-      ),
+      action: {
+        action: <Sparkles className="h-4 w-4 text-purple-600 animate-pulse" />
+      },
     });
   };
 

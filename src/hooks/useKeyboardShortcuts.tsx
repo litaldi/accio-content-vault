@@ -69,7 +69,6 @@ export const useKeyboardShortcuts = () => {
         toast({
           title: "Keyboard Shortcuts",
           description: "Ctrl+S: Save content, Ctrl+D: Dashboard, Ctrl+K: Search, Ctrl+H: Home",
-          duration: 5000
         });
       },
       description: 'Show keyboard shortcuts'
@@ -78,14 +77,12 @@ export const useKeyboardShortcuts = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      // Don't trigger shortcuts when user is typing in inputs
       const target = event.target as HTMLElement;
       if (
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.contentEditable === 'true'
       ) {
-        // Only allow certain shortcuts when in input fields
         if (!(event.key === 'Escape' || (event.ctrlKey && ['s', 'd', 'h'].includes(event.key)))) {
           return;
         }

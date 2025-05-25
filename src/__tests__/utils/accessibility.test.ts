@@ -13,7 +13,6 @@ import {
 
 describe('Accessibility Utils', () => {
   beforeEach(() => {
-    // Clear DOM before each test
     document.body.innerHTML = '';
   });
 
@@ -25,7 +24,6 @@ describe('Accessibility Utils', () => {
       expect(announcement).toBeInTheDocument();
       expect(announcement).toHaveTextContent('Test announcement');
       
-      // Should be removed after timeout
       setTimeout(() => {
         expect(document.querySelector('[aria-live]')).not.toBeInTheDocument();
       }, 1100);
@@ -65,7 +63,7 @@ describe('Accessibility Utils', () => {
       `;
       
       const focusableElements = getFocusableElements(container);
-      expect(focusableElements).toHaveLength(4); // Excludes disabled button
+      expect(focusableElements).toHaveLength(4);
     });
   });
 
@@ -81,7 +79,6 @@ describe('Accessibility Utils', () => {
       
       const cleanup = trapFocus(container);
       
-      // Focus should be on first element
       expect(document.activeElement?.id).toBe('first');
       
       cleanup();
@@ -92,25 +89,24 @@ describe('Accessibility Utils', () => {
   describe('getContrastRatio', () => {
     it('should calculate contrast ratio', () => {
       const ratio = getContrastRatio('#000000', '#ffffff');
-      expect(ratio).toBeCloseTo(21, 0); // Black on white has ~21:1 ratio
+      expect(ratio).toBeCloseTo(21, 0);
     });
 
     it('should handle same colors', () => {
       const ratio = getContrastRatio('#ffffff', '#ffffff');
-      expect(ratio).toBeCloseTo(1, 0); // Same colors have 1:1 ratio
+      expect(ratio).toBeCloseTo(1, 0);
     });
   });
 
   describe('meetsContrastRequirement', () => {
     it('should validate WCAG AA compliance', () => {
-      expect(meetsContrastRequirement('#000000', '#ffffff')).toBe(true);
-      expect(meetsContrastRequirement('#888888', '#ffffff')).toBe(false);
+      expect(meetsContrastRequirement('#000000', '#ffffff', 'AA')).toBe(true);
+      expect(meetsContrastRequirement('#888888', '#ffffff', 'AA')).toBe(false);
     });
 
     it('should handle large text differently', () => {
-      // Lower requirement for large text
-      expect(meetsContrastRequirement('#767676', '#ffffff', true)).toBe(true);
-      expect(meetsContrastRequirement('#767676', '#ffffff', false)).toBe(false);
+      expect(meetsContrastRequirement('#767676', '#ffffff', 'AA', true)).toBe(true);
+      expect(meetsContrastRequirement('#767676', '#ffffff', 'AA', false)).toBe(false);
     });
   });
 
