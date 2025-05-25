@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import ImprovedNavigation from '@/components/navigation/ImprovedNavigation';
+import EnhancedHeader from '@/components/layout/EnhancedHeader';
 import EnhancedHeroSection from '@/components/ui/enhanced-hero-section';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
@@ -29,7 +29,7 @@ const ImprovedIndex = () => {
           <link rel="canonical" href="https://yoursite.com/" />
         </Helmet>
         
-        <ImprovedNavigation />
+        <EnhancedHeader />
         
         <main id="main-content" className="flex-grow w-full" role="main">
           <EnhancedHeroSection />
