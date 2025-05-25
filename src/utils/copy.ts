@@ -1,25 +1,26 @@
 
 /**
  * Centralized copy and microcopy for consistent messaging
+ * Tone: Friendly, clear, action-oriented, and supportive
  */
 
 export const copy = {
-  // Navigation
+  // Navigation - Clear and familiar
   nav: {
     home: 'Home',
     dashboard: 'Dashboard',
     saveContent: 'Save Content',
+    library: 'My Library',
     settings: 'Settings',
-    analytics: 'Analytics',
     features: 'Features',
     pricing: 'Pricing',
     about: 'About',
     contact: 'Contact',
-    faq: 'FAQ',
+    help: 'Help',
     blog: 'Blog'
   },
 
-  // Buttons - consistent with proper punctuation and clear CTAs
+  // Buttons - Action-oriented and consistent
   buttons: {
     save: 'Save',
     cancel: 'Cancel',
@@ -29,113 +30,247 @@ export const copy = {
     getStarted: 'Get Started',
     learnMore: 'Learn More',
     signUp: 'Sign Up',
-    signIn: 'Sign In',
+    logIn: 'Log In',
     signOut: 'Sign Out',
-    createAccount: 'Create My Free Account',
-    scheduleDemo: 'Schedule a Demo',
-    chatSupport: 'Chat with Support',
-    tryFree: 'Try It Free',
+    createAccount: 'Create Account',
+    scheduleDemo: 'Schedule Demo',
     startFreeTrial: 'Start Free Trial',
-    contactSales: 'Contact Sales',
+    upgrade: 'Upgrade',
+    contactSupport: 'Contact Support',
     viewDemo: 'View Demo',
-    exploreFeatures: 'Explore Features'
+    exploreFeatures: 'Explore Features',
+    continue: 'Continue',
+    back: 'Back',
+    next: 'Next',
+    finish: 'Finish',
+    close: 'Close',
+    done: 'Done',
+    apply: 'Apply Changes',
+    reset: 'Reset'
   },
 
-  // Marketing Headlines - benefit-focused
+  // Headlines - Value-focused and user-centric
   headlines: {
-    hero: 'Stop Losing Your Best Ideas. Start Building Brilliance.',
-    subhero: 'Transform scattered bookmarks, tabs, and notes into an AI-powered knowledge engine that makes you 10x more productive.',
-    features: 'Powerful Features for Modern Knowledge Management',
-    pricing: 'Simple, Transparent Pricing',
-    about: 'Building the Future of Knowledge Management'
+    hero: 'Never Lose Your Best Ideas Again',
+    subhero: 'Transform scattered bookmarks and notes into an AI-powered knowledge library that helps you think better.',
+    features: 'Everything You Need to Organize Your Knowledge',
+    pricing: 'Choose the Plan That Fits Your Needs',
+    about: 'We\'re Building the Future of Knowledge Management',
+    dashboard: 'Welcome Back! Here\'s What\'s New',
+    library: 'Your Knowledge Library',
+    settings: 'Customize Your Experience'
   },
 
-  // Value Propositions - user benefit focused
+  // Value propositions - Benefit-focused
   benefits: {
-    saveAnything: 'Save from any website in 1 click',
+    saveAnything: 'Save any content with one click',
     aiOrganization: 'AI organizes everything automatically',
-    findFast: 'Find anything in seconds, not hours',
-    crossDevice: 'Works seamlessly across all devices',
-    timeBack: 'Get 5+ hours back each week',
-    neverLose: 'Never lose important information again'
+    findFast: 'Find anything in seconds with smart search',
+    crossDevice: 'Access your library on any device',
+    timeBack: 'Save hours of searching every week',
+    neverLose: 'Never lose important information again',
+    smartTags: 'Get perfect tags without the work',
+    instantSync: 'Everything syncs instantly across devices'
   },
 
-  // Error messages - user-friendly and actionable
+  // Error messages - Helpful and solution-focused
   errors: {
-    general: 'Something went wrong. Please try again.',
-    network: 'Unable to connect. Please check your internet connection.',
-    validation: 'Please check the information you entered.',
-    unauthorized: 'You need to be signed in to access this feature.',
-    forbidden: 'You don\'t have permission to perform this action.',
-    notFound: 'The content you\'re looking for doesn\'t exist.',
-    fileSize: 'File is too large. Please choose a file under 10MB.',
-    fileType: 'This file type isn\'t supported. Please choose a PDF or image file.',
-    urlInvalid: 'Please enter a valid web address (URL).',
-    urlUnsafe: 'This URL cannot be processed for security reasons.'
+    general: 'Something went wrong. Please try again, or contact support if this keeps happening.',
+    network: 'Looks like you\'re offline. Please check your connection and try again.',
+    validation: 'Please check the information you entered and try again.',
+    unauthorized: 'Please sign in to continue.',
+    forbidden: 'You don\'t have permission to do that.',
+    notFound: 'We couldn\'t find what you\'re looking for.',
+    fileSize: 'That file is too large. Please choose one under 10MB.',
+    fileType: 'We can\'t process that file type. Please try a PDF, image, or text file.',
+    urlInvalid: 'That doesn\'t look like a valid web address. Please check and try again.',
+    urlUnsafe: 'We can\'t access that URL for security reasons.',
+    emailInvalid: 'Please enter a valid email address.',
+    passwordWeak: 'Your password needs at least 8 characters, including a number and special character.',
+    required: 'This field is required.',
+    tooShort: 'This needs to be longer.',
+    tooLong: 'This is too long. Please keep it under {max} characters.',
+    emailExists: 'An account with this email already exists. Try signing in instead.'
   },
 
-  // Success messages - encouraging and clear
+  // Success messages - Encouraging and next-step focused
   success: {
-    contentSaved: 'Content saved successfully!',
-    settingsUpdated: 'Your settings have been updated.',
-    accountCreated: 'Welcome to Accio! Your account has been created.',
+    contentSaved: 'Content saved! It\'s now in your library.',
+    settingsUpdated: 'Your preferences have been saved.',
+    accountCreated: 'Welcome to Accio! Let\'s get you started.',
     signedIn: 'Welcome back!',
-    signedOut: 'You\'ve been signed out successfully.'
+    signedOut: 'You\'ve been signed out successfully.',
+    emailSent: 'Check your email for next steps.',
+    passwordChanged: 'Your password has been updated.',
+    profileUpdated: 'Your profile changes have been saved.',
+    uploadComplete: 'Your file has been uploaded and processed.',
+    deleted: 'Item deleted successfully.',
+    copied: 'Copied to clipboard!'
   },
 
-  // Loading states - informative and reassuring
+  // Loading states - Informative and reassuring
   loading: {
     saving: 'Saving your content...',
-    processing: 'Processing URL...',
-    analyzing: 'AI is analyzing your content...',
-    uploading: 'Uploading file...',
+    processing: 'Processing your request...',
+    analyzing: 'Our AI is analyzing your content...',
+    uploading: 'Uploading your file...',
     searching: 'Searching your library...',
-    loading: 'Loading...'
+    loading: 'Loading...',
+    signin: 'Signing you in...',
+    creating: 'Creating your account...',
+    deleting: 'Deleting...',
+    updating: 'Updating...'
   },
 
-  // Form labels and help text
+  // Form labels and help text - Clear and helpful
   forms: {
     url: {
       label: 'Website URL',
       placeholder: 'https://example.com/article',
-      help: 'Enter the full web address of the page you want to save.'
+      help: 'Paste the full web address of the content you want to save.'
     },
     file: {
-      label: 'Choose File',
-      help: 'Upload a PDF document or image (max 10MB).',
-      dragDrop: 'Drag and drop a file here, or click to browse.'
+      label: 'Upload File',
+      help: 'Upload a PDF, image, or document (max 10MB).',
+      dragDrop: 'Drag your file here, or click to browse.',
+      dropActive: 'Drop your file here'
     },
     search: {
-      placeholder: 'Search your saved content...',
-      help: 'Try searching by title, tags, or content keywords.'
+      placeholder: 'Search your library...',
+      help: 'Try searching by title, topic, or any keyword you remember.',
+      noResults: 'No results found. Try different keywords or browse by category.'
     },
     email: {
       label: 'Email Address',
-      placeholder: 'your@email.com'
+      placeholder: 'your@email.com',
+      help: 'We\'ll use this to sign you in and send important updates.'
     },
     password: {
       label: 'Password',
-      placeholder: 'Enter your password'
+      placeholder: 'Create a secure password',
+      help: 'At least 8 characters with a mix of letters, numbers, and symbols.',
+      confirmLabel: 'Confirm Password',
+      confirmPlaceholder: 'Enter your password again'
+    },
+    name: {
+      label: 'Full Name',
+      placeholder: 'Enter your name',
+      help: 'This is how we\'ll address you in the app.'
+    },
+    phone: {
+      label: 'Phone Number',
+      placeholder: '+1 (555) 123-4567',
+      help: 'We\'ll send you a verification code.'
     }
   },
 
-  // Social Proof
-  socialProof: {
-    userCount: '10,000+',
-    rating: '4.9/5',
-    reviews: '2,500+',
-    companies: 'Google, Microsoft, Netflix, and 500+ other companies'
+  // Empty states - Encouraging and actionable
+  emptyStates: {
+    library: {
+      title: 'Your Library is Ready!',
+      description: 'Start building your knowledge collection by saving your first piece of content.',
+      action: 'Save Your First Item'
+    },
+    search: {
+      title: 'No Results Found',
+      description: 'Try adjusting your search terms or browse your collections.',
+      action: 'Clear Search'
+    },
+    dashboard: {
+      title: 'Welcome to Accio!',
+      description: 'Your dashboard will come alive as you start saving and organizing content.',
+      action: 'Take a Quick Tour'
+    },
+    recent: {
+      title: 'Nothing Here Yet',
+      description: 'Your recently saved items will appear here.',
+      action: 'Save Something'
+    }
   },
 
-  // Trust Indicators
+  // Onboarding - Welcoming and clear about value
+  onboarding: {
+    welcome: {
+      title: 'Welcome to Accio!',
+      description: 'Let\'s get you set up to start building your knowledge library.',
+      subtitle: 'Your personal knowledge assistant'
+    },
+    step1: {
+      title: 'Save Any Content',
+      description: 'Articles, videos, PDFs, and more—save anything with one click.',
+      tip: 'Install our browser extension for the fastest saving experience.'
+    },
+    step2: {
+      title: 'AI Does the Organizing',
+      description: 'Our AI automatically tags and categorizes everything you save.',
+      tip: 'No more time spent organizing—just save and find.'
+    },
+    step3: {
+      title: 'Find Everything Instantly',
+      description: 'Search naturally, like asking a question. Our AI understands what you\'re looking for.',
+      tip: 'Try searching for concepts, not just keywords.'
+    },
+    step4: {
+      title: 'You\'re All Set!',
+      description: 'Start saving content and watch your knowledge library grow.',
+      tip: 'Your first save is just a click away.'
+    }
+  },
+
+  // Accessibility - Clear and supportive
+  accessibility: {
+    fontSizeLabel: 'Text Size',
+    fontSizeHelp: 'Make text larger for easier reading.',
+    contrastLabel: 'High Contrast',
+    contrastHelp: 'Increase contrast for better visibility.',
+    motionLabel: 'Reduce Motion',
+    motionHelp: 'Minimize animations and transitions.',
+    screenReaderLabel: 'Screen Reader Mode',
+    screenReaderHelp: 'Optimize the interface for screen readers.',
+    keyboardLabel: 'Keyboard Navigation',
+    keyboardHelp: 'Navigate using only your keyboard.',
+    focusLabel: 'Focus Indicators',
+    focusHelp: 'Show clear focus outlines on interactive elements.'
+  },
+
+  // Tooltips and help text - Concise and helpful
+  tooltips: {
+    save: 'Save this content to your library',
+    delete: 'Remove this item permanently',
+    edit: 'Make changes to this item',
+    share: 'Share this with others',
+    bookmark: 'Add to your favorites',
+    tag: 'Add tags to organize this content',
+    search: 'Search your entire library',
+    filter: 'Filter results by type or date',
+    sort: 'Change how items are ordered',
+    view: 'Switch between list and grid view',
+    settings: 'Customize your experience',
+    help: 'Get help and support',
+    profile: 'Manage your account',
+    notifications: 'View your notifications',
+    theme: 'Switch between light and dark mode'
+  },
+
+  // Social proof and trust indicators
+  social: {
+    userCount: '50,000+',
+    rating: '4.9/5 stars',
+    reviews: '5,000+ reviews',
+    companies: 'Trusted by teams at Google, Microsoft, and 1,000+ other companies'
+  },
+
+  // Trust indicators
   trust: {
-    security: 'Enterprise-grade security',
-    uptime: '99.9% uptime guarantee',
-    support: '24/7 customer support',
-    noCard: 'No credit card required'
+    security: 'Bank-level security',
+    privacy: 'Your data stays private',
+    uptime: '99.9% uptime',
+    support: '24/7 support when you need it',
+    noCard: 'No credit card required',
+    freeTrial: '14 days free, then cancel anytime'
   },
 
-  // Common phrases and labels
+  // Common phrases
   common: {
     or: 'or',
     and: 'and',
@@ -145,19 +280,26 @@ export const copy = {
     popular: 'Most Popular',
     recommended: 'Recommended',
     comingSoon: 'Coming Soon',
-    beta: 'Beta'
+    beta: 'Beta',
+    new: 'New',
+    updated: 'Updated',
+    featured: 'Featured'
   },
 
   // Accessibility announcements
   a11y: {
     loading: 'Content is loading, please wait.',
-    error: 'An error has occurred.',
+    error: 'An error occurred. Please try again.',
     success: 'Action completed successfully.',
-    newContent: 'New content has been added.',
+    newContent: 'New content has been added to the page.',
     navigationMenu: 'Main navigation menu',
     skipToContent: 'Skip to main content',
     closeDialog: 'Close dialog',
     openMenu: 'Open menu',
-    closeMenu: 'Close menu'
+    closeMenu: 'Close menu',
+    pageLoaded: 'Page has finished loading.',
+    formError: 'There are errors in the form. Please review and try again.',
+    saved: 'Your changes have been saved.',
+    deleted: 'Item has been deleted.'
   }
 };

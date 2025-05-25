@@ -23,9 +23,10 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { copy } from '@/utils/copy';
 
 const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address' }),
+  email: z.string().email({ message: copy.errors.emailInvalid }),
   password: z.string().min(6, { message: 'Password must be at least 6 characters' }),
 });
 
@@ -71,8 +72,9 @@ function Login() {
   // Show loading state while checking authentication
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <div className="min-h-screen flex items-center justify-center" role="status" aria-label={copy.loading.loading}>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" aria-hidden="true"></div>
+        <span className="sr-only">{copy.loading.signin}</span>
       </div>
     );
   }
@@ -87,12 +89,12 @@ function Login() {
         </div>
       </header>
       
-      <div className="flex-grow flex items-center justify-center px-4 py-12">
+      <main className="flex-grow flex items-center justify-center px-4 py-12" id="main-content" role="main">
         <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Welcome back</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">Welcome Back</CardTitle>
             <CardDescription className="text-center">
-              Enter your email and password to access your account
+              Sign in to access your knowledge library
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -103,10 +105,10 @@ function Login() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel>{copy.forms.email.label}</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="example@email.com" 
+                          placeholder={copy.forms.email.placeholder}
                           type="email" 
                           disabled={isSubmitting} 
                           {...field} 
@@ -121,10 +123,10 @@ function Login() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>{copy.forms.password.label}</FormLabel>
                       <FormControl>
                         <Input 
-                          placeholder="••••••" 
+                          placeholder="Enter your password"
                           type="password" 
                           disabled={isSubmitting} 
                           {...field} 
@@ -139,7 +141,7 @@ function Login() {
                   className="w-full" 
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Signing in...' : 'Sign In'}
+                  {isSubmitting ? copy.loading.signin : copy.buttons.logIn}
                 </Button>
               </form>
             </Form>
@@ -148,12 +150,12 @@ function Login() {
             <div className="text-center text-sm text-muted-foreground">
               Don't have an account?{' '}
               <Link to="/register" className="text-primary hover:underline font-medium">
-                Register
+                {copy.buttons.createAccount}
               </Link>
             </div>
           </CardFooter>
         </Card>
-      </div>
+      </main>
     </div>
   );
 }

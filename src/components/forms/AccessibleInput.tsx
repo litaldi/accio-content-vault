@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { AlertCircle } from 'lucide-react';
+import { copy } from '@/utils/copy';
 
 interface AccessibleInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -29,6 +30,7 @@ export const AccessibleInput = forwardRef<HTMLInputElement, AccessibleInputProps
           )}
         >
           {label}
+          {required && <span className="sr-only">{copy.common.required}</span>}
         </Label>
         
         <Input
@@ -54,8 +56,8 @@ export const AccessibleInput = forwardRef<HTMLInputElement, AccessibleInputProps
         )}
         
         {error && (
-          <p id={errorId} className="flex items-center gap-1 text-xs text-destructive" role="alert">
-            <AlertCircle className="h-3 w-3" />
+          <p id={errorId} className="flex items-center gap-1 text-xs text-destructive" role="alert" aria-live="polite">
+            <AlertCircle className="h-3 w-3" aria-hidden="true" />
             {error}
           </p>
         )}

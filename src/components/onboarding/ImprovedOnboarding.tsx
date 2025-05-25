@@ -6,6 +6,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Check, ArrowRight, ArrowLeft, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { copy } from '@/utils/copy';
 
 interface ImprovedOnboardingProps {
   onComplete: () => void;
@@ -14,35 +15,35 @@ interface ImprovedOnboardingProps {
 const onboardingSteps = [
   {
     id: 1,
-    title: 'Welcome to Accio',
-    description: 'Your personal knowledge library awaits',
-    content: 'Transform how you save, organize, and rediscover content from across the web.',
-    icon: '🎯',
-    benefits: ['Never lose important content again', 'AI-powered organization', 'Instant search and discovery']
+    title: copy.onboarding.step1.title,
+    description: copy.onboarding.step1.description,
+    content: copy.onboarding.step1.tip,
+    icon: '📚',
+    benefits: [copy.benefits.saveAnything, copy.benefits.crossDevice, 'Works with any website']
   },
   {
     id: 2,
-    title: 'Save Content',
-    description: 'Capture anything from the web',
-    content: 'Save articles, videos, PDFs, and more with just one click.',
-    icon: '📚',
-    benefits: ['One-click saving', 'Multiple content types', 'Automatic metadata extraction']
+    title: copy.onboarding.step2.title,
+    description: copy.onboarding.step2.description,
+    content: copy.onboarding.step2.tip,
+    icon: '🤖',
+    benefits: [copy.benefits.smartTags, copy.benefits.aiOrganization, 'No manual work required']
   },
   {
     id: 3,
-    title: 'AI Organization',
-    description: 'Let AI organize your content',
-    content: 'Our AI automatically tags and categorizes your saved content.',
-    icon: '🤖',
-    benefits: ['Smart tagging', 'Auto-categorization', 'Content recommendations']
+    title: copy.onboarding.step3.title,
+    description: copy.onboarding.step3.description,
+    content: copy.onboarding.step3.tip,
+    icon: '🔍',
+    benefits: [copy.benefits.findFast, 'Natural language search', 'Smart filters']
   },
   {
     id: 4,
-    title: 'Smart Search',
-    description: 'Find anything instantly',
-    content: 'Search by keywords, topics, or even describe what you remember.',
-    icon: '🔍',
-    benefits: ['Natural language search', 'Semantic understanding', 'Quick filters']
+    title: copy.onboarding.step4.title,
+    description: copy.onboarding.step4.description,
+    content: copy.onboarding.step4.tip,
+    icon: '🎯',
+    benefits: [copy.benefits.neverLose, copy.benefits.timeBack, copy.benefits.instantSync]
   }
 ];
 
@@ -79,13 +80,14 @@ export const ImprovedOnboarding: React.FC<ImprovedOnboardingProps> = ({ onComple
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-2">
           <span className="text-2xl font-bold text-primary">Accio</span>
-          <Badge variant="secondary">Setup</Badge>
+          <Badge variant="secondary">{copy.onboarding.welcome.subtitle}</Badge>
         </div>
         <Button
           variant="ghost"
           size="sm"
           onClick={onComplete}
           className="text-muted-foreground hover:text-foreground"
+          aria-label={copy.buttons.close}
         >
           <X className="h-4 w-4" />
         </Button>
@@ -101,7 +103,7 @@ export const ImprovedOnboarding: React.FC<ImprovedOnboardingProps> = ({ onComple
 
       <Card className="mb-8">
         <CardHeader className="text-center">
-          <div className="text-4xl mb-4">{step.icon}</div>
+          <div className="text-4xl mb-4" aria-hidden="true">{step.icon}</div>
           <CardTitle className="text-2xl">{step.title}</CardTitle>
           <p className="text-muted-foreground">{step.description}</p>
         </CardHeader>
@@ -110,10 +112,8 @@ export const ImprovedOnboarding: React.FC<ImprovedOnboardingProps> = ({ onComple
           
           <div className="grid gap-3">
             {step.benefits.map((benefit, index) => (
-              <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <div className="flex-shrink-0 w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Check className="h-3 w-3 text-primary" />
-                </div>
+              <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/30">
+                <Check className="h-5 w-5 text-primary flex-shrink-0" />
                 <span className="text-sm">{benefit}</span>
               </div>
             ))}
@@ -121,7 +121,7 @@ export const ImprovedOnboarding: React.FC<ImprovedOnboardingProps> = ({ onComple
         </CardContent>
       </Card>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between">
         <Button
           variant="outline"
           onClick={handlePrevious}
@@ -129,38 +129,19 @@ export const ImprovedOnboarding: React.FC<ImprovedOnboardingProps> = ({ onComple
           className="flex items-center gap-2"
         >
           <ArrowLeft className="h-4 w-4" />
-          Previous
+          {copy.buttons.back}
         </Button>
-
-        <div className="flex gap-2">
-          {onboardingSteps.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentStep(index)}
-              className={cn(
-                "w-3 h-3 rounded-full transition-colors",
-                index === currentStep ? "bg-primary" : "bg-muted",
-                index < currentStep && "bg-primary/60"
-              )}
-              aria-label={`Go to step ${index + 1}`}
-            />
-          ))}
-        </div>
-
+        
         <Button
           onClick={handleNext}
           disabled={isCompleting}
           className="flex items-center gap-2"
         >
           {currentStep === onboardingSteps.length - 1 ? (
-            isCompleting ? (
-              <>Completing...</>
-            ) : (
-              <>Get Started</>
-            )
+            isCompleting ? copy.loading.loading : copy.buttons.finish
           ) : (
             <>
-              Next
+              {copy.buttons.next}
               <ArrowRight className="h-4 w-4" />
             </>
           )}
