@@ -1,99 +1,149 @@
 
-/* Utility Classes */
+/* Utility classes */
 
-/* Enhanced spacing utilities */
-.section-spacing {
-  @apply py-20 px-4;
+/* Container utilities */
+.container-narrow {
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-.content-container {
-  @apply max-w-7xl mx-auto;
+.container-wide {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
 
-/* Safe area utilities */
-.safe-area-inset {
-  padding-top: env(safe-area-inset-top);
-  padding-bottom: env(safe-area-inset-bottom);
-  padding-left: env(safe-area-inset-left);
-  padding-right: env(safe-area-inset-right);
+/* Spacing utilities */
+.space-y-fluid > * + * {
+  margin-top: clamp(1rem, 3vw, 2rem);
 }
 
-/* Enhanced focus utilities */
-.focus-ring {
-  @apply focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+.space-x-fluid > * + * {
+  margin-left: clamp(1rem, 3vw, 2rem);
 }
 
-/* Skip link utility */
-.skip-link {
-  @apply absolute -top-full left-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded focus:top-4 transition-all;
+/* Flexbox utilities */
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* Touch target utilities */
-@media (max-width: 768px) {
-  .touch-friendly,
-  button, 
-  [role="button"],
-  input[type="button"],
-  input[type="submit"],
-  a[href] {
-    min-height: 44px !important;
-    min-width: 44px !important;
-    touch-action: manipulation;
-  }
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
-/* Scroll utilities */
-.scroll-smooth-enhanced {
-  scroll-behavior: smooth;
-  scroll-padding-top: 2rem;
+.flex-start {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
-/* Visual utilities */
-.glass-effect {
-  @apply bg-background/80 backdrop-blur-md border border-border/50;
+.flex-end {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
 }
 
-/* Layout utilities */
-.container-padding {
-  @apply px-4 sm:px-6 lg:px-8;
+/* Grid utilities */
+.grid-auto-fit {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
 }
 
-.section-padding {
-  @apply py-16 md:py-20 lg:py-24;
+.grid-auto-fill {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
 }
 
 /* Responsive utilities */
-.responsive-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
+.hide-mobile {
+  display: block;
 }
 
-.responsive-flex {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.show-mobile {
+  display: none;
 }
 
-/* State utilities */
-.loading-state {
-  opacity: 0.7;
-  pointer-events: none;
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none;
+  }
+  
+  .show-mobile {
+    display: block;
+  }
 }
 
-.disabled-state {
-  opacity: 0.5;
-  cursor: not-allowed;
+/* Text utilities */
+.text-wrap-balance {
+  text-wrap: balance;
+}
+
+.text-wrap-pretty {
+  text-wrap: pretty;
 }
 
 /* Border utilities */
 .border-gradient {
-  @apply relative;
+  border: 1px solid;
+  border-image: linear-gradient(45deg, hsl(var(--primary)), hsl(var(--secondary))) 1;
 }
 
-.border-gradient::before {
-  content: '';
-  @apply absolute inset-0 rounded-lg p-px bg-gradient-to-r from-primary to-primary/50;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
+/* Shadow utilities */
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.shadow-smooth {
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+/* Interactive utilities */
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.no-select {
+  user-select: none;
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted-foreground) / 0.1) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: loading-shimmer 2s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Focus utilities */
+.focus-ring {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+.focus-ring-destructive {
+  outline: 2px solid hsl(var(--destructive));
+  outline-offset: 2px;
 }

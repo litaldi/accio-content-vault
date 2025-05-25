@@ -1,108 +1,102 @@
 
 /* Component-specific styles */
 
-/* Enhanced hero section gradient */
-.hero-gradient {
-  background: linear-gradient(135deg, hsl(210, 100%, 50%) 0%, hsl(200, 100%, 45%) 50%, hsl(220, 100%, 55%) 100%);
+/* Button enhancements */
+.btn-focus {
   position: relative;
 }
 
-.hero-gradient::before {
+.btn-focus::after {
   content: '';
   position: absolute;
-  top: 0;
+  inset: -2px;
+  border: 2px solid transparent;
+  border-radius: inherit;
+  transition: border-color 0.2s ease;
+}
+
+.btn-focus:focus-visible::after {
+  border-color: hsl(var(--primary));
+}
+
+/* Form enhancements */
+.form-field-wrapper {
+  position: relative;
+}
+
+.form-field-wrapper .error-message {
+  position: absolute;
+  bottom: -1.5rem;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 30% 20%, rgba(255,255,255,0.1) 0%, transparent 50%);
-  pointer-events: none;
+  font-size: 0.875rem;
+  color: hsl(var(--destructive));
 }
 
-/* Enhanced gradients */
-.gradient-primary {
-  background: linear-gradient(135deg, hsl(210, 100%, 50%) 0%, hsl(220, 100%, 55%) 100%);
+.form-field-wrapper .help-text {
+  position: absolute;
+  bottom: -1.5rem;
+  left: 0;
+  font-size: 0.875rem;
+  color: hsl(var(--muted-foreground));
 }
 
-.gradient-secondary {
-  background: linear-gradient(135deg, hsl(210, 40%, 96%) 0%, hsl(214, 32%, 91%) 100%);
+/* Modal enhancements */
+.modal-backdrop {
+  backdrop-filter: blur(4px);
 }
 
-/* Enhanced button states */
-.btn-primary {
-  @apply bg-primary text-primary-foreground hover:bg-primary/90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 active:translate-y-0;
+.modal-content {
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
-.btn-secondary {
-  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 border border-border hover:border-primary/50 transition-all hover:-translate-y-0.5 active:translate-y-0;
+/* Card enhancements */
+.card-interactive {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.btn-with-icon {
-  @apply inline-flex items-center gap-2;
+.card-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
 }
 
-/* Glass morphism effect */
-.glass {
-  @apply backdrop-blur-sm bg-white/10 border border-white/20;
+/* Navigation enhancements */
+.nav-link {
+  position: relative;
+  transition: color 0.2s ease;
 }
 
-/* Enhanced shadows */
-.shadow-soft {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: hsl(var(--primary));
+  transition: width 0.2s ease;
 }
 
-.shadow-medium {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
 }
 
-.shadow-strong {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+/* Toast positioning */
+.toast-container {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  max-width: 420px;
+  width: 100%;
 }
 
-/* Enhanced form styling */
-.form-field {
-  @apply mb-6;
-}
-
-.form-label {
-  @apply block text-sm font-semibold mb-2 text-foreground;
-}
-
-.form-input {
-  @apply w-full rounded-lg border-2 border-input bg-background px-4 py-3 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:border-primary transition-all;
-}
-
-.form-input:focus {
-  @apply shadow-md;
-}
-
-.form-error {
-  @apply text-sm text-destructive mt-2 font-medium flex items-center gap-2;
-}
-
-.form-success {
-  @apply text-sm text-green-600 mt-2 font-medium flex items-center gap-2;
-}
-
-/* Enhanced error and success states */
-.input-error {
-  @apply border-destructive focus-visible:ring-destructive;
-}
-
-.input-success {
-  @apply border-green-500 focus-visible:ring-green-500;
-}
-
-/* Enhanced tag styling */
-.tag {
-  @apply inline-flex items-center gap-1 px-3 py-1 text-xs font-medium bg-primary/10 text-primary rounded-full border border-primary/20 hover:bg-primary/20 transition-all duration-200 hover:scale-105;
-}
-
-/* Better loading states */
-.loading-overlay {
-  @apply absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-50;
-}
-
-/* Enhanced tooltip styling */
-.tooltip {
-  @apply bg-popover text-popover-foreground border border-border rounded-md px-3 py-2 text-sm shadow-md max-w-xs;
+@media (max-width: 640px) {
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    max-width: none;
+  }
 }

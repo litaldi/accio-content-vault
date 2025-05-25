@@ -1,32 +1,34 @@
 
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Slider } from '@/components/ui/slider';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
-import { Badge } from '@/components/ui/badge';
-import { useResponsiveLayout } from '@/hooks/use-responsive-layout';
-import { trapFocus } from '@/utils/accessibility';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { 
-  Eye, 
   Type, 
-  Keyboard, 
-  Volume2, 
-  Pause, 
+  Eye, 
   Palette, 
+  Link, 
+  AlignLeft, 
+  Play, 
+  Volume2,
   RotateCcw,
-  Plus,
-  Minus,
-  Sun,
-  Moon,
-  Contrast,
-  Link,
-  AlignLeft,
-  AudioLines,
-  Zap
+  Check
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -35,416 +37,240 @@ interface EnhancedAccessibilityPanelProps {
   onClose: () => void;
 }
 
-const EnhancedAccessibilityPanel: React.FC<EnhancedAccessibilityPanelProps> = ({ isOpen, onClose }) => {
-  const { 
-    preferences, 
-    updatePreferences, 
-    resetPreferences, 
-    increaseFontSize, 
+const EnhancedAccessibilityPanel: React.FC<EnhancedAccessibilityPanelProps> = ({
+  isOpen,
+  onClose
+}) => {
+  const {
+    preferences,
+    updatePreferences,
+    resetPreferences,
+    increaseFontSize,
     decreaseFontSize,
     toggleHighContrast,
     toggleGrayscale,
     toggleLinkHighlight,
     announceToUser
   } = useAccessibility();
-  const { isMobile } = useResponsiveLayout();
-  const panelRef = useRef<HTMLDivElement>(null);
 
-  // Focus management and keyboard navigation
-  useEffect(() => {
-    if (isOpen && panelRef.current) {
-      const cleanup = trapFocus(panelRef.current);
-      return cleanup;
-    }
-  }, [isOpen]);
-
-  // Handle escape key
-  useEffect(() => {
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onClose]);
-
-  const handleTextToSpeech = () => {
-    const newValue = !preferences.textToSpeech;
-    updatePreferences({ textToSpeech: newValue });
-    
-    if (newValue && 'speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance('Text-to-speech enabled');
-      utterance.rate = 0.8;
-      speechSynthesis.speak(utterance);
-    }
-    
-    announceToUser(`Text-to-speech ${newValue ? 'enabled' : 'disabled'}`);
+  const handleFontSizeChange = (value: string) => {
+    updatePreferences({ fontSize: value as 'small' | 'medium' | 'large' });
+    announceToUser(`Font size changed to ${value}`);
   };
 
-  const handleScreenReaderMode = () => {
-    const newValue = !preferences.screenReaderMode;
-    updatePreferences({ screenReaderMode: newValue });
-    announceToUser(`Screen reader mode ${newValue ? 'enabled' : 'disabled'}`);
+  const handleLineSpacingChange = (value: string) => {
+    updatePreferences({ lineSpacing: value as 'normal' | 'relaxed' | 'loose' });
+    announceToUser(`Line spacing changed to ${value}`);
   };
 
-  const AccessibilityContent = () => (
-    <div 
-      ref={panelRef}
-      className="space-y-6 max-h-[80vh] overflow-y-auto"
-      role="dialog"
-      aria-labelledby="accessibility-panel-title"
-      aria-describedby="accessibility-panel-description"
-    >
-      <div className="space-y-2">
-        <h2 id="accessibility-panel-title" className="text-lg font-semibold flex items-center gap-2">
-          <Zap className="h-5 w-5" aria-hidden="true" />
-          Accessibility Settings
-        </h2>
-        <p id="accessibility-panel-description" className="text-sm text-muted-foreground">
-          Customize your experience with accessibility options. Changes are saved automatically.
-        </p>
-        
-        {/* Active Features Badge */}
-        {Object.values(preferences).some(value => value !== false && value !== 'medium' && value !== 'normal' && value !== 'light') && (
-          <Badge variant="secondary" className="text-xs">
-            {Object.entries(preferences).filter(([key, value]) => 
-              value !== false && value !== 'medium' && value !== 'normal' && value !== 'light'
-            ).length} features active
-          </Badge>
-        )}
-      </div>
+  const handleToggle = (key: keyof typeof preferences, label: string) => {
+    const newValue = !preferences[key];
+    updatePreferences({ [key]: newValue });
+    announceToUser(`${label} ${newValue ? 'enabled' : 'disabled'}`);
+  };
 
-      {/* Font Size Controls */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <Type className="h-4 w-4" aria-hidden="true" />
-            Text Size
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Current size: <strong>{preferences.fontSize}</strong></span>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  decreaseFontSize();
-                  announceToUser('Font size decreased');
-                }}
-                disabled={preferences.fontSize === 'small'}
-                aria-label="Decrease font size"
-                className="h-8 w-8 p-0"
-              >
-                <Minus className="h-3 w-3" />
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  increaseFontSize();
-                  announceToUser('Font size increased');
-                }}
-                disabled={preferences.fontSize === 'large'}
-                aria-label="Increase font size"
-                className="h-8 w-8 p-0"
-              >
-                <Plus className="h-3 w-3" />
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Line Spacing */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <AlignLeft className="h-4 w-4" aria-hidden="true" />
-            Line Spacing
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { value: 'normal', label: 'Normal' },
-              { value: 'relaxed', label: 'Relaxed' },
-              { value: 'loose', label: 'Loose' }
-            ].map(({ value, label }) => (
-              <Button
-                key={value}
-                variant={preferences.lineSpacing === value ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => {
-                  updatePreferences({ lineSpacing: value as any });
-                  announceToUser(`Line spacing set to ${label}`);
-                }}
-                className="text-xs"
-                aria-pressed={preferences.lineSpacing === value}
-              >
-                {label}
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Color Scheme */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <Palette className="h-4 w-4" aria-hidden="true" />
-            Color Scheme
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-3 gap-2">
-            {[
-              { value: 'light', icon: Sun, label: 'Light' },
-              { value: 'dark', icon: Moon, label: 'Dark' },
-              { value: 'high-contrast', icon: Contrast, label: 'High Contrast' }
-            ].map(({ value, icon: Icon, label }) => (
-              <Button
-                key={value}
-                variant={preferences.colorScheme === value ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => {
-                  updatePreferences({ colorScheme: value as any });
-                  announceToUser(`Color scheme changed to ${label}`);
-                }}
-                className="flex flex-col gap-1 h-auto py-3"
-                aria-pressed={preferences.colorScheme === value}
-              >
-                <Icon className="h-4 w-4" aria-hidden="true" />
-                <span className="text-xs">{label}</span>
-              </Button>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Separator />
-
-      {/* Visual Accessibility Options */}
-      <div className="space-y-4">
-        <h3 className="font-medium text-sm">Visual Accessibility</h3>
-        
-        <div className="space-y-4">
-          {/* High Contrast */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <div>
-                <label htmlFor="high-contrast" className="text-sm font-medium cursor-pointer">
-                  High Contrast Mode
-                </label>
-                <p className="text-xs text-muted-foreground">Enhanced contrast for better visibility</p>
-              </div>
-            </div>
-            <Switch
-              id="high-contrast"
-              checked={preferences.highContrast}
-              onCheckedChange={(checked) => {
-                updatePreferences({ highContrast: checked });
-                announceToUser(`High contrast ${checked ? 'enabled' : 'disabled'}`);
-              }}
-            />
-          </div>
-
-          {/* Grayscale Mode */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Palette className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <div>
-                <label htmlFor="grayscale" className="text-sm font-medium cursor-pointer">
-                  Grayscale Mode
-                </label>
-                <p className="text-xs text-muted-foreground">Convert interface to grayscale for color blindness support</p>
-              </div>
-            </div>
-            <Switch
-              id="grayscale"
-              checked={preferences.grayscaleMode}
-              onCheckedChange={(checked) => {
-                updatePreferences({ grayscaleMode: checked });
-                announceToUser(`Grayscale mode ${checked ? 'enabled' : 'disabled'}`);
-              }}
-            />
-          </div>
-
-          {/* Highlight Links */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Link className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <div>
-                <label htmlFor="highlight-links" className="text-sm font-medium cursor-pointer">
-                  Highlight Links & Buttons
-                </label>
-                <p className="text-xs text-muted-foreground">Make interactive elements more visible</p>
-              </div>
-            </div>
-            <Switch
-              id="highlight-links"
-              checked={preferences.highlightLinks}
-              onCheckedChange={(checked) => {
-                updatePreferences({ highlightLinks: checked });
-                announceToUser(`Link highlighting ${checked ? 'enabled' : 'disabled'}`);
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Interaction Accessibility Options */}
-      <div className="space-y-4">
-        <h3 className="font-medium text-sm">Interaction & Navigation</h3>
-        
-        <div className="space-y-4">
-          {/* Keyboard Navigation */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Keyboard className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <div>
-                <label htmlFor="keyboard-nav" className="text-sm font-medium cursor-pointer">
-                  Enhanced Keyboard Navigation
-                </label>
-                <p className="text-xs text-muted-foreground">Improved focus indicators and shortcuts</p>
-              </div>
-            </div>
-            <Switch
-              id="keyboard-nav"
-              checked={preferences.keyboardNavigation}
-              onCheckedChange={(checked) => {
-                updatePreferences({ keyboardNavigation: checked });
-                announceToUser(`Enhanced keyboard navigation ${checked ? 'enabled' : 'disabled'}`);
-              }}
-            />
-          </div>
-
-          {/* Reduce Motion */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Pause className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <div>
-                <label htmlFor="reduce-motion" className="text-sm font-medium cursor-pointer">
-                  Pause Animations
-                </label>
-                <p className="text-xs text-muted-foreground">Minimize animations and transitions</p>
-              </div>
-            </div>
-            <Switch
-              id="reduce-motion"
-              checked={preferences.reducedMotion}
-              onCheckedChange={(checked) => {
-                updatePreferences({ 
-                  reducedMotion: checked,
-                  reduceAnimations: checked 
-                });
-                announceToUser(`Animations ${checked ? 'paused' : 'enabled'}`);
-              }}
-            />
-          </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Screen Reader & Audio Options */}
-      <div className="space-y-4">
-        <h3 className="font-medium text-sm">Screen Reader & Audio</h3>
-        
-        <div className="space-y-4">
-          {/* Screen Reader Mode */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <AudioLines className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <div>
-                <label htmlFor="screen-reader" className="text-sm font-medium cursor-pointer">
-                  Screen Reader Mode
-                </label>
-                <p className="text-xs text-muted-foreground">Enhanced screen reader announcements</p>
-              </div>
-            </div>
-            <Switch
-              id="screen-reader"
-              checked={preferences.screenReaderMode}
-              onCheckedChange={handleScreenReaderMode}
-            />
-          </div>
-
-          {/* Text-to-Speech */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Volume2 className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <div>
-                <label htmlFor="text-to-speech" className="text-sm font-medium cursor-pointer">
-                  Text-to-Speech
-                </label>
-                <p className="text-xs text-muted-foreground">Enable voice feedback for important actions</p>
-              </div>
-            </div>
-            <Switch
-              id="text-to-speech"
-              checked={preferences.textToSpeech}
-              onCheckedChange={handleTextToSpeech}
-            />
-          </div>
-        </div>
-      </div>
-
-      <Separator />
-
-      {/* Reset Button */}
-      <div className="flex justify-center pt-2">
-        <Button
-          variant="outline"
-          onClick={() => {
-            resetPreferences();
-            announceToUser('All accessibility settings have been reset to default');
-          }}
-          className="flex items-center gap-2"
-        >
-          <RotateCcw className="h-4 w-4" />
-          Reset to Default
-        </Button>
-      </div>
-
-      {/* Help Text */}
-      <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
-        <p>💡 These settings are automatically saved</p>
-        <p>🎯 Use Tab key to navigate between options</p>
-        <p>♿ Changes apply immediately across the entire app</p>
-      </div>
-    </div>
-  );
-
-  if (isMobile) {
-    return (
-      <Drawer open={isOpen} onOpenChange={onClose}>
-        <DrawerContent className="max-h-[85vh]">
-          <DrawerHeader>
-            <DrawerTitle>Accessibility Settings</DrawerTitle>
-          </DrawerHeader>
-          <div className="px-4 pb-6">
-            <AccessibilityContent />
-          </div>
-        </DrawerContent>
-      </Drawer>
-    );
-  }
+  const handleReset = () => {
+    resetPreferences();
+    announceToUser('All accessibility preferences have been reset to defaults');
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[85vh] overflow-hidden">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Accessibility Settings</DialogTitle>
+          <DialogTitle className="flex items-center gap-2 text-lg font-semibold">
+            <Eye className="h-5 w-5" />
+            Accessibility Settings
+          </DialogTitle>
         </DialogHeader>
-        <AccessibilityContent />
+
+        <div className="space-y-6 py-4">
+          {/* Font Size */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <Type className="h-4 w-4" />
+              <Label className="text-sm font-medium">Font Size</Label>
+            </div>
+            <Select
+              value={preferences.fontSize}
+              onValueChange={handleFontSizeChange}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="small">Small</SelectItem>
+                <SelectItem value="medium">Medium (Default)</SelectItem>
+                <SelectItem value="large">Large</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Separator />
+
+          {/* Visual Preferences */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Palette className="h-4 w-4" />
+              <Label className="text-sm font-medium">Visual Preferences</Label>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="high-contrast" className="text-sm">
+                  High Contrast Mode
+                </Label>
+                <Switch
+                  id="high-contrast"
+                  checked={preferences.highContrast}
+                  onCheckedChange={() => handleToggle('highContrast', 'High contrast mode')}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label htmlFor="grayscale" className="text-sm">
+                  Grayscale Mode
+                </Label>
+                <Switch
+                  id="grayscale"
+                  checked={preferences.grayscaleMode}
+                  onCheckedChange={() => handleToggle('grayscaleMode', 'Grayscale mode')}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label htmlFor="highlight-links" className="text-sm">
+                  Highlight Links
+                </Label>
+                <Switch
+                  id="highlight-links"
+                  checked={preferences.highlightLinks}
+                  onCheckedChange={() => handleToggle('highlightLinks', 'Link highlighting')}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Line Spacing */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <AlignLeft className="h-4 w-4" />
+              <Label className="text-sm font-medium">Line Spacing</Label>
+            </div>
+            <Select
+              value={preferences.lineSpacing}
+              onValueChange={handleLineSpacingChange}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="relaxed">Relaxed</SelectItem>
+                <SelectItem value="loose">Loose</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Separator />
+
+          {/* Motion & Animation */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Play className="h-4 w-4" />
+              <Label className="text-sm font-medium">Motion & Animation</Label>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="reduced-motion" className="text-sm">
+                  Reduce Motion
+                </Label>
+                <Switch
+                  id="reduced-motion"
+                  checked={preferences.reducedMotion}
+                  onCheckedChange={() => handleToggle('reducedMotion', 'Reduced motion')}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label htmlFor="reduce-animations" className="text-sm">
+                  Pause Animations
+                </Label>
+                <Switch
+                  id="reduce-animations"
+                  checked={preferences.reduceAnimations}
+                  onCheckedChange={() => handleToggle('reduceAnimations', 'Animation pausing')}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Screen Reader Support */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Volume2 className="h-4 w-4" />
+              <Label className="text-sm font-medium">Screen Reader Support</Label>
+            </div>
+
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="screen-reader" className="text-sm">
+                  Screen Reader Mode
+                </Label>
+                <Switch
+                  id="screen-reader"
+                  checked={preferences.screenReaderMode}
+                  onCheckedChange={() => handleToggle('screenReaderMode', 'Screen reader mode')}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Label htmlFor="text-to-speech" className="text-sm">
+                  Text-to-Speech
+                </Label>
+                <Switch
+                  id="text-to-speech"
+                  checked={preferences.textToSpeech}
+                  onCheckedChange={() => handleToggle('textToSpeech', 'Text-to-speech')}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          {/* Quick Actions */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium">Quick Actions</Label>
+            <div className="flex flex-col gap-2">
+              <Button
+                variant="outline"
+                onClick={handleReset}
+                className="justify-start"
+                size="sm"
+              >
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset All Settings
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className="flex items-center justify-between pt-4 border-t">
+          <p className="text-xs text-muted-foreground">
+            Settings are saved automatically
+          </p>
+          <Button onClick={onClose} size="sm">
+            <Check className="h-4 w-4 mr-2" />
+            Done
+          </Button>
+        </div>
       </DialogContent>
     </Dialog>
   );

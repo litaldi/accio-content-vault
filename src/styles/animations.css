@@ -1,235 +1,106 @@
 
-/* Animation Keyframes */
-@keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(20px);
-  }
-  to { 
-    opacity: 1; 
-    transform: translateY(0);
-  }
-}
+/* Animation utilities */
 
-@keyframes fadeUp {
-  from { 
+@keyframes fade-in {
+  from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(10px);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes scaleIn {
-  from { 
+@keyframes fade-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes scale-in {
+  from {
     opacity: 0;
     transform: scale(0.95);
   }
-  to { 
+  to {
     opacity: 1;
     transform: scale(1);
   }
 }
 
-@keyframes slideUp {
+@keyframes scale-out {
   from {
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1;
+    transform: scale(1);
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 0;
+    transform: scale(0.95);
   }
 }
 
-@keyframes slideInLeft {
+@keyframes slide-in-right {
   from {
-    opacity: 0;
-    transform: translateX(-30px);
+    transform: translateX(100%);
   }
   to {
-    opacity: 1;
     transform: translateX(0);
   }
 }
 
-@keyframes slideInRight {
+@keyframes slide-out-right {
   from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
     transform: translateX(0);
   }
-}
-
-@keyframes bounceIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.3);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.05);
-  }
-  70% {
-    transform: scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
+  to {
+    transform: translateX(100%);
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: calc(200px + 100%) 0;
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
-  }
-  50% {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
-  }
-}
-
-@keyframes loading-dots {
-  0%, 80%, 100% {
-    transform: scale(0);
-    opacity: 0.5;
-  }
-  40% {
-    transform: scale(1);
-    opacity: 1;
-  }
-}
-
-/* Animation Classes */
 .animate-fade-in {
-  animation: fadeIn 0.6s ease-out forwards;
+  animation: fade-in 0.3s ease-out;
 }
 
-.animate-fade-up {
-  animation: fadeUp 0.6s ease-out forwards;
+.animate-fade-out {
+  animation: fade-out 0.3s ease-out;
 }
 
 .animate-scale-in {
-  animation: scaleIn 0.4s ease-out forwards;
+  animation: scale-in 0.2s ease-out;
 }
 
-.animate-slide-up {
-  animation: slideUp 0.5s ease-out forwards;
-}
-
-.animate-slide-in-left {
-  animation: slideInLeft 0.5s ease-out forwards;
+.animate-scale-out {
+  animation: scale-out 0.2s ease-out;
 }
 
 .animate-slide-in-right {
-  animation: slideInRight 0.5s ease-out forwards;
+  animation: slide-in-right 0.3s ease-out;
 }
 
-.animate-bounce-in {
-  animation: bounceIn 0.6s ease-out forwards;
+.animate-slide-out-right {
+  animation: slide-out-right 0.3s ease-out;
 }
 
-.animate-shimmer {
-  animation: shimmer 2s infinite;
-  background: linear-gradient(110deg, #f0f0f0 8%, #e0e0e0 18%, #f0f0f0 33%);
-  background-size: 200px 100%;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s ease-in-out infinite;
-}
-
-/* Enhanced animation classes with better performance */
-.transition-hover {
-  @apply transition-all duration-300 ease-out;
-  will-change: transform, box-shadow;
-}
-
-.transition-smooth {
-  @apply transition-all duration-500 ease-out;
-}
-
+/* Hover animations */
 .hover-scale {
-  @apply transition-transform duration-200 hover:scale-105;
+  transition: transform 0.2s ease;
 }
 
-.pulse {
-  @apply animate-[pulse_2s_cubic-bezier(0.4,0,0.6,1)_infinite];
+.hover-scale:hover {
+  transform: scale(1.05);
 }
 
-/* Interactive elements */
-.interactive {
-  @apply transition-all duration-300 active:scale-95 cursor-pointer;
-  will-change: transform;
-}
-
-.interactive:hover {
-  transform: translateY(-2px);
-}
-
-/* Card animations */
-.card-hover {
-  @apply transition-all duration-300 hover:shadow-lg;
-  will-change: transform, box-shadow;
-}
-
-.card-hover:hover {
-  @apply shadow-xl;
-  transform: translateY(-4px);
-}
-
-/* Loading animations */
-.loading-spinner {
-  @apply animate-spin rounded-full border-4 border-muted border-t-primary h-8 w-8;
-}
-
-.loading-dots {
-  display: inline-flex;
-  gap: 4px;
-}
-
-.loading-dots > div {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: currentColor;
-  animation: loading-dots 1.4s ease-in-out infinite both;
-}
-
-.loading-dots > div:nth-child(1) { animation-delay: -0.32s; }
-.loading-dots > div:nth-child(2) { animation-delay: -0.16s; }
-
-/* Hover states for touch devices */
-@media (hover: hover) {
-  .hover-lift:hover {
-    transform: translateY(-2px);
-  }
-}
-
-/* Smooth scrolling with respect for user preferences */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-/* Reduced animations for accessibility */
+/* Respect reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .reduce-animations *,
-  * {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

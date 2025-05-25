@@ -1,455 +1,128 @@
 
-/* WCAG 2.1 AA Compliant Accessibility Styles - Enhanced */
+/* Accessibility-focused CSS utilities */
 
-/* Font Size Classes with better scaling */
+/* Font size utilities */
 .font-size-small {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
-
-.font-size-small h1 { font-size: clamp(1.5rem, 4vw, 2rem); }
-.font-size-small h2 { font-size: clamp(1.25rem, 3.5vw, 1.75rem); }
-.font-size-small h3 { font-size: clamp(1.125rem, 3vw, 1.5rem); }
-.font-size-small h4 { font-size: clamp(1rem, 2.5vw, 1.25rem); }
-.font-size-small .text-lg { font-size: 1rem; }
-.font-size-small .text-xl { font-size: 1.125rem; }
 
 .font-size-medium {
-  font-size: 16px;
-  line-height: 1.6;
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
-
-.font-size-medium h1 { font-size: clamp(2rem, 5vw, 3rem); }
-.font-size-medium h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); }
-.font-size-medium h3 { font-size: clamp(1.25rem, 3.5vw, 1.875rem); }
-.font-size-medium h4 { font-size: clamp(1.125rem, 3vw, 1.5rem); }
 
 .font-size-large {
-  font-size: 18px;
-  line-height: 1.7;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
-.font-size-large h1 { font-size: clamp(2.5rem, 6vw, 4rem); }
-.font-size-large h2 { font-size: clamp(2rem, 5vw, 3rem); }
-.font-size-large h3 { font-size: clamp(1.75rem, 4vw, 2.5rem); }
-.font-size-large h4 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
-.font-size-large .text-lg { font-size: 1.25rem; }
-.font-size-large .text-xl { font-size: 1.5rem; }
-
-/* Line Spacing Options */
+/* Line spacing utilities */
 .line-spacing-normal {
   line-height: 1.5;
 }
 
 .line-spacing-relaxed {
-  line-height: 1.75;
+  line-height: 1.625;
 }
 
 .line-spacing-loose {
   line-height: 2;
 }
 
-.line-spacing-relaxed p,
-.line-spacing-relaxed div,
-.line-spacing-relaxed span {
-  line-height: 1.75 !important;
-  margin-bottom: 1rem;
-}
-
-.line-spacing-loose p,
-.line-spacing-loose div,
-.line-spacing-loose span {
-  line-height: 2 !important;
-  margin-bottom: 1.25rem;
-}
-
-/* Enhanced High Contrast Mode with proper color ratios */
+/* High contrast mode */
 .high-contrast {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --card: 0 0% 5%;
-  --card-foreground: 0 0% 100%;
-  --primary: 60 100% 50%; /* Yellow for better contrast */
-  --primary-foreground: 0 0% 0%;
-  --secondary: 0 0% 20%;
-  --secondary-foreground: 0 0% 100%;
-  --muted: 0 0% 15%;
-  --muted-foreground: 0 0% 85%;
-  --accent: 45 100% 50%; /* Orange accent */
-  --accent-foreground: 0 0% 0%;
-  --destructive: 0 100% 50%;
-  --destructive-foreground: 0 0% 100%;
-  --border: 0 0% 40%;
-  --input: 0 0% 20%;
-  --ring: 60 100% 50%;
-  --success: 120 100% 50%;
-  --warning: 30 100% 50%;
-  --info: 200 100% 50%;
+  filter: contrast(1.5);
 }
 
-.high-contrast * {
-  border-color: hsl(var(--border)) !important;
+/* Grayscale mode */
+.grayscale-mode {
+  filter: grayscale(100%);
 }
 
-.high-contrast a:not(.btn) {
-  text-decoration: underline !important;
-  color: hsl(var(--accent)) !important;
-  font-weight: 600;
-}
-
-.high-contrast button,
-.high-contrast [role="button"] {
-  border: 2px solid hsl(var(--border)) !important;
-  font-weight: 600;
-}
-
-/* Link and Button Highlighting */
-.highlight-links a,
-.highlight-links button,
-.highlight-links [role="button"],
-.highlight-links input[type="button"],
-.highlight-links input[type="submit"] {
-  outline: 3px solid hsl(var(--primary)) !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 6px hsl(var(--primary) / 0.2) !important;
-  border-radius: 4px;
-  font-weight: 600 !important;
-  position: relative;
-}
-
-.highlight-links a::before,
-.highlight-links button::before,
-.highlight-links [role="button"]::before {
-  content: "🔗";
-  position: absolute;
-  left: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 12px;
-}
-
-.highlight-links button::before,
-.highlight-links [role="button"]::before,
-.highlight-links input[type="button"]::before,
-.highlight-links input[type="submit"]::before {
-  content: "▶";
-}
-
-/* Enhanced focus styles for all interactive elements */
-.high-contrast *:focus-visible,
-.keyboard-navigation *:focus-visible {
-  outline: 3px solid hsl(var(--accent)) !important;
-  outline-offset: 2px !important;
-  box-shadow: 0 0 0 6px hsl(var(--accent) / 0.3) !important;
-  border-radius: 4px;
-}
-
-/* Reduced Motion with better performance */
+/* Reduced motion preferences */
 .reduce-motion *,
 .reduce-motion *::before,
 .reduce-motion *::after {
   animation-duration: 0.01ms !important;
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
-  transition-delay: 0ms !important;
   scroll-behavior: auto !important;
-  transform: none !important;
 }
 
-/* Better keyboard navigation indicators */
-.keyboard-navigation {
-  --focus-ring-color: hsl(210, 100%, 50%);
-  --focus-ring-width: 3px;
-  --focus-ring-offset: 2px;
+.reduce-animations * {
+  animation: none !important;
 }
 
-.keyboard-navigation button:focus-visible,
-.keyboard-navigation a:focus-visible,
-.keyboard-navigation input:focus-visible,
-.keyboard-navigation textarea:focus-visible,
-.keyboard-navigation select:focus-visible {
-  outline: var(--focus-ring-width) solid var(--focus-ring-color) !important;
-  outline-offset: var(--focus-ring-offset) !important;
-  box-shadow: 0 0 0 calc(var(--focus-ring-width) + var(--focus-ring-offset)) hsl(210 100% 50% / 0.2) !important;
+/* Link highlighting */
+.highlight-links a {
+  background-color: rgba(59, 130, 246, 0.1);
+  border: 2px solid rgba(59, 130, 246, 0.3);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
-/* Enhanced grayscale mode */
-.grayscale-mode {
-  filter: grayscale(100%) contrast(1.2);
+/* Screen reader mode improvements */
+.screen-reader-mode {
+  /* Improve focus indicators */
 }
 
-.grayscale-mode img,
-.grayscale-mode video,
-.grayscale-mode canvas {
-  filter: grayscale(100%) contrast(1.1);
+.screen-reader-mode *:focus {
+  outline: 3px solid #005fcc !important;
+  outline-offset: 2px !important;
 }
 
-/* Screen Reader Mode Enhancements */
-.screen-reader-mode [aria-live] {
-  position: static !important;
-  clip: auto !important;
-  width: auto !important;
-  height: auto !important;
-  overflow: visible !important;
-}
-
-.screen-reader-mode .sr-only:focus,
-.screen-reader-mode .sr-only:active {
-  position: static !important;
-  width: auto !important;
-  height: auto !important;
-  padding: 0.5rem !important;
-  margin: 0.25rem !important;
-  overflow: visible !important;
-  clip: auto !important;
-  white-space: normal !important;
-  background: hsl(var(--accent)) !important;
-  color: hsl(var(--accent-foreground)) !important;
+/* Keyboard navigation improvements */
+.keyboard-navigation *:focus-visible {
+  outline: 2px solid #005fcc;
+  outline-offset: 2px;
   border-radius: 0.25rem;
 }
 
-/* Screen Reader Only Content with better positioning */
-.sr-only {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
+/* High contrast dark mode */
+.dark.high-contrast {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --primary: 210 100% 70%;
+  --primary-foreground: 0 0% 0%;
 }
 
-.sr-only:focus,
-.sr-only:active {
-  position: static !important;
-  width: auto !important;
-  height: auto !important;
-  padding: inherit !important;
-  margin: inherit !important;
-  overflow: visible !important;
-  clip: auto !important;
-  white-space: inherit !important;
-}
-
-/* Enhanced skip links */
-.skip-link {
-  position: absolute;
-  top: -100vh;
-  left: 1rem;
-  z-index: 9999;
-  padding: 0.75rem 1.5rem;
-  background: hsl(var(--primary));
-  color: hsl(var(--primary-foreground));
-  text-decoration: none;
-  border-radius: 0.375rem;
-  font-weight: 600;
-  font-size: 0.875rem;
-  transition: top 0.3s ease;
-}
-
-.skip-link:focus {
-  top: 1rem;
-}
-
-/* Better touch targets for mobile */
-@media (max-width: 768px) {
-  .touch-friendly,
-  button, 
-  [role="button"],
-  input[type="button"],
-  input[type="submit"],
-  a[href] {
-    min-height: 44px !important;
-    min-width: 44px !important;
-    touch-action: manipulation;
-  }
-
-  /* Larger focus areas on mobile */
-  .keyboard-navigation *:focus-visible,
-  .highlight-links *:focus-visible {
-    outline-width: 4px !important;
-    outline-offset: 3px !important;
-  }
-}
-
-/* Enhanced color scheme support */
-[data-color-scheme="light"] {
-  color-scheme: light;
-  --focus-ring-color: hsl(210, 100%, 45%);
-}
-
-[data-color-scheme="dark"] {
-  color-scheme: dark;
-  --focus-ring-color: hsl(210, 100%, 60%);
-}
-
-[data-color-scheme="high-contrast"] {
-  color-scheme: dark;
-  forced-color-adjust: none;
-  --focus-ring-color: hsl(60, 100%, 50%);
-}
-
-/* System preference respect with overrides */
-@media (prefers-contrast: high) {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
-    --primary: 210 100% 25%;
-    --primary-foreground: 0 0% 100%;
-    --border: 0 0% 0%;
-    --ring: 210 100% 25%;
-  }
-  
-  * {
-    border-color: hsl(0 0% 0%) !important;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    transition-delay: 0ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-
-/* Enhanced form accessibility */
-.form-field label[required]::after,
-.form-field label[aria-required="true"]::after {
-  content: " *";
-  color: hsl(var(--destructive));
-  font-weight: bold;
-}
-
-.form-error[role="alert"] {
-  animation: shake 0.3s ease-in-out;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-/* Live region styling */
-[aria-live] {
-  position: absolute;
-  left: -10000px;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-}
-
-[aria-live]:not([aria-hidden="true"]) {
-  position: static;
-  left: auto;
-  width: auto;
-  height: auto;
-  overflow: visible;
-  padding: 0.5rem;
-  background: hsl(var(--accent));
-  color: hsl(var(--accent-foreground));
-  border-radius: 0.25rem;
-  margin: 0.5rem 0;
-}
-
-/* Better table accessibility */
-table {
-  border-collapse: collapse;
-  width: 100%;
-}
-
-th, td {
-  border: 1px solid hsl(var(--border));
-  padding: 0.75rem;
-  text-align: left;
-}
-
-th {
-  background-color: hsl(var(--muted));
-  font-weight: 600;
-}
-
-/* Enhanced print styles for accessibility */
+/* Print styles for accessibility */
 @media print {
   .sr-only {
     position: static !important;
     width: auto !important;
     height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
     overflow: visible !important;
     clip: auto !important;
-  }
-  
-  a[href]:not([href=""]):after {
-    content: " (" attr(href) ")";
-    color: #000;
-    font-size: 0.8em;
-  }
-  
-  .high-contrast {
-    filter: none;
+    white-space: normal !important;
   }
 }
 
-/* RTL (Right-to-Left) language support */
-[dir="rtl"] {
-  text-align: right;
-}
-
-[dir="rtl"] .fixed.right-4 {
-  right: auto;
-  left: 1rem;
-}
-
-[dir="rtl"] .ml-auto {
-  margin-left: 0;
-  margin-right: auto;
-}
-
-[dir="rtl"] .mr-auto {
-  margin-right: 0;
-  margin-left: auto;
-}
-
-/* Enhanced Windows High Contrast support */
-@media (prefers-contrast: high) {
-  button {
-    border: 2px solid ButtonText;
-  }
-  
-  button:focus {
-    outline: 2px solid Highlight;
-    outline-offset: 2px;
-  }
-}
-
-/* Zoom and scaling support */
-@media (min-resolution: 1.5dppx) {
-  .high-contrast *:focus-visible,
-  .highlight-links *:focus-visible {
-    outline-width: 4px;
-  }
-}
-
-/* Focus trap indicators */
-.focus-trap-active {
+/* Focus trap styles */
+.focus-trap {
   position: relative;
 }
 
-.focus-trap-active::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 40;
+.focus-trap::before,
+.focus-trap::after {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
   pointer-events: none;
+}
+
+/* Announcement region */
+.announcement-region {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
 }
