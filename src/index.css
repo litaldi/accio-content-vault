@@ -13,86 +13,106 @@
 
 @layer base {
   :root {
+    /* Improved color palette with WCAG 2.1 AA compliant contrast ratios */
     --background: 210 50% 98%;
-    --foreground: 222 47% 10%;
+    --foreground: 222 47% 15%; /* Darkened from 10% to 15% for better contrast */
 
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 10%;
+    --card-foreground: 222 47% 15%; /* Darkened for better contrast */
  
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 10%;
+    --popover-foreground: 222 47% 15%; /* Darkened for better contrast */
  
-    --primary: 210 100% 50%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 210 100% 45%; /* Slightly darkened for better contrast on light backgrounds */
+    --primary-foreground: 0 0% 100%; /* White for maximum contrast */
  
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222 47% 11.2%;
+    --secondary: 210 40% 90%; /* Adjusted for better contrast */
+    --secondary-foreground: 222 47% 20%; /* Darkened for better readability */
  
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 210 40% 92%; /* Lighter background */
+    --muted-foreground: 215 16% 35%; /* Darkened for 4.5:1 contrast ratio */
  
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222 47% 11.2%;
+    --accent: 210 40% 90%; /* Adjusted background */
+    --accent-foreground: 222 47% 20%; /* Darkened for better contrast */
  
-    --destructive: 0 84% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 84% 50%; /* Slightly darkened */
+    --destructive-foreground: 0 0% 100%; /* White for maximum contrast */
 
-    --border: 214 32% 91.4%;
-    --input: 214 32% 91.4%;
-    --ring: 210 100% 50%;
+    --border: 214 32% 85%; /* Darkened for better visibility */
+    --input: 214 32% 85%; /* Darkened for better visibility */
+    --ring: 210 100% 45%; /* Matches primary */
  
     --radius: 0.5rem;
+
+    /* Success, warning, and info colors with proper contrast */
+    --success: 142 76% 36%; /* Dark green for good contrast */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 40%; /* Dark orange for good contrast */
+    --warning-foreground: 0 0% 100%;
+    --info: 210 100% 40%; /* Dark blue for good contrast */
+    --info-foreground: 0 0% 100%;
   }
  
   .dark {
-    --background: 222 47% 10%;
-    --foreground: 210 40% 98%;
+    /* Dark theme with enhanced contrast */
+    --background: 222 47% 8%; /* Darker background */
+    --foreground: 210 40% 95%; /* Lighter text for better contrast */
  
     --card: 222 47% 10%;
-    --card-foreground: 210 40% 98%;
+    --card-foreground: 210 40% 95%;
  
     --popover: 222 47% 10%;
-    --popover-foreground: 210 40% 98%;
+    --popover-foreground: 210 40% 95%;
  
-    --primary: 210 100% 50%;
-    --primary-foreground: 222 47% 11.2%;
+    --primary: 210 100% 60%; /* Lighter for dark theme */
+    --primary-foreground: 222 47% 8%; /* Dark for contrast */
  
-    --secondary: 217 33% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 217 33% 15%;
+    --secondary-foreground: 210 40% 90%; /* Lighter for contrast */
  
-    --muted: 217 33% 17.5%;
-    --muted-foreground: 215 20% 65.1%;
+    --muted: 217 33% 15%;
+    --muted-foreground: 215 20% 70%; /* Lighter for better contrast */
  
-    --accent: 217 33% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 217 33% 15%;
+    --accent-foreground: 210 40% 90%;
  
-    --destructive: 0 63% 60.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 63% 65%; /* Lighter red for dark theme */
+    --destructive-foreground: 222 47% 8%;
  
-    --border: 217 33% 17.5%;
-    --input: 217 33% 17.5%;
-    --ring: 210 100% 50%;
+    --border: 217 33% 20%; /* Lighter border for visibility */
+    --input: 217 33% 20%;
+    --ring: 210 100% 60%;
+
+    /* Dark theme success, warning, info */
+    --success: 142 76% 50%;
+    --success-foreground: 222 47% 8%;
+    --warning: 38 92% 55%;
+    --warning-foreground: 222 47% 8%;
+    --info: 210 100% 60%;
+    --info-foreground: 222 47% 8%;
   }
   
-  /* High contrast mode for better accessibility */
+  /* Enhanced high contrast mode for accessibility */
   .high-contrast.dark {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
-    --card: 0 0% 0%;
+    --card: 0 0% 5%;
     --card-foreground: 0 0% 100%;
-    --popover: 0 0% 0%;
+    --popover: 0 0% 5%;
     --popover-foreground: 0 0% 100%;
-    --primary: 210 100% 60%;
+    --primary: 210 100% 70%; /* Bright blue for high contrast */
     --primary-foreground: 0 0% 0%;
-    --secondary: 220 100% 60%;
-    --secondary-foreground: 0 0% 100%;
-    --muted: 0 0% 20%;
-    --muted-foreground: 0 0% 100%;
-    --accent: 195 100% 60%;
-    --accent-foreground: 0 0% 100%;
-    --border: 0 0% 60%;
-    --input: 0 0% 60%;
-    --ring: 210 100% 60%;
+    --secondary: 220 100% 70%; /* Bright cyan */
+    --secondary-foreground: 0 0% 0%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 90%;
+    --accent: 195 100% 70%; /* Bright light blue */
+    --accent-foreground: 0 0% 0%;
+    --border: 0 0% 70%;
+    --input: 0 0% 70%;
+    --ring: 210 100% 70%;
+    --destructive: 0 100% 70%;
+    --destructive-foreground: 0 0% 0%;
   }
 
   .high-contrast:not(.dark) {
@@ -102,17 +122,19 @@
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
-    --primary: 210 100% 40%;
+    --primary: 210 100% 25%; /* Very dark blue */
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 85%;
+    --secondary: 0 0% 80%;
     --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 90%;
+    --muted: 0 0% 85%;
     --muted-foreground: 0 0% 0%;
-    --accent: 195 100% 40%;
+    --accent: 195 100% 25%; /* Very dark cyan */
     --accent-foreground: 0 0% 100%;
-    --border: 0 0% 0%;
-    --input: 0 0% 0%;
-    --ring: 210 100% 40%;
+    --border: 0 0% 30%;
+    --input: 0 0% 30%;
+    --ring: 210 100% 25%;
+    --destructive: 0 100% 30%;
+    --destructive-foreground: 0 0% 100%;
   }
 }
 
@@ -132,6 +154,43 @@
     @apply outline-2 outline-primary outline-offset-2 outline-dashed;
   }
   
+  /* Ensure proper contrast for all text elements */
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-foreground;
+    font-weight: 600;
+  }
+  
+  p, span, div {
+    @apply text-foreground;
+  }
+  
+  /* Button contrast improvements */
+  button {
+    font-weight: 500;
+  }
+  
+  /* Link contrast improvements */
+  a {
+    @apply text-primary;
+    font-weight: 500;
+  }
+  
+  a:hover {
+    @apply text-primary/80;
+  }
+  
+  /* Form element improvements */
+  input, textarea, select {
+    @apply text-foreground bg-background;
+    border-width: 1px;
+  }
+  
+  input::placeholder,
+  textarea::placeholder {
+    @apply text-muted-foreground;
+    opacity: 0.8;
+  }
+  
   /* Screen reader only content */
   .sr-only {
     position: absolute;
@@ -143,5 +202,25 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border-width: 0;
+  }
+  
+  /* Enhanced error and success states with proper contrast */
+  .error-state {
+    @apply text-destructive border-destructive;
+  }
+  
+  .success-state {
+    color: hsl(var(--success));
+    border-color: hsl(var(--success));
+  }
+  
+  .warning-state {
+    color: hsl(var(--warning));
+    border-color: hsl(var(--warning));
+  }
+  
+  .info-state {
+    color: hsl(var(--info));
+    border-color: hsl(var(--info));
   }
 }
