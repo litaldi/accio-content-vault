@@ -41,10 +41,8 @@ export const AccessibleLayout: React.FC<AccessibleLayoutProps> = ({
           {/* Main Content */}
           {children}
           
-          {/* Fixed accessibility button */}
-          <div className="fixed bottom-4 left-4 z-50">
-            <EnhancedAccessibilityButton />
-          </div>
+          {/* Enhanced accessibility button */}
+          <EnhancedAccessibilityButton />
           
           {/* UI Consistency checker in development */}
           <ThemingChecker />

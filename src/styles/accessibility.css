@@ -1,5 +1,5 @@
 
-/* WCAG 2.1 AA Compliant Accessibility Styles */
+/* WCAG 2.1 AA Compliant Accessibility Styles - Enhanced */
 
 /* Font Size Classes with better scaling */
 .font-size-small {
@@ -35,6 +35,33 @@
 .font-size-large h4 { font-size: clamp(1.5rem, 3.5vw, 2rem); }
 .font-size-large .text-lg { font-size: 1.25rem; }
 .font-size-large .text-xl { font-size: 1.5rem; }
+
+/* Line Spacing Options */
+.line-spacing-normal {
+  line-height: 1.5;
+}
+
+.line-spacing-relaxed {
+  line-height: 1.75;
+}
+
+.line-spacing-loose {
+  line-height: 2;
+}
+
+.line-spacing-relaxed p,
+.line-spacing-relaxed div,
+.line-spacing-relaxed span {
+  line-height: 1.75 !important;
+  margin-bottom: 1rem;
+}
+
+.line-spacing-loose p,
+.line-spacing-loose div,
+.line-spacing-loose span {
+  line-height: 2 !important;
+  margin-bottom: 1.25rem;
+}
 
 /* Enhanced High Contrast Mode with proper color ratios */
 .high-contrast {
@@ -74,6 +101,38 @@
 .high-contrast [role="button"] {
   border: 2px solid hsl(var(--border)) !important;
   font-weight: 600;
+}
+
+/* Link and Button Highlighting */
+.highlight-links a,
+.highlight-links button,
+.highlight-links [role="button"],
+.highlight-links input[type="button"],
+.highlight-links input[type="submit"] {
+  outline: 3px solid hsl(var(--primary)) !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 6px hsl(var(--primary) / 0.2) !important;
+  border-radius: 4px;
+  font-weight: 600 !important;
+  position: relative;
+}
+
+.highlight-links a::before,
+.highlight-links button::before,
+.highlight-links [role="button"]::before {
+  content: "🔗";
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+}
+
+.highlight-links button::before,
+.highlight-links [role="button"]::before,
+.highlight-links input[type="button"]::before,
+.highlight-links input[type="submit"]::before {
+  content: "▶";
 }
 
 /* Enhanced focus styles for all interactive elements */
@@ -123,6 +182,30 @@
 .grayscale-mode video,
 .grayscale-mode canvas {
   filter: grayscale(100%) contrast(1.1);
+}
+
+/* Screen Reader Mode Enhancements */
+.screen-reader-mode [aria-live] {
+  position: static !important;
+  clip: auto !important;
+  width: auto !important;
+  height: auto !important;
+  overflow: visible !important;
+}
+
+.screen-reader-mode .sr-only:focus,
+.screen-reader-mode .sr-only:active {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0.5rem !important;
+  margin: 0.25rem !important;
+  overflow: visible !important;
+  clip: auto !important;
+  white-space: normal !important;
+  background: hsl(var(--accent)) !important;
+  color: hsl(var(--accent-foreground)) !important;
+  border-radius: 0.25rem;
 }
 
 /* Screen Reader Only Content with better positioning */
@@ -184,7 +267,8 @@
   }
 
   /* Larger focus areas on mobile */
-  .keyboard-navigation *:focus-visible {
+  .keyboard-navigation *:focus-visible,
+  .highlight-links *:focus-visible {
     outline-width: 4px !important;
     outline-offset: 3px !important;
   }
@@ -347,7 +431,25 @@ th {
 
 /* Zoom and scaling support */
 @media (min-resolution: 1.5dppx) {
-  .high-contrast *:focus-visible {
+  .high-contrast *:focus-visible,
+  .highlight-links *:focus-visible {
     outline-width: 4px;
   }
+}
+
+/* Focus trap indicators */
+.focus-trap-active {
+  position: relative;
+}
+
+.focus-trap-active::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+  pointer-events: none;
 }

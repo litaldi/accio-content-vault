@@ -10,6 +10,9 @@ interface AccessibilityPreferences {
   textToSpeech: boolean;
   grayscaleMode: boolean;
   colorScheme: 'light' | 'dark' | 'high-contrast';
+  highlightLinks: boolean;
+  lineSpacing: 'normal' | 'relaxed' | 'loose';
+  screenReaderMode: boolean;
 }
 
 interface AccessibilityContextType {
@@ -18,6 +21,10 @@ interface AccessibilityContextType {
   resetPreferences: () => void;
   increaseFontSize: () => void;
   decreaseFontSize: () => void;
+  toggleHighContrast: () => void;
+  toggleGrayscale: () => void;
+  toggleLinkHighlight: () => void;
+  announceToUser: (message: string) => void;
 }
 
 const defaultPreferences: AccessibilityPreferences = {
@@ -29,6 +36,9 @@ const defaultPreferences: AccessibilityPreferences = {
   textToSpeech: false,
   grayscaleMode: false,
   colorScheme: 'light',
+  highlightLinks: false,
+  lineSpacing: 'normal',
+  screenReaderMode: false,
 };
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -59,6 +69,18 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
         console.warn('Failed to parse accessibility preferences from localStorage');
       }
     }
+
+    // Detect system preferences
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
+    
+    if (prefersReducedMotion || prefersHighContrast) {
+      setPreferences(prev => ({
+        ...prev,
+        reducedMotion: prefersReducedMotion,
+        highContrast: prefersHighContrast,
+      }));
+    }
   }, []);
 
   // Save preferences to localStorage whenever they change
@@ -86,6 +108,16 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     
     // Grayscale mode
     documentElement.classList.toggle('grayscale-mode', preferences.grayscaleMode);
+    
+    // Link highlighting
+    documentElement.classList.toggle('highlight-links', preferences.highlightLinks);
+    
+    // Line spacing
+    documentElement.classList.remove('line-spacing-normal', 'line-spacing-relaxed', 'line-spacing-loose');
+    documentElement.classList.add(`line-spacing-${preferences.lineSpacing}`);
+    
+    // Screen reader mode
+    documentElement.classList.toggle('screen-reader-mode', preferences.screenReaderMode);
     
     // Color scheme
     documentElement.setAttribute('data-color-scheme', preferences.colorScheme);
@@ -116,13 +148,54 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     }
   };
 
+  const toggleHighContrast = () => {
+    updatePreferences({ highContrast: !preferences.highContrast });
+  };
+
+  const toggleGrayscale = () => {
+    updatePreferences({ grayscaleMode: !preferences.grayscaleMode });
+  };
+
+  const toggleLinkHighlight = () => {
+    updatePreferences({ highlightLinks: !preferences.highlightLinks });
+  };
+
+  const announceToUser = (message: string) => {
+    if (preferences.screenReaderMode || preferences.textToSpeech) {
+      // Create live region for screen reader
+      const announcement = document.createElement('div');
+      announcement.setAttribute('aria-live', 'polite');
+      announcement.setAttribute('aria-atomic', 'true');
+      announcement.className = 'sr-only';
+      announcement.textContent = message;
+      
+      document.body.appendChild(announcement);
+      
+      // Text-to-speech if enabled
+      if (preferences.textToSpeech && 'speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(message);
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+      
+      // Remove after announcement
+      setTimeout(() => {
+        document.body.removeChild(announcement);
+      }, 1000);
+    }
+  };
+
   return (
     <AccessibilityContext.Provider value={{ 
       preferences, 
       updatePreferences, 
       resetPreferences,
       increaseFontSize,
-      decreaseFontSize
+      decreaseFontSize,
+      toggleHighContrast,
+      toggleGrayscale,
+      toggleLinkHighlight,
+      announceToUser
     }}>
       {children}
     </AccessibilityContext.Provider>
