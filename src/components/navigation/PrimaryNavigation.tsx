@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -20,7 +21,9 @@ import {
   LogOut,
   Star,
   Users,
-  Mail
+  Mail,
+  DollarSign,
+  Info
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -92,16 +95,16 @@ const PrimaryNavigation: React.FC = () => {
     return user.email.charAt(0).toUpperCase();
   };
 
-  // Centralized navigation items - no nested features
+  // Centralized navigation items
   const publicNavItems: NavigationItem[] = [
     { path: '/features', label: 'Features', icon: Star, description: 'Explore all features' },
-    { path: '/pricing', label: 'Pricing', icon: BarChart3, description: 'Simple plans' },
-    { path: '/about', label: 'About', icon: Users, description: 'Our story' },
+    { path: '/pricing', label: 'Pricing', icon: DollarSign, description: 'Simple plans' },
+    { path: '/about', label: 'About', icon: Info, description: 'Our story' },
     { path: '/contact', label: 'Contact', icon: Mail, description: 'Get in touch' }
   ];
 
   const authenticatedNavItems: NavigationItem[] = [
-    { path: '/dashboard', label: 'Home', icon: Home, description: 'Your dashboard' },
+    { path: '/dashboard', label: 'Dashboard', icon: Home, description: 'Your overview' },
     { path: '/save', label: 'Save', icon: Plus, description: 'Save content' },
     { path: '/search', label: 'Search', icon: Search, description: 'Find content' },
     { path: '/collections', label: 'Collections', icon: BookOpen, description: 'Organize content' },
@@ -177,11 +180,11 @@ const PrimaryNavigation: React.FC = () => {
 
             {/* Right Actions */}
             <div className="flex items-center gap-2">
-              {/* Theme Controls */}
+              {/* Theme Controls - Positioned on the right */}
               <div className="hidden sm:flex items-center gap-1">
-                <ImprovedAccessibilityButton />
-                <ModeToggle />
                 <FeedbackSystem />
+                <ModeToggle />
+                <ImprovedAccessibilityButton />
               </div>
 
               {/* User Account or Auth */}
@@ -289,7 +292,7 @@ const PrimaryNavigation: React.FC = () => {
                         to="/" 
                         className={cn(
                           "flex items-center gap-3 p-4 rounded-lg transition-all duration-200",
-                          "hover:bg-accent active:scale-95 min-h-[60px]",
+                          "hover:bg-accent min-h-[60px]",
                           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                           isActiveLink('/') && "bg-accent text-accent-foreground"
                         )}
@@ -311,7 +314,7 @@ const PrimaryNavigation: React.FC = () => {
                         to={item.path} 
                         className={cn(
                           "flex items-center gap-3 p-4 rounded-lg transition-all duration-200",
-                          "hover:bg-accent active:scale-95 min-h-[60px]",
+                          "hover:bg-accent min-h-[60px]",
                           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                           isActiveLink(item.path) && "bg-accent text-accent-foreground"
                         )}
@@ -329,13 +332,9 @@ const PrimaryNavigation: React.FC = () => {
                   
                   {/* Mobile Theme Controls */}
                   <div className="flex items-center gap-2 mt-6 pt-6 border-t">
-                    <ImprovedAccessibilityButton />
-                    <ModeToggle />
-                  </div>
-                  
-                  {/* Mobile Feedback */}
-                  <div className="mt-4">
                     <FeedbackSystem />
+                    <ModeToggle />
+                    <ImprovedAccessibilityButton />
                   </div>
                   
                   {/* Mobile Auth Section */}
