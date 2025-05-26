@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -5,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { GlobalFeatures } from '@/components/GlobalFeatures/GlobalFeatures';
+import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
 import MainNavigation from '@/components/navigation/MainNavigation';
 import Footer from '@/components/Footer';
 import Home from '@/pages/Home';
@@ -46,6 +48,7 @@ const App: React.FC = () => {
                 <Footer />
                 <Toaster />
                 <ChatWidget />
+                <AIContentAssistant />
                 <GlobalFeatures />
               </div>
             </Router>

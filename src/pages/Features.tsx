@@ -14,8 +14,15 @@ import {
   Zap,
   Target,
   Clock,
-  Globe
+  Globe,
+  MessageCircle,
+  Wand2,
+  Mic,
+  RefreshCw
 } from 'lucide-react';
+import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
+import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
+import { SmartContentRefinement } from '@/components/ai/SmartContentRefinement';
 
 const Features: React.FC = () => {
   const aiFeatures = [
@@ -46,6 +53,34 @@ const Features: React.FC = () => {
       description: 'Discover related content based on your interests and viewing patterns.',
       status: 'active',
       benefit: 'Never miss relevant content'
+    },
+    {
+      icon: MessageCircle,
+      title: 'AI Content Assistant',
+      description: 'Get contextual help and suggestions based on your current page and actions.',
+      status: 'active',
+      benefit: 'Instant guidance available'
+    },
+    {
+      icon: Wand2,
+      title: 'Smart Content Creation',
+      description: 'Generate structured content with AI-powered templates and suggestions.',
+      status: 'active',
+      benefit: 'Create better content faster'
+    },
+    {
+      icon: Mic,
+      title: 'Voice-to-Content',
+      description: 'Record voice memos that are automatically transcribed, structured, and tagged.',
+      status: 'active',
+      benefit: 'Capture ideas on-the-go'
+    },
+    {
+      icon: RefreshCw,
+      title: 'Content Refinement',
+      description: 'One-click content improvement for clarity, tone, and structure.',
+      status: 'active',
+      benefit: 'Professional quality writing'
     },
     {
       icon: Target,
@@ -135,8 +170,29 @@ const Features: React.FC = () => {
           </div>
         </section>
 
-        {/* How It Works */}
+        {/* Interactive Demos */}
         <section className="py-16 px-4 bg-muted/30">
+          <div className="container mx-auto max-w-6xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Try AI Features</h2>
+              <p className="text-muted-foreground">
+                Experience our AI-powered tools in action with these interactive demos.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              <SmartContentWizard />
+              <VoiceContentCreator />
+            </div>
+            
+            <div className="mt-8">
+              <SmartContentRefinement />
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works */}
+        <section className="py-16 px-4">
           <div className="container mx-auto max-w-4xl">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">How AI Enhances Your Workflow</h2>
