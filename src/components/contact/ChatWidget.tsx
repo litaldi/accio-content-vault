@@ -10,7 +10,6 @@ import {
   MessageCircle, 
   Send, 
   CheckCircle, 
-  Paperclip, 
   X,
   Headphones
 } from 'lucide-react';
@@ -76,7 +75,7 @@ const ChatWidget: React.FC = () => {
     } catch (error) {
       showError(
         'Failed to Send Message', 
-        'Please try again or contact us directly at support@accio.com'
+        'Please try again or contact us directly at hello@accio.app'
       );
     } finally {
       setIsSubmitting(false);
@@ -86,8 +85,6 @@ const ChatWidget: React.FC = () => {
   const handleInputChange = (field: keyof ContactFormData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
-
-  const selectedCategory = categories.find(cat => cat.value === formData.category);
 
   if (isSuccess) {
     return (
@@ -161,7 +158,7 @@ const ChatWidget: React.FC = () => {
                 👋 How can we help you today?
               </h4>
               <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                Send us a message and we'll respond within 24 hours
+                Send us a message and we'll respond within 24 hours.
               </p>
             </div>
           </div>
@@ -169,19 +166,19 @@ const ChatWidget: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name Field */}
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Your Name</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Your name"
+                placeholder="Enter your name"
                 className="transition-all focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
             {/* Email Field */}
             <div className="space-y-2">
-              <Label htmlFor="email">Email (optional)</Label>
+              <Label htmlFor="email">Email Address (optional)</Label>
               <Input
                 id="email"
                 type="email"
@@ -191,7 +188,7 @@ const ChatWidget: React.FC = () => {
                 className="transition-all focus:ring-2 focus:ring-primary/20"
               />
               <p className="text-xs text-muted-foreground">
-                Leave your email if you'd like us to follow up
+                Leave your email if you'd like us to follow up.
               </p>
             </div>
 
@@ -214,7 +211,7 @@ const ChatWidget: React.FC = () => {
 
             {/* Message Field */}
             <div className="space-y-2">
-              <Label htmlFor="message">Message *</Label>
+              <Label htmlFor="message">Your Message *</Label>
               <Textarea
                 id="message"
                 value={formData.message}
@@ -256,7 +253,7 @@ const ChatWidget: React.FC = () => {
           {/* Footer */}
           <div className="pt-4 border-t text-center">
             <p className="text-xs text-muted-foreground">
-              🔒 Your information is secure and will only be used to respond to your message
+              🔒 Your information is secure and will only be used to respond to your message.
             </p>
           </div>
         </div>

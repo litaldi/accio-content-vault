@@ -69,7 +69,7 @@ const ContactForm: React.FC = () => {
     } catch (error) {
       showError(
         'Failed to Send Message', 
-        'Please try again or email us directly at contact@accio.com'
+        'Please try again or email us directly at hello@accio.app'
       );
     } finally {
       setIsSubmitting(false);
@@ -87,7 +87,7 @@ const ContactForm: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <MessageSquare className="h-6 w-6 text-primary" />
-            Send us a Message
+            Send Us a Message
           </CardTitle>
           <p className="text-muted-foreground">
             We'd love to hear from you. Drop us a line and we'll get back to you shortly.
@@ -97,7 +97,7 @@ const ContactForm: React.FC = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="contact-name">Name *</Label>
+                <Label htmlFor="contact-name">Full Name *</Label>
                 <Input
                   id="contact-name"
                   value={formData.name}
@@ -107,20 +107,20 @@ const ContactForm: React.FC = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="contact-email">Email *</Label>
+                <Label htmlFor="contact-email">Email Address *</Label>
                 <Input
                   id="contact-email"
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="your@company.com"
+                  placeholder="your.email@company.com"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contact-company">Company</Label>
+              <Label htmlFor="contact-company">Company Name</Label>
               <Input
                 id="contact-company"
                 value={formData.company}
@@ -130,7 +130,7 @@ const ContactForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contact-category">Category</Label>
+              <Label htmlFor="contact-category">How Can We Help?</Label>
               <select
                 id="contact-category"
                 value={formData.category}
@@ -146,7 +146,7 @@ const ContactForm: React.FC = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="contact-message">Message *</Label>
+              <Label htmlFor="contact-message">Your Message *</Label>
               <Textarea
                 id="contact-message"
                 value={formData.message}
@@ -184,9 +184,9 @@ const ContactForm: React.FC = () => {
                 <Mail className="h-5 w-5 text-primary mt-1" />
                 <div>
                   <h4 className="font-medium">Email Support</h4>
-                  <p className="text-sm text-muted-foreground">contact@accio.com</p>
+                  <p className="text-sm text-muted-foreground">hello@accio.app</p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    We typically respond within 24 hours
+                    We typically respond within 24 hours.
                   </p>
                 </div>
               </div>
@@ -196,10 +196,10 @@ const ContactForm: React.FC = () => {
                 <div>
                   <h4 className="font-medium">Response Time</h4>
                   <p className="text-sm text-muted-foreground">
-                    Business hours: Mon-Fri, 9 AM - 6 PM EST
+                    Business hours: Monday - Friday, 9 AM - 6 PM EST
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    Emergency support available 24/7 for Enterprise customers
+                    Emergency support available 24/7 for Enterprise customers.
                   </p>
                 </div>
               </div>
@@ -209,10 +209,10 @@ const ContactForm: React.FC = () => {
                 <div>
                   <h4 className="font-medium">Privacy & Security</h4>
                   <p className="text-sm text-muted-foreground">
-                    Your information is encrypted and secure
+                    Your information is encrypted and secure.
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
-                    We never share your data with third parties
+                    We never share your data with third parties.
                   </p>
                 </div>
               </div>

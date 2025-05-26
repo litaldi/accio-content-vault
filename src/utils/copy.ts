@@ -3,29 +3,31 @@ export const copy = {
   common: {
     required: '(required)',
     cancel: 'Cancel',
-    save: 'Save',
+    save: 'Save Changes',
     delete: 'Delete',
     edit: 'Edit',
     close: 'Close',
     submit: 'Submit',
     loading: 'Loading...',
     error: 'Error',
-    success: 'Success'
+    success: 'Success',
+    tryAgain: 'Try Again',
+    learnMore: 'Learn More'
   },
   auth: {
     signIn: 'Sign In',
     signUp: 'Sign Up',
     signOut: 'Sign Out',
-    email: 'Email',
+    email: 'Email Address',
     password: 'Password',
     confirmPassword: 'Confirm Password',
-    forgotPassword: 'Forgot Password?',
+    forgotPassword: 'Forgot your password?',
     createAccount: 'Create Account',
     alreadyHaveAccount: 'Already have an account?',
     dontHaveAccount: "Don't have an account?",
     termsAndConditions: 'Terms and Conditions',
     privacyPolicy: 'Privacy Policy',
-    getStarted: 'Get Started'
+    getStarted: 'Get Started Free'
   },
   navigation: {
     home: 'Home',
@@ -34,18 +36,25 @@ export const copy = {
     analytics: 'Analytics',
     profile: 'Profile',
     settings: 'Settings',
-    saveContent: 'Save Content'
+    saveContent: 'Save Content',
+    search: 'Search',
+    integrations: 'Integrations'
   },
   accessibility: {
     openMenu: 'Open menu',
-    closeMenu: 'Close menu'
+    closeMenu: 'Close menu',
+    skipToContent: 'Skip to main content'
   },
   headlines: {
     hero: 'Your Personal Knowledge Sanctuary',
     subhero: 'Capture, organize, and discover insights from your digital world with AI-powered intelligence.'
   },
   buttons: {
-    getStarted: 'Get Started Free'
+    getStarted: 'Get Started Free',
+    contactSales: 'Contact Sales',
+    startFreeTrial: 'Start Free Trial',
+    subscribe: 'Subscribe',
+    sendMessage: 'Send Message'
   },
   trust: {
     security: 'Bank-level security',
@@ -60,7 +69,7 @@ export const copy = {
   },
   onboarding: {
     welcome: 'Welcome to Accio',
-    subtitle: 'Let\'s get you set up with your personal knowledge sanctuary'
+    subtitle: 'Let\'s get you set up with your personal knowledge sanctuary.'
   },
   emptyStates: {
     library: {
@@ -85,9 +94,25 @@ export const copy = {
     }
   },
   success: {
-    signIn: 'Successfully signed in!'
+    signIn: 'Successfully signed in!',
+    messageSent: 'Message sent successfully!',
+    subscribed: 'Successfully subscribed to newsletter!'
   },
   errors: {
-    authentication: 'Authentication failed'
+    authentication: 'Authentication failed',
+    network: 'Network error. Please check your connection.',
+    requiredFields: 'Please fill in all required fields.',
+    invalidEmail: 'Please enter a valid email address.'
+  },
+  contact: {
+    title: 'Contact Our Team',
+    subtitle: 'Have questions? We\'d love to hear from you.',
+    emailSupport: 'Email Support',
+    responseTime: 'Response Time',
+    privacySecurity: 'Privacy & Security'
+  },
+  payments: {
+    securePayments: 'Secure Payment Options',
+    allPaymentsEncrypted: 'All payments are encrypted and secure. We never store your payment information.'
   }
 };
