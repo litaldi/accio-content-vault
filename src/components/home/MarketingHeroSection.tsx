@@ -12,7 +12,6 @@ import {
 
 const MarketingHeroSection = () => {
   const navigate = useNavigate();
-  const [isHovering, setIsHovering] = useState(false);
   const [showDemo, setShowDemo] = useState(false);
   
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -29,7 +28,7 @@ const MarketingHeroSection = () => {
       aria-labelledby="hero-heading"
       id="hero-section"
     >
-      {/* Background effects - removed flashing animations */}
+      {/* Background effects - static, no animations */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/10 pointer-events-none" aria-hidden="true"></div>
       <div className="absolute top-20 left-10 w-96 h-96 bg-white/10 rounded-full blur-3xl opacity-50" aria-hidden="true"></div>
       <div className="absolute bottom-20 right-10 w-80 h-80 bg-white/5 rounded-full blur-3xl opacity-30" aria-hidden="true"></div>
@@ -38,19 +37,19 @@ const MarketingHeroSection = () => {
       <div className="max-w-7xl mx-auto text-center relative z-10">
         {/* Trust indicators */}
         <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-16 text-white/90 text-sm">
-          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors">
+          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors focus-within:ring-2 focus-within:ring-white focus-within:ring-offset-2">
             <Shield className="h-4 w-4" aria-hidden="true" />
             <span className="font-medium">Bank-level security</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors">
+          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors focus-within:ring-2 focus-within:ring-white focus-within:ring-offset-2">
             <Brain className="h-4 w-4" aria-hidden="true" />
             <span className="font-medium">AI-powered organization</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors">
+          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors focus-within:ring-2 focus-within:ring-white focus-within:ring-offset-2">
             <Users className="h-4 w-4" aria-hidden="true" />
             <span className="font-medium">Trusted by 10,000+ users</span>
           </div>
-          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors">
+          <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors focus-within:ring-2 focus-within:ring-white focus-within:ring-offset-2">
             <Star className="h-4 w-4 text-yellow-400" aria-hidden="true" />
             <span className="font-medium">Free plan, always</span>
           </div>
@@ -67,7 +66,6 @@ const MarketingHeroSection = () => {
           </span>
           <span className="bg-gradient-to-r from-white via-white/95 to-white/90 bg-clip-text text-transparent block relative">
             Start building brilliance.
-            <Sparkles className="absolute -top-4 -right-8 h-8 w-8 text-white/70" aria-hidden="true" />
           </span>
         </h1>
         
@@ -77,7 +75,6 @@ const MarketingHeroSection = () => {
           Save anything, find everything, and
           <span className="font-semibold text-white relative mx-2">
             achieve 10x productivity
-            <div className="absolute -bottom-1 left-0 w-full h-1 bg-white/30 rounded-full" />
           </span> 
           with intelligent organization.
         </p>
@@ -91,13 +88,11 @@ const MarketingHeroSection = () => {
                   <Button 
                     size="lg" 
                     onClick={() => navigate('/register')} 
-                    className="bg-white text-primary hover:bg-white/95 focus-visible:ring-offset-primary group shadow-2xl transform transition-all duration-300 hover:-translate-y-1 hover:shadow-3xl text-lg px-10 py-4 h-auto font-bold relative overflow-hidden focus:ring-2 focus:ring-white focus:ring-offset-2"
+                    className="bg-white text-primary hover:bg-white/95 focus-visible:ring-offset-primary group shadow-2xl text-lg px-10 py-4 h-auto font-bold relative overflow-hidden focus:ring-2 focus:ring-white focus:ring-offset-2"
                   >
-                    <Sparkles className="mr-3 h-5 w-5 relative z-10 transition-transform group-hover:rotate-12" aria-hidden="true" />
+                    <Sparkles className="mr-3 h-5 w-5 relative z-10" aria-hidden="true" />
                     <span className="relative z-10">Start building your library</span>
-                    <ArrowRight className="ml-3 h-5 w-5 transition-transform group-hover:translate-x-2 relative z-10" aria-hidden="true" />
-                    
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                    <ArrowRight className="ml-3 h-5 w-5 relative z-10" aria-hidden="true" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent className="bg-white text-primary border-primary/20 shadow-xl">
@@ -110,9 +105,9 @@ const MarketingHeroSection = () => {
               size="lg" 
               variant="outline" 
               onClick={() => setShowDemo(!showDemo)} 
-              className="border-2 border-white/60 hover:bg-white/15 hover:border-white focus-visible:ring-offset-primary focus-visible:ring-white text-white backdrop-blur-sm transform transition-all duration-300 hover:-translate-y-1 text-lg px-10 py-4 h-auto font-semibold group focus:ring-2 focus:ring-white focus:ring-offset-2"
+              className="border-2 border-white/60 hover:bg-white/15 hover:border-white focus-visible:ring-offset-primary focus-visible:ring-white text-white backdrop-blur-sm text-lg px-10 py-4 h-auto font-semibold group focus:ring-2 focus:ring-white focus:ring-offset-2"
             >
-              <Play className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" aria-hidden="true" />
+              <Play className="mr-2 h-4 w-4" aria-hidden="true" />
               See how it works
             </Button>
           </div>
@@ -171,18 +166,12 @@ const MarketingHeroSection = () => {
             onClick={handleScroll}
             className="inline-flex flex-col items-center gap-4 text-white/90 hover:text-white transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary rounded-lg"
             aria-label="Learn how Accio works"
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
           >
             <span className="font-semibold text-xl relative">
               See how it works
-              <span 
-                className={`absolute -bottom-1 left-0 w-full h-0.5 bg-white/70 transform origin-left transition-transform duration-300 ${isHovering ? 'scale-x-100' : 'scale-x-0'}`} 
-                aria-hidden="true"
-              ></span>
             </span>
             <div className="bg-white/10 backdrop-blur-sm rounded-full p-3 group-hover:bg-white/20 transition-colors">
-              <ChevronDown className="h-6 w-6 group-hover:transform group-hover:translate-y-1 transition-transform" aria-hidden="true" />
+              <ChevronDown className="h-6 w-6" aria-hidden="true" />
             </div>
           </a>
         </div>

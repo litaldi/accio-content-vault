@@ -3,138 +3,60 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import modular CSS files */
-@import './styles/accessibility.css';
-@import url('./styles/onboarding-accessibility.css');
-@import './styles/animations.css';
-@import './styles/typography.css';
-@import './styles/components.css';
-@import './styles/utilities.css';
-
 @layer base {
   :root {
-    /* Improved color palette with WCAG 2.1 AA compliant contrast ratios */
-    --background: 210 50% 98%;
-    --foreground: 222 47% 15%; /* Darkened from 10% to 15% for better contrast */
-
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 15%; /* Darkened for better contrast */
- 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 15%; /* Darkened for better contrast */
- 
-    --primary: 210 100% 45%; /* Slightly darkened for better contrast on light backgrounds */
-    --primary-foreground: 0 0% 100%; /* White for maximum contrast */
- 
-    --secondary: 210 40% 90%; /* Adjusted for better contrast */
-    --secondary-foreground: 222 47% 20%; /* Darkened for better readability */
- 
-    --muted: 210 40% 92%; /* Lighter background */
-    --muted-foreground: 215 16% 35%; /* Darkened for 4.5:1 contrast ratio */
- 
-    --accent: 210 40% 90%; /* Adjusted background */
-    --accent-foreground: 222 47% 20%; /* Darkened for better contrast */
- 
-    --destructive: 0 84% 50%; /* Slightly darkened */
-    --destructive-foreground: 0 0% 100%; /* White for maximum contrast */
-
-    --border: 214 32% 85%; /* Darkened for better visibility */
-    --input: 214 32% 85%; /* Darkened for better visibility */
-    --ring: 210 100% 45%; /* Matches primary */
- 
-    --radius: 0.5rem;
-
-    /* Success, warning, and info colors with proper contrast */
-    --success: 142 76% 36%; /* Dark green for good contrast */
-    --success-foreground: 0 0% 100%;
-    --warning: 38 92% 40%; /* Dark orange for good contrast */
-    --warning-foreground: 0 0% 100%;
-    --info: 210 100% 40%; /* Dark blue for good contrast */
-    --info-foreground: 0 0% 100%;
-  }
- 
-  .dark {
-    /* Dark theme with enhanced contrast */
-    --background: 222 47% 8%; /* Darker background */
-    --foreground: 210 40% 95%; /* Lighter text for better contrast */
- 
-    --card: 222 47% 10%;
-    --card-foreground: 210 40% 95%;
- 
-    --popover: 222 47% 10%;
-    --popover-foreground: 210 40% 95%;
- 
-    --primary: 210 100% 60%; /* Lighter for dark theme */
-    --primary-foreground: 222 47% 8%; /* Dark for contrast */
- 
-    --secondary: 217 33% 15%;
-    --secondary-foreground: 210 40% 90%; /* Lighter for contrast */
- 
-    --muted: 217 33% 15%;
-    --muted-foreground: 215 20% 70%; /* Lighter for better contrast */
- 
-    --accent: 217 33% 15%;
-    --accent-foreground: 210 40% 90%;
- 
-    --destructive: 0 63% 65%; /* Lighter red for dark theme */
-    --destructive-foreground: 222 47% 8%;
- 
-    --border: 217 33% 20%; /* Lighter border for visibility */
-    --input: 217 33% 20%;
-    --ring: 210 100% 60%;
-
-    /* Dark theme success, warning, info */
-    --success: 142 76% 50%;
-    --success-foreground: 222 47% 8%;
-    --warning: 38 92% 55%;
-    --warning-foreground: 222 47% 8%;
-    --info: 210 100% 60%;
-    --info-foreground: 222 47% 8%;
-  }
-  
-  /* Enhanced high contrast mode for accessibility */
-  .high-contrast.dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 100%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
-    --primary: 210 100% 70%; /* Bright blue for high contrast */
-    --primary-foreground: 0 0% 0%;
-    --secondary: 220 100% 70%; /* Bright cyan */
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 90%;
-    --accent: 195 100% 70%; /* Bright light blue */
-    --accent-foreground: 0 0% 0%;
-    --border: 0 0% 70%;
-    --input: 0 0% 70%;
-    --ring: 210 100% 70%;
-    --destructive: 0 100% 70%;
-    --destructive-foreground: 0 0% 0%;
-  }
-
-  .high-contrast:not(.dark) {
     --background: 0 0% 100%;
-    --foreground: 0 0% 0%;
+    --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
-    --card-foreground: 0 0% 0%;
+    --card-foreground: 222.2 84% 4.9%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 0%;
-    --primary: 210 100% 25%; /* Very dark blue */
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 80%;
-    --secondary-foreground: 0 0% 0%;
-    --muted: 0 0% 85%;
-    --muted-foreground: 0 0% 0%;
-    --accent: 195 100% 25%; /* Very dark cyan */
-    --accent-foreground: 0 0% 100%;
-    --border: 0 0% 30%;
-    --input: 0 0% 30%;
-    --ring: 210 100% 25%;
-    --destructive: 0 100% 30%;
-    --destructive-foreground: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 221.2 83.2% 53.3%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221.2 83.2% 53.3%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 84% 4.9%;
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
   }
 }
 
@@ -142,55 +64,71 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     line-height: 1.6;
   }
-  
-  /* Enhanced focus styles for better accessibility */
-  :focus-visible {
-    @apply outline-2 outline-primary outline-offset-2 outline-dashed;
+
+  /* Accessibility improvements */
+  html {
+    scroll-behavior: smooth;
   }
-  
-  /* Ensure proper contrast for all text elements */
+
+  /* High contrast mode support */
+  @media (prefers-contrast: high) {
+    :root {
+      --border: 0 0% 0%;
+      --input: 0 0% 0%;
+    }
+    
+    .dark {
+      --border: 0 0% 100%;
+      --input: 0 0% 100%;
+    }
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Focus visibility improvements */
+  *:focus {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  *:focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* Ensure proper text contrast */
   h1, h2, h3, h4, h5, h6 {
-    @apply text-foreground;
     font-weight: 600;
+    line-height: 1.2;
+    color: hsl(var(--foreground));
   }
-  
-  p, span, div {
-    @apply text-foreground;
-  }
-  
-  /* Button contrast improvements */
-  button {
-    font-weight: 500;
-  }
-  
-  /* Link contrast improvements */
+
+  /* Better link accessibility */
   a {
-    @apply text-primary;
-    font-weight: 500;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
   }
-  
-  a:hover {
-    @apply text-primary/80;
+
+  a:hover,
+  a:focus {
+    text-decoration-thickness: 3px;
   }
-  
-  /* Form element improvements */
-  input, textarea, select {
-    @apply text-foreground bg-background;
-    border-width: 1px;
-  }
-  
-  input::placeholder,
-  textarea::placeholder {
-    @apply text-muted-foreground;
-    opacity: 0.8;
-  }
-  
+
   /* Screen reader only content */
   .sr-only {
     position: absolute;
@@ -201,26 +139,166 @@
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
-    border-width: 0;
+    border: 0;
   }
-  
-  /* Enhanced error and success states with proper contrast */
-  .error-state {
-    @apply text-destructive border-destructive;
+
+  .sr-only:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
   }
-  
-  .success-state {
-    color: hsl(var(--success));
-    border-color: hsl(var(--success));
+
+  /* Improve form accessibility */
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on iOS */
   }
-  
-  .warning-state {
-    color: hsl(var(--warning));
-    border-color: hsl(var(--warning));
+
+  /* Better button accessibility */
+  button {
+    min-height: 44px;
+    min-width: 44px;
   }
-  
-  .info-state {
-    color: hsl(var(--info));
-    border-color: hsl(var(--info));
+
+  /* Skip links */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+    border-radius: 4px;
+  }
+
+  .skip-link:focus {
+    top: 6px;
+  }
+}
+
+@layer components {
+  /* Container with proper accessibility */
+  .container {
+    @apply max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Accessible card hover states */
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-lg focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2;
+  }
+
+  /* Text hierarchy with proper contrast */
+  .text-hierarchy-1 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+  }
+
+  .text-hierarchy-2 {
+    @apply text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight;
+  }
+
+  .text-hierarchy-3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold;
+  }
+
+  /* Accessible form elements */
+  .form-group {
+    @apply space-y-2;
+  }
+
+  .form-label {
+    @apply text-sm font-medium text-foreground;
+  }
+
+  .form-input {
+    @apply w-full px-3 py-2 border border-input bg-background text-foreground rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent;
+  }
+
+  .form-error {
+    @apply text-sm text-destructive;
+  }
+
+  /* Accessible buttons */
+  .btn-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90 focus:ring-2 focus:ring-primary focus:ring-offset-2 px-4 py-2 rounded-md font-medium transition-colors;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 focus:ring-2 focus:ring-secondary focus:ring-offset-2 px-4 py-2 rounded-md font-medium transition-colors;
+  }
+}
+
+/* Animation keyframes that respect reduced motion */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+    opacity: 1;
+  }
+  to {
+    height: 0;
+    opacity: 0;
+  }
+}
+
+/* Utility animations */
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.3s ease-out;
+}
+
+.animate-accordion-down {
+  animation: accordion-down 0.2s ease-out;
+}
+
+.animate-accordion-up {
+  animation: accordion-up 0.2s ease-out;
+}
+
+/* Remove animations if user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-slide-in-right,
+  .animate-accordion-down,
+  .animate-accordion-up {
+    animation: none;
   }
 }

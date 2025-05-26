@@ -3,7 +3,6 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
 import MarketingHeroSection from '@/components/home/MarketingHeroSection';
@@ -61,22 +60,35 @@ const UnifiedIndexContent = () => {
   return (
     <div className="min-h-screen flex flex-col w-full">
       <Helmet>
-        <title>Accio - Stop Losing Your Best Ideas. Start Building Brilliance.</title>
-        <meta name="description" content="Transform chaos into your AI-powered knowledge engine. Save anything, find everything, achieve 10x productivity. Trusted by 10K+ professionals." />
-        <meta name="keywords" content="knowledge management, AI, productivity, content organization, search, bookmarks, notes, research" />
-        <meta property="og:title" content="Accio - Stop Losing Your Best Ideas. Start Building Brilliance." />
-        <meta property="og:description" content="Turn scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve more." />
+        <title>Accio - AI-Powered Knowledge Management | Save, Organize, Find Everything</title>
+        <meta name="description" content="Transform scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve 10x productivity. Trusted by 10K+ professionals. Free forever plan available." />
+        <meta name="keywords" content="knowledge management, AI, productivity, content organization, search, bookmarks, notes, research, information management, digital workspace" />
+        <meta property="og:title" content="Accio - AI-Powered Knowledge Management | Save, Organize, Find Everything" />
+        <meta property="og:description" content="Turn scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve more with intelligent organization." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://yoursite.com/" />
+        <meta property="og:url" content="https://accio.app/" />
+        <meta property="og:image" content="https://accio.app/og-image.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Accio - Your AI Knowledge Engine" />
         <meta name="twitter:description" content="Save anything, find everything, achieve 10x productivity with AI-powered organization." />
-        <link rel="canonical" href="https://yoursite.com/" />
+        <meta name="twitter:image" content="https://accio.app/twitter-image.jpg" />
+        <link rel="canonical" href="https://accio.app/" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="robots" content="index, follow" />
         <meta name="author" content="Accio" />
         <meta name="theme-color" content="#3B82F6" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
+      
+      {/* Skip to main content link for keyboard users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        Skip to main content
+      </a>
       
       <PrimaryNavigation />
       
@@ -156,11 +168,9 @@ const UnifiedIndexContent = () => {
 const UnifiedIndex = () => {
   return (
     <ThemeProvider>
-      <AccessibilityProvider>
-        <AuthProvider>
-          <UnifiedIndexContent />
-        </AuthProvider>
-      </AccessibilityProvider>
+      <AuthProvider>
+        <UnifiedIndexContent />
+      </AuthProvider>
     </ThemeProvider>
   );
 };
