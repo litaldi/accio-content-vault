@@ -1,6 +1,4 @@
 
-
-
 export const copy = {
   // Navigation
   navigation: {

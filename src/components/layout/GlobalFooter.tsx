@@ -15,7 +15,7 @@ import {
   Brain
 } from 'lucide-react';
 
-const UnifiedFooter: React.FC = () => {
+const GlobalFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
   const footerSections = [
@@ -24,17 +24,17 @@ const UnifiedFooter: React.FC = () => {
       links: [
         { name: 'Features', href: '/features' },
         { name: 'Dashboard', href: '/dashboard' },
-        { name: 'Analytics', href: '/analytics' },
-        { name: 'Collections', href: '/collections' },
+        { name: 'Help Center', href: '/help' },
+        { name: 'Contact', href: '/contact' },
       ]
     },
     {
       title: 'Resources',
       links: [
-        { name: 'Help Center', href: '/help', icon: HelpCircle },
         { name: 'Blog', href: '/blog' },
-        { name: 'Contact', href: '/contact', icon: Mail },
-        { name: 'About', href: '/about', icon: Globe },
+        { name: 'About', href: '/about' },
+        { name: 'FAQ', href: '/faq' },
+        { name: 'Support', href: '/help' },
       ]
     },
     {
@@ -55,7 +55,7 @@ const UnifiedFooter: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-background border-t" role="contentinfo">
+    <footer className="bg-background border-t mt-auto" role="contentinfo">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Main Footer Content */}
         <div className="py-12 lg:py-16">
@@ -164,4 +164,4 @@ const UnifiedFooter: React.FC = () => {
   );
 };
 
-export default UnifiedFooter;
+export default GlobalFooter;

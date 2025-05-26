@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ModernNavigation from '@/components/navigation/ModernNavigation';
-import Footer from '@/components/Footer';
+import UnifiedTopNavigation from '@/components/navigation/UnifiedTopNavigation';
+import GlobalFooter from '@/components/layout/GlobalFooter';
 
 interface UnifiedPageLayoutProps {
   children: React.ReactNode;
@@ -30,13 +30,13 @@ const UnifiedPageLayout: React.FC<UnifiedPageLayoutProps> = ({
         <meta name="theme-color" content="#000000" />
       </Helmet>
 
-      {showNavigation && <ModernNavigation />}
+      {showNavigation && <UnifiedTopNavigation />}
       
       <main className="flex-grow" role="main">
         {children}
       </main>
       
-      {showFooter && <Footer />}
+      {showFooter && <GlobalFooter />}
     </div>
   );
 };

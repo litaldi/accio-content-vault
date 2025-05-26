@@ -4,30 +4,27 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import { useTheme } from '@/contexts/ThemeContext';
 import { 
   Menu, 
   X, 
   Home, 
-  LayoutDashboard, 
-  FolderOpen, 
-  BarChart3, 
-  User, 
-  Settings, 
+  Star,
+  FileText,
   HelpCircle,
+  Mail,
   LogOut,
   LogIn,
   Brain,
-  BookmarkPlus,
   ArrowRight,
-  FileText,
-  Mail,
   Sun,
-  Moon
+  Moon,
+  User,
+  Settings
 } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
 import { copy } from '@/utils/copy';
 
-const ModernNavigation = () => {
+const UnifiedTopNavigation = () => {
   const { user, signOut } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -53,23 +50,14 @@ const ModernNavigation = () => {
     }
   };
 
-  const publicNavItems = [
-    { to: '/', label: copy.navigation.home, icon: Home },
-    { to: '/features', label: 'Features', icon: LayoutDashboard },
-    { to: '/blog', label: copy.navigation.blog, icon: FileText },
-    { to: '/help', label: copy.navigation.help, icon: HelpCircle },
-    { to: '/contact', label: copy.navigation.contact, icon: Mail }
+  // Main navigation items
+  const navItems = [
+    { to: '/', label: 'Home', icon: Home },
+    { to: '/features', label: 'Features', icon: Star },
+    { to: '/blog', label: 'Blog', icon: FileText },
+    { to: '/help', label: 'Help Center', icon: HelpCircle },
+    { to: '/contact', label: 'Contact', icon: Mail }
   ];
-
-  const userNavItems = [
-    { to: '/dashboard', label: copy.navigation.dashboard, icon: LayoutDashboard },
-    { to: '/collections', label: copy.navigation.collections, icon: FolderOpen },
-    { to: '/analytics', label: copy.navigation.analytics, icon: BarChart3 },
-    { to: '/profile', label: copy.navigation.profile, icon: User },
-    { to: '/settings', label: copy.navigation.settings, icon: Settings }
-  ];
-
-  const navItems = user ? [...publicNavItems.slice(0, 1), ...userNavItems, ...publicNavItems.slice(-3)] : publicNavItems;
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
@@ -79,7 +67,7 @@ const ModernNavigation = () => {
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
@@ -89,7 +77,7 @@ const ModernNavigation = () => {
             onClick={closeMobileMenu}
             aria-label="Accio - Go to homepage"
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-sm">
               <Brain className="h-5 w-5 text-white" aria-hidden="true" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
@@ -98,7 +86,7 @@ const ModernNavigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1" role="navigation" aria-label={copy.accessibility.mainNavigation}>
+          <nav className="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
             {navItems.map((item) => (
               <Button
                 key={item.to}
@@ -126,7 +114,7 @@ const ModernNavigation = () => {
               variant="ghost"
               size="sm"
               onClick={toggleTheme}
-              aria-label={copy.accessibility.toggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               className="w-9 h-9"
             >
               {theme === 'dark' ? (
@@ -140,8 +128,14 @@ const ModernNavigation = () => {
               <div className="flex items-center space-x-2">
                 <Button variant="outline" size="sm" asChild>
                   <Link to="/dashboard" className="flex items-center space-x-2">
-                    <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
-                    <span>{copy.navigation.saveContent}</span>
+                    <User className="h-4 w-4" aria-hidden="true" />
+                    <span>Dashboard</span>
+                  </Link>
+                </Button>
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/settings" className="flex items-center space-x-2">
+                    <Settings className="h-4 w-4" aria-hidden="true" />
+                    <span>Settings</span>
                   </Link>
                 </Button>
                 <Button
@@ -151,7 +145,7 @@ const ModernNavigation = () => {
                   className="text-muted-foreground hover:text-foreground"
                 >
                   <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-                  {copy.auth.signOut}
+                  Sign Out
                 </Button>
               </div>
             ) : (
@@ -159,12 +153,12 @@ const ModernNavigation = () => {
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/login">
                     <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
-                    {copy.auth.signIn}
+                    Sign In
                   </Link>
                 </Button>
                 <Button size="sm" asChild className="bg-primary hover:bg-primary/90">
                   <Link to="/register" className="flex items-center space-x-2">
-                    <span>{copy.auth.getStarted}</span>
+                    <span>Get Started</span>
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </Button>
@@ -179,7 +173,7 @@ const ModernNavigation = () => {
               variant="ghost"
               size="sm"
               onClick={toggleTheme}
-              aria-label={copy.accessibility.toggleTheme}
+              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               className="w-9 h-9"
             >
               {theme === 'dark' ? (
@@ -193,7 +187,7 @@ const ModernNavigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={isMobileMenuOpen ? copy.accessibility.closeMenu : copy.accessibility.openMenu}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
             >
@@ -236,8 +230,14 @@ const ModernNavigation = () => {
                   <>
                     <Button variant="outline" size="sm" className="w-full justify-start" asChild>
                       <Link to="/dashboard" onClick={closeMobileMenu}>
-                        <BookmarkPlus className="h-4 w-4 mr-2" aria-hidden="true" />
-                        {copy.navigation.saveContent}
+                        <User className="h-4 w-4 mr-2" aria-hidden="true" />
+                        Dashboard
+                      </Link>
+                    </Button>
+                    <Button variant="outline" size="sm" className="w-full justify-start" asChild>
+                      <Link to="/settings" onClick={closeMobileMenu}>
+                        <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
+                        Settings
                       </Link>
                     </Button>
                     <Button
@@ -247,7 +247,7 @@ const ModernNavigation = () => {
                       onClick={handleSignOut}
                     >
                       <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-                      {copy.auth.signOut}
+                      Sign Out
                     </Button>
                   </>
                 ) : (
@@ -255,12 +255,12 @@ const ModernNavigation = () => {
                     <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
                       <Link to="/login" onClick={closeMobileMenu}>
                         <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
-                        {copy.auth.signIn}
+                        Sign In
                       </Link>
                     </Button>
                     <Button size="sm" className="w-full" asChild>
                       <Link to="/register" onClick={closeMobileMenu}>
-                        {copy.auth.getStarted}
+                        Get Started
                         <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
                       </Link>
                     </Button>
@@ -275,4 +275,4 @@ const ModernNavigation = () => {
   );
 };
 
-export default ModernNavigation;
+export default UnifiedTopNavigation;
