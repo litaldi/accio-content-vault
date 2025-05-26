@@ -14,19 +14,19 @@ const EnterpriseNavigation = () => {
   const navigationItems = [
     { name: 'Home', href: '/', type: 'link' },
     { 
-      name: 'Products', 
+      name: 'Platform', 
       href: '#',
       type: 'dropdown',
       items: [
-        { name: 'Knowledge Management', href: '/features', description: 'Organize and discover information' },
-        { name: 'AI Analytics', href: '/analytics', description: 'Intelligent insights and patterns' },
-        { name: 'Team Collaboration', href: '/collaboration', description: 'Share knowledge seamlessly' },
-        { name: 'Enterprise Security', href: '/security', description: 'Advanced compliance and controls' }
+        { name: 'Dashboard', href: '/dashboard', description: 'Your knowledge overview' },
+        { name: 'Search', href: '/search', description: 'Find anything instantly' },
+        { name: 'Collections', href: '/collections', description: 'Organize your content' },
+        { name: 'Analytics', href: '/analytics', description: 'Usage insights and trends' }
       ]
     },
+    { name: 'Features', href: '/features', type: 'link' },
     { name: 'Pricing', href: '/pricing', type: 'link' },
-    { name: 'Resources', href: '/resources', type: 'link' },
-    { name: 'Support', href: '/support', type: 'link' }
+    { name: 'Resources', href: '/resources', type: 'link' }
   ];
 
   const isActive = (href: string) => location.pathname === href;

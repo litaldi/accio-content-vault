@@ -1,266 +1,294 @@
 
 import React, { useState } from 'react';
-import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
+import { Helmet } from 'react-helmet-async';
+import EnterpriseNavigation from '@/components/navigation/EnterpriseNavigation';
+import EnterpriseFooter from '@/components/layout/EnterpriseFooter';
+import { EnterpriseTypography, EnterpriseSpacing } from '@/components/ui/enterprise-design-system';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { 
-  FolderOpen, 
-  Search, 
-  Plus, 
-  Grid3X3, 
-  List, 
-  Filter,
-  BookmarkPlus,
-  Clock,
+  FolderPlus, 
+  Folder, 
+  FileText, 
+  Users, 
+  Calendar,
+  MoreHorizontal,
+  Share,
   Star,
-  MoreVertical,
-  Eye,
-  Edit,
-  Trash2
+  Lock,
+  Globe
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-const Collections = () => {
+const Collections: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [searchQuery, setSearchQuery] = useState('');
 
   const collections = [
     {
-      id: 1,
-      name: "Web Development",
-      description: "Modern web development techniques, frameworks, and best practices",
-      itemCount: 324,
-      lastUpdated: "2 hours ago",
-      color: "bg-blue-500",
-      tags: ["React", "JavaScript", "CSS", "HTML"]
-    },
-    {
-      id: 2,
-      name: "AI & Machine Learning",
-      description: "Artificial intelligence research, tools, and implementation guides",
-      itemCount: 187,
-      lastUpdated: "5 hours ago",
-      color: "bg-purple-500",
-      tags: ["Python", "TensorFlow", "Neural Networks", "Data Science"]
-    },
-    {
-      id: 3,
-      name: "Design Resources",
-      description: "UI/UX design principles, tools, and creative inspiration",
+      id: '1',
+      name: 'Product Documentation',
+      description: 'Complete product guides, API docs, and technical specifications',
       itemCount: 156,
-      lastUpdated: "1 day ago",
-      color: "bg-pink-500",
-      tags: ["Figma", "UI Design", "Color Theory", "Typography"]
+      collaborators: 12,
+      lastUpdated: '2024-01-15',
+      isStarred: true,
+      visibility: 'team',
+      color: 'blue',
+      recentItems: ['API v2.0 Guide', 'Product Roadmap Q1', 'Feature Specifications']
     },
     {
-      id: 4,
-      name: "Business Strategy",
-      description: "Entrepreneurship, management, and business development insights",
-      itemCount: 98,
-      lastUpdated: "2 days ago",
-      color: "bg-green-500",
-      tags: ["Startups", "Management", "Marketing", "Finance"]
-    },
-    {
-      id: 5,
-      name: "DevOps & Cloud",
-      description: "Infrastructure, deployment, and cloud computing resources",
-      itemCount: 142,
-      lastUpdated: "3 days ago",
-      color: "bg-orange-500",
-      tags: ["AWS", "Docker", "Kubernetes", "CI/CD"]
-    },
-    {
-      id: 6,
-      name: "Personal Development",
-      description: "Self-improvement, productivity, and career growth content",
+      id: '2',
+      name: 'Customer Support',
+      description: 'Support processes, FAQs, and escalation procedures',
       itemCount: 89,
-      lastUpdated: "1 week ago",
-      color: "bg-indigo-500",
-      tags: ["Productivity", "Career", "Learning", "Habits"]
+      collaborators: 8,
+      lastUpdated: '2024-01-12',
+      isStarred: false,
+      visibility: 'private',
+      color: 'green',
+      recentItems: ['Support Ticket Process', 'Customer FAQ', 'Escalation Matrix']
+    },
+    {
+      id: '3',
+      name: 'Security & Compliance',
+      description: 'Security policies, compliance checklists, and audit documentation',
+      itemCount: 67,
+      collaborators: 5,
+      lastUpdated: '2024-01-10',
+      isStarred: true,
+      visibility: 'organization',
+      color: 'red',
+      recentItems: ['SOC 2 Checklist', 'Security Policies', 'Audit Reports']
+    },
+    {
+      id: '4',
+      name: 'Team Onboarding',
+      description: 'New hire guides, training materials, and company processes',
+      itemCount: 45,
+      collaborators: 15,
+      lastUpdated: '2024-01-08',
+      isStarred: false,
+      visibility: 'team',
+      color: 'purple',
+      recentItems: ['New Hire Checklist', 'Company Handbook', 'Training Schedule']
     }
   ];
 
-  const filteredCollections = collections.filter(collection =>
-    collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    collection.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    collection.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
+  const getVisibilityIcon = (visibility: string) => {
+    switch (visibility) {
+      case 'private': return <Lock className="h-4 w-4" />;
+      case 'team': return <Users className="h-4 w-4" />;
+      case 'organization': return <Globe className="h-4 w-4" />;
+      default: return <Users className="h-4 w-4" />;
+    }
+  };
+
+  const getVisibilityColor = (visibility: string) => {
+    switch (visibility) {
+      case 'private': return 'bg-gray-100 text-gray-800';
+      case 'team': return 'bg-blue-100 text-blue-800';
+      case 'organization': return 'bg-green-100 text-green-800';
+      default: return 'bg-blue-100 text-blue-800';
+    }
+  };
 
   return (
-    <UnifiedPageLayout
-      title="Collections - Organize Your Knowledge | Accio"
-      description="Browse and manage your organized knowledge collections. Create, edit, and explore your curated content libraries."
-    >
-      <div className="container py-8">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">My Collections</h1>
-            <p className="text-muted-foreground">
-              Organize your knowledge into curated collections for easy access.
-            </p>
-          </div>
-          <Button size="lg" className="mt-4 lg:mt-0 gap-2">
-            <Plus className="h-5 w-5" />
-            Create Collection
-          </Button>
-        </div>
+    <>
+      <Helmet>
+        <title>Collections - Accio Enterprise</title>
+        <meta name="description" content="Organize and manage your knowledge collections with powerful collaboration tools." />
+      </Helmet>
+      
+      <div className="min-h-screen flex flex-col bg-background">
+        <EnterpriseNavigation />
+        
+        <main className="flex-grow">
+          <EnterpriseSpacing.Section>
+            <EnterpriseSpacing.Container>
+              {/* Header */}
+              <div className="flex items-center justify-between mb-8">
+                <div>
+                  <EnterpriseTypography.H1 className="mb-2">
+                    Knowledge Collections
+                  </EnterpriseTypography.H1>
+                  <EnterpriseTypography.Body>
+                    Organize your content into collections for better team collaboration and knowledge management
+                  </EnterpriseTypography.Body>
+                </div>
+                
+                <Button className="gap-2">
+                  <FolderPlus className="h-4 w-4" />
+                  Create Collection
+                </Button>
+              </div>
 
-        {/* Controls */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search collections, tags, or content..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="gap-2">
-              <Filter className="h-4 w-4" />
-              Filter
-            </Button>
-            
-            <div className="flex rounded-lg border">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-                className="rounded-r-none"
-              >
-                <Grid3X3 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                className="rounded-l-none"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        {/* Collections Grid/List */}
-        <div className={viewMode === 'grid' 
-          ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
-          : "space-y-4"
-        }>
-          {filteredCollections.map((collection) => (
-            <Card key={collection.id} className="hover:shadow-md transition-shadow group">
-              {viewMode === 'grid' ? (
-                <Link to={`/collections/${collection.id}`}>
+              {/* Quick Stats */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card>
                   <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className={`w-12 h-12 ${collection.color} rounded-lg flex items-center justify-center`}>
-                        <FolderOpen className="h-6 w-6 text-white" />
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-blue-100 rounded-lg">
+                        <Folder className="h-5 w-5 text-blue-600" />
                       </div>
-                      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </div>
-                    
-                    <h3 className="font-semibold text-lg mb-2">{collection.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {collection.description}
-                    </p>
-                    
-                    <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
-                      <div className="flex items-center gap-1">
-                        <BookmarkPlus className="h-4 w-4" />
-                        <span>{collection.itemCount} items</span>
+                      <div>
+                        <div className="text-2xl font-bold">12</div>
+                        <div className="text-sm text-muted-foreground">Collections</div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        <span>{collection.lastUpdated}</span>
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-wrap gap-1">
-                      {collection.tags.slice(0, 3).map((tag, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                      {collection.tags.length > 3 && (
-                        <Badge variant="secondary" className="text-xs">
-                          +{collection.tags.length - 3}
-                        </Badge>
-                      )}
                     </div>
                   </CardContent>
-                </Link>
-              ) : (
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 ${collection.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                      <FolderOpen className="h-6 w-6 text-white" />
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold truncate">{collection.name}</h3>
-                        <Badge variant="secondary" className="text-xs">
-                          {collection.itemCount} items
-                        </Badge>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-green-100 rounded-lg">
+                        <FileText className="h-5 w-5 text-green-600" />
                       </div>
-                      <p className="text-sm text-muted-foreground truncate mb-2">
+                      <div>
+                        <div className="text-2xl font-bold">1,247</div>
+                        <div className="text-sm text-muted-foreground">Total Items</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-purple-100 rounded-lg">
+                        <Users className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold">89</div>
+                        <div className="text-sm text-muted-foreground">Collaborators</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 bg-yellow-100 rounded-lg">
+                        <Star className="h-5 w-5 text-yellow-600" />
+                      </div>
+                      <div>
+                        <div className="text-2xl font-bold">8</div>
+                        <div className="text-sm text-muted-foreground">Starred</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Collections Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {collections.map((collection) => (
+                  <Card key={collection.id} className="hover:shadow-lg transition-all duration-200 group cursor-pointer">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className={`p-3 bg-${collection.color}-100 rounded-xl`}>
+                            <Folder className={`h-6 w-6 text-${collection.color}-600`} />
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2">
+                              <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                                {collection.name}
+                              </CardTitle>
+                              {collection.isStarred && (
+                                <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent>
+                      <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
                         {collection.description}
                       </p>
-                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                        <span>Updated {collection.lastUpdated}</span>
-                        <div className="flex gap-1">
-                          {collection.tags.slice(0, 2).map((tag, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
+                      
+                      {/* Collection Stats */}
+                      <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <FileText className="h-3 w-3" />
+                          {collection.itemCount} items
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Users className="h-3 w-3" />
+                          {collection.collaborators}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {collection.lastUpdated}
                         </div>
                       </div>
+                      
+                      {/* Visibility Badge */}
+                      <div className="flex items-center justify-between">
+                        <Badge 
+                          variant="secondary" 
+                          className={`text-xs ${getVisibilityColor(collection.visibility)}`}
+                        >
+                          {getVisibilityIcon(collection.visibility)}
+                          <span className="ml-1 capitalize">{collection.visibility}</span>
+                        </Badge>
+                        
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                          <Share className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      
+                      {/* Recent Items Preview */}
+                      <div className="mt-4 pt-4 border-t">
+                        <p className="text-xs text-muted-foreground mb-2">Recent items:</p>
+                        <div className="space-y-1">
+                          {collection.recentItems.slice(0, 2).map((item, index) => (
+                            <div key={index} className="text-xs text-muted-foreground truncate">
+                              • {item}
+                            </div>
+                          ))}
+                          {collection.recentItems.length > 2 && (
+                            <div className="text-xs text-primary">
+                              +{collection.recentItems.length - 2} more items
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                
+                {/* Create New Collection Card */}
+                <Card className="border-dashed border-2 hover:border-primary transition-colors cursor-pointer group">
+                  <CardContent className="h-full flex items-center justify-center py-12">
+                    <div className="text-center">
+                      <div className="p-4 bg-muted rounded-xl mb-4 group-hover:bg-primary/10 transition-colors">
+                        <FolderPlus className="h-8 w-8 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </div>
+                      <h3 className="font-medium mb-2 group-hover:text-primary transition-colors">
+                        Create New Collection
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        Organize related content together
+                      </p>
                     </div>
-                    
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/collections/${collection.id}`}>
-                          <Eye className="h-4 w-4" />
-                        </Link>
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              )}
-            </Card>
-          ))}
-        </div>
-
-        {filteredCollections.length === 0 && (
-          <div className="text-center py-12">
-            <FolderOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No collections found</h3>
-            <p className="text-muted-foreground mb-4">
-              {searchQuery ? "Try adjusting your search terms" : "Create your first collection to get started"}
-            </p>
-            <Button className="gap-2">
-              <Plus className="h-4 w-4" />
-              Create Collection
-            </Button>
-          </div>
-        )}
+                  </CardContent>
+                </Card>
+              </div>
+            </EnterpriseSpacing.Container>
+          </EnterpriseSpacing.Section>
+        </main>
+        
+        <EnterpriseFooter />
       </div>
-    </UnifiedPageLayout>
+    </>
   );
 };
 
