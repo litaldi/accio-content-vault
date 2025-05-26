@@ -1,11 +1,9 @@
 
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 
 const EnhancedAccessibility: React.FC = () => {
   const location = useLocation();
-  const { preferences } = useAccessibility();
 
   // Announce route changes to screen readers
   useEffect(() => {
@@ -55,21 +53,6 @@ const EnhancedAccessibility: React.FC = () => {
     document.addEventListener('keydown', handleKeydown);
     return () => document.removeEventListener('keydown', handleKeydown);
   }, []);
-
-  // Apply accessibility preferences to document
-  useEffect(() => {
-    if (preferences.reduceAnimations) {
-      document.documentElement.classList.add('reduce-animations');
-    } else {
-      document.documentElement.classList.remove('reduce-animations');
-    }
-
-    if (preferences.highContrast) {
-      document.documentElement.classList.add('high-contrast');
-    } else {
-      document.documentElement.classList.remove('high-contrast');
-    }
-  }, [preferences]);
 
   return null;
 };

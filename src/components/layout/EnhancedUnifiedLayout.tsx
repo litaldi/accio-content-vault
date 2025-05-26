@@ -2,7 +2,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import EnhancedUnifiedNavigation from '@/components/navigation/EnhancedUnifiedNavigation';
 import EnhancedUnifiedFooter from '@/components/Footer/EnhancedUnifiedFooter';
 import { Toaster } from '@/components/ui/toaster';
@@ -30,20 +29,13 @@ export const EnhancedUnifiedLayout: React.FC<EnhancedUnifiedLayoutProps> = ({
   onSignOut
 }) => {
   const { isMobile } = useResponsiveDesign();
-  const { preferences } = useAccessibility();
 
   return (
     <div 
       className={cn(
         "min-h-screen flex flex-col w-full bg-background text-foreground",
-        // Apply accessibility preferences
-        preferences.highContrast && "high-contrast",
-        preferences.reducedMotion && "reduce-motion",
-        preferences.fontSize === 'large' && "text-lg",
-        preferences.fontSize === 'small' && "text-sm",
         className
       )}
-      dir={preferences.language === 'he' ? 'rtl' : 'ltr'}
     >
       {/* Skip to content for keyboard users */}
       <a

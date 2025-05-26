@@ -2,7 +2,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
 import UnifiedFooter from '@/components/Footer/UnifiedFooter';
 import { Toaster } from '@/components/ui/toaster';
@@ -23,26 +22,13 @@ export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
   fullWidth = false
 }) => {
   const { isMobile } = useResponsiveDesign();
-  const { preferences } = useAccessibility();
 
   return (
     <div 
       className={cn(
         "min-h-screen flex flex-col w-full bg-background text-foreground",
-        // Apply accessibility preferences
-        preferences.highContrast && "high-contrast",
-        preferences.reducedMotion && "reduce-motion",
-        preferences.fontSize === 'large' && "font-size-large",
-        preferences.fontSize === 'small' && "font-size-small",
-        preferences.lineSpacing === 'relaxed' && "line-spacing-relaxed",
-        preferences.lineSpacing === 'loose' && "line-spacing-loose",
-        preferences.highlightLinks && "highlight-links",
         className
       )}
-      style={{
-        fontSize: preferences.fontSize === 'large' ? '1.125rem' : 
-                 preferences.fontSize === 'small' ? '0.875rem' : undefined
-      }}
     >
       {/* Skip to content for keyboard users */}
       <a

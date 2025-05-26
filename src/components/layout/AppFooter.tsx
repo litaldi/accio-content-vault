@@ -1,7 +1,5 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Mail, MessageCircle, FileText, Shield, HelpCircle, Github, Twitter, Linkedin } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -16,7 +14,6 @@ interface FooterSection {
 }
 
 const AppFooter: React.FC = () => {
-  const { preferences } = useAccessibility();
   const currentYear = new Date().getFullYear();
 
   const footerSections: FooterSection[] = [
@@ -81,10 +78,7 @@ const AppFooter: React.FC = () => {
 
   return (
     <footer 
-      className={cn(
-        "w-full border-t bg-background/95 backdrop-blur-sm mt-auto",
-        preferences.highContrast && 'border-foreground'
-      )}
+      className="w-full border-t bg-background/95 backdrop-blur-sm mt-auto"
       role="contentinfo"
       aria-label="Site footer"
     >

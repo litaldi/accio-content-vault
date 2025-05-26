@@ -2,11 +2,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
 import { Menu, X, Home, BookOpen, BarChart, Users, Settings, LogOut, Plus } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -33,7 +31,6 @@ const EnhancedNavigation: React.FC = () => {
     console.warn('AuthProvider not available, navigation will work in guest mode');
   }
 
-  const { preferences } = useAccessibility();
   const isLoggedIn = !!user;
 
   // Optimized scroll handler
@@ -83,8 +80,7 @@ const EnhancedNavigation: React.FC = () => {
         "sticky top-0 z-50 w-full transition-all duration-300 border-b",
         scrolled 
           ? 'bg-background/95 backdrop-blur-md shadow-sm' 
-          : 'bg-background border-transparent',
-        preferences.highContrast && 'border-foreground bg-background'
+          : 'bg-background border-transparent'
       )}
       role="banner"
     >
@@ -127,7 +123,6 @@ const EnhancedNavigation: React.FC = () => {
         
         {/* Right Actions */}
         <div className="flex items-center gap-3">
-          <AccessibilityButton />
           <ModeToggle />
           
           {isLoggedIn ? (

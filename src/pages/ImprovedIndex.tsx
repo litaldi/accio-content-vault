@@ -1,35 +1,28 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ImprovedNavigation from '@/components/navigation/ImprovedNavigation';
-import Container from '@/components/layout/Container';
-import { Typography } from '@/components/ui/typography';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
+import MarketingHeroSection from '@/components/home/MarketingHeroSection';
+import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
+import FeaturesSection from '@/components/home/FeaturesSection';
+import CTASection from '@/components/home/CTASection';
+import MarketingPricingSection from '@/components/home/MarketingPricingSection';
+import FAQSection from '@/components/home/FAQSection';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import SocialProofSection from '@/components/home/SocialProofSection';
+import UseCasesSection from '@/components/home/UseCasesSection';
+import TrustSignalsSection from '@/components/home/TrustSignalsSection';
+import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
-import { useResponsiveDesign } from '@/hooks/use-responsive-design';
-import RepositionedAccessibilityButton from '@/components/accessibility/RepositionedAccessibilityButton';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import { 
-  Search, 
-  BookOpen, 
-  Settings, 
-  HelpCircle, 
-  Sparkles, 
-  Shield, 
-  Brain,
-  Users,
-  Star,
-  ArrowRight
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Search, BookOpen, BarChart3, Settings, Sparkles } from 'lucide-react';
 
 const ImprovedIndex = () => {
   const navigate = useNavigate();
-  const { isMobile, isTablet } = useResponsiveDesign();
-  
-  // Mock auth check
-  const isLoggedIn = false;
+  const { user } = useAuth();
+  const isLoggedIn = !!user;
 
   const quickActions = [
     {
@@ -47,10 +40,10 @@ const ImprovedIndex = () => {
       color: "bg-green-500"
     },
     {
-      title: "Get Help",
-      description: "Access tutorials and support",
-      icon: HelpCircle,
-      action: () => navigate('/help'),
+      title: "Analytics",
+      description: "Track your knowledge growth",
+      icon: BarChart3,
+      action: () => navigate('/analytics'),
       color: "bg-purple-500"
     },
     {
@@ -62,225 +55,110 @@ const ImprovedIndex = () => {
     }
   ];
 
-  const features = [
-    {
-      icon: Brain,
-      title: "AI-Powered Organization",
-      description: "Automatically categorize and tag your content with intelligent AI."
-    },
-    {
-      icon: Search,
-      title: "Instant Search",
-      description: "Find anything in seconds with natural language search."
-    },
-    {
-      icon: Shield,
-      title: "Secure & Private",
-      description: "Your data is encrypted and stays completely private."
-    },
-    {
-      icon: Users,
-      title: "Team Collaboration",
-      description: "Share knowledge and collaborate with your team seamlessly."
-    }
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col w-full relative">
+    <div className="min-h-screen flex flex-col w-full">
       <Helmet>
-        <title>Accio - Stop Losing Your Best Ideas. Start Building Brilliance.</title>
-        <meta name="description" content="Transform chaos into your AI-powered knowledge engine. Save anything, find everything, achieve 10x productivity. Trusted by 10K+ professionals." />
+        <title>Accio - AI-Powered Knowledge Management | Save, Organize, Find Everything</title>
+        <meta name="description" content="Transform scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve 10x productivity. Trusted by 10K+ professionals. Free forever plan available." />
+        <meta name="keywords" content="knowledge management, AI, productivity, content organization, search, bookmarks, notes, research, information management, digital workspace" />
+        <meta property="og:title" content="Accio - AI-Powered Knowledge Management | Save, Organize, Find Everything" />
+        <meta property="og:description" content="Turn scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve more with intelligent organization." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://accio.app/" />
+        <meta property="og:image" content="https://accio.app/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Accio - Your AI Knowledge Engine" />
+        <meta name="twitter:description" content="Save anything, find everything, achieve 10x productivity with AI-powered organization." />
+        <meta name="twitter:image" content="https://accio.app/twitter-image.jpg" />
+        <link rel="canonical" href="https://accio.app/" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="Accio" />
+        <meta name="theme-color" content="#3B82F6" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
-
-      {/* Fixed Accessibility Controls - Top Right */}
-      <div className={cn(
-        "fixed z-50 flex items-center gap-3",
-        isMobile ? "top-3 right-3" : "top-6 right-6"
-      )}>
-        <ModeToggle />
-        <RepositionedAccessibilityButton />
-      </div>
       
-      <ImprovedNavigation />
+      {/* Skip to main content link for keyboard users */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
+        Skip to main content
+      </a>
+      
+      <PrimaryNavigation />
       
       <main id="main-content" className="flex-grow w-full" role="main">
-        {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-b from-primary/5 via-primary/10 to-background">
-          {/* Background Effects */}
-          <div className="absolute inset-0 bg-grid-pattern opacity-5" aria-hidden="true" />
-          <div className="absolute top-20 left-10 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" aria-hidden="true" />
-          <div className="absolute bottom-20 right-10 w-80 h-80 bg-primary/5 rounded-full blur-3xl animate-pulse delay-1000" aria-hidden="true" />
-          
-          <Container size="xl" padding="lg" verticalSpacing="xl">
-            {/* Trust Indicators */}
-            <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-16 text-muted-foreground text-sm">
-              <div className="flex items-center gap-2 bg-accent/50 rounded-full px-4 py-2 backdrop-blur-sm">
-                <Shield className="h-4 w-4" aria-hidden="true" />
-                <span className="font-medium">Bank-level security</span>
-              </div>
-              <div className="flex items-center gap-2 bg-accent/50 rounded-full px-4 py-2 backdrop-blur-sm">
-                <Brain className="h-4 w-4" aria-hidden="true" />
-                <span className="font-medium">AI-powered organization</span>
-              </div>
-              <div className="flex items-center gap-2 bg-accent/50 rounded-full px-4 py-2 backdrop-blur-sm">
-                <Users className="h-4 w-4" aria-hidden="true" />
-                <span className="font-medium">Trusted by 10,000+ users</span>
-              </div>
-            </div>
-
-            {/* Hero Content */}
-            <div className="text-center space-y-8 max-w-4xl mx-auto">
-              <Typography.H1 className="text-center">
-                Turn the internet into your personal{' '}
-                <span className="text-primary relative">
-                  knowledge library
-                  <Sparkles className="absolute -top-4 -right-8 h-8 w-8 text-primary/70 animate-pulse" aria-hidden="true" />
-                </span>
-              </Typography.H1>
-              
-              <Typography.Lead className="text-center max-w-3xl mx-auto">
-                Save any webpage, document, or file. Let AI organize everything perfectly. 
-                <span className="font-semibold text-foreground"> Find anything instantly</span> 
-                with natural language search.
-              </Typography.Lead>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Button 
-                  size="lg" 
-                  onClick={() => navigate('/register')} 
-                  className="group shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                >
-                  <Sparkles className="mr-2 h-5 w-5 transition-transform group-hover:rotate-12" aria-hidden="true" />
-                  Start building your library
-                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-                </Button>
-                
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  onClick={() => navigate('/demo')}
-                  className="hover:bg-accent transition-all duration-300 hover:-translate-y-1"
-                >
-                  See how it works
-                </Button>
-              </div>
-
-              {/* Social Proof */}
-              <div className="pt-8 space-y-4">
-                <div className="flex items-center justify-center gap-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star key={star} className="h-5 w-5 text-yellow-400 fill-current" aria-hidden="true" />
-                  ))}
-                </div>
-                <Typography.Small className="text-center">
-                  4.9 stars from 2,500+ happy users
-                </Typography.Small>
-              </div>
-            </div>
-          </Container>
-        </section>
-
-        {/* Quick Access for Logged In Users */}
+        <MarketingHeroSection />
+        
+        {/* Quick Access Section for returning users */}
         {isLoggedIn && (
-          <section className="py-16 bg-muted/30">
-            <Container size="xl" padding="lg">
+          <section className="py-16 bg-muted/30" aria-labelledby="quick-access-heading">
+            <div className="container mx-auto px-4">
               <div className="text-center mb-12">
-                <Typography.H2>Welcome back!</Typography.H2>
-                <Typography.Lead>Quick access to your most used features</Typography.Lead>
+                <h2 id="quick-access-heading" className="text-3xl font-bold mb-4">Welcome back!</h2>
+                <p className="text-xl text-muted-foreground">
+                  Quick access to your most used features
+                </p>
               </div>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 {quickActions.map((action) => (
                   <Card 
                     key={action.title} 
-                    className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 border-2 hover:border-primary/20"
+                    className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 group"
                     onClick={action.action}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        action.action();
+                      }
+                    }}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`${action.title}: ${action.description}`}
                   >
-                    <CardHeader className="text-center pb-2">
-                      <div className={cn(
-                        "w-12 h-12 mx-auto mb-4 rounded-full flex items-center justify-center",
-                        action.color
-                      )}>
+                    <CardHeader className="text-center">
+                      <div className={`w-12 h-12 mx-auto mb-4 ${action.color} rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <action.icon className="h-6 w-6 text-white" aria-hidden="true" />
                       </div>
                       <CardTitle className="text-lg">{action.title}</CardTitle>
+                      <CardDescription>{action.description}</CardDescription>
                     </CardHeader>
-                    <CardContent className="text-center">
-                      <CardDescription className="mb-4">
-                        {action.description}
-                      </CardDescription>
+                    <CardContent>
                       <Button 
                         variant="outline" 
-                        size="sm"
-                        className="w-full"
+                        className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          action.action();
+                        }}
                       >
+                        <Sparkles className="h-4 w-4 mr-2" />
                         Access Now
                       </Button>
                     </CardContent>
                   </Card>
                 ))}
               </div>
-            </Container>
+            </div>
           </section>
         )}
-
-        {/* Features Section */}
-        <section className="py-20">
-          <Container size="xl" padding="lg">
-            <div className="text-center mb-16">
-              <Typography.H2>Everything you need to organize your knowledge</Typography.H2>
-              <Typography.Lead>
-                Powerful features designed to make knowledge management effortless
-              </Typography.Lead>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {features.map((feature, index) => (
-                <div key={index} className="text-center space-y-4">
-                  <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center">
-                    <feature.icon className="h-8 w-8 text-primary" aria-hidden="true" />
-                  </div>
-                  <Typography.H4>{feature.title}</Typography.H4>
-                  <Typography.Small>{feature.description}</Typography.Small>
-                </div>
-              ))}
-            </div>
-          </Container>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-primary text-primary-foreground">
-          <Container size="lg" padding="lg">
-            <div className="text-center space-y-8">
-              <Typography.H2 className="text-primary-foreground">
-                Ready to transform how you manage knowledge?
-              </Typography.H2>
-              <Typography.Lead className="text-primary-foreground/90">
-                Join thousands of professionals who never lose important information again.
-              </Typography.Lead>
-              <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Button 
-                  size="lg" 
-                  variant="secondary"
-                  onClick={() => navigate('/register')}
-                  className="shadow-lg hover:shadow-xl transition-all duration-300"
-                >
-                  Get Started Free
-                </Button>
-                <Button 
-                  size="lg" 
-                  variant="outline"
-                  onClick={() => navigate('/contact')}
-                  className="border-primary-foreground/20 text-primary-foreground hover:bg-primary-foreground/10"
-                >
-                  Contact Sales
-                </Button>
-              </div>
-            </div>
-          </Container>
-        </section>
+        
+        <SocialProofSection />
+        <ImprovedPageShowcase />
+        <FeaturesSection />
+        <UseCasesSection />
+        <TestimonialsSection />
+        <MarketingPricingSection />
+        <TrustSignalsSection />
+        <FAQSection />
+        <CTASection />
       </main>
+      
+      <ImprovedFooter />
     </div>
   );
 };

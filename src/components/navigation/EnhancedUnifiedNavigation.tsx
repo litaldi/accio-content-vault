@@ -1,11 +1,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import EnhancedAccessibilityButton from '@/components/accessibility/EnhancedAccessibilityButton';
 import { 
   Menu, 
   X, 
@@ -39,7 +37,6 @@ const EnhancedUnifiedNavigation: React.FC<EnhancedUnifiedNavigationProps> = ({
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { isMobile } = useResponsiveDesign();
-  const { preferences } = useAccessibility();
 
   // Optimized scroll handler
   useEffect(() => {
@@ -97,8 +94,7 @@ const EnhancedUnifiedNavigation: React.FC<EnhancedUnifiedNavigationProps> = ({
     <header 
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300 border-b bg-background/95 backdrop-blur-md",
-        scrolled && "shadow-sm",
-        preferences.highContrast && "border-foreground"
+        scrolled && "shadow-sm"
       )}
       role="banner"
     >
@@ -144,55 +140,69 @@ const EnhancedUnifiedNavigation: React.FC<EnhancedUnifiedNavigationProps> = ({
               ))}
             </nav>
           )}
-          
+
           {/* Right Actions */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <ModeToggle />
-            <EnhancedAccessibilityButton />
             
             {isLoggedIn ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className="relative h-8 w-8 rounded-full focus-visible:ring-2 focus-visible:ring-primary"
-                    aria-label="User menu"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        {user?.email?.charAt(0).toUpperCase() || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg z-50">
-                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
-                    <Home className="mr-2 h-4 w-4" />
-                    Dashboard
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate('/settings')}>
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <>
+                {/* Quick Search Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate('/search')}
+                  className="hidden sm:flex items-center gap-2"
+                  aria-label="Search content"
+                >
+                  <Search className="h-4 w-4" />
+                  <span className="hidden lg:inline">Search</span>
+                </Button>
+
+                {/* User Menu */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      className="relative h-8 w-8 rounded-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                      aria-label="User menu"
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-primary/10 text-primary">
+                          {user?.email?.charAt(0).toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                      <Home className="mr-2 h-4 w-4" />
+                      Dashboard
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/settings')}>
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             ) : (
               <div className="hidden md:flex items-center gap-2">
                 <Button 
                   variant="ghost" 
                   onClick={() => navigate('/login')}
-                  className="focus-visible:ring-2 focus-visible:ring-primary"
+                  className="text-sm"
                 >
                   Sign In
                 </Button>
                 <Button 
                   onClick={() => navigate('/register')}
-                  className="focus-visible:ring-2 focus-visible:ring-primary shadow-sm"
+                  className="text-sm"
                 >
                   Get Started
                 </Button>
@@ -200,55 +210,66 @@ const EnhancedUnifiedNavigation: React.FC<EnhancedUnifiedNavigationProps> = ({
             )}
             
             {/* Mobile Menu */}
-            {isMobile && (
-              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-                <SheetTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    size="icon" 
-                    className="md:hidden"
-                    aria-label="Toggle navigation menu"
-                  >
-                    {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="right" className="w-[300px] z-50">
-                  <SheetHeader>
-                    <SheetTitle>Navigation</SheetTitle>
-                  </SheetHeader>
-                  <nav className="flex flex-col gap-4 mt-6" role="navigation" aria-label="Mobile navigation">
-                    {currentNavItems.map((item) => (
-                      <Link 
-                        key={item.path}
-                        to={item.path} 
-                        className={cn(
-                          "flex items-center gap-3 p-3 rounded-lg transition-all",
-                          "focus-visible:ring-2 focus-visible:ring-primary",
-                          isActiveLink(item.path) 
-                            ? "bg-primary text-primary-foreground" 
-                            : "hover:bg-accent"
-                        )}
-                        onClick={() => setMobileMenuOpen(false)}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="md:hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  aria-label="Navigation menu"
+                >
+                  {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px]">
+                <SheetHeader>
+                  <SheetTitle>Menu</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col gap-4 mt-6">
+                  {currentNavItems.map((item) => (
+                    <Link 
+                      key={item.path}
+                      to={item.path} 
+                      className={cn(
+                        "flex items-center gap-3 p-3 rounded-lg transition-all",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                        isActiveLink(item.path) 
+                          ? "bg-primary text-primary-foreground" 
+                          : "hover:bg-accent"
+                      )}
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      {item.label}
+                    </Link>
+                  ))}
+                  
+                  {!isLoggedIn && (
+                    <div className="flex flex-col gap-2 pt-4 border-t">
+                      <Button onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
+                        Get Started
+                      </Button>
+                      <Button variant="outline" onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
+                        Sign In
+                      </Button>
+                    </div>
+                  )}
+
+                  {isLoggedIn && (
+                    <div className="pt-4 border-t">
+                      <Button 
+                        variant="destructive" 
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2"
                       >
-                        <item.icon className="h-5 w-5" />
-                        {item.label}
-                      </Link>
-                    ))}
-                    
-                    {!isLoggedIn && (
-                      <div className="flex flex-col gap-2 pt-4 border-t">
-                        <Button onClick={() => { navigate('/register'); setMobileMenuOpen(false); }}>
-                          Get Started
-                        </Button>
-                        <Button variant="outline" onClick={() => { navigate('/login'); setMobileMenuOpen(false); }}>
-                          Sign In
-                        </Button>
-                      </div>
-                    )}
-                  </nav>
-                </SheetContent>
-              </Sheet>
-            )}
+                        <LogOut className="h-4 w-4" />
+                        Sign Out
+                      </Button>
+                    </div>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
       </div>

@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import EnhancedAccessibilityButton from '@/components/accessibility/EnhancedAccessibilityButton';
 import { UnifiedAuthModal } from '@/components/auth/UnifiedAuthModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { LogIn, UserPlus } from 'lucide-react';
