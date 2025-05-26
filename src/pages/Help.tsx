@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ResponsiveNavigation from '@/components/navigation/ResponsiveNavigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -77,35 +76,37 @@ const Help = () => {
         <title>Help & Support - Get Expert Assistance | Accio</title>
         <meta name="description" content="Get help with Accio. Find answers to common questions, browse documentation, and contact our support team." />
         <meta name="keywords" content="help, support, FAQ, documentation, contact, assistance" />
+        <link rel="canonical" href="/help" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
       </Helmet>
 
-      <MainNavigation />
+      <ResponsiveNavigation />
 
       <main className="flex-grow">
-        {/* Hero Section */}
-        <section className="py-16 bg-gradient-to-br from-primary/5 via-blue-50 to-purple-50 dark:from-primary/10 dark:via-blue-950/30 dark:to-purple-950/30">
-          <div className="container mx-auto px-4 max-w-6xl text-center">
-            <Badge variant="secondary" className="mb-6 px-6 py-3 text-sm font-semibold">
-              <HelpCircle className="h-4 w-4 mr-2" />
+        {/* Hero Section - Responsive */}
+        <section className="py-12 sm:py-16 bg-gradient-to-br from-primary/5 via-blue-50 to-purple-50 dark:from-primary/10 dark:via-blue-950/30 dark:to-purple-950/30">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl text-center">
+            <Badge variant="secondary" className="mb-6 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-semibold">
+              <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
               24/7 Support Available
             </Badge>
             
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               We're Here to
               <span className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent block mt-2">
                 Help You Succeed
               </span>
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
               Find answers, get support, and master Accio with our comprehensive help resources. 
               Your success is our mission.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
               <Button size="lg" className="gap-2 shadow-lg" asChild>
                 <Link to="#faq">
-                  <Search className="h-5 w-5" />
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5" />
                   Find Answers
                 </Link>
               </Button>
@@ -117,11 +118,11 @@ const Help = () => {
           </div>
         </section>
 
-        {/* Help Resources */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        {/* Help Resources - Responsive Grid */}
+        <section className="py-12 sm:py-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <div className="text-center mb-8 sm:mb-12">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
                 Multiple Ways to Get Help
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -129,7 +130,7 @@ const Help = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
               {helpResources.map((resource, index) => (
                 <Card key={index} className="hover:shadow-xl transition-all group border-0 bg-gradient-to-br from-background to-accent/10">
                   <CardHeader className="text-center pb-4">
@@ -155,9 +156,9 @@ const Help = () => {
           </div>
         </section>
 
-        {/* FAQ Section */}
-        <section id="faq" className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4 max-w-4xl">
+        {/* FAQ Section - Responsive */}
+        <section id="faq" className="py-12 sm:py-16 bg-muted/30">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Frequently Asked Questions
@@ -187,9 +188,9 @@ const Help = () => {
           </div>
         </section>
 
-        {/* Quick Start Guide */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 max-w-6xl">
+        {/* Quick Start Guide - Responsive */}
+        <section className="py-12 sm:py-16">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Quick Start Guide

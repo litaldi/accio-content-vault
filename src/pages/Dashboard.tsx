@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ResponsiveNavigation from '@/components/navigation/ResponsiveNavigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -60,31 +59,40 @@ const Dashboard = () => {
       <Helmet>
         <title>Knowledge Hub - Your AI-Powered Command Center | Accio</title>
         <meta name="description" content="Your personal knowledge command center. Track discoveries, manage collections, and unlock insights from your AI-organized knowledge base." />
+        <link rel="canonical" href="/dashboard" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
       </Helmet>
 
-      <MainNavigation />
+      <ResponsiveNavigation />
 
       <main className="flex-grow">
-        {/* Enhanced Header Section */}
-        <section className="py-8 border-b bg-gradient-to-r from-primary/5 via-blue-50 to-purple-50 dark:from-primary/10 dark:via-blue-950/30 dark:to-purple-950/30">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Enhanced Header Section - Responsive */}
+        <section className="py-8 sm:py-12 border-b bg-gradient-to-r from-primary/5 via-blue-50 to-purple-50 dark:from-primary/10 dark:via-blue-950/30 dark:to-purple-950/30">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <div className="flex flex-col gap-4 sm:gap-6">
               <div>
-                <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                  <Brain className="h-8 w-8 text-primary" />
-                  Welcome back, knowledge architect!
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 flex items-center gap-3">
+                  <Brain className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+                  <span className="leading-tight">Welcome back, knowledge architect!</span>
                 </h1>
-                <p className="text-muted-foreground text-lg">
+                <p className="text-muted-foreground text-base sm:text-lg mb-3 sm:mb-4">
                   Your brilliant discoveries are growing your knowledge empire
                 </p>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm">
+                  <Badge variant="secondary" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200 w-fit">
+                    <Sparkles className="h-3 w-3 mr-1" />
+                    12-day learning streak
+                  </Badge>
+                  <span className="text-muted-foreground">Last active: Today at 2:30 PM</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/80">
-                  <Search className="h-4 w-4" />
-                  Find Anything
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button variant="outline" size="lg" className="flex items-center gap-2 hover:bg-accent/80">
+                  <Search className="h-4 w-4 sm:h-5 sm:w-5" />
+                  Quick Search
                 </Button>
-                <Button className="flex items-center gap-2 shadow-lg bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
-                  <Plus className="h-4 w-4" />
+                <Button size="lg" className="flex items-center gap-2 shadow-lg bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
+                  <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
                   Capture New Discovery
                 </Button>
               </div>
@@ -92,33 +100,34 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <div className="container mx-auto px-4 max-w-6xl py-8 space-y-8">
-          {/* Enhanced Quick Stats */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-6 sm:py-8 space-y-8 sm:space-y-10">
+          {/* Enhanced Quick Stats - Responsive Grid */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {quickStats.map((stat, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all group border-0 bg-gradient-to-br from-background to-accent/20">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-muted-foreground font-medium">{stat.label}</p>
-                      <p className="text-3xl font-bold mt-1">{stat.value}</p>
-                      <Badge variant="secondary" className="mt-2 text-xs bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
-                        {stat.growth} this week
-                      </Badge>
+              <Card key={index} className="hover:shadow-xl transition-all duration-300 group border-0 bg-gradient-to-br from-background to-accent/20 hover:scale-105">
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <div className={`w-10 h-10 sm:w-14 sm:h-14 rounded-xl bg-${stat.color}-500/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+                      <stat.icon className={`h-5 w-5 sm:h-7 sm:w-7 text-${stat.color}-500`} />
                     </div>
-                    <div className={`w-14 h-14 rounded-xl bg-${stat.color}-500/10 flex items-center justify-center group-hover:scale-110 transition-transform`}>
-                      <stat.icon className={`h-7 w-7 text-${stat.color}-500`} />
-                    </div>
+                    <Badge variant="secondary" className="text-xs bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200">
+                      {stat.growth}
+                    </Badge>
+                  </div>
+                  <div>
+                    <p className="text-xs sm:text-sm text-muted-foreground font-medium mb-1">{stat.label}</p>
+                    <p className="text-xl sm:text-3xl font-bold mb-1">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.description}</p>
                   </div>
                 </CardContent>
               </Card>
             ))}
           </div>
 
-          {/* Main Content Grid */}
-          <div className="grid lg:grid-cols-3 gap-8">
+          {/* Main Content Grid - Responsive */}
+          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Enhanced Recent Activity */}
-            <Card className="lg:col-span-2 border-0 shadow-lg">
+            <Card className="lg:col-span-2 border-0 shadow-xl">
               <CardHeader className="pb-3">
                 <CardTitle className="flex items-center gap-2 text-xl">
                   <Sparkles className="h-5 w-5 text-primary" />
@@ -159,8 +168,9 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Enhanced Quick Actions */}
-            <div className="space-y-6">
+            {/* Enhanced Sidebar - Responsive */}
+            <div className="space-y-4 sm:space-y-6">
+              {/* Enhanced Quick Actions */}
               <Card className="border-0 shadow-lg">
                 <CardHeader>
                   <CardTitle className="text-lg">Quick Actions</CardTitle>

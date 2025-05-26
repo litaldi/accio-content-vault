@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ResponsiveNavigation from '@/components/navigation/ResponsiveNavigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -69,46 +68,56 @@ const Collections = () => {
       <Helmet>
         <title>My Collections - Organized Knowledge Brilliance | Accio</title>
         <meta name="description" content="Your smart collections of organized knowledge. Browse, manage, and discover insights from your AI-organized content libraries." />
+        <link rel="canonical" href="/collections" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
       </Helmet>
 
-      <MainNavigation />
+      <ResponsiveNavigation />
 
       <main className="flex-grow">
-        {/* Enhanced Header Section */}
-        <section className="py-8 border-b bg-gradient-to-r from-purple/5 via-blue-50 to-primary/5 dark:from-purple-950/20 dark:via-blue-950/30 dark:to-primary/10">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Enhanced Header Section - Responsive */}
+        <section className="py-8 sm:py-12 border-b bg-gradient-to-r from-purple/5 via-blue-50 to-primary/5 dark:from-purple-950/20 dark:via-blue-950/30 dark:to-primary/10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <div className="flex flex-col gap-4 sm:gap-6">
               <div>
-                <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                  <Brain className="h-8 w-8 text-primary" />
-                  My Knowledge Collections
+                <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 flex items-center gap-3">
+                  <Brain className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+                  <span className="leading-tight">My Knowledge Collections</span>
                 </h1>
-                <p className="text-muted-foreground text-lg">
+                <p className="text-muted-foreground text-base sm:text-lg mb-3 sm:mb-4">
                   Your brilliantly organized content libraries, perfected by AI
                 </p>
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-sm">
+                  <Badge variant="secondary" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200 w-fit">
+                    {collections.length} Active Collections
+                  </Badge>
+                  <span className="text-muted-foreground">
+                    {collections.reduce((sum, col) => sum + col.itemCount, 0)} Total Items
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/80">
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button variant="outline" size="lg" className="flex items-center gap-2 hover:bg-accent/80">
                   <Search className="h-4 w-4" />
                   Search Collections
                 </Button>
-                <Button variant="outline" className="flex items-center gap-2 hover:bg-accent/80">
+                <Button variant="outline" size="lg" className="flex items-center gap-2 hover:bg-accent/80">
                   <Filter className="h-4 w-4" />
                   Smart Filters
                 </Button>
-                <Button className="flex items-center gap-2 shadow-lg bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
+                <Button size="lg" className="flex items-center gap-2 shadow-lg bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
                   <Plus className="h-4 w-4" />
-                  Create New Collection
+                  Create Collection
                 </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Collections Grid */}
-        <section className="py-8">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Collections Grid - Responsive */}
+        <section className="py-8 sm:py-10">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {collections.map((collection) => (
                 <Card key={collection.id} className="hover:shadow-xl transition-all group border-0 bg-gradient-to-br from-background to-accent/10 cursor-pointer">
                   <CardHeader className="pb-3">
@@ -178,9 +187,9 @@ const Collections = () => {
           </div>
         </section>
 
-        {/* Tips Section */}
-        <section className="py-8 bg-muted/30">
-          <div className="container mx-auto px-4 max-w-6xl">
+        {/* Tips Section - Responsive */}
+        <section className="py-8 sm:py-10 bg-muted/30">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
             <Card className="border-0 shadow-lg bg-gradient-to-r from-primary/5 to-blue-50 dark:from-primary/10 dark:to-blue-950/30">
               <CardContent className="p-8 text-center">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
