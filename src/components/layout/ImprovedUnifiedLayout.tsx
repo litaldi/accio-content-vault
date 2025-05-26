@@ -8,8 +8,6 @@ import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
 import { Toaster } from '@/components/ui/toaster';
-import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 interface ImprovedUnifiedLayoutProps {
   children: React.ReactNode;
@@ -31,11 +29,6 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
 }) => {
   const { isMobile } = useResponsiveDesign();
   const { preferences, announceToScreenReader } = useAccessibility();
-
-  const handleQuickAction = () => {
-    announceToScreenReader('Navigating to save content page');
-    window.location.href = '/save';
-  };
 
   return (
     <div 

@@ -1,44 +1,55 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@/contexts/AuthContext';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ModeToggle } from '@/components/ui/mode-toggle';
+import { Badge } from '@/components/ui/badge';
 import { 
   Menu, 
   X, 
   Home, 
   BookOpen, 
-  Save, 
   BarChart3, 
-  User, 
+  Users, 
   Settings, 
-  LogOut,
-  Globe,
-  ChevronDown
+  LogOut, 
+  Plus,
+  Search,
+  User,
+  Languages,
+  Sparkles
 } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
-import { copy } from '@/utils/copy';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 
 const MainNavigation: React.FC = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const { preferences, updatePreferences, announceToScreenReader } = useAccessibility();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isMobile } = useResponsiveDesign();
+  const { preferences, announceToScreenReader, setLanguage } = useAccessibility();
+  
+  // Safely use auth context with fallback
+  let user = null;
+  let signOut = () => {};
+  
+  try {
+    const authContext = useAuth();
+    user = authContext.user;
+    signOut = authContext.signOut;
+  } catch (error) {
+    console.warn('AuthProvider not available, navigation will work in guest mode');
+  }
+
   const isLoggedIn = !!user;
 
-  // Handle scroll effect
+  // Optimized scroll handler
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
@@ -60,92 +71,66 @@ const MainNavigation: React.FC = () => {
     setMobileMenuOpen(false);
   }, [location.pathname]);
 
-  // Navigation items
-  const navigationItems = [
-    { 
-      path: '/', 
-      label: copy.nav.home || 'Home', 
-      icon: Home, 
-      requiresAuth: false 
-    },
-    { 
-      path: '/dashboard', 
-      label: copy.nav.dashboard, 
-      icon: Home, 
-      requiresAuth: true 
-    },
-    { 
-      path: '/save', 
-      label: copy.nav.saveContent, 
-      icon: Save, 
-      requiresAuth: true 
-    },
-    { 
-      path: '/collections', 
-      label: copy.nav.collections, 
-      icon: BookOpen, 
-      requiresAuth: true 
-    },
-    { 
-      path: '/analytics', 
-      label: copy.nav.analytics, 
-      icon: BarChart3, 
-      requiresAuth: true 
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      announceToScreenReader('Successfully signed out');
+      navigate('/');
+    } catch (error) {
+      announceToScreenReader('Error signing out');
     }
-  ];
-
-  const visibleItems = navigationItems.filter(item => 
-    !item.requiresAuth || isLoggedIn
-  );
-
-  const handleMobileMenuToggle = () => {
-    const newState = !mobileMenuOpen;
-    setMobileMenuOpen(newState);
-    announceToScreenReader(
-      newState ? 'Navigation menu opened' : 'Navigation menu closed'
-    );
+    setMobileMenuOpen(false);
   };
 
-  const handleSignOut = async () => {
-    await signOut();
-    announceToScreenReader('Successfully signed out');
-    navigate('/');
-  };
-
-  const handleLanguageChange = (lang: 'en' | 'he' | 'ar') => {
-    updatePreferences({ language: lang });
+  const handleLanguageChange = (lang: string) => {
+    setLanguage(lang);
     announceToScreenReader(`Language changed to ${lang === 'en' ? 'English' : lang === 'he' ? 'Hebrew' : 'Arabic'}`);
   };
 
+  // Navigation structure based on auth status
+  const publicNavItems = [
+    { path: '/', label: 'Home', icon: Home },
+    { path: '/features', label: 'Features', icon: BookOpen },
+    { path: '/pricing', label: 'Pricing', icon: BarChart3 },
+    { path: '/about', label: 'About', icon: Users }
+  ];
+
+  const userNavItems = [
+    { path: '/dashboard', label: 'Dashboard', icon: Home },
+    { path: '/save', label: 'Save Content', icon: Plus },
+    { path: '/collections', label: 'Collections', icon: BookOpen },
+    { path: '/analytics', label: 'Analytics', icon: BarChart3 }
+  ];
+
+  const currentNavItems = isLoggedIn ? userNavItems : publicNavItems;
+
   const isActiveLink = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
+    if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
 
   return (
     <header 
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300 border-b",
-        scrolled 
-          ? 'bg-background/95 backdrop-blur-md shadow-sm' 
-          : 'bg-background border-transparent',
-        preferences.highContrast && "border-2 border-foreground"
+        "sticky top-0 z-50 w-full transition-all duration-300 border-b bg-background/95 backdrop-blur-md",
+        scrolled && "shadow-sm",
+        preferences.highContrast && "border-2 border-foreground",
+        "supports-[backdrop-filter]:bg-background/60"
       )}
       role="banner"
       dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Enhanced Logo */}
           <Link 
             to="/" 
             className={cn(
-              "flex items-center gap-3 transition-all duration-200 hover:opacity-90",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1"
+              "flex items-center gap-3 transition-all duration-200 hover:opacity-90 rounded-lg p-2",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
             )}
-            aria-label="Accio - Go to homepage"
+            aria-label="Accio - Your Knowledge Library - Go to homepage"
+            onClick={() => announceToScreenReader('Navigating to homepage')}
           >
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
               <span className="text-primary-foreground font-bold text-xl" aria-hidden="true">A</span>
@@ -159,222 +144,260 @@ const MainNavigation: React.FC = () => {
           {/* Desktop Navigation */}
           <nav 
             className="hidden md:flex items-center gap-1" 
-            role="navigation"
+            role="navigation" 
             aria-label="Main navigation"
           >
-            <ul className="flex items-center gap-1" role="menubar">
-              {visibleItems.map((item) => (
-                <li key={item.path} role="none">
-                  <Link
-                    to={item.path}
-                    role="menuitem"
-                    className={cn(
-                      "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                      isActiveLink(item.path) 
-                        ? "bg-primary text-primary-foreground shadow-sm" 
-                        : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                    )}
-                    aria-current={isActiveLink(item.path) ? 'page' : undefined}
-                    tabIndex={0}
-                  >
-                    <item.icon className="h-4 w-4" aria-hidden="true" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            {currentNavItems.map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={cn(
+                  "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                  "hover:bg-accent hover:text-accent-foreground",
+                  isActiveLink(item.path) 
+                    ? "bg-primary text-primary-foreground shadow-sm" 
+                    : "text-muted-foreground"
+                )}
+                aria-current={isActiveLink(item.path) ? 'page' : undefined}
+                onClick={() => announceToScreenReader(`Navigating to ${item.label}`)}
+              >
+                <item.icon className="h-4 w-4" aria-hidden="true" />
+                <span>{item.label}</span>
+              </Link>
+            ))}
           </nav>
-          
+
           {/* Right Actions */}
           <div className="flex items-center gap-3">
             {/* Language Toggle */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="sm"
-                  className="hidden sm:flex items-center gap-2"
+                  className="flex items-center gap-1 focus-visible:ring-2 focus-visible:ring-primary"
                   aria-label="Change language"
                 >
-                  <Globe className="h-4 w-4" />
-                  <span className="uppercase text-xs">{preferences.language}</span>
-                  <ChevronDown className="h-3 w-3" />
+                  <Languages className="h-4 w-4" />
+                  <span className="hidden sm:inline text-xs uppercase">
+                    {preferences.language}
+                  </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-40">
+              <DropdownMenuContent align="end" className="w-32">
                 <DropdownMenuItem onClick={() => handleLanguageChange('en')}>
-                  🇺🇸 English
+                  English
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleLanguageChange('he')}>
-                  🇮🇱 עברית
+                  עברית
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleLanguageChange('ar')}>
-                  🇸🇦 العربية
+                  العربية
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Theme Toggle */}
             <ModeToggle />
             
-            {/* User Menu or Auth Buttons */}
             {isLoggedIn ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className="relative h-8 w-8 rounded-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                    aria-label="User menu"
-                    aria-haspopup="true"
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        {user?.email?.charAt(0).toUpperCase() || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="px-2 py-1.5 text-sm font-medium">
-                    {user?.email?.split('@')[0] || 'User'}
-                  </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard" className="flex items-center cursor-pointer">
+              <>
+                {/* Quick Search Button */}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    navigate('/search');
+                    announceToScreenReader('Opening search page');
+                  }}
+                  className="hidden sm:flex items-center gap-2 focus-visible:ring-2 focus-visible:ring-primary"
+                  aria-label="Search your content"
+                >
+                  <Search className="h-4 w-4" />
+                  <span className="hidden lg:inline">Search</span>
+                </Button>
+
+                {/* User Menu */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button 
+                      variant="ghost" 
+                      className="relative h-8 w-8 rounded-full focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                      aria-label={`User menu for ${user?.email || 'user'}`}
+                    >
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback className="bg-primary/10 text-primary">
+                          {user?.email?.charAt(0).toUpperCase() || 'U'}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
+                      {user?.email || 'User'}
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                       <Home className="mr-2 h-4 w-4" />
                       Dashboard
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings" className="flex items-center cursor-pointer">
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/settings')}>
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
             ) : (
               <div className="hidden md:flex items-center gap-2">
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/login">{copy.buttons.signIn}</Link>
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => {
+                    navigate('/login');
+                    announceToScreenReader('Opening sign in page');
+                  }}
+                  className="focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  Sign In
                 </Button>
-                <Button size="sm" asChild>
-                  <Link to="/register">{copy.buttons.getStarted}</Link>
+                <Button 
+                  size="sm"
+                  onClick={() => {
+                    navigate('/register');
+                    announceToScreenReader('Opening sign up page');
+                  }}
+                  className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 focus-visible:ring-2 focus-visible:ring-primary"
+                >
+                  <Sparkles className="h-4 w-4 mr-1" />
+                  Try Demo
                 </Button>
               </div>
             )}
             
-            {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-              onClick={handleMobileMenuToggle}
-              aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-navigation"
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
+            {/* Mobile Menu */}
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="md:hidden focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                  aria-expanded={mobileMenuOpen}
+                  aria-controls="mobile-navigation"
+                >
+                  {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+                </Button>
+              </SheetTrigger>
+              <SheetContent 
+                side={preferences.language === 'he' || preferences.language === 'ar' ? 'left' : 'right'} 
+                className="w-[300px]"
+                id="mobile-navigation"
+              >
+                <SheetHeader>
+                  <SheetTitle>Navigation Menu</SheetTitle>
+                </SheetHeader>
+                <nav className="flex flex-col gap-4 mt-6" role="navigation" aria-label="Mobile navigation">
+                  {currentNavItems.map((item) => (
+                    <Link 
+                      key={item.path}
+                      to={item.path} 
+                      className={cn(
+                        "flex items-center gap-3 p-3 rounded-lg transition-all",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                        isActiveLink(item.path) 
+                          ? "bg-primary text-primary-foreground" 
+                          : "hover:bg-accent"
+                      )}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        announceToScreenReader(`Navigating to ${item.label}`);
+                      }}
+                      aria-current={isActiveLink(item.path) ? 'page' : undefined}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      {item.label}
+                    </Link>
+                  ))}
+                  
+                  {/* Mobile-only additional options */}
+                  {isLoggedIn && (
+                    <>
+                      <Link 
+                        to="/search"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          announceToScreenReader('Opening search page');
+                        }}
+                      >
+                        <Search className="h-5 w-5" />
+                        Search
+                      </Link>
+                      <Link 
+                        to="/settings"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          announceToScreenReader('Opening settings page');
+                        }}
+                      >
+                        <Settings className="h-5 w-5" />
+                        Settings
+                      </Link>
+                    </>
+                  )}
+                  
+                  {!isLoggedIn && (
+                    <div className="flex flex-col gap-2 pt-4 border-t">
+                      <Button 
+                        onClick={() => { 
+                          navigate('/register'); 
+                          setMobileMenuOpen(false);
+                          announceToScreenReader('Opening sign up page');
+                        }}
+                        className="justify-start"
+                      >
+                        <Sparkles className="h-4 w-4 mr-2" />
+                        Try Demo
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => { 
+                          navigate('/login'); 
+                          setMobileMenuOpen(false);
+                          announceToScreenReader('Opening sign in page');
+                        }}
+                        className="justify-start"
+                      >
+                        <User className="h-4 w-4 mr-2" />
+                        Sign In
+                      </Button>
+                    </div>
+                  )}
+
+                  {isLoggedIn && (
+                    <div className="pt-4 border-t">
+                      <Button 
+                        variant="destructive" 
+                        onClick={handleLogout}
+                        className="w-full justify-start"
+                      >
+                        <LogOut className="h-4 w-4 mr-2" />
+                        Sign Out
+                      </Button>
+                    </div>
+                  )}
+                </nav>
+              </SheetContent>
+            </Sheet>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <nav
-            id="mobile-navigation"
-            className="md:hidden border-t bg-background py-4"
-            role="navigation"
-            aria-label="Mobile navigation"
-          >
-            <ul className="space-y-2 px-2" role="menu">
-              {visibleItems.map((item) => (
-                <li key={item.path} role="none">
-                  <Link 
-                    to={item.path}
-                    role="menuitem"
-                    className={cn(
-                      "flex items-center gap-3 p-3 rounded-lg transition-all",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                      isActiveLink(item.path) 
-                        ? "bg-primary text-primary-foreground" 
-                        : "hover:bg-accent"
-                    )}
-                    onClick={() => setMobileMenuOpen(false)}
-                    aria-current={isActiveLink(item.path) ? 'page' : undefined}
-                  >
-                    <item.icon className="h-5 w-5" aria-hidden="true" />
-                    <span>{item.label}</span>
-                  </Link>
-                </li>
-              ))}
-              
-              {/* Mobile Auth Buttons */}
-              {!isLoggedIn && (
-                <li role="none" className="pt-4 border-t space-y-2">
-                  <Button 
-                    className="w-full" 
-                    onClick={() => { 
-                      navigate('/register'); 
-                      setMobileMenuOpen(false); 
-                    }}
-                  >
-                    {copy.buttons.getStarted}
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => { 
-                      navigate('/login'); 
-                      setMobileMenuOpen(false); 
-                    }}
-                  >
-                    {copy.buttons.signIn}
-                  </Button>
-                </li>
-              )}
-
-              {/* Mobile Language Options */}
-              <li role="none" className="pt-4 border-t">
-                <div className="space-y-2">
-                  <p className="text-sm font-medium text-muted-foreground px-3">Language</p>
-                  <div className="grid grid-cols-3 gap-2">
-                    <Button
-                      variant={preferences.language === 'en' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handleLanguageChange('en')}
-                      className="text-xs"
-                    >
-                      🇺🇸 EN
-                    </Button>
-                    <Button
-                      variant={preferences.language === 'he' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handleLanguageChange('he')}
-                      className="text-xs"
-                    >
-                      🇮🇱 HE
-                    </Button>
-                    <Button
-                      variant={preferences.language === 'ar' ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => handleLanguageChange('ar')}
-                      className="text-xs"
-                    >
-                      🇸🇦 AR
-                    </Button>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </nav>
-        )}
       </div>
     </header>
   );
