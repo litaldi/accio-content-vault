@@ -36,11 +36,11 @@ const Login = () => {
       const { error: signInError } = await signIn(email, password);
       
       if (signInError) {
-        setError('Invalid email or password. Please try again.');
+        setError(signInError.message || 'Invalid email or password.');
       } else {
         toast({
           title: "Welcome back!",
-          description: "You've been successfully logged in.",
+          description: "You have been successfully signed in.",
         });
         navigate('/dashboard');
       }
@@ -55,7 +55,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
       <Helmet>
         <title>Sign In - Accio Knowledge Library</title>
-        <meta name="description" content="Sign in to your Accio account to access your personal knowledge library." />
+        <meta name="description" content="Sign in to your Accio account and access your personal knowledge library." />
       </Helmet>
 
       <div className="w-full max-w-md space-y-8">
@@ -137,10 +137,19 @@ const Login = () => {
               </Button>
             </form>
 
-            {/* Demo Notice */}
-            <div className="mt-4 p-3 bg-muted rounded-lg">
-              <p className="text-sm text-muted-foreground">
-                <strong>Demo:</strong> Use any email and password for testing
+            {/* Demo Credentials */}
+            <div className="mt-4 p-4 bg-muted rounded-lg">
+              <h3 className="font-medium mb-2">Demo Accounts</h3>
+              <div className="space-y-2 text-sm">
+                <div>
+                  <strong>Admin:</strong> admin@demo.com / Admin123!
+                </div>
+                <div>
+                  <strong>User:</strong> user@demo.com / User123!
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground mt-2">
+                Use these credentials to explore the app with sample data
               </p>
             </div>
           </CardContent>
@@ -151,7 +160,7 @@ const Login = () => {
           <p className="text-sm text-muted-foreground">
             Don't have an account?{' '}
             <Link to="/register" className="text-primary hover:underline font-medium">
-              Create one here
+              Sign up here
             </Link>
           </p>
         </div>
