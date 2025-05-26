@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
@@ -79,7 +78,7 @@ const Login = () => {
       const errorMessage = error.message || "Invalid credentials. Please try again.";
       setErrors({ submit: errorMessage });
       toast({
-        title: copy.errors.signIn,
+        title: copy.errors.authentication,
         description: errorMessage,
         variant: "destructive",
       });
