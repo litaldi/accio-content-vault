@@ -31,6 +31,7 @@ describe('Save Content End-to-End Flow', () => {
       login: jest.fn(),
       logout: jest.fn(),
       register: jest.fn(),
+      signInWithProvider: jest.fn(),
       isLoading: false,
       isConfigured: true,
     });
@@ -143,6 +144,7 @@ describe('Save Content End-to-End Flow', () => {
       login: jest.fn(),
       logout: jest.fn(),
       register: jest.fn(),
+      signInWithProvider: jest.fn(),
       isLoading: false,
       isConfigured: true,
     });

@@ -41,6 +41,7 @@ describe('Content Saving Integration', () => {
       login: jest.fn(),
       logout: jest.fn(),
       register: jest.fn(),
+      signInWithProvider: jest.fn(),
       isLoading: false,
       isConfigured: true
     });
@@ -136,6 +137,7 @@ describe('Content Saving Integration', () => {
       login: jest.fn(),
       logout: jest.fn(),
       register: jest.fn(),
+      signInWithProvider: jest.fn(),
       isLoading: false,
       isConfigured: true
     });

@@ -39,6 +39,7 @@ describe('End-to-End User Flows', () => {
       login: jest.fn(),
       logout: jest.fn(),
       register: jest.fn(),
+      signInWithProvider: jest.fn(),
       isLoading: false,
       isConfigured: true
     });

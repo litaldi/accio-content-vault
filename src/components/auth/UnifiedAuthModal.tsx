@@ -81,7 +81,10 @@ export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
     setIsLoading(true);
     try {
       if (activeTab === 'signup') {
-        await signUp(values.email, values.password, values.name);
+        await signUp(values.email, values.password, {
+          displayName: values.name,
+          subscribeNewsletter: false
+        });
       } else {
         await signIn(values.email, values.password);
       }
