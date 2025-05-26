@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -19,6 +18,7 @@ import Contact from '@/pages/Contact';
 import NotFound from '@/pages/NotFound';
 import QueryProvider from '@/providers/QueryProvider';
 import ChatWidget from '@/components/contact/ChatWidget';
+import Features from '@/pages/Features';
 
 const App: React.FC = () => {
   return (
@@ -32,6 +32,7 @@ const App: React.FC = () => {
                 <main className="flex-grow">
                   <Routes>
                     <Route path="/" element={<Home />} />
+                    <Route path="/features" element={<Features />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/search" element={<Search />} />
                     <Route path="/collections" element={<Collections />} />

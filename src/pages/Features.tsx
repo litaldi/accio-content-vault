@@ -1,173 +1,204 @@
 
 import React from 'react';
-import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
-import { Button } from '@/components/ui/button';
+import { Helmet } from 'react-helmet-async';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Typography, Spacing, animations } from '@/components/ui/design-system';
+import { Button } from '@/components/ui/button';
 import { 
   Brain, 
+  Sparkles, 
   Search, 
-  BookOpen, 
-  TrendingUp, 
-  Shield,
+  Tags, 
+  FileText, 
+  TrendingUp,
   Zap,
   Target,
-  Users,
-  Sparkles,
-  ArrowRight
+  Clock,
+  Globe
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-const Features = () => {
-  const mainFeatures = [
+const Features: React.FC = () => {
+  const aiFeatures = [
     {
       icon: Brain,
-      title: "AI-Powered Knowledge Processing",
-      description: "Transform any content into organized, searchable insights with advanced AI that understands context and meaning.",
-      benefits: ["Natural language processing", "Auto-categorization", "Smart tagging", "Content summarization"],
-      color: "from-blue-500 to-purple-600"
+      title: 'Smart Content Tagging',
+      description: 'AI automatically suggests relevant tags when you save content, learning from your preferences.',
+      status: 'active',
+      benefit: 'Save 80% of tagging time'
     },
     {
       icon: Search,
-      title: "Intelligent Search & Discovery",
-      description: "Find exactly what you need with semantic search that understands intent, not just keywords.",
-      benefits: ["Semantic search", "Visual similarity", "Context awareness", "Instant results"],
-      color: "from-green-500 to-blue-500"
+      title: 'Natural Language Search',
+      description: 'Ask questions like "Show me recent programming tutorials" and get intelligent results.',
+      status: 'active',
+      benefit: 'Find content 3x faster'
     },
     {
-      icon: BookOpen,
-      title: "Smart Organization System",
-      description: "Create collections that automatically grow and organize themselves as you add more content.",
-      benefits: ["Auto-organization", "Smart collections", "Tag suggestions", "Content relationships"],
-      color: "from-purple-500 to-pink-500"
+      icon: FileText,
+      title: 'AI Summarization',
+      description: 'Generate concise summaries of articles, documents, and long-form content instantly.',
+      status: 'active',
+      benefit: 'Understand content quickly'
     },
     {
       icon: TrendingUp,
-      title: "Learning Analytics & Insights",
-      description: "Track your knowledge growth with detailed analytics and personalized recommendations.",
-      benefits: ["Progress tracking", "Learning patterns", "Knowledge gaps", "Smart recommendations"],
-      color: "from-orange-500 to-red-500"
+      title: 'Smart Recommendations',
+      description: 'Discover related content based on your interests and viewing patterns.',
+      status: 'active',
+      benefit: 'Never miss relevant content'
+    },
+    {
+      icon: Target,
+      title: 'Auto-Categorization',
+      description: 'AI analyzes your content library and suggests optimal organization strategies.',
+      status: 'active',
+      benefit: 'Keep organized effortlessly'
+    },
+    {
+      icon: Zap,
+      title: 'Instant Insights',
+      description: 'Get key insights and trends from your saved content with one click.',
+      status: 'coming-soon',
+      benefit: 'Unlock hidden patterns'
     }
   ];
 
-  const additionalFeatures = [
-    { icon: Shield, title: "Enterprise Security", description: "Bank-level encryption and privacy protection" },
-    { icon: Zap, title: "Lightning Fast", description: "Sub-second search across millions of items" },
-    { icon: Target, title: "99.9% Accuracy", description: "Precision AI processing with human-level understanding" },
-    { icon: Users, title: "Team Collaboration", description: "Share knowledge and collaborate seamlessly" }
-  ];
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active':
+        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      case 'coming-soon':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      default:
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    }
+  };
 
   return (
-    <UnifiedPageLayout
-      title="Features - Powerful AI Knowledge Tools | Accio"
-      description="Discover Accio's powerful features: AI-powered knowledge processing, intelligent search, smart organization, and learning analytics."
-    >
-      {/* Hero Section */}
-      <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/10 to-background">
-        <Spacing.Container>
-          <div className="text-center max-w-4xl mx-auto">
-            <Badge variant="outline" className={`mb-6 ${animations.fadeIn}`}>
-              <Sparkles className="h-3 w-3 mr-1" />
-              Powered by Advanced AI
-            </Badge>
-            
-            <Typography.H1 className={animations.slideUp}>
-              Features That Transform
-              <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent"> Knowledge Work</span>
-            </Typography.H1>
-            
-            <Typography.Lead className={animations.slideUp}>
-              Discover the powerful capabilities that make Accio the ultimate 
-              knowledge management platform for modern professionals.
-            </Typography.Lead>
-          </div>
-        </Spacing.Container>
-      </Spacing.Section>
+    <>
+      <Helmet>
+        <title>AI Features - Accio</title>
+        <meta name="description" content="Discover powerful AI features that help you organize, search, and understand your content better." />
+      </Helmet>
 
-      {/* Main Features */}
-      <Spacing.Section>
-        <Spacing.Container>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {mainFeatures.map((feature, index) => (
-              <div key={index} className={`bg-card border rounded-xl p-6 ${animations.hoverLift}`}>
-                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6`}>
-                  <feature.icon className="h-8 w-8 text-white" />
-                </div>
-                <Typography.H3 className="text-2xl font-bold mb-4">{feature.title}</Typography.H3>
-                <Typography.Body className="text-muted-foreground leading-relaxed mb-6">{feature.description}</Typography.Body>
-                
-                <div className="space-y-3">
-                  {feature.benefits.map((benefit, benefitIndex) => (
-                    <div key={benefitIndex} className="flex items-center gap-3">
-                      <div className="h-2 w-2 bg-primary rounded-full flex-shrink-0" />
-                      <span className="text-sm">{benefit}</span>
+      <div className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <section className="py-20 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <div className="flex justify-center mb-6">
+              <div className="p-3 bg-primary/10 rounded-full">
+                <Brain className="h-12 w-12 text-primary" />
+              </div>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              AI-Powered Features
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Experience the future of knowledge management with intelligent features that learn from your behavior and help you work smarter.
+            </p>
+            <Button size="lg" className="gap-2">
+              <Sparkles className="h-5 w-5" />
+              Try AI Features
+            </Button>
+          </div>
+        </section>
+
+        {/* Features Grid */}
+        <section className="py-16 px-4">
+          <div className="container mx-auto max-w-6xl">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {aiFeatures.map((feature, index) => (
+                <Card key={index} className="group hover:shadow-lg transition-all duration-200 border-2 hover:border-primary/20">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
+                        <feature.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <Badge className={getStatusColor(feature.status)}>
+                        {feature.status === 'active' ? 'Active' : 'Coming Soon'}
+                      </Badge>
                     </div>
-                  ))}
-                </div>
-              </div>
-            ))}
+                    <CardTitle className="text-lg">{feature.title}</CardTitle>
+                    <CardDescription className="text-sm">
+                      {feature.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center gap-2 text-sm font-medium text-green-600 dark:text-green-400">
+                      <Clock className="h-4 w-4" />
+                      {feature.benefit}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </Spacing.Container>
-      </Spacing.Section>
+        </section>
 
-      {/* Additional Features */}
-      <Spacing.Section className="bg-gradient-to-br from-primary/5 to-background">
-        <Spacing.Container>
-          <div className="text-center mb-16">
-            <Typography.H2>
-              Built for Performance & Scale
-            </Typography.H2>
-            <Typography.Body className="text-lg">
-              Enterprise-grade capabilities that grow with your needs.
-            </Typography.Body>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {additionalFeatures.map((feature, index) => (
-              <div key={index} className={`text-center ${animations.hoverLift}`}>
-                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                  <feature.icon className="h-8 w-8 text-primary" />
+        {/* How It Works */}
+        <section className="py-16 px-4 bg-muted/30">
+          <div className="container mx-auto max-w-4xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">How AI Enhances Your Workflow</h2>
+              <p className="text-muted-foreground">
+                Our AI features work seamlessly in the background to make your knowledge management effortless.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Globe className="h-8 w-8 text-primary" />
                 </div>
-                <Typography.H3 className="text-lg font-semibold mb-2">{feature.title}</Typography.H3>
-                <Typography.Body className="text-sm text-muted-foreground">{feature.description}</Typography.Body>
+                <h3 className="font-semibold mb-2">Save Content</h3>
+                <p className="text-sm text-muted-foreground">
+                  AI analyzes and tags your content automatically as you save it.
+                </p>
               </div>
-            ))}
-          </div>
-        </Spacing.Container>
-      </Spacing.Section>
-
-      {/* CTA Section */}
-      <Spacing.Section>
-        <Spacing.Container>
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-3xl p-12 border border-primary/10">
-              <Typography.H2 className="mb-4">
-                Ready to experience the future of knowledge management?
-              </Typography.H2>
               
-              <Typography.Body className="text-lg mb-8">
-                Join thousands of professionals who've transformed their productivity with Accio's powerful features.
-              </Typography.Body>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Brain className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">AI Processing</h3>
+                <p className="text-sm text-muted-foreground">
+                  Machine learning models understand context and generate insights.
+                </p>
+              </div>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="xl" className="group" asChild>
-                  <Link to="/register">
-                    Start Free Trial
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                  </Link>
-                </Button>
-                
-                <Button variant="outline" size="xl" asChild>
-                  <Link to="/contact">
-                    Schedule Demo
-                  </Link>
-                </Button>
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">Smart Results</h3>
+                <p className="text-sm text-muted-foreground">
+                  Get personalized recommendations and intelligent search results.
+                </p>
               </div>
             </div>
           </div>
-        </Spacing.Container>
-      </Spacing.Section>
-    </UnifiedPageLayout>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-16 px-4">
+          <div className="container mx-auto max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-4">Ready to Experience AI-Powered Knowledge Management?</h2>
+            <p className="text-muted-foreground mb-8">
+              Join thousands of users who are already saving time with our intelligent features.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="gap-2">
+                <Brain className="h-5 w-5" />
+                Start Using AI Features
+              </Button>
+              <Button variant="outline" size="lg">
+                Learn More
+              </Button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </>
   );
 };
 

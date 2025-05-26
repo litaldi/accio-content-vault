@@ -58,7 +58,7 @@ const MainNavigation = () => {
       to: '/features', 
       label: 'Features', 
       icon: Sparkles,
-      description: 'Discover all features'
+      description: 'Discover AI-powered features'
     },
     { 
       to: '/help', 
