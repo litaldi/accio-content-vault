@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { Zap, Brain, Search, Sync, Shield, Users } from 'lucide-react';
+import { Zap, Brain, Search, RefreshCw, Shield, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 
@@ -28,7 +27,7 @@ const FeaturesShowcase: React.FC = () => {
       color: "text-blue-600"
     },
     {
-      icon: Sync,
+      icon: RefreshCw,
       title: "Universal Sync",
       description: "Access your knowledge library from any device, anywhere. Real-time synchronization across platforms.",
       benefit: "Work from anywhere",
