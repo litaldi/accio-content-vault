@@ -10,6 +10,8 @@ import DashboardStats from './DashboardStats';
 import RecentActivity from './RecentActivity';
 import AchievementSystem from './AchievementSystem';
 import { ContentRecommendations } from '@/components/ContentRecommendations/ContentRecommendations';
+import { DashboardPersonalization } from '@/components/dashboard/DashboardPersonalization';
+import { DistractionFreeMode } from '@/components/reading/DistractionFreeMode';
 
 interface DashboardContentProps {
   userName: string;
@@ -48,6 +50,12 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
   onViewContent,
   onViewAllActivity,
 }) => {
+  const [readingModeContent, setReadingModeContent] = React.useState<SavedContent | null>(null);
+
+  const handleOpenReadingMode = (content: SavedContent) => {
+    setReadingModeContent(content);
+  };
+
   return (
     <>
       <WelcomeHeader
@@ -56,6 +64,11 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
         recentActivity={recentActivity.length}
         onAddContent={onAddContent}
       />
+      
+      {/* Dashboard Personalization */}
+      <div className="flex justify-end mb-4">
+        <DashboardPersonalization />
+      </div>
       
       <div className="grid lg:grid-cols-4 gap-8">
         <div className="lg:col-span-3 space-y-6">
@@ -79,6 +92,7 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
           <ContentList 
             contents={filteredContent}
             searchQuery={searchQuery}
+            onOpenReadingMode={handleOpenReadingMode}
           />
         </div>
         
@@ -102,6 +116,15 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
           />
         </div>
       </div>
+
+      {/* Distraction-Free Reading Mode */}
+      {readingModeContent && (
+        <DistractionFreeMode
+          content={readingModeContent}
+          isOpen={!!readingModeContent}
+          onClose={() => setReadingModeContent(null)}
+        />
+      )}
     </>
   );
 };
