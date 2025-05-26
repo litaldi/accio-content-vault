@@ -9,6 +9,7 @@ import ContentList from '@/components/ContentList';
 import DashboardStats from './DashboardStats';
 import RecentActivity from './RecentActivity';
 import AchievementSystem from './AchievementSystem';
+import { ContentRecommendations } from '@/components/ContentRecommendations/ContentRecommendations';
 
 interface DashboardContentProps {
   userName: string;
@@ -83,6 +84,11 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
         
         <div className="lg:col-span-1 space-y-6">
           <DashboardStats tagStats={tagStats} />
+          
+          <ContentRecommendations 
+            currentContent={filteredContent[0]} 
+            maxItems={3}
+          />
           
           <RecentActivity
             recentContent={recentActivity}

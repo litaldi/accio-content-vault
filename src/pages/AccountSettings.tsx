@@ -1,278 +1,381 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '@/components/Navbar';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
+import { TagsManager } from '@/components/TagsManager/TagsManager';
+import { 
+  User, 
+  Settings, 
+  Shield, 
+  Bell, 
+  Download,
+  Upload,
+  Trash2,
+  ExternalLink
+} from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useSubscription } from '@/hooks/useSubscription';
-import SubscriptionButton from '@/components/pricing/SubscriptionButton';
 
-const AccountSettings = () => {
-  const navigate = useNavigate();
+const AccountSettings: React.FC = () => {
+  const { user, signOut } = useAuth();
   const { toast } = useToast();
-  const { subscription, currentTier, isLoading } = useSubscription();
-  const [email, setEmail] = useState('user@example.com');
-  const [name, setName] = useState('Demo User');
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleProfileUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Updating profile:', { email, name });
+  // Mock settings state
+  const [settings, setSettings] = useState({
+    emailNotifications: true,
+    browserNotifications: false,
+    weeklyDigest: true,
+    autoTagging: true,
+    publicProfile: false,
+    dataCollection: true,
+  });
+
+  const handleSave = async () => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Settings saved",
+        description: "Your account settings have been updated successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save settings. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleExportData = () => {
+    // Simulate data export
+    const data = {
+      user: user?.email,
+      exportDate: new Date().toISOString(),
+      content: [], // Would be actual user content
+      tags: [],
+      settings: settings,
+    };
+    
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `accio-data-export-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
     
     toast({
-      title: 'Profile Updated',
-      description: 'Your profile has been successfully updated.',
+      title: "Export started",
+      description: "Your data export has been downloaded.",
     });
   };
 
-  const handlePasswordUpdate = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (newPassword !== confirmPassword) {
-      toast({
-        title: 'Passwords do not match',
-        description: 'The new password and confirmation do not match.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
-    if (newPassword.length < 8) {
-      toast({
-        title: 'Password too short',
-        description: 'Password must be at least 8 characters long.',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
-    console.log('Updating password');
-    
+  const handleDeleteAccount = () => {
+    // In a real app, this would show a confirmation dialog
     toast({
-      title: 'Password Updated',
-      description: 'Your password has been successfully changed.',
+      title: "Account deletion",
+      description: "Please contact support to delete your account.",
+      variant: "destructive",
     });
-    
-    setCurrentPassword('');
-    setNewPassword('');
-    setConfirmPassword('');
-  };
-
-  const handleLogout = () => {
-    navigate('/');
-  };
-
-  const getSubscriptionDisplayName = (tier: string) => {
-    switch (tier) {
-      case 'pro': return 'Pro Plan';
-      case 'team': return 'Team Plan';
-      default: return 'Free Plan';
-    }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar isLoggedIn={true} onLogout={handleLogout} />
-      
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold mb-8">Account Settings</h1>
-          
-          <Tabs defaultValue="profile">
-            <TabsList className="mb-6">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="password">Password</TabsTrigger>
-              <TabsTrigger value="subscription">Subscription</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="profile">
-              <Card>
-                <form onSubmit={handleProfileUpdate}>
-                  <CardHeader>
-                    <CardTitle>Profile Information</CardTitle>
-                    <CardDescription>Update your account details</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Name</Label>
-                      <Input
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <Button type="button" variant="outline" onClick={() => navigate('/dashboard')}>
-                      Cancel
-                    </Button>
-                    <Button type="submit">Save Changes</Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="password">
-              <Card>
-                <form onSubmit={handlePasswordUpdate}>
-                  <CardHeader>
-                    <CardTitle>Change Password</CardTitle>
-                    <CardDescription>Update your password</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="current-password">Current Password</Label>
-                      <Input
-                        id="current-password"
-                        type="password"
-                        value={currentPassword}
-                        onChange={(e) => setCurrentPassword(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="new-password">New Password</Label>
-                      <Input
-                        id="new-password"
-                        type="password"
-                        value={newPassword}
-                        onChange={(e) => setNewPassword(e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirm-password">Confirm New Password</Label>
-                      <Input
-                        id="confirm-password"
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                      />
-                    </div>
-                  </CardContent>
-                  <CardFooter className="flex justify-between">
-                    <Button type="button" variant="outline" onClick={() => navigate('/dashboard')}>
-                      Cancel
-                    </Button>
-                    <Button type="submit">Update Password</Button>
-                  </CardFooter>
-                </form>
-              </Card>
-            </TabsContent>
-            
-            <TabsContent value="subscription">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Subscription Plan</CardTitle>
-                  <CardDescription>Manage your subscription and billing</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {isLoading ? (
-                    <div className="text-center py-8">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-                      <p className="text-muted-foreground">Loading subscription details...</p>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="p-4 bg-secondary rounded-lg">
-                        <div className="flex justify-between items-center">
-                          <div>
-                            <h3 className="font-semibold text-lg">
-                              {getSubscriptionDisplayName(currentTier)}
-                            </h3>
-                            <p className="text-muted-foreground">
-                              {currentTier === 'free' 
-                                ? 'Limited features with basic functionality' 
-                                : 'Full access to premium features'}
-                            </p>
-                            {subscription?.subscription_end && (
-                              <p className="text-sm text-muted-foreground mt-1">
-                                {subscription.subscribed ? 'Renews' : 'Expires'} on {' '}
-                                {new Date(subscription.subscription_end).toLocaleDateString()}
-                              </p>
-                            )}
-                          </div>
-                          <div className={`px-3 py-1 rounded text-xs font-medium ${
-                            currentTier === 'free' ? 'bg-muted' : 'bg-primary/20 text-primary'
-                          }`}>
-                            {currentTier === 'free' ? 'FREE' : currentTier.toUpperCase()}
-                          </div>
-                        </div>
-                      </div>
-                      
-                      {currentTier === 'free' ? (
-                        <div className="text-center p-6">
-                          <h4 className="text-lg font-medium mb-2">Upgrade for More Features</h4>
-                          <p className="text-muted-foreground mb-6">
-                            Get unlimited content storage, advanced search, file uploads, and more.
-                          </p>
-                          <div className="space-y-3">
-                            <SubscriptionButton tier="pro" currentTier={currentTier} isPopular />
-                            <SubscriptionButton tier="team" currentTier={currentTier} />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div className="flex justify-between py-2 border-b">
-                              <span className="text-muted-foreground">Plan</span>
-                              <span className="font-medium">{getSubscriptionDisplayName(currentTier)}</span>
-                            </div>
-                            <div className="flex justify-between py-2 border-b">
-                              <span className="text-muted-foreground">Status</span>
-                              <span className={`font-medium ${subscription?.subscribed ? 'text-green-600' : 'text-red-600'}`}>
-                                {subscription?.subscribed ? 'Active' : 'Inactive'}
-                              </span>
-                            </div>
-                          </div>
-                          
-                          <div className="pt-4 space-y-3">
-                            <Button variant="outline" className="w-full" disabled>
-                              Manage Billing (Coming Soon)
-                            </Button>
-                            {currentTier !== 'team' && (
-                              <SubscriptionButton tier="team" currentTier={currentTier} />
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-          
-          <div className="mt-8 border-t pt-6">
-            <Button 
-              variant="destructive" 
-              onClick={() => {
-                if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                  toast({
-                    title: 'Account Deletion Requested',
-                    description: 'Your account deletion has been initiated.',
-                  });
-                }
-              }}
-            >
-              Delete Account
-            </Button>
-          </div>
-        </div>
-      </main>
+    <div className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-2">Account Settings</h1>
+        <p className="text-muted-foreground">
+          Manage your account preferences and data
+        </p>
+      </div>
+
+      <Tabs defaultValue="profile" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-5">
+          <TabsTrigger value="profile" className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            Profile
+          </TabsTrigger>
+          <TabsTrigger value="preferences" className="flex items-center gap-2">
+            <Settings className="h-4 w-4" />
+            Preferences
+          </TabsTrigger>
+          <TabsTrigger value="notifications" className="flex items-center gap-2">
+            <Bell className="h-4 w-4" />
+            Notifications
+          </TabsTrigger>
+          <TabsTrigger value="data" className="flex items-center gap-2">
+            <Download className="h-4 w-4" />
+            Data
+          </TabsTrigger>
+          <TabsTrigger value="security" className="flex items-center gap-2">
+            <Shield className="h-4 w-4" />
+            Security
+          </TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="profile" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={user?.email || ''}
+                  disabled
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="name">Display Name</Label>
+                <Input
+                  id="name"
+                  placeholder="Enter your display name"
+                  defaultValue={user?.user_metadata?.firstName || ''}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Account Type</Label>
+                <Badge variant="secondary">Free Plan</Badge>
+              </div>
+              <Button onClick={handleSave} disabled={isLoading}>
+                {isLoading ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="preferences" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Content Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Auto-tagging</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Automatically suggest tags for new content
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.autoTagging}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, autoTagging: checked }))
+                  }
+                />
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <Label>Tags Management</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Organize and manage your content tags
+                    </p>
+                  </div>
+                  <TagsManager />
+                </div>
+              </div>
+              
+              <Separator />
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Public Profile</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Allow others to discover your public collections
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.publicProfile}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, publicProfile: checked }))
+                  }
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Notification Preferences</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Email Notifications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Receive updates and reminders via email
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.emailNotifications}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, emailNotifications: checked }))
+                  }
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Browser Notifications</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Show notifications in your browser
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.browserNotifications}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, browserNotifications: checked }))
+                  }
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Weekly Digest</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Get a summary of your activity each week
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.weeklyDigest}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, weeklyDigest: checked }))
+                  }
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="data" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Data Management</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label>Export Your Data</Label>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Download all your content, tags, and settings as a JSON file
+                </p>
+                <Button variant="outline" onClick={handleExportData}>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Data
+                </Button>
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <Label>Import Data</Label>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Import content from another knowledge management tool
+                </p>
+                <Button variant="outline" disabled>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Import Data (Coming Soon)
+                </Button>
+              </div>
+              
+              <Separator />
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Data Collection</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Allow anonymous usage analytics to improve the service
+                  </p>
+                </div>
+                <Switch
+                  checked={settings.dataCollection}
+                  onCheckedChange={(checked) => 
+                    setSettings(prev => ({ ...prev, dataCollection: checked }))
+                  }
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="security" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Security Settings</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div>
+                <Label>Change Password</Label>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Update your account password
+                </p>
+                <Button variant="outline" disabled>
+                  <Shield className="h-4 w-4 mr-2" />
+                  Change Password (Coming Soon)
+                </Button>
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <Label>Two-Factor Authentication</Label>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Add an extra layer of security to your account
+                </p>
+                <Button variant="outline" disabled>
+                  <Shield className="h-4 w-4 mr-2" />
+                  Enable 2FA (Coming Soon)
+                </Button>
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <Label className="text-destructive">Danger Zone</Label>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Permanently delete your account and all associated data
+                </p>
+                <Button 
+                  variant="destructive" 
+                  onClick={handleDeleteAccount}
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete Account
+                </Button>
+              </div>
+              
+              <Separator />
+              
+              <div>
+                <Button variant="outline" onClick={() => signOut()}>
+                  <ExternalLink className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

@@ -3,6 +3,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { GlobalFeatures } from '@/components/GlobalFeatures/GlobalFeatures';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import Search from '@/pages/Search';
@@ -19,23 +21,26 @@ const App: React.FC = () => {
   return (
     <HelmetProvider>
       <QueryProvider>
-        <Router>
-          <div className="App">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/search" element={<Search />} />
-              <Route path="/collections" element={<Collections />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/integrations" element={<Integrations />} />
-              <Route path="/account" element={<AccountSettings />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-            <ChatWidget />
-          </div>
-        </Router>
+        <AuthProvider>
+          <Router>
+            <div className="App">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/search" element={<Search />} />
+                <Route path="/collections" element={<Collections />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/integrations" element={<Integrations />} />
+                <Route path="/account" element={<AccountSettings />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+              <ChatWidget />
+              <GlobalFeatures />
+            </div>
+          </Router>
+        </AuthProvider>
       </QueryProvider>
     </HelmetProvider>
   );
