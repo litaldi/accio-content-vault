@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import Navigation from '@/components/layout/Navigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import Footer from '@/components/Footer';
 import { 
   HeroSection,
@@ -68,7 +68,7 @@ const Index = () => {
         </script>
       </Helmet>
 
-      <Navigation />
+      <MainNavigation />
       
       <main className="flex-1" role="main">
         <div className="py-12 space-y-24">

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import Navigation from '@/components/layout/Navigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,7 @@ import {
   Sparkles,
   Brain
 } from 'lucide-react';
-import { copy } from '@/utils/copy';
+import { Link } from 'react-router-dom';
 
 const Dashboard = () => {
   const recentItems = [
@@ -62,7 +62,7 @@ const Dashboard = () => {
         <meta name="description" content="Your personal knowledge command center. Track discoveries, manage collections, and unlock insights from your AI-organized knowledge base." />
       </Helmet>
 
-      <Navigation />
+      <MainNavigation />
 
       <main className="flex-grow">
         {/* Enhanced Header Section */}
@@ -72,7 +72,7 @@ const Dashboard = () => {
               <div>
                 <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
                   <Brain className="h-8 w-8 text-primary" />
-                  {copy.common.loading.replace('Working our magic...', 'Welcome back, knowledge architect!')}
+                  Welcome back, knowledge architect!
                 </h1>
                 <p className="text-muted-foreground text-lg">
                   Your brilliant discoveries are growing your knowledge empire
@@ -168,16 +168,16 @@ const Dashboard = () => {
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <Button className="w-full justify-start hover:scale-105 transition-transform" asChild>
-                    <a href="/collections">
+                    <Link to="/collections">
                       <FolderOpen className="h-4 w-4 mr-2" />
                       Browse My Collections
-                    </a>
+                    </Link>
                   </Button>
                   <Button variant="outline" className="w-full justify-start hover:bg-accent/80" asChild>
-                    <a href="/analytics">
+                    <Link to="/analytics">
                       <BarChart3 className="h-4 w-4 mr-2" />
                       View Growth Analytics
-                    </a>
+                    </Link>
                   </Button>
                   <Button variant="outline" className="w-full justify-start hover:bg-accent/80">
                     <Star className="h-4 w-4 mr-2" />

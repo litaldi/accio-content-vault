@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import Navigation from '@/components/layout/Navigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,7 +19,6 @@ import {
   Brain,
   TrendingUp
 } from 'lucide-react';
-import { copy } from '@/utils/copy';
 
 const Collections = () => {
   const collections = [
@@ -72,7 +71,7 @@ const Collections = () => {
         <meta name="description" content="Your smart collections of organized knowledge. Browse, manage, and discover insights from your AI-organized content libraries." />
       </Helmet>
 
-      <Navigation />
+      <MainNavigation />
 
       <main className="flex-grow">
         {/* Enhanced Header Section */}
