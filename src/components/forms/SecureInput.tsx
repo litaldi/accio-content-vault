@@ -117,7 +117,12 @@ export const SecureInput: React.FC<SecureInputProps> = ({
     }
     
     if (sanitize) {
-      return <Shield className="h-4 w-4 text-muted-foreground" title="Input is sanitized for security" />;
+      return (
+        <Shield 
+          className="h-4 w-4 text-muted-foreground" 
+          aria-label="Input is sanitized for security"
+        />
+      );
     }
     
     return undefined;
