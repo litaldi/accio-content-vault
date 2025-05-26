@@ -1,319 +1,283 @@
 
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useAuth } from '@/contexts/AuthContext';
+import { useToast } from '@/hooks/use-toast';
 import { 
   Menu, 
   X, 
   Home, 
   LayoutDashboard, 
   FolderOpen, 
-  BookmarkPlus,
+  BookmarkPlus, 
   BarChart3, 
   User, 
-  Settings,
-  LogIn,
-  LogOut
+  Settings, 
+  LogOut,
+  Sparkles,
+  Brain
 } from 'lucide-react';
+import { copy } from '@/utils/copy';
 
-const Navigation: React.FC = () => {
+const Navigation = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const publicNavigationItems = [
-    { name: 'Home', href: '/', icon: Home },
-  ];
-
-  const authenticatedNavigationItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Collections', href: '/collections', icon: FolderOpen },
-    { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-  ];
-
-  const userMenuItems = [
-    { name: 'Profile', href: '/profile', icon: User },
-    { name: 'Settings', href: '/settings', icon: Settings },
-  ];
-
-  const isActivePage = (href: string) => {
-    if (href === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.startsWith(href);
-  };
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      setMobileMenuOpen(false);
+      toast({
+        title: "See you soon!",
+        description: "You've been signed out successfully. Your knowledge awaits your return.",
+      });
+      navigate('/');
     } catch (error) {
-      console.error('Sign out error:', error);
+      toast({
+        title: "Oops!",
+        description: "There was an issue signing you out. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
-  const closeMobileMenu = () => setMobileMenuOpen(false);
+  const navItems = [
+    { 
+      to: '/', 
+      label: copy.navigation.home, 
+      icon: Home,
+      description: 'Discover the magic'
+    },
+    ...(user ? [
+      { 
+        to: '/dashboard', 
+        label: copy.navigation.dashboard, 
+        icon: LayoutDashboard,
+        description: 'Your command center'
+      },
+      { 
+        to: '/collections', 
+        label: copy.navigation.collections, 
+        icon: FolderOpen,
+        description: 'Organized brilliance'
+      },
+      { 
+        to: '/analytics', 
+        label: copy.navigation.analytics, 
+        icon: BarChart3,
+        description: 'Track your growth'
+      },
+      { 
+        to: '/profile', 
+        label: copy.navigation.profile, 
+        icon: User,
+        description: 'Your genius profile'
+      },
+      { 
+        to: '/settings', 
+        label: copy.navigation.settings, 
+        icon: Settings,
+        description: 'Customize everything'
+      }
+    ] : [])
+  ];
+
+  const isActiveRoute = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b shadow-sm" role="navigation" aria-label="Main navigation">
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
+          {/* Logo/Brand */}
           <Link 
             to="/" 
-            className="flex items-center gap-3 hover:opacity-90 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg px-2 py-1"
-            aria-label="Accio Knowledge Engine - Go to homepage"
+            className="flex items-center gap-3 font-bold text-xl hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg p-1"
+            onClick={closeMenu}
           >
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
-              <span className="text-primary-foreground font-bold text-lg" aria-hidden="true">A</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+              <Brain className="h-5 w-5 text-white" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-bold text-xl text-primary leading-none">Accio</span>
-              <span className="text-xs text-muted-foreground leading-none">Knowledge Engine</span>
-            </div>
+            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Accio
+            </span>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
-            {/* Public items */}
-            {publicNavigationItems.map((item) => (
+          <div className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => (
               <Link
-                key={item.href}
-                to={item.href}
+                key={item.to}
+                to={item.to}
                 className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                  hover:bg-accent hover:text-accent-foreground
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                  ${isActivePage(item.href) 
-                    ? 'bg-accent text-accent-foreground' 
+                  flex items-center gap-2 px-4 py-2 rounded-lg transition-all font-medium text-sm
+                  hover:bg-accent/80 hover:text-accent-foreground
+                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                  ${isActiveRoute(item.to) 
+                    ? 'bg-primary text-primary-foreground shadow-md' 
                     : 'text-muted-foreground hover:text-foreground'
                   }
                 `}
-                aria-current={isActivePage(item.href) ? 'page' : undefined}
+                aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                title={item.description}
               >
                 <item.icon className="h-4 w-4" aria-hidden="true" />
-                {item.name}
+                {item.label}
               </Link>
             ))}
+          </div>
 
-            {/* Authenticated items */}
-            {user && authenticatedNavigationItems.map((item) => (
-              <Link
-                key={item.href}
-                to={item.href}
-                className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors
-                  hover:bg-accent hover:text-accent-foreground
-                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                  ${isActivePage(item.href) 
-                    ? 'bg-accent text-accent-foreground' 
-                    : 'text-muted-foreground hover:text-foreground'
-                  }
-                `}
-                aria-current={isActivePage(item.href) ? 'page' : undefined}
-              >
-                <item.icon className="h-4 w-4" aria-hidden="true" />
-                {item.name}
-              </Link>
-            ))}
-          </nav>
-
-          {/* Desktop Actions */}
+          {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
             {user ? (
-              <div className="flex items-center gap-1">
-                {/* Save Content Button */}
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/dashboard" className="flex items-center gap-2">
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 hover:bg-accent/80"
+                  asChild
+                >
+                  <Link to="/dashboard">
                     <BookmarkPlus className="h-4 w-4" />
-                    Save Content
+                    {copy.navigation.saveContent}
                   </Link>
                 </Button>
-                
-                {/* User Menu */}
-                {userMenuItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    to={item.href}
-                    className={`
-                      flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors
-                      hover:bg-accent hover:text-accent-foreground
-                      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                      ${isActivePage(item.href) 
-                        ? 'bg-accent text-accent-foreground' 
-                        : 'text-muted-foreground hover:text-foreground'
-                      }
-                    `}
-                    aria-current={isActivePage(item.href) ? 'page' : undefined}
-                  >
-                    <item.icon className="h-4 w-4" aria-hidden="true" />
-                    <span className="sr-only md:not-sr-only">{item.name}</span>
-                  </Link>
-                ))}
-                
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={handleSignOut}
-                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                  className="gap-2 hover:bg-destructive/10 hover:text-destructive"
                 >
                   <LogOut className="h-4 w-4" />
-                  Sign Out
+                  {copy.auth.signOut}
                 </Button>
-              </div>
+              </>
             ) : (
               <>
                 <Button variant="ghost" size="sm" asChild>
-                  <Link to="/login" className="flex items-center gap-2">
-                    <LogIn className="h-4 w-4" />
-                    Sign In
-                  </Link>
+                  <Link to="/login">{copy.auth.signIn}</Link>
                 </Button>
-                <Button size="sm" asChild>
-                  <Link to="/register">Get Started</Link>
+                <Button size="sm" className="gap-2 shadow-lg" asChild>
+                  <Link to="/register">
+                    <Sparkles className="h-4 w-4" />
+                    {copy.auth.getStarted}
+                  </Link>
                 </Button>
               </>
             )}
           </div>
 
-          {/* Mobile Menu */}
-          <div className="md:hidden">
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="relative"
-                  aria-label={mobileMenuOpen ? 'Close main menu' : 'Open main menu'}
-                  aria-expanded={mobileMenuOpen}
-                  aria-controls="mobile-navigation"
-                >
-                  {mobileMenuOpen ? (
-                    <X className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <Menu className="h-5 w-5" aria-hidden="true" />
-                  )}
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-80" id="mobile-navigation">
-                <nav className="flex flex-col space-y-4 mt-8" role="navigation" aria-label="Mobile navigation">
-                  <div className="space-y-2">
-                    {/* Public navigation items */}
-                    {publicNavigationItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        onClick={closeMobileMenu}
-                        className={`
-                          flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors
-                          hover:bg-accent hover:text-accent-foreground
-                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                          ${isActivePage(item.href) 
-                            ? 'bg-accent text-accent-foreground' 
-                            : 'text-foreground'
-                          }
-                        `}
-                        aria-current={isActivePage(item.href) ? 'page' : undefined}
-                      >
-                        <item.icon className="h-5 w-5" aria-hidden="true" />
-                        {item.name}
-                      </Link>
-                    ))}
-                    
-                    {/* Authenticated navigation items */}
-                    {user && authenticatedNavigationItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        to={item.href}
-                        onClick={closeMobileMenu}
-                        className={`
-                          flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors
-                          hover:bg-accent hover:text-accent-foreground
-                          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                          ${isActivePage(item.href) 
-                            ? 'bg-accent text-accent-foreground' 
-                            : 'text-foreground'
-                          }
-                        `}
-                        aria-current={isActivePage(item.href) ? 'page' : undefined}
-                      >
-                        <item.icon className="h-5 w-5" aria-hidden="true" />
-                        {item.name}
-                      </Link>
-                    ))}
-                  </div>
-                  
-                  {user && (
-                    <>
-                      <div className="border-t pt-4">
-                        <div className="space-y-2">
-                          <Button variant="ghost" className="w-full justify-start text-base" asChild>
-                            <Link to="/dashboard" onClick={closeMobileMenu}>
-                              <BookmarkPlus className="h-5 w-5 mr-3" aria-hidden="true" />
-                              Save Content
-                            </Link>
-                          </Button>
-                          
-                          {userMenuItems.map((item) => (
-                            <Link
-                              key={item.href}
-                              to={item.href}
-                              onClick={closeMobileMenu}
-                              className={`
-                                flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors
-                                hover:bg-accent hover:text-accent-foreground
-                                focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-                                ${isActivePage(item.href) 
-                                  ? 'bg-accent text-accent-foreground' 
-                                  : 'text-foreground'
-                                }
-                              `}
-                              aria-current={isActivePage(item.href) ? 'page' : undefined}
-                            >
-                              <item.icon className="h-5 w-5" aria-hidden="true" />
-                              {item.name}
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div className="border-t pt-4">
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-start text-base font-medium"
-                          onClick={handleSignOut}
-                        >
-                          <LogOut className="h-5 w-5 mr-3" aria-hidden="true" />
-                          Sign Out
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                  
-                  {!user && (
-                    <div className="border-t pt-4 space-y-3">
-                      <Button variant="ghost" className="w-full justify-start text-base" asChild>
-                        <Link to="/login" onClick={closeMobileMenu}>
-                          <LogIn className="h-5 w-5 mr-3" aria-hidden="true" />
-                          Sign In
-                        </Link>
-                      </Button>
-                      <Button className="w-full" asChild>
-                        <Link to="/register" onClick={closeMobileMenu}>
-                          Get Started
-                        </Link>
-                      </Button>
-                    </div>
-                  )}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleMenu}
+            className="md:hidden"
+            aria-expanded={isMenuOpen}
+            aria-controls="mobile-menu"
+            aria-label={isMenuOpen ? copy.accessibility.closeMenu : copy.accessibility.openMenu}
+          >
+            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div 
+            id="mobile-menu"
+            className="md:hidden absolute top-16 left-0 right-0 bg-background border-b shadow-xl z-50"
+          >
+            <div className="container mx-auto px-4 py-6 space-y-4">
+              {/* Mobile Navigation Links */}
+              {navItems.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={closeMenu}
+                  className={`
+                    flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium
+                    hover:bg-accent/80 hover:text-accent-foreground
+                    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                    ${isActiveRoute(item.to) 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'text-muted-foreground hover:text-foreground'
+                    }
+                  `}
+                  aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                >
+                  <item.icon className="h-5 w-5" aria-hidden="true" />
+                  <div>
+                    <div className="font-medium">{item.label}</div>
+                    <div className="text-xs opacity-70">{item.description}</div>
+                  </div>
+                </Link>
+              ))}
+
+              {/* Mobile Auth Buttons */}
+              <div className="pt-4 border-t space-y-3">
+                {user ? (
+                  <>
+                    <Button
+                      className="w-full justify-start gap-3"
+                      variant="outline"
+                      asChild
+                      onClick={closeMenu}
+                    >
+                      <Link to="/dashboard">
+                        <BookmarkPlus className="h-5 w-5" />
+                        {copy.navigation.saveContent}
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        handleSignOut();
+                        closeMenu();
+                      }}
+                      className="w-full justify-start gap-3 hover:bg-destructive/10 hover:text-destructive"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      {copy.auth.signOut}
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      asChild
+                      onClick={closeMenu}
+                    >
+                      <Link to="/login">{copy.auth.signIn}</Link>
+                    </Button>
+                    <Button 
+                      className="w-full gap-2 shadow-lg"
+                      asChild
+                      onClick={closeMenu}
+                    >
+                      <Link to="/register">
+                        <Sparkles className="h-4 w-4" />
+                        {copy.auth.getStarted}
+                      </Link>
+                    </Button>
+                  </>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </header>
+    </nav>
   );
 };
 

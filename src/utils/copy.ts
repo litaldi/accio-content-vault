@@ -1,146 +1,164 @@
 
 export const copy = {
   common: {
-    required: 'Required',
-    loading: 'Loading...',
-    error: 'Something went wrong',
-    success: 'Success!',
-    cancel: 'Cancel',
-    confirm: 'Confirm',
-    save: 'Save Changes',
-    delete: 'Delete',
-    edit: 'Edit',
+    required: 'This field is required',
+    loading: 'Working our magic...',
+    error: 'Oops! Something went wrong',
+    success: 'Success! You\'re all set!',
+    cancel: 'Not Now',
+    confirm: 'Yes, Do It!',
+    save: 'Save My Changes',
+    delete: 'Delete Forever',
+    edit: 'Make It Better',
     close: 'Close',
-    back: 'Back',
-    next: 'Next',
+    back: 'Go Back',
+    next: 'Continue Forward',
     previous: 'Previous',
     tryAgain: 'Try Again',
-    learnMore: 'Learn More'
+    learnMore: 'Discover More'
   },
   auth: {
-    signIn: 'Sign In',
+    signIn: 'Sign Me In',
     signOut: 'Sign Out',
-    signUp: 'Create Account',
-    getStarted: 'Start Building',
-    welcome: 'Welcome back!',
-    createAccount: 'Create your free account',
-    forgotPassword: 'Forgot password?',
-    rememberMe: 'Remember me',
-    alreadyHaveAccount: 'Already have an account?',
-    dontHaveAccount: "Don't have an account?",
+    signUp: 'Start My Journey',
+    getStarted: 'Begin Building',
+    welcome: 'Welcome back, knowledge builder!',
+    createAccount: 'Create Your Knowledge Empire',
+    forgotPassword: 'Forgot your password?',
+    rememberMe: 'Keep me signed in',
+    alreadyHaveAccount: 'Already building your knowledge?',
+    dontHaveAccount: "New to the knowledge revolution?",
     signInHere: 'Sign in here',
-    signUpHere: 'Sign up here',
-    enterEmail: 'Enter your email',
-    enterPassword: 'Enter your password'
+    signUpHere: 'Join the movement',
+    enterEmail: 'Your email address',
+    enterPassword: 'Your secure password'
   },
   navigation: {
     home: 'Home',
-    dashboard: 'Get Organized Faster',
-    saveContent: 'Save Your First Content',
-    collections: 'Organize Collections',
-    analytics: 'Track Your Growth',
-    profile: 'Manage Your Profile',
-    settings: 'Customize Experience',
-    help: 'Get Help & Support',
-    about: 'About Accio',
-    preferences: 'Preferences'
+    dashboard: 'My Knowledge Hub',
+    saveContent: 'Save Something Smart',
+    collections: 'My Collections',
+    analytics: 'My Growth Stats',
+    profile: 'My Profile',
+    settings: 'Preferences',
+    help: 'Get Help & Tips',
+    about: 'Our Story',
+    preferences: 'Customize Experience'
   },
   accessibility: {
     skipToContent: 'Skip to main content',
     skipToNavigation: 'Skip to navigation',
-    toggleTheme: 'Toggle theme',
-    openMenu: 'Open navigation menu',
-    closeMenu: 'Close navigation menu',
+    toggleTheme: 'Switch theme',
+    openMenu: 'Open menu',
+    closeMenu: 'Close menu',
     showPassword: 'Show password',
     hidePassword: 'Hide password',
-    userMenu: 'User menu'
+    userMenu: 'Account menu'
   },
   headlines: {
-    hero: 'Turn the internet into your personal knowledge library',
-    subhero: 'Save any webpage, document, or file. Let AI organize everything perfectly. Find anything instantly with natural language search.',
-    valueProposition: 'Never lose important information again'
+    hero: 'Turn Your Brain Into a Supercomputer',
+    subhero: 'Save anything from the web, let AI organize it perfectly, and find everything instantly with natural language search.',
+    valueProposition: 'Never lose another brilliant idea again'
   },
   social: {
-    companies: 'Trusted by professionals at leading companies',
-    userCount: '10,000+',
+    companies: 'Trusted by brilliant minds at leading companies worldwide',
+    userCount: '50,000+',
     rating: '4.9/5 stars',
-    testimonial: 'The best knowledge management tool I\'ve ever used'
+    testimonial: 'The smartest knowledge tool I\'ve ever used - it\'s like having a second brain!'
   },
   trust: {
-    freeTrial: 'Free forever plan',
+    freeTrial: 'Free forever plan available',
     noCredit: 'No credit card required',
     setupTime: 'Ready in 30 seconds',
-    security: 'Bank-level security'
+    security: 'Enterprise-grade security'
   },
   emptyStates: {
     library: {
-      title: 'Your knowledge library awaits',
-      description: 'Start building your personal knowledge engine by saving your first piece of content.',
-      action: 'Save Your First Content'
+      title: 'Your knowledge empire awaits',
+      description: 'Start building your personal AI-powered knowledge engine by saving your first brilliant discovery.',
+      action: 'Save My First Discovery'
     },
     search: {
-      title: 'No results found',
-      description: 'Try different keywords or browse your organized collections.',
-      action: 'Browse Collections'
+      title: 'No matches found',
+      description: 'Try different keywords or explore your organized collections for inspiration.',
+      action: 'Browse My Collections'
     },
     dashboard: {
-      title: 'Welcome to your knowledge engine',
-      description: 'Once you start saving content, your insights and analytics will appear here.',
-      action: 'Start Saving Content'
+      title: 'Welcome to your knowledge command center',
+      description: 'Once you start saving brilliant content, your insights and growth analytics will appear here.',
+      action: 'Start Saving Smart Content'
     },
     recent: {
-      title: 'No recent activity yet',
-      description: 'Your recently viewed content will appear here as you explore.',
-      action: 'Explore Your Library'
+      title: 'No recent adventures yet',
+      description: 'Your recently discovered content will appear here as you explore and save.',
+      action: 'Explore & Discover'
     }
   },
   onboarding: {
     welcome: {
-      subtitle: 'Welcome to your AI Knowledge Engine'
+      subtitle: 'Welcome to Your AI Knowledge Revolution'
     },
     step1: {
-      title: 'Save Any Content',
-      description: 'Capture articles, links, and resources with one click',
-      tip: 'Never lose track of valuable information again'
+      title: 'Save Anything, Instantly',
+      description: 'Capture brilliant articles, insights, and resources with one magical click',
+      tip: 'Never lose track of valuable discoveries again'
     },
     step2: {
-      title: 'AI-Powered Organization',
-      description: 'Let AI automatically categorize and tag your content',
-      tip: 'Smart organization that learns from your preferences'
+      title: 'AI Organizes Everything',
+      description: 'Our smart AI automatically categorizes and tags your content perfectly',
+      tip: 'Intelligent organization that learns your preferences'
     },
     step3: {
       title: 'Find Everything Instantly',
-      description: 'Search through your content with natural language',
-      tip: 'Ask questions and get the answers you need'
+      description: 'Search through your knowledge with natural language - just ask and find',
+      tip: 'Ask questions and get the answers you need immediately'
     },
     step4: {
-      title: 'Access Everywhere',
-      description: 'Your knowledge is synchronized across all devices',
-      tip: 'Work seamlessly from anywhere'
+      title: 'Access Your Genius Everywhere',
+      description: 'Your knowledge empire is synchronized across all your devices',
+      tip: 'Work seamlessly from anywhere, anytime'
     }
   },
   benefits: {
-    saveAnything: 'Save anything from the web instantly',
-    crossDevice: 'Access from any device, anywhere',
-    smartTags: 'AI-powered smart categorization',
+    saveAnything: 'Save any brilliant discovery instantly',
+    crossDevice: 'Access your genius from any device',
+    smartTags: 'AI-powered smart categorization magic',
     aiOrganization: 'Automatic intelligent organization',
     findFast: 'Lightning-fast semantic search',
-    neverLose: 'Never lose important information',
+    neverLose: 'Never lose important information again',
     timeBack: 'Get 5+ hours back every week',
-    instantSync: 'Real-time synchronization'
+    instantSync: 'Real-time synchronization everywhere'
   },
   buttons: {
-    back: 'Back',
-    next: 'Continue',
-    finish: 'Start Building',
+    back: 'Go Back',
+    next: 'Continue the Journey',
+    finish: 'Start Building Brilliance',
     close: 'Close',
-    getStarted: 'Start Now',
-    exploreFeatures: 'Explore Features',
-    startFree: 'Start Free',
-    scheduleDemo: 'Schedule Demo',
-    contactUs: 'Contact Us'
+    getStarted: 'Start My Knowledge Revolution',
+    exploreFeatures: 'Explore the Magic',
+    startFree: 'Start Free Forever',
+    scheduleDemo: 'See It in Action',
+    contactUs: 'Get Expert Help'
   },
   loading: {
-    loading: 'Loading your knowledge...'
+    loading: 'Organizing your brilliant ideas...'
+  },
+  microcopy: {
+    formSuccess: 'Perfect! You\'re all set.',
+    formError: 'Oops! Let\'s fix that together.',
+    saveSuccess: 'Brilliant! Saved to your knowledge empire.',
+    deleteConfirm: 'Are you sure? This can\'t be undone.',
+    searchPlaceholder: 'Ask me anything about your knowledge...',
+    noResults: 'No matches found - try different words or browse collections',
+    uploadSuccess: 'Amazing! Your file is now part of your knowledge empire.',
+    settingsSaved: 'Perfect! Your preferences have been updated.',
+    passwordChanged: 'Excellent! Your password is now more secure.',
+    inviteSent: 'Great! Your invitation is on its way.',
+    subscriptionSuccess: 'Welcome to the Pro experience! Your upgrade is active.',
+    emailVerified: 'Fantastic! Your email is verified and ready.',
+    profileUpdated: 'Wonderful! Your profile looks great.',
+    exportReady: 'Your knowledge export is ready for download!',
+    importComplete: 'Success! Your content has been imported beautifully.',
+    shareCreated: 'Perfect! Your share link is ready to spread the knowledge.'
   }
 };
