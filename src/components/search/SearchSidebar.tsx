@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Slider } from '@/components/ui/slider';
-import { OptimizedCard } from '@/components/ui/optimized-card';
+import { OptimizedCard, OptimizedCardHeader, OptimizedCardTitle, OptimizedCardDescription, OptimizedCardContent } from '@/components/ui/optimized-card';
 
 interface SearchSidebarProps {
   isSemanticSearch: boolean;

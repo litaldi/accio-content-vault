@@ -1,80 +1,64 @@
+
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
-import { UnifiedTypography } from '@/components/ui/unified-design-system';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Typography, Spacing } from '@/components/ui/design-system';
+import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 
-const FAQ = () => {
+const FAQ: React.FC = () => {
+  const faqs = [
+    {
+      question: "What is Accio and how does it work?",
+      answer: "Accio is a knowledge management tool that helps you organize and understand information. It uses AI to automatically tag, categorize, and summarize content from various sources, making it easier to find and use."
+    },
+    {
+      question: "How secure is my data with Accio?",
+      answer: "We take data security seriously. Accio uses industry-standard encryption and security protocols to protect your information. Your data is stored securely and is only accessible to you."
+    },
+    {
+      question: "Can I use Accio for team collaboration?",
+      answer: "Yes, Accio supports team collaboration. You can share your knowledge collections with team members, allowing for seamless collaboration and knowledge sharing."
+    },
+    {
+      question: "What types of content can I save to Accio?",
+      answer: "You can save a wide variety of content to Accio, including web pages, documents, PDFs, images, and more. Our AI will analyze and organize the content, regardless of its format."
+    },
+    {
+      question: "Is there a limit to the amount of content I can save?",
+      answer: "Accio offers different subscription plans with varying storage limits. Please check our pricing page for more details on storage capacity."
+    },
+    {
+      question: "How does Accio's AI improve my knowledge management?",
+      answer: "Accio's AI automatically tags and categorizes your content, saving you time and effort. It also provides summaries and insights, helping you quickly understand the key points of any document or article."
+    }
+  ];
+
   return (
-    <UnifiedLayout>
-      <Helmet>
-        <title>FAQ - Accio Knowledge Engine</title>
-        <meta name="description" content="Frequently asked questions about Accio. Find quick answers to common questions about features, pricing, and usage." />
-      </Helmet>
+    <UnifiedPageLayout
+      title="Frequently Asked Questions | Accio"
+      description="Find answers to common questions about Accio's knowledge management platform, features, security, and pricing."
+    >
+      <Spacing.Section size="lg">
+        <Spacing.Container>
+          <div className="text-center mb-12">
+            <Typography.H2 className="mb-4">Frequently Asked Questions</Typography.H2>
+            <Typography.Lead className="max-w-3xl mx-auto">
+              Everything you need to know about using Accio to manage your knowledge effectively.
+            </Typography.Lead>
+          </div>
 
-      <div className="py-8 space-y-12">
-        {/* Hero Section */}
-        <div className="text-center">
-          <UnifiedTypography.H1>
-            Frequently Asked
-            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
-              Questions
-            </span>
-          </UnifiedTypography.H1>
-          <UnifiedTypography.Lead>
-            Quick answers to the most common questions about Accio and how it works.
-          </UnifiedTypography.Lead>
-        </div>
-
-        {/* FAQ Section */}
-        <div className="max-w-4xl mx-auto">
-          <Accordion type="single" collapsible className="w-full">
-            <AccordionItem value="item-1">
-              <AccordionTrigger>Is there a free plan available?</AccordionTrigger>
-              <AccordionContent>
-                Yes! We offer a free plan with limited features. It's a great way to get started and see if Accio is right for you.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-2">
-              <AccordionTrigger>How secure is my data?</AccordionTrigger>
-              <AccordionContent>
-                We take security seriously. All data is encrypted both in transit and at rest. We also perform regular security audits to ensure your data is safe.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-3">
-              <AccordionTrigger>Can I export my data?</AccordionTrigger>
-              <AccordionContent>
-                Yes, you can export your data at any time. We support various formats, including JSON and CSV.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-4">
-              <AccordionTrigger>What kind of support do you offer?</AccordionTrigger>
-              <AccordionContent>
-                We offer email support for all users. Pro users also get priority support and access to our knowledge base.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-5">
-              <AccordionTrigger>How does AI organization work?</AccordionTrigger>
-              <AccordionContent>
-                Our AI automatically categorizes and tags your content based on its content and context. It learns from your preferences to improve over time.
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="item-6">
-              <AccordionTrigger>Can I collaborate with my team?</AccordionTrigger>
-              <AccordionContent>
-                Yes! Pro and Enterprise plans include team collaboration features, allowing you to share collections and work together seamlessly.
-              </AccordionContent>
-            </AccordionItem>
+          <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-lg font-medium">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
           </Accordion>
-        </div>
-      </div>
-    </UnifiedLayout>
+        </Spacing.Container>
+      </Spacing.Section>
+    </UnifiedPageLayout>
   );
 };
 

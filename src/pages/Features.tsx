@@ -1,13 +1,9 @@
+
 import React from 'react';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  EnhancedTypography, 
-  EnhancedLayout, 
-  EnhancedCard,
-  animations 
-} from '@/components/ui/enhanced-design-system';
+import { Typography, Spacing, animations } from '@/components/ui/design-system';
 import { 
   Brain, 
   Search, 
@@ -18,11 +14,9 @@ import {
   Target,
   Users,
   Sparkles,
-  ArrowRight,
-  CheckCircle
+  ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
 const Features = () => {
   const mainFeatures = [
@@ -69,91 +63,91 @@ const Features = () => {
       description="Discover Accio's powerful features: AI-powered knowledge processing, intelligent search, smart organization, and learning analytics."
     >
       {/* Hero Section */}
-      <EnhancedLayout.Section variant="primary">
-        <EnhancedLayout.Container>
+      <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/10 to-background">
+        <Spacing.Container>
           <div className="text-center max-w-4xl mx-auto">
             <Badge variant="outline" className={`mb-6 ${animations.fadeIn}`}>
               <Sparkles className="h-3 w-3 mr-1" />
               Powered by Advanced AI
             </Badge>
             
-            <EnhancedTypography.H1 className={animations.slideUp}>
+            <Typography.H1 className={animations.slideUp}>
               Features That Transform
               <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent"> Knowledge Work</span>
-            </EnhancedTypography.H1>
+            </Typography.H1>
             
-            <EnhancedTypography.Lead className={animations.slideUp}>
+            <Typography.Lead className={animations.slideUp}>
               Discover the powerful capabilities that make Accio the ultimate 
               knowledge management platform for modern professionals.
-            </EnhancedTypography.Lead>
+            </Typography.Lead>
           </div>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+        </Spacing.Container>
+      </Spacing.Section>
 
       {/* Main Features */}
-      <EnhancedLayout.Section>
-        <EnhancedLayout.Container>
-          <EnhancedLayout.Grid cols="two">
+      <Spacing.Section>
+        <Spacing.Container>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {mainFeatures.map((feature, index) => (
-              <EnhancedCard.Feature key={index} className={animations.hoverLift}>
+              <div key={index} className={`bg-card border rounded-xl p-6 ${animations.hoverLift}`}>
                 <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6`}>
                   <feature.icon className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed mb-6">{feature.description}</p>
+                <Typography.H3 className="text-2xl font-bold mb-4">{feature.title}</Typography.H3>
+                <Typography.Body className="text-muted-foreground leading-relaxed mb-6">{feature.description}</Typography.Body>
                 
                 <div className="space-y-3">
                   {feature.benefits.map((benefit, benefitIndex) => (
                     <div key={benefitIndex} className="flex items-center gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <div className="h-2 w-2 bg-primary rounded-full flex-shrink-0" />
                       <span className="text-sm">{benefit}</span>
                     </div>
                   ))}
                 </div>
-              </EnhancedCard.Feature>
+              </div>
             ))}
-          </EnhancedLayout.Grid>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+          </div>
+        </Spacing.Container>
+      </Spacing.Section>
 
       {/* Additional Features */}
-      <EnhancedLayout.Section variant="accent">
-        <EnhancedLayout.Container>
+      <Spacing.Section className="bg-gradient-to-br from-primary/5 to-background">
+        <Spacing.Container>
           <div className="text-center mb-16">
-            <EnhancedTypography.H2>
+            <Typography.H2>
               Built for Performance & Scale
-            </EnhancedTypography.H2>
-            <EnhancedTypography.Body className="text-lg">
+            </Typography.H2>
+            <Typography.Body className="text-lg">
               Enterprise-grade capabilities that grow with your needs.
-            </EnhancedTypography.Body>
+            </Typography.Body>
           </div>
           
-          <EnhancedLayout.Grid cols="four">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {additionalFeatures.map((feature, index) => (
               <div key={index} className={`text-center ${animations.hoverLift}`}>
                 <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <feature.icon className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
+                <Typography.H3 className="text-lg font-semibold mb-2">{feature.title}</Typography.H3>
+                <Typography.Body className="text-sm text-muted-foreground">{feature.description}</Typography.Body>
               </div>
             ))}
-          </EnhancedLayout.Grid>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+          </div>
+        </Spacing.Container>
+      </Spacing.Section>
 
       {/* CTA Section */}
-      <EnhancedLayout.Section>
-        <EnhancedLayout.Container>
+      <Spacing.Section>
+        <Spacing.Container>
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-3xl p-12 border border-primary/10">
-              <EnhancedTypography.H2 className="mb-4">
+              <Typography.H2 className="mb-4">
                 Ready to experience the future of knowledge management?
-              </EnhancedTypography.H2>
+              </Typography.H2>
               
-              <EnhancedTypography.Body className="text-lg mb-8">
+              <Typography.Body className="text-lg mb-8">
                 Join thousands of professionals who've transformed their productivity with Accio's powerful features.
-              </EnhancedTypography.Body>
+              </Typography.Body>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="xl" className="group" asChild>
@@ -171,8 +165,8 @@ const Features = () => {
               </div>
             </div>
           </div>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+        </Spacing.Container>
+      </Spacing.Section>
     </UnifiedPageLayout>
   );
 };

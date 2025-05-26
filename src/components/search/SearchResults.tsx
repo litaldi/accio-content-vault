@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Content } from '@/types';
 import { OptimizedCard } from '@/components/ui/optimized-card';

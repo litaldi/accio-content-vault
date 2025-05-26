@@ -1,14 +1,10 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  EnhancedTypography, 
-  EnhancedLayout, 
-  EnhancedCard,
-  animations 
-} from '@/components/ui/enhanced-design-system';
+import { Typography, Spacing, animations } from '@/components/ui/design-system';
 import { 
   Brain, 
   Sparkles, 
@@ -23,7 +19,6 @@ import {
   Zap,
   Target
 } from 'lucide-react';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
 const Home = () => {
   const features = [
@@ -77,24 +72,24 @@ const Home = () => {
       description="The intelligent knowledge management platform that turns information into actionable insights. Organize, discover, and grow your understanding with AI."
     >
       {/* Hero Section */}
-      <EnhancedLayout.Section variant="primary">
-        <EnhancedLayout.Container>
+      <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/10 to-background">
+        <Spacing.Container>
           <div className="text-center max-w-4xl mx-auto">
             <Badge variant="outline" className={`mb-6 ${animations.fadeIn}`}>
               <Sparkles className="h-3 w-3 mr-1" />
               AI-Powered Knowledge Engine
             </Badge>
             
-            <EnhancedTypography.H1 className={animations.slideUp}>
+            <Typography.H1 className={animations.slideUp}>
               Transform Knowledge into
               <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent"> Power</span>
-            </EnhancedTypography.H1>
+            </Typography.H1>
             
-            <EnhancedTypography.Lead className={animations.slideUp}>
+            <Typography.Lead className={animations.slideUp}>
               The intelligent platform that captures, organizes, and transforms any content 
               into searchable knowledge. Stop losing valuable insights—start building your 
               personal knowledge sanctuary.
-            </EnhancedTypography.Lead>
+            </Typography.Lead>
             
             <div className={`flex flex-col sm:flex-row gap-4 justify-center mb-12 ${animations.fadeIn}`}>
               <Button size="xl" className="group" asChild>
@@ -124,69 +119,69 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+        </Spacing.Container>
+      </Spacing.Section>
 
       {/* Benefits Section */}
-      <EnhancedLayout.Section>
-        <EnhancedLayout.Container>
-          <EnhancedLayout.Grid cols="three">
+      <Spacing.Section>
+        <Spacing.Container>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {benefits.map((benefit, index) => (
               <div key={index} className={`text-center ${animations.hoverLift}`}>
                 <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <benefit.icon className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-2xl font-bold mb-2">{benefit.title}</h3>
-                <p className="text-muted-foreground">{benefit.description}</p>
+                <Typography.H3 className="text-2xl font-bold mb-2">{benefit.title}</Typography.H3>
+                <Typography.Body className="text-muted-foreground">{benefit.description}</Typography.Body>
               </div>
             ))}
-          </EnhancedLayout.Grid>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+          </div>
+        </Spacing.Container>
+      </Spacing.Section>
 
       {/* Features Section */}
-      <EnhancedLayout.Section variant="accent">
-        <EnhancedLayout.Container>
+      <Spacing.Section className="bg-gradient-to-br from-primary/5 to-background">
+        <Spacing.Container>
           <div className="text-center mb-16">
-            <EnhancedTypography.H2>
+            <Typography.H2>
               Everything you need to master knowledge
-            </EnhancedTypography.H2>
-            <EnhancedTypography.Body className="text-lg">
+            </Typography.H2>
+            <Typography.Body className="text-lg">
               Powerful features designed to transform how you capture, organize, and discover insights.
-            </EnhancedTypography.Body>
+            </Typography.Body>
           </div>
           
-          <EnhancedLayout.Grid cols="two">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, index) => (
-              <EnhancedCard.Feature key={index} className={animations.hoverLift}>
+              <div key={index} className={`bg-card border rounded-xl p-6 ${animations.hoverLift}`}>
                 <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6`}>
                   <feature.icon className="h-7 w-7 text-white" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{feature.description}</p>
-              </EnhancedCard.Feature>
+                <Typography.H3 className="text-xl font-semibold mb-3">{feature.title}</Typography.H3>
+                <Typography.Body className="text-muted-foreground leading-relaxed">{feature.description}</Typography.Body>
+              </div>
             ))}
-          </EnhancedLayout.Grid>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+          </div>
+        </Spacing.Container>
+      </Spacing.Section>
 
       {/* CTA Section */}
-      <EnhancedLayout.Section>
-        <EnhancedLayout.Container>
+      <Spacing.Section>
+        <Spacing.Container>
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-3xl p-12 border border-primary/10">
               <div className="w-20 h-20 bg-gradient-to-br from-primary to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-8">
                 <Brain className="h-10 w-10 text-white" />
               </div>
               
-              <EnhancedTypography.H2 className="mb-4">
+              <Typography.H2 className="mb-4">
                 Ready to transform your knowledge?
-              </EnhancedTypography.H2>
+              </Typography.H2>
               
-              <EnhancedTypography.Body className="text-lg mb-8">
+              <Typography.Body className="text-lg mb-8">
                 Join thousands of professionals who've revolutionized their learning and 
                 productivity with Accio. Start your free trial today.
-              </EnhancedTypography.Body>
+              </Typography.Body>
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Button size="xl" className="group" asChild>
@@ -215,8 +210,8 @@ const Home = () => {
               </div>
             </div>
           </div>
-        </EnhancedLayout.Container>
-      </EnhancedLayout.Section>
+        </Spacing.Container>
+      </Spacing.Section>
     </UnifiedPageLayout>
   );
 };

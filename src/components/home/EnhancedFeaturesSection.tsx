@@ -1,27 +1,28 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle, Rocket, ShieldCheck, Lightbulb } from 'lucide-react';
+import { Brain, Shield, Sparkles, Target } from 'lucide-react';
 import { Typography, Spacing } from '@/components/ui/design-system';
 
 const EnhancedFeaturesSection: React.FC = () => {
   const features = [
     {
-      icon: Rocket,
+      icon: Brain,
       title: 'AI-Powered Insights',
       description: 'Unlock deeper understanding with AI-generated summaries, key concepts, and related content suggestions.',
     },
     {
-      icon: ShieldCheck,
+      icon: Shield,
       title: 'Secure Knowledge Base',
       description: 'Your data is encrypted and securely stored, ensuring your knowledge remains private and protected.',
     },
     {
-      icon: Lightbulb,
+      icon: Sparkles,
       title: 'Smart Organization',
       description: 'Automatically categorize and tag your content, making it easier to find and connect related ideas.',
     },
     {
-      icon: CheckCircle,
+      icon: Target,
       title: 'Seamless Integration',
       description: 'Connect with your favorite tools and platforms, creating a unified knowledge ecosystem.',
     },

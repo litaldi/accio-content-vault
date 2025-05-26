@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Rocket } from 'lucide-react';
+import { Brain } from 'lucide-react';
 import { Typography, Spacing } from '@/components/ui/design-system';
 
 const FinalCTASection: React.FC = () => {
@@ -8,7 +9,7 @@ const FinalCTASection: React.FC = () => {
     <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/10 to-background">
       <Spacing.Container>
         <div className="text-center py-16">
-          <Rocket className="h-10 w-10 mx-auto mb-6 text-primary animate-pulse" />
+          <Brain className="h-10 w-10 mx-auto mb-6 text-primary animate-pulse" />
           <Typography.H2 className="mb-4">
             Ready to Supercharge Your Knowledge?
           </Typography.H2>

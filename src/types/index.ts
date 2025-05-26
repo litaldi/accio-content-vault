@@ -1,4 +1,3 @@
-
 export interface User {
   id: string;
   email?: string;
@@ -72,4 +71,13 @@ export interface Collection {
   content_ids: string[];
   created_at: string;
   parent_id?: string;
+}
+
+export interface Content {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  tags?: string[];
+  createdAt?: string;
 }
