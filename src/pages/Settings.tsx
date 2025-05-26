@@ -1,290 +1,301 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { 
   Settings as SettingsIcon, 
   Bell, 
   Shield, 
-  Palette, 
-  Download, 
+  Download,
   Trash2,
+  Eye,
   Globe,
-  Moon,
-  Sun,
-  Monitor
+  Smartphone,
+  Save,
+  AlertTriangle
 } from 'lucide-react';
-import { useState } from 'react';
 
 const Settings = () => {
-  const [settings, setSettings] = useState({
-    notifications: {
-      email: true,
-      push: false,
-      weekly: true,
-      reminders: true
-    },
-    privacy: {
-      analytics: true,
-      publicProfile: false,
-      searchable: true
-    },
-    appearance: {
-      theme: 'system',
-      compactView: false,
-      showPreviews: true
-    }
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: false,
+    weekly: true,
+    marketing: false
   });
 
-  const updateSetting = (category: string, key: string, value: boolean | string) => {
-    setSettings(prev => ({
-      ...prev,
-      [category]: {
-        ...prev[category as keyof typeof prev],
-        [key]: value
-      }
-    }));
-  };
+  const [privacy, setPrivacy] = useState({
+    profileVisible: true,
+    shareStats: false,
+    analytics: true
+  });
 
   return (
-    <UnifiedLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Settings - Accio | Account Preferences</title>
-        <meta name="description" content="Manage your Accio account settings and preferences." />
+        <title>Settings - Accio Knowledge Engine</title>
+        <meta name="description" content="Customize your account preferences, privacy settings, and notification options." />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-3">
-            <SettingsIcon className="h-8 w-8" />
-            Settings
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Customize your Accio experience
-          </p>
-        </div>
+      <ProfessionalNavigation />
 
-        <div className="space-y-6">
-          {/* Notifications */}
-          <Card>
+      <main className="flex-grow">
+        {/* Header Section */}
+        <section className="py-8 border-b">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <h1 className="text-3xl font-bold mb-2">Settings</h1>
+            <p className="text-muted-foreground">
+              Customize your account preferences and privacy settings
+            </p>
+          </div>
+        </section>
+
+        <div className="container mx-auto px-4 max-w-4xl py-8 space-y-8">
+          {/* Account Settings */}
+          <Card className="card-elevated">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Bell className="h-5 w-5" />
-                Notifications
+                <SettingsIcon className="h-5 w-5 text-primary" />
+                Account Settings
               </CardTitle>
+              <CardDescription>
+                Manage your account preferences and display settings
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="email-notifications">Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive updates via email</p>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="timezone">Timezone</Label>
+                  <Select defaultValue="pst">
+                    <SelectTrigger id="timezone">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pst">Pacific Standard Time</SelectItem>
+                      <SelectItem value="est">Eastern Standard Time</SelectItem>
+                      <SelectItem value="cst">Central Standard Time</SelectItem>
+                      <SelectItem value="mst">Mountain Standard Time</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Switch 
-                  id="email-notifications"
-                  checked={settings.notifications.email}
-                  onCheckedChange={(checked) => updateSetting('notifications', 'email', checked)}
-                />
-              </div>
-              
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="push-notifications">Push Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive browser notifications</p>
+                <div className="space-y-2">
+                  <Label htmlFor="language">Language</Label>
+                  <Select defaultValue="en">
+                    <SelectTrigger id="language">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="de">Deutsch</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <Switch 
-                  id="push-notifications"
-                  checked={settings.notifications.push}
-                  onCheckedChange={(checked) => updateSetting('notifications', 'push', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="weekly-digest">Weekly Digest</Label>
-                  <p className="text-sm text-muted-foreground">Summary of your activity</p>
-                </div>
-                <Switch 
-                  id="weekly-digest"
-                  checked={settings.notifications.weekly}
-                  onCheckedChange={(checked) => updateSetting('notifications', 'weekly', checked)}
-                />
               </div>
 
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="reminders">Content Reminders</Label>
-                  <p className="text-sm text-muted-foreground">Reminders for saved content</p>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Auto-save enabled</Label>
+                    <p className="text-sm text-muted-foreground">Automatically save content as you browse</p>
+                  </div>
+                  <Switch defaultChecked />
                 </div>
-                <Switch 
-                  id="reminders"
-                  checked={settings.notifications.reminders}
-                  onCheckedChange={(checked) => updateSetting('notifications', 'reminders', checked)}
-                />
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Smart categorization</Label>
+                    <p className="text-sm text-muted-foreground">Let AI automatically categorize your content</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Offline mode</Label>
+                    <p className="text-sm text-muted-foreground">Enable offline access to your content</p>
+                  </div>
+                  <Switch />
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Appearance */}
-          <Card>
+          {/* Notifications */}
+          <Card className="card-elevated">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Palette className="h-5 w-5" />
-                Appearance
+                <Bell className="h-5 w-5 text-primary" />
+                Notifications
               </CardTitle>
+              <CardDescription>
+                Choose how you want to be notified about important updates
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="theme">Theme</Label>
-                <Select 
-                  value={settings.appearance.theme} 
-                  onValueChange={(value) => updateSetting('appearance', 'theme', value)}
-                >
-                  <SelectTrigger className="w-full mt-2">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">
-                      <div className="flex items-center gap-2">
-                        <Sun className="h-4 w-4" />
-                        Light
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="dark">
-                      <div className="flex items-center gap-2">
-                        <Moon className="h-4 w-4" />
-                        Dark
-                      </div>
-                    </SelectItem>
-                    <SelectItem value="system">
-                      <div className="flex items-center gap-2">
-                        <Monitor className="h-4 w-4" />
-                        System
-                      </div>
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="compact-view">Compact View</Label>
-                  <p className="text-sm text-muted-foreground">Show more content in less space</p>
+                  <Label>Email notifications</Label>
+                  <p className="text-sm text-muted-foreground">Receive updates via email</p>
                 </div>
                 <Switch 
-                  id="compact-view"
-                  checked={settings.appearance.compactView}
-                  onCheckedChange={(checked) => updateSetting('appearance', 'compactView', checked)}
+                  checked={notifications.email}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, email: checked}))}
                 />
               </div>
-
               <div className="flex items-center justify-between">
                 <div>
-                  <Label htmlFor="show-previews">Show Previews</Label>
-                  <p className="text-sm text-muted-foreground">Display content previews in cards</p>
+                  <Label>Push notifications</Label>
+                  <p className="text-sm text-muted-foreground">Get real-time browser notifications</p>
                 </div>
                 <Switch 
-                  id="show-previews"
-                  checked={settings.appearance.showPreviews}
-                  onCheckedChange={(checked) => updateSetting('appearance', 'showPreviews', checked)}
+                  checked={notifications.push}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, push: checked}))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Weekly digest</Label>
+                  <p className="text-sm text-muted-foreground">Summary of your activity and insights</p>
+                </div>
+                <Switch 
+                  checked={notifications.weekly}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, weekly: checked}))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Marketing emails</Label>
+                  <p className="text-sm text-muted-foreground">Updates about new features and tips</p>
+                </div>
+                <Switch 
+                  checked={notifications.marketing}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, marketing: checked}))}
                 />
               </div>
             </CardContent>
           </Card>
 
           {/* Privacy & Security */}
-          <Card>
+          <Card className="card-elevated">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="h-5 w-5" />
+                <Shield className="h-5 w-5 text-primary" />
                 Privacy & Security
               </CardTitle>
+              <CardDescription>
+                Control your privacy settings and data sharing preferences
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="analytics">Usage Analytics</Label>
-                  <p className="text-sm text-muted-foreground">Help improve Accio by sharing usage data</p>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Public profile</Label>
+                    <p className="text-sm text-muted-foreground">Make your profile visible to other users</p>
+                  </div>
+                  <Switch 
+                    checked={privacy.profileVisible}
+                    onCheckedChange={(checked) => setPrivacy(prev => ({...prev, profileVisible: checked}))}
+                  />
                 </div>
-                <Switch 
-                  id="analytics"
-                  checked={settings.privacy.analytics}
-                  onCheckedChange={(checked) => updateSetting('privacy', 'analytics', checked)}
-                />
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Share usage statistics</Label>
+                    <p className="text-sm text-muted-foreground">Help improve Accio with anonymous usage data</p>
+                  </div>
+                  <Switch 
+                    checked={privacy.shareStats}
+                    onCheckedChange={(checked) => setPrivacy(prev => ({...prev, shareStats: checked}))}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Analytics tracking</Label>
+                    <p className="text-sm text-muted-foreground">Allow analytics to improve your experience</p>
+                  </div>
+                  <Switch 
+                    checked={privacy.analytics}
+                    onCheckedChange={(checked) => setPrivacy(prev => ({...prev, analytics: checked}))}
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="public-profile">Public Profile</Label>
-                  <p className="text-sm text-muted-foreground">Allow others to view your profile</p>
+              <div className="space-y-2">
+                <Label htmlFor="password">Change Password</Label>
+                <div className="flex gap-2">
+                  <Input id="password" type="password" placeholder="Enter new password" className="flex-1" />
+                  <Button variant="outline">Update</Button>
                 </div>
-                <Switch 
-                  id="public-profile"
-                  checked={settings.privacy.publicProfile}
-                  onCheckedChange={(checked) => updateSetting('privacy', 'publicProfile', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <Label htmlFor="searchable">Searchable Content</Label>
-                  <p className="text-sm text-muted-foreground">Include your content in search results</p>
-                </div>
-                <Switch 
-                  id="searchable"
-                  checked={settings.privacy.searchable}
-                  onCheckedChange={(checked) => updateSetting('privacy', 'searchable', checked)}
-                />
               </div>
             </CardContent>
           </Card>
 
           {/* Data Management */}
-          <Card>
+          <Card className="card-elevated">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Download className="h-5 w-5" />
+                <Download className="h-5 w-5 text-primary" />
                 Data Management
               </CardTitle>
+              <CardDescription>
+                Export, backup, or delete your data
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium">Export Data</h4>
-                  <p className="text-sm text-muted-foreground">Download all your saved content</p>
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Download className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <h4 className="font-medium">Export Data</h4>
+                    <p className="text-sm text-muted-foreground">Download all your content and collections</p>
+                  </div>
                 </div>
                 <Button variant="outline">Export</Button>
               </div>
 
-              <Separator />
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="font-medium text-destructive">Delete Account</h4>
-                  <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Globe className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <h4 className="font-medium">API Access</h4>
+                    <p className="text-sm text-muted-foreground">Generate API keys for third-party integrations</p>
+                  </div>
                 </div>
-                <Button variant="destructive" className="flex items-center gap-2">
-                  <Trash2 className="h-4 w-4" />
-                  Delete
-                </Button>
+                <Button variant="outline">Manage</Button>
+              </div>
+
+              <div className="flex items-center justify-between p-4 border border-destructive/20 rounded-lg bg-destructive/5">
+                <div className="flex items-center gap-3">
+                  <Trash2 className="h-5 w-5 text-destructive" />
+                  <div>
+                    <h4 className="font-medium text-destructive">Delete Account</h4>
+                    <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
+                  </div>
+                </div>
+                <Button variant="destructive">Delete</Button>
               </div>
             </CardContent>
           </Card>
-        </div>
 
-        {/* Save Button */}
-        <div className="flex justify-end mt-8">
-          <Button size="lg">Save Changes</Button>
+          {/* Save Changes */}
+          <div className="flex justify-end">
+            <Button className="flex items-center gap-2">
+              <Save className="h-4 w-4" />
+              Save All Changes
+            </Button>
+          </div>
         </div>
-      </div>
-    </UnifiedLayout>
+      </main>
+
+      <ImprovedFooter />
+    </div>
   );
 };
 

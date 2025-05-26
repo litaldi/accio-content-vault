@@ -7,10 +7,6 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
-import Collections from '@/pages/Collections';
-import Analytics from '@/pages/Analytics';
-import Profile from '@/pages/Profile';
-import Settings from '@/pages/Settings';
 import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '@/contexts/AuthContext';
 

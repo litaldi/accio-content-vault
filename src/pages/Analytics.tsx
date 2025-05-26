@@ -1,211 +1,214 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { 
   BarChart3, 
   TrendingUp, 
-  Eye, 
-  Bookmark, 
-  Tag, 
+  Clock, 
+  BookOpen,
+  Target,
+  Zap,
   Calendar,
-  Clock,
-  Target
+  Award
 } from 'lucide-react';
 
 const Analytics = () => {
-  const metrics = [
+  const stats = [
     {
-      title: 'Total Saved Items',
-      value: '156',
-      change: '+12%',
-      trend: 'up',
-      icon: Bookmark,
-      color: 'text-blue-600'
+      title: "Items Saved",
+      value: "1,247",
+      change: "+12%",
+      trend: "up",
+      icon: BookOpen,
+      color: "blue"
     },
     {
-      title: 'Monthly Views',
-      value: '2.4K',
-      change: '+8%',
-      trend: 'up',
-      icon: Eye,
-      color: 'text-green-600'
-    },
-    {
-      title: 'Collections',
-      value: '24',
-      change: '+3',
-      trend: 'up',
-      icon: Tag,
-      color: 'text-purple-600'
-    },
-    {
-      title: 'Avg. Daily Usage',
-      value: '45min',
-      change: '+15%',
-      trend: 'up',
+      title: "Time Saved",
+      value: "24.5 hrs",
+      change: "+8%",
+      trend: "up",
       icon: Clock,
-      color: 'text-orange-600'
+      color: "green"
+    },
+    {
+      title: "Collections",
+      value: "18",
+      change: "+3",
+      trend: "up",
+      icon: Target,
+      color: "purple"
+    },
+    {
+      title: "Knowledge Score",
+      value: "92%",
+      change: "+5%",
+      trend: "up",
+      icon: Award,
+      color: "orange"
     }
   ];
 
-  const topTags = [
-    { name: 'React', count: 32, percentage: 85 },
-    { name: 'JavaScript', count: 28, percentage: 75 },
-    { name: 'Tutorial', count: 24, percentage: 65 },
-    { name: 'Productivity', count: 18, percentage: 48 },
-    { name: 'Career', count: 15, percentage: 40 }
+  const insights = [
+    {
+      title: "Most Active Day",
+      value: "Tuesday",
+      description: "You save 40% more content on Tuesdays"
+    },
+    {
+      title: "Top Category",
+      value: "Research",
+      description: "45% of your saved content is research-related"
+    },
+    {
+      title: "Average Read Time",
+      value: "8 minutes",
+      description: "Perfect for focused learning sessions"
+    },
+    {
+      title: "Streak",
+      value: "12 days",
+      description: "Current knowledge building streak"
+    }
   ];
 
-  const monthlyData = [
-    { month: 'Jan', saved: 8, viewed: 120 },
-    { month: 'Feb', saved: 12, viewed: 180 },
-    { month: 'Mar', saved: 15, viewed: 240 },
-    { month: 'Apr', saved: 18, viewed: 320 },
-    { month: 'May', saved: 22, viewed: 380 }
+  const recentActivity = [
+    { action: "Saved article", title: "AI in Knowledge Management", time: "2 hours ago" },
+    { action: "Created collection", title: "Machine Learning Papers", time: "5 hours ago" },
+    { action: "Added tags", title: "React Best Practices", time: "1 day ago" },
+    { action: "Shared collection", title: "Design Resources", time: "2 days ago" }
   ];
 
   return (
-    <UnifiedLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Analytics - Accio | Your Usage Insights</title>
-        <meta name="description" content="View your Accio usage analytics and insights." />
+        <title>Analytics - Accio Knowledge Engine</title>
+        <meta name="description" content="Track your knowledge management progress and discover insights about your learning patterns." />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Analytics</h1>
-          <p className="text-muted-foreground mt-2">
-            Insights into your knowledge management patterns
-          </p>
-        </div>
+      <ProfessionalNavigation />
 
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {metrics.map((metric, index) => (
-            <Card key={index}>
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <metric.icon className={`h-5 w-5 ${metric.color}`} />
-                  <Badge variant={metric.trend === 'up' ? 'default' : 'secondary'}>
-                    {metric.change}
-                  </Badge>
-                </div>
+      <main className="flex-grow">
+        {/* Header Section */}
+        <section className="py-8 border-b">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">Analytics</h1>
+                <p className="text-muted-foreground">
+                  Track your knowledge management journey and discover insights
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="flex items-center gap-1">
+                  <Calendar className="h-3 w-3" />
+                  Last 30 days
+                </Badge>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Main Content */}
+        <div className="container mx-auto px-4 max-w-6xl py-8 space-y-8">
+          {/* Stats Grid */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {stats.map((stat, index) => (
+              <Card key={index} className="card-elevated">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className={`w-10 h-10 rounded-lg bg-${stat.color}-500/10 flex items-center justify-center`}>
+                      <stat.icon className={`h-5 w-5 text-${stat.color}-500`} />
+                    </div>
+                    <Badge variant={stat.trend === 'up' ? 'default' : 'secondary'} className="text-xs">
+                      <TrendingUp className="h-3 w-3 mr-1" />
+                      {stat.change}
+                    </Badge>
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold mb-1">{stat.value}</p>
+                    <p className="text-sm text-muted-foreground">{stat.title}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Charts and Insights */}
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Activity Chart Placeholder */}
+            <Card className="lg:col-span-2 card-elevated">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-primary" />
+                  Saving Activity
+                </CardTitle>
+                <CardDescription>
+                  Your content saving patterns over the last 30 days
+                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div>
-                  <div className="text-2xl font-bold">{metric.value}</div>
-                  <div className="text-sm text-muted-foreground">{metric.title}</div>
+                <div className="h-64 rounded-lg bg-muted/20 flex items-center justify-center border-2 border-dashed border-border">
+                  <div className="text-center">
+                    <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <p className="text-muted-foreground">Interactive chart coming soon</p>
+                    <p className="text-sm text-muted-foreground">Track your daily saving habits</p>
+                  </div>
                 </div>
               </CardContent>
             </Card>
-          ))}
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Top Tags */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Tag className="h-5 w-5" />
-                Most Used Tags
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {topTags.map((tag, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="font-medium">{tag.name}</span>
-                      <span className="text-muted-foreground">{tag.count} items</span>
+            {/* Quick Insights */}
+            <div className="space-y-6">
+              <Card className="card-elevated">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-primary" />
+                    Quick Insights
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {insights.map((insight, index) => (
+                    <div key={index} className="pb-4 border-b border-border/50 last:border-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="text-sm font-medium">{insight.title}</p>
+                        <p className="text-sm font-bold text-primary">{insight.value}</p>
+                      </div>
+                      <p className="text-xs text-muted-foreground">{insight.description}</p>
                     </div>
-                    <Progress value={tag.percentage} className="h-2" />
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  ))}
+                </CardContent>
+              </Card>
 
-          {/* Usage Goals */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Monthly Goals
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-6">
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>Save 25 items</span>
-                    <span className="text-muted-foreground">22/25</span>
-                  </div>
-                  <Progress value={88} className="h-2" />
-                  <p className="text-xs text-muted-foreground mt-1">3 more to reach your goal!</p>
-                </div>
-                
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>Create 5 collections</span>
-                    <span className="text-muted-foreground">3/5</span>
-                  </div>
-                  <Progress value={60} className="h-2" />
-                  <p className="text-xs text-muted-foreground mt-1">2 more collections needed</p>
-                </div>
-
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>Daily usage streak</span>
-                    <span className="text-muted-foreground">7 days</span>
-                  </div>
-                  <Progress value={100} className="h-2" />
-                  <p className="text-xs text-green-600 mt-1">Great job! Keep it up!</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Activity Timeline */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Activity Overview
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="grid grid-cols-5 gap-4 text-center">
-                {monthlyData.map((data, index) => (
-                  <div key={index} className="space-y-2">
-                    <div className="text-sm font-medium">{data.month}</div>
-                    <div className="space-y-1">
-                      <div 
-                        className="bg-primary rounded w-full mx-auto" 
-                        style={{ height: `${(data.saved / 25) * 60}px` }}
-                      ></div>
-                      <div className="text-xs text-muted-foreground">{data.saved} saved</div>
+              <Card className="card-elevated">
+                <CardHeader>
+                  <CardTitle>Recent Activity</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-start gap-3 pb-3 border-b border-border/50 last:border-0">
+                      <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm">
+                          <span className="font-medium">{activity.action}</span>:{" "}
+                          <span className="text-muted-foreground">{activity.title}</span>
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground mt-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-primary rounded"></div>
-                  <span>Items Saved</span>
-                </div>
-              </div>
+                  ))}
+                </CardContent>
+              </Card>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </UnifiedLayout>
+          </div>
+        </div>
+      </main>
+
+      <ImprovedFooter />
+    </div>
   );
 };
 
