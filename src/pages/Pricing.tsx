@@ -1,15 +1,13 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ImprovedMainNavigation from '@/components/navigation/ImprovedMainNavigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Check, Sparkles, ArrowRight, Zap } from 'lucide-react';
+import { Check, X, Star, Zap } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 
 const Pricing = () => {
   const navigate = useNavigate();
@@ -19,79 +17,59 @@ const Pricing = () => {
       name: 'Free',
       price: '$0',
       period: 'forever',
-      description: 'Perfect for getting started with basic knowledge management.',
+      description: 'Perfect for getting started',
       features: [
-        'Save up to 100 items per month',
-        'Basic search and organization',
-        'Web app access',
-        'Mobile apps (iOS & Android)',
-        'Community support',
-        'Basic export options'
+        'Save up to 100 items',
+        'Basic search',
+        'Web clipper extension',
+        'Mobile app access',
+        'Email support'
+      ],
+      limitations: [
+        'No AI organization',
+        'No analytics',
+        'No team features'
       ],
       cta: 'Get Started Free',
-      popular: false,
-      color: 'border-border'
+      popular: false
     },
     {
       name: 'Pro',
-      price: '$12',
+      price: '$9',
       period: 'per month',
-      description: 'Advanced features for power users and professionals.',
+      description: 'For serious knowledge workers',
       features: [
         'Unlimited saves',
         'AI-powered organization',
         'Advanced search & filters',
         'Knowledge analytics',
-        'Browser extension',
+        'Custom tags & collections',
         'Priority support',
-        'Custom tags and collections',
-        'Bulk import/export',
-        'API access',
-        'Team collaboration (up to 5 users)'
+        'Export capabilities'
+      ],
+      limitations: [
+        'Single user only'
       ],
       cta: 'Start Pro Trial',
-      popular: true,
-      color: 'border-primary ring-2 ring-primary/20'
+      popular: true
     },
     {
-      name: 'Enterprise',
-      price: 'Custom',
-      period: 'contact us',
-      description: 'Advanced features and support for larger organizations.',
+      name: 'Team',
+      price: '$19',
+      period: 'per user/month',
+      description: 'Built for collaborative teams',
       features: [
         'Everything in Pro',
-        'Unlimited team members',
-        'Advanced admin controls',
-        'Custom integrations',
-        'Dedicated account manager',
-        'SLA guarantee',
-        'Custom training sessions',
-        'Single Sign-On (SSO)',
-        'Advanced security features',
-        'On-premise deployment option'
+        'Team workspaces',
+        'Shared collections',
+        'Admin controls',
+        'Team analytics',
+        'SSO integration',
+        'Dedicated support'
       ],
-      cta: 'Contact Sales',
-      popular: false,
-      color: 'border-border'
-    }
-  ];
-
-  const faqs = [
-    {
-      question: 'Can I change my plan anytime?',
-      answer: 'Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and billing is prorated.'
-    },
-    {
-      question: 'What happens to my data if I cancel?',
-      answer: 'You retain access to all your data. You can export everything before your subscription ends, and we keep your data for 30 days after cancellation.'
-    },
-    {
-      question: 'Do you offer student discounts?',
-      answer: 'Yes! Students get 50% off Pro plans with a valid student email address. Contact support with your .edu email for verification.'
-    },
-    {
-      question: 'Is there a free trial for Pro?',
-      answer: 'Absolutely! You get a 14-day free trial of Pro with no credit card required. You can cancel anytime during the trial.'
+      limitations: [],
+      cta: 'Start Team Trial',
+      popular: false
     }
   ];
 
@@ -99,10 +77,10 @@ const Pricing = () => {
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
         <title>Pricing - Accio Knowledge Engine</title>
-        <meta name="description" content="Choose the perfect plan for your knowledge management needs. Start free or unlock advanced features with Pro. Enterprise solutions available." />
+        <meta name="description" content="Choose the perfect plan for your knowledge management needs. Start free and upgrade anytime with transparent pricing." />
       </Helmet>
 
-      <ImprovedMainNavigation />
+      <MainNavigation />
 
       <main className="flex-grow">
         {/* Hero Section */}
@@ -118,20 +96,6 @@ const Pricing = () => {
               Start free and scale as you grow. No hidden fees, no surprises. 
               Cancel anytime with full data export.
             </p>
-            <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
-              <div className="flex items-center gap-1">
-                <Check className="h-4 w-4 text-green-500" />
-                <span>14-day free trial</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Check className="h-4 w-4 text-green-500" />
-                <span>No credit card required</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <Check className="h-4 w-4 text-green-500" />
-                <span>Cancel anytime</span>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -140,66 +104,43 @@ const Pricing = () => {
           <div className="container mx-auto px-4 max-w-7xl">
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {plans.map((plan, index) => (
-                <Card 
-                  key={index} 
-                  className={cn(
-                    "relative overflow-hidden transition-all duration-300 hover:shadow-lg",
-                    plan.color,
-                    plan.popular && "scale-105 shadow-xl"
-                  )}
-                >
+                <Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-lg scale-105' : ''}`}>
                   {plan.popular && (
-                    <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-primary to-blue-600 text-white text-center py-2 text-sm font-medium">
-                      <Sparkles className="inline h-4 w-4 mr-1" />
+                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-primary to-blue-600">
+                      <Star className="h-3 w-3 mr-1" />
                       Most Popular
-                    </div>
+                    </Badge>
                   )}
-                  
-                  <CardHeader className={cn("text-center", plan.popular && "pt-12")}>
+                  <CardHeader className="text-center pb-8">
                     <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                    <div className="py-4">
+                    <div className="mt-4">
                       <span className="text-4xl font-bold">{plan.price}</span>
-                      {plan.period !== 'contact us' && (
-                        <span className="text-muted-foreground ml-1">/{plan.period}</span>
-                      )}
+                      <span className="text-muted-foreground">/{plan.period}</span>
                     </div>
-                    <CardDescription className="text-base">
-                      {plan.description}
-                    </CardDescription>
+                    <CardDescription className="mt-2">{plan.description}</CardDescription>
                   </CardHeader>
-
-                  <CardContent className="space-y-6">
+                  <CardContent>
                     <Button 
-                      className={cn(
-                        "w-full",
-                        plan.popular 
-                          ? "bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
-                          : ""
-                      )}
-                      variant={plan.popular ? "default" : "outline"}
-                      onClick={() => {
-                        if (plan.name === 'Enterprise') {
-                          navigate('/contact');
-                        } else {
-                          navigate('/register');
-                        }
-                      }}
+                      className={`w-full mb-6 ${plan.popular ? 'bg-gradient-to-r from-primary to-blue-600' : ''}`}
+                      variant={plan.popular ? 'default' : 'outline'}
+                      onClick={() => navigate('/register')}
                     >
-                      {plan.name === 'Pro' && <Zap className="mr-2 h-4 w-4" />}
                       {plan.cta}
-                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
-
-                    <Separator />
-
-                    <ul className="space-y-3">
+                    <div className="space-y-3">
                       {plan.features.map((feature, i) => (
-                        <li key={i} className="flex items-start gap-3">
-                          <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                        <div key={i} className="flex items-center gap-3">
+                          <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
                           <span className="text-sm">{feature}</span>
-                        </li>
+                        </div>
                       ))}
-                    </ul>
+                      {plan.limitations.map((limitation, i) => (
+                        <div key={i} className="flex items-center gap-3">
+                          <X className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                          <span className="text-sm text-muted-foreground">{limitation}</span>
+                        </div>
+                      ))}
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -210,24 +151,20 @@ const Pricing = () => {
         {/* FAQ Section */}
         <section className="py-20 bg-muted/20">
           <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Frequently Asked Questions</h2>
-              <p className="text-xl text-muted-foreground">
-                Everything you need to know about our pricing and plans.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              {faqs.map((faq, index) => (
-                <Card key={index} className="hover:shadow-lg transition-all duration-300">
-                  <CardHeader>
-                    <CardTitle className="text-lg">{faq.question}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
-                  </CardContent>
-                </Card>
-              ))}
+            <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+            <div className="space-y-6">
+              <div className="bg-background rounded-lg p-6">
+                <h3 className="font-semibold mb-2">Can I change plans anytime?</h3>
+                <p className="text-muted-foreground">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
+              </div>
+              <div className="bg-background rounded-lg p-6">
+                <h3 className="font-semibold mb-2">What happens to my data if I cancel?</h3>
+                <p className="text-muted-foreground">You can export all your data before canceling. We keep your data for 30 days after cancellation.</p>
+              </div>
+              <div className="bg-background rounded-lg p-6">
+                <h3 className="font-semibold mb-2">Do you offer refunds?</h3>
+                <p className="text-muted-foreground">Yes, we offer a 30-day money-back guarantee for all paid plans.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -235,25 +172,18 @@ const Pricing = () => {
         {/* CTA Section */}
         <section className="py-20 bg-gradient-to-r from-primary to-blue-600 text-white">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Supercharge Your Knowledge Management?
-            </h2>
-            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-              Join thousands of professionals who have transformed their productivity with Accio.
-              Start free today!
+            <h2 className="text-3xl font-bold mb-6">Ready to get started?</h2>
+            <p className="text-xl opacity-90 mb-8">
+              Join thousands of professionals already using Accio to manage their knowledge.
             </p>
             <Button 
               size="lg" 
               onClick={() => navigate('/register')} 
               className="bg-white text-primary hover:bg-white/95 text-lg px-8 py-4 font-semibold"
             >
-              <Sparkles className="mr-2 h-5 w-5" />
-              Start Your Free Trial
-              <ArrowRight className="ml-2 h-5 w-5" />
+              <Zap className="mr-2 h-5 w-5" />
+              Start Free Today
             </Button>
-            <p className="text-sm opacity-75 mt-6">
-              No credit card required • Cancel anytime • Full data export
-            </p>
           </div>
         </section>
       </main>

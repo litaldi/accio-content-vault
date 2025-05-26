@@ -1,10 +1,10 @@
 
 import React from 'react';
-import OrganizedNavigation from './OrganizedNavigation';
+import MainNavigation from './MainNavigation';
 
-// EnhancedNavigation is an alias for OrganizedNavigation to maintain compatibility
+// EnhancedNavigation is an alias for MainNavigation to maintain compatibility
 const EnhancedNavigation: React.FC = () => {
-  return <OrganizedNavigation />;
+  return <MainNavigation />;
 };
 
 export default EnhancedNavigation;

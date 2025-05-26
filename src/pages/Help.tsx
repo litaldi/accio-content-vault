@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ImprovedMainNavigation from '@/components/navigation/ImprovedMainNavigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -94,7 +94,7 @@ const Help = () => {
         <meta name="description" content="Get help and support for Accio. Find answers to common questions, tutorials, and contact our support team." />
       </Helmet>
 
-      <ImprovedMainNavigation />
+      <MainNavigation />
 
       <main className="flex-grow" id="main-content">
         {/* Hero Section */}

@@ -3,10 +3,10 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
-import EnhancedFooter from '@/components/Footer/EnhancedFooter';
+import MainNavigation from '@/components/navigation/MainNavigation';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
-import SkipLinks from '@/components/accessibility/SkipLinks';
+import SkipToContent from '@/components/accessibility/SkipToContent';
 import { Toaster } from '@/components/ui/toaster';
 
 interface UnifiedLayoutProps {
@@ -42,10 +42,10 @@ export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
       lang="en"
     >
       {/* Skip Links for accessibility */}
-      <SkipLinks />
+      <SkipToContent />
 
       {/* Navigation */}
-      {showNavigation && <OrganizedNavigation />}
+      {showNavigation && <MainNavigation />}
 
       {/* Main Content */}
       <main
@@ -69,7 +69,7 @@ export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
       <AccessibilityButton variant="floating" />
 
       {/* Footer */}
-      {showFooter && <EnhancedFooter />}
+      {showFooter && <ImprovedFooter />}
 
       {/* Toast Notifications */}
       <Toaster />
