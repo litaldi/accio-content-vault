@@ -68,6 +68,60 @@ export const validateEmailEnhanced = (email: string): { isValid: boolean; messag
 };
 
 /**
+ * Validate password strength and security
+ */
+export const validatePassword = (password: string): { isValid: boolean; message: string; strength: number } => {
+  if (!password || typeof password !== 'string') {
+    return { isValid: false, message: 'Password is required', strength: 0 };
+  }
+
+  let strength = 0;
+  const feedback = [];
+
+  // Length check
+  if (password.length >= 8) {
+    strength += 20;
+  } else {
+    feedback.push('at least 8 characters');
+  }
+
+  // Uppercase check
+  if (/[A-Z]/.test(password)) {
+    strength += 20;
+  } else {
+    feedback.push('an uppercase letter');
+  }
+
+  // Lowercase check
+  if (/[a-z]/.test(password)) {
+    strength += 20;
+  } else {
+    feedback.push('a lowercase letter');
+  }
+
+  // Number check
+  if (/\d/.test(password)) {
+    strength += 20;
+  } else {
+    feedback.push('a number');
+  }
+
+  // Special character check
+  if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    strength += 20;
+  } else {
+    feedback.push('a special character');
+  }
+
+  const isValid = strength >= 60; // At least 3 criteria met
+  const message = isValid 
+    ? 'Password is strong' 
+    : `Password needs: ${feedback.join(', ')}`;
+
+  return { isValid, message, strength };
+};
+
+/**
  * Validate email format
  */
 export const isValidEmail = (email: string): boolean => {
