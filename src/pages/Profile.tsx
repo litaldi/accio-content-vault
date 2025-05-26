@@ -1,221 +1,319 @@
 
 import React, { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
-import CleanNavigation from '@/components/navigation/CleanNavigation';
-import Footer from '@/components/Footer';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
 import { 
   User, 
   Mail, 
   Calendar, 
-  Star,
-  Settings,
+  MapPin, 
+  Edit, 
+  Save, 
   Camera,
-  CheckCircle
+  Trophy,
+  BookmarkPlus,
+  Brain,
+  TrendingUp,
+  Settings,
+  Shield
 } from 'lucide-react';
 
 const Profile = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const [profile, setProfile] = useState({
-    name: 'Knowledge Architect',
-    email: user?.email || 'user@example.com',
-    joinDate: 'January 2024',
-    bio: 'Passionate about organizing knowledge and building my digital brain with AI-powered tools.'
+  const [formData, setFormData] = useState({
+    name: 'Alex Johnson',
+    email: 'alex.johnson@example.com',
+    bio: 'Passionate learner and knowledge curator. I love exploring new technologies and sharing insights with the community.',
+    location: 'San Francisco, CA',
+    website: 'https://alexjohnson.dev',
+    joinDate: 'March 2023'
   });
 
-  const achievements = [
-    { title: "Early Adopter", description: "Joined Accio in the first month", icon: Star },
-    { title: "Knowledge Curator", description: "Saved 1000+ items", icon: CheckCircle },
-    { title: "Collection Master", description: "Created 10+ collections", icon: CheckCircle },
-    { title: "Learning Streak", description: "12-day active streak", icon: CheckCircle }
+  const stats = [
+    { label: "Content Saved", value: "1,247", icon: BookmarkPlus, color: "text-blue-600" },
+    { label: "Collections", value: "23", icon: Trophy, color: "text-purple-600" },
+    { label: "AI Insights", value: "156", icon: Brain, color: "text-green-600" },
+    { label: "Learning Streak", value: "42 days", icon: TrendingUp, color: "text-orange-600" }
   ];
 
-  const stats = [
-    { label: "Total Saves", value: "1,247" },
-    { label: "Collections", value: "18" },
-    { label: "Days Active", value: "89" },
-    { label: "Time Saved", value: "156h" }
+  const achievements = [
+    { name: "Early Adopter", description: "Joined in the first month", icon: "🌟" },
+    { name: "Knowledge Explorer", description: "Saved 1000+ items", icon: "🔍" },
+    { name: "Consistent Learner", description: "40+ day learning streak", icon: "📚" },
+    { name: "AI Enthusiast", description: "Generated 100+ insights", icon: "🤖" },
+    { name: "Collection Master", description: "Created 20+ collections", icon: "📁" }
+  ];
+
+  const recentActivity = [
+    { action: "Saved article", item: "The Future of Web Development", time: "2 hours ago" },
+    { action: "Created collection", item: "React Best Practices", time: "1 day ago" },
+    { action: "Generated insight", item: "AI in Education trends", time: "2 days ago" },
+    { action: "Updated collection", item: "Machine Learning Resources", time: "3 days ago" }
   ];
 
   const handleSave = () => {
-    toast({
-      title: "Profile updated",
-      description: "Your profile has been updated successfully.",
-    });
     setIsEditing(false);
+    // Here you would typically save to backend
+  };
+
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Helmet>
-        <title>Profile - Accio</title>
-        <meta name="description" content="Manage your Accio profile, view achievements, and track your knowledge journey." />
-      </Helmet>
+    <UnifiedPageLayout
+      title="Profile - Manage Your Account | Accio"
+      description="View and manage your Accio profile, track your learning progress, and customize your account settings."
+    >
+      <div className="container py-8">
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Profile Card */}
+          <div className="lg:col-span-1">
+            <Card>
+              <CardContent className="p-6">
+                {/* Avatar Section */}
+                <div className="text-center mb-6">
+                  <div className="relative inline-block">
+                    <div className="w-24 h-24 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
+                      {formData.name.split(' ').map(n => n[0]).join('')}
+                    </div>
+                    <Button size="sm" className="absolute -bottom-2 -right-2 rounded-full w-8 h-8 p-0">
+                      <Camera className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  
+                  {isEditing ? (
+                    <div className="space-y-3">
+                      <Input
+                        value={formData.name}
+                        onChange={(e) => handleInputChange('name', e.target.value)}
+                        className="text-center font-semibold"
+                      />
+                    </div>
+                  ) : (
+                    <>
+                      <h2 className="text-xl font-bold mb-1">{formData.name}</h2>
+                      <p className="text-muted-foreground text-sm">Knowledge Curator</p>
+                    </>
+                  )}
+                </div>
 
-      <CleanNavigation />
+                {/* Profile Info */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3 text-sm">
+                    <Mail className="h-4 w-4 text-muted-foreground" />
+                    {isEditing ? (
+                      <Input
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        className="text-sm"
+                      />
+                    ) : (
+                      <span>{formData.email}</span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-sm">
+                    <MapPin className="h-4 w-4 text-muted-foreground" />
+                    {isEditing ? (
+                      <Input
+                        value={formData.location}
+                        onChange={(e) => handleInputChange('location', e.target.value)}
+                        className="text-sm"
+                      />
+                    ) : (
+                      <span>{formData.location}</span>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center gap-3 text-sm">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    <span>Joined {formData.joinDate}</span>
+                  </div>
+                </div>
 
-      <main className="flex-grow">
-        {/* Header */}
-        <section className="border-b bg-muted/30 py-8">
-          <div className="container">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-              <div className="flex items-center gap-6">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center relative">
-                  <User className="h-10 w-10 text-primary" />
-                  <Button size="sm" variant="secondary" className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full p-0">
-                    <Camera className="h-4 w-4" />
+                <Separator className="my-6" />
+
+                {/* Bio Section */}
+                <div>
+                  <Label className="text-sm font-medium mb-2 block">Bio</Label>
+                  {isEditing ? (
+                    <Textarea
+                      value={formData.bio}
+                      onChange={(e) => handleInputChange('bio', e.target.value)}
+                      className="min-h-[80px] text-sm"
+                    />
+                  ) : (
+                    <p className="text-sm text-muted-foreground">{formData.bio}</p>
+                  )}
+                </div>
+
+                <Separator className="my-6" />
+
+                {/* Action Buttons */}
+                <div className="space-y-2">
+                  {isEditing ? (
+                    <div className="flex gap-2">
+                      <Button onClick={handleSave} size="sm" className="flex-1 gap-2">
+                        <Save className="h-4 w-4" />
+                        Save
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setIsEditing(false)}
+                        className="flex-1"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  ) : (
+                    <Button 
+                      onClick={() => setIsEditing(true)} 
+                      variant="outline" 
+                      size="sm" 
+                      className="w-full gap-2"
+                    >
+                      <Edit className="h-4 w-4" />
+                      Edit Profile
+                    </Button>
+                  )}
+                  
+                  <Button variant="ghost" size="sm" className="w-full gap-2">
+                    <Settings className="h-4 w-4" />
+                    Account Settings
                   </Button>
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold">{profile.name}</h1>
-                  <p className="text-muted-foreground flex items-center gap-2 mt-1">
-                    <Mail className="h-4 w-4" />
-                    {profile.email}
-                  </p>
-                  <p className="text-muted-foreground flex items-center gap-2 mt-1">
-                    <Calendar className="h-4 w-4" />
-                    Joined {profile.joinDate}
-                  </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Stats */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Stats</CardTitle>
+                <CardDescription>
+                  Overview of your learning and engagement metrics
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {stats.map((stat, index) => (
+                    <div key={index} className="text-center p-4 rounded-lg bg-muted/30">
+                      <div className={`w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2`}>
+                        <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                      </div>
+                      <p className="text-xl font-bold">{stat.value}</p>
+                      <p className="text-xs text-muted-foreground">{stat.label}</p>
+                    </div>
+                  ))}
                 </div>
-              </div>
-              <Button 
-                variant={isEditing ? "default" : "outline"}
-                onClick={isEditing ? handleSave : () => setIsEditing(true)}
-              >
-                <Settings className="h-4 w-4 mr-2" />
-                {isEditing ? "Save Changes" : "Edit Profile"}
-              </Button>
-            </div>
+              </CardContent>
+            </Card>
+
+            {/* Achievements */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Achievements</CardTitle>
+                <CardDescription>
+                  Milestones you've unlocked on your learning journey
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {achievements.map((achievement, index) => (
+                    <div key={index} className="flex items-center gap-3 p-4 rounded-lg border">
+                      <div className="text-2xl">{achievement.icon}</div>
+                      <div>
+                        <h4 className="font-semibold">{achievement.name}</h4>
+                        <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                  Your latest interactions and contributions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
+                      <div className="flex-1">
+                        <p className="text-sm">
+                          <span className="font-medium">{activity.action}</span>
+                          {' "'}
+                          <span className="text-muted-foreground">{activity.item}</span>
+                          {'"'}
+                        </p>
+                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Privacy & Security */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5" />
+                  Privacy & Security
+                </CardTitle>
+                <CardDescription>
+                  Manage your privacy settings and account security
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">Profile Visibility</h4>
+                      <p className="text-sm text-muted-foreground">Control who can see your profile</p>
+                    </div>
+                    <Badge variant="secondary">Public</Badge>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">Data Export</h4>
+                      <p className="text-sm text-muted-foreground">Download your data anytime</p>
+                    </div>
+                    <Button variant="outline" size="sm">Export</Button>
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium">Two-Factor Authentication</h4>
+                      <p className="text-sm text-muted-foreground">Add extra security to your account</p>
+                    </div>
+                    <Button variant="outline" size="sm">Enable</Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </section>
-
-        {/* Profile Content */}
-        <section className="py-8">
-          <div className="container">
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Profile Details */}
-              <div className="lg:col-span-2 space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Profile Information</CardTitle>
-                    <CardDescription>
-                      Manage your personal information and preferences
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Display Name</Label>
-                      <Input
-                        id="name"
-                        value={profile.name}
-                        onChange={(e) => setProfile({ ...profile, name: e.target.value })}
-                        disabled={!isEditing}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={profile.email}
-                        disabled
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="bio">Bio</Label>
-                      <textarea
-                        id="bio"
-                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        value={profile.bio}
-                        onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                        disabled={!isEditing}
-                        rows={3}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Achievements */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Achievements</CardTitle>
-                    <CardDescription>
-                      Milestones you've unlocked on your knowledge journey
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      {achievements.map((achievement, index) => (
-                        <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <achievement.icon className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <div className="font-medium">{achievement.title}</div>
-                            <div className="text-sm text-muted-foreground">{achievement.description}</div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Sidebar */}
-              <div className="space-y-6">
-                {/* Stats */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Your Stats</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {stats.map((stat, index) => (
-                        <div key={index} className="flex justify-between items-center">
-                          <span className="text-muted-foreground">{stat.label}</span>
-                          <Badge variant="secondary">{stat.value}</Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Quick Actions */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Quick Actions</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <Button variant="outline" className="w-full justify-start">
-                      <Settings className="h-4 w-4 mr-2" />
-                      Account Settings
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start">
-                      <Star className="h-4 w-4 mr-2" />
-                      Export Data
-                    </Button>
-                    <Button variant="outline" className="w-full justify-start text-destructive hover:text-destructive">
-                      <User className="h-4 w-4 mr-2" />
-                      Delete Account
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <Footer />
-    </div>
+        </div>
+      </div>
+    </UnifiedPageLayout>
   );
 };
 

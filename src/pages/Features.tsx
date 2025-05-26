@@ -1,21 +1,25 @@
 
 import React from 'react';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
+  EnhancedTypography, 
+  EnhancedLayout, 
+  EnhancedCard,
+  animations 
+} from '@/components/ui/enhanced-design-system';
+import { 
   Brain, 
-  Zap, 
   Search, 
+  BookOpen, 
+  TrendingUp, 
   Shield,
+  Zap,
+  Target,
   Users,
-  Cloud,
-  Smartphone,
-  FileText,
-  Tag,
-  Network,
-  Star,
+  Sparkles,
+  ArrowRight,
   CheckCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -24,154 +28,151 @@ const Features = () => {
   const mainFeatures = [
     {
       icon: Brain,
-      title: "AI-Powered Organization",
-      description: "Our intelligent system automatically categorizes and connects your knowledge, creating meaningful relationships between your ideas.",
-      highlights: ["Smart tagging", "Auto-categorization", "Concept linking", "Pattern recognition"]
+      title: "AI-Powered Knowledge Processing",
+      description: "Transform any content into organized, searchable insights with advanced AI that understands context and meaning.",
+      benefits: ["Natural language processing", "Auto-categorization", "Smart tagging", "Content summarization"],
+      color: "from-blue-500 to-purple-600"
     },
     {
-      icon: Zap,
-      title: "Lightning Fast Search",
-      description: "Find anything in seconds with our semantic search that understands context, not just keywords.",
-      highlights: ["Semantic understanding", "Context-aware results", "Instant suggestions", "Natural language queries"]
+      icon: Search,
+      title: "Intelligent Search & Discovery",
+      description: "Find exactly what you need with semantic search that understands intent, not just keywords.",
+      benefits: ["Semantic search", "Visual similarity", "Context awareness", "Instant results"],
+      color: "from-green-500 to-blue-500"
     },
     {
-      icon: Shield,
-      title: "Enterprise Security",
-      description: "Your data stays private and secure with end-to-end encryption and enterprise-grade security measures.",
-      highlights: ["End-to-end encryption", "GDPR compliant", "Zero-knowledge architecture", "Regular security audits"]
+      icon: BookOpen,
+      title: "Smart Organization System",
+      description: "Create collections that automatically grow and organize themselves as you add more content.",
+      benefits: ["Auto-organization", "Smart collections", "Tag suggestions", "Content relationships"],
+      color: "from-purple-500 to-pink-500"
+    },
+    {
+      icon: TrendingUp,
+      title: "Learning Analytics & Insights",
+      description: "Track your knowledge growth with detailed analytics and personalized recommendations.",
+      benefits: ["Progress tracking", "Learning patterns", "Knowledge gaps", "Smart recommendations"],
+      color: "from-orange-500 to-red-500"
     }
   ];
 
   const additionalFeatures = [
-    { icon: Users, title: "Team Collaboration", description: "Share knowledge seamlessly with your team" },
-    { icon: Cloud, title: "Cloud Sync", description: "Access your knowledge from anywhere, anytime" },
-    { icon: Smartphone, title: "Mobile Ready", description: "Fully responsive design for all devices" },
-    { icon: FileText, title: "Rich Content", description: "Support for text, images, documents, and more" },
-    { icon: Tag, title: "Smart Tags", description: "Intelligent tagging system for better organization" },
-    { icon: Network, title: "Knowledge Graph", description: "Visualize connections between your ideas" }
+    { icon: Shield, title: "Enterprise Security", description: "Bank-level encryption and privacy protection" },
+    { icon: Zap, title: "Lightning Fast", description: "Sub-second search across millions of items" },
+    { icon: Target, title: "99.9% Accuracy", description: "Precision AI processing with human-level understanding" },
+    { icon: Users, title: "Team Collaboration", description: "Share knowledge and collaborate seamlessly" }
   ];
 
   return (
     <UnifiedPageLayout
-      title="Features - Accio Knowledge Engine"
-      description="Discover all the powerful features that make Accio the ultimate AI-powered knowledge management platform."
+      title="Features - Powerful AI Knowledge Tools | Accio"
+      description="Discover Accio's powerful features: AI-powered knowledge processing, intelligent search, smart organization, and learning analytics."
     >
       {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-background">
-        <div className="container text-center">
-          <Badge variant="outline" className="mb-6">
-            <Star className="h-3 w-3 mr-1" />
-            Features Overview
-          </Badge>
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-            Everything you need to build your
-            <span className="text-primary block">knowledge empire</span>
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Powerful features designed to amplify your intellectual capabilities and transform 
-            how you work with information.
-          </p>
-          <Button size="lg" asChild>
-            <Link to="/register">
-              Start Free Trial
-            </Link>
-          </Button>
-        </div>
-      </section>
+      <EnhancedLayout.Section variant="primary">
+        <EnhancedLayout.Container>
+          <div className="text-center max-w-4xl mx-auto">
+            <Badge variant="outline" className={`mb-6 ${animations.fadeIn}`}>
+              <Sparkles className="h-3 w-3 mr-1" />
+              Powered by Advanced AI
+            </Badge>
+            
+            <EnhancedTypography.H1 className={animations.slideUp}>
+              Features That Transform
+              <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent"> Knowledge Work</span>
+            </EnhancedTypography.H1>
+            
+            <EnhancedTypography.Lead className={animations.slideUp}>
+              Discover the powerful capabilities that make Accio the ultimate 
+              knowledge management platform for modern professionals.
+            </EnhancedTypography.Lead>
+          </div>
+        </EnhancedLayout.Container>
+      </EnhancedLayout.Section>
 
       {/* Main Features */}
-      <section className="py-16">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Core Features</h2>
-            <p className="text-xl text-muted-foreground">
-              The foundation of intelligent knowledge management
-            </p>
-          </div>
-
-          <div className="grid gap-12 lg:gap-16">
+      <EnhancedLayout.Section>
+        <EnhancedLayout.Container>
+          <EnhancedLayout.Grid cols="two">
             {mainFeatures.map((feature, index) => (
-              <div key={index} className={`grid lg:grid-cols-2 gap-8 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
-                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
-                  <Card className="border-0 shadow-lg">
-                    <CardHeader>
-                      <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                        <feature.icon className="h-8 w-8 text-primary" />
-                      </div>
-                      <CardTitle className="text-2xl">{feature.title}</CardTitle>
-                      <CardDescription className="text-lg leading-relaxed">
-                        {feature.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {feature.highlights.map((highlight, idx) => (
-                          <li key={idx} className="flex items-center gap-2">
-                            <CheckCircle className="h-4 w-4 text-primary" />
-                            <span className="text-sm">{highlight}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+              <EnhancedCard.Feature key={index} className={animations.hoverLift}>
+                <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6`}>
+                  <feature.icon className="h-8 w-8 text-white" />
                 </div>
-                <div className={`bg-gradient-to-br from-primary/10 to-transparent rounded-lg p-8 flex items-center justify-center ${index % 2 === 1 ? 'lg:col-start-1' : ''}`}>
-                  <feature.icon className="h-32 w-32 text-primary/60" />
+                <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+                <p className="text-muted-foreground leading-relaxed mb-6">{feature.description}</p>
+                
+                <div className="space-y-3">
+                  {feature.benefits.map((benefit, benefitIndex) => (
+                    <div key={benefitIndex} className="flex items-center gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0" />
+                      <span className="text-sm">{benefit}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              </EnhancedCard.Feature>
             ))}
-          </div>
-        </div>
-      </section>
+          </EnhancedLayout.Grid>
+        </EnhancedLayout.Container>
+      </EnhancedLayout.Section>
 
-      {/* Additional Features Grid */}
-      <section className="py-16 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Additional Features</h2>
-            <p className="text-lg text-muted-foreground">
-              Even more ways to enhance your knowledge workflow
-            </p>
+      {/* Additional Features */}
+      <EnhancedLayout.Section variant="accent">
+        <EnhancedLayout.Container>
+          <div className="text-center mb-16">
+            <EnhancedTypography.H2>
+              Built for Performance & Scale
+            </EnhancedTypography.H2>
+            <EnhancedTypography.Body className="text-lg">
+              Enterprise-grade capabilities that grow with your needs.
+            </EnhancedTypography.Body>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <EnhancedLayout.Grid cols="four">
             {additionalFeatures.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-sm text-muted-foreground">{feature.description}</p>
-                </CardContent>
-              </Card>
+              <div key={index} className={`text-center ${animations.hoverLift}`}>
+                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <feature.icon className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground">{feature.description}</p>
+              </div>
             ))}
-          </div>
-        </div>
-      </section>
+          </EnhancedLayout.Grid>
+        </EnhancedLayout.Container>
+      </EnhancedLayout.Section>
 
       {/* CTA Section */}
-      <section className="py-16">
-        <div className="container">
-          <Card className="border-0 bg-gradient-to-r from-primary/10 to-transparent">
-            <CardContent className="p-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Join thousands of professionals who've transformed their knowledge management. 
-                Start your free trial today.
-              </p>
+      <EnhancedLayout.Section>
+        <EnhancedLayout.Container>
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="bg-gradient-to-br from-primary/5 to-purple-500/5 rounded-3xl p-12 border border-primary/10">
+              <EnhancedTypography.H2 className="mb-4">
+                Ready to experience the future of knowledge management?
+              </EnhancedTypography.H2>
+              
+              <EnhancedTypography.Body className="text-lg mb-8">
+                Join thousands of professionals who've transformed their productivity with Accio's powerful features.
+              </EnhancedTypography.Body>
+              
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" asChild>
-                  <Link to="/register">Start Free Trial</Link>
+                <Button size="xl" className="group" asChild>
+                  <Link to="/register">
+                    Start Free Trial
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
                 </Button>
-                <Button variant="outline" size="lg" asChild>
-                  <Link to="/contact">Contact Sales</Link>
+                
+                <Button variant="outline" size="xl" asChild>
+                  <Link to="/contact">
+                    Schedule Demo
+                  </Link>
                 </Button>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
+            </div>
+          </div>
+        </EnhancedLayout.Container>
+      </EnhancedLayout.Section>
     </UnifiedPageLayout>
   );
 };
