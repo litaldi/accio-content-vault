@@ -38,6 +38,7 @@ export const copy = {
     signIn: 'Sign In',
     signOut: 'Sign Out',
     getStarted: 'Get Started',
+    exploreFeatures: 'Explore Features',
     back: 'Back',
     next: 'Next',
     finish: 'Get Started',
@@ -45,6 +46,40 @@ export const copy = {
   },
   loading: {
     loading: 'Loading...'
+  },
+  headlines: {
+    hero: 'Your Personal Knowledge Library',
+    subhero: 'Save, organize, and discover content with the power of AI. Never lose an important article, video, or document again.'
+  },
+  social: {
+    companies: 'Trusted by knowledge workers at leading companies',
+    userCount: '10,000+',
+    rating: '4.9/5 stars'
+  },
+  trust: {
+    freeTrial: '14-day free trial'
+  },
+  emptyStates: {
+    library: {
+      title: 'Your library is empty',
+      description: 'Start building your knowledge collection by saving your first piece of content.',
+      action: 'Save Content'
+    },
+    search: {
+      title: 'No results found',
+      description: 'Try adjusting your search terms or browse through your collections.',
+      action: 'Clear Search'
+    },
+    dashboard: {
+      title: 'Welcome to your dashboard',
+      description: 'Your saved content and insights will appear here once you start building your library.',
+      action: 'Get Started'
+    },
+    recent: {
+      title: 'No recent activity',
+      description: 'Your recently viewed and saved content will appear here.',
+      action: 'Explore Library'
+    }
   },
   onboarding: {
     welcome: {

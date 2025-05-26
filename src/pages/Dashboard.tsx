@@ -9,6 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useDemoData } from '@/hooks/useDemoData';
 import DemoBanner from '@/components/demo/DemoBanner';
 import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
+import { cn } from '@/lib/utils';
 import { 
   BookmarkPlus, 
   Search, 
