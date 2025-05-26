@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import ImprovedNavigation from '@/components/navigation/ImprovedNavigation';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import {
   Accordion,
@@ -53,7 +53,7 @@ const FAQ = () => {
         <meta name="description" content="Frequently asked questions about Accio's features, pricing, and how to get started." />
       </Helmet>
       
-      <EnhancedNavigation />
+      <ImprovedNavigation />
       
       <main className="flex-grow py-16">
         <div className="container mx-auto px-4 max-w-4xl">
