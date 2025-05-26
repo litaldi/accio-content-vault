@@ -82,7 +82,7 @@ const MainNavigation: React.FC = () => {
     setMobileMenuOpen(false);
   };
 
-  const handleLanguageChange = (lang: string) => {
+  const handleLanguageChange = (lang: 'en' | 'he' | 'ar') => {
     setLanguage(lang);
     announceToScreenReader(`Language changed to ${lang === 'en' ? 'English' : lang === 'he' ? 'Hebrew' : 'Arabic'}`);
   };
