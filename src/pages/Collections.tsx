@@ -1,6 +1,7 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Header } from '@/components/layout/Header';
+import Footer from '@/components/Footer';
 import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -56,7 +57,7 @@ const Collections = () => {
         <meta name="description" content="Organize your saved content into smart collections for easy access and management." />
       </Helmet>
 
-      <ProfessionalNavigation />
+      <Header />
 
       <main className="flex-grow">
         {/* Header Section */}
@@ -154,7 +155,7 @@ const Collections = () => {
         </section>
       </main>
 
-      <ImprovedFooter />
+      <Footer />
     </div>
   );
 };

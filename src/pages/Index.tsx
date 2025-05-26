@@ -1,7 +1,8 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { Header } from '@/components/layout/Header';
+import Footer from '@/components/Footer';
 import { 
   HeroSection,
   StatsSection,
@@ -14,7 +15,7 @@ import {
 
 const Index = () => {
   return (
-    <UnifiedLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
         <title>Accio - Your AI-Powered Knowledge Engine</title>
         <meta name="description" content="Transform how you save, organize, and access digital content with Accio's intelligent AI-powered knowledge engine. Never lose important information again." />
@@ -22,16 +23,22 @@ const Index = () => {
         <link rel="canonical" href="/" />
       </Helmet>
 
-      <div className="py-12 space-y-24">
-        <HeroSection />
-        <StatsSection />
-        <EnhancedFeaturesSection />
-        <TestimonialsSection />
-        <BenefitsSection />
-        <FAQSection />
-        <FinalCTASection />
-      </div>
-    </UnifiedLayout>
+      <Header />
+      
+      <main className="flex-1" role="main">
+        <div className="py-12 space-y-24">
+          <HeroSection />
+          <StatsSection />
+          <EnhancedFeaturesSection />
+          <TestimonialsSection />
+          <BenefitsSection />
+          <FAQSection />
+          <FinalCTASection />
+        </div>
+      </main>
+      
+      <Footer />
+    </div>
   );
 };
 

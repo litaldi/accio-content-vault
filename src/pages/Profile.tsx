@@ -1,6 +1,7 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Header } from '@/components/layout/Header';
+import Footer from '@/components/Footer';
 import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -44,7 +45,7 @@ const Profile = () => {
         <meta name="description" content="Manage your profile, view your achievements, and track your knowledge management progress." />
       </Helmet>
 
-      <ProfessionalNavigation />
+      <Header />
 
       <main className="flex-grow">
         {/* Header Section */}
@@ -226,7 +227,7 @@ const Profile = () => {
         </div>
       </main>
 
-      <ImprovedFooter />
+      <Footer />
     </div>
   );
 };

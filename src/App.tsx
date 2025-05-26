@@ -7,6 +7,11 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import Dashboard from '@/pages/Dashboard';
+import Collections from '@/pages/Collections';
+import Analytics from '@/pages/Analytics';
+import Profile from '@/pages/Profile';
+import Settings from '@/pages/Settings';
 import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '@/contexts/AuthContext';
 
@@ -49,6 +54,11 @@ function App() {
                 <Route path="/" element={<Index />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/collections" element={<Collections />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
               
