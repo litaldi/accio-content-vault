@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
 import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, MessageSquare, HelpCircle, Send } from 'lucide-react';
+import { Mail, MessageSquare, Phone, MapPin } from 'lucide-react';
+import { sanitizeHtml, isValidEmail } from '@/utils/security';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -22,23 +23,32 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!isValidEmail(formData.email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
       // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast({
-        title: "Message sent successfully!",
-        description: "We'll get back to you within 24 hours.",
+        title: "Message sent!",
+        description: "Thank you for your message. We'll get back to you soon.",
       });
-
-      // Reset form
+      
       setFormData({ name: '', email: '', subject: '', message: '' });
     } catch (error) {
       toast({
-        title: "Error sending message",
-        description: "Please try again later.",
+        title: "Failed to send message",
+        description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -46,172 +56,180 @@ const Contact = () => {
     }
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: keyof typeof formData) => (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: sanitizeHtml(e.target.value)
+    }));
   };
-
-  const contactOptions = [
-    {
-      title: "General Support",
-      description: "Questions about features, pricing, or your account",
-      icon: HelpCircle,
-      email: "support@accio.app"
-    },
-    {
-      title: "Technical Issues",
-      description: "Bug reports, technical problems, or integration help",
-      icon: MessageSquare,
-      email: "tech@accio.app"
-    },
-    {
-      title: "Business Inquiries",
-      description: "Partnerships, press, or enterprise solutions",
-      icon: Mail,
-      email: "business@accio.app"
-    }
-  ];
 
   return (
     <EnhancedUnifiedLayout>
       <Helmet>
-        <title>Contact Us - Accio Knowledge Library</title>
-        <meta name="description" content="Get in touch with our team for support, questions, or feedback about Accio." />
+        <title>Contact - Accio Knowledge Library</title>
+        <meta name="description" content="Get in touch with the Accio team. We're here to help with questions, feedback, and support." />
       </Helmet>
 
       <UnifiedSpacing.Section>
         <UnifiedSpacing.Container>
-          <div className="max-w-4xl mx-auto">
-            {/* Header */}
-            <div className="text-center mb-12">
-              <UnifiedTypography.H1>Get in Touch</UnifiedTypography.H1>
-              <UnifiedTypography.Lead>
-                Have a question or need help? We're here to assist you.
-              </UnifiedTypography.Lead>
-            </div>
+          {/* Header */}
+          <div className="text-center mb-12">
+            <UnifiedTypography.H1>Contact Us</UnifiedTypography.H1>
+            <UnifiedTypography.Lead>
+              We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+            </UnifiedTypography.Lead>
+          </div>
 
-            <div className="grid lg:grid-cols-3 gap-8">
-              {/* Contact Options */}
-              <div className="lg:col-span-1 space-y-6">
-                <div>
-                  <h3 className="font-semibold text-lg mb-4">How can we help?</h3>
-                  <div className="space-y-4">
-                    {contactOptions.map((option, index) => (
-                      <Card key={index} className="p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-                            <option.icon className="h-5 w-5 text-primary" />
-                          </div>
-                          <div className="space-y-1">
-                            <h4 className="font-medium text-sm">{option.title}</h4>
-                            <p className="text-xs text-muted-foreground">{option.description}</p>
-                            <a 
-                              href={`mailto:${option.email}`}
-                              className="text-xs text-primary hover:underline"
-                            >
-                              {option.email}
-                            </a>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
+          <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Contact Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Send us a message
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form below and we'll get back to you within 24 hours.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium">
+                        Name *
+                      </label>
+                      <Input
+                        id="name"
+                        placeholder="Your name"
+                        value={formData.name}
+                        onChange={handleInputChange('name')}
+                        required
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium">
+                        Email *
+                      </label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        value={formData.email}
+                        onChange={handleInputChange('email')}
+                        required
+                      />
+                    </div>
                   </div>
-                </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="subject" className="text-sm font-medium">
+                      Subject *
+                    </label>
+                    <Input
+                      id="subject"
+                      placeholder="What is this about?"
+                      value={formData.subject}
+                      onChange={handleInputChange('subject')}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label htmlFor="message" className="text-sm font-medium">
+                      Message *
+                    </label>
+                    <Textarea
+                      id="message"
+                      placeholder="Tell us more about your question or feedback..."
+                      value={formData.message}
+                      onChange={handleInputChange('message')}
+                      rows={6}
+                      required
+                    />
+                  </div>
+                  
+                  <Button type="submit" className="w-full" disabled={isLoading}>
+                    {isLoading ? 'Sending...' : 'Send Message'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
 
-                {/* Response Time */}
-                <Card className="p-4 bg-muted/50">
-                  <h4 className="font-medium text-sm mb-2">Response Time</h4>
-                  <p className="text-xs text-muted-foreground">
-                    We typically respond within 24 hours during business days. 
-                    For urgent technical issues, we aim to respond within 4 hours.
-                  </p>
-                </Card>
-              </div>
-
-              {/* Contact Form */}
-              <div className="lg:col-span-2">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Send us a Message</CardTitle>
-                    <CardDescription>
-                      Fill out the form below and we'll get back to you as soon as possible.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label htmlFor="name" className="text-sm font-medium">
-                            Name <span className="text-destructive">*</span>
-                          </label>
-                          <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) => handleInputChange('name', e.target.value)}
-                            required
-                            placeholder="Your full name"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <label htmlFor="email" className="text-sm font-medium">
-                            Email <span className="text-destructive">*</span>
-                          </label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) => handleInputChange('email', e.target.value)}
-                            required
-                            placeholder="your@email.com"
-                          />
-                        </div>
+            {/* Contact Information */}
+            <div className="space-y-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Get in Touch</CardTitle>
+                  <CardDescription>
+                    Here are other ways to reach us.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-start gap-3">
+                    <Mail className="h-5 w-5 text-primary mt-0.5" />
+                    <div>
+                      <div className="font-medium">Email</div>
+                      <div className="text-sm text-muted-foreground">support@accio.app</div>
+                      <div className="text-xs text-muted-foreground">We reply within 24 hours</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <Phone className="h-5 w-5 text-primary mt-0.5" />
+                    <div>
+                      <div className="font-medium">Phone</div>
+                      <div className="text-sm text-muted-foreground">+1 (555) 123-4567</div>
+                      <div className="text-xs text-muted-foreground">Mon-Fri, 9am-5pm EST</div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start gap-3">
+                    <MapPin className="h-5 w-5 text-primary mt-0.5" />
+                    <div>
+                      <div className="font-medium">Office</div>
+                      <div className="text-sm text-muted-foreground">
+                        123 Knowledge Ave<br />
+                        San Francisco, CA 94102<br />
+                        United States
                       </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-                      <div className="space-y-2">
-                        <label htmlFor="subject" className="text-sm font-medium">
-                          Subject <span className="text-destructive">*</span>
-                        </label>
-                        <Input
-                          id="subject"
-                          value={formData.subject}
-                          onChange={(e) => handleInputChange('subject', e.target.value)}
-                          required
-                          placeholder="What's this about?"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <label htmlFor="message" className="text-sm font-medium">
-                          Message <span className="text-destructive">*</span>
-                        </label>
-                        <Textarea
-                          id="message"
-                          value={formData.message}
-                          onChange={(e) => handleInputChange('message', e.target.value)}
-                          required
-                          placeholder="Tell us more about your question or issue..."
-                          rows={6}
-                        />
-                      </div>
-
-                      <Button 
-                        type="submit" 
-                        size="lg" 
-                        className="w-full" 
-                        disabled={isLoading}
-                      >
-                        {isLoading ? (
-                          'Sending...'
-                        ) : (
-                          <>
-                            <Send className="h-4 w-4 mr-2" />
-                            Send Message
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Frequently Asked Questions</CardTitle>
+                  <CardDescription>
+                    Quick answers to common questions.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <div className="font-medium mb-1">How do I reset my password?</div>
+                    <div className="text-sm text-muted-foreground">
+                      Click "Forgot Password" on the login page and follow the instructions.
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="font-medium mb-1">Can I export my data?</div>
+                    <div className="text-sm text-muted-foreground">
+                      Yes, you can export all your data from the Settings page.
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="font-medium mb-1">Is there a mobile app?</div>
+                    <div className="text-sm text-muted-foreground">
+                      Yes, we have mobile apps for iOS and Android coming soon.
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </UnifiedSpacing.Container>

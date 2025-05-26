@@ -3,35 +3,43 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
 import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { User, Bell, Shield, Download, Trash2 } from 'lucide-react';
 
 const Settings = () => {
-  const [name, setName] = useState('John Doe');
-  const [email, setEmail] = useState('john@example.com');
-  const [notifications, setNotifications] = useState({
-    email: true,
-    push: false,
-    weekly: true
+  const [settings, setSettings] = useState({
+    notifications: {
+      email: true,
+      push: false,
+      digest: true
+    },
+    privacy: {
+      publicProfile: false,
+      shareUsage: true
+    },
+    preferences: {
+      autoTag: true,
+      smartSearch: true
+    }
   });
   const { toast } = useToast();
 
-  const handleSaveProfile = () => {
+  const handleSave = () => {
     toast({
-      title: "Profile updated",
-      description: "Your profile information has been saved.",
+      title: "Settings saved",
+      description: "Your preferences have been updated successfully.",
     });
   };
 
-  const handleExportData = () => {
+  const handleExport = () => {
     toast({
       title: "Export started",
-      description: "Your data export will be emailed to you shortly.",
+      description: "Your data export will be ready for download shortly.",
     });
   };
 
@@ -47,7 +55,7 @@ const Settings = () => {
     <EnhancedUnifiedLayout>
       <Helmet>
         <title>Settings - Accio Knowledge Library</title>
-        <meta name="description" content="Manage your account settings, preferences, and privacy options." />
+        <meta name="description" content="Manage your Accio account settings, privacy preferences, and data." />
       </Helmet>
 
       <UnifiedSpacing.Section>
@@ -57,7 +65,7 @@ const Settings = () => {
             <div className="mb-8">
               <UnifiedTypography.H1>Settings</UnifiedTypography.H1>
               <UnifiedTypography.Lead>
-                Manage your account and application preferences.
+                Manage your account preferences and privacy settings.
               </UnifiedTypography.Lead>
             </div>
 
@@ -67,43 +75,32 @@ const Settings = () => {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <User className="h-5 w-5" />
-                    Profile Information
+                    Profile
                   </CardTitle>
                   <CardDescription>
-                    Update your personal information and email address.
+                    Update your personal information and account details.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="grid md:grid-cols-2 gap-4">
+                  <div className="grid sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <label htmlFor="name" className="text-sm font-medium">
                         Full Name
                       </label>
-                      <Input
-                        id="name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
+                      <Input id="name" defaultValue="John Doe" />
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="email" className="text-sm font-medium">
-                        Email Address
+                        Email
                       </label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
+                      <Input id="email" type="email" defaultValue="john@example.com" />
                     </div>
                   </div>
-                  <Button onClick={handleSaveProfile}>
-                    Save Changes
-                  </Button>
+                  <Button onClick={handleSave}>Save Changes</Button>
                 </CardContent>
               </Card>
 
-              {/* Notification Settings */}
+              {/* Notifications */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -116,53 +113,62 @@ const Settings = () => {
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <div className="text-sm font-medium">Email Notifications</div>
+                    <div>
+                      <div className="font-medium">Email Notifications</div>
                       <div className="text-sm text-muted-foreground">
                         Receive notifications via email
                       </div>
                     </div>
                     <Switch
-                      checked={notifications.email}
+                      checked={settings.notifications.email}
                       onCheckedChange={(checked) =>
-                        setNotifications(prev => ({ ...prev, email: checked }))
+                        setSettings(prev => ({
+                          ...prev,
+                          notifications: { ...prev.notifications, email: checked }
+                        }))
                       }
                     />
                   </div>
-                  <Separator />
+                  
                   <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <div className="text-sm font-medium">Push Notifications</div>
+                    <div>
+                      <div className="font-medium">Push Notifications</div>
                       <div className="text-sm text-muted-foreground">
-                        Receive push notifications in your browser
+                        Receive browser push notifications
                       </div>
                     </div>
                     <Switch
-                      checked={notifications.push}
+                      checked={settings.notifications.push}
                       onCheckedChange={(checked) =>
-                        setNotifications(prev => ({ ...prev, push: checked }))
+                        setSettings(prev => ({
+                          ...prev,
+                          notifications: { ...prev.notifications, push: checked }
+                        }))
                       }
                     />
                   </div>
-                  <Separator />
+                  
                   <div className="flex items-center justify-between">
-                    <div className="space-y-0.5">
-                      <div className="text-sm font-medium">Weekly Digest</div>
+                    <div>
+                      <div className="font-medium">Weekly Digest</div>
                       <div className="text-sm text-muted-foreground">
                         Get a weekly summary of your activity
                       </div>
                     </div>
                     <Switch
-                      checked={notifications.weekly}
+                      checked={settings.notifications.digest}
                       onCheckedChange={(checked) =>
-                        setNotifications(prev => ({ ...prev, weekly: checked }))
+                        setSettings(prev => ({
+                          ...prev,
+                          notifications: { ...prev.notifications, digest: checked }
+                        }))
                       }
                     />
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Privacy & Security */}
+              {/* Privacy */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -170,47 +176,104 @@ const Settings = () => {
                     Privacy & Security
                   </CardTitle>
                   <CardDescription>
-                    Manage your privacy settings and account security.
+                    Control your privacy settings and data sharing preferences.
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <Button variant="outline" className="w-full justify-start">
-                    Change Password
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    Two-Factor Authentication
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start">
-                    Manage Connected Apps
-                  </Button>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">Auto-tagging</div>
+                      <div className="text-sm text-muted-foreground">
+                        Let AI automatically tag your content
+                      </div>
+                    </div>
+                    <Switch
+                      checked={settings.preferences.autoTag}
+                      onCheckedChange={(checked) =>
+                        setSettings(prev => ({
+                          ...prev,
+                          preferences: { ...prev.preferences, autoTag: checked }
+                        }))
+                      }
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">Smart Search</div>
+                      <div className="text-sm text-muted-foreground">
+                        Enable AI-powered search features
+                      </div>
+                    </div>
+                    <Switch
+                      checked={settings.preferences.smartSearch}
+                      onCheckedChange={(checked) =>
+                        setSettings(prev => ({
+                          ...prev,
+                          preferences: { ...prev.preferences, smartSearch: checked }
+                        }))
+                      }
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <div className="font-medium">Share Usage Data</div>
+                      <div className="text-sm text-muted-foreground">
+                        Help improve Accio by sharing anonymous usage data
+                      </div>
+                    </div>
+                    <Switch
+                      checked={settings.privacy.shareUsage}
+                      onCheckedChange={(checked) =>
+                        setSettings(prev => ({
+                          ...prev,
+                          privacy: { ...prev.privacy, shareUsage: checked }
+                        }))
+                      }
+                    />
+                  </div>
                 </CardContent>
               </Card>
 
               {/* Data Management */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Data Management</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <Download className="h-5 w-5" />
+                    Data Management
+                  </CardTitle>
                   <CardDescription>
-                    Export your data or delete your account.
+                    Export or delete your data.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <Button 
-                    variant="outline" 
-                    className="w-full justify-start"
-                    onClick={handleExportData}
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Export My Data
-                  </Button>
-                  <Button 
-                    variant="destructive" 
-                    className="w-full justify-start"
-                    onClick={handleDeleteAccount}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete Account
-                  </Button>
+                  <div className="flex items-center justify-between p-4 border rounded-lg">
+                    <div>
+                      <div className="font-medium">Export Data</div>
+                      <div className="text-sm text-muted-foreground">
+                        Download all your saved content and data
+                      </div>
+                    </div>
+                    <Button variant="outline" onClick={handleExport}>
+                      Export
+                    </Button>
+                  </div>
+                  
+                  <Separator />
+                  
+                  <div className="flex items-center justify-between p-4 border border-destructive/20 rounded-lg">
+                    <div>
+                      <div className="font-medium text-destructive">Delete Account</div>
+                      <div className="text-sm text-muted-foreground">
+                        Permanently delete your account and all data
+                      </div>
+                    </div>
+                    <Button variant="destructive" onClick={handleDeleteAccount}>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             </div>

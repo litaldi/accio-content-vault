@@ -58,12 +58,7 @@
   animation: none !important;
 }
 
-/* Remove all blinking and flashing animations */
-@keyframes none {
-  0%, 100% { opacity: 1; }
-}
-
-/* Override any potential blinking */
+/* Disable all blinking and flashing animations */
 *[class*="blink"],
 *[class*="flash"],
 .animate-pulse,
@@ -158,7 +153,6 @@ a:focus-visible {
     white-space: normal !important;
   }
   
-  /* Hide decorative elements when printing */
   .no-print {
     display: none !important;
   }
@@ -186,7 +180,6 @@ a:focus-visible {
 /* Ensure proper contrast ratios */
 .text-muted-foreground {
   color: hsl(var(--muted-foreground));
-  /* Ensure 4.5:1 contrast ratio minimum */
 }
 
 /* Announcement region */

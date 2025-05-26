@@ -3,20 +3,24 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
 import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
-import { Plus, Upload, Link as LinkIcon, FileText, Tag } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Link2, Upload, FileText, Tag, Plus, X } from 'lucide-react';
+import { validateFileUpload, sanitizeHtml, isValidUrl } from '@/utils/security';
 
 const SaveContent = () => {
-  const [url, setUrl] = useState('');
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [tags, setTags] = useState('');
+  const [contentType, setContentType] = useState<'url' | 'text' | 'file'>('url');
+  const [formData, setFormData] = useState({
+    url: '',
+    title: '',
+    notes: '',
+    tags: [] as string[]
+  });
+  const [newTag, setNewTag] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -25,8 +29,18 @@ const SaveContent = () => {
     setIsLoading(true);
 
     try {
+      // Validate URL if provided
+      if (contentType === 'url' && formData.url && !isValidUrl(formData.url)) {
+        toast({
+          title: "Invalid URL",
+          description: "Please enter a valid URL starting with http:// or https://",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Simulate saving content
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
       toast({
         title: "Content saved successfully!",
@@ -34,14 +48,12 @@ const SaveContent = () => {
       });
 
       // Reset form
-      setUrl('');
-      setTitle('');
-      setDescription('');
-      setTags('');
+      setFormData({ url: '', title: '', notes: '', tags: [] });
+      setNewTag('');
     } catch (error) {
       toast({
-        title: "Error saving content",
-        description: "Please try again later.",
+        title: "Failed to save content",
+        description: "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -49,153 +61,243 @@ const SaveContent = () => {
     }
   };
 
-  const quickSaveOptions = [
-    {
-      title: "Save URL",
-      description: "Save any webpage or article",
-      icon: LinkIcon,
-      action: () => document.getElementById('url-input')?.focus()
-    },
-    {
-      title: "Upload File",
-      description: "Upload documents, images, or PDFs",
-      icon: Upload,
-      action: () => toast({ title: "File upload coming soon!" })
-    },
-    {
-      title: "Quick Note",
-      description: "Write and save a quick note",
-      icon: FileText,
-      action: () => document.getElementById('title-input')?.focus()
+  const handleAddTag = () => {
+    const sanitizedTag = sanitizeHtml(newTag.trim());
+    if (sanitizedTag && !formData.tags.includes(sanitizedTag)) {
+      setFormData(prev => ({
+        ...prev,
+        tags: [...prev.tags, sanitizedTag]
+      }));
+      setNewTag('');
     }
-  ];
+  };
+
+  const handleRemoveTag = (tagToRemove: string) => {
+    setFormData(prev => ({
+      ...prev,
+      tags: prev.tags.filter(tag => tag !== tagToRemove)
+    }));
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const validation = validateFileUpload(file);
+    if (!validation.isValid) {
+      toast({
+        title: "Invalid file",
+        description: validation.message,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Handle file upload logic here
+    toast({
+      title: "File selected",
+      description: `${file.name} is ready to upload.`,
+    });
+  };
 
   return (
     <EnhancedUnifiedLayout>
       <Helmet>
         <title>Save Content - Accio Knowledge Library</title>
-        <meta name="description" content="Save articles, notes, and files to your personal knowledge library with AI-powered organization." />
+        <meta name="description" content="Save articles, documents, and notes to your Accio knowledge library for easy access and organization." />
       </Helmet>
 
       <UnifiedSpacing.Section>
         <UnifiedSpacing.Container>
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-2xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <UnifiedTypography.H1>
-                Save Content to Your Library
-              </UnifiedTypography.H1>
+              <UnifiedTypography.H1>Save Content</UnifiedTypography.H1>
               <UnifiedTypography.Lead>
-                Add articles, notes, files, and more to your personal knowledge collection.
+                Add articles, documents, and notes to your knowledge library.
               </UnifiedTypography.Lead>
             </div>
 
-            {/* Quick Save Options */}
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              {quickSaveOptions.map((option, index) => (
-                <Card 
-                  key={index} 
-                  className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
-                  onClick={option.action}
-                >
-                  <CardHeader className="text-center">
-                    <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                      <option.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg">{option.title}</CardTitle>
-                    <CardDescription>{option.description}</CardDescription>
-                  </CardHeader>
-                </Card>
-              ))}
+            {/* Content Type Selector */}
+            <div className="flex justify-center gap-2 mb-8">
+              <Button
+                variant={contentType === 'url' ? 'default' : 'outline'}
+                onClick={() => setContentType('url')}
+                className="flex items-center gap-2"
+              >
+                <Link2 className="h-4 w-4" />
+                URL
+              </Button>
+              <Button
+                variant={contentType === 'text' ? 'default' : 'outline'}
+                onClick={() => setContentType('text')}
+                className="flex items-center gap-2"
+              >
+                <FileText className="h-4 w-4" />
+                Text
+              </Button>
+              <Button
+                variant={contentType === 'file' ? 'default' : 'outline'}
+                onClick={() => setContentType('file')}
+                className="flex items-center gap-2"
+              >
+                <Upload className="h-4 w-4" />
+                File
+              </Button>
             </div>
 
-            {/* Main Save Form */}
+            {/* Main Form */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Plus className="h-5 w-5" />
-                  Add New Content
+                <CardTitle>
+                  {contentType === 'url' && 'Save from URL'}
+                  {contentType === 'text' && 'Save Text Content'}
+                  {contentType === 'file' && 'Upload File'}
                 </CardTitle>
                 <CardDescription>
-                  Fill in the details below to save content to your library.
+                  {contentType === 'url' && 'Enter a URL to save the content from a webpage'}
+                  {contentType === 'text' && 'Add your own text content or notes'}
+                  {contentType === 'file' && 'Upload a document, image, or other file'}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* URL Input */}
-                  <div className="space-y-2">
-                    <label htmlFor="url-input" className="text-sm font-medium">
-                      URL (optional)
-                    </label>
-                    <Input
-                      id="url-input"
-                      type="url"
-                      placeholder="https://example.com/article"
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
+                  {contentType === 'url' && (
+                    <div className="space-y-2">
+                      <label htmlFor="url" className="text-sm font-medium">
+                        URL *
+                      </label>
+                      <Input
+                        id="url"
+                        type="url"
+                        placeholder="https://example.com/article"
+                        value={formData.url}
+                        onChange={(e) => setFormData(prev => ({ ...prev, url: e.target.value }))}
+                        required
+                      />
+                    </div>
+                  )}
 
-                  {/* Title Input */}
+                  {/* File Upload */}
+                  {contentType === 'file' && (
+                    <div className="space-y-2">
+                      <label htmlFor="file" className="text-sm font-medium">
+                        Choose File *
+                      </label>
+                      <Input
+                        id="file"
+                        type="file"
+                        onChange={handleFileUpload}
+                        accept=".pdf,.txt,.md,.jpg,.jpeg,.png,.gif,.webp"
+                        required
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Supported formats: PDF, TXT, MD, JPG, PNG, GIF, WebP (max 10MB)
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Title */}
                   <div className="space-y-2">
-                    <label htmlFor="title-input" className="text-sm font-medium">
-                      Title <span className="text-destructive">*</span>
+                    <label htmlFor="title" className="text-sm font-medium">
+                      Title {contentType === 'text' && '*'}
                     </label>
                     <Input
-                      id="title-input"
+                      id="title"
                       type="text"
-                      placeholder="Enter a title for your content"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      required
-                      className="w-full"
+                      placeholder="Enter a title for this content"
+                      value={formData.title}
+                      onChange={(e) => setFormData(prev => ({ ...prev, title: sanitizeHtml(e.target.value) }))}
+                      required={contentType === 'text'}
                     />
                   </div>
 
-                  {/* Description */}
+                  {/* Notes/Content */}
                   <div className="space-y-2">
-                    <label htmlFor="description" className="text-sm font-medium">
-                      Description (optional)
+                    <label htmlFor="notes" className="text-sm font-medium">
+                      {contentType === 'text' ? 'Content *' : 'Notes'}
                     </label>
                     <Textarea
-                      id="description"
-                      placeholder="Add a description or notes about this content"
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      rows={4}
-                      className="w-full"
+                      id="notes"
+                      placeholder={
+                        contentType === 'text' 
+                          ? "Enter your text content here..."
+                          : "Add any notes or context about this content..."
+                      }
+                      value={formData.notes}
+                      onChange={(e) => setFormData(prev => ({ ...prev, notes: sanitizeHtml(e.target.value) }))}
+                      rows={contentType === 'text' ? 8 : 4}
+                      required={contentType === 'text'}
                     />
                   </div>
 
                   {/* Tags */}
                   <div className="space-y-2">
-                    <label htmlFor="tags" className="text-sm font-medium flex items-center gap-2">
-                      <Tag className="h-4 w-4" />
-                      Tags (optional)
+                    <label htmlFor="tags" className="text-sm font-medium">
+                      Tags
                     </label>
-                    <Input
-                      id="tags"
-                      type="text"
-                      placeholder="research, productivity, web-dev (separate with commas)"
-                      value={tags}
-                      onChange={(e) => setTags(e.target.value)}
-                      className="w-full"
-                    />
+                    <div className="flex gap-2">
+                      <Input
+                        id="newTag"
+                        type="text"
+                        placeholder="Add a tag"
+                        value={newTag}
+                        onChange={(e) => setNewTag(e.target.value)}
+                        onKeyPress={(e) => {
+                          if (e.key === 'Enter') {
+                            e.preventDefault();
+                            handleAddTag();
+                          }
+                        }}
+                      />
+                      <Button type="button" onClick={handleAddTag} size="icon" variant="outline">
+                        <Plus className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    
+                    {/* Tag Display */}
+                    {formData.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {formData.tags.map((tag, index) => (
+                          <Badge key={index} variant="secondary" className="flex items-center gap-1">
+                            <Tag className="h-3 w-3" />
+                            {tag}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveTag(tag)}
+                              className="ml-1 hover:text-destructive"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Submit Button */}
-                  <Button 
-                    type="submit" 
-                    size="lg" 
-                    className="w-full" 
-                    disabled={isLoading || !title.trim()}
-                  >
+                  <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? 'Saving...' : 'Save Content'}
                   </Button>
                 </form>
               </CardContent>
             </Card>
+
+            {/* Quick Access */}
+            <div className="text-center mt-8">
+              <p className="text-sm text-muted-foreground mb-4">
+                Want to save content faster? Install our browser extension or use the mobile app.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-2 justify-center">
+                <Button variant="outline" size="sm">
+                  Get Browser Extension
+                </Button>
+                <Button variant="outline" size="sm">
+                  Download Mobile App
+                </Button>
+              </div>
+            </div>
           </div>
         </UnifiedSpacing.Container>
       </UnifiedSpacing.Section>
