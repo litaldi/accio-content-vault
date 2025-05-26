@@ -1,89 +1,102 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   Mic, 
-  MicOff, 
-  Square, 
-  Play, 
+  Square,
+  Play,
   Pause,
-  RefreshCw,
-  Download,
+  RotateCcw,
   FileText,
-  Volume2
+  Wand2,
+  Download,
+  Volume2,
+  Edit
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+interface VoiceNote {
+  id: string;
+  title: string;
+  originalTranscript: string;
+  structuredContent: string;
+  duration: number;
+  createdAt: Date;
+  tags: string[];
+}
+
 interface VoiceContentCreatorProps {
-  onContentCreated?: (content: string) => void;
   className?: string;
 }
 
-export const VoiceContentCreator: React.FC<VoiceContentCreatorProps> = ({
-  onContentCreated,
-  className
-}) => {
+export const VoiceContentCreator: React.FC<VoiceContentCreatorProps> = ({ className }) => {
   const [isRecording, setIsRecording] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [transcript, setTranscript] = useState('');
-  const [structuredContent, setStructuredContent] = useState('');
-  const [recordingTime, setRecordingTime] = useState(0);
-  const [audioUrl, setAudioUrl] = useState<string>('');
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [recordingDuration, setRecordingDuration] = useState(0);
+  const [voiceNotes, setVoiceNotes] = useState<VoiceNote[]>([]);
+  const [selectedNote, setSelectedNote] = useState<VoiceNote | null>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [editedContent, setEditedContent] = useState('');
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
+    loadExistingNotes();
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-      if (audioUrl) URL.revokeObjectURL(audioUrl);
+      if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [audioUrl]);
+  }, []);
+
+  const loadExistingNotes = () => {
+    const mockNotes: VoiceNote[] = [
+      {
+        id: '1',
+        title: 'React Hooks Learning Notes',
+        originalTranscript: 'So I was thinking about React hooks today and how they really changed the way we write components. useState is probably the most basic one but useEffect is where things get interesting...',
+        structuredContent: `# React Hooks Learning Notes
+
+## Key Insights
+- **useState**: The foundation of state management in functional components
+- **useEffect**: Handles side effects and lifecycle events
+- **Custom Hooks**: Enable reusable stateful logic
+
+## Next Steps
+- Practice building custom hooks
+- Explore advanced hooks like useCallback and useMemo
+- Study performance optimization patterns`,
+        duration: 125,
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        tags: ['React', 'JavaScript', 'Learning']
+      }
+    ];
+    setVoiceNotes(mockNotes);
+  };
 
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
       mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        const url = URL.createObjectURL(audioBlob);
-        setAudioUrl(url);
-        stream.getTracks().forEach(track => track.stop());
-      };
-
+      
       mediaRecorder.start();
       setIsRecording(true);
-      setRecordingTime(0);
-
-      timerRef.current = setInterval(() => {
-        setRecordingTime(prev => prev + 1);
+      setRecordingDuration(0);
+      
+      intervalRef.current = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
       }, 1000);
-
-      toast({
-        title: "Recording Started",
-        description: "Speak clearly for best transcription results.",
-      });
+      
+      mediaRecorder.addEventListener('dataavailable', handleRecordingComplete);
     } catch (error) {
       toast({
         title: "Recording Failed",
-        description: "Please check microphone permissions.",
+        description: "Could not access microphone. Please check permissions.",
         variant: "destructive"
       });
     }
@@ -93,96 +106,107 @@ export const VoiceContentCreator: React.FC<VoiceContentCreatorProps> = ({
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-      if (timerRef.current) {
-        clearInterval(timerRef.current);
-        timerRef.current = null;
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     }
   };
 
-  const transcribeAudio = async () => {
-    if (!audioUrl) return;
-
+  const handleRecordingComplete = async (event: BlobEvent) => {
     setIsProcessing(true);
+    
     try {
-      // Simulate transcription (in real implementation, use Whisper API)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Simulate AI processing
+      await new Promise(resolve => setTimeout(resolve, 3000));
       
-      // Mock transcription result
-      const mockTranscript = "This is a sample transcription of your voice recording. The AI has converted your speech to text and will now structure it into organized content with proper formatting and suggestions for tags.";
-      
-      setTranscript(mockTranscript);
-      
-      // Generate structured content
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const structured = `# Voice Note - ${new Date().toLocaleDateString()}
-
-## Transcript
-${mockTranscript}
+      const mockTranscript = "This is a sample transcription of your voice note. The AI has converted your speech to text and will now structure it into organized content.";
+      const mockStructuredContent = `# Voice Note Summary
 
 ## Key Points
-- Important ideas extracted from your voice note
-- Automatically identified themes and concepts
-- Action items or follow-up tasks mentioned
+- Main topic discussed
+- Important insights shared
+- Action items identified
 
-## Summary
-Your voice note has been processed and structured for easy reference. The main themes and actionable items have been highlighted above.
+## Structured Content
+${mockTranscript}
 
-## Suggested Tags
-#voice-note #${new Date().toLocaleDateString().replace(/\//g, '-')} #ideas #quick-capture
+## Generated Tags
+- Content Creation
+- Voice Notes
+- AI Processing`;
 
----
-*Generated from voice recording on ${new Date().toLocaleString()}*`;
+      const newNote: VoiceNote = {
+        id: Date.now().toString(),
+        title: `Voice Note ${new Date().toLocaleDateString()}`,
+        originalTranscript: mockTranscript,
+        structuredContent: mockStructuredContent,
+        duration: recordingDuration,
+        createdAt: new Date(),
+        tags: ['Voice Note', 'AI Generated']
+      };
 
-      setStructuredContent(structured);
+      setVoiceNotes(prev => [newNote, ...prev]);
+      setSelectedNote(newNote);
       
-      if (onContentCreated) {
-        onContentCreated(structured);
-      }
-
       toast({
-        title: "Content Created!",
-        description: "Your voice recording has been transcribed and structured.",
+        title: "Voice Note Created!",
+        description: "Your recording has been transcribed and structured.",
       });
-    } catch (error) {
+    } finally {
+      setIsProcessing(false);
+      setRecordingDuration(0);
+    }
+  };
+
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const enhanceContent = async (note: VoiceNote) => {
+    setIsProcessing(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const enhancedContent = `# ${note.title} (Enhanced)
+
+## Executive Summary
+AI-enhanced version with improved structure and clarity.
+
+${note.structuredContent}
+
+## AI Enhancements
+- Improved formatting and structure
+- Added section headers for better organization
+- Enhanced readability and flow
+- Suggested related topics for further exploration`;
+
+      const updatedNote = { ...note, structuredContent: enhancedContent };
+      setVoiceNotes(prev => prev.map(n => n.id === note.id ? updatedNote : n));
+      setSelectedNote(updatedNote);
+      
       toast({
-        title: "Processing Failed",
-        description: "Please try recording again.",
-        variant: "destructive"
+        title: "Content Enhanced!",
+        description: "AI has improved the structure and clarity of your note.",
       });
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const playAudio = () => {
-    if (audioUrl && audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play();
-        setIsPlaying(true);
-      }
+  const saveEditedContent = () => {
+    if (selectedNote) {
+      const updatedNote = { ...selectedNote, structuredContent: editedContent };
+      setVoiceNotes(prev => prev.map(n => n.id === selectedNote.id ? updatedNote : n));
+      setSelectedNote(updatedNote);
+      setEditMode(false);
+      toast({
+        title: "Content Saved!",
+        description: "Your changes have been saved.",
+      });
     }
-  };
-
-  const resetRecording = () => {
-    setTranscript('');
-    setStructuredContent('');
-    setRecordingTime(0);
-    if (audioUrl) {
-      URL.revokeObjectURL(audioUrl);
-      setAudioUrl('');
-    }
-    setIsPlaying(false);
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   return (
@@ -190,140 +214,157 @@ Your voice note has been processed and structured for easy reference. The main t
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Volume2 className="h-5 w-5 text-primary" />
+            <Mic className="h-5 w-5 text-primary" />
             Voice Content Creator
             <Badge variant="secondary">AI-Powered</Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {/* Recording Controls */}
           <div className="text-center space-y-4">
             <div className="flex justify-center">
-              <Button
-                size="lg"
-                variant={isRecording ? "destructive" : "default"}
-                className="rounded-full w-24 h-24"
-                onClick={isRecording ? stopRecording : startRecording}
-                disabled={isProcessing}
-              >
+              <div className={`w-24 h-24 rounded-full flex items-center justify-center border-4 ${
+                isRecording ? 'border-red-500 bg-red-50 dark:bg-red-950' : 'border-primary bg-primary/10'
+              }`}>
                 {isRecording ? (
-                  <Square className="h-8 w-8" />
+                  <div className="w-8 h-8 bg-red-500 rounded-sm animate-pulse" />
                 ) : (
-                  <Mic className="h-8 w-8" />
+                  <Mic className="h-8 w-8 text-primary" />
                 )}
-              </Button>
+              </div>
             </div>
             
-            <div className="space-y-2">
+            {isRecording && (
               <div className="text-lg font-mono">
-                {formatTime(recordingTime)}
+                {formatDuration(recordingDuration)}
               </div>
-              {isRecording && (
-                <div className="flex items-center justify-center gap-2">
-                  <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-                  <span className="text-sm text-red-500">Recording...</span>
-                </div>
+            )}
+            
+            <div className="flex justify-center gap-2">
+              {!isRecording ? (
+                <Button onClick={startRecording} size="lg" className="gap-2">
+                  <Mic className="h-5 w-5" />
+                  Start Recording
+                </Button>
+              ) : (
+                <Button onClick={stopRecording} variant="destructive" size="lg" className="gap-2">
+                  <Square className="h-5 w-5" />
+                  Stop Recording
+                </Button>
               )}
+            </div>
+            
+            {isProcessing && (
+              <div className="text-center space-y-2">
+                <div className="w-6 h-6 mx-auto animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                <p className="text-sm text-muted-foreground">AI is transcribing and structuring your content...</p>
+              </div>
+            )}
+          </div>
+
+          {/* Voice Notes List */}
+          <div className="space-y-4">
+            <h3 className="font-medium">Your Voice Notes</h3>
+            <div className="grid gap-3">
+              {voiceNotes.map((note) => (
+                <Card 
+                  key={note.id} 
+                  className={`cursor-pointer transition-all ${
+                    selectedNote?.id === note.id ? 'ring-2 ring-primary' : ''
+                  }`}
+                  onClick={() => setSelectedNote(note)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h4 className="font-medium">{note.title}</h4>
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {note.originalTranscript}
+                        </p>
+                        <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <Volume2 className="h-3 w-3" />
+                            {formatDuration(note.duration)}
+                          </span>
+                          <span>{note.createdAt.toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {note.tags.slice(0, 2).map((tag) => (
+                          <Badge key={tag} variant="outline" className="text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
 
-          {/* Audio Playback */}
-          {audioUrl && (
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                <span className="text-sm font-medium">Recording Ready</span>
+          {/* Selected Note Content */}
+          {selectedNote && (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium">Content Preview</h3>
                 <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={playAudio}
-                  >
-                    {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={transcribeAudio}
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => enhanceContent(selectedNote)}
                     disabled={isProcessing}
+                    className="gap-1"
                   >
-                    {isProcessing ? (
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <FileText className="h-4 w-4" />
-                    )}
-                    {isProcessing ? "Processing..." : "Transcribe"}
+                    <Wand2 className="h-3 w-3" />
+                    Enhance
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => {
+                      setEditMode(!editMode);
+                      setEditedContent(selectedNote.structuredContent);
+                    }}
+                    className="gap-1"
+                  >
+                    <Edit className="h-3 w-3" />
+                    Edit
                   </Button>
                 </div>
               </div>
               
-              <audio
-                ref={audioRef}
-                src={audioUrl}
-                onEnded={() => setIsPlaying(false)}
-                className="hidden"
-              />
-            </div>
-          )}
-
-          {/* Processing Status */}
-          {isProcessing && (
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span>Processing audio...</span>
-                <span>AI Transcription</span>
-              </div>
-              <Progress value={isProcessing ? 45 : 0} className="h-2" />
-            </div>
-          )}
-
-          {/* Transcript */}
-          {transcript && (
-            <div className="space-y-2">
-              <h3 className="font-medium">Transcript</h3>
-              <Textarea
-                value={transcript}
-                onChange={(e) => setTranscript(e.target.value)}
-                rows={3}
-                className="text-sm"
-              />
-            </div>
-          )}
-
-          {/* Structured Content */}
-          {structuredContent && (
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <h3 className="font-medium">Structured Content</h3>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={resetRecording}
-                >
-                  <RefreshCw className="h-4 w-4 mr-1" />
-                  New Recording
-                </Button>
-              </div>
-              <Textarea
-                value={structuredContent}
-                onChange={(e) => setStructuredContent(e.target.value)}
-                rows={10}
-                className="font-mono text-sm"
-              />
+              {editMode ? (
+                <div className="space-y-2">
+                  <Textarea
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    className="min-h-[200px] font-mono text-sm"
+                  />
+                  <div className="flex gap-2">
+                    <Button onClick={saveEditedContent} size="sm">Save Changes</Button>
+                    <Button variant="outline" onClick={() => setEditMode(false)} size="sm">Cancel</Button>
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-muted/30 p-4 rounded-lg">
+                  <pre className="whitespace-pre-wrap text-sm font-sans">
+                    {selectedNote.structuredContent}
+                  </pre>
+                </div>
+              )}
             </div>
           )}
 
           {/* Tips */}
-          {!audioUrl && !isRecording && (
-            <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg text-sm">
-              <h4 className="font-medium mb-1">💡 Tips for better results:</h4>
-              <ul className="text-muted-foreground space-y-1">
-                <li>• Speak clearly and at a normal pace</li>
-                <li>• Find a quiet environment</li>
-                <li>• Mention key topics and action items</li>
-                <li>• Keep recordings under 5 minutes for best results</li>
-              </ul>
-            </div>
-          )}
+          <div className="bg-purple-50 dark:bg-purple-950 p-3 rounded-lg text-sm">
+            <h4 className="font-medium mb-1">🎤 Voice Notes Tips:</h4>
+            <ul className="text-muted-foreground space-y-1">
+              <li>• Speak clearly and at a moderate pace for best transcription</li>
+              <li>• Use the enhance feature to improve structure and readability</li>
+              <li>• Voice notes are automatically tagged based on content</li>
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -2,18 +2,19 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import { 
-  Sparkles, 
-  RefreshCw, 
-  Copy, 
-  Wand2,
+  Wand2, 
+  RefreshCw,
+  Copy,
+  Check,
+  Volume2,
+  Edit,
   Target,
-  Zap,
-  BookOpen,
-  Users
+  Sparkles,
+  FileText,
+  Zap
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -21,62 +22,71 @@ interface RefinementOption {
   id: string;
   name: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
-  action: string;
+  icon: React.ElementType;
+  tone: string;
 }
 
-const refinementOptions: RefinementOption[] = [
-  {
-    id: 'clarity',
-    name: 'Improve Clarity',
-    description: 'Make text clearer and more concise',
-    icon: Target,
-    action: 'clarity'
-  },
-  {
-    id: 'professional',
-    name: 'Professional Tone',
-    description: 'Adjust tone for professional communication',
-    icon: Users,
-    action: 'professional'
-  },
-  {
-    id: 'simplify',
-    name: 'Simplify Language',
-    description: 'Use simpler, more accessible language',
-    icon: Zap,
-    action: 'simplify'
-  },
-  {
-    id: 'structure',
-    name: 'Better Structure',
-    description: 'Improve organization and flow',
-    icon: BookOpen,
-    action: 'structure'
-  }
-];
-
 interface SmartContentRefinementProps {
-  initialContent?: string;
-  onContentRefined?: (content: string) => void;
   className?: string;
 }
 
-export const SmartContentRefinement: React.FC<SmartContentRefinementProps> = ({
-  initialContent = '',
-  onContentRefined,
-  className
-}) => {
-  const [originalContent, setOriginalContent] = useState(initialContent);
+export const SmartContentRefinement: React.FC<SmartContentRefinementProps> = ({ className }) => {
+  const [originalContent, setOriginalContent] = useState('');
   const [refinedContent, setRefinedContent] = useState('');
   const [isRefining, setIsRefining] = useState(false);
-  const [selectedRefinement, setSelectedRefinement] = useState<RefinementOption>(refinementOptions[0]);
+  const [selectedOption, setSelectedOption] = useState<string>('clarity');
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
-  const refineContent = async (option: RefinementOption) => {
+  const refinementOptions: RefinementOption[] = [
+    {
+      id: 'clarity',
+      name: 'Improve Clarity',
+      description: 'Make content clearer and easier to understand',
+      icon: Target,
+      tone: 'clear'
+    },
+    {
+      id: 'professional',
+      name: 'Professional Tone',
+      description: 'Convert to professional business language',
+      icon: FileText,
+      tone: 'professional'
+    },
+    {
+      id: 'casual',
+      name: 'Casual Tone',
+      description: 'Make content more conversational and friendly',
+      icon: Volume2,
+      tone: 'casual'
+    },
+    {
+      id: 'concise',
+      name: 'Make Concise',
+      description: 'Shorten while keeping key information',
+      icon: Zap,
+      tone: 'concise'
+    },
+    {
+      id: 'engaging',
+      name: 'More Engaging',
+      description: 'Add personality and make it more interesting',
+      icon: Sparkles,
+      tone: 'engaging'
+    },
+    {
+      id: 'academic',
+      name: 'Academic Style',
+      description: 'Convert to formal academic writing',
+      icon: Edit,
+      tone: 'academic'
+    }
+  ];
+
+  const refineContent = async () => {
     if (!originalContent.trim()) {
       toast({
-        title: "No Content",
+        title: "Content Required",
         description: "Please enter some content to refine.",
         variant: "destructive"
       });
@@ -84,98 +94,121 @@ export const SmartContentRefinement: React.FC<SmartContentRefinementProps> = ({
     }
 
     setIsRefining(true);
-    setSelectedRefinement(option);
-
     try {
-      // Simulate AI processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      const refined = generateRefinedContent(originalContent, option.action);
-      setRefinedContent(refined);
+      const selectedRefinement = refinementOptions.find(opt => opt.id === selectedOption);
       
-      if (onContentRefined) {
-        onContentRefined(refined);
-      }
+      // Mock AI refinement based on selected option
+      let mockRefinement = '';
+      
+      switch (selectedOption) {
+        case 'clarity':
+          mockRefinement = `**Clarified Version:**
 
+${originalContent}
+
+**Key Improvements:**
+- Simplified complex sentences for better readability
+- Added clear structure with bullet points
+- Removed unnecessary jargon
+- Enhanced logical flow between ideas`;
+          break;
+          
+        case 'professional':
+          mockRefinement = `**Professional Version:**
+
+We would like to present the following refined content for your consideration:
+
+${originalContent.replace(/I think|maybe|kinda|pretty|really/gi, '').replace(/!/g, '.')}
+
+This revision maintains the core message while adopting a more formal tone appropriate for business communications.`;
+          break;
+          
+        case 'casual':
+          mockRefinement = `**Casual Version:**
+
+Hey there! 👋
+
+${originalContent.replace(/shall|must|ought to/gi, 'should').replace(/\./g, '!')}
+
+Hope this helps! Let me know if you have any questions.`;
+          break;
+          
+        case 'concise':
+          mockRefinement = `**Concise Version:**
+
+${originalContent.split(' ').slice(0, Math.ceil(originalContent.split(' ').length * 0.6)).join(' ')}...
+
+**Length Reduction:** ${Math.ceil((1 - 0.6) * 100)}% shorter while preserving key points.`;
+          break;
+          
+        case 'engaging':
+          mockRefinement = `**Engaging Version:**
+
+✨ ${originalContent.replace(/\./g, '! 🎯')}
+
+**Added Elements:**
+- Emojis for visual appeal
+- Enthusiastic tone
+- Call-to-action phrases
+- Personal connection`;
+          break;
+          
+        case 'academic':
+          mockRefinement = `**Academic Version:**
+
+The present analysis examines the following content:
+
+${originalContent.replace(/I/g, 'The author').replace(/you/g, 'the reader')}
+
+**Scholarly Enhancements:**
+- Objective third-person perspective
+- Formal academic terminology
+- Structured argumentation
+- Citation-ready format`;
+          break;
+          
+        default:
+          mockRefinement = `**Refined Version:**\n\n${originalContent}`;
+      }
+      
+      setRefinedContent(mockRefinement);
+      
       toast({
         title: "Content Refined!",
-        description: `Applied ${option.name.toLowerCase()} improvements.`,
-      });
-    } catch (error) {
-      toast({
-        title: "Refinement Failed",
-        description: "Please try again.",
-        variant: "destructive"
+        description: `Applied ${selectedRefinement?.name} refinement successfully.`,
       });
     } finally {
       setIsRefining(false);
     }
   };
 
-  const generateRefinedContent = (content: string, action: string): string => {
-    const improvements = {
-      clarity: (text: string) => {
-        // Mock clarity improvement
-        return text
-          .replace(/\b(very|really|quite|pretty|extremely)\s+/gi, '')
-          .replace(/\bthat\s+/gi, '')
-          .replace(/\bin order to\b/gi, 'to')
-          .replace(/\bdue to the fact that\b/gi, 'because')
-          + '\n\n[Clarity improvements applied: Removed filler words, simplified phrases, improved directness]';
-      },
-      professional: (text: string) => {
-        // Mock professional tone adjustment
-        return text
-          .replace(/\bcan't\b/gi, 'cannot')
-          .replace(/\bwon't\b/gi, 'will not')
-          .replace(/\bI think\b/gi, 'I believe')
-          .replace(/\bokay\b/gi, 'acceptable')
-          + '\n\n[Professional tone applied: Formal contractions, professional language, authoritative voice]';
-      },
-      simplify: (text: string) => {
-        // Mock simplification
-        return text
-          .replace(/\butilize\b/gi, 'use')
-          .replace(/\bfacilitate\b/gi, 'help')
-          .replace(/\bdemonstrate\b/gi, 'show')
-          .replace(/\bparticipate\b/gi, 'take part')
-          + '\n\n[Simplified language: Complex words replaced with simpler alternatives, improved readability]';
-      },
-      structure: (text: string) => {
-        // Mock structure improvement
-        const sentences = text.split('.').filter(s => s.trim());
-        const structured = sentences.map((sentence, index) => {
-          if (index === 0) return `## Main Point\n${sentence.trim()}.`;
-          if (index < sentences.length - 1) return `• ${sentence.trim()}.`;
-          return `\n## Conclusion\n${sentence.trim()}.`;
-        }).join('\n');
-        
-        return structured + '\n\n[Structure improvements: Added headings, bullet points, logical flow]';
-      }
-    };
-
-    const improvementFunction = improvements[action as keyof typeof improvements];
-    return improvementFunction ? improvementFunction(content) : content;
-  };
-
-  const copyToClipboard = async (content: string) => {
+  const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(content);
+      await navigator.clipboard.writeText(refinedContent);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
       toast({
         title: "Copied!",
-        description: "Content copied to clipboard.",
+        description: "Refined content copied to clipboard.",
       });
     } catch (error) {
       toast({
         title: "Copy Failed",
-        description: "Please select and copy manually.",
+        description: "Could not copy to clipboard.",
         variant: "destructive"
       });
     }
   };
 
-  const resetRefinement = () => {
+  const useRefinedContent = () => {
+    setOriginalContent(refinedContent);
     setRefinedContent('');
+    toast({
+      title: "Content Updated!",
+      description: "Refined content is now your working version.",
+    });
   };
 
   return (
@@ -185,130 +218,148 @@ export const SmartContentRefinement: React.FC<SmartContentRefinementProps> = ({
           <CardTitle className="flex items-center gap-2">
             <Wand2 className="h-5 w-5 text-primary" />
             Smart Content Refinement
-            <Badge variant="secondary">AI-Powered</Badge>
+            <Badge variant="secondary">One-Click</Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <Tabs value={refinedContent ? 'comparison' : 'refine'} className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="refine" onClick={resetRefinement}>
+        <CardContent className="space-y-6">
+          {/* Input Content */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Your Content</label>
+            <Textarea
+              placeholder="Paste or type content you want to refine..."
+              value={originalContent}
+              onChange={(e) => setOriginalContent(e.target.value)}
+              className="min-h-[120px]"
+            />
+            <p className="text-xs text-muted-foreground">
+              {originalContent.length} characters • {originalContent.split(' ').filter(w => w.length > 0).length} words
+            </p>
+          </div>
+
+          {/* Refinement Options */}
+          <div className="space-y-3">
+            <label className="text-sm font-medium">Refinement Style</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {refinementOptions.map((option) => (
+                <Card 
+                  key={option.id}
+                  className={`cursor-pointer transition-all ${
+                    selectedOption === option.id ? 'ring-2 ring-primary bg-primary/5' : 'hover:bg-muted/50'
+                  }`}
+                  onClick={() => setSelectedOption(option.id)}
+                >
+                  <CardContent className="p-3">
+                    <div className="flex items-start gap-3">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <option.icon className="h-4 w-4 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-medium text-sm">{option.name}</h4>
+                        <p className="text-xs text-muted-foreground">{option.description}</p>
+                      </div>
+                      {selectedOption === option.id && (
+                        <Check className="h-4 w-4 text-primary" />
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+
+          {/* Refine Button */}
+          <Button
+            onClick={refineContent}
+            disabled={isRefining || !originalContent.trim()}
+            className="w-full gap-2"
+            size="lg"
+          >
+            {isRefining ? (
+              <>
+                <RefreshCw className="h-4 w-4 animate-spin" />
+                Refining Content...
+              </>
+            ) : (
+              <>
+                <Wand2 className="h-4 w-4" />
                 Refine Content
-              </TabsTrigger>
-              <TabsTrigger value="comparison" disabled={!refinedContent}>
-                Compare Results
-              </TabsTrigger>
-            </TabsList>
+              </>
+            )}
+          </Button>
 
-            <TabsContent value="refine" className="space-y-4">
-              {/* Original Content Input */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">Content to Refine</label>
-                <Textarea
-                  placeholder="Paste or type your content here..."
-                  value={originalContent}
-                  onChange={(e) => setOriginalContent(e.target.value)}
-                  rows={8}
-                  className="text-sm"
-                />
-              </div>
-
-              {/* Refinement Options */}
-              <div className="space-y-3">
-                <h3 className="font-medium">Choose Refinement Type</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {refinementOptions.map((option) => (
-                    <Button
-                      key={option.id}
-                      variant="outline"
-                      className="justify-start h-auto p-3"
-                      onClick={() => refineContent(option)}
-                      disabled={isRefining || !originalContent.trim()}
-                    >
-                      <option.icon className="h-4 w-4 mr-2" />
-                      <div className="text-left">
-                        <div className="font-medium">{option.name}</div>
-                        <div className="text-xs opacity-70">{option.description}</div>
-                      </div>
-                    </Button>
-                  ))}
+          {/* Refined Content */}
+          {refinedContent && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium">Refined Content</h3>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={copyToClipboard}
+                    className="gap-1"
+                  >
+                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                    {copied ? 'Copied' : 'Copy'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={useRefinedContent}
+                    className="gap-1"
+                  >
+                    <RefreshCw className="h-3 w-3" />
+                    Use This
+                  </Button>
                 </div>
               </div>
+              
+              <div className="bg-muted/30 p-4 rounded-lg border">
+                <pre className="whitespace-pre-wrap text-sm font-sans">
+                  {refinedContent}
+                </pre>
+              </div>
+              
+              <div className="flex justify-center">
+                <Button onClick={refineContent} variant="outline" size="sm" className="gap-1">
+                  <RefreshCw className="h-3 w-3" />
+                  Try Different Style
+                </Button>
+              </div>
+            </div>
+          )}
 
-              {/* Processing Status */}
-              {isRefining && (
-                <div className="flex items-center justify-center gap-2 p-4 bg-muted rounded-lg">
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  <span className="text-sm">
-                    Applying {selectedRefinement.name.toLowerCase()}...
-                  </span>
-                </div>
-              )}
-            </TabsContent>
+          {/* Quick Examples */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm">Quick Examples</h4>
+            <div className="grid gap-2">
+              {[
+                "I think this feature could maybe help users...",
+                "The quarterly results exceeded expectations significantly.",
+                "Let me explain how this algorithm works step by step."
+              ].map((example, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setOriginalContent(example)}
+                  className="text-left justify-start text-xs h-auto p-2"
+                >
+                  "{example}"
+                </Button>
+              ))}
+            </div>
+          </div>
 
-            <TabsContent value="comparison" className="space-y-4">
-              {refinedContent && (
-                <>
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-medium">Before & After</h3>
-                    <div className="flex gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => copyToClipboard(refinedContent)}
-                      >
-                        <Copy className="h-4 w-4 mr-1" />
-                        Copy Refined
-                      </Button>
-                      <Button variant="outline" size="sm" onClick={resetRefinement}>
-                        <RefreshCw className="h-4 w-4 mr-1" />
-                        Try Another
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    {/* Original */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-sm">Original</h4>
-                        <Badge variant="outline" className="text-xs">
-                          {originalContent.split(' ').length} words
-                        </Badge>
-                      </div>
-                      <div className="bg-muted p-3 rounded-lg text-sm max-h-64 overflow-y-auto">
-                        <pre className="whitespace-pre-wrap">{originalContent}</pre>
-                      </div>
-                    </div>
-
-                    {/* Refined */}
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-medium text-sm">Refined</h4>
-                        <Badge variant="default" className="text-xs">
-                          <Sparkles className="h-3 w-3 mr-1" />
-                          {selectedRefinement.name}
-                        </Badge>
-                      </div>
-                      <div className="bg-primary/5 border border-primary/20 p-3 rounded-lg text-sm max-h-64 overflow-y-auto">
-                        <pre className="whitespace-pre-wrap">{refinedContent}</pre>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Editable Refined Content */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Edit Refined Content</label>
-                    <Textarea
-                      value={refinedContent}
-                      onChange={(e) => setRefinedContent(e.target.value)}
-                      rows={8}
-                      className="text-sm"
-                    />
-                  </div>
-                </>
-              )}
-            </TabsContent>
-          </Tabs>
+          {/* Tips */}
+          <div className="bg-yellow-50 dark:bg-yellow-950 p-3 rounded-lg text-sm">
+            <h4 className="font-medium mb-1">✨ Refinement Tips:</h4>
+            <ul className="text-muted-foreground space-y-1">
+              <li>• Try different styles to see what works best for your audience</li>
+              <li>• Professional tone is great for business communications</li>
+              <li>• Use "Make Concise" to create summaries or abstracts</li>
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </div>

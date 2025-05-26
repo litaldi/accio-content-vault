@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,7 +24,9 @@ import {
   Focus,
   Lightbulb,
   Network,
-  Calendar
+  Calendar,
+  Map,
+  Volume2
 } from 'lucide-react';
 import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
 import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
@@ -44,6 +47,7 @@ import { AIKnowledgeGraph } from '@/components/ai/AIKnowledgeGraph';
 import { SmartHabitTracker } from '@/components/ai/SmartHabitTracker';
 import { ContentGapAnalyzer } from '@/components/ai/ContentGapAnalyzer';
 import { AIStudyBuddy } from '@/components/ai/AIStudyBuddy';
+import { AILearningPathGenerator } from '@/components/ai/AILearningPathGenerator';
 
 const Features: React.FC = () => {
   const aiFeatures = [
@@ -158,6 +162,20 @@ const Features: React.FC = () => {
       description: 'Interactive learning companion that explains concepts and keeps you motivated.',
       status: 'active',
       benefit: 'Never study alone'
+    },
+    {
+      icon: Map,
+      title: 'Learning Path Generator',
+      description: 'AI creates personalized learning journeys based on your goals and current knowledge.',
+      status: 'active',
+      benefit: 'Structured learning paths'
+    },
+    {
+      icon: Volume2,
+      title: 'Voice Content Creator',
+      description: 'Record, transcribe, and automatically structure voice notes with AI assistance.',
+      status: 'active',
+      benefit: 'Capture thoughts instantly'
     }
   ];
 
@@ -243,6 +261,18 @@ const Features: React.FC = () => {
               </p>
             </div>
             
+            {/* New AI Features - Latest */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <AILearningPathGenerator />
+              <VoiceContentCreator />
+            </div>
+            
+            {/* Content Enhancement */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <SmartContentRefinement />
+              <SmartTagging />
+            </div>
+            
             {/* Knowledge & Analytics */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <AIKnowledgeGraph />
@@ -267,38 +297,27 @@ const Features: React.FC = () => {
               <NextActionsRecommender />
             </div>
             
-            {/* Content Creation & Voice */}
+            {/* Content Creation & Writing */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <SmartContentWizard />
-              <VoiceContentCreator />
-            </div>
-            
-            {/* Content Enhancement & Analysis */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <SmartContentRefinement />
-              <AIContentSummarizer />
-            </div>
-            
-            {/* Writing & Tagging */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <AIWritingAssistant />
-              <SmartTagging />
             </div>
             
-            {/* Personalization & Learning */}
+            {/* Content Analysis */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <AIContentSummarizer />
               <PersonalizedRecommendations />
+            </div>
+            
+            {/* Learning & Paths */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <LearningPathGenerator />
+              <IntelligentContentInsights />
             </div>
             
             {/* Advanced Features */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <IntelligentContentInsights />
               <SmartAutomationWorkflows />
-            </div>
-            
-            {/* Content Quality Analysis - Full Width */}
-            <div className="mb-8">
               <ContentQualityAnalyzer />
             </div>
           </div>
