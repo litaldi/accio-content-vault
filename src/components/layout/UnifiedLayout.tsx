@@ -2,7 +2,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Header } from './Header';
-import { Footer } from './Footer';
+import Footer from '@/components/Footer';
 import { QAButton } from './QAButton';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 
