@@ -36,8 +36,11 @@ export const VoiceSearchButton: React.FC<VoiceSearchButtonProps> = ({
       variant={variant}
       size={size}
       onClick={handleClick}
-      className={isListening ? 'text-red-600' : ''}
+      className={isListening ? 'text-red-600 hover:text-red-700' : ''}
       aria-label={isListening ? 'Stop voice search' : 'Start voice search'}
+      title={isListening ? 'Stop voice search' : 'Start voice search'}
+      loading={isListening}
+      loadingText="Listening..."
     >
       {isListening ? (
         <MicOff className="h-4 w-4" />

@@ -9,6 +9,7 @@ import { Search as SearchIcon, Filter, Clock, Tag, FileText } from 'lucide-react
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
 
   const recentSearches = [
     'React best practices',
@@ -44,6 +45,22 @@ const Search = () => {
     }
   ];
 
+  const handleSearch = async () => {
+    if (!searchQuery.trim()) return;
+    
+    setIsSearching(true);
+    // Simulate search
+    setTimeout(() => {
+      setIsSearching(false);
+    }, 1000);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <UnifiedLayout>
       <Helmet>
@@ -70,14 +87,26 @@ const Search = () => {
                   placeholder="Ask anything about your saved content..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyPress={handleKeyPress}
                   className="pl-10"
+                  aria-label="Search your knowledge base"
                 />
               </div>
-              <Button>
+              <Button 
+                onClick={handleSearch}
+                disabled={!searchQuery.trim() || isSearching}
+                loading={isSearching}
+                loadingText="Searching..."
+                aria-label="Execute search"
+              >
                 <SearchIcon className="h-4 w-4 mr-2" />
                 Search
               </Button>
-              <Button variant="outline">
+              <Button 
+                variant="outline"
+                aria-label="Open search filters"
+                title="Advanced search filters"
+              >
                 <Filter className="h-4 w-4" />
               </Button>
             </div>
@@ -102,6 +131,7 @@ const Search = () => {
                     size="sm"
                     onClick={() => setSearchQuery(search)}
                     className="text-xs"
+                    aria-label={`Search for ${search}`}
                   >
                     {search}
                   </Button>
@@ -127,7 +157,20 @@ const Search = () => {
                   <div className="space-y-3">
                     <div className="flex items-start justify-between">
                       <div className="space-y-1 flex-1">
-                        <h3 className="font-semibold text-lg hover:text-primary">{result.title}</h3>
+                        <Button 
+                          variant="link" 
+                          className="p-0 h-auto font-semibold text-lg hover:text-primary text-left justify-start"
+                          asChild
+                        >
+                          <a 
+                            href={result.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            aria-label={`Open ${result.title} in new tab`}
+                          >
+                            {result.title}
+                          </a>
+                        </Button>
                         <p className="text-muted-foreground text-sm">{result.description}</p>
                         <p className="text-xs text-muted-foreground">{result.url}</p>
                       </div>
@@ -140,13 +183,17 @@ const Search = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex flex-wrap gap-1">
                         {result.tags.map((tag, tagIndex) => (
-                          <span
+                          <Button
                             key={tagIndex}
-                            className="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded-full text-xs"
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 py-1 text-xs hover:bg-muted"
+                            onClick={() => setSearchQuery(`tag:${tag}`)}
+                            aria-label={`Search by tag ${tag}`}
                           >
-                            <Tag className="h-3 w-3" />
+                            <Tag className="h-3 w-3 mr-1" />
                             {tag}
-                          </span>
+                          </Button>
                         ))}
                       </div>
                       <span className="text-xs text-muted-foreground">
@@ -170,21 +217,49 @@ const Search = () => {
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <h4 className="font-medium mb-2">Natural Language</h4>
-                <p className="text-muted-foreground">Try: "articles about React performance"</p>
+              <div className="space-y-2">
+                <h4 className="font-medium">Natural Language</h4>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-8 justify-start"
+                  onClick={() => setSearchQuery('articles about React performance')}
+                >
+                  Try: "articles about React performance"
+                </Button>
               </div>
-              <div>
-                <h4 className="font-medium mb-2">By Tag</h4>
-                <p className="text-muted-foreground">Try: "tag:productivity"</p>
+              <div className="space-y-2">
+                <h4 className="font-medium">By Tag</h4>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-8 justify-start"
+                  onClick={() => setSearchQuery('tag:productivity')}
+                >
+                  Try: "tag:productivity"
+                </Button>
               </div>
-              <div>
-                <h4 className="font-medium mb-2">By Date</h4>
-                <p className="text-muted-foreground">Try: "saved this week"</p>
+              <div className="space-y-2">
+                <h4 className="font-medium">By Date</h4>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-8 justify-start"
+                  onClick={() => setSearchQuery('saved this week')}
+                >
+                  Try: "saved this week"
+                </Button>
               </div>
-              <div>
-                <h4 className="font-medium mb-2">By Type</h4>
-                <p className="text-muted-foreground">Try: "type:video"</p>
+              <div className="space-y-2">
+                <h4 className="font-medium">By Type</h4>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs h-8 justify-start"
+                  onClick={() => setSearchQuery('type:video')}
+                >
+                  Try: "type:video"
+                </Button>
               </div>
             </div>
           </CardContent>

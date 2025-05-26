@@ -10,14 +10,14 @@ import {
   Home, 
   LayoutDashboard, 
   FolderOpen, 
-  BookmarkPlus, 
   BarChart3, 
   User, 
   Settings, 
   LogOut,
   LogIn,
-  Sparkles,
   Brain,
+  BookmarkPlus,
+  Sparkles,
   HelpCircle,
   Sun,
   Moon
@@ -37,7 +37,7 @@ const MainNavigation = () => {
       await signOut();
       toast({
         title: "Successfully signed out!",
-        description: "See you next time, productivity champion!",
+        description: "See you next time!",
       });
       navigate('/');
       setIsMenuOpen(false);
@@ -55,19 +55,19 @@ const MainNavigation = () => {
       to: '/', 
       label: 'Home', 
       icon: Home,
-      description: 'Discover Accio'
+      description: 'Back to homepage'
     },
     { 
       to: '/features', 
       label: 'Features', 
       icon: Sparkles,
-      description: 'See what\'s possible'
+      description: 'Discover all features'
     },
     { 
       to: '/help', 
       label: 'Help', 
       icon: HelpCircle,
-      description: 'Get support'
+      description: 'Get help and support'
     }
   ];
 
@@ -76,43 +76,31 @@ const MainNavigation = () => {
       to: '/', 
       label: 'Home', 
       icon: Home,
-      description: 'Back to home'
+      description: 'Back to homepage'
     },
     { 
       to: '/dashboard', 
       label: 'Dashboard', 
       icon: LayoutDashboard,
-      description: 'Your command center'
+      description: 'Your main dashboard'
     },
     { 
       to: '/collections', 
       label: 'Collections', 
       icon: FolderOpen,
-      description: 'Organized knowledge'
+      description: 'Organize your content'
     },
     { 
-      to: '/analytics', 
-      label: 'Analytics', 
+      to: '/search', 
+      label: 'Search', 
       icon: BarChart3,
-      description: 'Track your growth'
+      description: 'Search your knowledge'
     },
     { 
       to: '/profile', 
       label: 'Profile', 
       icon: User,
-      description: 'Your account'
-    },
-    { 
-      to: '/settings', 
-      label: 'Settings', 
-      icon: Settings,
-      description: 'Customize experience'
-    },
-    { 
-      to: '/help', 
-      label: 'Help', 
-      icon: HelpCircle,
-      description: 'Get support'
+      description: 'Your account settings'
     }
   ];
 
@@ -136,53 +124,56 @@ const MainNavigation = () => {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
-          <Link 
-            to="/" 
-            className="flex items-center gap-3 font-bold text-xl hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg p-1"
-            onClick={closeMenu}
-            aria-label="Accio homepage"
+          <Button 
+            variant="ghost"
+            className="flex items-center gap-3 font-bold text-xl hover:bg-transparent"
+            asChild
           >
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-              <Brain className="h-5 w-5 text-white" aria-hidden="true" />
-            </div>
-            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Accio
-            </span>
-          </Link>
+            <Link 
+              to="/" 
+              onClick={closeMenu}
+              aria-label="Accio homepage"
+            >
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+                <Brain className="h-5 w-5 text-white" aria-hidden="true" />
+              </div>
+              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Accio
+              </span>
+            </Link>
+          </Button>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
             {navItems.map((item) => (
-              <Link
+              <Button
                 key={item.to}
-                to={item.to}
-                className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg transition-all font-medium text-sm
-                  hover:bg-accent/80 hover:text-accent-foreground
-                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                  ${isActiveRoute(item.to) 
-                    ? 'bg-primary text-primary-foreground shadow-md' 
-                    : 'text-muted-foreground hover:text-foreground'
-                  }
-                `}
-                aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                title={item.description}
+                variant={isActiveRoute(item.to) ? "default" : "ghost"}
+                size="sm"
+                className="gap-2"
+                asChild
               >
-                <item.icon className="h-4 w-4" aria-hidden="true" />
-                {item.label}
-              </Link>
+                <Link
+                  to={item.to}
+                  aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                  title={item.description}
+                >
+                  <item.icon className="h-4 w-4" aria-hidden="true" />
+                  {item.label}
+                </Link>
+              </Button>
             ))}
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden md:flex items-center gap-2">
             {/* Theme Toggle */}
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={toggleTheme}
-              className="gap-2"
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
               {theme === 'dark' ? (
                 <Sun className="h-4 w-4" aria-hidden="true" />
@@ -196,10 +187,10 @@ const MainNavigation = () => {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-2 hover:bg-accent/80"
+                  className="gap-2"
                   asChild
                 >
-                  <Link to="/dashboard">
+                  <Link to="/save-content">
                     <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
                     Save Content
                   </Link>
@@ -209,6 +200,7 @@ const MainNavigation = () => {
                   size="sm"
                   onClick={handleSignOut}
                   className="gap-2 hover:bg-destructive/10 hover:text-destructive"
+                  aria-label="Sign out of your account"
                 >
                   <LogOut className="h-4 w-4" aria-hidden="true" />
                   Sign Out
@@ -216,13 +208,22 @@ const MainNavigation = () => {
               </>
             ) : (
               <>
-                <Button variant="ghost" size="sm" asChild>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="gap-2"
+                  asChild
+                >
                   <Link to="/login">
-                    <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
+                    <LogIn className="h-4 w-4" aria-hidden="true" />
                     Sign In
                   </Link>
                 </Button>
-                <Button size="sm" className="gap-2 shadow-lg" asChild>
+                <Button 
+                  size="sm" 
+                  className="gap-2 shadow-lg" 
+                  asChild
+                >
                   <Link to="/register">
                     <Sparkles className="h-4 w-4" aria-hidden="true" />
                     Get Started Free
@@ -237,7 +238,7 @@ const MainNavigation = () => {
             {/* Mobile Theme Toggle */}
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={toggleTheme}
               aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
@@ -250,7 +251,7 @@ const MainNavigation = () => {
 
             <Button
               variant="ghost"
-              size="sm"
+              size="icon"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-expanded={isMenuOpen}
               aria-controls="mobile-menu"
@@ -272,56 +273,49 @@ const MainNavigation = () => {
             className="md:hidden border-t bg-background shadow-xl"
             role="menu"
           >
-            <div className="px-4 py-6 space-y-4">
+            <div className="px-4 py-6 space-y-3">
               {/* Mobile Navigation Links */}
               <nav className="space-y-2" role="none">
                 {navItems.map((item) => (
-                  <Link
+                  <Button
                     key={item.to}
-                    to={item.to}
-                    onClick={closeMenu}
-                    className={`
-                      flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium
-                      hover:bg-accent/80 hover:text-accent-foreground
-                      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                      ${isActiveRoute(item.to) 
-                        ? 'bg-primary text-primary-foreground shadow-md' 
-                        : 'text-muted-foreground hover:text-foreground'
-                      }
-                    `}
-                    aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                    role="menuitem"
+                    variant={isActiveRoute(item.to) ? "default" : "ghost"}
+                    className="w-full justify-start gap-3"
+                    asChild
                   >
-                    <item.icon className="h-5 w-5" aria-hidden="true" />
-                    <div>
-                      <div className="font-medium">{item.label}</div>
-                      <div className="text-xs opacity-70">{item.description}</div>
-                    </div>
-                  </Link>
+                    <Link
+                      to={item.to}
+                      onClick={closeMenu}
+                      aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                      role="menuitem"
+                    >
+                      <item.icon className="h-5 w-5" aria-hidden="true" />
+                      <div>
+                        <div className="font-medium">{item.label}</div>
+                        <div className="text-xs opacity-70">{item.description}</div>
+                      </div>
+                    </Link>
+                  </Button>
                 ))}
               </nav>
 
               {/* Mobile Auth Actions */}
-              <div className="pt-4 border-t space-y-3">
+              <div className="pt-4 border-t space-y-2">
                 {user ? (
                   <>
                     <Button
-                      className="w-full justify-start gap-3"
                       variant="outline"
+                      className="w-full justify-start gap-3"
                       asChild
-                      onClick={closeMenu}
                     >
-                      <Link to="/dashboard">
+                      <Link to="/save-content" onClick={closeMenu}>
                         <BookmarkPlus className="h-5 w-5" aria-hidden="true" />
                         Save Content
                       </Link>
                     </Button>
                     <Button
                       variant="ghost"
-                      onClick={() => {
-                        handleSignOut();
-                        closeMenu();
-                      }}
+                      onClick={handleSignOut}
                       className="w-full justify-start gap-3 hover:bg-destructive/10 hover:text-destructive"
                     >
                       <LogOut className="h-5 w-5" aria-hidden="true" />
@@ -334,9 +328,8 @@ const MainNavigation = () => {
                       variant="outline" 
                       className="w-full justify-start gap-3"
                       asChild
-                      onClick={closeMenu}
                     >
-                      <Link to="/login">
+                      <Link to="/login" onClick={closeMenu}>
                         <LogIn className="h-5 w-5" aria-hidden="true" />
                         Sign In
                       </Link>
@@ -344,9 +337,8 @@ const MainNavigation = () => {
                     <Button 
                       className="w-full justify-start gap-3 shadow-lg"
                       asChild
-                      onClick={closeMenu}
                     >
-                      <Link to="/register">
+                      <Link to="/register" onClick={closeMenu}>
                         <Sparkles className="h-5 w-5" aria-hidden="true" />
                         Get Started Free
                       </Link>

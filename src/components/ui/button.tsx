@@ -70,6 +70,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const accessibilityProps = {
       'aria-disabled': disabled || loading,
       'aria-describedby': description ? `${props.id || 'button'}-desc` : undefined,
+      'aria-label': hoverText || (typeof children === 'string' ? children : ''),
       title: hoverText || (typeof children === 'string' ? children : ''),
       ...props
     }
