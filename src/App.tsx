@@ -13,8 +13,9 @@ import LoadingSpinner from '@/components/ui/loading-spinner';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
-// Import Login and NotFound directly instead of lazy loading to avoid dynamic import errors
+// Import Login, Register and NotFound directly instead of lazy loading to avoid dynamic import errors
 import Login from '@/pages/Login';
+import Register from '@/pages/Register';
 import NotFound from '@/pages/NotFound';
 
 // Lazy load other pages for better performance
@@ -50,6 +51,7 @@ function App() {
                         <Routes>
                           <Route path="/" element={<ImprovedIndex />} />
                           <Route path="/login" element={<Login />} />
+                          <Route path="/register" element={<Register />} />
                           <Route 
                             path="/dashboard" 
                             element={

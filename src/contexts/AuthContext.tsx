@@ -10,7 +10,7 @@ interface AuthContextType {
   isLoading: boolean; // Added for compatibility
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
-  signInWithProvider: (provider: 'google' | 'github') => Promise<{ error: any }>; // Added
+  signInWithProvider: (provider: 'google' | 'github') => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 

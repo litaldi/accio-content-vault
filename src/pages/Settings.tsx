@@ -1,143 +1,200 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
-import { useTheme } from '@/components/theme/ThemeProvider';
-import MainLayout from '@/components/layout/MainLayout';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
+import AccessibilitySettings from '@/components/accessibility/AccessibilitySettings';
+import { 
+  ArrowLeft,
+  User,
+  Shield,
+  Palette,
+  Bell,
+  Eye,
+  LogOut
+} from 'lucide-react';
 
-const Settings: React.FC = () => {
+const Settings = () => {
   const { user, signOut } = useAuth();
-  const { preferences, updatePreferences } = useAccessibility();
-  const { theme, setTheme } = useTheme();
   const { toast } = useToast();
 
   const handleSignOut = async () => {
     try {
       await signOut();
       toast({
-        title: "Signed out",
-        description: "You have been successfully signed out.",
+        title: "Signed out successfully",
+        description: "You have been logged out of your account.",
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to sign out. Please try again.",
+        title: "Error signing out",
+        description: "Please try again.",
         variant: "destructive",
       });
     }
   };
 
   return (
-    <MainLayout isLoggedIn={!!user} user={user}>
+    <div className="min-h-screen bg-background">
       <Helmet>
         <title>Settings - Accio</title>
-        <meta name="description" content="Customize your Accio experience" />
+        <meta name="description" content="Manage your account settings and preferences" />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      {/* Navigation */}
+      <nav className="border-b bg-background/95 backdrop-blur">
+        <div className="container mx-auto px-4 h-16 flex items-center gap-4">
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/dashboard">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Dashboard
+            </Link>
+          </Button>
+          
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
+              <span className="text-primary-foreground font-bold">A</span>
+            </div>
+            <span className="text-xl font-bold">Accio</span>
+          </div>
+        </div>
+      </nav>
+
+      <main className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Settings</h1>
-          <p className="text-muted-foreground">Customize your Accio experience.</p>
+          <p className="text-muted-foreground">
+            Manage your account and customize your experience
+          </p>
         </div>
 
-        <div className="grid gap-6">
-          {/* Theme Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="theme">Theme</Label>
-                <Select value={theme} onValueChange={setTheme}>
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="light">Light</SelectItem>
-                    <SelectItem value="dark">Dark</SelectItem>
-                    <SelectItem value="system">System</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Accessibility Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Accessibility</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="font-size">Font Size</Label>
-                <Select 
-                  value={preferences.fontSize} 
-                  onValueChange={(value: 'small' | 'medium' | 'large') => 
-                    updatePreferences({ fontSize: value })
-                  }
-                >
-                  <SelectTrigger className="w-32">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="small">Small</SelectItem>
-                    <SelectItem value="medium">Medium</SelectItem>
-                    <SelectItem value="large">Large</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Label htmlFor="high-contrast">High Contrast</Label>
-                <Switch
-                  id="high-contrast"
-                  checked={preferences.highContrast}
-                  onCheckedChange={(checked) => updatePreferences({ highContrast: checked })}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <Label htmlFor="reduced-motion">Reduced Motion</Label>
-                <Switch
-                  id="reduced-motion"
-                  checked={preferences.reducedMotion}
-                  onCheckedChange={(checked) => updatePreferences({ reducedMotion: checked })}
-                />
-              </div>
-            </CardContent>
-          </Card>
+        <Tabs defaultValue="account" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="account" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Account
+            </TabsTrigger>
+            <TabsTrigger value="accessibility" className="flex items-center gap-2">
+              <Eye className="h-4 w-4" />
+              Accessibility
+            </TabsTrigger>
+            <TabsTrigger value="appearance" className="flex items-center gap-2">
+              <Palette className="h-4 w-4" />
+              Appearance
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              Notifications
+            </TabsTrigger>
+          </TabsList>
 
           {/* Account Settings */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Account</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
+          <TabsContent value="account" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Account Information</CardTitle>
+                <CardDescription>
+                  View and update your account details
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div>
-                  <Label>Email</Label>
-                  <p className="text-sm text-muted-foreground">{user?.email}</p>
+                  <label className="text-sm font-medium">Email</label>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {user?.email || 'Not available'}
+                  </p>
                 </div>
-              </div>
+                
+                <div>
+                  <label className="text-sm font-medium">Account Created</label>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Not available'}
+                  </p>
+                </div>
 
-              <div className="pt-4 border-t">
-                <Button variant="destructive" onClick={handleSignOut}>
-                  Sign Out
+                <div className="pt-4 border-t">
+                  <Button variant="destructive" onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-red-600">Danger Zone</CardTitle>
+                <CardDescription>
+                  Irreversible actions that affect your account
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Button variant="destructive" disabled>
+                  Delete Account
                 </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </MainLayout>
+                <p className="text-sm text-muted-foreground mt-2">
+                  This feature is currently disabled in the demo
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Accessibility Settings */}
+          <TabsContent value="accessibility" className="space-y-6">
+            <AccessibilitySettings />
+          </TabsContent>
+
+          {/* Appearance Settings */}
+          <TabsContent value="appearance" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Theme Preferences</CardTitle>
+                <CardDescription>
+                  Customize the appearance of your interface
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">Color Theme</label>
+                  <div className="grid grid-cols-3 gap-3 mt-2">
+                    <Button variant="outline" className="justify-start">
+                      Light
+                    </Button>
+                    <Button variant="outline" className="justify-start">
+                      Dark
+                    </Button>
+                    <Button variant="outline" className="justify-start">
+                      System
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Notifications Settings */}
+          <TabsContent value="notifications" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Notification Preferences</CardTitle>
+                <CardDescription>
+                  Control how and when you receive notifications
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Notification settings will be available in a future update.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </main>
+    </div>
   );
 };
 
