@@ -3,188 +3,170 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { 
-  HelpCircle, 
+  BookOpen, 
   MessageCircle, 
-  FileText, 
-  Mail, 
-  Phone, 
-  Clock,
-  Search,
-  BookOpen,
-  Users,
-  Zap
+  Video, 
+  FileText,
+  Mail,
+  ExternalLink
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const Help: React.FC = () => {
-  const faqs = [
-    {
-      question: "How do I save content to my library?",
-      answer: "You can save content by pasting URLs, uploading files, or using our browser extension. All content is automatically organized and searchable."
-    },
-    {
-      question: "Can I organize my saved content into collections?",
-      answer: "Yes! Create custom collections to organize your content by topic, project, or any other criteria that works for you."
-    },
-    {
-      question: "Is my data secure and private?",
-      answer: "Absolutely. We use enterprise-grade encryption and never share your personal data. You have full control over your content and privacy settings."
-    },
-    {
-      question: "How does the AI summarization work?",
-      answer: "Our AI automatically generates summaries and key insights from your saved content, making it easier to quickly review and find what you need."
-    }
-  ];
+const Help = () => {
+  const navigate = useNavigate();
 
-  const supportOptions = [
+  const helpCategories = [
     {
-      icon: MessageCircle,
-      title: "Live Chat",
-      description: "Get instant help from our support team",
-      action: "Start Chat",
-      available: "24/7"
+      title: 'Getting Started',
+      description: 'Learn the basics of using Accio',
+      icon: BookOpen,
+      color: 'bg-blue-500',
+      topics: [
+        'Creating your first account',
+        'Saving your first content',
+        'Understanding AI organization',
+        'Basic search techniques'
+      ]
     },
     {
-      icon: Mail,
-      title: "Email Support",
-      description: "Send us a detailed message about your issue",
-      action: "Send Email",
-      available: "Response within 24h"
+      title: 'Video Tutorials',
+      description: 'Watch step-by-step guides',
+      icon: Video,
+      color: 'bg-green-500',
+      topics: [
+        'Complete walkthrough (5 min)',
+        'Advanced search tips',
+        'Team collaboration features',
+        'Mobile app usage'
+      ]
     },
     {
+      title: 'Knowledge Base',
+      description: 'Detailed guides and documentation',
       icon: FileText,
-      title: "Documentation",
-      description: "Browse our comprehensive guides and tutorials",
-      action: "View Docs",
-      available: "Always available"
+      color: 'bg-purple-500',
+      topics: [
+        'Feature documentation',
+        'Integration guides',
+        'Troubleshooting',
+        'Best practices'
+      ]
     },
     {
-      icon: Users,
-      title: "Community Forum",
-      description: "Connect with other users and share tips",
-      action: "Join Forum",
-      available: "Community moderated"
+      title: 'Community Support',
+      description: 'Connect with other users',
+      icon: MessageCircle,
+      color: 'bg-orange-500',
+      topics: [
+        'User community forum',
+        'Feature requests',
+        'Tips and tricks',
+        'Success stories'
+      ]
     }
   ];
 
   return (
-    <ImprovedUnifiedLayout>
+    <UnifiedLayout>
       <Helmet>
         <title>Help & Support - Accio</title>
-        <meta name="description" content="Get help with Accio. Find answers to common questions, contact support, and access documentation." />
+        <meta name="description" content="Get help with Accio's knowledge management platform. Tutorials, guides, and support resources." />
       </Helmet>
 
-      <div className="py-8 space-y-8">
-        {/* Hero Section */}
+      <div className="max-w-6xl mx-auto py-12 space-y-12">
+        {/* Header */}
         <div className="text-center space-y-4">
-          <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
-            <HelpCircle className="h-8 w-8 text-primary" />
-          </div>
-          <h1 className="text-4xl font-bold">How can we help you?</h1>
+          <h1 className="text-4xl font-bold">Help & Support</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Find answers to your questions, get support, and learn how to make the most of Accio.
+            Everything you need to get the most out of your knowledge management journey with Accio.
           </p>
         </div>
 
-        {/* Search Help */}
-        <Card className="max-w-2xl mx-auto">
-          <CardContent className="p-6">
-            <div className="flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search for help articles, guides, and FAQs..."
-                  className="pl-10"
-                />
+        {/* Quick Actions */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card className="text-center cursor-pointer hover:shadow-lg transition-shadow" onClick={() => navigate('/faq')}>
+            <CardContent className="pt-6">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BookOpen className="h-6 w-6 text-blue-600" />
               </div>
-              <Button>Search</Button>
-            </div>
-          </CardContent>
-        </Card>
+              <h3 className="font-semibold mb-2">FAQ</h3>
+              <p className="text-sm text-muted-foreground">Quick answers to common questions</p>
+            </CardContent>
+          </Card>
 
-        {/* Support Options */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {supportOptions.map((option, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardHeader className="text-center">
-                <div className="w-12 h-12 mx-auto rounded-lg bg-primary/10 flex items-center justify-center">
-                  <option.icon className="h-6 w-6 text-primary" />
+          <Card className="text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Video className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="font-semibold mb-2">Video Guides</h3>
+              <p className="text-sm text-muted-foreground">Step-by-step video tutorials</p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <CardContent className="pt-6">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MessageCircle className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold mb-2">Contact Us</h3>
+              <p className="text-sm text-muted-foreground">Get personalized support</p>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Help Categories */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {helpCategories.map((category) => (
+            <Card key={category.title}>
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className={`w-12 h-12 ${category.color} rounded-lg flex items-center justify-center`}>
+                    <category.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle>{category.title}</CardTitle>
+                    <CardDescription>{category.description}</CardDescription>
+                  </div>
                 </div>
-                <CardTitle className="text-lg">{option.title}</CardTitle>
-                <CardDescription>{option.description}</CardDescription>
               </CardHeader>
-              <CardContent className="text-center space-y-3">
-                <Button variant="outline" className="w-full">
-                  {option.action}
-                </Button>
-                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                  <Clock className="h-3 w-3" />
-                  {option.available}
-                </div>
+              <CardContent>
+                <ul className="space-y-2">
+                  {category.topics.map((topic, index) => (
+                    <li key={index} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground cursor-pointer">
+                      <ExternalLink className="h-3 w-3" />
+                      {topic}
+                    </li>
+                  ))}
+                </ul>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        {/* FAQ Section */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
-          <div className="grid md:grid-cols-2 gap-6">
-            {faqs.map((faq, index) => (
-              <Card key={index}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{faq.question}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground">{faq.answer}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-
-        {/* Contact Form */}
-        <Card className="max-w-2xl mx-auto">
-          <CardHeader>
-            <CardTitle>Still Need Help?</CardTitle>
-            <CardDescription>
-              Send us a message and we'll get back to you as soon as possible.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium">Name</label>
-                <Input id="name" placeholder="Your name" />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">Email</label>
-                <Input id="email" type="email" placeholder="your@email.com" />
-              </div>
+        {/* Contact Section */}
+        <Card className="text-center">
+          <CardContent className="pt-8">
+            <Mail className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h3 className="text-2xl font-semibold mb-2">Need Personal Help?</h3>
+            <p className="text-muted-foreground mb-6 max-w-md mx-auto">
+              Our support team is ready to help you succeed with Accio. We typically respond within 2 hours.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button>
+                <Mail className="h-4 w-4 mr-2" />
+                Email Support
+              </Button>
+              <Button variant="outline">
+                Schedule a Call
+              </Button>
             </div>
-            <div className="space-y-2">
-              <label htmlFor="subject" className="text-sm font-medium">Subject</label>
-              <Input id="subject" placeholder="How can we help?" />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-medium">Message</label>
-              <Textarea 
-                id="message" 
-                placeholder="Describe your question or issue in detail..."
-                rows={4}
-              />
-            </div>
-            <Button className="w-full">
-              <Mail className="h-4 w-4 mr-2" />
-              Send Message
-            </Button>
           </CardContent>
         </Card>
       </div>
-    </ImprovedUnifiedLayout>
+    </UnifiedLayout>
   );
 };
 

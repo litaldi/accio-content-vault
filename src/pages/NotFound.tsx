@@ -1,59 +1,83 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
-import { Home, ArrowLeft, Search } from 'lucide-react';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { Home, Search, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
-const NotFound: React.FC = () => {
+const NotFound = () => {
+  const navigate = useNavigate();
+
   return (
-    <ImprovedUnifiedLayout>
+    <UnifiedLayout>
       <Helmet>
         <title>Page Not Found - Accio</title>
-        <meta name="description" content="The page you're looking for doesn't exist." />
-        <meta name="robots" content="noindex" />
+        <meta name="description" content="The page you're looking for doesn't exist. Return to your knowledge library." />
       </Helmet>
 
-      <div className="min-h-[60vh] flex items-center justify-center py-12">
-        <Card className="w-full max-w-md text-center">
-          <CardHeader>
-            <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-muted flex items-center justify-center">
-              <span className="text-4xl font-bold text-muted-foreground">404</span>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <div className="text-center space-y-8 max-w-md mx-auto px-4">
+          {/* Error Illustration */}
+          <div className="relative">
+            <div className="text-8xl font-bold text-muted-foreground/20">404</div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Search className="h-16 w-16 text-muted-foreground" />
             </div>
-            <CardTitle className="text-2xl">Page Not Found</CardTitle>
-            <CardDescription>
-              The page you're looking for doesn't exist or has been moved.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Button asChild className="flex items-center gap-2">
-                <Link to="/">
-                  <Home className="h-4 w-4" />
-                  Go Home
-                </Link>
-              </Button>
-              <Button variant="outline" asChild className="flex items-center gap-2">
-                <Link to="/search">
-                  <Search className="h-4 w-4" />
-                  Search
-                </Link>
-              </Button>
-            </div>
+          </div>
+
+          {/* Error Message */}
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold">Page Not Found</h1>
+            <p className="text-muted-foreground leading-relaxed">
+              The page you're looking for doesn't exist or has been moved. 
+              Let's get you back to organizing your knowledge.
+            </p>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button onClick={() => navigate('/')} className="flex items-center gap-2">
+              <Home className="h-4 w-4" />
+              Go Home
+            </Button>
             <Button 
-              variant="ghost" 
-              onClick={() => window.history.back()}
-              className="flex items-center gap-2 w-full"
+              variant="outline" 
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2"
             >
               <ArrowLeft className="h-4 w-4" />
               Go Back
             </Button>
-          </CardContent>
-        </Card>
+          </div>
+
+          {/* Quick Links */}
+          <div className="border-t pt-6">
+            <p className="text-sm text-muted-foreground mb-4">Quick links:</p>
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <button 
+                onClick={() => navigate('/dashboard')}
+                className="text-primary hover:underline"
+              >
+                Dashboard
+              </button>
+              <button 
+                onClick={() => navigate('/save')}
+                className="text-primary hover:underline"
+              >
+                Save Content
+              </button>
+              <button 
+                onClick={() => navigate('/help')}
+                className="text-primary hover:underline"
+              >
+                Help Center
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
-    </ImprovedUnifiedLayout>
+    </UnifiedLayout>
   );
 };
 

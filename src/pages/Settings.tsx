@@ -1,180 +1,200 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import AccessibilitySettings from '@/components/accessibility/AccessibilitySettings';
-import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
-import { 
-  User,
-  Shield,
-  Palette,
-  Bell,
-  Eye,
-  LogOut
-} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { Settings as SettingsIcon, Palette, Bell, Shield, Database } from 'lucide-react';
+import { useTheme } from '@/components/theme/ThemeProvider';
 
 const Settings = () => {
-  const { user, signOut } = useAuth();
-  const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-      toast({
-        title: "Signed out successfully",
-        description: "You have been logged out of your account.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error signing out",
-        description: "Please try again.",
-        variant: "destructive",
-      });
+  const settingsCategories = [
+    {
+      title: 'Appearance',
+      description: 'Customize how Accio looks and feels',
+      icon: Palette,
+      settings: [
+        {
+          label: 'Theme',
+          description: 'Choose your preferred color scheme',
+          type: 'select',
+          value: theme,
+          options: [
+            { value: 'light', label: 'Light' },
+            { value: 'dark', label: 'Dark' },
+            { value: 'system', label: 'System' }
+          ],
+          onChange: setTheme
+        },
+        {
+          label: 'Compact Mode',
+          description: 'Show more content in less space',
+          type: 'switch',
+          value: false
+        }
+      ]
+    },
+    {
+      title: 'Notifications',
+      description: 'Manage how you receive updates',
+      icon: Bell,
+      settings: [
+        {
+          label: 'Email Notifications',
+          description: 'Receive updates via email',
+          type: 'switch',
+          value: true
+        },
+        {
+          label: 'Weekly Summary',
+          description: 'Get a weekly summary of your activity',
+          type: 'switch',
+          value: true
+        },
+        {
+          label: 'Feature Updates',
+          description: 'Notify me about new features',
+          type: 'switch',
+          value: false
+        }
+      ]
+    },
+    {
+      title: 'Privacy & Security',
+      description: 'Control your data and privacy settings',
+      icon: Shield,
+      settings: [
+        {
+          label: 'Make Profile Public',
+          description: 'Allow others to see your public collections',
+          type: 'switch',
+          value: false
+        },
+        {
+          label: 'Analytics',
+          description: 'Help improve Accio by sharing usage data',
+          type: 'switch',
+          value: true
+        }
+      ]
+    },
+    {
+      title: 'Data Management',
+      description: 'Manage your data and storage',
+      icon: Database,
+      settings: [
+        {
+          label: 'Auto-save Frequency',
+          description: 'How often to automatically save changes',
+          type: 'select',
+          value: 'medium',
+          options: [
+            { value: 'low', label: 'Every 5 minutes' },
+            { value: 'medium', label: 'Every 2 minutes' },
+            { value: 'high', label: 'Every 30 seconds' }
+          ]
+        }
+      ]
     }
-  };
+  ];
 
   return (
-    <ImprovedUnifiedLayout>
+    <UnifiedLayout>
       <Helmet>
         <title>Settings - Accio</title>
-        <meta name="description" content="Manage your account settings and preferences" />
+        <meta name="description" content="Customize your Accio experience with personalized settings and preferences." />
       </Helmet>
 
-      <div className="py-8 space-y-6">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Settings</h1>
-          <p className="text-muted-foreground">
-            Manage your account and customize your experience
-          </p>
+      <div className="max-w-4xl mx-auto py-8 space-y-8">
+        {/* Header */}
+        <div className="flex items-center gap-4">
+          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
+            <SettingsIcon className="h-8 w-8 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold">Settings</h1>
+            <p className="text-muted-foreground">Customize your Accio experience</p>
+          </div>
         </div>
 
-        <Tabs defaultValue="account" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="account" className="flex items-center gap-2">
-              <User className="h-4 w-4" />
-              Account
-            </TabsTrigger>
-            <TabsTrigger value="accessibility" className="flex items-center gap-2">
-              <Eye className="h-4 w-4" />
-              Accessibility
-            </TabsTrigger>
-            <TabsTrigger value="appearance" className="flex items-center gap-2">
-              <Palette className="h-4 w-4" />
-              Appearance
-            </TabsTrigger>
-            <TabsTrigger value="notifications" className="flex items-center gap-2">
-              <Bell className="h-4 w-4" />
-              Notifications
-            </TabsTrigger>
-          </TabsList>
-
-          {/* Account Settings */}
-          <TabsContent value="account" className="space-y-6">
-            <Card>
+        {/* Settings Categories */}
+        <div className="space-y-6">
+          {settingsCategories.map((category) => (
+            <Card key={category.title}>
               <CardHeader>
-                <CardTitle>Account Information</CardTitle>
-                <CardDescription>
-                  View and update your account details
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">Email</label>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {user?.email || 'Not available'}
-                  </p>
-                </div>
-                
-                <div>
-                  <label className="text-sm font-medium">Account Created</label>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Not available'}
-                  </p>
-                </div>
-
-                <div className="pt-4 border-t">
-                  <Button variant="destructive" onClick={handleSignOut}>
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign Out
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-red-600">Danger Zone</CardTitle>
-                <CardDescription>
-                  Irreversible actions that affect your account
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button variant="destructive" disabled>
-                  Delete Account
-                </Button>
-                <p className="text-sm text-muted-foreground mt-2">
-                  This feature is currently disabled in the demo
-                </p>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Accessibility Settings */}
-          <TabsContent value="accessibility" className="space-y-6">
-            <AccessibilitySettings />
-          </TabsContent>
-
-          {/* Appearance Settings */}
-          <TabsContent value="appearance" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Theme Preferences</CardTitle>
-                <CardDescription>
-                  Customize the appearance of your interface
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">Color Theme</label>
-                  <div className="grid grid-cols-3 gap-3 mt-2">
-                    <Button variant="outline" className="justify-start">
-                      Light
-                    </Button>
-                    <Button variant="outline" className="justify-start">
-                      Dark
-                    </Button>
-                    <Button variant="outline" className="justify-start">
-                      System
-                    </Button>
+                <div className="flex items-center gap-3">
+                  <category.icon className="h-5 w-5 text-primary" />
+                  <div>
+                    <CardTitle>{category.title}</CardTitle>
+                    <CardDescription>{category.description}</CardDescription>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Notifications Settings */}
-          <TabsContent value="notifications" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Notification Preferences</CardTitle>
-                <CardDescription>
-                  Control how and when you receive notifications
-                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  Notification settings will be available in a future update.
-                </p>
+              <CardContent className="space-y-6">
+                {category.settings.map((setting, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <Label className="font-medium">{setting.label}</Label>
+                      <p className="text-sm text-muted-foreground">{setting.description}</p>
+                    </div>
+                    <div>
+                      {setting.type === 'switch' && (
+                        <Switch checked={setting.value} />
+                      )}
+                      {setting.type === 'select' && setting.options && (
+                        <Select value={setting.value} onValueChange={setting.onChange}>
+                          <SelectTrigger className="w-40">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {setting.options.map((option) => (
+                              <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          ))}
+        </div>
+
+        {/* Danger Zone */}
+        <Card className="border-destructive/20">
+          <CardHeader>
+            <CardTitle className="text-destructive">Danger Zone</CardTitle>
+            <CardDescription>
+              Irreversible actions that will affect your account permanently
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between p-4 border border-destructive/20 rounded-lg">
+              <div>
+                <h4 className="font-medium">Export Data</h4>
+                <p className="text-sm text-muted-foreground">Download all your saved content and data</p>
+              </div>
+              <Button variant="outline">Export</Button>
+            </div>
+            <div className="flex items-center justify-between p-4 border border-destructive/20 rounded-lg">
+              <div>
+                <h4 className="font-medium">Delete Account</h4>
+                <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
+              </div>
+              <Button variant="destructive">Delete</Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </ImprovedUnifiedLayout>
+    </UnifiedLayout>
   );
 };
 

@@ -1,33 +1,37 @@
 
 export const copy = {
   common: {
-    required: 'required',
+    required: 'Required',
     loading: 'Loading...',
-    error: 'An error occurred',
-    success: 'Success',
+    error: 'Something went wrong',
+    success: 'Success!',
     cancel: 'Cancel',
     confirm: 'Confirm',
-    save: 'Save',
+    save: 'Save Changes',
     delete: 'Delete',
     edit: 'Edit',
     close: 'Close',
     back: 'Back',
     next: 'Next',
-    previous: 'Previous'
+    previous: 'Previous',
+    tryAgain: 'Try Again',
+    learnMore: 'Learn More'
   },
   auth: {
     signIn: 'Sign In',
     signOut: 'Sign Out',
-    signUp: 'Sign Up',
-    getStarted: 'Start Now',
-    welcome: 'Welcome back',
+    signUp: 'Create Account',
+    getStarted: 'Start Building',
+    welcome: 'Welcome back!',
     createAccount: 'Create your free account',
     forgotPassword: 'Forgot password?',
     rememberMe: 'Remember me',
     alreadyHaveAccount: 'Already have an account?',
     dontHaveAccount: "Don't have an account?",
     signInHere: 'Sign in here',
-    signUpHere: 'Sign up here'
+    signUpHere: 'Sign up here',
+    enterEmail: 'Enter your email',
+    enterPassword: 'Enter your password'
   },
   navigation: {
     home: 'Home',
@@ -37,28 +41,36 @@ export const copy = {
     analytics: 'Track Your Growth',
     profile: 'Manage Your Profile',
     settings: 'Customize Experience',
-    help: 'Get Help & Support'
+    help: 'Get Help & Support',
+    about: 'About Accio',
+    preferences: 'Preferences'
   },
   accessibility: {
     skipToContent: 'Skip to main content',
     skipToNavigation: 'Skip to navigation',
     toggleTheme: 'Toggle theme',
-    openMenu: 'Open menu',
-    closeMenu: 'Close menu',
+    openMenu: 'Open navigation menu',
+    closeMenu: 'Close navigation menu',
     showPassword: 'Show password',
-    hidePassword: 'Hide password'
+    hidePassword: 'Hide password',
+    userMenu: 'User menu'
   },
   headlines: {
-    hero: 'Never lose track of valuable knowledge again',
-    subhero: 'Transform scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything instantly, achieve 10x productivity.'
+    hero: 'Turn the internet into your personal knowledge library',
+    subhero: 'Save any webpage, document, or file. Let AI organize everything perfectly. Find anything instantly with natural language search.',
+    valueProposition: 'Never lose important information again'
   },
   social: {
     companies: 'Trusted by professionals at leading companies',
     userCount: '10,000+',
-    rating: '4.9/5 stars'
+    rating: '4.9/5 stars',
+    testimonial: 'The best knowledge management tool I\'ve ever used'
   },
   trust: {
-    freeTrial: 'Free forever plan'
+    freeTrial: 'Free forever plan',
+    noCredit: 'No credit card required',
+    setupTime: 'Ready in 30 seconds',
+    security: 'Bank-level security'
   },
   emptyStates: {
     library: {
@@ -119,11 +131,14 @@ export const copy = {
   },
   buttons: {
     back: 'Back',
-    next: 'Next',
+    next: 'Continue',
     finish: 'Start Building',
     close: 'Close',
     getStarted: 'Start Now',
-    exploreFeatures: 'Explore Features'
+    exploreFeatures: 'Explore Features',
+    startFree: 'Start Free',
+    scheduleDemo: 'Schedule Demo',
+    contactUs: 'Contact Us'
   },
   loading: {
     loading: 'Loading your knowledge...'

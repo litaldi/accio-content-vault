@@ -4,7 +4,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import NewMainNavigation from '@/components/navigation/NewMainNavigation';
+import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
 
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <BrowserRouter>
@@ -16,23 +16,22 @@ const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   </BrowserRouter>
 );
 
-describe('NewMainNavigation', () => {
+describe('OrganizedNavigation', () => {
   it('renders navigation items correctly', () => {
     render(
       <TestWrapper>
-        <NewMainNavigation />
+        <OrganizedNavigation />
       </TestWrapper>
     );
 
     expect(screen.getByText('Accio')).toBeInTheDocument();
-    expect(screen.getByText('Home')).toBeInTheDocument();
-    expect(screen.getByText('Sign In')).toBeInTheDocument();
+    expect(screen.getByText('Explore')).toBeInTheDocument();
   });
 
   it('has proper accessibility attributes', () => {
     render(
       <TestWrapper>
-        <NewMainNavigation />
+        <OrganizedNavigation />
       </TestWrapper>
     );
 
@@ -46,7 +45,7 @@ describe('NewMainNavigation', () => {
   it('toggles theme correctly', () => {
     render(
       <TestWrapper>
-        <NewMainNavigation />
+        <OrganizedNavigation />
       </TestWrapper>
     );
 
@@ -62,7 +61,7 @@ describe('NewMainNavigation', () => {
   it('handles mobile menu toggle', () => {
     render(
       <TestWrapper>
-        <NewMainNavigation />
+        <OrganizedNavigation />
       </TestWrapper>
     );
 
