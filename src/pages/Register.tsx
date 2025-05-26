@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
-import { AccessibleFormField } from '@/components/forms/AccessibleFormField';
+import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -14,11 +16,11 @@ import {
   Loader2, 
   AlertCircle, 
   CheckCircle,
-  Shield,
-  Chrome,
+  Eye,
+  EyeOff,
+  User,
   Mail,
-  Lock,
-  User
+  Lock
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -161,12 +163,12 @@ const Register = () => {
   };
 
   return (
-    <UnifiedPageLayout
-      title="Create Account - Join Accio | Accio"
-      description="Create your free Accio account to start building your personal knowledge sanctuary with AI-powered organization and insights."
-      showNavigation={true}
-      showFooter={true}
-    >
+    <>
+      <Helmet>
+        <title>Create Account - Join Accio | Accio</title>
+        <meta name="description" content="Create your free Accio account to start building your personal knowledge sanctuary with AI-powered organization and insights." />
+      </Helmet>
+
       <div className="min-h-screen flex items-center justify-center py-12 px-4 bg-gradient-to-br from-primary/5 via-background to-background">
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
@@ -195,51 +197,102 @@ const Register = () => {
             <CardContent className="space-y-6">
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 {/* Name Field */}
-                <AccessibleFormField
-                  ref={nameInputRef}
-                  label="Full name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  error={errors.name}
-                  required
-                  autoComplete="name"
-                  disabled={isLoading}
-                  icon={User}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full name *</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      ref={nameInputRef}
+                      id="name"
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={formData.name}
+                      onChange={(e) => handleInputChange('name', e.target.value)}
+                      required
+                      autoComplete="name"
+                      disabled={isLoading}
+                      className={cn(
+                        "pl-10",
+                        errors.name && "border-destructive focus-visible:ring-destructive"
+                      )}
+                    />
+                  </div>
+                  {errors.name && (
+                    <p className="text-sm text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {errors.name}
+                    </p>
+                  )}
+                </div>
 
                 {/* Email Field */}
-                <AccessibleFormField
-                  label="Email address"
-                  type="email"
-                  placeholder="Enter your email address"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  error={errors.email}
-                  required
-                  autoComplete="email"
-                  disabled={isLoading}
-                  icon={Mail}
-                  helpText="We'll never share your email with anyone"
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email address *</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      required
+                      autoComplete="email"
+                      disabled={isLoading}
+                      className={cn(
+                        "pl-10",
+                        errors.email && "border-destructive focus-visible:ring-destructive"
+                      )}
+                    />
+                  </div>
+                  {errors.email && (
+                    <p className="text-sm text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {errors.email}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground">
+                    We'll never share your email with anyone
+                  </p>
+                </div>
 
                 {/* Password Field */}
-                <AccessibleFormField
-                  label="Password"
-                  type="password"
-                  placeholder="Create a strong password"
-                  value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  error={errors.password}
-                  required
-                  autoComplete="new-password"
-                  disabled={isLoading}
-                  icon={Lock}
-                  showPasswordToggle
-                  showPassword={showPassword}
-                  onTogglePassword={() => setShowPassword(!showPassword)}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password *</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Create a strong password"
+                      value={formData.password}
+                      onChange={(e) => handleInputChange('password', e.target.value)}
+                      required
+                      autoComplete="new-password"
+                      disabled={isLoading}
+                      className={cn(
+                        "pl-10 pr-10",
+                        errors.password && "border-destructive focus-visible:ring-destructive"
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                      onClick={() => setShowPassword(!showPassword)}
+                      disabled={isLoading}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {errors.password}
+                    </p>
+                  )}
+                </div>
 
                 {/* Password Strength Indicator */}
                 {formData.password && (
@@ -278,21 +331,42 @@ const Register = () => {
                 )}
 
                 {/* Confirm Password Field */}
-                <AccessibleFormField
-                  label="Confirm password"
-                  type="password"
-                  placeholder="Confirm your password"
-                  value={formData.confirmPassword}
-                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                  error={errors.confirmPassword}
-                  required
-                  autoComplete="new-password"
-                  disabled={isLoading}
-                  icon={Lock}
-                  showPasswordToggle
-                  showPassword={showConfirmPassword}
-                  onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm password *</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="confirmPassword"
+                      type={showConfirmPassword ? "text" : "password"}
+                      placeholder="Confirm your password"
+                      value={formData.confirmPassword}
+                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                      required
+                      autoComplete="new-password"
+                      disabled={isLoading}
+                      className={cn(
+                        "pl-10 pr-10",
+                        errors.confirmPassword && "border-destructive focus-visible:ring-destructive"
+                      )}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      disabled={isLoading}
+                    >
+                      {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </Button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-sm text-destructive flex items-center gap-1">
+                      <AlertCircle className="h-3 w-3" />
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
 
                 {/* Terms and Conditions */}
                 <div className="space-y-3">
@@ -302,7 +376,6 @@ const Register = () => {
                       checked={acceptTerms}
                       onCheckedChange={(checked) => setAcceptTerms(checked === true)}
                       disabled={isLoading}
-                      aria-describedby="terms-description"
                       className={cn(
                         "mt-0.5",
                         errors.terms && "border-destructive"
@@ -312,7 +385,6 @@ const Register = () => {
                       <label 
                         htmlFor="terms" 
                         className="text-sm leading-relaxed cursor-pointer"
-                        id="terms-description"
                       >
                         I agree to the{' '}
                         <Link 
@@ -336,7 +408,7 @@ const Register = () => {
                     </div>
                   </div>
                   {errors.terms && (
-                    <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
+                    <div className="flex items-center gap-1 text-sm text-destructive">
                       <AlertCircle className="h-3 w-3" />
                       {errors.terms}
                     </div>
@@ -345,20 +417,18 @@ const Register = () => {
 
                 {/* Submit Error */}
                 {errors.submit && (
-                  <div className="p-4 rounded-lg bg-destructive/10 border border-destructive/20" role="alert">
-                    <div className="flex items-center gap-2">
-                      <AlertCircle className="h-4 w-4 text-destructive" />
-                      <p className="text-sm text-destructive font-medium">
-                        {errors.submit}
-                      </p>
-                    </div>
-                  </div>
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      {errors.submit}
+                    </AlertDescription>
+                  </Alert>
                 )}
 
                 {/* Submit Button */}
                 <Button
                   type="submit"
-                  className="w-full relative"
+                  className="w-full"
                   size="lg"
                   disabled={isLoading}
                 >
@@ -375,29 +445,6 @@ const Register = () => {
                   )}
                 </Button>
               </form>
-
-              {/* Divider */}
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-                </div>
-              </div>
-
-              {/* Alternative Sign Up Methods */}
-              <div className="space-y-3">
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  <Chrome className="h-4 w-4 mr-2" />
-                  Sign up with Google
-                </Button>
-              </div>
 
               {/* Sign In Link */}
               <div className="space-y-4">
@@ -420,7 +467,7 @@ const Register = () => {
           </Card>
         </div>
       </div>
-    </UnifiedPageLayout>
+    </>
   );
 };
 
