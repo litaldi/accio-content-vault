@@ -20,8 +20,17 @@ import {
   Puzzle,
   Star,
   MessageCircle,
-  Zap
+  Zap,
+  Settings,
+  ChevronDown
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { copy } from '@/utils/copy';
 
 export const UnifiedMainNavigation = () => {
@@ -64,34 +73,30 @@ export const UnifiedMainNavigation = () => {
     }
   };
 
-  const publicNavItems = [
+  // Core navigation items (always visible)
+  const coreNavItems = [
     { 
       to: '/', 
       label: copy.navigation.home, 
       icon: Home,
-      description: 'Discover Accio'
+      description: 'Welcome to Accio'
     },
     { 
       to: '/features', 
       label: copy.navigation.features, 
       icon: Star,
-      description: 'Explore capabilities'
+      description: 'Explore our capabilities'
     },
     { 
       to: '/playground', 
       label: copy.navigation.playground, 
       icon: Puzzle,
-      description: 'Try interactive demo'
+      description: 'Try our interactive demo'
     },
-    { 
-      to: '/contact', 
-      label: copy.navigation.contact, 
-      icon: MessageCircle,
-      description: 'Get help and support'
-    }
   ];
 
-  const authenticatedNavItems = [
+  // Product navigation (authenticated users)
+  const productNavItems = [
     { 
       to: '/dashboard', 
       label: copy.navigation.dashboard, 
@@ -102,29 +107,37 @@ export const UnifiedMainNavigation = () => {
       to: '/search', 
       label: copy.navigation.search, 
       icon: Search,
-      description: 'Find knowledge'
+      description: 'Find your knowledge'
     },
     { 
       to: '/collections', 
       label: copy.navigation.collections, 
       icon: FolderOpen,
-      description: 'Organized content'
+      description: 'Organize your content'
     },
     { 
       to: '/analytics', 
       label: copy.navigation.analytics, 
       icon: BarChart3,
-      description: 'Track insights'
+      description: 'Track your insights'
     },
     { 
       to: '/integrations', 
       label: copy.navigation.integrations, 
       icon: Zap,
-      description: 'Connect tools'
+      description: 'Connect your tools'
     }
   ];
 
-  const navItems = user ? [...publicNavItems.slice(0, 1), ...authenticatedNavItems, ...publicNavItems.slice(1)] : publicNavItems;
+  // Support navigation
+  const supportNavItems = [
+    { 
+      to: '/contact', 
+      label: copy.navigation.contact, 
+      icon: MessageCircle,
+      description: 'Get help and support'
+    }
+  ];
 
   const isActiveRoute = (path: string) => {
     if (path === '/') {
@@ -157,7 +170,64 @@ export const UnifiedMainNavigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
+            {/* Core Navigation */}
+            {coreNavItems.map((item) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                className={`
+                  flex items-center gap-2 px-4 py-2 rounded-lg transition-all font-medium text-sm
+                  hover:bg-accent/80 hover:text-accent-foreground
+                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                  ${isActiveRoute(item.to) 
+                    ? 'bg-primary text-primary-foreground shadow-md' 
+                    : 'text-muted-foreground hover:text-foreground'
+                  }
+                `}
+                aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                title={item.description}
+              >
+                <item.icon className="h-4 w-4" aria-hidden="true" />
+                {item.label}
+              </Link>
+            ))}
+
+            {/* Product Navigation (for authenticated users) */}
+            {user && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="gap-2 font-medium text-sm text-muted-foreground hover:text-foreground"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    Product
+                    <ChevronDown className="h-3 w-3" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="center" className="w-56">
+                  {productNavItems.map((item) => (
+                    <DropdownMenuItem key={item.to} asChild>
+                      <Link
+                        to={item.to}
+                        className={`flex items-center gap-3 w-full ${
+                          isActiveRoute(item.to) ? 'bg-accent' : ''
+                        }`}
+                      >
+                        <item.icon className="h-4 w-4" />
+                        <div className="flex flex-col">
+                          <span className="font-medium">{item.label}</span>
+                          <span className="text-xs text-muted-foreground">{item.description}</span>
+                        </div>
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
+            {/* Support Navigation */}
+            {supportNavItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
@@ -185,26 +255,35 @@ export const UnifiedMainNavigation = () => {
             
             {user ? (
               <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 hover:bg-accent/80"
-                  asChild
-                >
-                  <Link to="/account">
-                    <User className="h-4 w-4" />
-                    Account
-                  </Link>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSignOut}
-                  className="gap-2 hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <LogOut className="h-4 w-4" />
-                  {copy.auth.signOut}
-                </Button>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2 hover:bg-accent/80"
+                    >
+                      <User className="h-4 w-4" />
+                      Account
+                      <ChevronDown className="h-3 w-3" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuItem asChild>
+                      <Link to="/account" className="flex items-center gap-2">
+                        <Settings className="h-4 w-4" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem 
+                      onClick={handleSignOut}
+                      className="flex items-center gap-2 text-destructive focus:text-destructive"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      {copy.auth.signOut}
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </>
             ) : (
               <>
@@ -246,30 +325,95 @@ export const UnifiedMainNavigation = () => {
             role="navigation"
             aria-label="Mobile navigation"
           >
-            <div className="container mx-auto px-4 py-6 space-y-4">
-              {/* Mobile Navigation Links */}
-              {navItems.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium
-                    hover:bg-accent/80 hover:text-accent-foreground
-                    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                    ${isActiveRoute(item.to) 
-                      ? 'bg-primary text-primary-foreground shadow-md' 
-                      : 'text-muted-foreground hover:text-foreground'
-                    }
-                  `}
-                  aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                >
-                  <item.icon className="h-5 w-5" aria-hidden="true" />
-                  <div>
-                    <div className="font-medium">{item.label}</div>
-                    <div className="text-xs opacity-70">{item.description}</div>
+            <div className="container mx-auto px-4 py-6 space-y-1">
+              {/* Core Navigation */}
+              <div className="space-y-1">
+                <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  Main
+                </div>
+                {coreNavItems.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={`
+                      flex items-center gap-3 px-3 py-3 rounded-lg transition-all font-medium
+                      hover:bg-accent/80 hover:text-accent-foreground
+                      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                      ${isActiveRoute(item.to) 
+                        ? 'bg-primary text-primary-foreground shadow-md' 
+                        : 'text-muted-foreground hover:text-foreground'
+                      }
+                    `}
+                    aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                  >
+                    <item.icon className="h-5 w-5" aria-hidden="true" />
+                    <div>
+                      <div className="font-medium">{item.label}</div>
+                      <div className="text-xs opacity-70">{item.description}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+
+              {/* Product Navigation (for authenticated users) */}
+              {user && (
+                <div className="space-y-1">
+                  <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                    Product
                   </div>
-                </Link>
-              ))}
+                  {productNavItems.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className={`
+                        flex items-center gap-3 px-3 py-3 rounded-lg transition-all font-medium
+                        hover:bg-accent/80 hover:text-accent-foreground
+                        focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                        ${isActiveRoute(item.to) 
+                          ? 'bg-primary text-primary-foreground shadow-md' 
+                          : 'text-muted-foreground hover:text-foreground'
+                        }
+                      `}
+                      aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                    >
+                      <item.icon className="h-5 w-5" aria-hidden="true" />
+                      <div>
+                        <div className="font-medium">{item.label}</div>
+                        <div className="text-xs opacity-70">{item.description}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+
+              {/* Support Navigation */}
+              <div className="space-y-1">
+                <div className="px-3 py-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  Support
+                </div>
+                {supportNavItems.map((item) => (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={`
+                      flex items-center gap-3 px-3 py-3 rounded-lg transition-all font-medium
+                      hover:bg-accent/80 hover:text-accent-foreground
+                      focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
+                      ${isActiveRoute(item.to) 
+                        ? 'bg-primary text-primary-foreground shadow-md' 
+                        : 'text-muted-foreground hover:text-foreground'
+                      }
+                    `}
+                    aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                  >
+                    <item.icon className="h-5 w-5" aria-hidden="true" />
+                    <div>
+                      <div className="font-medium">{item.label}</div>
+                      <div className="text-xs opacity-70">{item.description}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
 
               {/* Mobile Auth Buttons */}
               <div className="pt-4 border-t space-y-3">
@@ -281,7 +425,7 @@ export const UnifiedMainNavigation = () => {
                       asChild
                     >
                       <Link to="/account">
-                        <User className="h-5 w-5" />
+                        <Settings className="h-5 w-5" />
                         Account Settings
                       </Link>
                     </Button>
