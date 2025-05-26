@@ -47,5 +47,31 @@ export const copy = {
     companies: 'Trusted by forward-thinking teams at',
     userCount: '10,000+',
     rating: '4.9/5 stars'
+  },
+  onboarding: {
+    welcome: 'Welcome to Accio',
+    getStarted: 'Let\'s get you started with your knowledge management journey'
+  },
+  emptyStates: {
+    noContent: {
+      title: 'No content yet',
+      description: 'Start by adding your first piece of content',
+      action: 'Add Content'
+    },
+    noResults: {
+      title: 'No results found',
+      description: 'Try adjusting your search or filters',
+      action: 'Clear Filters'
+    },
+    noCollections: {
+      title: 'No collections',
+      description: 'Create your first collection to organize your content',
+      action: 'Create Collection'
+    },
+    loading: {
+      title: 'Loading...',
+      description: 'Please wait while we fetch your content',
+      action: ''
+    }
   }
 };

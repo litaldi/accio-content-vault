@@ -11,14 +11,19 @@ interface User {
   };
 }
 
+interface AuthResponse {
+  data?: { user: User | null };
+  error?: Error | null;
+}
+
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   loading: boolean; // Alias for compatibility
   isDemoMode: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, metadata?: { name?: string }) => Promise<void>;
-  signInWithProvider: (provider: string) => Promise<void>;
+  signIn: (email: string, password: string) => Promise<AuthResponse>;
+  signUp: (email: string, password: string, metadata?: { name?: string }) => Promise<AuthResponse>;
+  signInWithProvider: (provider: string) => Promise<AuthResponse>;
   signOut: () => Promise<void>;
 }
 
@@ -54,7 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setIsLoading(false);
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<void> => {
+  const signIn = async (email: string, password: string): Promise<AuthResponse> => {
     setIsLoading(true);
     try {
       // Simulate API call - replace with actual authentication
@@ -71,14 +76,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       setUser(mockUser);
       localStorage.setItem('accio_user', JSON.stringify(mockUser));
+      return { data: { user: mockUser }, error: null };
     } catch (error) {
-      throw new Error('Invalid email or password');
+      const authError = new Error('Invalid email or password');
+      return { data: { user: null }, error: authError };
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signUp = async (email: string, password: string, metadata?: { name?: string }): Promise<void> => {
+  const signUp = async (email: string, password: string, metadata?: { name?: string }): Promise<AuthResponse> => {
     setIsLoading(true);
     try {
       // Simulate API call - replace with actual authentication
@@ -95,14 +102,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       setUser(mockUser);
       localStorage.setItem('accio_user', JSON.stringify(mockUser));
+      return { data: { user: mockUser }, error: null };
     } catch (error) {
-      throw new Error('Failed to create account');
+      const authError = new Error('Failed to create account');
+      return { data: { user: null }, error: authError };
     } finally {
       setIsLoading(false);
     }
   };
 
-  const signInWithProvider = async (provider: string): Promise<void> => {
+  const signInWithProvider = async (provider: string): Promise<AuthResponse> => {
     setIsLoading(true);
     try {
       // Simulate OAuth flow
@@ -120,8 +129,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       
       setUser(mockUser);
       localStorage.setItem('accio_user', JSON.stringify(mockUser));
+      return { data: { user: mockUser }, error: null };
     } catch (error) {
-      throw new Error(`Failed to sign in with ${provider}`);
+      const authError = new Error(`Failed to sign in with ${provider}`);
+      return { data: { user: null }, error: authError };
     } finally {
       setIsLoading(false);
     }
