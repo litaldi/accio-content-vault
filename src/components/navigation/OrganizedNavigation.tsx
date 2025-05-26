@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { 
   Home, 
@@ -356,12 +355,19 @@ const OrganizedNavigation: React.FC = () => {
               <Button variant="ghost" asChild className="transition-all duration-200 hover:scale-105">
                 <Link to="/login">Sign In</Link>
               </Button>
-              <EnhancedButton variant="gradient" asChild className="hover:scale-105">
-                <Link to="/register">
+              <Button 
+                variant="default" 
+                asChild 
+                className={cn(
+                  "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70",
+                  "shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+                )}
+              >
+                <Link to="/register" className="flex items-center gap-2">
                   <Sparkles className="h-4 w-4" />
                   Start Free
                 </Link>
-              </EnhancedButton>
+              </Button>
             </div>
           )}
 
