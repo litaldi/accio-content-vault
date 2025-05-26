@@ -1,37 +1,20 @@
 
 import { useState, useEffect } from 'react';
 
-interface ResponsiveState {
-  isMobile: boolean;
-  isTablet: boolean;
-  isDesktop: boolean;
-  width: number;
-}
-
-export const useResponsiveDesign = (): ResponsiveState => {
-  const [state, setState] = useState<ResponsiveState>({
-    isMobile: false,
-    isTablet: false,
-    isDesktop: true,
-    width: typeof window !== 'undefined' ? window.innerWidth : 1024
-  });
+export const useResponsiveDesign = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      const width = window.innerWidth;
-      setState({
-        isMobile: width < 768,
-        isTablet: width >= 768 && width < 1024,
-        isDesktop: width >= 1024,
-        width
-      });
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+      setIsTablet(window.innerWidth >= 768 && window.innerWidth < 1024);
     };
 
-    handleResize(); // Initial call
-    window.addEventListener('resize', handleResize);
-    
-    return () => window.removeEventListener('resize', handleResize);
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
 
-  return state;
+  return { isMobile, isTablet };
 };

@@ -2,42 +2,20 @@
 import React from 'react';
 import { Moon, Sun } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from 'next-themes';
 
-interface ThemeToggleProps {
-  variant?: 'icon' | 'iconText';
-  size?: 'default' | 'sm' | 'lg' | 'icon';
-}
-
-export const ThemeToggle: React.FC<ThemeToggleProps> = ({ 
-  variant = 'icon',
-  size = 'default' 
-}) => {
-  const { theme, toggleTheme } = useTheme();
-
-  if (variant === 'iconText') {
-    return (
-      <Button
-        variant="ghost"
-        size={size}
-        onClick={toggleTheme}
-        className="w-full justify-start gap-2"
-        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-      >
-        {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-        <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
-      </Button>
-    );
-  }
+export function ThemeToggle() {
+  const { theme, setTheme } = useTheme();
 
   return (
     <Button
       variant="ghost"
-      size={size}
-      onClick={toggleTheme}
-      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      size="icon"
+      onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
     >
-      {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+      <span className="sr-only">Toggle theme</span>
     </Button>
   );
-};
+}
