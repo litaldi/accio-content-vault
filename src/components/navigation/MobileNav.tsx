@@ -40,21 +40,15 @@ const MobileNav: React.FC<MobileNavProps> = ({
 
   const publicNavItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/features', label: 'Features', icon: BookOpen },
-    { path: '/pricing', label: 'Pricing', icon: BarChart3 },
-    { path: '/about', label: 'About', icon: Users }
+    { path: '/help', label: 'Help', icon: HelpCircle }
   ];
 
   const userNavItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
     { path: '/save', label: 'Save Content', icon: Plus },
     { path: '/collections', label: 'Collections', icon: BookOpen },
-    { path: '/analytics', label: 'Analytics', icon: BarChart3 }
-  ];
-
-  const utilityPages = [
-    { path: '/search', label: 'Search', icon: Search },
-    { path: '/help', label: 'Help', icon: HelpCircle }
+    { path: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { path: '/search', label: 'Search', icon: Search }
   ];
 
   const currentNavItems = isLoggedIn ? userNavItems : publicNavItems;
@@ -62,6 +56,12 @@ const MobileNav: React.FC<MobileNavProps> = ({
   const isActiveLink = (path: string) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
+  };
+
+  const handleNavigation = (path: string, label: string) => {
+    navigate(path);
+    setMobileMenuOpen(false);
+    announceToScreenReader(`Navigating to ${label}`);
   };
 
   return (
@@ -87,77 +87,51 @@ const MobileNav: React.FC<MobileNavProps> = ({
           <SheetTitle>Navigation Menu</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-4 mt-6" role="navigation" aria-label="Mobile navigation">
+          {/* Main Navigation Items */}
           {currentNavItems.map((item) => (
-            <Link 
+            <Button
               key={item.path}
-              to={item.path} 
+              variant="ghost"
               className={cn(
-                "flex items-center gap-3 p-3 rounded-lg transition-all",
+                "flex items-center gap-3 p-3 rounded-lg transition-all justify-start h-auto",
                 "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                 isActiveLink(item.path) 
                   ? "bg-primary text-primary-foreground" 
                   : "hover:bg-accent"
               )}
-              onClick={() => {
-                setMobileMenuOpen(false);
-                announceToScreenReader(`Navigating to ${item.label}`);
-              }}
+              onClick={() => handleNavigation(item.path, item.label)}
               aria-current={isActiveLink(item.path) ? 'page' : undefined}
             >
               <item.icon className="h-5 w-5" />
               {item.label}
-            </Link>
+            </Button>
           ))}
           
-          {/* Mobile utility pages */}
-          <div className="border-t pt-4">
-            <div className="text-sm font-medium text-muted-foreground mb-2 px-3">More Pages</div>
-            {utilityPages.map((page) => (
-              <Link 
-                key={page.path}
-                to={page.path}
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  announceToScreenReader(`Opening ${page.label} page`);
-                }}
-              >
-                <page.icon className="h-5 w-5" />
-                {page.label}
-              </Link>
-            ))}
-          </div>
-          
-          {/* Mobile-only additional options */}
+          {/* Account Actions for Logged In Users */}
           {isLoggedIn && (
             <div className="border-t pt-4">
               <div className="text-sm font-medium text-muted-foreground mb-2 px-3">Account</div>
-              <Link 
-                to="/profile"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  announceToScreenReader('Opening profile page');
-                }}
+              <Button 
+                variant="ghost"
+                className="w-full justify-start h-auto p-3"
+                onClick={() => handleNavigation('/profile', 'Profile')}
               >
-                <User className="h-5 w-5" />
+                <User className="h-5 w-5 mr-3" />
                 Profile
-              </Link>
-              <Link 
-                to="/settings"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  announceToScreenReader('Opening settings page');
-                }}
+              </Button>
+              <Button 
+                variant="ghost"
+                className="w-full justify-start h-auto p-3"
+                onClick={() => handleNavigation('/settings', 'Settings')}
               >
-                <Settings className="h-5 w-5" />
+                <Settings className="h-5 w-5 mr-3" />
                 Settings
-              </Link>
+              </Button>
             </div>
           )}
           
-          {!isLoggedIn && (
+          {/* Auth Actions */}
+          {!isLoggedIn ? (
             <div className="flex flex-col gap-2 pt-4 border-t">
               <Button 
                 onClick={() => { 
@@ -183,9 +157,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
                 Sign In
               </Button>
             </div>
-          )}
-
-          {isLoggedIn && (
+          ) : (
             <div className="pt-4 border-t">
               <Button 
                 variant="destructive" 

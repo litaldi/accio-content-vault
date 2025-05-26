@@ -25,7 +25,14 @@ import Help from "./pages/Help";
 // Import error pages
 import NotFound from "./pages/NotFound";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
 function App() {
   return (
@@ -52,10 +59,10 @@ function App() {
                     <Route path="/search" element={<Search />} />
                     <Route path="/profile" element={<Profile />} />
                     
-                    {/* Marketing pages */}
-                    <Route path="/features" element={<Index />} />
-                    <Route path="/pricing" element={<Index />} />
-                    <Route path="/about" element={<Index />} />
+                    {/* Marketing pages - redirect to home for now */}
+                    <Route path="/features" element={<Navigate to="/#features" replace />} />
+                    <Route path="/pricing" element={<Navigate to="/#pricing" replace />} />
+                    <Route path="/about" element={<Navigate to="/#about" replace />} />
                     
                     {/* Redirect old routes */}
                     <Route path="/home" element={<Navigate to="/" replace />} />
