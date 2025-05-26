@@ -13,6 +13,11 @@ export interface PasswordValidationResult {
   errors: string[];
 }
 
+export interface RateLimitResult {
+  allowed: boolean;
+  resetTime?: number;
+}
+
 export const validateEmail = (email: string): ValidationResult => {
   if (!email) {
     return { isValid: false, error: 'Email is required' };
@@ -72,11 +77,37 @@ export const validatePassword = (password: string): PasswordValidationResult => 
   };
 };
 
-export const sanitizeTextInput = (input: string): string => {
-  return DOMPurify.sanitize(input, { ALLOWED_TAGS: [] });
+export const sanitizeTextInput = (input: string, maxLength?: number): string => {
+  const sanitized = DOMPurify.sanitize(input, { ALLOWED_TAGS: [] });
+  return maxLength ? sanitized.slice(0, maxLength) : sanitized;
 };
 
 export const generateCSRFToken = (): string => {
   return Math.random().toString(36).substring(2, 15) + 
          Math.random().toString(36).substring(2, 15);
+};
+
+// Simple rate limiting implementation
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+export const createRateLimit = (maxAttempts: number, windowMs: number) => {
+  return (identifier: string): RateLimitResult => {
+    const now = Date.now();
+    const key = identifier;
+    const entry = rateLimitStore.get(key);
+    
+    if (!entry || now > entry.resetTime) {
+      // First attempt or window expired
+      rateLimitStore.set(key, { count: 1, resetTime: now + windowMs });
+      return { allowed: true };
+    }
+    
+    if (entry.count >= maxAttempts) {
+      return { allowed: false, resetTime: entry.resetTime };
+    }
+    
+    // Increment count
+    entry.count++;
+    return { allowed: true };
+  };
 };
