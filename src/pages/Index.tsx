@@ -3,11 +3,12 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import ImprovedMainNavigation from '@/components/navigation/ImprovedMainNavigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import ValueProposition from '@/components/marketing/ValueProposition';
 import SocialProof from '@/components/marketing/SocialProof';
 import FeaturesShowcase from '@/components/marketing/FeaturesShowcase';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
+import SkipToContent from '@/components/accessibility/SkipToContent';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, TrendingUp, Users, Shield, Play, Star, Zap, Brain } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
@@ -73,8 +74,11 @@ const Index = () => {
         </script>
       </Helmet>
 
+      {/* Skip to Content */}
+      <SkipToContent />
+
       {/* Navigation */}
-      <ImprovedMainNavigation />
+      <MainNavigation />
 
       {/* Main Content */}
       <main className="flex-grow" id="main-content">
