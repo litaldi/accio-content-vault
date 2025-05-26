@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -6,7 +5,8 @@ import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
+import ImprovedAccessibilityButton from '@/components/accessibility/ImprovedAccessibilityButton';
+import FeedbackSystem from '@/components/feedback/FeedbackSystem';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { 
   Menu, 
@@ -20,8 +20,7 @@ import {
   LogOut,
   Star,
   Users,
-  Mail,
-  HelpCircle
+  Mail
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -180,8 +179,9 @@ const PrimaryNavigation: React.FC = () => {
             <div className="flex items-center gap-2">
               {/* Theme Controls */}
               <div className="hidden sm:flex items-center gap-1">
-                <AccessibilityButton />
+                <ImprovedAccessibilityButton />
                 <ModeToggle />
+                <FeedbackSystem />
               </div>
 
               {/* User Account or Auth */}
@@ -329,8 +329,13 @@ const PrimaryNavigation: React.FC = () => {
                   
                   {/* Mobile Theme Controls */}
                   <div className="flex items-center gap-2 mt-6 pt-6 border-t">
-                    <AccessibilityButton />
+                    <ImprovedAccessibilityButton />
                     <ModeToggle />
+                  </div>
+                  
+                  {/* Mobile Feedback */}
+                  <div className="mt-4">
+                    <FeedbackSystem />
                   </div>
                   
                   {/* Mobile Auth Section */}
