@@ -26,6 +26,37 @@ export class SummaryService {
   }
 
   /**
+   * Static method to generate summary for content using AI
+   */
+  static async generateSummary(
+    contentId: string, 
+    text: string, 
+    length: 'short' | 'medium' | 'long' = 'medium'
+  ): Promise<ContentSummary> {
+    return SummaryService.getInstance().generateSummary(contentId, text, length);
+  }
+
+  /**
+   * Static method to get existing summary for content
+   */
+  static async getSummary(contentId: string): Promise<ContentSummary | null> {
+    return SummaryService.getInstance().getSummary(contentId);
+  }
+
+  /**
+   * Static method to check if summary exists for content
+   */
+  static async hasSummary(contentId: string): Promise<boolean> {
+    try {
+      const summary = await SummaryService.getSummary(contentId);
+      return summary !== null;
+    } catch (error) {
+      console.error('Error checking summary:', error);
+      return false;
+    }
+  }
+
+  /**
    * Generate summary for content using AI
    */
   async generateSummary(
@@ -40,7 +71,7 @@ export class SummaryService {
       
       const summaryText = this.generateMockSummary(text, length);
       
-      return {
+      const summary: ContentSummary = {
         id: `summary_${Date.now()}`,
         content_id: contentId,
         summary_text: summaryText,
@@ -50,6 +81,11 @@ export class SummaryService {
         generated_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
+
+      // Save to storage
+      await this.saveSummary(summary);
+      
+      return summary;
     } catch (error) {
       console.error('Error generating summary:', error);
       throw error;

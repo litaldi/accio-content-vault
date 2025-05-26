@@ -30,7 +30,7 @@ const Search: React.FC = () => {
       description: 'A comprehensive tutorial covering all React hooks with practical examples and best practices.',
       url: 'https://example.com/react-hooks',
       content_type: 'article',
-      file_type: 'url',
+      file_type: 'pdf',
       tags: [
         { id: '1', name: 'react', auto_generated: true, confirmed: true },
         { id: '2', name: 'programming', auto_generated: true, confirmed: true }
@@ -44,7 +44,7 @@ const Search: React.FC = () => {
       description: 'Understanding the basics of machine learning algorithms and their applications.',
       url: 'https://example.com/ml-fundamentals',
       content_type: 'course',
-      file_type: 'url',
+      file_type: 'image',
       tags: [
         { id: '3', name: 'machine-learning', auto_generated: true, confirmed: true },
         { id: '4', name: 'ai', auto_generated: true, confirmed: true }
