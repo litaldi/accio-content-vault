@@ -14,6 +14,7 @@ export interface AccessibilityPreferences {
 interface AccessibilityContextType {
   preferences: AccessibilityPreferences;
   updatePreferences: (updates: Partial<AccessibilityPreferences>) => void;
+  setLanguage: (language: 'en' | 'he' | 'ar') => void;
   announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
 }
 
@@ -45,6 +46,10 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     setPreferences(prev => ({ ...prev, ...updates }));
   };
 
+  const setLanguage = (language: 'en' | 'he' | 'ar') => {
+    updatePreferences({ language });
+  };
+
   const handleAnnounceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
     if (preferences.announcements) {
       announceToScreenReader(message, priority);
@@ -54,7 +59,8 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
   return (
     <AccessibilityContext.Provider value={{ 
       preferences, 
-      updatePreferences, 
+      updatePreferences,
+      setLanguage,
       announceToScreenReader: handleAnnounceToScreenReader 
     }}>
       {children}
