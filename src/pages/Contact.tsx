@@ -42,7 +42,6 @@ const Contact = () => {
     toast({
       title: "Message sent successfully!",
       description: "We'll get back to you within 24 hours.",
-      action: <CheckCircle className="h-4 w-4" />,
     });
     
     setFormData({
@@ -300,11 +299,11 @@ const Contact = () => {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Email support</span>
-                      <span className="font-medium">< 24 hours</span>
+                      <span className="font-medium">&lt; 24 hours</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Live chat</span>
-                      <span className="font-medium">< 5 minutes</span>
+                      <span className="font-medium">&lt; 5 minutes</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Phone support</span>
