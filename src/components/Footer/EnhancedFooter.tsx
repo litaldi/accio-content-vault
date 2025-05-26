@@ -1,213 +1,229 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Linkedin, Twitter, Mail, Heart, MapPin, Phone } from 'lucide-react';
+import { Mail, MessageCircle, FileText, Shield, HelpCircle, Github, Twitter, Linkedin, Heart } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+
+interface FooterSection {
+  title: string;
+  links: {
+    label: string;
+    href: string;
+    external?: boolean;
+    icon?: React.ComponentType<{ className?: string }>;
+  }[];
+}
 
 const EnhancedFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
 
-  const productLinks = [
-    { path: '/features', label: 'Features' },
-    { path: '/pricing', label: 'Pricing' },
-    { path: '/dashboard', label: 'Dashboard' },
-    { path: '/playground', label: 'Try Demo' }
-  ];
-
-  const companyLinks = [
-    { path: '/about', label: 'About Us' },
-    { path: '/blog', label: 'Blog' },
-    { path: '/contact', label: 'Contact' },
-    { path: '/faq', label: 'FAQ' }
-  ];
-
-  const legalLinks = [
-    { path: '/privacy', label: 'Privacy Policy' },
-    { path: '/terms', label: 'Terms of Service' },
-    { path: '/accessibility', label: 'Accessibility' },
-    { path: '/sitemap', label: 'Sitemap' }
+  const footerSections: FooterSection[] = [
+    {
+      title: 'Product',
+      links: [
+        { label: 'Features', href: '/#features' },
+        { label: 'Pricing', href: '/#pricing' },
+        { label: 'Help Center', href: '/help', icon: HelpCircle },
+        { label: 'Updates', href: '/help#updates' }
+      ]
+    },
+    {
+      title: 'Company',
+      links: [
+        { label: 'About Us', href: '/about' },
+        { label: 'Contact', href: '/help#contact', icon: Mail },
+        { label: 'Blog', href: '/help#blog' }
+      ]
+    },
+    {
+      title: 'Support',
+      links: [
+        { label: 'Help Center', href: '/help', icon: HelpCircle },
+        { label: 'FAQ', href: '/faq', icon: MessageCircle },
+        { label: 'Documentation', href: '/help#docs', icon: FileText }
+      ]
+    },
+    {
+      title: 'Legal',
+      links: [
+        { label: 'Privacy Policy', href: '/help#privacy', icon: Shield },
+        { label: 'Terms of Service', href: '/help#terms' },
+        { label: 'Security', href: '/help#security' }
+      ]
+    }
   ];
 
   const socialLinks = [
     { 
-      href: 'https://github.com/accio', 
       label: 'GitHub', 
+      href: 'https://github.com/accio', 
       icon: Github,
-      ariaLabel: 'Visit our GitHub repository'
+      'aria-label': 'Follow us on GitHub' 
     },
     { 
-      href: 'https://linkedin.com/company/accio', 
-      label: 'LinkedIn', 
-      icon: Linkedin,
-      ariaLabel: 'Follow us on LinkedIn'
-    },
-    { 
-      href: 'https://twitter.com/accio', 
       label: 'Twitter', 
+      href: 'https://twitter.com/accio', 
       icon: Twitter,
-      ariaLabel: 'Follow us on Twitter'
+      'aria-label': 'Follow us on Twitter' 
     },
     { 
-      href: 'mailto:hello@accio.com', 
-      label: 'Email', 
-      icon: Mail,
-      ariaLabel: 'Send us an email'
+      label: 'LinkedIn', 
+      href: 'https://linkedin.com/company/accio', 
+      icon: Linkedin,
+      'aria-label': 'Connect with us on LinkedIn' 
     }
   ];
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Newsletter signup logic would go here
-    console.log('Newsletter signup submitted');
-  };
-
   return (
     <footer 
-      className="bg-background border-t border-border py-16 px-4" 
+      className={cn(
+        "w-full border-t bg-background/95 backdrop-blur-sm mt-auto",
+        "border-border/40 dark:border-border/20 dark:bg-background/90",
+        "transition-all duration-300"
+      )}
       role="contentinfo"
-      aria-labelledby="footer-heading"
+      aria-label="Site footer"
     >
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand and Newsletter Column */}
-          <div className="lg:col-span-2">
-            <Link 
-              to="/" 
-              className="inline-flex items-center mb-6 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg"
-              aria-label="Accio - Go to homepage"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-xl">A</span>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        {/* Main Footer Content */}
+        <div className="py-12 lg:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-12">
+            
+            {/* Brand Section */}
+            <div className="lg:col-span-1 space-y-6">
+              <Link 
+                to="/" 
+                className={cn(
+                  "flex items-center gap-3 transition-all duration-200 hover:opacity-90 rounded-lg p-1 w-fit",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                )}
+                aria-label="Accio - Go to homepage"
+              >
+                <div className={cn(
+                  "w-8 h-8 rounded-lg flex items-center justify-center shadow-sm",
+                  "bg-gradient-to-br from-primary to-primary/80",
+                  "dark:shadow-primary/20"
+                )}>
+                  <span className="text-primary-foreground font-bold text-lg" aria-hidden="true">A</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-2xl font-bold text-primary leading-none">Accio</span>
+                  <span className={cn(
+                    "text-xl font-bold leading-none",
+                    "bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent"
+                  )}>
+                    Accio
+                  </span>
                   <span className="text-xs text-muted-foreground leading-none">Knowledge Library</span>
                 </div>
-              </div>
-            </Link>
-            <p className="text-muted-foreground mb-6 max-w-md leading-relaxed">
-              Transform the way you save, organize, and rediscover online content with AI-powered intelligence. 
-              Your personal knowledge library awaits.
-            </p>
-            
-            {/* Newsletter Signup */}
-            <div className="mb-6">
-              <h3 className="font-semibold text-lg mb-3">Stay Updated</h3>
-              <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
-                <Input 
-                  type="email" 
-                  placeholder="Enter your email" 
-                  className="flex-1"
-                  aria-label="Email address for newsletter"
-                />
-                <Button type="submit" size="sm">
-                  Subscribe
-                </Button>
-              </form>
-              <p className="text-xs text-muted-foreground mt-2">
-                Get product updates and tips. Unsubscribe anytime.
+              </Link>
+              
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+                Your personal knowledge management system. Save, organize, and find your content effortlessly.
               </p>
-            </div>
-          </div>
-          
-          {/* Product Links */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">Product</h3>
-            <nav aria-label="Product navigation">
-              <ul className="space-y-3" role="list">
-                {productLinks.map(link => (
-                  <li key={link.path}>
-                    <Link 
-                      to={link.path} 
-                      className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm inline-block"
+              
+              {/* Social Links */}
+              <div className="flex items-center gap-3">
+                {socialLinks.map((social) => (
+                  <Button
+                    key={social.label}
+                    variant="ghost"
+                    size="sm"
+                    asChild
+                    className={cn(
+                      "h-8 w-8 p-0 rounded-lg transition-all duration-200",
+                      "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                    )}
+                  >
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social['aria-label']}
                     >
-                      {link.label}
-                    </Link>
-                  </li>
+                      <social.icon className="h-4 w-4" aria-hidden="true" />
+                    </a>
+                  </Button>
                 ))}
-              </ul>
-            </nav>
-          </div>
-          
-          {/* Company Links */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">Company</h3>
-            <nav aria-label="Company navigation">
-              <ul className="space-y-3" role="list">
-                {companyLinks.map(link => (
-                  <li key={link.path}>
-                    <Link 
-                      to={link.path} 
-                      className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm inline-block"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-          
-          {/* Legal Links */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4">Legal</h3>
-            <nav aria-label="Legal navigation">
-              <ul className="space-y-3" role="list">
-                {legalLinks.map(link => (
-                  <li key={link.path}>
-                    <Link 
-                      to={link.path} 
-                      className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm inline-block"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-            
-            {/* Contact Info */}
-            <div className="mt-6 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" aria-hidden="true" />
-                <span>San Francisco, CA</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" aria-hidden="true" />
-                <a href="tel:+1-555-0123" className="hover:text-foreground transition-colors">
-                  +1 (555) 012-3456
-                </a>
               </div>
             </div>
+
+            {/* Footer Links Sections */}
+            {footerSections.map((section) => (
+              <div key={section.title} className="space-y-4">
+                <h3 className="text-sm font-semibold text-foreground">
+                  {section.title}
+                </h3>
+                <ul className="space-y-3" role="list">
+                  {section.links.map((link) => (
+                    <li key={link.label}>
+                      {link.external ? (
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            "inline-flex items-center gap-2 text-sm transition-colors duration-200",
+                            "text-muted-foreground hover:text-foreground",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+                          )}
+                        >
+                          {link.icon && <link.icon className="h-3 w-3" aria-hidden="true" />}
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link
+                          to={link.href}
+                          className={cn(
+                            "inline-flex items-center gap-2 text-sm transition-colors duration-200",
+                            "text-muted-foreground hover:text-foreground",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+                          )}
+                        >
+                          {link.icon && <link.icon className="h-3 w-3" aria-hidden="true" />}
+                          {link.label}
+                        </Link>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
-        
-        {/* Bottom section */}
-        <div className="border-t border-border pt-8 flex flex-col md:flex-row md:justify-between items-center gap-6">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>&copy; {currentYear} Accio. All rights reserved.</span>
-            <Heart className="h-4 w-4 text-red-500 animate-pulse" aria-hidden="true" />
-            <span>Made with care for knowledge seekers</span>
-          </div>
+
+        {/* Footer Bottom */}
+        <div className={cn(
+          "border-t py-6 flex flex-col sm:flex-row items-center justify-between gap-4",
+          "border-border/40 dark:border-border/20"
+        )}>
+          <p className="text-xs text-muted-foreground text-center sm:text-left flex items-center gap-1">
+            © {currentYear} Accio. Built with <Heart className="h-3 w-3 text-red-500" aria-hidden="true" /> for knowledge workers.
+          </p>
           
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground mr-4">Follow us:</span>
-            <nav className="flex gap-4" aria-label="Social media links">
-              {socialLinks.map((social) => (
-                <a 
-                  key={social.label}
-                  href={social.href} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
-                  className="text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm p-2 hover:bg-accent"
-                  aria-label={social.ariaLabel}
-                >
-                  <social.icon className="h-5 w-5" aria-hidden="true" />
-                  <span className="sr-only">{social.label}</span>
-                </a>
-              ))}
-            </nav>
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <Link 
+              to="/help#privacy" 
+              className={cn(
+                "hover:text-foreground transition-colors duration-200",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+              )}
+            >
+              Privacy
+            </Link>
+            <span aria-hidden="true">•</span>
+            <Link 
+              to="/help#terms" 
+              className={cn(
+                "hover:text-foreground transition-colors duration-200",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
+              )}
+            >
+              Terms
+            </Link>
+            <span aria-hidden="true">•</span>
+            <span className="text-muted-foreground">WCAG AA Compliant</span>
           </div>
         </div>
       </div>

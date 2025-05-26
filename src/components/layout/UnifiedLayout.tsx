@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
-import MarketingFooter from '@/components/Footer/MarketingFooter';
+import EnhancedFooter from '@/components/Footer/EnhancedFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
 import { Toaster } from '@/components/ui/toaster';
@@ -30,7 +30,7 @@ export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
   return (
     <div 
       className={cn(
-        "min-h-screen flex flex-col w-full transition-colors duration-300",
+        "min-h-screen flex flex-col w-full transition-all duration-300",
         "bg-background text-foreground",
         // Apply accessibility preferences
         preferences.highContrast && "high-contrast",
@@ -41,7 +41,7 @@ export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
       )}
       lang="en"
     >
-      {/* Skip Links */}
+      {/* Skip Links for accessibility */}
       <SkipLinks />
 
       {/* Navigation */}
@@ -51,21 +51,25 @@ export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
       <main
         id="main-content"
         className={cn(
-          "flex-grow w-full",
+          "flex-grow w-full relative",
+          // Add smooth transitions for better UX
+          "transition-all duration-300 ease-in-out",
           !fullWidth && "container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
         )}
         role="main"
         tabIndex={-1}
         aria-label="Main content"
       >
-        {children}
+        <div className="animate-fade-in">
+          {children}
+        </div>
       </main>
 
       {/* Accessibility Button */}
       <AccessibilityButton variant="floating" />
 
       {/* Footer */}
-      {showFooter && <MarketingFooter />}
+      {showFooter && <EnhancedFooter />}
 
       {/* Toast Notifications */}
       <Toaster />

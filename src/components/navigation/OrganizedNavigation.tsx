@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { 
   Home, 
@@ -79,7 +80,7 @@ const OrganizedNavigation: React.FC = () => {
       items: [
         { name: 'Home', href: '/', icon: Home, description: 'Welcome page and overview' },
         { name: 'Collections', href: '/collections', icon: BookOpen, requiresAuth: true, description: 'Organize your saved content' },
-        { name: 'Saved Content', href: '/save', icon: Save, requiresAuth: true, description: 'Save new content quickly' },
+        { name: 'Save Content', href: '/save', icon: Save, requiresAuth: true, description: 'Save new content quickly' },
       ]
     },
     {
@@ -100,37 +101,30 @@ const OrganizedNavigation: React.FC = () => {
       label: 'Account',
       items: [
         { name: 'Sign In', href: '/login', icon: LogIn, hideWhenAuth: true, description: 'Access your account' },
-        { name: 'Sign Up', href: '/register', icon: Sparkles, hideWhenAuth: true, description: 'Create your account' },
+        { name: 'Sign Up', href: '/register', icon: Sparkles, hideWhenAuth: true, description: 'Create new account' },
       ]
     },
     {
-      label: 'Extras',
+      label: 'Support',
       items: [
-        { name: 'Help', href: '/help', icon: HelpCircle, description: 'Get support and guides' },
-        { name: 'About', href: '/about', icon: Info, description: 'Learn more about Accio' },
+        { name: 'Help Center', href: '/help', icon: HelpCircle, description: 'Get help and support' },
+        { name: 'About', href: '/about', icon: Info, description: 'Learn about Accio' },
+        { name: 'FAQ', href: '/faq', icon: HelpCircle, description: 'Frequently asked questions' },
       ]
     }
   ];
 
-  // Filter navigation items based on auth state
-  const getVisibleCategories = () => {
-    return navigationCategories.map(category => ({
-      ...category,
-      items: category.items.filter(item => {
-        if (item.requiresAuth && !isLoggedIn) return false;
-        if (item.hideWhenAuth && isLoggedIn) return false;
-        return true;
-      })
-    })).filter(category => category.items.length > 0);
-  };
-
-  // Handle scroll effect
+  // Handle scroll effect for navbar
   useEffect(() => {
     let ticking = false;
+    
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 20);
+          const isScrolled = window.scrollY > 10;
+          if (isScrolled !== scrolled) {
+            setScrolled(isScrolled);
+          }
           ticking = false;
         });
         ticking = true;
@@ -139,173 +133,125 @@ const OrganizedNavigation: React.FC = () => {
     
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [scrolled]);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
-
-  const handleSignOut = async () => {
+  const handleLogout = async () => {
     try {
       await signOut();
-      announceToScreenReader('Successfully signed out');
+      announceToScreenReader('You have been signed out successfully');
       navigate('/');
     } catch (error) {
-      announceToScreenReader('Error signing out');
+      console.error('Logout error:', error);
+      announceToScreenReader('Error signing out. Please try again.');
     }
-    setMobileMenuOpen(false);
   };
 
-  const handleNavClick = (itemName: string) => {
-    announceToScreenReader(`Navigating to ${itemName}`);
-    setMobileMenuOpen(false);
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    setTheme(newTheme);
+    announceToScreenReader(`Theme changed to ${newTheme}`);
   };
 
-  const isActivePath = (href: string) => {
-    if (href === '/') return location.pathname === '/';
-    return location.pathname.startsWith(href);
+  const getUserInitials = () => {
+    if (!user?.email) return 'U';
+    return user.email.charAt(0).toUpperCase();
   };
 
-  const ThemeToggle = () => (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn(
-            "h-9 w-9 rounded-lg transition-all duration-200",
-            "hover:bg-accent/50 hover:scale-105 active:scale-100",
-            "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-          )}
-          aria-label="Toggle theme"
-        >
-          <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-          <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="bg-background border shadow-lg backdrop-blur-xl min-w-[120px]">
-        <DropdownMenuItem 
-          onClick={() => setTheme('light')}
-          className={cn(
-            "cursor-pointer hover:bg-accent/50",
-            theme === 'light' && "bg-accent/30 text-accent-foreground"
-          )}
-        >
-          <Sun className="mr-2 h-4 w-4" />
-          Light
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => setTheme('dark')}
-          className={cn(
-            "cursor-pointer hover:bg-accent/50",
-            theme === 'dark' && "bg-accent/30 text-accent-foreground"
-          )}
-        >
-          <Moon className="mr-2 h-4 w-4" />
-          Dark
-        </DropdownMenuItem>
-        <DropdownMenuItem 
-          onClick={() => setTheme('system')}
-          className={cn(
-            "cursor-pointer hover:bg-accent/50",
-            theme === 'system' && "bg-accent/30 text-accent-foreground"
-          )}
-        >
-          <Monitor className="mr-2 h-4 w-4" />
-          System
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-
-  const visibleCategories = getVisibleCategories();
+  // Filter navigation items based on auth state
+  const getVisibleItems = (items: NavigationItem[]) => {
+    return items.filter(item => {
+      if (item.requiresAuth && !isLoggedIn) return false;
+      if (item.hideWhenAuth && isLoggedIn) return false;
+      return true;
+    });
+  };
 
   return (
     <header 
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
-        "border-b border-border/40 bg-background/95 backdrop-blur-xl",
-        "supports-[backdrop-filter]:bg-background/80",
-        scrolled && "shadow-lg border-border/60"
+        "sticky top-0 z-50 w-full transition-all duration-300 border-b",
+        scrolled 
+          ? "bg-background/95 backdrop-blur-md shadow-sm border-border" 
+          : "bg-background border-transparent"
       )}
       role="banner"
     >
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between gap-4">
-          
-          {/* Logo */}
-          <Link 
-            to="/" 
-            className={cn(
-              "flex items-center gap-3 transition-all duration-200 rounded-lg p-2 -ml-2",
-              "hover:opacity-90 hover:scale-105 active:scale-100",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-              "group"
-            )}
-            aria-label="Accio Knowledge Library - Go to homepage"
-            onClick={() => announceToScreenReader('Navigating to homepage')}
-          >
-            <div className={cn(
-              "w-8 h-8 rounded-xl flex items-center justify-center shadow-sm transition-all duration-200",
-              "bg-gradient-to-br from-primary via-primary to-primary/80",
-              "group-hover:shadow-md group-hover:from-primary/90 group-hover:to-primary/70"
+      <nav 
+        className="container mx-auto flex h-16 items-center justify-between px-4 max-w-7xl"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        {/* Logo */}
+        <Link 
+          to="/" 
+          className={cn(
+            "flex items-center gap-3 transition-all duration-200 hover:opacity-90 rounded-lg p-1",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+          )}
+          aria-label="Accio - Go to homepage"
+        >
+          <div className={cn(
+            "w-8 h-8 rounded-lg flex items-center justify-center shadow-sm",
+            "bg-gradient-to-br from-primary to-primary/80 hover:scale-105 transition-transform duration-200"
+          )}>
+            <span className="text-primary-foreground font-bold text-lg" aria-hidden="true">A</span>
+          </div>
+          <div className="flex flex-col">
+            <span className={cn(
+              "text-xl font-bold leading-none",
+              "bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent"
             )}>
-              <span className="text-primary-foreground font-bold text-lg leading-none">
-                A
-              </span>
-            </div>
-            <div className="flex flex-col">
-              <span className={cn(
-                "text-xl font-bold leading-none transition-colors duration-200",
-                "bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent",
-                "group-hover:from-primary/90 group-hover:to-primary/70"
-              )}>
-                Accio
-              </span>
-              <span className="text-xs text-muted-foreground leading-none font-medium">
-                Knowledge Engine
-              </span>
-            </div>
-          </Link>
+              Accio
+            </span>
+            <span className="text-xs text-muted-foreground leading-none hidden sm:block">Knowledge Library</span>
+          </div>
+        </Link>
 
-          {/* Desktop Navigation with Categories */}
-          <nav className="hidden lg:flex items-center gap-1" role="navigation" aria-label="Main navigation">
-            {visibleCategories.map((category) => (
+        {/* Desktop Navigation */}
+        <div className="hidden lg:flex items-center gap-6">
+          {navigationCategories.map((category) => {
+            const visibleItems = getVisibleItems(category.items);
+            if (visibleItems.length === 0) return null;
+
+            return (
               <DropdownMenu key={category.label}>
                 <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="ghost"
+                  <Button 
+                    variant="ghost" 
                     className={cn(
-                      "flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                      "h-9 px-3 text-sm font-medium transition-all duration-200",
                       "hover:bg-accent/50 hover:text-accent-foreground",
                       "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                     )}
+                    aria-expanded="false"
+                    aria-haspopup="true"
                   >
                     {category.label}
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="ml-1 h-3 w-3 transition-transform duration-200" aria-hidden="true" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-64 bg-background border shadow-lg backdrop-blur-xl">
+                <DropdownMenuContent 
+                  align="start" 
+                  className={cn(
+                    "w-56 bg-background/95 backdrop-blur-md border shadow-lg",
+                    "animate-in fade-in-0 zoom-in-95 duration-200"
+                  )}
+                >
                   <DropdownMenuLabel className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     {category.label}
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  {category.items.map((item) => (
-                    <DropdownMenuItem
-                      key={item.name}
-                      asChild
-                      className={cn(
-                        "cursor-pointer hover:bg-accent/50",
-                        isActivePath(item.href) && "bg-accent/30 text-accent-foreground"
-                      )}
-                    >
+                  {visibleItems.map((item) => (
+                    <DropdownMenuItem key={item.name} asChild>
                       <Link
                         to={item.href}
-                        className="flex items-start gap-3 p-2"
-                        onClick={() => handleNavClick(item.name)}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2 text-sm transition-colors duration-200",
+                          "hover:bg-accent/50 hover:text-accent-foreground",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                          location.pathname === item.href && "bg-accent text-accent-foreground"
+                        )}
                       >
-                        <item.icon className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                        <item.icon className="h-4 w-4" aria-hidden="true" />
                         <div className="flex flex-col">
                           <span className="font-medium">{item.name}</span>
                           {item.description && (
@@ -317,177 +263,188 @@ const OrganizedNavigation: React.FC = () => {
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
-            ))}
-          </nav>
-          
-          {/* Right Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
-            
-            {/* Theme Toggle */}
-            <ThemeToggle />
-            
-            {/* CTA Button */}
-            {!isLoggedIn && (
-              <Button 
-                size="sm"
-                onClick={() => navigate('/register')}
-                className={cn(
-                  "hidden md:flex h-9 px-4 rounded-lg shadow-sm",
-                  "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70",
-                  "hover:shadow-md transition-all duration-200"
-                )}
-              >
-                <Sparkles className="h-4 w-4 mr-1" />
-                Start Now
-              </Button>
-            )}
-            
-            {/* User Menu */}
-            {isLoggedIn && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className={cn(
-                      "relative h-9 w-9 rounded-full transition-all duration-200",
-                      "hover:bg-accent/50 hover:scale-105 active:scale-100",
-                      "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                    )}
-                    aria-label={`User menu for ${user?.email || 'user'}`}
-                  >
-                    <div className={cn(
-                      "h-8 w-8 rounded-full flex items-center justify-center",
-                      "bg-primary/10 text-primary font-semibold text-sm"
-                    )}>
-                      {user?.email?.charAt(0).toUpperCase() || 'U'}
-                    </div>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent 
-                  align="end" 
-                  className="w-56 bg-background border shadow-lg backdrop-blur-xl"
-                >
-                  <div className="px-2 py-1.5 text-sm font-medium text-muted-foreground">
-                    {user?.email || 'User'}
-                  </div>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    onClick={() => navigate('/profile')}
-                    className="cursor-pointer hover:bg-accent/50"
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={() => navigate('/settings')}
-                    className="cursor-pointer hover:bg-accent/50"
-                  >
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem 
-                    onClick={handleSignOut} 
-                    className="cursor-pointer text-destructive focus:text-destructive hover:bg-destructive/10"
-                  >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
+            );
+          })}
+        </div>
 
-            {/* Mobile Menu */}
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
+        {/* Right side actions */}
+        <div className="flex items-center gap-3">
+          {/* Theme Toggle */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "h-9 w-9 transition-all duration-200",
+                  "hover:bg-accent/50 hover:scale-105",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                )}
+                aria-label="Toggle theme"
+              >
+                <Sun className="h-4 w-4 rotate-0 scale-100 transition-transform duration-200 dark:-rotate-90 dark:scale-0" />
+                <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-transform duration-200 dark:rotate-0 dark:scale-100" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-background/95 backdrop-blur-md">
+              <DropdownMenuItem onClick={() => handleThemeChange('light')}>
+                <Sun className="mr-2 h-4 w-4" />
+                Light
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleThemeChange('dark')}>
+                <Moon className="mr-2 h-4 w-4" />
+                Dark
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleThemeChange('system')}>
+                <Monitor className="mr-2 h-4 w-4" />
+                System
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          {/* User Menu or Auth Buttons */}
+          {isLoggedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"
-                  size="sm"
-                  className="lg:hidden h-9 w-9 hover:bg-accent/50"
-                  aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-                >
-                  {mobileMenuOpen ? (
-                    <X className="h-5 w-5" />
-                  ) : (
-                    <Menu className="h-5 w-5" />
+                  className={cn(
+                    "relative h-9 w-9 rounded-full transition-all duration-200",
+                    "hover:bg-accent/50 hover:scale-105",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   )}
+                  aria-label="User menu"
+                >
+                  <div className="h-7 w-7 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-xs font-medium text-primary">
+                      {getUserInitials()}
+                    </span>
+                  </div>
                 </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[320px] sm:w-[400px]">
-                <SheetHeader>
-                  <SheetTitle>Navigation Menu</SheetTitle>
-                </SheetHeader>
-                <nav className="flex flex-col gap-6 mt-8" role="navigation" aria-label="Mobile navigation">
-                  
-                  {/* Mobile Navigation Categories */}
-                  {visibleCategories.map((category) => (
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56 bg-background/95 backdrop-blur-md">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium leading-none">Account</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user?.email}
+                    </p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile" className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings" className="flex items-center gap-2">
+                    <Settings className="h-4 w-4" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="hidden sm:flex items-center gap-2">
+              <Button variant="ghost" asChild className="transition-all duration-200 hover:scale-105">
+                <Link to="/login">Sign In</Link>
+              </Button>
+              <EnhancedButton variant="gradient" asChild className="hover:scale-105">
+                <Link to="/register">
+                  <Sparkles className="h-4 w-4" />
+                  Start Free
+                </Link>
+              </EnhancedButton>
+            </div>
+          )}
+
+          {/* Mobile Menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={cn(
+                  "lg:hidden h-9 w-9 transition-all duration-200",
+                  "hover:bg-accent/50 hover:scale-105",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                )}
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-80 bg-background/95 backdrop-blur-md">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
+                    <span className="text-primary-foreground font-bold text-sm">A</span>
+                  </div>
+                  Accio Navigation
+                </SheetTitle>
+              </SheetHeader>
+              
+              <div className="mt-6 space-y-6">
+                {navigationCategories.map((category) => {
+                  const visibleItems = getVisibleItems(category.items);
+                  if (visibleItems.length === 0) return null;
+
+                  return (
                     <div key={category.label} className="space-y-3">
                       <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
                         {category.label}
                       </h3>
                       <div className="space-y-1">
-                        {category.items.map((item) => (
+                        {visibleItems.map((item) => (
                           <Link
                             key={item.name}
                             to={item.href}
+                            onClick={() => setMobileMenuOpen(false)}
                             className={cn(
-                              "flex items-center gap-3 px-3 py-3 rounded-lg text-base font-medium transition-all duration-200",
+                              "flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200",
+                              "hover:bg-accent/50 hover:text-accent-foreground",
                               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                              isActivePath(item.href)
-                                ? "bg-primary text-primary-foreground shadow-sm"
-                                : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
+                              location.pathname === item.href && "bg-accent text-accent-foreground"
                             )}
-                            onClick={() => handleNavClick(item.name)}
-                            aria-current={isActivePath(item.href) ? 'page' : undefined}
                           >
-                            <item.icon className="h-5 w-5" />
+                            <item.icon className="h-4 w-4" aria-hidden="true" />
                             <div className="flex flex-col">
-                              <span>{item.name}</span>
+                              <span className="font-medium">{item.name}</span>
                               {item.description && (
-                                <span className="text-xs opacity-70">{item.description}</span>
+                                <span className="text-xs text-muted-foreground">{item.description}</span>
                               )}
                             </div>
                           </Link>
                         ))}
                       </div>
                     </div>
-                  ))}
+                  );
+                })}
 
-                  {/* Mobile CTA */}
-                  {!isLoggedIn && (
-                    <div className="border-t pt-6 mt-6">
-                      <Button 
-                        className="w-full justify-center"
-                        onClick={() => {
-                          navigate('/register');
-                          setMobileMenuOpen(false);
-                        }}
-                      >
-                        <Sparkles className="h-4 w-4 mr-2" />
-                        Start Now - It's Free!
-                      </Button>
-                    </div>
-                  )}
-
-                  {/* Mobile Logout */}
-                  {isLoggedIn && (
-                    <div className="border-t pt-4 mt-4">
-                      <Button 
-                        variant="ghost" 
-                        className="w-full justify-start text-destructive hover:text-destructive hover:bg-destructive/10"
-                        onClick={handleSignOut}
-                      >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Sign Out
-                      </Button>
-                    </div>
-                  )}
-                </nav>
-              </SheetContent>
-            </Sheet>
-          </div>
+                {isLoggedIn && (
+                  <div className="pt-4 border-t">
+                    <Button 
+                      onClick={handleLogout}
+                      variant="outline"
+                      className="w-full justify-start"
+                    >
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Sign Out
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
-      </div>
+      </nav>
     </header>
   );
 };
