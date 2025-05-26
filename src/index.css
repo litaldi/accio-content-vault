@@ -80,11 +80,6 @@
     scroll-behavior: smooth;
   }
 
-  /* Improved focus visibility */
-  *:focus-visible {
-    @apply outline-2 outline-offset-2 outline-primary;
-  }
-
   /* Enhanced typography */
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold leading-tight tracking-tight;
@@ -93,7 +88,6 @@
 
   /* Better link accessibility */
   a {
-    @apply focus-ring;
     text-decoration-thickness: 2px;
     text-underline-offset: 3px;
   }
@@ -105,11 +99,6 @@
   /* Improved form elements */
   input, textarea, select {
     font-size: 16px; /* Prevents zoom on iOS */
-  }
-
-  /* Better button accessibility */
-  button {
-    @apply focus-ring min-h-[44px] min-w-[44px];
   }
 
   /* Screen reader only content */
@@ -138,6 +127,11 @@
 }
 
 @layer components {
+  /* Focus ring utility */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
   /* Enhanced container */
   .container {
     @apply max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8;
@@ -171,7 +165,7 @@
 
   /* Enhanced button styles */
   .btn-primary {
-    @apply btn-gradient text-primary-foreground font-medium rounded-md transition-all duration-200;
+    @apply bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground font-medium rounded-md transition-all duration-200 shadow-lg hover:shadow-xl;
   }
 
   .btn-secondary {
@@ -183,7 +177,6 @@
   }
 }
 
-/* Performance optimizations */
 @layer utilities {
   .gpu-accelerated {
     transform: translateZ(0);
