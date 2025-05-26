@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, MessageCircle, FileText, Shield, HelpCircle, Github, Twitter, Linkedin } from 'lucide-react';
@@ -20,28 +21,26 @@ const AppFooter: React.FC = () => {
     {
       title: 'Product',
       links: [
-        { label: 'Features', href: '/features' },
-        { label: 'Pricing', href: '/pricing' },
-        { label: 'Documentation', href: '/docs', icon: FileText },
-        { label: 'Updates', href: '/changelog' }
+        { label: 'Features', href: '/#features' },
+        { label: 'Pricing', href: '/#pricing' },
+        { label: 'Help Center', href: '/help', icon: HelpCircle },
+        { label: 'Updates', href: '/#updates' }
       ]
     },
     {
       title: 'Company',
       links: [
-        { label: 'About Us', href: '/about' },
-        { label: 'Contact', href: '/contact', icon: Mail },
-        { label: 'Careers', href: '/careers' },
-        { label: 'Blog', href: '/blog' }
+        { label: 'About Us', href: '/#about' },
+        { label: 'Contact', href: '/help', icon: Mail },
+        { label: 'Blog', href: '/#blog' }
       ]
     },
     {
       title: 'Support',
       links: [
         { label: 'Help Center', href: '/help', icon: HelpCircle },
-        { label: 'FAQ', href: '/faq' },
-        { label: 'Community', href: '/community', icon: MessageCircle },
-        { label: 'Status', href: 'https://status.accio.app', external: true }
+        { label: 'Community', href: '/help', icon: MessageCircle },
+        { label: 'Documentation', href: '/help', icon: FileText }
       ]
     },
     {
@@ -49,7 +48,6 @@ const AppFooter: React.FC = () => {
       links: [
         { label: 'Privacy Policy', href: '/privacy', icon: Shield },
         { label: 'Terms of Service', href: '/terms' },
-        { label: 'Cookie Policy', href: '/cookies' },
         { label: 'Security', href: '/security' }
       ]
     }
@@ -197,16 +195,6 @@ const AppFooter: React.FC = () => {
               )}
             >
               Terms
-            </Link>
-            <span aria-hidden="true">•</span>
-            <Link 
-              to="/cookies" 
-              className={cn(
-                "hover:text-foreground transition-colors duration-200",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
-              )}
-            >
-              Cookies
             </Link>
           </div>
         </div>

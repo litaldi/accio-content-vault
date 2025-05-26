@@ -8,6 +8,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 // Import pages
 import Index from "./pages/Index";
@@ -50,14 +51,42 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/help" element={<Help />} />
                     
-                    {/* Protected routes */}
-                    <Route path="/dashboard" element={<EnhancedDashboard />} />
-                    <Route path="/save" element={<SaveContent />} />
-                    <Route path="/collections" element={<Collections />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/search" element={<Search />} />
-                    <Route path="/profile" element={<Profile />} />
+                    {/* Protected routes - require authentication */}
+                    <Route path="/dashboard" element={
+                      <ProtectedRoute>
+                        <EnhancedDashboard />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/save" element={
+                      <ProtectedRoute>
+                        <SaveContent />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/collections" element={
+                      <ProtectedRoute>
+                        <Collections />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/analytics" element={
+                      <ProtectedRoute>
+                        <Analytics />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/settings" element={
+                      <ProtectedRoute>
+                        <Settings />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/search" element={
+                      <ProtectedRoute>
+                        <Search />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/profile" element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    } />
                     
                     {/* Marketing pages - redirect to home for now */}
                     <Route path="/features" element={<Navigate to="/#features" replace />} />

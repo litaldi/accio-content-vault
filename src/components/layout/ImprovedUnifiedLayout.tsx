@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import MainNavigation from '@/components/navigation/MainNavigation';
-import ImprovedFooter from '@/components/Footer/ImprovedFooter';
+import AppFooter from '@/components/layout/AppFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
 import { Toaster } from '@/components/ui/toaster';
@@ -68,7 +68,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
       <AccessibilityButton variant="floating" />
 
       {/* Footer */}
-      {showFooter && <ImprovedFooter />}
+      {showFooter && <AppFooter />}
 
       {/* Toast Notifications */}
       <Toaster />

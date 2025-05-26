@@ -1,15 +1,14 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import AccessibilitySettings from '@/components/accessibility/AccessibilitySettings';
+import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
 import { 
-  ArrowLeft,
   User,
   Shield,
   Palette,
@@ -39,32 +38,13 @@ const Settings = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <ImprovedUnifiedLayout>
       <Helmet>
         <title>Settings - Accio</title>
         <meta name="description" content="Manage your account settings and preferences" />
       </Helmet>
 
-      {/* Navigation */}
-      <nav className="border-b bg-background/95 backdrop-blur">
-        <div className="container mx-auto px-4 h-16 flex items-center gap-4">
-          <Button variant="ghost" size="sm" asChild>
-            <Link to="/dashboard">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Dashboard
-            </Link>
-          </Button>
-          
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center">
-              <span className="text-primary-foreground font-bold">A</span>
-            </div>
-            <span className="text-xl font-bold">Accio</span>
-          </div>
-        </div>
-      </nav>
-
-      <main className="container mx-auto px-4 py-8 max-w-4xl">
+      <div className="py-8 space-y-6">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Settings</h1>
           <p className="text-muted-foreground">
@@ -193,8 +173,8 @@ const Settings = () => {
             </Card>
           </TabsContent>
         </Tabs>
-      </main>
-    </div>
+      </div>
+    </ImprovedUnifiedLayout>
   );
 };
 
