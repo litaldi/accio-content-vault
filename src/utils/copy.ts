@@ -1,4 +1,5 @@
 
+
 export const copy = {
   common: {
     required: 'Required field',
@@ -22,6 +23,63 @@ export const copy = {
     clear: 'Clear',
     selectAll: 'Select All',
     deselectAll: 'Deselect All'
+  },
+  nav: {
+    dashboard: 'Dashboard',
+    saveContent: 'Save Content',
+    collections: 'Collections',
+    analytics: 'Analytics',
+    features: 'Features',
+    pricing: 'Pricing',
+    about: 'About',
+    settings: 'Settings'
+  },
+  buttons: {
+    signIn: 'Sign In',
+    signOut: 'Sign Out',
+    getStarted: 'Get Started',
+    back: 'Back',
+    next: 'Next',
+    finish: 'Get Started',
+    close: 'Close'
+  },
+  loading: {
+    loading: 'Loading...'
+  },
+  onboarding: {
+    welcome: {
+      subtitle: 'Quick Tour'
+    },
+    step1: {
+      title: 'Save Anything',
+      description: 'Capture articles, videos, and documents from anywhere on the web',
+      tip: 'Simply paste a URL or upload a file to get started'
+    },
+    step2: {
+      title: 'AI Organization',
+      description: 'Our AI automatically categorizes and tags your content',
+      tip: 'No more manual sorting - everything is organized intelligently'
+    },
+    step3: {
+      title: 'Smart Search',
+      description: 'Find what you need instantly with powerful search',
+      tip: 'Search by content, tags, or even describe what you\'re looking for'
+    },
+    step4: {
+      title: 'Never Lose Anything',
+      description: 'Your knowledge library is always accessible and synced',
+      tip: 'Access your saved content from any device, anywhere'
+    }
+  },
+  benefits: {
+    saveAnything: 'Save from any website',
+    crossDevice: 'Access from anywhere',
+    smartTags: 'AI-powered tags',
+    aiOrganization: 'Auto-organization',
+    findFast: 'Lightning-fast search',
+    neverLose: 'Never lose content',
+    timeBack: 'Get your time back',
+    instantSync: 'Instant sync'
   },
   accessibility: {
     skipToContent: 'Skip to main content',
@@ -63,3 +121,4 @@ export const copy = {
     }
   }
 };
+
