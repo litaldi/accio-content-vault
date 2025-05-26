@@ -10,23 +10,23 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-  const { user, isLoading } = useAuth();
+  const { user, loading } = useAuth();
   const location = useLocation();
   const { toast } = useToast();
 
   // Show toast only once when redirecting
   useEffect(() => {
-    if (!isLoading && !user) {
+    if (!loading && !user) {
       toast({
         title: "Authentication required",
         description: "Please log in to access this page.",
         variant: "destructive",
       });
     }
-  }, [isLoading, user, toast]);
+  }, [loading, user, toast]);
 
   // Show loading state while checking authentication
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
         <div className="flex-grow container mx-auto px-4 py-8">

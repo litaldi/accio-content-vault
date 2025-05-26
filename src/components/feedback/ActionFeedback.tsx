@@ -25,18 +25,8 @@ const ActionFeedback: React.FC<ActionFeedbackProps> = ({
     toast({
       title: title,
       description: description,
-      action: actionable ? {
-        action: (
-          <div 
-            className="rounded-md bg-muted/50 px-3 py-2 text-sm font-medium cursor-pointer hover:bg-muted" 
-            onClick={actionable.action}
-          >
-            {actionable.label}
-          </div>
-        )
-      } : undefined,
     });
-  }, [title, description, actionable, toast]);
+  }, [title, description, toast]);
 
   return null;
 };

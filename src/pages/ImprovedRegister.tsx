@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
@@ -71,10 +70,7 @@ const ImprovedRegister = () => {
 
     setIsLoading(true);
     try {
-      await signUp(formData.email, formData.password, {
-        displayName: formData.name,
-        subscribeNewsletter: formData.subscribeNewsletter
-      });
+      await signUp(formData.email, formData.password);
       
       showSuccess(
         'Account Created Successfully!', 

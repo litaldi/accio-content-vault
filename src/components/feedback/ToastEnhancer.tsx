@@ -1,6 +1,6 @@
 
 import { useToast } from '@/hooks/use-toast';
-import { CheckCircle, AlertCircle, Info, AlertTriangle, X, Sparkles } from 'lucide-react';
+import { CheckCircle, AlertCircle, Info, AlertTriangle, Sparkles } from 'lucide-react';
 
 export const useEnhancedToast = () => {
   const { toast } = useToast();
@@ -10,9 +10,6 @@ export const useEnhancedToast = () => {
       title,
       description,
       className: "border-green-200 bg-green-50 text-green-900",
-      action: {
-        action: <CheckCircle className="h-4 w-4 text-green-600" />
-      },
     });
   };
 
@@ -21,9 +18,6 @@ export const useEnhancedToast = () => {
       title,
       description,
       variant: "destructive",
-      action: {
-        action: <AlertCircle className="h-4 w-4" />
-      },
     });
   };
 
@@ -32,9 +26,6 @@ export const useEnhancedToast = () => {
       title,
       description,
       className: "border-yellow-200 bg-yellow-50 text-yellow-900",
-      action: {
-        action: <AlertTriangle className="h-4 w-4 text-yellow-600" />
-      },
     });
   };
 
@@ -43,9 +34,6 @@ export const useEnhancedToast = () => {
       title,
       description,
       className: "border-blue-200 bg-blue-50 text-blue-900",
-      action: {
-        action: <Info className="h-4 w-4 text-blue-600" />
-      },
     });
   };
 
@@ -62,9 +50,6 @@ export const useEnhancedToast = () => {
       title,
       description,
       className: "border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 text-purple-900",
-      action: {
-        action: <Sparkles className="h-4 w-4 text-purple-600 animate-pulse" />
-      },
     });
   };
 

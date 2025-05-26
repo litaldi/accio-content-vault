@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -52,7 +51,7 @@ export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
   defaultTab = 'signup'
 }) => {
   const navigate = useNavigate();
-  const { signIn, signUp } = useAuth();
+  const { signIn, signUp, signInWithProvider } = useAuth();
   const [activeTab, setActiveTab] = useState(defaultTab);
   const [authMethod, setAuthMethod] = useState<'email' | 'phone'>('email');
   const [isLoading, setIsLoading] = useState(false);
@@ -81,10 +80,7 @@ export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
     setIsLoading(true);
     try {
       if (activeTab === 'signup') {
-        await signUp(values.email, values.password, {
-          displayName: values.name,
-          subscribeNewsletter: false
-        });
+        await signUp(values.email, values.password);
       } else {
         await signIn(values.email, values.password);
       }
@@ -101,11 +97,9 @@ export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
     setIsLoading(true);
     try {
       if (phoneStep === 'phone') {
-        // In a real app, this would send SMS verification
         console.log('Sending verification to:', values.phone);
         setPhoneStep('verification');
       } else {
-        // Verify code and sign in/up
         console.log('Verifying code:', values.verificationCode);
         onClose();
         navigate('/dashboard');
@@ -120,9 +114,7 @@ export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     try {
-      // In a real app with Supabase, this would be:
-      // await supabase.auth.signInWithOAuth({ provider: 'google' });
-      console.log('Google OAuth initiated');
+      await signInWithProvider('google');
       onClose();
       navigate('/dashboard');
     } catch (error) {
@@ -141,10 +133,8 @@ export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
     
     setIsLoading(true);
     try {
-      // In a real app, this would send password reset email
       console.log('Password reset sent to:', email);
       setForgotPassword(false);
-      // Show success message
     } catch (error) {
       console.error('Password reset error:', error);
     } finally {
