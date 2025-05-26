@@ -44,8 +44,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
         "dark:bg-background dark:text-foreground",
         className
       )}
-      dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}
-      lang={preferences.language}
+      lang="en"
     >
       {/* Skip Links */}
       <SkipLinks />

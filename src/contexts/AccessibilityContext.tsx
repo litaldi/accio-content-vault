@@ -6,7 +6,6 @@ export interface AccessibilityPreferences {
   highContrast: boolean;
   reducedMotion: boolean;
   fontSize: 'small' | 'medium' | 'large';
-  language: 'en' | 'he' | 'ar';
   announcements: boolean;
   keyboardNavigation: boolean;
 }
@@ -14,7 +13,6 @@ export interface AccessibilityPreferences {
 interface AccessibilityContextType {
   preferences: AccessibilityPreferences;
   updatePreferences: (updates: Partial<AccessibilityPreferences>) => void;
-  setLanguage: (language: 'en' | 'he' | 'ar') => void;
   announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
 }
 
@@ -37,17 +35,12 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     highContrast: false,
     reducedMotion: false,
     fontSize: 'medium',
-    language: 'en',
     announcements: true,
     keyboardNavigation: true,
   });
 
   const updatePreferences = (updates: Partial<AccessibilityPreferences>) => {
     setPreferences(prev => ({ ...prev, ...updates }));
-  };
-
-  const setLanguage = (language: 'en' | 'he' | 'ar') => {
-    updatePreferences({ language });
   };
 
   const handleAnnounceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
@@ -60,7 +53,6 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     <AccessibilityContext.Provider value={{ 
       preferences, 
       updatePreferences,
-      setLanguage,
       announceToScreenReader: handleAnnounceToScreenReader 
     }}>
       {children}

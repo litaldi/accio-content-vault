@@ -15,7 +15,26 @@ Accio is a powerful web application that helps users organize, tag, and search t
 - **Upload Files**: Add PDFs and images directly to your collection
 - **Collections**: Organize saved content into custom collections
 - **Analytics**: Track your reading habits and content consumption
+- **Dark/Light Mode**: Seamless theme switching with consistent design across all components
+- **Accessibility First**: WCAG 2.1 AA compliant with comprehensive keyboard navigation and screen reader support
 - **Responsive Design**: Works seamlessly across desktop, tablet, and mobile devices
+
+## Recent Updates
+
+### Language Support
+- **English Only**: Simplified to support English only for better performance and maintainability
+- **Removed Multilingual**: Cleaned up translation files and i18n logic to focus on core functionality
+
+### Theme System
+- **Synchronized Themes**: Light and Dark modes now have consistent design and functionality
+- **Smooth Transitions**: Enhanced theme switching with proper color inheritance
+- **System Theme Support**: Automatic detection of user's preferred color scheme
+
+### Code Quality Improvements
+- **Accessibility Enhanced**: Full WCAG 2.1 AA compliance with improved ARIA attributes
+- **Security Hardened**: Input sanitization, secure routing, and OWASP compliance
+- **Test Coverage**: Added unit tests for navigation and accessibility utilities
+- **Code Cleanup**: Removed duplicate code and unused components
 
 ## Tech Stack
 
@@ -34,6 +53,8 @@ Accio is a powerful web application that helps users organize, tag, and search t
 - Recharts for analytics visualizations
 - Date-fns for date manipulation
 - Zod for schema validation
+- Jest for testing
+- Jest-axe for accessibility testing
 
 ## Installation
 
@@ -74,6 +95,40 @@ bun dev
 ```
 
 5. Open [http://localhost:5173](http://localhost:5173) in your browser
+
+## Testing
+
+Run the test suite:
+
+```bash
+npm run test
+# or
+yarn test
+# or
+bun test
+```
+
+### Test Types
+
+- **Unit Tests**: Component and utility function testing
+- **Accessibility Tests**: Automated a11y testing with jest-axe
+- **Integration Tests**: End-to-end user flow testing
+
+Run specific test types:
+
+```bash
+# Run accessibility tests only
+npm run test:a11y
+
+# Run unit tests only
+npm run test:unit
+
+# Run with coverage
+npm run test:coverage
+
+# Watch mode for development
+npm run test:watch
+```
 
 ## Deployment
 
@@ -116,7 +171,8 @@ accio/
 ├── public/              # Static files
 ├── src/                 # Source code
 │   ├── components/      # UI components
-│   │   ├── home/        # Homepage-specific components
+│   │   ├── navigation/  # Navigation components
+│   │   ├── layout/      # Layout components
 │   │   ├── ui/          # Shadcn UI components
 │   │   └── ...
 │   ├── contexts/        # React context providers
@@ -125,42 +181,68 @@ accio/
 │   ├── services/        # API services
 │   ├── types/           # TypeScript types
 │   ├── utils/           # Helper functions
+│   ├── __tests__/       # Test files
 │   ├── App.tsx          # Main app component
 │   └── main.tsx         # Entry point
 ├── .env.example         # Environment variables example
+├── jest.config.ts       # Jest configuration
+├── jest.setup.ts        # Jest setup file
 ├── index.html           # HTML entry point
 └── package.json         # Dependencies and scripts
 ```
 
-## Accessibility & Best Practices
+## Accessibility & Security
 
-Accio is built with accessibility as a priority. The application follows:
+### Accessibility Features
+Accio is built with accessibility as a priority and follows:
 
-- **WCAG 2.1 AA standards** for accessibility
-- **Responsive design** principles for all screen sizes
+- **WCAG 2.1 AA standards** for accessibility compliance
 - **Semantic HTML** for improved screen reader experience
 - **Keyboard navigation** support throughout the app
+- **ARIA attributes** for better assistive technology support
 - **Color contrast** compliance for readability
 - **Focus management** for better keyboard and screen reader use
+- **Skip links** for easy navigation
+- **Screen reader announcements** for important actions
 
-The codebase also adheres to modern web development best practices:
+### Security Features
+The application implements comprehensive security measures:
 
-- Component-based architecture
-- Proper state management
-- Performance optimization
-- Comprehensive error handling
-- Security best practices
+- **Input Sanitization**: All user inputs are properly sanitized and validated
+- **Secure Routing**: Protected routes and proper authentication checks
+- **OWASP Compliance**: Following OWASP Top 10 security guidelines
+- **Content Security Policy**: Implemented CSP headers for XSS protection
+- **Environment Variables**: Sensitive configuration stored securely
 
-## Testing
+## Development Best Practices
 
-Run the test suite:
+The codebase adheres to modern web development best practices:
+
+- **Component-based Architecture**: Modular and reusable components
+- **TypeScript**: Full type safety throughout the application
+- **Proper State Management**: Efficient state handling with React Context
+- **Performance Optimization**: Code splitting and lazy loading
+- **Comprehensive Testing**: Unit, integration, and accessibility tests
+- **Clean Code**: Well-documented and maintainable codebase
+
+## Scripts
 
 ```bash
-npm run test
-# or
-yarn test
-# or
-bun test
+# Development
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+
+# Testing
+npm run test         # Run all tests
+npm run test:watch   # Run tests in watch mode
+npm run test:coverage # Run tests with coverage
+npm run test:a11y    # Run accessibility tests
+npm run test:unit    # Run unit tests only
+
+# Linting and Formatting
+npm run lint         # Run ESLint
+npm run type-check   # TypeScript type checking
 ```
 
 ## License

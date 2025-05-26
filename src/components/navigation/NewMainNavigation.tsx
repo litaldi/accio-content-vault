@@ -46,7 +46,7 @@ const NewMainNavigation: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
-  const { preferences, announceToScreenReader } = useAccessibility();
+  const { announceToScreenReader } = useAccessibility();
   
   // Safely use auth context with fallback
   let user = null;
@@ -183,11 +183,9 @@ const NewMainNavigation: React.FC = () => {
         "border-b border-border/40 bg-background/95 backdrop-blur-xl",
         "supports-[backdrop-filter]:bg-background/80",
         scrolled && "shadow-lg border-border/60",
-        preferences.highContrast && "border-2 border-foreground",
         "dark:border-border/20 dark:bg-background/90"
       )}
       role="banner"
-      dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">

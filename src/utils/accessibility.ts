@@ -1,12 +1,13 @@
 
 /**
- * Accessibility utility functions
+ * Accessibility utilities for screen reader announcements and keyboard navigation
  */
 
-/**
- * Announces a message to screen readers using aria-live regions
- */
-export const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite'): void => {
+// Screen reader announcement utility
+export const announceToScreenReader = (
+  message: string, 
+  priority: 'polite' | 'assertive' = 'polite'
+): void => {
   const announcement = document.createElement('div');
   announcement.setAttribute('aria-live', priority);
   announcement.setAttribute('aria-atomic', 'true');
@@ -15,182 +16,60 @@ export const announceToScreenReader = (message: string, priority: 'polite' | 'as
   
   document.body.appendChild(announcement);
   
-  // Remove after announcement
+  // Remove after announcement is made
   setTimeout(() => {
-    if (document.body.contains(announcement)) {
-      document.body.removeChild(announcement);
-    }
+    document.body.removeChild(announcement);
   }, 1000);
 };
 
-/**
- * Checks if reduced motion is preferred by the user
- */
-export const prefersReducedMotion = (): boolean => {
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-};
-
-/**
- * Checks if high contrast is preferred by the user
- */
-export const prefersHighContrast = (): boolean => {
-  return window.matchMedia('(prefers-contrast: high)').matches;
-};
-
-/**
- * Checks if an element is focusable
- */
-export const isFocusable = (element: HTMLElement): boolean => {
-  const focusableSelectors = [
-    'button:not([disabled])',
-    '[href]',
-    'input:not([disabled]):not([type="hidden"])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-    '[contenteditable="true"]'
-  ];
+// Focus management utilities
+export const trapFocus = (element: HTMLElement): void => {
+  const focusableElements = element.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
   
-  return focusableSelectors.some(selector => element.matches(selector)) &&
-    !element.hasAttribute('hidden') &&
-    element.offsetParent !== null;
-};
-
-/**
- * Gets all focusable elements within a container
- */
-export const getFocusableElements = (container: HTMLElement): HTMLElement[] => {
-  const focusableSelectors = [
-    'button:not([disabled])',
-    '[href]',
-    'input:not([disabled]):not([type="hidden"])',
-    'select:not([disabled])',
-    'textarea:not([disabled])',
-    '[tabindex]:not([tabindex="-1"])',
-    '[contenteditable="true"]'
-  ];
+  const firstElement = focusableElements[0] as HTMLElement;
+  const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
   
-  const elements = container.querySelectorAll(focusableSelectors.join(', '));
-  return Array.from(elements).filter(el => isFocusable(el as HTMLElement)) as HTMLElement[];
-};
-
-/**
- * Calculates contrast ratio between two colors
- */
-export const getContrastRatio = (color1: string, color2: string): number => {
-  // Simplified implementation - in production, use a proper color contrast library
-  // This is a mock implementation for demonstration
-  return 4.5; // Return a value that passes WCAG AA
-};
-
-/**
- * Checks if a color combination meets WCAG contrast requirements
- */
-export const meetsContrastRequirement = (
-  foreground: string,
-  background: string,
-  level: 'AA' | 'AAA' = 'AA',
-  isLargeText: boolean = false
-): boolean => {
-  const ratio = getContrastRatio(foreground, background);
-  const requirement = level === 'AAA' 
-    ? (isLargeText ? 4.5 : 7) 
-    : (isLargeText ? 3 : 4.5);
-    
-  return ratio >= requirement;
-};
-
-/**
- * Generates a unique ID with prefix
- */
-export const generateId = (prefix: string = 'id'): string => {
-  return `${prefix}-${Math.random().toString(36).substr(2, 9)}`;
-};
-
-/**
- * Handles arrow key navigation for lists
- */
-export const handleArrowNavigation = (
-  event: KeyboardEvent,
-  elements: HTMLElement[],
-  currentIndex: number,
-  direction: 'horizontal' | 'vertical' = 'vertical'
-): number => {
-  const isVertical = direction === 'vertical';
-  const upKey = isVertical ? 'ArrowUp' : 'ArrowLeft';
-  const downKey = isVertical ? 'ArrowDown' : 'ArrowRight';
-  
-  if (event.key === upKey) {
-    event.preventDefault();
-    return currentIndex > 0 ? currentIndex - 1 : elements.length - 1;
-  } else if (event.key === downKey) {
-    event.preventDefault();
-    return currentIndex < elements.length - 1 ? currentIndex + 1 : 0;
-  }
-  
-  return currentIndex;
-};
-
-/**
- * Creates a live region for announcements
- */
-export const createLiveRegion = (priority: 'polite' | 'assertive' = 'polite'): HTMLElement => {
-  const region = document.createElement('div');
-  region.setAttribute('aria-live', priority);
-  region.setAttribute('aria-atomic', 'true');
-  region.className = 'sr-only';
-  document.body.appendChild(region);
-  return region;
-};
-
-/**
- * Focuses an element and scrolls it into view if needed
- */
-export const focusElement = (element: HTMLElement, scrollIntoView: boolean = true): void => {
-  element.focus();
-  
-  if (scrollIntoView) {
-    element.scrollIntoView({
-      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
-      block: 'nearest'
-    });
-  }
-};
-
-/**
- * Traps focus within a container (useful for modals)
- */
-export const trapFocus = (container: HTMLElement): (() => void) => {
-  const focusableElements = getFocusableElements(container);
-  
-  const firstElement = focusableElements[0];
-  const lastElement = focusableElements[focusableElements.length - 1];
-  
-  const handleKeyDown = (e: KeyboardEvent) => {
+  element.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
           e.preventDefault();
-          lastElement?.focus();
+          lastElement.focus();
         }
       } else {
         if (document.activeElement === lastElement) {
           e.preventDefault();
-          firstElement?.focus();
+          firstElement.focus();
         }
       }
     }
-  };
-  
-  container.addEventListener('keydown', handleKeyDown);
-  
-  // Focus first element by default
-  if (firstElement) {
-    firstElement.focus();
+  });
+};
+
+// Keyboard navigation helper
+export const handleKeyboardNavigation = (
+  event: React.KeyboardEvent,
+  callback: () => void
+): void => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    callback();
   }
-  
-  // Return cleanup function
-  return () => {
-    container.removeEventListener('keydown', handleKeyDown);
-  };
+};
+
+// Check if user prefers reduced motion
+export const prefersReducedMotion = (): boolean => {
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+};
+
+// High contrast detection
+export const prefersHighContrast = (): boolean => {
+  return window.matchMedia('(prefers-contrast: high)').matches;
+};
+
+// Get user's preferred color scheme
+export const getPreferredColorScheme = (): 'light' | 'dark' => {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
