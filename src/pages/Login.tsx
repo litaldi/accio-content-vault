@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import CleanNavigation from '@/components/navigation/CleanNavigation';
+import ModernNavigation from '@/components/navigation/ModernNavigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -81,7 +81,7 @@ const Login = () => {
         <meta name="description" content="Sign in to your Accio account to access your knowledge collection and insights." />
       </Helmet>
 
-      <CleanNavigation />
+      <ModernNavigation />
 
       <main className="flex-grow flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md">
@@ -92,7 +92,7 @@ const Login = () => {
             </p>
           </div>
 
-          <Card>
+          <Card className="border-0 shadow-lg">
             <CardHeader>
               <CardTitle>Sign in to your account</CardTitle>
               <CardDescription>
