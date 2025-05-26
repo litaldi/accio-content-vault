@@ -1,195 +1,181 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
 import { 
   BookOpen, 
-  FileText, 
-  Tags, 
-  TrendingUp, 
-  Plus,
-  Search,
-  Calendar,
-  Target
+  Plus, 
+  Search, 
+  BarChart3, 
+  Clock, 
+  Star,
+  TrendingUp,
+  Users,
+  FileText
 } from 'lucide-react';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
-import { copy } from '@/utils/copy';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const stats = [
-    { 
-      title: 'Saved Items', 
-      value: '247', 
-      change: '+12%', 
-      icon: BookOpen,
-      description: 'Articles and resources saved'
-    },
-    { 
-      title: 'Collections', 
-      value: '18', 
-      change: '+5%', 
-      icon: FileText,
-      description: 'Organized collections'
-    },
-    { 
-      title: 'Smart Tags', 
-      value: '84', 
-      change: '+8%', 
-      icon: Tags,
-      description: 'AI-generated tags'
-    },
-    { 
-      title: 'Knowledge Score', 
-      value: '92%', 
-      change: '+3%', 
-      icon: TrendingUp,
-      description: 'Organization efficiency'
-    }
+    { title: "Total Items", value: "147", icon: BookOpen, change: "+12 this week" },
+    { title: "Collections", value: "8", icon: FileText, change: "+2 this month" },
+    { title: "Hours Saved", value: "23", icon: Clock, change: "This month" },
+    { title: "Knowledge Score", value: "87%", icon: TrendingUp, change: "+5% this week" }
   ];
 
   const quickActions = [
     {
-      title: copy.navigation.saveContent,
-      description: 'Capture new articles, links, and resources',
+      title: "Save Content",
+      description: "Add something new to your library",
       icon: Plus,
       action: () => navigate('/save'),
-      color: 'bg-blue-500'
+      color: "bg-green-500"
     },
     {
-      title: 'Smart Search',
-      description: 'Find anything in your knowledge base',
+      title: "Search Library",
+      description: "Find what you're looking for",
       icon: Search,
       action: () => navigate('/search'),
-      color: 'bg-green-500'
+      color: "bg-blue-500"
     },
     {
-      title: copy.navigation.collections,
-      description: 'Browse and organize your content',
+      title: "View Analytics",
+      description: "See your knowledge insights",
+      icon: BarChart3,
+      action: () => navigate('/analytics'),
+      color: "bg-purple-500"
+    },
+    {
+      title: "Browse Collections",
+      description: "Organize your content",
       icon: BookOpen,
       action: () => navigate('/collections'),
-      color: 'bg-purple-500'
-    },
-    {
-      title: copy.navigation.analytics,
-      description: 'View insights and progress',
-      icon: TrendingUp,
-      action: () => navigate('/analytics'),
-      color: 'bg-orange-500'
+      color: "bg-orange-500"
     }
+  ];
+
+  const recentActivity = [
+    { title: "AI in Healthcare Research", type: "Article", time: "2 hours ago" },
+    { title: "Product Strategy Notes", type: "Note", time: "5 hours ago" },
+    { title: "Design System Guidelines", type: "Document", time: "1 day ago" },
+    { title: "Market Research Data", type: "Data", time: "2 days ago" }
   ];
 
   return (
     <UnifiedLayout>
       <Helmet>
-        <title>{copy.navigation.dashboard} - Accio</title>
-        <meta name="description" content="Your personal knowledge dashboard with AI-powered insights and organization tools." />
+        <title>Dashboard - Accio Knowledge Library</title>
+        <meta name="description" content="Your personal knowledge dashboard. Track your learning progress and manage your content library." />
       </Helmet>
 
-      <div className="space-y-8 py-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="py-8 space-y-8">
+        {/* Welcome Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">{copy.auth.welcome}</h1>
-            <p className="text-muted-foreground mt-2">
-              Here's what's happening with your knowledge library today.
+            <h1 className="text-3xl font-bold">
+              Welcome back{user?.email ? `, ${user.email.split('@')[0]}` : ''}!
+            </h1>
+            <p className="text-muted-foreground">
+              Here's what's happening in your knowledge library today.
             </p>
           </div>
-          <Button onClick={() => navigate('/save')} className="md:self-start">
-            <Plus className="h-4 w-4 mr-2" />
-            Save Content
-          </Button>
+          <Badge variant="outline" className="w-fit">
+            <Star className="h-3 w-3 mr-1 text-yellow-500" />
+            Pro Plan
+          </Badge>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {stats.map((stat) => (
-            <Card key={stat.title}>
+          {stats.map((stat, index) => (
+            <Card key={index} className="hover:shadow-lg transition-shadow">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
                 <stat.icon className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="text-xs text-muted-foreground">{stat.description}</p>
-                <div className="flex items-center mt-2">
-                  <span className="text-xs text-green-600 font-medium">{stat.change}</span>
-                  <span className="text-xs text-muted-foreground ml-1">from last month</span>
-                </div>
+                <p className="text-xs text-muted-foreground">{stat.change}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {quickActions.map((action) => (
-            <Card key={action.title} className="cursor-pointer hover:shadow-md transition-shadow" onClick={action.action}>
-              <CardHeader>
-                <div className={`w-12 h-12 ${action.color} rounded-lg flex items-center justify-center mb-4`}>
-                  <action.icon className="h-6 w-6 text-white" />
-                </div>
-                <CardTitle className="text-lg">{action.title}</CardTitle>
-                <CardDescription>{action.description}</CardDescription>
-              </CardHeader>
-            </Card>
-          ))}
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {quickActions.map((action, index) => (
+              <Card 
+                key={index} 
+                className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+                onClick={action.action}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className={`w-12 h-12 mx-auto mb-4 ${action.color} rounded-2xl flex items-center justify-center`}>
+                    <action.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <h3 className="font-medium mb-2">{action.title}</h3>
+                  <p className="text-sm text-muted-foreground">{action.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
-        {/* Progress Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Activity */}
+        <div className="grid lg:grid-cols-2 gap-8">
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5" />
-                Monthly Goal Progress
-              </CardTitle>
+              <CardTitle>Recent Activity</CardTitle>
+              <CardDescription>Your latest saved content and interactions</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Content Saved</span>
-                  <span>67/100</span>
-                </div>
-                <Progress value={67} />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-2">
-                  <span>Collections Organized</span>
-                  <span>12/20</span>
-                </div>
-                <Progress value={60} />
+            <CardContent>
+              <div className="space-y-4">
+                {recentActivity.map((item, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                    <div>
+                      <h4 className="font-medium">{item.title}</h4>
+                      <p className="text-sm text-muted-foreground">{item.type}</p>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{item.time}</span>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Calendar className="h-5 w-5" />
-                Recent Activity
-              </CardTitle>
+              <CardTitle>Knowledge Insights</CardTitle>
+              <CardDescription>AI-powered insights about your learning patterns</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <span className="text-sm">Saved "React Best Practices" article</span>
-                  <span className="text-xs text-muted-foreground ml-auto">2h ago</span>
+              <div className="space-y-4">
+                <div className="p-4 bg-primary/5 rounded-lg">
+                  <h4 className="font-medium mb-2">📚 Most Active Topic</h4>
+                  <p className="text-sm text-muted-foreground">
+                    You've been exploring <strong>AI & Machine Learning</strong> frequently this week.
+                  </p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm">Created "Web Development" collection</span>
-                  <span className="text-xs text-muted-foreground ml-auto">5h ago</span>
+                <div className="p-4 bg-green-500/5 rounded-lg">
+                  <h4 className="font-medium mb-2">🎯 Learning Goal</h4>
+                  <p className="text-sm text-muted-foreground">
+                    You're 73% closer to your monthly reading goal of 50 articles.
+                  </p>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <span className="text-sm">Tagged 5 items with "AI"</span>
-                  <span className="text-xs text-muted-foreground ml-auto">1d ago</span>
+                <div className="p-4 bg-blue-500/5 rounded-lg">
+                  <h4 className="font-medium mb-2">💡 Smart Suggestion</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Consider creating a collection for your product strategy notes.
+                  </p>
                 </div>
               </div>
             </CardContent>

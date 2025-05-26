@@ -3,12 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AccessibleInput } from '@/components/forms/AccessibleInput';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, LogIn } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Login = () => {
@@ -37,11 +37,11 @@ const Login = () => {
       const { error: signInError } = await signIn(email, password);
       
       if (signInError) {
-        setError(signInError.message || 'Invalid email or password.');
+        setError(signInError.message || 'Failed to sign in.');
       } else {
         toast({
           title: "Welcome back!",
-          description: "You have been successfully signed in.",
+          description: "You have been signed in successfully.",
         });
         navigate('/dashboard');
       }
@@ -80,7 +80,10 @@ const Login = () => {
           {/* Login Form */}
           <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle className="text-card-foreground">Sign In</CardTitle>
+              <CardTitle className="text-card-foreground flex items-center gap-2">
+                <LogIn className="h-5 w-5 text-primary" />
+                Sign In
+              </CardTitle>
               <CardDescription className="text-muted-foreground">
                 Enter your credentials to access your account
               </CardDescription>
@@ -94,17 +97,21 @@ const Login = () => {
                 )}
 
                 {/* Email */}
-                <AccessibleInput
-                  id="email"
-                  type="email"
-                  label="Email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                  aria-describedby="email-help"
-                />
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium text-foreground">
+                    Email
+                    <span className="text-destructive ml-1" aria-label="required">*</span>
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                  />
+                </div>
 
                 {/* Password */}
                 <div className="space-y-2">
@@ -113,17 +120,15 @@ const Login = () => {
                     <span className="text-destructive ml-1" aria-label="required">*</span>
                   </label>
                   <div className="relative">
-                    <AccessibleInput
+                    <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      label=""
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       autoComplete="current-password"
                       className="pr-10"
-                      containerClassName="space-y-0"
                     />
                     <button
                       type="button"
@@ -156,22 +161,6 @@ const Login = () => {
                   </div>
                 )}
               </form>
-
-              {/* Demo Credentials */}
-              <div className="mt-4 p-4 bg-muted rounded-lg border border-border">
-                <h3 className="font-medium mb-2 text-foreground">Demo Accounts</h3>
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div>
-                    <strong className="text-foreground">Admin:</strong> admin@demo.com / Admin123!
-                  </div>
-                  <div>
-                    <strong className="text-foreground">User:</strong> user@demo.com / User123!
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Use these credentials to explore the app with sample data
-                </p>
-              </div>
             </CardContent>
           </Card>
 
@@ -183,7 +172,7 @@ const Login = () => {
                 to="/register" 
                 className="text-primary hover:underline font-medium focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
               >
-                Sign up here
+                Create one here
               </Link>
             </p>
           </div>

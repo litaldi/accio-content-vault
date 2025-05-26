@@ -1,74 +1,75 @@
 
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import { Toaster } from '@/components/ui/toaster';
-import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
+import { Suspense, lazy } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HelmetProvider } from 'react-helmet-async';
+import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
 
-// Import pages
-import Index from '@/pages/Index';
-import About from '@/pages/About';
-import Help from '@/pages/Help';
-import FAQ from '@/pages/FAQ';
-import Features from '@/pages/Features';
-import Pricing from '@/pages/Pricing';
+// Lazy load pages for better performance
+const Index = lazy(() => import("./pages/Index"));
+const Register = lazy(() => import("./pages/Register"));
+const Login = lazy(() => import("./pages/Login"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const About = lazy(() => import("./pages/About"));
+const Features = lazy(() => import("./pages/Features"));
+const Pricing = lazy(() => import("./pages/Pricing"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+const Help = lazy(() => import("./pages/Help"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const AccessibilityTest = lazy(() => import("./pages/AccessibilityTest"));
+const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
+const OfflinePage = lazy(() => import("./pages/OfflinePage"));
 
-function App() {
-  return (
-    <HelmetProvider>
-      <ThemeProvider defaultTheme="system" storageKey="accio-ui-theme">
+const queryClient = new QueryClient();
+
+// Loading component
+const PageLoader = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+);
+
+const App = () => (
+  <HelmetProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
         <AccessibilityProvider>
-          <Router>
-            <div className="min-h-screen w-full">
-              <Helmet>
-                <html lang="en" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <meta name="theme-color" content="#3B82F6" />
-                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-                
-                {/* Enhanced SEO meta tags */}
-                <meta name="author" content="Accio Team" />
-                <meta name="robots" content="index, follow" />
-                <meta name="language" content="English" />
-                <meta name="revisit-after" content="7 days" />
-                
-                {/* Structured data for organization */}
-                <script type="application/ld+json">
-                  {JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "Organization",
-                    "name": "Accio",
-                    "description": "AI-powered knowledge management platform",
-                    "url": "https://accio.app",
-                    "logo": "https://accio.app/logo.png",
-                    "sameAs": [
-                      "https://twitter.com/accio",
-                      "https://github.com/accio"
-                    ]
-                  })}
-                </script>
-              </Helmet>
-
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/features" element={<Features />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/faq" element={<FAQ />} />
-                {/* Add more routes as needed */}
-              </Routes>
-
-              <EnhancedAccessibility />
+          <AuthProvider>
+            <TooltipProvider>
               <Toaster />
-            </div>
-          </Router>
+              <Sonner />
+              <BrowserRouter>
+                <Suspense fallback={<PageLoader />}>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/features" element={<Features />} />
+                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/blog/:slug" element={<BlogPost />} />
+                    <Route path="/accessibility-test" element={<AccessibilityTest />} />
+                    <Route path="/accessibility-statement" element={<AccessibilityStatement />} />
+                    <Route path="/offline" element={<OfflinePage />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </Suspense>
+              </BrowserRouter>
+            </TooltipProvider>
+          </AuthProvider>
         </AccessibilityProvider>
       </ThemeProvider>
-    </HelmetProvider>
-  );
-}
+    </QueryClientProvider>
+  </HelmetProvider>
+);
 
 export default App;
