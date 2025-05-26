@@ -1,105 +1,88 @@
 
-import { Suspense, lazy } from "react";
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
-
-// Lazy load pages for better performance
-const Index = lazy(() => import("./pages/Index"));
-const Register = lazy(() => import("./pages/Register"));
-const Login = lazy(() => import("./pages/Login"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
-const Save = lazy(() => import("./pages/Save"));
-const Collections = lazy(() => import("./pages/Collections"));
-const Analytics = lazy(() => import("./pages/Analytics"));
-const Profile = lazy(() => import("./pages/Profile"));
-const Settings = lazy(() => import("./pages/Settings"));
-const About = lazy(() => import("./pages/About"));
-const Features = lazy(() => import("./pages/Features"));
-const Pricing = lazy(() => import("./pages/Pricing"));
-const Blog = lazy(() => import("./pages/Blog"));
-const FAQ = lazy(() => import("./pages/FAQ"));
-const Help = lazy(() => import("./pages/Help"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Terms = lazy(() => import("./pages/Terms"));
-const Privacy = lazy(() => import("./pages/Privacy"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
-const NotFound = lazy(() => import("./pages/NotFound"));
-const AccessibilityTest = lazy(() => import("./pages/AccessibilityTest"));
-const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
-const OfflinePage = lazy(() => import("./pages/OfflinePage"));
-const Reminders = lazy(() => import("./pages/Reminders"));
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { Toaster } from '@/components/ui/toaster';
+import Index from '@/pages/Index';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import Dashboard from '@/pages/Dashboard';
+import Save from '@/pages/Save';
+import Collections from '@/pages/Collections';
+import Analytics from '@/pages/Analytics';
+import Settings from '@/pages/Settings';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import Pricing from '@/pages/Pricing';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
+import Accessibility from '@/pages/Accessibility';
+import FAQ from '@/pages/FAQ';
+import Help from '@/pages/Help';
+import Blog from '@/pages/Blog';
+import Sitemap from '@/pages/Sitemap';
+import Reminders from '@/pages/Reminders';
+import OfflinePage from '@/pages/OfflinePage';
+import ErrorBoundary from '@/components/error/ErrorBoundary';
+import '@/styles/accessibility.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      gcTime: 1000 * 60 * 30, // 30 minutes
+      retry: 1,
+      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
     },
   },
 });
 
-// Professional loading component
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
-    <div className="flex flex-col items-center gap-4">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      <p className="text-sm text-muted-foreground">Loading...</p>
-    </div>
-  </div>
-);
-
-const App = () => (
-  <HelmetProvider>
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AccessibilityProvider>
-          <AuthProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <BrowserRouter>
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/save" element={<Save />} />
-                    <Route path="/collections" element={<Collections />} />
-                    <Route path="/analytics" element={<Analytics />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/features" element={<Features />} />
-                    <Route path="/pricing" element={<Pricing />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/blog/:slug" element={<BlogPost />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/help" element={<Help />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/terms" element={<Terms />} />
-                    <Route path="/privacy" element={<Privacy />} />
-                    <Route path="/accessibility-test" element={<AccessibilityTest />} />
-                    <Route path="/accessibility-statement" element={<AccessibilityStatement />} />
-                    <Route path="/offline" element={<OfflinePage />} />
-                    <Route path="/reminders" element={<Reminders />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Suspense>
-              </BrowserRouter>
-            </TooltipProvider>
-          </AuthProvider>
-        </AccessibilityProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-  </HelmetProvider>
-);
+const App: React.FC = () => {
+  return (
+    <ErrorBoundary>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider>
+            <AccessibilityProvider>
+              <AuthProvider>
+                <Router>
+                  <div className="min-h-screen bg-background text-foreground">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/save" element={<Save />} />
+                      <Route path="/collections" element={<Collections />} />
+                      <Route path="/analytics" element={<Analytics />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/pricing" element={<Pricing />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="/accessibility" element={<Accessibility />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/help" element={<Help />} />
+                      <Route path="/blog" element={<Blog />} />
+                      <Route path="/sitemap" element={<Sitemap />} />
+                      <Route path="/reminders" element={<Reminders />} />
+                      <Route path="/offline" element={<OfflinePage />} />
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                    <Toaster />
+                  </div>
+                </Router>
+              </AuthProvider>
+            </AccessibilityProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
+    </ErrorBoundary>
+  );
+};
 
 export default App;

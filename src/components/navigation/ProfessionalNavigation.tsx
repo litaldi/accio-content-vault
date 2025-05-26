@@ -1,219 +1,220 @@
 
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { useNavigation } from '@/hooks/use-navigation';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Badge } from '@/components/ui/badge';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
+import NavigationLink from '@/components/common/NavigationLink';
 import { 
-  Home, 
+  Menu, 
+  X, 
+  Sparkles, 
   LayoutDashboard,
-  Save,
+  BookmarkPlus,
   FolderOpen,
-  BarChart3, 
-  HelpCircle, 
-  Settings, 
-  User, 
+  BarChart3,
+  Settings,
+  HelpCircle,
+  User,
   LogOut,
-  Menu,
-  X,
-  Sparkles,
-  Info
+  LogIn,
+  UserPlus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const ProfessionalNavigation: React.FC = () => {
+const ProfessionalNavigation = () => {
   const { user, signOut } = useAuth();
   const location = useLocation();
-  const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isMobileMenuOpen, setMobileMenuOpen } = useNavigation();
 
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
-
-  // Completely flat navigation - authenticated users
-  const authenticatedNavItems = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Save Content', path: '/save', icon: Save },
-    { name: 'Collections', path: '/collections', icon: FolderOpen },
-    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
-    { name: 'Help', path: '/help', icon: HelpCircle },
-    { name: 'Profile', path: '/profile', icon: User },
-    { name: 'Settings', path: '/settings', icon: Settings },
-  ];
-
-  // Completely flat navigation - public users
   const publicNavItems = [
-    { name: 'Home', path: '/', icon: Home },
-    { name: 'Features', path: '/features', icon: Sparkles },
-    { name: 'About', path: '/about', icon: Info },
-    { name: 'Pricing', path: '/pricing', icon: BarChart3 },
-    { name: 'Blog', path: '/blog', icon: FolderOpen },
-    { name: 'Help', path: '/help', icon: HelpCircle },
+    { name: 'Home', href: '/', icon: Sparkles },
+    { name: 'About', href: '/about' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'Help', href: '/help', icon: HelpCircle },
   ];
 
-  const mainNavItems = user ? authenticatedNavItems : publicNavItems;
+  const authenticatedNavItems = [
+    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
+    { name: 'Save Content', href: '/save', icon: BookmarkPlus },
+    { name: 'Collections', href: '/collections', icon: FolderOpen },
+    { name: 'Analytics', href: '/analytics', icon: BarChart3 },
+    { name: 'Settings', href: '/settings', icon: Settings },
+  ];
+
+  const navItems = user ? authenticatedNavItems : publicNavItems;
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      navigate('/');
-      setIsMobileMenuOpen(false);
+      setMobileMenuOpen(false);
     } catch (error) {
-      console.error('Error signing out:', error);
+      console.error('Sign out error:', error);
     }
-  };
-
-  const handleMobileNavClick = (path: string) => {
-    navigate(path);
-    setIsMobileMenuOpen(false);
   };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-8" role="navigation" aria-label="Main navigation">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center gap-3 hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary rounded-lg p-1"
-            aria-label="Go to Accio homepage"
-          >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
-              <span className="text-primary-foreground font-bold text-xl" aria-hidden="true">A</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-2xl font-bold text-foreground">Accio</span>
-              <span className="text-xs text-muted-foreground leading-none hidden sm:block">Knowledge Engine</span>
-            </div>
-          </Link>
+          <div className="flex items-center">
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md"
+              aria-label="Accio homepage"
+            >
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-white" aria-hidden="true" />
+              </div>
+              <span className="font-bold text-xl">Accio</span>
+              {user && (
+                <Badge variant="secondary" className="ml-2 text-xs">
+                  Pro
+                </Badge>
+              )}
+            </Link>
+          </div>
 
-          {/* Desktop Navigation - Completely Flat */}
-          <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
-            {mainNavItems.map((item) => (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={cn(
-                  "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg",
-                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                  isActive(item.path) 
-                    ? "bg-primary text-primary-foreground shadow-sm" 
-                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                )}
-                aria-current={isActive(item.path) ? 'page' : undefined}
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-1">
+            {navItems.map((item) => (
+              <NavigationLink
+                key={item.href}
+                to={item.href}
+                className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                activeClassName="bg-accent text-accent-foreground"
+                aria-label={`Go to ${item.name}`}
               >
-                <item.icon className="h-4 w-4" aria-hidden="true" />
-                <span>{item.name}</span>
-              </Link>
+                {item.icon && <item.icon className="h-4 w-4 mr-2" aria-hidden="true" />}
+                {item.name}
+              </NavigationLink>
             ))}
-          </nav>
+          </div>
 
-          {/* Desktop Right Side Actions */}
-          <div className="hidden lg:flex items-center gap-2">
-            {/* Accessibility Button - Icon Only */}
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center space-x-2">
             <AccessibilityButton variant="header" />
-
+            
             {user ? (
-              <Button 
-                variant="ghost" 
-                onClick={handleSignOut}
-                className="flex items-center gap-2 text-sm font-medium"
-                aria-label="Sign out"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </Button>
-            ) : (
-              <div className="flex items-center gap-3">
-                <Button variant="ghost" asChild>
-                  <Link to="/login">Sign In</Link>
+              <div className="flex items-center space-x-2">
+                <NavigationLink
+                  to="/settings"
+                  className="p-2 rounded-md hover:bg-accent"
+                  aria-label="User settings"
+                >
+                  <User className="h-4 w-4" aria-hidden="true" />
+                </NavigationLink>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2"
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-4 w-4" aria-hidden="true" />
+                  Sign Out
                 </Button>
-                <Button asChild className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
+              </div>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login" className="flex items-center gap-2">
+                    <LogIn className="h-4 w-4" aria-hidden="true" />
+                    Sign In
+                  </Link>
+                </Button>
+                <Button size="sm" asChild>
                   <Link to="/register" className="flex items-center gap-2">
-                    <Sparkles className="h-4 w-4" />
-                    Start Now
+                    <UserPlus className="h-4 w-4" aria-hidden="true" />
+                    Sign Up
                   </Link>
                 </Button>
               </div>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="lg:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label="Toggle mobile menu"
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
-        </div>
-
-        {/* Mobile Menu - Completely Flat */}
-        {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border animate-fade-in">
-            <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
-              {/* All Navigation Items */}
-              {mainNavItems.map((item) => (
-                <button
-                  key={item.path}
-                  onClick={() => handleMobileNavClick(item.path)}
-                  className={cn(
-                    "flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors w-full text-left",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-                    isActive(item.path)
-                      ? "bg-primary text-primary-foreground"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+          {/* Mobile Menu */}
+          <div className="md:hidden flex items-center space-x-2">
+            <AccessibilityButton variant="header" />
+            <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="md:hidden"
+                  aria-label="Open menu"
+                  aria-expanded={isMobileMenuOpen}
+                  aria-controls="mobile-menu"
+                >
+                  {isMobileMenuOpen ? (
+                    <X className="h-5 w-5" aria-hidden="true" />
+                  ) : (
+                    <Menu className="h-5 w-5" aria-hidden="true" />
                   )}
-                  aria-current={isActive(item.path) ? 'page' : undefined}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.name}
-                </button>
-              ))}
-              
-              <div className="border-t border-border my-3"></div>
-              
-              {/* Auth Actions */}
-              {user ? (
-                <button
-                  onClick={handleSignOut}
-                  className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors w-full text-left"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </button>
-              ) : (
-                <>
-                  <button
-                    onClick={() => handleMobileNavClick('/login')}
-                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors w-full text-left"
-                  >
-                    Sign In
-                  </button>
-                  <button
-                    onClick={() => handleMobileNavClick('/register')}
-                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors w-full text-left"
-                  >
-                    <Sparkles className="h-4 w-4" />
-                    Start Now
-                  </button>
-                </>
-              )}
-
-              {/* Accessibility Button for Mobile */}
-              <div className="px-3 py-2">
-                <AccessibilityButton variant="inline" />
-              </div>
-            </nav>
+                </Button>
+              </SheetTrigger>
+              <SheetContent id="mobile-menu" side="right" className="w-80">
+                <div className="flex flex-col space-y-4 mt-8">
+                  {navItems.map((item) => (
+                    <NavigationLink
+                      key={item.href}
+                      to={item.href}
+                      className="flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                      activeClassName="bg-accent text-accent-foreground"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.icon && <item.icon className="h-5 w-5 mr-3" aria-hidden="true" />}
+                      {item.name}
+                    </NavigationLink>
+                  ))}
+                  
+                  <div className="border-t pt-4 mt-4">
+                    {user ? (
+                      <div className="space-y-2">
+                        <NavigationLink
+                          to="/settings"
+                          className="flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <User className="h-5 w-5 mr-3" aria-hidden="true" />
+                          Profile
+                        </NavigationLink>
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start px-3 py-2 h-auto"
+                          onClick={handleSignOut}
+                        >
+                          <LogOut className="h-5 w-5 mr-3" aria-hidden="true" />
+                          Sign Out
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        <Button variant="ghost" className="w-full justify-start" asChild>
+                          <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                            <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
+                            Sign In
+                          </Link>
+                        </Button>
+                        <Button className="w-full justify-start" asChild>
+                          <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
+                            <UserPlus className="h-4 w-4 mr-2" aria-hidden="true" />
+                            Sign Up
+                          </Link>
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
           </div>
-        )}
-      </div>
+        </div>
+      </nav>
     </header>
   );
 };

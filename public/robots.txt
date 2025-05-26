@@ -1,14 +1,26 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
 
 User-agent: *
 Allow: /
+
+# Important pages
+Allow: /
+Allow: /about
+Allow: /pricing
+Allow: /help
+Allow: /contact
+Allow: /accessibility
+Allow: /privacy
+Allow: /terms
+Allow: /sitemap
+
+# Disallow user-specific pages
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /save
+Disallow: /collections
+Disallow: /analytics
+Disallow: /login
+Disallow: /register
+
+# Sitemap
+Sitemap: https://accio.app/sitemap.xml
