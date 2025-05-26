@@ -121,7 +121,7 @@ export const ContentRecommendations: React.FC<ContentRecommendationsProps> = ({
         filteredRecs = filteredRecs.map(rec => {
           const commonTags = rec.tags.filter(tag => 
             currentContent.tags?.some(currentTag => 
-              currentTag.toLowerCase().includes(tag.toLowerCase())
+              currentTag.name.toLowerCase().includes(tag.toLowerCase())
             )
           ).length;
           
