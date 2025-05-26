@@ -3,24 +3,21 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import NewMainNavigation from '@/components/navigation/NewMainNavigation';
-import AppFooter from '@/components/layout/AppFooter';
+import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
+import MarketingFooter from '@/components/Footer/MarketingFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
 import { Toaster } from '@/components/ui/toaster';
 
-interface ImprovedUnifiedLayoutProps {
+interface UnifiedLayoutProps {
   children: React.ReactNode;
   className?: string;
   showNavigation?: boolean;
   showFooter?: boolean;
   fullWidth?: boolean;
-  isLoggedIn?: boolean;
-  user?: any;
-  onSignOut?: () => void;
 }
 
-export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
+export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
   children,
   className,
   showNavigation = true,
@@ -28,7 +25,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
   fullWidth = false
 }) => {
   const { isMobile } = useResponsiveDesign();
-  const { preferences, announceToScreenReader } = useAccessibility();
+  const { preferences } = useAccessibility();
 
   return (
     <div 
@@ -40,8 +37,6 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
         preferences.reducedMotion && "reduce-motion",
         preferences.fontSize === 'large' && "text-lg",
         preferences.fontSize === 'small' && "text-sm",
-        // Enhanced dark mode support
-        "dark:bg-background dark:text-foreground",
         className
       )}
       lang="en"
@@ -50,7 +45,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
       <SkipLinks />
 
       {/* Navigation */}
-      {showNavigation && <NewMainNavigation />}
+      {showNavigation && <OrganizedNavigation />}
 
       {/* Main Content */}
       <main
@@ -70,20 +65,12 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
       <AccessibilityButton variant="floating" />
 
       {/* Footer */}
-      {showFooter && <AppFooter />}
+      {showFooter && <MarketingFooter />}
 
       {/* Toast Notifications */}
       <Toaster />
-
-      {/* Screen reader announcements region */}
-      <div 
-        id="announcements" 
-        aria-live="polite" 
-        aria-atomic="true" 
-        className="sr-only"
-      />
     </div>
   );
 };
 
-export default ImprovedUnifiedLayout;
+export default UnifiedLayout;

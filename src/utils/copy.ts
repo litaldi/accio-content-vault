@@ -19,9 +19,9 @@ export const copy = {
     signIn: 'Sign In',
     signOut: 'Sign Out',
     signUp: 'Sign Up',
-    getStarted: 'Get Started',
+    getStarted: 'Start Now',
     welcome: 'Welcome back',
-    createAccount: 'Create your account',
+    createAccount: 'Create your free account',
     forgotPassword: 'Forgot password?',
     rememberMe: 'Remember me',
     alreadyHaveAccount: 'Already have an account?',
@@ -31,13 +31,13 @@ export const copy = {
   },
   navigation: {
     home: 'Home',
-    dashboard: 'Dashboard',
-    saveContent: 'Save Content',
-    collections: 'Collections',
-    analytics: 'Analytics',
-    profile: 'Profile',
-    settings: 'Settings',
-    help: 'Help'
+    dashboard: 'Get Organized Faster',
+    saveContent: 'Save Your First Content',
+    collections: 'Organize Collections',
+    analytics: 'Track Your Growth',
+    profile: 'Manage Your Profile',
+    settings: 'Customize Experience',
+    help: 'Get Help & Support'
   },
   accessibility: {
     skipToContent: 'Skip to main content',
@@ -49,47 +49,47 @@ export const copy = {
     hidePassword: 'Hide password'
   },
   headlines: {
-    hero: 'Your Personal Knowledge Engine',
-    subhero: 'Transform scattered bookmarks into an AI-powered knowledge base. Save anything, find everything, achieve more.'
+    hero: 'Never lose track of valuable knowledge again',
+    subhero: 'Transform scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything instantly, achieve 10x productivity.'
   },
   social: {
-    companies: 'Trusted by teams at leading companies',
+    companies: 'Trusted by professionals at leading companies',
     userCount: '10,000+',
-    rating: '4.8/5 stars'
+    rating: '4.9/5 stars'
   },
   trust: {
-    freeTrial: 'Free 14-day trial'
+    freeTrial: 'Free forever plan'
   },
   emptyStates: {
     library: {
-      title: 'Your library is empty',
-      description: 'Start building your knowledge base by saving your first piece of content.',
-      action: 'Save Content'
+      title: 'Your knowledge library awaits',
+      description: 'Start building your personal knowledge engine by saving your first piece of content.',
+      action: 'Save Your First Content'
     },
     search: {
       title: 'No results found',
-      description: 'Try adjusting your search terms or browse your collections.',
+      description: 'Try different keywords or browse your organized collections.',
       action: 'Browse Collections'
     },
     dashboard: {
-      title: 'Welcome to your dashboard',
+      title: 'Welcome to your knowledge engine',
       description: 'Once you start saving content, your insights and analytics will appear here.',
-      action: 'Get Started'
+      action: 'Start Saving Content'
     },
     recent: {
-      title: 'No recent activity',
-      description: 'Your recently viewed content will appear here as you browse.',
-      action: 'Explore Content'
+      title: 'No recent activity yet',
+      description: 'Your recently viewed content will appear here as you explore.',
+      action: 'Explore Your Library'
     }
   },
   onboarding: {
     welcome: {
-      subtitle: 'Welcome to Accio'
+      subtitle: 'Welcome to your AI Knowledge Engine'
     },
     step1: {
       title: 'Save Any Content',
-      description: 'Capture articles, links, and resources with ease',
-      tip: 'Never lose track of valuable content again'
+      description: 'Capture articles, links, and resources with one click',
+      tip: 'Never lose track of valuable information again'
     },
     step2: {
       title: 'AI-Powered Organization',
@@ -97,35 +97,35 @@ export const copy = {
       tip: 'Smart organization that learns from your preferences'
     },
     step3: {
-      title: 'Find Anything Instantly',
+      title: 'Find Everything Instantly',
       description: 'Search through your content with natural language',
       tip: 'Ask questions and get the answers you need'
     },
     step4: {
       title: 'Access Everywhere',
-      description: 'Your content is synchronized across all devices',
+      description: 'Your knowledge is synchronized across all devices',
       tip: 'Work seamlessly from anywhere'
     }
   },
   benefits: {
-    saveAnything: 'Save anything from the web',
-    crossDevice: 'Access from any device',
-    smartTags: 'AI-powered smart tagging',
-    aiOrganization: 'Automatic organization',
-    findFast: 'Lightning-fast search',
-    neverLose: 'Never lose important content',
-    timeBack: 'Get your time back',
-    instantSync: 'Instant synchronization'
+    saveAnything: 'Save anything from the web instantly',
+    crossDevice: 'Access from any device, anywhere',
+    smartTags: 'AI-powered smart categorization',
+    aiOrganization: 'Automatic intelligent organization',
+    findFast: 'Lightning-fast semantic search',
+    neverLose: 'Never lose important information',
+    timeBack: 'Get 5+ hours back every week',
+    instantSync: 'Real-time synchronization'
   },
   buttons: {
     back: 'Back',
     next: 'Next',
-    finish: 'Get Started',
+    finish: 'Start Building',
     close: 'Close',
-    getStarted: 'Get Started',
+    getStarted: 'Start Now',
     exploreFeatures: 'Explore Features'
   },
   loading: {
-    loading: 'Loading...'
+    loading: 'Loading your knowledge...'
   }
 };
