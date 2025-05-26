@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -33,7 +33,7 @@ const About = () => {
   ];
 
   return (
-    <EnhancedUnifiedLayout>
+    <UnifiedLayout>
       <Helmet>
         <title>About - Accio Knowledge Library</title>
         <meta name="description" content="Learn about Accio's mission to help everyone build and access their personal knowledge library efficiently." />
@@ -153,7 +153,7 @@ const About = () => {
           </div>
         </UnifiedSpacing.Container>
       </UnifiedSpacing.Section>
-    </EnhancedUnifiedLayout>
+    </UnifiedLayout>
   );
 };
 

@@ -22,6 +22,8 @@ import Settings from "./pages/Settings";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
 import Help from "./pages/Help";
+import About from "./pages/About";
+import FAQ from "./pages/FAQ";
 
 // Import error pages
 import NotFound from "./pages/NotFound";
@@ -50,6 +52,8 @@ function App() {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/help" element={<Help />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/faq" element={<FAQ />} />
                     
                     {/* Protected routes - require authentication */}
                     <Route path="/dashboard" element={
@@ -91,7 +95,6 @@ function App() {
                     {/* Marketing pages - redirect to home for now */}
                     <Route path="/features" element={<Navigate to="/#features" replace />} />
                     <Route path="/pricing" element={<Navigate to="/#pricing" replace />} />
-                    <Route path="/about" element={<Navigate to="/#about" replace />} />
                     <Route path="/terms" element={<Navigate to="/help#terms" replace />} />
                     <Route path="/privacy" element={<Navigate to="/help#privacy" replace />} />
                     
