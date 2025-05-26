@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
+import ResponsiveNavigation from '@/components/navigation/ResponsiveNavigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -66,7 +66,7 @@ const Login = () => {
     } catch (error: any) {
       console.error('Login error:', error);
       toast({
-        title: "Sign in failed",
+        title: "Authentication error",
         description: error.message || "Invalid email or password. Please try again.",
         variant: "destructive",
       });
@@ -86,7 +86,7 @@ const Login = () => {
         <meta name="description" content="Sign in to your Accio account to access your knowledge collection and insights." />
       </Helmet>
 
-      <Header />
+      <ResponsiveNavigation />
 
       <main className="flex-grow flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md space-y-8">
@@ -180,11 +180,15 @@ const Login = () => {
                   type="submit"
                   className="w-full"
                   disabled={isLoading}
-                  loading={isLoading}
-                  loadingText="Signing in..."
                 >
-                  {!isLoading && <ArrowRight className="h-4 w-4 mr-2" />}
-                  Sign in
+                  {isLoading ? (
+                    "Signing in..."
+                  ) : (
+                    <>
+                      <ArrowRight className="h-4 w-4 mr-2" />
+                      Sign in
+                    </>
+                  )}
                 </Button>
               </form>
 
