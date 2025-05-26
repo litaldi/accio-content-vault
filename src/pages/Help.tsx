@@ -8,104 +8,96 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Search, BookOpen, Video, MessageCircle, Mail, Phone, 
-  ArrowRight, Zap, Users, GraduationCap, LifeBuoy 
+  Search, 
+  BookOpen, 
+  MessageCircle, 
+  Mail, 
+  Phone, 
+  Clock,
+  ChevronRight,
+  HelpCircle,
+  Zap,
+  Users,
+  Settings
 } from 'lucide-react';
 
 const Help = () => {
   const helpCategories = [
     {
-      icon: Zap,
       title: "Getting Started",
-      description: "Set up your account and start organizing in minutes",
+      description: "Learn the basics of using Accio",
+      icon: Zap,
       articles: [
-        "How to create your first collection",
+        "Creating your first collection",
         "Installing the browser extension", 
-        "Importing your existing bookmarks",
+        "Setting up your workspace",
         "Understanding AI organization"
       ],
       color: "text-green-600"
     },
     {
-      icon: Search,
-      title: "Search & Discovery",
-      description: "Master the art of finding exactly what you need",
+      title: "Account & Settings",
+      description: "Manage your account and preferences",
+      icon: Settings,
       articles: [
-        "Using natural language search",
-        "Advanced search operators",
-        "Creating smart filters",
-        "Search shortcuts and tips"
+        "Account settings and profile",
+        "Privacy and security options",
+        "Notification preferences",
+        "Billing and subscription"
       ],
       color: "text-blue-600"
     },
     {
+      title: "Collaboration",
+      description: "Share and work with your team",
       icon: Users,
-      title: "Team Collaboration",
-      description: "Share knowledge and collaborate effectively",
       articles: [
-        "Creating shared collections",
-        "Managing team permissions",
-        "Collaborative tagging",
-        "Team analytics dashboard"
+        "Sharing collections with others",
+        "Team workspace setup",
+        "Permission management",
+        "Collaborative editing"
       ],
       color: "text-purple-600"
-    },
-    {
-      icon: GraduationCap,
-      title: "Best Practices",
-      description: "Pro tips from power users and productivity experts",
-      articles: [
-        "Building an effective knowledge system",
-        "Organizing research projects",
-        "Creating learning collections",
-        "Productivity workflows"
-      ],
-      color: "text-orange-600"
     }
   ];
 
-  const supportOptions = [
+  const quickActions = [
     {
+      title: "Search Documentation",
+      description: "Find answers in our knowledge base",
+      icon: Search,
+      action: "Browse Docs"
+    },
+    {
+      title: "Contact Support",
+      description: "Get help from our team",
       icon: MessageCircle,
-      title: "Live Chat",
-      description: "Get instant help from our support team",
-      action: "Start Chat",
-      available: "Available 24/7"
+      action: "Start Chat"
     },
     {
-      icon: Video,
       title: "Video Tutorials",
-      description: "Watch step-by-step guides and walkthroughs", 
-      action: "Browse Videos",
-      available: "50+ tutorials"
+      description: "Watch step-by-step guides",
+      icon: BookOpen,
+      action: "Watch Now"
     },
     {
+      title: "Report a Bug",
+      description: "Help us improve Accio",
       icon: Mail,
-      title: "Email Support",
-      description: "Send us detailed questions for thorough assistance",
-      action: "Contact Us",
-      available: "Response within 4 hours"
+      action: "Report Issue"
     }
-  ];
-
-  const popularArticles = [
-    "How to save content from any website",
-    "Understanding AI-powered tagging",
-    "Setting up team workspaces",
-    "Exporting your data",
-    "Keyboard shortcuts guide",
-    "Troubleshooting sync issues"
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Help Center - Accio Support & Learning Resources</title>
-        <meta name="description" content="Get help with Accio's knowledge management platform. Tutorials, guides, FAQs, and support to help you organize information and boost productivity." />
-        <meta name="keywords" content="accio help, knowledge management support, tutorials, how to guides, customer support" />
+        <title>Help Center - Get Support and Learn How to Use Accio</title>
+        <meta name="description" content="Find answers, tutorials, and get support for Accio. Learn how to organize your knowledge effectively with our comprehensive help center." />
+        <meta name="keywords" content="help, support, tutorials, documentation, knowledge management help" />
         
-        <meta property="og:title" content="Accio Help Center - Get Support & Learn" />
-        <meta property="og:description" content="Complete support resources for Accio users. Tutorials, guides, and instant help to maximize your productivity." />
+        <meta property="og:title" content="Accio Help Center - Support & Tutorials" />
+        <meta property="og:description" content="Get help with Accio's knowledge management platform. Find tutorials, FAQs, and contact support." />
+        <meta property="og:type" content="website" />
         
         <link rel="canonical" href="https://accio.app/help" />
       </Helmet>
@@ -114,79 +106,71 @@ const Help = () => {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
+        <section className="py-16 lg:py-24 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="outline" className="mb-6 bg-blue-50 border-blue-200 text-blue-800">
-              💡 Help Center
-            </Badge>
-            
             <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              How can we help you succeed?
+              How can we help you today?
             </h1>
-            
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Get the most out of Accio with our comprehensive guides, tutorials, 
-              and expert support. We're here to help you organize knowledge like a pro.
+            <p className="text-xl text-muted-foreground mb-8">
+              Find answers, get support, and learn how to make the most of Accio's knowledge management platform.
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-lg mx-auto mb-8">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                <Input 
-                  type="search"
-                  placeholder="Search help articles..."
-                  className="pl-10 pr-4 py-3 text-lg"
-                />
-                <Button className="absolute right-1 top-1/2 transform -translate-y-1/2">
-                  Search
-                </Button>
-              </div>
+            <div className="relative max-w-2xl mx-auto mb-8">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input 
+                type="search"
+                placeholder="Search for help articles, tutorials, or features..."
+                className="pl-12 pr-4 py-4 text-lg border-2 focus:border-primary"
+                aria-label="Search help articles"
+              />
+              <Button className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                Search
+              </Button>
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
+            <div className="grid md:grid-cols-3 gap-6 mt-12">
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">50+</div>
-                <div className="text-sm text-muted-foreground">Video Tutorials</div>
+                <div className="text-2xl font-bold text-primary mb-2">200+</div>
+                <div className="text-sm text-muted-foreground">Help articles</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">200+</div>
-                <div className="text-sm text-muted-foreground">Help Articles</div>
+                <div className="text-2xl font-bold text-primary mb-2">&lt;2min</div>
+                <div className="text-sm text-muted-foreground">Average response time</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">24/7</div>
-                <div className="text-sm text-muted-foreground">Support</div>
+                <div className="text-2xl font-bold text-primary mb-2">24/7</div>
+                <div className="text-sm text-muted-foreground">Support available</div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Support Options */}
-        <section className="py-16 border-b border-border">
+        {/* Quick Actions */}
+        <section className="py-16 bg-muted/20">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Get help your way</h2>
+              <h2 className="text-3xl font-bold mb-4">Popular Help Topics</h2>
               <p className="text-xl text-muted-foreground">
-                Choose the support method that works best for you
+                Quick access to the most requested support resources
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              {supportOptions.map((option, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow border-0 bg-background">
-                  <CardHeader>
-                    <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center">
-                      <option.icon className="h-8 w-8 text-primary" />
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {quickActions.map((action, index) => (
+                <Card key={index} className="text-center border-0 bg-background hover:shadow-lg transition-all duration-300 group cursor-pointer">
+                  <CardContent className="pt-6">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <action.icon className="h-8 w-8 text-primary" />
                     </div>
-                    <CardTitle className="text-xl">{option.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-4">{option.description}</p>
-                    <p className="text-sm text-primary font-medium mb-6">{option.available}</p>
-                    <Button className="w-full">
-                      {option.action}
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                    <h3 className="text-lg font-semibold mb-2">{action.title}</h3>
+                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+                      {action.description}
+                    </p>
+                    <Button variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                      {action.action}
+                      <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   </CardContent>
                 </Card>
@@ -196,47 +180,44 @@ const Help = () => {
         </section>
 
         {/* Help Categories */}
-        <section className="py-20">
-          <div className="container mx-auto px-4 max-w-7xl">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Browse by category</h2>
+        <section className="py-16">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Browse by Category</h2>
               <p className="text-xl text-muted-foreground">
-                Find detailed guides organized by topic
+                Explore detailed guides and tutorials organized by topic
               </p>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8">
+            <div className="grid lg:grid-cols-3 gap-8">
               {helpCategories.map((category, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow border-0 bg-background">
+                <Card key={index} className="border-0 bg-background hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                    <div className="flex items-center gap-4 mb-4">
+                      <div className="p-3 rounded-2xl bg-muted">
                         <category.icon className={`h-6 w-6 ${category.color}`} />
                       </div>
-                      <div>
-                        <CardTitle className="text-xl">{category.title}</CardTitle>
-                        <p className="text-muted-foreground">{category.description}</p>
-                      </div>
+                      <Badge variant="secondary" className="text-xs">
+                        {category.articles.length} articles
+                      </Badge>
                     </div>
+                    <CardTitle className="text-xl">{category.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="space-y-3">
+                    <p className="text-muted-foreground mb-6 leading-relaxed">
+                      {category.description}
+                    </p>
+                    <div className="space-y-2">
                       {category.articles.map((article, articleIndex) => (
-                        <li key={articleIndex}>
-                          <a 
-                            href="#" 
-                            className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-                          >
-                            <BookOpen className="h-4 w-4" />
-                            {article}
-                          </a>
-                        </li>
+                        <button 
+                          key={articleIndex}
+                          className="flex items-center justify-between w-full p-2 text-left text-sm hover:bg-muted/50 rounded-lg transition-colors"
+                        >
+                          <span>{article}</span>
+                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                        </button>
                       ))}
-                    </ul>
-                    <Button variant="outline" className="w-full mt-6">
-                      View All Articles
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
@@ -244,59 +225,48 @@ const Help = () => {
           </div>
         </section>
 
-        {/* Popular Articles */}
-        <section className="py-20 bg-muted/20">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Most popular articles</h2>
-              <p className="text-xl text-muted-foreground">
-                Quick answers to the most common questions
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4">
-              {popularArticles.map((article, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  className="flex items-center gap-3 p-4 bg-background rounded-xl border hover:border-primary/50 hover:shadow-sm transition-all group"
-                >
-                  <BookOpen className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                  <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                    {article}
-                  </span>
-                  <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Contact CTA */}
-        <section className="py-20">
+        {/* Contact Support */}
+        <section className="py-16 bg-gradient-to-r from-primary to-blue-600 text-white">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 rounded-3xl p-8 md:p-12">
-              <LifeBuoy className="h-16 w-16 mx-auto mb-6 text-primary" />
-              <h2 className="text-3xl font-bold mb-4">
-                Still need help?
-              </h2>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Our support team is standing by to help you succeed. 
-                Get personalized assistance from knowledge management experts.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="text-lg px-8 py-4">
-                  <MessageCircle className="mr-2 h-5 w-5" />
-                  Start Live Chat
-                </Button>
-                <Button variant="outline" size="lg" className="text-lg px-8 py-4">
-                  <Mail className="mr-2 h-5 w-5" />
-                  Email Support
-                </Button>
+            <h2 className="text-3xl font-bold mb-6">Still need help?</h2>
+            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+              Our support team is here to help. Get in touch and we'll get back to you quickly.
+            </p>
+            
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="text-center">
+                <MessageCircle className="h-8 w-8 mx-auto mb-3 opacity-90" />
+                <h3 className="font-semibold mb-2">Live Chat</h3>
+                <p className="text-sm opacity-75">Available 24/7</p>
               </div>
-              <p className="text-sm text-muted-foreground mt-6">
-                Average response time: 4 hours • Available 24/7
-              </p>
+              <div className="text-center">
+                <Mail className="h-8 w-8 mx-auto mb-3 opacity-90" />
+                <h3 className="font-semibold mb-2">Email Support</h3>
+                <p className="text-sm opacity-75">help@accio.app</p>
+              </div>
+              <div className="text-center">
+                <Clock className="h-8 w-8 mx-auto mb-3 opacity-90" />
+                <h3 className="font-semibold mb-2">Response Time</h3>
+                <p className="text-sm opacity-75">Under 2 minutes</p>
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                size="lg" 
+                className="bg-white text-primary hover:bg-white/95 text-lg px-8 py-4 font-semibold"
+              >
+                <MessageCircle className="mr-2 h-5 w-5" />
+                Start Live Chat
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white/50 text-white hover:bg-white/10 text-lg px-8 py-4 font-semibold"
+              >
+                <Mail className="mr-2 h-5 w-5" />
+                Send Email
+              </Button>
             </div>
           </div>
         </section>

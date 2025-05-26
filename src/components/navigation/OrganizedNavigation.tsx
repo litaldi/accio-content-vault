@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useTheme } from '@/components/theme/ThemeProvider';
+import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -166,6 +167,7 @@ const OrganizedNavigation: React.FC = () => {
 
   return (
     <header 
+      id="navigation"
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300 border-b",
         scrolled 
@@ -223,6 +225,7 @@ const OrganizedNavigation: React.FC = () => {
                     )}
                     aria-expanded="false"
                     aria-haspopup="true"
+                    aria-label={`${category.label} menu`}
                   >
                     {category.label}
                     <ChevronDown className="ml-1 h-3 w-3 transition-transform duration-200" aria-hidden="true" />
@@ -249,6 +252,7 @@ const OrganizedNavigation: React.FC = () => {
                           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                           location.pathname === item.href && "bg-accent text-accent-foreground"
                         )}
+                        aria-current={location.pathname === item.href ? 'page' : undefined}
                       >
                         <item.icon className="h-4 w-4" aria-hidden="true" />
                         <div className="flex flex-col">
@@ -268,6 +272,9 @@ const OrganizedNavigation: React.FC = () => {
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
+          {/* Accessibility Button */}
+          <AccessibilityButton variant="header" />
+
           {/* Theme Toggle */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -419,6 +426,7 @@ const OrganizedNavigation: React.FC = () => {
                               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                               location.pathname === item.href && "bg-accent text-accent-foreground"
                             )}
+                            aria-current={location.pathname === item.href ? 'page' : undefined}
                           >
                             <item.icon className="h-4 w-4" aria-hidden="true" />
                             <div className="flex flex-col">

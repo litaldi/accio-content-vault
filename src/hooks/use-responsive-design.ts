@@ -1,78 +1,53 @@
 
 import { useState, useEffect } from 'react';
 
-export interface ResponsiveBreakpoints {
-  sm: boolean;   // >= 640px
-  md: boolean;   // >= 768px
-  lg: boolean;   // >= 1024px
-  xl: boolean;   // >= 1280px
-  '2xl': boolean; // >= 1536px
-}
-
-export interface ResponsiveState extends ResponsiveBreakpoints {
+interface ResponsiveBreakpoints {
   isMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
+  isLarge: boolean;
   screenWidth: number;
-  orientation: 'portrait' | 'landscape';
 }
 
-export const useResponsiveDesign = (): ResponsiveState => {
-  const [state, setState] = useState<ResponsiveState>({
-    sm: false,
-    md: false,
-    lg: false,
-    xl: false,
-    '2xl': false,
+export const useResponsiveDesign = (): ResponsiveBreakpoints => {
+  const [breakpoints, setBreakpoints] = useState<ResponsiveBreakpoints>({
     isMobile: false,
     isTablet: false,
     isDesktop: false,
+    isLarge: false,
     screenWidth: 0,
-    orientation: 'landscape'
   });
 
   useEffect(() => {
-    const updateScreenInfo = () => {
+    const updateBreakpoints = () => {
       const width = window.innerWidth;
-      const height = window.innerHeight;
       
-      const breakpoints = {
-        sm: width >= 640,
-        md: width >= 768,
-        lg: width >= 1024,
-        xl: width >= 1280,
-        '2xl': width >= 1536
-      };
-
-      setState({
-        ...breakpoints,
+      setBreakpoints({
         isMobile: width < 768,
         isTablet: width >= 768 && width < 1024,
-        isDesktop: width >= 1024,
+        isDesktop: width >= 1024 && width < 1440,
+        isLarge: width >= 1440,
         screenWidth: width,
-        orientation: width > height ? 'landscape' : 'portrait'
       });
     };
 
-    // Initial call
-    updateScreenInfo();
+    // Set initial values
+    updateBreakpoints();
 
-    // Add event listener with throttling
+    // Add event listener with debouncing
     let timeoutId: NodeJS.Timeout;
-    const handleResize = () => {
+    const debouncedResize = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(updateScreenInfo, 100);
+      timeoutId = setTimeout(updateBreakpoints, 150);
     };
 
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
-
+    window.addEventListener('resize', debouncedResize);
+    
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
+      window.removeEventListener('resize', debouncedResize);
       clearTimeout(timeoutId);
     };
   }, []);
 
-  return state;
+  return breakpoints;
 };
