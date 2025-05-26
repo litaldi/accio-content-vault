@@ -2,49 +2,74 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Typography, Spacing } from '@/components/ui/design-system';
-import { Star } from 'lucide-react';
+import { Star, Quote } from 'lucide-react';
 
-const TestimonialsSection: React.FC = () => {
+const TestimonialsSection = () => {
   const testimonials = [
     {
-      name: "Sarah Johnson",
+      name: "Sarah Chen",
       role: "Product Manager",
-      content: "Accio has completely transformed how I organize my research. The AI insights are incredibly accurate.",
-      rating: 5
+      company: "TechCorp",
+      content: "Accio transformed how I manage information. The AI tagging is incredibly accurate, and I can find anything in seconds.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b17c?w=64&h=64&fit=crop&crop=face"
     },
     {
-      name: "Michael Chen",
-      role: "Data Scientist",
-      content: "The search functionality is lightning fast and finds exactly what I need every time.",
-      rating: 5
+      name: "Marcus Rodriguez",
+      role: "Researcher",
+      company: "University Labs",
+      content: "As a researcher, I collect massive amounts of data. Accio's smart collections help me organize everything automatically.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=64&h=64&fit=crop&crop=face"
+    },
+    {
+      name: "Emily Watson",
+      role: "Content Creator",
+      company: "Creative Studio",
+      content: "The semantic search is a game-changer. I can describe what I'm looking for naturally and find exactly what I need.",
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=64&h=64&fit=crop&crop=face"
     }
   ];
 
   return (
-    <Spacing.Section size="lg">
+    <Spacing.Section className="bg-muted/20">
       <Spacing.Container>
         <div className="text-center mb-12">
-          <Typography.H2>What Our Users Say</Typography.H2>
+          <Typography.H2 className="mb-4">Loved by Knowledge Workers</Typography.H2>
           <Typography.Lead>
-            Hear from professionals who've transformed their knowledge management with Accio
+            Join thousands who've transformed their information management
           </Typography.Lead>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="p-6">
-              <CardContent className="pt-0">
-                <div className="flex mb-4">
+            <Card key={index} className="relative">
+              <CardContent className="p-6">
+                <Quote className="h-8 w-8 text-primary/20 mb-4" />
+                
+                <div className="flex items-center mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="h-4 w-4 fill-primary text-primary" />
                   ))}
                 </div>
-                <Typography.Body className="mb-4 italic">
+                
+                <Typography.Body className="mb-6 italic">
                   "{testimonial.content}"
                 </Typography.Body>
-                <div>
-                  <Typography.Body className="font-semibold">{testimonial.name}</Typography.Body>
-                  <Typography.Body className="text-sm text-muted-foreground">{testimonial.role}</Typography.Body>
+                
+                <div className="flex items-center">
+                  <img
+                    src={testimonial.avatar}
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full mr-4"
+                  />
+                  <div>
+                    <div className="font-semibold">{testimonial.name}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {testimonial.role} at {testimonial.company}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>

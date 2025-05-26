@@ -1,70 +1,78 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Check } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Typography, Spacing } from '@/components/ui/design-system';
+import { Check, Sparkles, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const PricingSection: React.FC = () => {
+const PricingSection = () => {
   const plans = [
     {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for getting started',
+      name: "Free",
+      price: "$0",
+      description: "Perfect for getting started",
       features: [
-        'Save up to 100 items',
-        'Basic search',
-        'Tag organization',
-        'Mobile app access'
+        "Save up to 100 items",
+        "3 collections",
+        "Basic search",
+        "Web capture"
       ],
-      buttonText: 'Get Started',
-      buttonVariant: 'outline' as const
+      cta: "Start Free",
+      href: "/register",
+      popular: false
     },
     {
-      name: 'Pro',
-      price: '$9',
-      period: 'month',
-      description: 'For power users',
+      name: "Pro",
+      price: "$9",
+      description: "For serious knowledge workers",
       features: [
-        'Unlimited saved items',
-        'Advanced AI search',
-        'Smart suggestions',
-        'Priority support',
-        'Export functionality',
-        'Team collaboration'
+        "Unlimited items",
+        "Unlimited collections",
+        "AI-powered search",
+        "Advanced analytics",
+        "Priority support"
       ],
-      buttonText: 'Upgrade to Pro',
-      buttonVariant: 'default' as const,
+      cta: "Start Pro Trial",
+      href: "/register",
       popular: true
     }
   ];
 
   return (
-    <section className="py-16 bg-muted/30">
-      <div className="container mx-auto px-4">
+    <Spacing.Section>
+      <Spacing.Container>
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold mb-4">Simple, Transparent Pricing</h2>
-          <p className="text-xl text-muted-foreground">
-            Start free, upgrade when you need more
-          </p>
+          <Badge variant="outline" className="mb-6">
+            <Sparkles className="h-3 w-3 mr-1" />
+            Simple Pricing
+          </Badge>
+          <Typography.H2 className="mb-4">Start Free, Scale as You Grow</Typography.H2>
+          <Typography.Lead>
+            No hidden fees, no surprises. Cancel anytime.
+          </Typography.Lead>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, index) => (
-            <Card key={index} className={plan.popular ? 'border-primary shadow-lg' : ''}>
+            <Card key={index} className={`relative ${plan.popular ? 'ring-2 ring-primary' : ''}`}>
               {plan.popular && (
-                <div className="bg-primary text-primary-foreground text-center py-2 text-sm font-medium">
-                  Most Popular
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                  <Badge className="bg-primary text-primary-foreground">
+                    Most Popular
+                  </Badge>
                 </div>
               )}
-              <CardHeader className="text-center">
+              <CardHeader className="text-center pb-6">
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <div className="mt-4">
                   <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className="text-muted-foreground">/{plan.period}</span>
+                  <span className="text-muted-foreground">/month</span>
                 </div>
-                <CardDescription>{plan.description}</CardDescription>
+                <Typography.Body size="sm" className="mt-2">
+                  {plan.description}
+                </Typography.Body>
               </CardHeader>
               <CardContent className="space-y-6">
                 <ul className="space-y-3">
@@ -75,15 +83,27 @@ const PricingSection: React.FC = () => {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full" variant={plan.buttonVariant} asChild>
-                  <Link to="/register">{plan.buttonText}</Link>
+                <Button 
+                  className={`w-full ${plan.popular ? 'bg-primary hover:bg-primary/90' : ''}`}
+                  variant={plan.popular ? 'default' : 'outline'}
+                  asChild
+                >
+                  <Link to={plan.href}>{plan.cta}</Link>
                 </Button>
               </CardContent>
             </Card>
           ))}
         </div>
-      </div>
-    </section>
+
+        <div className="text-center mt-12">
+          <Button variant="ghost" asChild>
+            <Link to="/pricing" className="flex items-center gap-2">
+              View All Plans <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
+      </Spacing.Container>
+    </Spacing.Section>
   );
 };
 
