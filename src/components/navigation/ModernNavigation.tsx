@@ -25,6 +25,7 @@ import {
   Moon
 } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
+import { copy } from '@/utils/copy';
 
 const ModernNavigation = () => {
   const { user, signOut } = useAuth();
@@ -38,8 +39,8 @@ const ModernNavigation = () => {
     try {
       await signOut();
       toast({
-        title: "Signed out successfully",
-        description: "See you next time!",
+        title: copy.success.signOut,
+        description: "Your knowledge awaits your return.",
       });
       navigate('/');
       setIsMobileMenuOpen(false);
@@ -53,22 +54,22 @@ const ModernNavigation = () => {
   };
 
   const publicNavItems = [
-    { to: '/', label: 'Home', icon: Home },
+    { to: '/', label: copy.navigation.home, icon: Home },
     { to: '/features', label: 'Features', icon: LayoutDashboard },
-    { to: '/blog', label: 'Blog', icon: FileText },
-    { to: '/help', label: 'Help', icon: HelpCircle },
-    { to: '/contact', label: 'Contact', icon: Mail }
+    { to: '/blog', label: copy.navigation.blog, icon: FileText },
+    { to: '/help', label: copy.navigation.help, icon: HelpCircle },
+    { to: '/contact', label: copy.navigation.contact, icon: Mail }
   ];
 
   const userNavItems = [
-    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/collections', label: 'Collections', icon: FolderOpen },
-    { to: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { to: '/profile', label: 'Profile', icon: User },
-    { to: '/settings', label: 'Settings', icon: Settings }
+    { to: '/dashboard', label: copy.navigation.dashboard, icon: LayoutDashboard },
+    { to: '/collections', label: copy.navigation.collections, icon: FolderOpen },
+    { to: '/analytics', label: copy.navigation.analytics, icon: BarChart3 },
+    { to: '/profile', label: copy.navigation.profile, icon: User },
+    { to: '/settings', label: copy.navigation.settings, icon: Settings }
   ];
 
-  const navItems = user ? [...publicNavItems.slice(0, 1), ...userNavItems, ...publicNavItems.slice(-2)] : publicNavItems;
+  const navItems = user ? [...publicNavItems.slice(0, 1), ...userNavItems, ...publicNavItems.slice(-3)] : publicNavItems;
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
@@ -97,7 +98,7 @@ const ModernNavigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center space-x-1" role="navigation" aria-label={copy.accessibility.mainNavigation}>
             {navItems.map((item) => (
               <Button
                 key={item.to}
@@ -125,7 +126,7 @@ const ModernNavigation = () => {
               variant="ghost"
               size="sm"
               onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-label={copy.accessibility.toggleTheme}
               className="w-9 h-9"
             >
               {theme === 'dark' ? (
@@ -140,7 +141,7 @@ const ModernNavigation = () => {
                 <Button variant="outline" size="sm" asChild>
                   <Link to="/dashboard" className="flex items-center space-x-2">
                     <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
-                    <span>Save Content</span>
+                    <span>{copy.navigation.saveContent}</span>
                   </Link>
                 </Button>
                 <Button
@@ -150,7 +151,7 @@ const ModernNavigation = () => {
                   className="text-muted-foreground hover:text-foreground"
                 >
                   <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-                  Sign Out
+                  {copy.auth.signOut}
                 </Button>
               </div>
             ) : (
@@ -158,12 +159,12 @@ const ModernNavigation = () => {
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/login">
                     <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Sign In
+                    {copy.auth.signIn}
                   </Link>
                 </Button>
                 <Button size="sm" asChild className="bg-primary hover:bg-primary/90">
                   <Link to="/register" className="flex items-center space-x-2">
-                    <span>Get Started</span>
+                    <span>{copy.auth.getStarted}</span>
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </Button>
@@ -178,7 +179,7 @@ const ModernNavigation = () => {
               variant="ghost"
               size="sm"
               onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              aria-label={copy.accessibility.toggleTheme}
               className="w-9 h-9"
             >
               {theme === 'dark' ? (
@@ -192,7 +193,7 @@ const ModernNavigation = () => {
               variant="ghost"
               size="sm"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-label={isMobileMenuOpen ? copy.accessibility.closeMenu : copy.accessibility.openMenu}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-navigation"
             >
@@ -236,7 +237,7 @@ const ModernNavigation = () => {
                     <Button variant="outline" size="sm" className="w-full justify-start" asChild>
                       <Link to="/dashboard" onClick={closeMobileMenu}>
                         <BookmarkPlus className="h-4 w-4 mr-2" aria-hidden="true" />
-                        Save Content
+                        {copy.navigation.saveContent}
                       </Link>
                     </Button>
                     <Button
@@ -246,7 +247,7 @@ const ModernNavigation = () => {
                       onClick={handleSignOut}
                     >
                       <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-                      Sign Out
+                      {copy.auth.signOut}
                     </Button>
                   </>
                 ) : (
@@ -254,12 +255,12 @@ const ModernNavigation = () => {
                     <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
                       <Link to="/login" onClick={closeMobileMenu}>
                         <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
-                        Sign In
+                        {copy.auth.signIn}
                       </Link>
                     </Button>
                     <Button size="sm" className="w-full" asChild>
                       <Link to="/register" onClick={closeMobileMenu}>
-                        Get Started
+                        {copy.auth.getStarted}
                         <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
                       </Link>
                     </Button>

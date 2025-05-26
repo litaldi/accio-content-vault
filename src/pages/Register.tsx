@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/navigation/ModernNavigation';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Shield, User, Chrome } from 'lucide-react';
+import { copy } from '@/utils/copy';
 
 const Register = () => {
   const { user, signUp } = useAuth();
@@ -40,31 +42,31 @@ const Register = () => {
     const newErrors: Record<string, string> = {};
     
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
+      newErrors.firstName = copy.errors.required;
     }
     
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
+      newErrors.lastName = copy.errors.required;
     }
     
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = copy.errors.required;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = copy.errors.invalidEmail;
     }
     
     if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
+      newErrors.password = copy.errors.required;
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = copy.errors.passwordTooShort;
     }
     
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = copy.errors.passwordMismatch;
     }
     
     if (!acceptTerms) {
-      newErrors.terms = 'You must accept the terms and conditions';
+      newErrors.terms = copy.errors.termsRequired;
     }
     
     setErrors(newErrors);
@@ -82,8 +84,8 @@ const Register = () => {
     try {
       await signUp(formData.email.trim(), formData.password);
       toast({
-        title: "Account created successfully!",
-        description: "Welcome to Accio! You can now start building your knowledge empire.",
+        title: copy.success.accountCreated,
+        description: "You can now start building your knowledge empire.",
       });
       navigate('/dashboard');
     } catch (error: any) {
@@ -145,9 +147,9 @@ const Register = () => {
       <main className="flex-grow flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold">Create your account</h1>
+            <h1 className="text-3xl font-bold">{copy.auth.createAccountTitle}</h1>
             <p className="text-muted-foreground mt-2">
-              Start building your knowledge empire today
+              {copy.auth.createAccountSubtitle}
             </p>
           </div>
 
@@ -167,7 +169,7 @@ const Register = () => {
                 disabled={isLoading}
               >
                 <Chrome className="h-4 w-4 mr-2" aria-hidden="true" />
-                Continue with Google
+                {copy.auth.continueWithGoogle}
               </Button>
 
               <div className="relative">
@@ -183,12 +185,12 @@ const Register = () => {
                 {/* Name Fields */}
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="firstName">First name</Label>
+                    <Label htmlFor="firstName">{copy.forms.firstName}</Label>
                     <div className="relative">
                       <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                       <Input
                         id="firstName"
-                        placeholder="First name"
+                        placeholder={copy.forms.firstNamePlaceholder}
                         value={formData.firstName}
                         onChange={(e) => handleInputChange('firstName', e.target.value)}
                         className={`pl-10 ${errors.firstName ? 'border-destructive' : ''}`}
@@ -203,10 +205,10 @@ const Register = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="lastName">Last name</Label>
+                    <Label htmlFor="lastName">{copy.forms.lastName}</Label>
                     <Input
                       id="lastName"
-                      placeholder="Last name"
+                      placeholder={copy.forms.lastNamePlaceholder}
                       value={formData.lastName}
                       onChange={(e) => handleInputChange('lastName', e.target.value)}
                       className={errors.lastName ? 'border-destructive' : ''}
@@ -222,13 +224,13 @@ const Register = () => {
 
                 {/* Email Field */}
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email address</Label>
+                  <Label htmlFor="email">{copy.forms.email}</Label>
                   <div className="relative">
                     <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder={copy.forms.emailPlaceholder}
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       className={`pl-10 ${errors.email ? 'border-destructive' : ''}`}
@@ -244,7 +246,7 @@ const Register = () => {
 
                 {/* Password Fields */}
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{copy.forms.password}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
@@ -262,7 +264,7 @@ const Register = () => {
                       size="sm"
                       className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
                       onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      aria-label={showPassword ? copy.accessibility.hidePassword : copy.accessibility.showPassword}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -275,13 +277,13 @@ const Register = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Confirm password</Label>
+                  <Label htmlFor="confirmPassword">{copy.forms.confirmPassword}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="Confirm your password"
+                      placeholder={copy.forms.confirmPasswordPlaceholder}
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
                       className={`pl-10 pr-10 ${errors.confirmPassword ? 'border-destructive' : ''}`}
@@ -293,7 +295,7 @@ const Register = () => {
                       size="sm"
                       className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                      aria-label={showConfirmPassword ? copy.accessibility.hidePassword : copy.accessibility.showPassword}
                     >
                       {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
@@ -318,14 +320,7 @@ const Register = () => {
                       htmlFor="terms"
                       className="text-sm font-normal leading-snug peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
                     >
-                      I agree to the{' '}
-                      <Link to="/terms" className="text-primary hover:underline">
-                        Terms of Service
-                      </Link>{' '}
-                      and{' '}
-                      <Link to="/privacy" className="text-primary hover:underline">
-                        Privacy Policy
-                      </Link>
+                      {copy.auth.acceptTerms}
                     </Label>
                     {errors.terms && (
                       <p className="text-sm text-destructive" role="alert">
@@ -346,10 +341,10 @@ const Register = () => {
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
-                    "Creating account..."
+                    copy.buttons.creatingAccount
                   ) : (
                     <>
-                      Create account
+                      {copy.auth.createAccount}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </>
                   )}
@@ -358,7 +353,7 @@ const Register = () => {
 
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">
-                  Already have an account?{' '}
+                  {copy.auth.alreadyHaveAccount}{' '}
                   <Link to="/login" className="text-primary hover:underline">
                     Sign in
                   </Link>
@@ -373,11 +368,13 @@ const Register = () => {
               <span>Your data is secure and encrypted</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Demo app - use any email and password to create an account
+              {copy.auth.demoNote}
             </p>
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };

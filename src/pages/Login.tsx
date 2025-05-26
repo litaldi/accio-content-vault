@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import ModernNavigation from '@/components/navigation/ModernNavigation';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -11,6 +12,7 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Shield, Phone, Chrome } from 'lucide-react';
+import { copy } from '@/utils/copy';
 
 const Login = () => {
   const { user, signIn } = useAuth();
@@ -36,22 +38,20 @@ const Login = () => {
     
     if (loginMethod === 'email') {
       if (!email.trim()) {
-        newErrors.email = 'Email is required';
+        newErrors.email = copy.errors.required;
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        newErrors.email = 'Please enter a valid email address';
+        newErrors.email = copy.errors.invalidEmail;
       }
     } else {
       if (!phone.trim()) {
-        newErrors.phone = 'Phone number is required';
+        newErrors.phone = copy.errors.required;
       } else if (!/^\+?[\d\s\-\(\)]{10,}$/.test(phone)) {
-        newErrors.phone = 'Please enter a valid phone number';
+        newErrors.phone = copy.errors.phoneInvalid;
       }
     }
     
     if (!password.trim()) {
-      newErrors.password = 'Password is required';
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = copy.errors.required;
     }
     
     setErrors(newErrors);
@@ -70,13 +70,13 @@ const Login = () => {
       const identifier = loginMethod === 'email' ? email.trim() : phone.trim();
       await signIn(identifier, password);
       toast({
-        title: "Welcome back!",
-        description: "You've been successfully signed in.",
+        title: copy.success.signIn,
+        description: "Your knowledge awaits your return.",
       });
       navigate('/dashboard');
     } catch (error: any) {
       console.error('Login error:', error);
-      const errorMessage = error.message || "Invalid credentials. Please try again.";
+      const errorMessage = error.message || copy.errors.authentication;
       setErrors({ submit: errorMessage });
       toast({
         title: "Sign in failed",
@@ -91,7 +91,6 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      // This would integrate with Google OAuth
       toast({
         title: "Google Sign In",
         description: "Google authentication is not yet implemented in this demo.",
@@ -140,9 +139,9 @@ const Login = () => {
       <main className="flex-grow flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold">Welcome back</h1>
+            <h1 className="text-3xl font-bold">{copy.auth.welcomeBack}</h1>
             <p className="text-muted-foreground mt-2">
-              Sign in to continue building your knowledge empire
+              {copy.auth.signInSubtitle}
             </p>
           </div>
 
@@ -162,7 +161,7 @@ const Login = () => {
                 disabled={isLoading}
               >
                 <Chrome className="h-4 w-4 mr-2" aria-hidden="true" />
-                Continue with Google
+                {copy.auth.continueWithGoogle}
               </Button>
 
               <div className="relative">
@@ -170,7 +169,7 @@ const Login = () => {
                   <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
+                  <span className="bg-background px-2 text-muted-foreground">{copy.auth.orContinueWith}</span>
                 </div>
               </div>
 
@@ -202,7 +201,7 @@ const Login = () => {
                 {/* Email/Phone Field */}
                 <div className="space-y-2">
                   <Label htmlFor="identifier">
-                    {loginMethod === 'email' ? 'Email address' : 'Phone number'}
+                    {loginMethod === 'email' ? copy.forms.email : copy.forms.phone}
                   </Label>
                   <div className="relative">
                     {loginMethod === 'email' ? (
@@ -213,7 +212,7 @@ const Login = () => {
                     <Input
                       id="identifier"
                       type={loginMethod === 'email' ? 'email' : 'tel'}
-                      placeholder={loginMethod === 'email' ? 'Enter your email' : 'Enter your phone number'}
+                      placeholder={loginMethod === 'email' ? copy.forms.emailPlaceholder : copy.forms.phonePlaceholder}
                       value={loginMethod === 'email' ? email : phone}
                       onChange={(e) => handleInputChange(loginMethod, e.target.value)}
                       className={`pl-10 ${(errors.email || errors.phone) ? 'border-destructive' : ''}`}
@@ -236,13 +235,13 @@ const Login = () => {
 
                 {/* Password Field */}
                 <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">{copy.forms.password}</Label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Enter your password"
+                      placeholder={copy.forms.passwordPlaceholder}
                       value={password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
                       className={`pl-10 pr-10 ${errors.password ? 'border-destructive' : ''}`}
@@ -255,7 +254,7 @@ const Login = () => {
                       size="sm"
                       className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2"
                       onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      aria-label={showPassword ? copy.accessibility.hidePassword : copy.accessibility.showPassword}
                     >
                       {showPassword ? (
                         <EyeOff className="h-4 w-4" />
@@ -282,10 +281,10 @@ const Login = () => {
 
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? (
-                    "Signing in..."
+                    copy.buttons.signingIn
                   ) : (
                     <>
-                      Sign in
+                      {copy.auth.signIn}
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </>
                   )}
@@ -294,7 +293,7 @@ const Login = () => {
 
               <div className="text-center">
                 <p className="text-sm text-muted-foreground">
-                  Don't have an account?{' '}
+                  {copy.auth.dontHaveAccount}{' '}
                   <Link to="/register" className="text-primary hover:underline">
                     Sign up
                   </Link>
@@ -309,11 +308,13 @@ const Login = () => {
               <span>Your data is secure and encrypted</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Demo app - use any email/phone and password to sign in
+              {copy.auth.demoNote}
             </p>
           </div>
         </div>
       </main>
+
+      <Footer />
     </div>
   );
 };
