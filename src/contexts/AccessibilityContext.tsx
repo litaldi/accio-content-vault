@@ -6,6 +6,7 @@ export interface AccessibilityPreferences {
   highContrast: boolean;
   reducedMotion: boolean;
   fontSize: 'small' | 'medium' | 'large';
+  lineSpacing: 'normal' | 'relaxed' | 'loose';
   announcements: boolean;
   keyboardNavigation: boolean;
 }
@@ -35,6 +36,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     highContrast: false,
     reducedMotion: false,
     fontSize: 'medium',
+    lineSpacing: 'normal',
     announcements: true,
     keyboardNavigation: true,
   });
