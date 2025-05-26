@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useUnifiedTheme } from '@/contexts/UnifiedThemeContext';
+import { useTheme } from 'next-themes';
 import { copy } from '@/utils/copy';
 
 interface EnhancedThemeToggleProps {
@@ -20,7 +20,7 @@ export const EnhancedThemeToggle: React.FC<EnhancedThemeToggleProps> = ({
   variant = 'icon',
   size = 'default' 
 }) => {
-  const { theme, setTheme, effectiveTheme } = useUnifiedTheme();
+  const { theme, setTheme } = useTheme();
 
   if (variant === 'button') {
     return (
@@ -32,13 +32,10 @@ export const EnhancedThemeToggle: React.FC<EnhancedThemeToggleProps> = ({
             className="gap-2"
             aria-label={copy.accessibility.toggleTheme}
           >
-            {effectiveTheme === 'light' ? (
-              <Sun className="h-4 w-4" />
-            ) : (
-              <Moon className="h-4 w-4" />
-            )}
+            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             <span className="sr-only sm:not-sr-only">
-              {effectiveTheme === 'light' ? 'Light' : 'Dark'} Mode
+              Theme
             </span>
           </Button>
         </DropdownMenuTrigger>
@@ -68,11 +65,9 @@ export const EnhancedThemeToggle: React.FC<EnhancedThemeToggleProps> = ({
           size="icon"
           aria-label={copy.accessibility.toggleTheme}
         >
-          {effectiveTheme === 'light' ? (
-            <Sun className="h-5 w-5" />
-          ) : (
-            <Moon className="h-5 w-5" />
-          )}
+          <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+          <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+          <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-background border border-border">

@@ -11,8 +11,8 @@ export const mockContents: SavedContent[] = [
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     tags: [
-      { id: '1', name: 'React', confirmed: true },
-      { id: '2', name: 'JavaScript', confirmed: true }
+      { id: '1', name: 'React', confirmed: true, auto_generated: false },
+      { id: '2', name: 'JavaScript', confirmed: true, auto_generated: false }
     ]
   },
   {
@@ -23,8 +23,8 @@ export const mockContents: SavedContent[] = [
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     tags: [
-      { id: '3', name: 'TypeScript', confirmed: true },
-      { id: '4', name: 'Programming', confirmed: true }
+      { id: '3', name: 'TypeScript', confirmed: true, auto_generated: false },
+      { id: '4', name: 'Programming', confirmed: true, auto_generated: false }
     ]
   }
 ];

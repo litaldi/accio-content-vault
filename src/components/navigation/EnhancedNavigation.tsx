@@ -93,7 +93,7 @@ export const EnhancedNavigation: React.FC = () => {
 
           {/* Desktop Actions */}
           <div className="hidden lg:flex items-center gap-3">
-            <ThemeToggle variant="icon" size="sm" />
+            <ThemeToggle />
             <Button variant="outline" size="sm" asChild>
               <Link to="/contact">Get Help</Link>
             </Button>
@@ -104,7 +104,7 @@ export const EnhancedNavigation: React.FC = () => {
 
           {/* Mobile menu button */}
           <div className="lg:hidden flex items-center gap-2">
-            <ThemeToggle variant="icon" size="sm" />
+            <ThemeToggle />
             <Button
               variant="ghost"
               size="sm"
