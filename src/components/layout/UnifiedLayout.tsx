@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import SkipToContent from '@/components/accessibility/SkipToContent';
@@ -45,14 +45,13 @@ export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
       <SkipToContent />
 
       {/* Navigation */}
-      {showNavigation && <MainNavigation />}
+      {showNavigation && <ProfessionalNavigation />}
 
       {/* Main Content */}
       <main
         id="main-content"
         className={cn(
           "flex-grow w-full relative",
-          // Add smooth transitions for better UX
           "transition-all duration-300 ease-in-out",
           !fullWidth && "container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
         )}

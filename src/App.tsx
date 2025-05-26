@@ -26,12 +26,22 @@ const AccessibilityTest = lazy(() => import("./pages/AccessibilityTest"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
 const OfflinePage = lazy(() => import("./pages/OfflinePage"));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      gcTime: 1000 * 60 * 30, // 30 minutes
+    },
+  },
+});
 
-// Loading component
+// Professional loading component
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="flex flex-col items-center gap-4">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      <p className="text-sm text-muted-foreground">Loading...</p>
+    </div>
   </div>
 );
 

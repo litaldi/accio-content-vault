@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -54,13 +54,13 @@ const About = () => {
         <meta name="description" content="Learn about Accio's mission to transform how people organize and access information through AI-powered knowledge management." />
       </Helmet>
 
-      <MainNavigation />
+      <ProfessionalNavigation />
 
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="outline" className="mb-6">Our Story</Badge>
+            <Badge variant="outline" className="mb-6 bg-primary/10 text-primary border-primary/20">Our Story</Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Building the Future of
               <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
@@ -78,7 +78,7 @@ const About = () => {
         <section className="py-16">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
+              <div className="animate-fade-in">
                 <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
                 <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
                   In a world overflowing with information, we're building the tools to help people 
@@ -87,30 +87,30 @@ const About = () => {
                   that grows with you.
                 </p>
                 <p className="text-lg text-muted-foreground leading-relaxed">
-                  Started in 2024, we've helped over 10,000 professionals, researchers, and 
+                  Started in 2024, we've helped over 50,000 professionals, researchers, and 
                   lifelong learners transform their relationship with information.
                 </p>
               </div>
-              <div className="grid grid-cols-2 gap-6">
-                <Card className="text-center p-6">
+              <div className="grid grid-cols-2 gap-6 animate-slide-in-right">
+                <Card className="text-center p-6 card-elevated">
                   <CardContent className="pt-6">
-                    <div className="text-3xl font-bold text-primary mb-2">10K+</div>
+                    <div className="text-3xl font-bold text-primary mb-2">50K+</div>
                     <p className="text-sm text-muted-foreground">Active Users</p>
                   </CardContent>
                 </Card>
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 card-elevated">
                   <CardContent className="pt-6">
-                    <div className="text-3xl font-bold text-primary mb-2">1M+</div>
+                    <div className="text-3xl font-bold text-primary mb-2">2M+</div>
                     <p className="text-sm text-muted-foreground">Items Saved</p>
                   </CardContent>
                 </Card>
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 card-elevated">
                   <CardContent className="pt-6">
                     <div className="text-3xl font-bold text-primary mb-2">99.9%</div>
                     <p className="text-sm text-muted-foreground">Uptime</p>
                   </CardContent>
                 </Card>
-                <Card className="text-center p-6">
+                <Card className="text-center p-6 card-elevated">
                   <CardContent className="pt-6">
                     <div className="text-3xl font-bold text-primary mb-2">4.9★</div>
                     <p className="text-sm text-muted-foreground">User Rating</p>
@@ -132,7 +132,7 @@ const About = () => {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {values.map((value, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                <Card key={index} className="text-center card-elevated hover:-translate-y-1">
                   <CardHeader>
                     <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center">
                       <value.icon className="h-8 w-8 text-primary" />
@@ -159,7 +159,7 @@ const About = () => {
             </div>
             <div className="grid md:grid-cols-3 gap-8">
               {teamMembers.map((member, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                <Card key={index} className="text-center card-elevated hover:-translate-y-1">
                   <CardHeader>
                     <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center">
                       <member.icon className="h-10 w-10 text-white" />

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -99,13 +99,13 @@ const Features = () => {
         <meta name="description" content="Discover all the powerful features that make Accio the ultimate knowledge management platform. AI-powered organization, semantic search, and more." />
       </Helmet>
 
-      <MainNavigation />
+      <ProfessionalNavigation />
 
       <main className="flex-grow">
         {/* Hero Section */}
         <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="outline" className="mb-6">All Features</Badge>
+            <Badge variant="outline" className="mb-6 bg-primary/10 text-primary border-primary/20">All Features</Badge>
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Everything You Need for
               <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
@@ -119,7 +119,7 @@ const Features = () => {
             <Button 
               size="lg" 
               onClick={() => navigate('/register')}
-              className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90"
+              className="btn-primary text-lg px-8 py-4 font-semibold"
             >
               <Zap className="mr-2 h-5 w-5" />
               Start Free Trial
@@ -138,7 +138,7 @@ const Features = () => {
             </div>
             <div className="grid lg:grid-cols-2 gap-8">
               {coreFeatures.map((feature, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow border-0 bg-background">
+                <Card key={index} className="card-elevated hover:-translate-y-1">
                   <CardHeader>
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center">
@@ -179,7 +179,7 @@ const Features = () => {
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {advancedFeatures.map((feature, index) => (
-                <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+                <Card key={index} className="text-center card-elevated hover:-translate-y-1">
                   <CardHeader>
                     <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-2xl flex items-center justify-center">
                       <feature.icon className={`h-8 w-8 ${feature.color}`} />
