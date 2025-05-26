@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,7 +26,9 @@ import {
   Calendar,
   Map,
   Volume2,
-  PenTool
+  PenTool,
+  Folder,
+  Compass
 } from 'lucide-react';
 import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
 import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
@@ -49,6 +50,10 @@ import { SmartHabitTracker } from '@/components/ai/SmartHabitTracker';
 import { ContentGapAnalyzer } from '@/components/ai/ContentGapAnalyzer';
 import { AIStudyBuddy } from '@/components/ai/AIStudyBuddy';
 import { AILearningPathGenerator } from '@/components/ai/AILearningPathGenerator';
+import { SmartCollections } from '@/components/ai/SmartCollections';
+import { ContextualAssistant } from '@/components/ai/ContextualAssistant';
+import { LearningAnalytics } from '@/components/ai/LearningAnalytics';
+import { ContentDiscovery } from '@/components/ai/ContentDiscovery';
 
 const Features: React.FC = () => {
   const aiFeatures = [
@@ -191,6 +196,34 @@ const Features: React.FC = () => {
       description: 'Record, transcribe, and automatically structure voice notes with AI assistance.',
       status: 'active',
       benefit: 'Capture thoughts instantly'
+    },
+    {
+      icon: Folder,
+      title: 'Smart Collections',
+      description: 'AI automatically groups related content into intelligent, organized collections.',
+      status: 'active',
+      benefit: 'Effortless organization'
+    },
+    {
+      icon: MessageCircle,
+      title: 'Contextual Assistant',
+      description: 'Real-time AI help that understands your current context and provides relevant suggestions.',
+      status: 'active',
+      benefit: 'Always available guidance'
+    },
+    {
+      icon: BarChart3,
+      title: 'Learning Analytics',
+      description: 'Personal insights dashboard that tracks your learning progress and identifies improvement areas.',
+      status: 'active',
+      benefit: 'Data-driven learning'
+    },
+    {
+      icon: Compass,
+      title: 'Content Discovery',
+      description: 'AI discovers and curates new content based on your interests and knowledge gaps.',
+      status: 'active',
+      benefit: 'Never run out of learning material'
     }
   ];
 
@@ -277,6 +310,17 @@ const Features: React.FC = () => {
             </div>
             
             {/* Latest AI Features */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <SmartCollections />
+              <ContextualAssistant />
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <LearningAnalytics />
+              <ContentDiscovery />
+            </div>
+            
+            {/* Content Creation & Analysis */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <AIContentSummarizer />
               <AIWritingAssistant />
