@@ -8,7 +8,7 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      variant: 'default',
+      variant: 'default'
     });
   };
 
@@ -16,7 +16,7 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      variant: 'destructive',
+      variant: 'destructive'
     });
   };
 
@@ -24,15 +24,7 @@ export const useEnhancedToast = () => {
     toast({
       title,
       description,
-      variant: 'default',
-    });
-  };
-
-  const showInfo = (title: string, description?: string) => {
-    toast({
-      title,
-      description,
-      variant: 'default',
+      variant: 'default'
     });
   };
 
@@ -40,6 +32,6 @@ export const useEnhancedToast = () => {
     showSuccess,
     showError,
     showWarning,
-    showInfo,
+    toast
   };
 };

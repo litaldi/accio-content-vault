@@ -1,6 +1,12 @@
 
 import React from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,7 +26,7 @@ export const Modal: React.FC<ModalProps> = ({
   className
 }) => {
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent className={className}>
         {(title || description) && (
           <DialogHeader>

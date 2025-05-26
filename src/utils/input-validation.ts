@@ -81,3 +81,25 @@ export const validateMaxLength = (value: string, maxLength: number, fieldName: s
   }
   return { isValid: true, message: 'Valid' };
 };
+
+// Rate limiting utility
+export const createRateLimit = (maxAttempts: number, windowMs: number) => {
+  const attempts = new Map<string, { count: number; resetTime: number }>();
+
+  return (identifier: string): { allowed: boolean; resetTime?: number } => {
+    const now = Date.now();
+    const record = attempts.get(identifier);
+
+    if (!record || now > record.resetTime) {
+      attempts.set(identifier, { count: 1, resetTime: now + windowMs });
+      return { allowed: true };
+    }
+
+    if (record.count >= maxAttempts) {
+      return { allowed: false, resetTime: record.resetTime };
+    }
+
+    record.count++;
+    return { allowed: true };
+  };
+};

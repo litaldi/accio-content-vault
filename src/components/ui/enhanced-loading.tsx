@@ -4,7 +4,7 @@ import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface EnhancedLoadingProps {
-  state: 'loading' | 'success' | 'error' | 'idle';
+  state: 'loading' | 'idle' | 'error';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }
@@ -14,13 +14,13 @@ export const EnhancedLoading: React.FC<EnhancedLoadingProps> = ({
   size = 'md',
   className
 }) => {
+  if (state !== 'loading') return null;
+
   const sizeClasses = {
     sm: 'h-4 w-4',
     md: 'h-6 w-6',
     lg: 'h-8 w-8'
   };
-
-  if (state !== 'loading') return null;
 
   return (
     <Loader2 

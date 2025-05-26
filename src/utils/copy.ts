@@ -40,5 +40,36 @@ export const copy = {
     error: 'Error',
     warning: 'Warning',
     info: 'Information'
+  },
+  headlines: {
+    hero: 'Organize Your Knowledge with AI-Powered Intelligence',
+    subhero: 'Transform scattered information into actionable insights with Accio\'s smart knowledge management platform.'
+  },
+  buttons: {
+    getStarted: 'Get Started Free',
+    learnMore: 'Learn More',
+    tryDemo: 'Try Demo'
+  },
+  trust: {
+    security: 'Enterprise Security',
+    freeTrial: 'Free 14-day trial',
+    noCredit: 'No credit card required',
+    setupTime: '2-minute setup'
+  },
+  social: {
+    companies: 'Trusted by teams at leading companies',
+    userCount: '10,000+',
+    rating: '4.9/5 stars'
+  },
+  onboarding: {
+    welcome: 'Welcome to Accio',
+    step1: 'Set up your workspace',
+    step2: 'Connect your tools',
+    step3: 'Start organizing'
+  },
+  emptyStates: {
+    noContent: 'No content found',
+    getStarted: 'Get started by adding your first item',
+    noResults: 'No results found'
   }
 };
