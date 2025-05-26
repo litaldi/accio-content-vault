@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { generateCSRFToken, sanitizeTextInput } from '@/utils/input-validation';
+import { CSRFManager, sanitizeInput } from '@/utils/unified-security';
 
 interface SecureFormProps {
   children: React.ReactNode;
@@ -21,8 +21,7 @@ export const SecureForm: React.FC<SecureFormProps> = ({
   const [csrfToken, setCsrfToken] = useState<string>('');
 
   useEffect(() => {
-    // Generate CSRF token on mount
-    setCsrfToken(generateCSRFToken());
+    setCsrfToken(CSRFManager.generate());
   }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -31,12 +30,11 @@ export const SecureForm: React.FC<SecureFormProps> = ({
     const formData = new FormData(event.currentTarget);
     
     if (validateInputs) {
-      // Sanitize text inputs
       const sanitizedData = new FormData();
       
       for (const [key, value] of formData.entries()) {
         if (typeof value === 'string') {
-          sanitizedData.append(key, sanitizeTextInput(value));
+          sanitizedData.append(key, sanitizeInput(value));
         } else {
           sanitizedData.append(key, value);
         }
@@ -50,7 +48,6 @@ export const SecureForm: React.FC<SecureFormProps> = ({
 
   return (
     <form onSubmit={handleSubmit} className={className}>
-      {/* Hidden CSRF token field */}
       <input type="hidden" name="csrf_token" value={csrfToken} />
       {children}
     </form>

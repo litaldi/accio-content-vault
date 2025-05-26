@@ -16,6 +16,11 @@ import {
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
 import { EnhancedLoading } from '@/components/ui/enhanced-loading';
 import { cn } from '@/lib/utils';
+import { 
+  validateEmailEnhanced, 
+  sanitizeInput, 
+  contactRateLimiter 
+} from '@/utils/unified-security';
 
 interface ContactFormData {
   name: string;
@@ -53,9 +58,30 @@ const ChatWidget: React.FC = () => {
       return;
     }
 
+    // Rate limiting check
+    const rateLimitCheck = contactRateLimiter.canAttempt('chat-widget');
+    if (!rateLimitCheck.allowed) {
+      showError('Too Many Messages', 'Please wait before sending another message.');
+      return;
+    }
+
+    // Validate email if provided
+    if (formData.email && !validateEmailEnhanced(formData.email).isValid) {
+      showError('Invalid Email', 'Please enter a valid email address.');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
+      // Sanitize inputs
+      const sanitizedData = {
+        name: sanitizeInput(formData.name, { maxLength: 100 }),
+        email: formData.email.trim(),
+        category: formData.category,
+        message: sanitizeInput(formData.message, { maxLength: 1000, preserveLineBreaks: true })
+      };
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
@@ -172,6 +198,7 @@ const ChatWidget: React.FC = () => {
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
                 placeholder="Enter your name"
+                maxLength={100}
                 className="transition-all focus:ring-2 focus:ring-primary/20"
               />
             </div>
@@ -185,6 +212,7 @@ const ChatWidget: React.FC = () => {
                 value={formData.email}
                 onChange={(e) => handleInputChange('email', e.target.value)}
                 placeholder="your.email@company.com"
+                maxLength={254}
                 className="transition-all focus:ring-2 focus:ring-primary/20"
               />
               <p className="text-xs text-muted-foreground">
@@ -218,6 +246,7 @@ const ChatWidget: React.FC = () => {
                 onChange={(e) => handleInputChange('message', e.target.value)}
                 placeholder="Tell us what's on your mind..."
                 rows={4}
+                maxLength={1000}
                 className="transition-all focus:ring-2 focus:ring-primary/20 resize-none"
                 required
               />

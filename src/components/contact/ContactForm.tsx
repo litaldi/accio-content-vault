@@ -15,6 +15,12 @@ import {
 } from 'lucide-react';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
 import { EnhancedLoading } from '@/components/ui/enhanced-loading';
+import { 
+  validateEmailEnhanced, 
+  sanitizeInput, 
+  contactRateLimiter,
+  CSRFManager 
+} from '@/utils/unified-security';
 
 interface ContactFormData {
   name: string;
@@ -47,14 +53,41 @@ const ContactForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Rate limiting check
+    const rateLimitCheck = contactRateLimiter.canAttempt('contact-form');
+    if (!rateLimitCheck.allowed) {
+      showError('Too Many Attempts', 'Please wait before submitting another message.');
+      return;
+    }
+
+    // Validate required fields
     if (!formData.name || !formData.email || !formData.message) {
       showError('Required Fields Missing', 'Please fill in all required fields.');
+      return;
+    }
+
+    // Validate email
+    const emailValidation = validateEmailEnhanced(formData.email);
+    if (!emailValidation.isValid) {
+      showError('Invalid Email', emailValidation.error || 'Please enter a valid email address.');
       return;
     }
 
     setIsSubmitting(true);
 
     try {
+      // Sanitize inputs
+      const sanitizedData = {
+        name: sanitizeInput(formData.name, { maxLength: 100 }),
+        email: formData.email.trim(),
+        company: sanitizeInput(formData.company, { maxLength: 100 }),
+        category: formData.category,
+        message: sanitizeInput(formData.message, { maxLength: 2000, preserveLineBreaks: true })
+      };
+
+      // Generate CSRF token
+      const csrfToken = CSRFManager.generate();
+
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
@@ -103,6 +136,7 @@ const ContactForm: React.FC = () => {
                   value={formData.name}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Your full name"
+                  maxLength={100}
                   required
                 />
               </div>
@@ -114,6 +148,7 @@ const ContactForm: React.FC = () => {
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="your.email@company.com"
+                  maxLength={254}
                   required
                 />
               </div>
@@ -126,6 +161,7 @@ const ContactForm: React.FC = () => {
                 value={formData.company}
                 onChange={(e) => handleInputChange('company', e.target.value)}
                 placeholder="Your company name"
+                maxLength={100}
               />
             </div>
 
@@ -153,6 +189,7 @@ const ContactForm: React.FC = () => {
                 onChange={(e) => handleInputChange('message', e.target.value)}
                 placeholder="Tell us how we can help you..."
                 rows={5}
+                maxLength={2000}
                 required
               />
             </div>

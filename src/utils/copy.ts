@@ -38,81 +38,41 @@ export const copy = {
     settings: 'Settings',
     saveContent: 'Save Content',
     search: 'Search',
-    integrations: 'Integrations'
+    integrations: 'Integrations',
+    contact: 'Contact'
   },
   accessibility: {
     openMenu: 'Open menu',
     closeMenu: 'Close menu',
     skipToContent: 'Skip to main content'
   },
-  headlines: {
-    hero: 'Your Personal Knowledge Sanctuary',
-    subhero: 'Capture, organize, and discover insights from your digital world with AI-powered intelligence.'
-  },
-  buttons: {
-    getStarted: 'Get Started Free',
-    contactSales: 'Contact Sales',
-    startFreeTrial: 'Start Free Trial',
-    subscribe: 'Subscribe',
-    sendMessage: 'Send Message'
-  },
-  trust: {
-    security: 'Bank-level security',
-    noCredit: 'No credit card required',
-    freeTrial: 'Free forever',
-    setupTime: '2-minute setup'
-  },
-  social: {
-    companies: 'Trusted by knowledge workers at leading companies',
-    userCount: '10,000+',
-    rating: '4.9/5 stars'
-  },
-  onboarding: {
-    welcome: 'Welcome to Accio',
-    subtitle: 'Let\'s get you set up with your personal knowledge sanctuary.'
-  },
-  emptyStates: {
-    library: {
-      title: 'Your library is empty',
-      description: 'Start building your knowledge collection by saving your first content.',
-      action: 'Save Content'
-    },
-    search: {
-      title: 'No results found',
-      description: 'Try adjusting your search terms or save new content to expand your library.',
-      action: 'Clear Search'
-    },
-    dashboard: {
-      title: 'Welcome to your dashboard',
-      description: 'Your personal knowledge sanctuary awaits. Start by saving your first piece of content.',
-      action: 'Save Content'
-    },
-    recent: {
-      title: 'No recent activity',
-      description: 'Your recent content will appear here once you start saving and organizing.',
-      action: 'Explore Library'
-    }
-  },
-  success: {
-    signIn: 'Successfully signed in!',
-    messageSent: 'Message sent successfully!',
-    subscribed: 'Successfully subscribed to newsletter!'
-  },
-  errors: {
-    authentication: 'Authentication failed',
-    network: 'Network error. Please check your connection.',
-    requiredFields: 'Please fill in all required fields.',
-    invalidEmail: 'Please enter a valid email address.'
-  },
   contact: {
     title: 'Contact Our Team',
     subtitle: 'Have questions? We\'d love to hear from you.',
     emailSupport: 'Email Support',
     responseTime: 'Response Time',
-    privacySecurity: 'Privacy & Security'
+    privacySecurity: 'Privacy & Security',
+    messageSent: 'Message sent successfully!',
+    messageRequired: 'Please enter your message before sending.',
+    invalidEmail: 'Please enter a valid email address.',
+    rateLimitExceeded: 'Too many attempts. Please wait before sending another message.',
+    generalError: 'Failed to send message. Please try again or contact us directly.'
   },
-  payments: {
-    securePayments: 'Secure Payment Options',
-    allPaymentsEncrypted: 'All payments are encrypted and secure. We never store your payment information.'
+  security: {
+    secureConnection: 'Secure connection',
+    dataEncrypted: 'Your data is encrypted and secure',
+    noThirdPartySharing: 'We never share your data with third parties',
+    csrfProtection: 'CSRF protection enabled',
+    rateLimitActive: 'Rate limiting active for security'
+  },
+  validation: {
+    emailRequired: 'Email is required',
+    passwordRequired: 'Password is required',
+    nameRequired: 'Name is required',
+    messageRequired: 'Message is required',
+    invalidEmailFormat: 'Please enter a valid email address',
+    passwordTooShort: 'Password must be at least 8 characters',
+    fileTooLarge: 'File size must be less than 10MB',
+    invalidFileType: 'File type not supported'
   }
 };
