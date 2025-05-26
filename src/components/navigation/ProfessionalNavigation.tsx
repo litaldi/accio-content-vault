@@ -112,8 +112,8 @@ const ProfessionalNavigation: React.FC = () => {
           </nav>
 
           {/* Desktop Right Side Actions */}
-          <div className="hidden lg:flex items-center gap-3">
-            {/* Accessibility Button */}
+          <div className="hidden lg:flex items-center gap-2">
+            {/* Accessibility Button - Icon Only */}
             <AccessibilityButton variant="header" />
 
             {user ? (
@@ -208,7 +208,7 @@ const ProfessionalNavigation: React.FC = () => {
 
               {/* Accessibility Button for Mobile */}
               <div className="px-3 py-2">
-                <AccessibilityButton variant="header" />
+                <AccessibilityButton variant="inline" />
               </div>
             </nav>
           </div>
