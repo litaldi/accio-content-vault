@@ -1,8 +1,8 @@
 
 import React, { useState, useCallback } from 'react';
 import { EnhancedInput } from '@/components/ui/enhanced-input';
-import { sanitizeInput, validateSecureUrl } from '@/utils/security-helpers';
-import { AlertCircle, Shield } from 'lucide-react';
+import { sanitizeTextInput } from '@/utils/input-validation';
+import { Shield } from 'lucide-react';
 
 interface SecureInputProps {
   type?: 'text' | 'email' | 'url' | 'password';
@@ -16,6 +16,15 @@ interface SecureInputProps {
   validateUrl?: boolean;
   className?: string;
 }
+
+const validateSecureUrl = (url: string): boolean => {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'https:' || urlObj.protocol === 'http:';
+  } catch {
+    return false;
+  }
+};
 
 /**
  * Secure input component with built-in validation and sanitization
@@ -64,7 +73,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
     let newValue = e.target.value;
     
     if (sanitize) {
-      newValue = sanitizeInput(newValue, { maxLength });
+      newValue = sanitizeTextInput(newValue, maxLength);
     }
 
     const validationError = validateInput(newValue);
@@ -87,7 +96,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
       onBlur={handleBlur}
       placeholder={placeholder}
       label={label}
-      error={isTouched ? error : undefined}
+      error={!!(isTouched && error)}
       success={isTouched && !error && value.length > 0}
       rightIcon={sanitize ? <Shield className="h-4 w-4 text-muted-foreground" /> : undefined}
       className={className}

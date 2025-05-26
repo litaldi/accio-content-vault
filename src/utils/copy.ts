@@ -61,5 +61,33 @@ export const copy = {
   onboarding: {
     welcome: 'Welcome to Accio',
     subtitle: 'Let\'s get you set up with your personal knowledge sanctuary'
+  },
+  emptyStates: {
+    library: {
+      title: 'Your library is empty',
+      description: 'Start building your knowledge collection by saving your first content.',
+      action: 'Save Content'
+    },
+    search: {
+      title: 'No results found',
+      description: 'Try adjusting your search terms or save new content to expand your library.',
+      action: 'Clear Search'
+    },
+    dashboard: {
+      title: 'Welcome to your dashboard',
+      description: 'Your personal knowledge sanctuary awaits. Start by saving your first piece of content.',
+      action: 'Save Content'
+    },
+    recent: {
+      title: 'No recent activity',
+      description: 'Your recent content will appear here once you start saving and organizing.',
+      action: 'Explore Library'
+    }
+  },
+  success: {
+    signIn: 'Successfully signed in!'
+  },
+  errors: {
+    authentication: 'Authentication failed'
   }
 };

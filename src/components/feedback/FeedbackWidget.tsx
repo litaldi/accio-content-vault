@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { MessageSquare, Send, Star, ThumbsUp, ThumbsDown, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { EnhancedCard, EnhancedCardContent, EnhancedCardHeader, EnhancedCardTitle } from '@/components/ui/enhanced-card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { EnhancedInput } from '@/components/ui/enhanced-input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
@@ -87,9 +87,9 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
               <MessageSquare className="h-5 w-5" />
             </Button>
           ) : (
-            <EnhancedCard className="w-80 shadow-2xl border-2">
-              <EnhancedCardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
-                <EnhancedCardTitle className="text-lg">Share your feedback</EnhancedCardTitle>
+            <Card className="w-80 shadow-2xl border-2">
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                <CardTitle className="text-lg">Share your feedback</CardTitle>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -98,9 +98,9 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                 >
                   <X className="h-4 w-4" />
                 </Button>
-              </EnhancedCardHeader>
+              </CardHeader>
               
-              <EnhancedCardContent className="space-y-4">
+              <CardContent className="space-y-4">
                 {step === 'rating' && showRating ? (
                   <div className="space-y-4">
                     <p className="text-sm text-muted-foreground">
@@ -193,8 +193,8 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                     </div>
                   </div>
                 )}
-              </EnhancedCardContent>
-            </EnhancedCard>
+              </CardContent>
+            </Card>
           )}
         </div>
       </>
@@ -203,11 +203,11 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
 
   // Inline variant
   return (
-    <EnhancedCard className={cn("max-w-md", className)}>
-      <EnhancedCardHeader>
-        <EnhancedCardTitle>We'd love your feedback</EnhancedCardTitle>
-      </EnhancedCardHeader>
-      <EnhancedCardContent>
+    <Card className={cn("max-w-md", className)}>
+      <CardHeader>
+        <CardTitle>We'd love your feedback</CardTitle>
+      </CardHeader>
+      <CardContent>
         {/* Similar content but adapted for inline use */}
         <div className="space-y-4">
           <Textarea
@@ -225,7 +225,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
             Send Feedback
           </Button>
         </div>
-      </EnhancedCardContent>
-    </EnhancedCard>
+      </CardContent>
+    </Card>
   );
 };
