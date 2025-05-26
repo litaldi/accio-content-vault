@@ -52,28 +52,42 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
           <Button
             variant="ghost"
             size={size === 'sm' ? 'sm' : size === 'lg' ? 'lg' : 'default'}
-            className="w-9 px-0"
-            aria-label="Toggle theme"
+            className="w-9 px-0 transition-all duration-200 hover:scale-105"
+            aria-label={`Current theme: ${getThemeLabel()}. Click to change theme`}
           >
-            {getThemeIcon()}
+            <div className="transition-transform duration-200">
+              {getThemeIcon()}
+            </div>
             <span className="sr-only">Toggle theme</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={align} className="min-w-[8rem]">
-          <DropdownMenuItem onClick={() => setTheme('light')} className="gap-2">
+        <DropdownMenuContent 
+          align={align} 
+          className="min-w-[8rem] bg-background border shadow-lg"
+        >
+          <DropdownMenuItem 
+            onClick={() => setTheme('light')} 
+            className="gap-2 cursor-pointer transition-colors duration-200"
+          >
             <Sun className="h-4 w-4" />
             <span>Light</span>
-            {theme === 'light' && <span className="ml-auto text-xs">✓</span>}
+            {theme === 'light' && <span className="ml-auto text-xs text-primary">✓</span>}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme('dark')} className="gap-2">
+          <DropdownMenuItem 
+            onClick={() => setTheme('dark')} 
+            className="gap-2 cursor-pointer transition-colors duration-200"
+          >
             <Moon className="h-4 w-4" />
             <span>Dark</span>
-            {theme === 'dark' && <span className="ml-auto text-xs">✓</span>}
+            {theme === 'dark' && <span className="ml-auto text-xs text-primary">✓</span>}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme('system')} className="gap-2">
+          <DropdownMenuItem 
+            onClick={() => setTheme('system')} 
+            className="gap-2 cursor-pointer transition-colors duration-200"
+          >
             <Monitor className="h-4 w-4" />
             <span>System</span>
-            {theme === 'system' && <span className="ml-auto text-xs">✓</span>}
+            {theme === 'system' && <span className="ml-auto text-xs text-primary">✓</span>}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -87,29 +101,43 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
           <Button
             variant="ghost"
             size={size}
-            className="gap-2"
-            aria-label={`Current theme: ${getThemeLabel()}`}
+            className="gap-2 transition-all duration-200 hover:scale-105"
+            aria-label={`Current theme: ${getThemeLabel()}. Click to change theme`}
           >
-            {getThemeIcon()}
+            <div className="transition-transform duration-200">
+              {getThemeIcon()}
+            </div>
             <span className="hidden sm:inline">{getThemeLabel()}</span>
             <span className="sr-only">Toggle theme</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={align} className="min-w-[8rem]">
-          <DropdownMenuItem onClick={() => setTheme('light')} className="gap-2">
+        <DropdownMenuContent 
+          align={align} 
+          className="min-w-[8rem] bg-background border shadow-lg"
+        >
+          <DropdownMenuItem 
+            onClick={() => setTheme('light')} 
+            className="gap-2 cursor-pointer transition-colors duration-200"
+          >
             <Sun className="h-4 w-4" />
             <span>Light</span>
-            {theme === 'light' && <span className="ml-auto text-xs">✓</span>}
+            {theme === 'light' && <span className="ml-auto text-xs text-primary">✓</span>}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme('dark')} className="gap-2">
+          <DropdownMenuItem 
+            onClick={() => setTheme('dark')} 
+            className="gap-2 cursor-pointer transition-colors duration-200"
+          >
             <Moon className="h-4 w-4" />
             <span>Dark</span>
-            {theme === 'dark' && <span className="ml-auto text-xs">✓</span>}
+            {theme === 'dark' && <span className="ml-auto text-xs text-primary">✓</span>}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setTheme('system')} className="gap-2">
+          <DropdownMenuItem 
+            onClick={() => setTheme('system')} 
+            className="gap-2 cursor-pointer transition-colors duration-200"
+          >
             <Monitor className="h-4 w-4" />
             <span>System</span>
-            {theme === 'system' && <span className="ml-auto text-xs">✓</span>}
+            {theme === 'system' && <span className="ml-auto text-xs text-primary">✓</span>}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -122,10 +150,12 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
       variant="ghost"
       size={size}
       onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-      className="gap-2"
+      className="gap-2 transition-all duration-200 hover:scale-105"
       aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
     >
-      {getThemeIcon()}
+      <div className="transition-transform duration-200">
+        {getThemeIcon()}
+      </div>
       <span>{getThemeLabel()}</span>
     </Button>
   );

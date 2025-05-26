@@ -6,6 +6,8 @@ import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { GlobalFeatures } from '@/components/GlobalFeatures/GlobalFeatures';
+import MainNavigation from '@/components/navigation/MainNavigation';
+import Footer from '@/components/Footer';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import Search from '@/pages/Search';
@@ -25,18 +27,22 @@ const App: React.FC = () => {
         <QueryProvider>
           <AuthProvider>
             <Router>
-              <div className="App">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/collections" element={<Collections />} />
-                  <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/integrations" element={<Integrations />} />
-                  <Route path="/account" element={<AccountSettings />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+              <div className="App min-h-screen flex flex-col bg-background text-foreground">
+                <MainNavigation />
+                <main className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/collections" element={<Collections />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/integrations" element={<Integrations />} />
+                    <Route path="/account" element={<AccountSettings />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+                <Footer />
                 <Toaster />
                 <ChatWidget />
                 <GlobalFeatures />

@@ -94,10 +94,10 @@ const MainNavigation = () => {
       description: 'Search your knowledge'
     },
     { 
-      to: '/profile', 
-      label: 'Profile', 
-      icon: User,
-      description: 'Your account settings'
+      to: '/integrations', 
+      label: 'Integrations', 
+      icon: Settings,
+      description: 'Connect your tools'
     }
   ];
 
@@ -114,7 +114,7 @@ const MainNavigation = () => {
 
   return (
     <nav 
-      className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b shadow-sm" 
+      className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b shadow-sm transition-colors duration-200" 
       role="navigation" 
       aria-label="Main navigation"
     >
@@ -147,7 +147,7 @@ const MainNavigation = () => {
                 key={item.to}
                 variant={isActiveRoute(item.to) ? "default" : "ghost"}
                 size="sm"
-                className="gap-2"
+                className="gap-2 transition-colors duration-200"
                 asChild
               >
                 <Link
@@ -163,7 +163,7 @@ const MainNavigation = () => {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-3">
             {/* Theme Toggle */}
             <ThemeToggle variant="icon" size="sm" />
 
@@ -175,7 +175,7 @@ const MainNavigation = () => {
                   className="gap-2"
                   asChild
                 >
-                  <Link to="/save-content">
+                  <Link to="/dashboard">
                     <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
                     Save Content
                   </Link>
@@ -184,7 +184,7 @@ const MainNavigation = () => {
                   variant="ghost"
                   size="sm"
                   onClick={handleSignOut}
-                  className="gap-2 hover:bg-destructive/10 hover:text-destructive"
+                  className="gap-2 hover:bg-destructive/10 hover:text-destructive transition-colors duration-200"
                   aria-label="Sign out of your account"
                 >
                   <LogOut className="h-4 w-4" aria-hidden="true" />
@@ -244,7 +244,7 @@ const MainNavigation = () => {
         {isMenuOpen && (
           <div 
             id="mobile-menu"
-            className="md:hidden border-t bg-background shadow-xl"
+            className="md:hidden border-t bg-background shadow-xl transition-all duration-200"
             role="menu"
           >
             <div className="px-4 py-6 space-y-3">
@@ -287,7 +287,7 @@ const MainNavigation = () => {
                       className="w-full justify-start gap-3"
                       asChild
                     >
-                      <Link to="/save-content" onClick={closeMenu}>
+                      <Link to="/dashboard" onClick={closeMenu}>
                         <BookmarkPlus className="h-5 w-5" aria-hidden="true" />
                         Save Content
                       </Link>

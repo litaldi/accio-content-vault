@@ -12,7 +12,9 @@ import {
   FileText,
   HelpCircle,
   Globe,
-  Brain
+  Brain,
+  CreditCard,
+  Banknote
 } from 'lucide-react';
 
 const Footer: React.FC = () => {
@@ -26,15 +28,27 @@ const Footer: React.FC = () => {
         { name: 'Dashboard', href: '/dashboard' },
         { name: 'Analytics', href: '/analytics' },
         { name: 'Collections', href: '/collections' },
+        { name: 'Integrations', href: '/integrations' },
       ]
     },
     {
       title: 'Resources',
       links: [
         { name: 'Help Center', href: '/help', icon: HelpCircle },
+        { name: 'Contact Support', href: '/contact', icon: Mail },
+        { name: 'Documentation', href: '/docs' },
+        { name: 'API Reference', href: '/api' },
         { name: 'Blog', href: '/blog' },
-        { name: 'Contact', href: '/contact', icon: Mail },
-        { name: 'About', href: '/about', icon: Globe },
+      ]
+    },
+    {
+      title: 'Company',
+      links: [
+        { name: 'About Us', href: '/about', icon: Globe },
+        { name: 'Careers', href: '/careers' },
+        { name: 'Press', href: '/press' },
+        { name: 'Partners', href: '/partners' },
+        { name: 'Status', href: '/status' },
       ]
     },
     {
@@ -43,6 +57,7 @@ const Footer: React.FC = () => {
         { name: 'Privacy Policy', href: '/privacy', icon: Shield },
         { name: 'Terms of Service', href: '/terms', icon: FileText },
         { name: 'Cookie Policy', href: '/cookies' },
+        { name: 'GDPR', href: '/gdpr' },
         { name: 'Security', href: '/security' },
       ]
     }
@@ -54,12 +69,18 @@ const Footer: React.FC = () => {
     { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail },
   ];
 
+  const paymentMethods = [
+    { name: 'Stripe', icon: CreditCard },
+    { name: 'PayPal', icon: Banknote },
+    { name: 'Bitcoin', icon: Banknote },
+  ];
+
   return (
-    <footer className="bg-background border-t" role="contentinfo">
+    <footer className="bg-background border-t transition-colors duration-200" role="contentinfo">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Main Footer Content */}
         <div className="py-12 lg:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
             {/* Brand Section */}
             <div className="lg:col-span-2 space-y-4">
               <Link 
@@ -102,6 +123,24 @@ const Footer: React.FC = () => {
                   </Button>
                 ))}
               </div>
+
+              {/* Payment Methods */}
+              <div className="pt-4">
+                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                  Secure Payments
+                </p>
+                <div className="flex items-center gap-2">
+                  {paymentMethods.map((method) => (
+                    <div
+                      key={method.name}
+                      className="flex items-center justify-center w-8 h-6 bg-muted rounded border transition-colors duration-200 hover:bg-accent"
+                      title={method.name}
+                    >
+                      <method.icon className="h-3 w-3 text-muted-foreground" />
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Footer Links */}
@@ -134,7 +173,7 @@ const Footer: React.FC = () => {
         <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <span>© {currentYear} Accio. Made with</span>
-            <Heart className="h-3 w-3 text-red-500 fill-current" />
+            <Heart className="h-3 w-3 text-red-500 fill-current animate-pulse" />
             <span>for knowledge workers worldwide.</span>
           </div>
           
@@ -157,6 +196,7 @@ const Footer: React.FC = () => {
             >
               Security
             </Link>
+            <span className="text-xs">v2.1.0</span>
           </div>
         </div>
       </div>
