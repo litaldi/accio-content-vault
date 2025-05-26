@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -29,7 +28,7 @@ import { Mail, Phone, Github, Loader2, Shield, Eye, EyeOff } from 'lucide-react'
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import { validateEmail, validatePassword, createRateLimit } from '@/utils/input-validation';
-import { sanitizeTextInput } from '@/utils/input-validation';
+import { sanitizeInput } from '@/utils/unified-security';
 
 // Rate limiting: 5 attempts per 15 minutes per email/phone
 const authRateLimit = createRateLimit(5, 15 * 60 * 1000);
@@ -123,9 +122,9 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
     setIsLoading(true);
     
     try {
-      // Sanitize inputs
-      const sanitizedEmail = sanitizeTextInput(values.email.toLowerCase(), 254);
-      const sanitizedName = values.name ? sanitizeTextInput(values.name, 100) : undefined;
+      // Sanitize inputs with proper options object
+      const sanitizedEmail = sanitizeInput(values.email.toLowerCase(), { maxLength: 254 });
+      const sanitizedName = values.name ? sanitizeInput(values.name, { maxLength: 100 }) : undefined;
       
       if (activeTab === 'signup') {
         const { error } = await signUp(sanitizedEmail, values.password);
@@ -179,8 +178,8 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
     setIsLoading(true);
     
     try {
-      // Sanitize phone number
-      const sanitizedPhone = sanitizeTextInput(values.phone, 20);
+      // Sanitize phone number with proper options object
+      const sanitizedPhone = sanitizeInput(values.phone, { maxLength: 20 });
       
       if (phoneStep === 'phone') {
         // For demo purposes - in production, this would send SMS

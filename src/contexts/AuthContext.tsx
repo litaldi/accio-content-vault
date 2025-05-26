@@ -1,9 +1,8 @@
-
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { getDemoUserByEmail, isDemoUser } from '@/data/demoData';
-import { EnhancedRateLimiter } from '@/utils/enhanced-security';
+import { UnifiedRateLimiter } from '@/utils/unified-security';
 
 interface AuthContextType {
   user: User | null;
@@ -32,7 +31,7 @@ interface AuthProviderProps {
 }
 
 // Enhanced rate limiter for authentication attempts
-const authRateLimiter = new EnhancedRateLimiter(5, 15 * 60 * 1000, true);
+const authRateLimiter = new UnifiedRateLimiter(5, 15 * 60 * 1000, true);
 
 // Auth state cleanup utility
 const cleanupAuthState = () => {
