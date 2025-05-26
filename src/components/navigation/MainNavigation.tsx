@@ -10,7 +10,6 @@ import NavigationLogo from './NavigationLogo';
 import DesktopNav from './DesktopNav';
 import MobileNav from './MobileNav';
 import UserMenu from './UserMenu';
-import LanguageSelector from './LanguageSelector';
 
 const MainNavigation: React.FC = () => {
   const location = useLocation();
@@ -78,7 +77,6 @@ const MainNavigation: React.FC = () => {
         "dark:border-border/20 dark:bg-background/90"
       )}
       role="banner"
-      dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
@@ -87,7 +85,6 @@ const MainNavigation: React.FC = () => {
           
           {/* Right Actions */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <LanguageSelector />
             <ModeToggle />
             <UserMenu isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} />
             <MobileNav 

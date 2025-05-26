@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Eye, Volume2, Keyboard, Globe } from 'lucide-react';
+import { Eye, Volume2, Keyboard } from 'lucide-react';
 
 export const AccessibilitySettings: React.FC = () => {
   const { preferences, updatePreferences } = useAccessibility();
@@ -132,33 +132,6 @@ export const AccessibilitySettings: React.FC = () => {
           </div>
         </div>
 
-        {/* Language Preferences */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Globe className="h-4 w-4" />
-            Language
-          </h3>
-          
-          <div className="space-y-2">
-            <Label htmlFor="language">Interface Language</Label>
-            <Select
-              value={preferences.language}
-              onValueChange={(value: 'en' | 'he' | 'ar') =>
-                updatePreferences({ language: value })
-              }
-            >
-              <SelectTrigger id="language">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">English (LTR)</SelectItem>
-                <SelectItem value="he">עברית (RTL)</SelectItem>
-                <SelectItem value="ar">العربية (RTL)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
         {/* Reset Button */}
         <div className="pt-4 border-t">
           <Button
@@ -167,7 +140,6 @@ export const AccessibilitySettings: React.FC = () => {
               highContrast: false,
               reducedMotion: false,
               fontSize: 'medium',
-              language: 'en',
               announcements: true,
               keyboardNavigation: true,
             })}

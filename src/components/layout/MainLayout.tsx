@@ -50,7 +50,6 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
         "transition-colors duration-300",
         className
       )}
-      dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}
     >
       {/* Skip to main content link */}
       <a

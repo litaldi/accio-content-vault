@@ -11,7 +11,6 @@ import {
   Type, 
   Contrast, 
   Zap, 
-  Globe,
   X,
   Settings,
   Plus,
@@ -48,16 +47,11 @@ const AccessibilityToolbar: React.FC<AccessibilityToolbarProps> = ({ isOpen, onC
     document.documentElement.style.zoom = `${newZoom}%`;
   };
 
-  const handleLanguageChange = (language: 'en' | 'he' | 'ar') => {
-    updatePreferences({ language });
-  };
-
   const resetAllSettings = () => {
     updatePreferences({
       highContrast: false,
       reducedMotion: false,
       fontSize: 'medium',
-      language: 'en',
       announcements: true,
       keyboardNavigation: true,
     });
@@ -95,10 +89,9 @@ const AccessibilityToolbar: React.FC<AccessibilityToolbarProps> = ({ isOpen, onC
           
           <CardContent className="space-y-4">
             <Tabs defaultValue="display" className="w-full">
-              <TabsList className="grid w-full grid-cols-3">
+              <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="display">Display</TabsTrigger>
                 <TabsTrigger value="navigation">Navigation</TabsTrigger>
-                <TabsTrigger value="language">Language</TabsTrigger>
               </TabsList>
 
               <TabsContent value="display" className="space-y-4 mt-4">
@@ -231,31 +224,6 @@ const AccessibilityToolbar: React.FC<AccessibilityToolbarProps> = ({ isOpen, onC
                     <div><Badge variant="outline">?</Badge> Show shortcuts</div>
                   </div>
                 </div>
-              </TabsContent>
-
-              <TabsContent value="language" className="space-y-4 mt-4">
-                {/* Language Selection */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Language & Direction</label>
-                  <div className="space-y-2">
-                    {[
-                      { code: 'en', name: 'English (LTR)', flag: '🇺🇸' },
-                      { code: 'he', name: 'עברית (RTL)', flag: '🇮🇱' },
-                      { code: 'ar', name: 'العربية (RTL)', flag: '🇸🇦' }
-                    ].map((lang) => (
-                      <Button
-                        key={lang.code}
-                        variant={preferences.language === lang.code ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => handleLanguageChange(lang.code as any)}
-                        className="w-full justify-start"
-                      >
-                        <Globe className="h-3 w-3 mr-2" />
-                        {lang.flag} {lang.name}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
 
                 {/* Current Settings Summary */}
                 <div className="p-3 bg-muted rounded-lg">
@@ -265,7 +233,6 @@ const AccessibilityToolbar: React.FC<AccessibilityToolbarProps> = ({ isOpen, onC
                     <div>Zoom: {zoomLevel}%</div>
                     <div>High Contrast: {preferences.highContrast ? 'On' : 'Off'}</div>
                     <div>Reduced Motion: {preferences.reducedMotion ? 'On' : 'Off'}</div>
-                    <div>Language: {preferences.language.toUpperCase()}</div>
                   </div>
                 </div>
               </TabsContent>

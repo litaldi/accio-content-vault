@@ -35,10 +35,6 @@ const EnhancedAccessibility: React.FC = () => {
       root.classList.remove('reduce-motion');
     }
 
-    // Apply language direction
-    root.setAttribute('dir', preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr');
-    root.setAttribute('lang', preferences.language);
-
   }, [preferences]);
 
   return null;

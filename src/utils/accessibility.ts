@@ -22,30 +22,42 @@ export const announceToScreenReader = (
   }, 1000);
 };
 
-// Focus management utilities
-export const trapFocus = (element: HTMLElement): void => {
+// Get focusable elements utility
+export const getFocusableElements = (element: HTMLElement): HTMLElement[] => {
   const focusableElements = element.querySelectorAll(
     'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
   );
+  return Array.from(focusableElements) as HTMLElement[];
+};
+
+// Focus management utilities
+export const trapFocus = (element: HTMLElement): (() => void) => {
+  const focusableElements = getFocusableElements(element);
   
-  const firstElement = focusableElements[0] as HTMLElement;
-  const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
   
-  element.addEventListener('keydown', (e) => {
+  const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Tab') {
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
           e.preventDefault();
-          lastElement.focus();
+          lastElement?.focus();
         }
       } else {
         if (document.activeElement === lastElement) {
           e.preventDefault();
-          firstElement.focus();
+          firstElement?.focus();
         }
       }
     }
-  });
+  };
+
+  element.addEventListener('keydown', handleKeyDown);
+  
+  return () => {
+    element.removeEventListener('keydown', handleKeyDown);
+  };
 };
 
 // Keyboard navigation helper

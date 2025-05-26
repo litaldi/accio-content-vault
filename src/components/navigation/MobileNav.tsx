@@ -79,7 +79,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
         </Button>
       </SheetTrigger>
       <SheetContent 
-        side={preferences.language === 'he' || preferences.language === 'ar' ? 'left' : 'right'} 
+        side="right" 
         className="w-[300px]"
         id="mobile-navigation"
       >
