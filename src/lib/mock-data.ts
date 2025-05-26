@@ -10,6 +10,7 @@ export const mockContents: SavedContent[] = [
     title: 'How to Build a React App',
     description: 'Learn the basics of React and build your first application with this step-by-step tutorial.',
     image_url: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?q=80&w=2070',
+    content_type: 'url',
     created_at: new Date(2025, 4, 10).toISOString(),
     tags: [
       { id: 't1', name: 'react', auto_generated: true, confirmed: true },
@@ -24,6 +25,7 @@ export const mockContents: SavedContent[] = [
     title: 'Job Interview Tips',
     description: 'Top 10 tips to prepare for your next tech job interview and stand out from other candidates.',
     image_url: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2688',
+    content_type: 'url',
     created_at: new Date(2025, 4, 15).toISOString(),
     tags: [
       { id: 't4', name: 'job', auto_generated: true, confirmed: true },
@@ -37,6 +39,7 @@ export const mockContents: SavedContent[] = [
     url: 'https://example.com/article3',
     title: 'Productivity Tools for Developers',
     description: 'A curated list of the best productivity tools that every developer should try in 2025.',
+    content_type: 'url',
     created_at: new Date(2025, 4, 18).toISOString(),
     tags: [
       { id: 't7', name: 'productivity', auto_generated: true, confirmed: true },
@@ -53,6 +56,7 @@ export const mockContents: SavedContent[] = [
     file_url: 'https://example.com/files/requirements.pdf',
     file_type: 'pdf',
     file_size: 2500000,
+    content_type: 'document',
     created_at: new Date(2025, 4, 19).toISOString(),
     tags: [
       { id: 't10', name: 'project', auto_generated: true, confirmed: true },

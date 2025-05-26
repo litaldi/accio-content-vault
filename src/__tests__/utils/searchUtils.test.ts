@@ -69,6 +69,7 @@ describe('searchUtils', () => {
       description: 'A comprehensive guide to React development and testing',
       url: 'https://example.com/react-guide',
       file_url: '',
+      content_type: 'url',
       created_at: '2024-01-01T00:00:00Z',
       tags: [
         { id: 'tag-1', name: 'react', auto_generated: false, confirmed: true },

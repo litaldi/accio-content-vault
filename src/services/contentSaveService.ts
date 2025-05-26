@@ -57,6 +57,7 @@ export const useContentSaveService = () => {
         description: content.description || '',
         file_url: content.file_path || '',
         file_type: content.file_type as "image" | "pdf" | undefined,
+        content_type: content.content_type || 'url',
         created_at: content.created_at,
         tags: savedTags
       };

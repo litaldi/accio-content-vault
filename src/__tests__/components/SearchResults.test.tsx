@@ -46,6 +46,7 @@ describe('SearchResults', () => {
     url: 'https://example.com',
     description: 'This is a test content',
     file_url: '',
+    content_type: 'url',
     tags: [
       { id: 'tag1', name: 'React', auto_generated: false, confirmed: true },
       { id: 'tag2', name: 'Testing', auto_generated: true, confirmed: true }
