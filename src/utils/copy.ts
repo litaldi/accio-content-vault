@@ -1,5 +1,4 @@
 
-
 export const copy = {
   common: {
     required: 'Required field',
@@ -156,4 +155,3 @@ export const copy = {
     }
   }
 };
-
