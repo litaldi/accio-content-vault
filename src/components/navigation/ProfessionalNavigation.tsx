@@ -5,23 +5,17 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigation } from '@/hooks/use-navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Badge } from '@/components/ui/badge';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import NavigationLink from '@/components/common/NavigationLink';
 import { 
   Menu, 
   X, 
   Sparkles, 
-  LayoutDashboard,
-  BookmarkPlus,
-  FolderOpen,
-  BarChart3,
-  Settings,
-  HelpCircle,
   User,
   LogOut,
   LogIn,
-  UserPlus
+  UserPlus,
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,22 +24,13 @@ const ProfessionalNavigation = () => {
   const location = useLocation();
   const { isMobileMenuOpen, setMobileMenuOpen } = useNavigation();
 
-  const publicNavItems = [
-    { name: 'Home', href: '/', icon: Sparkles },
+  const mainNavItems = [
+    { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
-    { name: 'Pricing', href: '/pricing' },
-    { name: 'Help', href: '/help', icon: HelpCircle },
+    { name: 'Features', href: '/features' },
+    { name: 'Blog', href: '/blog' },
+    { name: 'Contact', href: '/contact' },
   ];
-
-  const authenticatedNavItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Save Content', href: '/save', icon: BookmarkPlus },
-    { name: 'Collections', href: '/collections', icon: FolderOpen },
-    { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-    { name: 'Settings', href: '/settings', icon: Settings },
-  ];
-
-  const navItems = user ? authenticatedNavItems : publicNavItems;
 
   const handleSignOut = async () => {
     try {
@@ -71,40 +56,41 @@ const ProfessionalNavigation = () => {
                 <Sparkles className="h-5 w-5 text-white" aria-hidden="true" />
               </div>
               <span className="font-bold text-xl">Accio</span>
-              {user && (
-                <Badge variant="secondary" className="ml-2 text-xs">
-                  Pro
-                </Badge>
-              )}
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
+          <div className="hidden md:flex items-center space-x-8">
+            {mainNavItems.map((item) => (
               <NavigationLink
                 key={item.href}
                 to={item.href}
-                className="px-3 py-2 rounded-md text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-                activeClassName="bg-accent text-accent-foreground"
+                className={cn(
+                  "relative px-3 py-2 text-sm font-medium transition-colors duration-200",
+                  "hover:text-primary focus-visible:outline-none focus-visible:ring-2",
+                  "focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md",
+                  "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full",
+                  "after:scale-x-0 after:bg-primary after:transition-transform after:duration-200",
+                  "hover:after:scale-x-100"
+                )}
+                activeClassName="text-primary after:scale-x-100"
                 aria-label={`Go to ${item.name}`}
               >
-                {item.icon && <item.icon className="h-4 w-4 mr-2" aria-hidden="true" />}
                 {item.name}
               </NavigationLink>
             ))}
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-2">
+          <div className="hidden md:flex items-center space-x-4">
             <AccessibilityButton variant="header" />
             
             {user ? (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <NavigationLink
-                  to="/settings"
-                  className="p-2 rounded-md hover:bg-accent"
-                  aria-label="User settings"
+                  to="/dashboard"
+                  className="p-2 rounded-md hover:bg-accent transition-colors"
+                  aria-label="Go to dashboard"
                 >
                   <User className="h-4 w-4" aria-hidden="true" />
                 </NavigationLink>
@@ -120,17 +106,17 @@ const ProfessionalNavigation = () => {
                 </Button>
               </div>
             ) : (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-3">
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/login" className="flex items-center gap-2">
                     <LogIn className="h-4 w-4" aria-hidden="true" />
                     Sign In
                   </Link>
                 </Button>
-                <Button size="sm" asChild>
-                  <Link to="/register" className="flex items-center gap-2">
-                    <UserPlus className="h-4 w-4" aria-hidden="true" />
-                    Sign Up
+                <Button size="sm" className="flex items-center gap-2" asChild>
+                  <Link to="/register">
+                    <Zap className="h-4 w-4" aria-hidden="true" />
+                    Get Started
                   </Link>
                 </Button>
               </div>
@@ -146,7 +132,7 @@ const ProfessionalNavigation = () => {
                   variant="ghost"
                   size="icon"
                   className="md:hidden"
-                  aria-label="Open menu"
+                  aria-label="Open main menu"
                   aria-expanded={isMobileMenuOpen}
                   aria-controls="mobile-menu"
                 >
@@ -158,30 +144,31 @@ const ProfessionalNavigation = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent id="mobile-menu" side="right" className="w-80">
-                <div className="flex flex-col space-y-4 mt-8">
-                  {navItems.map((item) => (
-                    <NavigationLink
-                      key={item.href}
-                      to={item.href}
-                      className="flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
-                      activeClassName="bg-accent text-accent-foreground"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {item.icon && <item.icon className="h-5 w-5 mr-3" aria-hidden="true" />}
-                      {item.name}
-                    </NavigationLink>
-                  ))}
+                <div className="flex flex-col space-y-6 mt-8">
+                  <nav className="flex flex-col space-y-4" role="navigation" aria-label="Mobile navigation">
+                    {mainNavItems.map((item) => (
+                      <NavigationLink
+                        key={item.href}
+                        to={item.href}
+                        className="flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+                        activeClassName="bg-accent text-accent-foreground"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {item.name}
+                      </NavigationLink>
+                    ))}
+                  </nav>
                   
-                  <div className="border-t pt-4 mt-4">
+                  <div className="border-t pt-6">
                     {user ? (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         <NavigationLink
-                          to="/settings"
+                          to="/dashboard"
                           className="flex items-center px-3 py-2 rounded-md text-base font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
                           onClick={() => setMobileMenuOpen(false)}
                         >
                           <User className="h-5 w-5 mr-3" aria-hidden="true" />
-                          Profile
+                          Dashboard
                         </NavigationLink>
                         <Button
                           variant="ghost"
@@ -193,7 +180,7 @@ const ProfessionalNavigation = () => {
                         </Button>
                       </div>
                     ) : (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         <Button variant="ghost" className="w-full justify-start" asChild>
                           <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
                             <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
@@ -202,8 +189,8 @@ const ProfessionalNavigation = () => {
                         </Button>
                         <Button className="w-full justify-start" asChild>
                           <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                            <UserPlus className="h-4 w-4 mr-2" aria-hidden="true" />
-                            Sign Up
+                            <Zap className="h-4 w-4 mr-2" aria-hidden="true" />
+                            Get Started
                           </Link>
                         </Button>
                       </div>

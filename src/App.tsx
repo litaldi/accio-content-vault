@@ -16,6 +16,7 @@ import Collections from '@/pages/Collections';
 import Analytics from '@/pages/Analytics';
 import Settings from '@/pages/Settings';
 import About from '@/pages/About';
+import Features from '@/pages/Features';
 import Contact from '@/pages/Contact';
 import Pricing from '@/pages/Pricing';
 import Privacy from '@/pages/Privacy';
