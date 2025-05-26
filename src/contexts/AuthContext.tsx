@@ -5,13 +5,20 @@ interface User {
   id: string;
   email: string;
   name: string;
+  user_metadata?: {
+    role?: string;
+    [key: string]: any;
+  };
 }
 
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
+  loading: boolean; // Alias for compatibility
+  isDemoMode: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, metadata?: { name?: string }) => Promise<void>;
+  signInWithProvider: (provider: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -32,6 +39,7 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDemoMode] = useState(true); // Default to demo mode
 
   useEffect(() => {
     // Check for stored user session
@@ -55,7 +63,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const mockUser: User = {
         id: '1',
         email,
-        name: email.split('@')[0]
+        name: email.split('@')[0],
+        user_metadata: {
+          role: 'user'
+        }
       };
       
       setUser(mockUser);
@@ -76,13 +87,41 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const mockUser: User = {
         id: Date.now().toString(),
         email,
-        name: metadata?.name || email.split('@')[0]
+        name: metadata?.name || email.split('@')[0],
+        user_metadata: {
+          role: 'user'
+        }
       };
       
       setUser(mockUser);
       localStorage.setItem('accio_user', JSON.stringify(mockUser));
     } catch (error) {
       throw new Error('Failed to create account');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithProvider = async (provider: string): Promise<void> => {
+    setIsLoading(true);
+    try {
+      // Simulate OAuth flow
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      const mockUser: User = {
+        id: Date.now().toString(),
+        email: `user@${provider}.com`,
+        name: `${provider} User`,
+        user_metadata: {
+          role: 'user',
+          provider
+        }
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('accio_user', JSON.stringify(mockUser));
+    } catch (error) {
+      throw new Error(`Failed to sign in with ${provider}`);
     } finally {
       setIsLoading(false);
     }
@@ -106,8 +145,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const value: AuthContextType = {
     user,
     isLoading,
+    loading: isLoading, // Alias for compatibility
+    isDemoMode,
     signIn,
     signUp,
+    signInWithProvider,
     signOut
   };
 

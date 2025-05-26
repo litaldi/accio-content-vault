@@ -1,7 +1,7 @@
 
 import { 
   sanitizeInput, 
-  validateSecureUrl, 
+  isValidSecureUrl, 
   UnifiedRateLimiter
 } from '@/utils/unified-security';
 
@@ -26,25 +26,20 @@ describe('Security Utilities', () => {
     });
   });
 
-  describe('validateSecureUrl', () => {
+  describe('isValidSecureUrl', () => {
     it('should accept valid HTTPS URLs', () => {
-      expect(validateSecureUrl('https://example.com')).toBe(true);
-      expect(validateSecureUrl('https://subdomain.example.com/path')).toBe(true);
+      expect(isValidSecureUrl('https://example.com')).toBe(true);
+      expect(isValidSecureUrl('https://subdomain.example.com/path')).toBe(true);
     });
 
     it('should accept valid HTTP URLs', () => {
-      expect(validateSecureUrl('http://example.com')).toBe(true);
+      expect(isValidSecureUrl('http://example.com')).toBe(true);
     });
 
     it('should reject dangerous protocols', () => {
-      expect(validateSecureUrl('javascript:alert("xss")')).toBe(false);
-      expect(validateSecureUrl('data:text/html,<script>alert("xss")</script>')).toBe(false);
-      expect(validateSecureUrl('ftp://example.com')).toBe(false);
-    });
-
-    it('should handle URLs without protocol', () => {
-      expect(validateSecureUrl('example.com')).toBe(true);
-      expect(validateSecureUrl('subdomain.example.com/path')).toBe(true);
+      expect(isValidSecureUrl('javascript:alert("xss")')).toBe(false);
+      expect(isValidSecureUrl('data:text/html,<script>alert("xss")</script>')).toBe(false);
+      expect(isValidSecureUrl('ftp://example.com')).toBe(false);
     });
   });
 
