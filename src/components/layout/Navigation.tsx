@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -139,6 +140,8 @@ const Navigation = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
+            <ThemeToggle variant="icon" size="sm" />
+            
             {user ? (
               <>
                 <Button
@@ -178,17 +181,20 @@ const Navigation = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleMenu}
-            className="md:hidden"
-            aria-expanded={isMenuOpen}
-            aria-controls="mobile-menu"
-            aria-label={isMenuOpen ? copy.accessibility.closeMenu : copy.accessibility.openMenu}
-          >
-            {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          <div className="md:hidden flex items-center gap-2">
+            <ThemeToggle variant="icon" size="sm" />
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleMenu}
+              aria-expanded={isMenuOpen}
+              aria-controls="mobile-menu"
+              aria-label={isMenuOpen ? copy.accessibility.closeMenu : copy.accessibility.openMenu}
+            >
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -223,8 +229,13 @@ const Navigation = () => {
                 </Link>
               ))}
 
+              {/* Mobile Theme Toggle */}
+              <div className="pt-4 border-t">
+                <ThemeToggle variant="iconText" size="sm" />
+              </div>
+
               {/* Mobile Auth Buttons */}
-              <div className="pt-4 border-t space-y-3">
+              <div className="pt-2 border-t space-y-3">
                 {user ? (
                   <>
                     <Button

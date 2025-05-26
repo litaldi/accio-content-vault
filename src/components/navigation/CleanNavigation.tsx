@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -103,6 +104,8 @@ const CleanNavigation = () => {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-2">
+          <ThemeToggle variant="icon" size="sm" />
+          
           {user ? (
             <div className="flex items-center space-x-2">
               <Button variant="outline" size="sm" asChild>
@@ -137,15 +140,18 @@ const CleanNavigation = () => {
         </div>
 
         {/* Mobile Menu Button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="md:hidden"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </Button>
+        <div className="md:hidden flex items-center space-x-2">
+          <ThemeToggle variant="icon" size="sm" />
+          
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
+        </div>
       </div>
 
       {/* Mobile Menu */}
@@ -172,6 +178,8 @@ const CleanNavigation = () => {
             ))}
             
             <div className="pt-2 border-t space-y-2">
+              <ThemeToggle variant="iconText" size="sm" />
+              
               {user ? (
                 <>
                   <Button variant="outline" size="sm" className="w-full justify-start" asChild>

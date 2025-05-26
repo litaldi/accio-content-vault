@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -18,15 +19,11 @@ import {
   Brain,
   BookmarkPlus,
   Sparkles,
-  HelpCircle,
-  Sun,
-  Moon
+  HelpCircle
 } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
 
 const MainNavigation = () => {
   const { user, signOut } = useAuth();
-  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -168,19 +165,7 @@ const MainNavigation = () => {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-2">
             {/* Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-              title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Button>
+            <ThemeToggle variant="icon" size="sm" />
 
             {user ? (
               <>
@@ -236,18 +221,7 @@ const MainNavigation = () => {
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
             {/* Mobile Theme Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Button>
+            <ThemeToggle variant="icon" size="sm" />
 
             <Button
               variant="ghost"
@@ -299,8 +273,13 @@ const MainNavigation = () => {
                 ))}
               </nav>
 
+              {/* Mobile Theme Toggle */}
+              <div className="pt-2 border-t">
+                <ThemeToggle variant="iconText" size="sm" />
+              </div>
+
               {/* Mobile Auth Actions */}
-              <div className="pt-4 border-t space-y-2">
+              <div className="pt-2 border-t space-y-2">
                 {user ? (
                   <>
                     <Button
