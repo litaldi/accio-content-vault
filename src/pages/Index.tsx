@@ -16,9 +16,14 @@ import {
   Star,
   Users,
   Bookmark,
-  TrendingUp
+  TrendingUp,
+  Network,
+  Download,
+  BookOpen,
+  Filter
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { QuickCaptureWidget } from '@/components/features/QuickCaptureWidget';
 
 const Index = () => {
   const features = [
@@ -36,6 +41,42 @@ const Index = () => {
       icon: Shield,
       title: "Secure & Private",
       description: "Your data stays private with enterprise-grade security and end-to-end encryption."
+    },
+    {
+      icon: Network,
+      title: "Knowledge Graph",
+      description: "Visualize connections between your ideas and discover insights through interactive graphs."
+    },
+    {
+      icon: BookOpen,
+      title: "Reading Mode",
+      description: "Distraction-free reading experience with customizable fonts, themes, and layouts."
+    },
+    {
+      icon: Download,
+      title: "Data Portability",
+      description: "Export your data in multiple formats or import from other knowledge management tools."
+    }
+  ];
+
+  const newFeatures = [
+    {
+      icon: Zap,
+      title: "Quick Capture",
+      description: "Save content instantly from anywhere with our floating capture widget.",
+      badge: "New"
+    },
+    {
+      icon: Filter,
+      title: "Advanced Search",
+      description: "Powerful filtering and search capabilities to find exactly what you need.",
+      badge: "Enhanced"
+    },
+    {
+      icon: Network,
+      title: "Knowledge Graph",
+      description: "Visualize relationships between your content, tags, and collections.",
+      badge: "Beta"
     }
   ];
 
@@ -102,6 +143,43 @@ const Index = () => {
           </div>
         </section>
 
+        {/* New Features Highlight */}
+        <section className="py-16 bg-gradient-to-br from-primary/5 to-background">
+          <div className="container">
+            <div className="text-center mb-12">
+              <Badge variant="outline" className="mb-4">
+                <Zap className="h-3 w-3 mr-1" />
+                Latest Features
+              </Badge>
+              <h2 className="text-3xl font-bold mb-4">
+                Powerful new tools to supercharge your workflow
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                We're constantly adding new features to make knowledge management effortless
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {newFeatures.map((feature, index) => (
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-card/50 backdrop-blur">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <feature.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <Badge variant="secondary">{feature.badge}</Badge>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Features Section */}
         <section className="py-24 bg-muted/30">
           <div className="container">
@@ -114,7 +192,7 @@ const Index = () => {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
                 <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
                   <CardContent className="p-8">
@@ -245,6 +323,9 @@ const Index = () => {
       </main>
 
       <Footer />
+      
+      {/* Quick Capture Widget */}
+      <QuickCaptureWidget />
     </div>
   );
 };
