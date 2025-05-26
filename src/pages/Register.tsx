@@ -1,304 +1,180 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { UnifiedTypography } from '@/components/ui/unified-design-system';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useToast } from '@/hooks/use-toast';
+import { EnhancedForm } from '@/components/forms/EnhancedForm';
 import { useAuth } from '@/contexts/AuthContext';
-import { Eye, EyeOff, Sparkles, CheckCircle, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useToast } from '@/hooks/use-toast';
+import { createRateLimit } from '@/utils/input-validation';
+import { ArrowLeft, Shield, CheckCircle } from 'lucide-react';
+
+// Rate limiting: 3 attempts per 10 minutes
+const registerRateLimit = createRateLimit(3, 10 * 60 * 1000);
 
 const Register = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const { signUp } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { signUp, user } = useAuth();
+  const [isLoading, setIsLoading] = React.useState(false);
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
+  const handleRegister = async (data: { email: string; password: string; csrfToken: string }) => {
+    // Check rate limiting
+    const identifier = `register_${data.email}`;
+    const rateLimitResult = registerRateLimit(identifier);
+    
+    if (!rateLimitResult.allowed) {
+      const resetTime = rateLimitResult.resetTime ? new Date(rateLimitResult.resetTime) : null;
+      toast({
+        title: "Too many attempts",
+        description: resetTime 
+          ? `Please try again after ${resetTime.toLocaleTimeString()}`
+          : "Please try again later",
+        variant: "destructive"
+      });
+      return;
     }
-  }, [user, navigate]);
 
-  const benefits = [
-    "AI-powered content organization",
-    "Unlimited storage and collections", 
-    "Advanced semantic search",
-    "Team collaboration features",
-    "Priority customer support"
-  ];
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
     setIsLoading(true);
-    setError('');
-
-    if (password !== confirmPassword) {
-      setError('Passwords do not match.');
-      setIsLoading(false);
-      return;
-    }
-
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters long.');
-      setIsLoading(false);
-      return;
-    }
-
+    
     try {
-      const { error: signUpError } = await signUp(email, password);
+      const { error } = await signUp(data.email, data.password);
       
-      if (signUpError) {
-        setError(signUpError.message || 'Failed to create account.');
-      } else {
+      if (error) {
+        let errorMessage = "An error occurred during registration. Please try again.";
+        
+        if (error.message.includes('already registered')) {
+          errorMessage = "An account with this email already exists. Please sign in instead.";
+        } else if (error.message.includes('password')) {
+          errorMessage = "Password doesn't meet security requirements. Please choose a stronger password.";
+        } else if (error.message.includes('email')) {
+          errorMessage = "Please enter a valid email address.";
+        }
+        
         toast({
-          title: "Welcome to Accio! 🎉",
-          description: "Your account has been created successfully. Let's get started!",
+          title: "Registration failed",
+          description: errorMessage,
+          variant: "destructive"
         });
-        navigate('/dashboard');
+        return;
       }
+
+      toast({
+        title: "Account created successfully!",
+        description: "Welcome to Accio. You can now start organizing your knowledge.",
+        variant: "default"
+      });
+      
+      navigate('/dashboard');
     } catch (error) {
-      setError('Something went wrong. Please try again.');
+      console.error('Registration error:', error);
+      toast({
+        title: "Registration failed",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
+  const securityFeatures = [
+    "End-to-end encryption",
+    "Secure data storage",
+    "Privacy-first design",
+    "GDPR compliant"
+  ];
+
   return (
-    <>
+    <UnifiedLayout>
       <Helmet>
-        <title>Create Your Account - Accio Knowledge Engine</title>
-        <meta name="description" content="Join thousands of professionals using Accio to transform their knowledge management. Start your free account today." />
+        <title>Create Account - Accio</title>
+        <meta name="description" content="Create your free Accio account and start organizing your digital knowledge with AI-powered tools." />
+        <meta name="robots" content="noindex" />
       </Helmet>
 
-      <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
-        <div className="w-full max-w-5xl grid lg:grid-cols-2 gap-12 items-center">
-          
-          {/* Left Side - Benefits */}
-          <div className="hidden lg:block space-y-8 animate-fade-in">
-            <div>
-              <h1 className="text-4xl font-bold mb-4">
-                Transform Your
-                <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
-                  Knowledge Management
-                </span>
-              </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Join thousands of professionals who've revolutionized how they organize and access information.
-              </p>
+      <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12">
+        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl w-full">
+          {/* Left Column - Benefits */}
+          <div className="space-y-8 flex flex-col justify-center">
+            <div className="space-y-4">
+              <UnifiedTypography.H2>
+                Start Your Knowledge Journey
+              </UnifiedTypography.H2>
+              <UnifiedTypography.Body>
+                Join thousands of professionals who have transformed their digital workspace with Accio's AI-powered organization.
+              </UnifiedTypography.Body>
             </div>
 
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">What you'll get:</h3>
-              <ul className="space-y-3">
-                {benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-center gap-3 animate-slide-in-right" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle className="h-4 w-4 text-primary" />
-                    </div>
-                    <span className="text-muted-foreground">{benefit}</span>
+              <div className="flex items-center gap-3">
+                <Shield className="h-5 w-5 text-primary" />
+                <UnifiedTypography.Body className="font-medium">
+                  Enterprise-grade security
+                </UnifiedTypography.Body>
+              </div>
+              
+              <ul className="space-y-3 ml-8">
+                {securityFeatures.map((feature, index) => (
+                  <li key={index} className="flex items-center gap-2 text-sm">
+                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    {feature}
                   </li>
                 ))}
               </ul>
             </div>
 
-            <div className="p-6 bg-card border border-border rounded-xl">
-              <blockquote className="text-muted-foreground italic">
-                "Accio transformed how I manage research. I've saved hours every week and never lose important information anymore."
-              </blockquote>
-              <div className="mt-3 text-sm">
-                <span className="font-medium">Dr. Sarah Chen</span>
-                <span className="text-muted-foreground"> - Research Scientist</span>
-              </div>
-            </div>
+            <Button variant="ghost" asChild className="self-start group">
+              <Link to="/" className="flex items-center gap-2">
+                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                Back to Home
+              </Link>
+            </Button>
           </div>
 
-          {/* Right Side - Registration Form */}
-          <div className="w-full max-w-md mx-auto lg:mx-0 animate-scale-in">
-            {/* Header */}
-            <div className="text-center mb-8">
-              <Link 
-                to="/" 
-                className="inline-flex items-center gap-3 mb-6 hover:opacity-90 transition-opacity focus-visible:ring-2 focus-visible:ring-primary rounded-lg p-1"
-                aria-label="Go to Accio homepage"
-              >
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
-                  <span className="text-primary-foreground font-bold text-xl" aria-hidden="true">A</span>
-                </div>
-                <span className="text-2xl font-bold text-primary">Accio</span>
-              </Link>
-              <h2 className="text-2xl font-bold text-foreground mb-2">Create your account</h2>
-              <p className="text-muted-foreground">Start your knowledge transformation today</p>
-            </div>
+          {/* Right Column - Form */}
+          <div className="flex flex-col justify-center">
+            <EnhancedForm
+              mode="register"
+              onSubmit={handleRegister}
+              isLoading={isLoading}
+            />
 
-            {/* Register Form */}
-            <Card className="border-border bg-card/50 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="text-card-foreground flex items-center gap-2">
-                  <Sparkles className="h-5 w-5 text-primary" />
-                  Get Started Free
-                </CardTitle>
-                <CardDescription className="text-muted-foreground">
-                  No credit card required • 14-day free trial
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                  {error && (
-                    <Alert variant="destructive" role="alert">
-                      <AlertDescription>{error}</AlertDescription>
-                    </Alert>
-                  )}
-
-                  {/* Email */}
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium text-foreground">
-                      Email Address
-                      <span className="text-destructive ml-1" aria-label="required">*</span>
-                    </label>
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="you@company.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                      autoComplete="email"
-                      className="bg-background/50"
-                    />
-                  </div>
-
-                  {/* Password */}
-                  <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-medium text-foreground">
-                      Password
-                      <span className="text-destructive ml-1" aria-label="required">*</span>
-                    </label>
-                    <div className="relative">
-                      <Input
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Create a strong password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        autoComplete="new-password"
-                        className="pr-10 bg-background/50"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className={cn(
-                          "absolute right-3 top-1/2 transform -translate-y-1/2",
-                          "text-muted-foreground hover:text-foreground",
-                          "focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-1"
-                        )}
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                        tabIndex={0}
-                      >
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      Must be at least 6 characters long
-                    </p>
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div className="space-y-2">
-                    <label htmlFor="confirmPassword" className="text-sm font-medium text-foreground">
-                      Confirm Password
-                      <span className="text-destructive ml-1" aria-label="required">*</span>
-                    </label>
-                    <div className="relative">
-                      <Input
-                        id="confirmPassword"
-                        type={showConfirmPassword ? 'text' : 'password'}
-                        placeholder="Confirm your password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        required
-                        autoComplete="new-password"
-                        className="pr-10 bg-background/50"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className={cn(
-                          "absolute right-3 top-1/2 transform -translate-y-1/2",
-                          "text-muted-foreground hover:text-foreground",
-                          "focus-visible:ring-2 focus-visible:ring-primary rounded-sm p-1"
-                        )}
-                        aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
-                        tabIndex={0}
-                      >
-                        {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
-
-                  <Button 
-                    type="submit" 
-                    className="w-full btn-primary" 
-                    disabled={isLoading}
-                    aria-describedby={isLoading ? "loading-announcement" : undefined}
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                        Creating your account...
-                      </>
-                    ) : (
-                      <>
-                        Create Account
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-                  
-                  {isLoading && (
-                    <div id="loading-announcement" className="sr-only" aria-live="polite">
-                      Creating your account, please wait
-                    </div>
-                  )}
-                </form>
-
-                {/* Terms */}
-                <p className="text-xs text-muted-foreground mt-4 text-center leading-relaxed">
-                  By creating an account, you agree to our{' '}
-                  <Link to="/terms" className="text-primary hover:underline">Terms of Service</Link>
-                  {' '}and{' '}
-                  <Link to="/privacy" className="text-primary hover:underline">Privacy Policy</Link>.
-                </p>
-              </CardContent>
-            </Card>
-
-            {/* Login Link */}
-            <div className="text-center mt-6">
-              <p className="text-sm text-muted-foreground">
+            {/* Sign In Link */}
+            <div className="text-center mt-6 space-y-4">
+              <UnifiedTypography.Body className="text-sm">
                 Already have an account?{' '}
                 <Link 
                   to="/login" 
-                  className="text-primary hover:underline font-medium focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
+                  className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
                 >
                   Sign in here
                 </Link>
-              </p>
+              </UnifiedTypography.Body>
+              
+              <div className="text-xs text-muted-foreground">
+                By creating an account, you agree to our{' '}
+                <Link 
+                  to="/terms" 
+                  className="hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                >
+                  Terms of Service
+                </Link>
+                {' and '}
+                <Link 
+                  to="/privacy" 
+                  className="hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                >
+                  Privacy Policy
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </UnifiedLayout>
   );
 };
 

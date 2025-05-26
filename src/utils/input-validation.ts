@@ -1,58 +1,25 @@
 
 /**
- * Input validation and sanitization utilities for security
+ * Comprehensive input validation and sanitization utilities
+ * Following OWASP security guidelines
  */
 
-// HTML sanitization to prevent XSS
-export const sanitizeHtml = (input: string): string => {
-  // Create a temporary div to leverage browser's HTML parsing
-  const temp = document.createElement('div');
-  temp.textContent = input;
-  return temp.innerHTML;
+// CSRF Token Generation
+export const generateCSRFToken = (): string => {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
 };
 
-// Email validation with proper regex
-export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(email.trim());
-};
-
-// Password strength validation
-export const validatePassword = (password: string): {
-  isValid: boolean;
-  errors: string[];
-} => {
-  const errors: string[] = [];
-  
-  if (password.length < 8) {
-    errors.push('Password must be at least 8 characters long');
-  }
-  
-  if (!/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter');
-  }
-  
-  if (!/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter');
-  }
-  
-  if (!/\d/.test(password)) {
-    errors.push('Password must contain at least one number');
-  }
-  
-  return {
-    isValid: errors.length === 0,
-    errors
-  };
-};
-
-// Generic text input sanitization
+// Enhanced text input sanitization
 export const sanitizeTextInput = (input: string, maxLength: number = 1000): string => {
+  if (typeof input !== 'string') return '';
+  
   return input
     .trim()
     .slice(0, maxLength)
     .replace(/[<>'"&]/g, (match) => {
-      const entities: { [key: string]: string } = {
+      const entities: Record<string, string> = {
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
@@ -60,76 +27,137 @@ export const sanitizeTextInput = (input: string, maxLength: number = 1000): stri
         '&': '&amp;'
       };
       return entities[match] || match;
-    });
+    })
+    .replace(/javascript:/gi, '')
+    .replace(/on\w+\s*=/gi, '');
 };
 
-// URL validation
-export const isValidUrl = (url: string): boolean => {
-  try {
-    const urlObj = new URL(url);
-    return ['http:', 'https:'].includes(urlObj.protocol);
-  } catch {
-    return false;
+// Email validation with security checks
+export const validateEmail = (email: string): { isValid: boolean; error?: string } => {
+  if (!email || email.length === 0) {
+    return { isValid: false, error: 'Email is required' };
   }
+  
+  if (email.length > 254) {
+    return { isValid: false, error: 'Email is too long' };
+  }
+  
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  if (!emailRegex.test(email)) {
+    return { isValid: false, error: 'Please enter a valid email address' };
+  }
+  
+  // Check for suspicious patterns
+  if (email.includes('..') || email.startsWith('.') || email.endsWith('.')) {
+    return { isValid: false, error: 'Email format is invalid' };
+  }
+  
+  return { isValid: true };
 };
 
-// File type validation for uploads
-export const validateFileType = (file: File, allowedTypes: string[]): boolean => {
-  return allowedTypes.includes(file.type);
+// Password strength validation
+export const validatePassword = (password: string): { 
+  isValid: boolean; 
+  strength: 'weak' | 'medium' | 'strong';
+  errors: string[];
+} => {
+  const errors: string[] = [];
+  let score = 0;
+  
+  if (!password || password.length === 0) {
+    return { isValid: false, strength: 'weak', errors: ['Password is required'] };
+  }
+  
+  if (password.length < 8) {
+    errors.push('Password must be at least 8 characters long');
+  } else {
+    score += 1;
+  }
+  
+  if (!/[a-z]/.test(password)) {
+    errors.push('Password must contain at least one lowercase letter');
+  } else {
+    score += 1;
+  }
+  
+  if (!/[A-Z]/.test(password)) {
+    errors.push('Password must contain at least one uppercase letter');
+  } else {
+    score += 1;
+  }
+  
+  if (!/\d/.test(password)) {
+    errors.push('Password must contain at least one number');
+  } else {
+    score += 1;
+  }
+  
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    errors.push('Password must contain at least one special character');
+  } else {
+    score += 1;
+  }
+  
+  const strength = score <= 2 ? 'weak' : score <= 4 ? 'medium' : 'strong';
+  const isValid = errors.length === 0 && score >= 4;
+  
+  return { isValid, strength, errors };
 };
 
-// File size validation (in bytes)
-export const validateFileSize = (file: File, maxSizeBytes: number): boolean => {
-  return file.size <= maxSizeBytes;
-};
-
-// Rate limiting helper for client-side
-export const createRateLimiter = (maxAttempts: number, windowMs: number) => {
+// Rate limiting for client-side protection
+export const createRateLimit = (maxAttempts: number, windowMs: number) => {
   const attempts = new Map<string, number[]>();
   
-  return (identifier: string): boolean => {
+  return (identifier: string): { allowed: boolean; resetTime?: number } => {
     const now = Date.now();
     const userAttempts = attempts.get(identifier) || [];
     
-    // Remove old attempts outside the window
-    const recentAttempts = userAttempts.filter(time => now - time < windowMs);
+    // Clean old attempts
+    const validAttempts = userAttempts.filter(time => now - time < windowMs);
     
-    if (recentAttempts.length >= maxAttempts) {
-      return false; // Rate limit exceeded
+    if (validAttempts.length >= maxAttempts) {
+      const oldestAttempt = Math.min(...validAttempts);
+      return {
+        allowed: false,
+        resetTime: oldestAttempt + windowMs
+      };
     }
     
-    recentAttempts.push(now);
-    attempts.set(identifier, recentAttempts);
-    return true;
+    validAttempts.push(now);
+    attempts.set(identifier, validAttempts);
+    
+    return { allowed: true };
   };
 };
 
-// CSRF token generation for forms
-export const generateCSRFToken = (): string => {
-  const array = new Uint8Array(32);
-  crypto.getRandomValues(array);
-  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
-};
-
-// Secure headers validation
-export const validateSecureHeaders = (): void => {
-  // Check if running in secure context
-  if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-    console.warn('Application should be served over HTTPS in production');
+// URL validation with security checks
+export const validateUrl = (url: string): { isValid: boolean; error?: string } => {
+  if (!url || url.length === 0) {
+    return { isValid: false, error: 'URL is required' };
   }
   
-  // Check for security headers (for development awareness)
-  if (typeof window !== 'undefined') {
-    const headers = [
-      'Content-Security-Policy',
-      'X-Frame-Options', 
-      'X-Content-Type-Options',
-      'Referrer-Policy'
-    ];
+  try {
+    const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
     
-    headers.forEach(header => {
-      // This is just for development awareness
-      console.debug(`Security header check: ${header}`);
-    });
+    // Block dangerous protocols
+    if (!['http:', 'https:'].includes(urlObj.protocol)) {
+      return { isValid: false, error: 'Only HTTP and HTTPS protocols are allowed' };
+    }
+    
+    // Block local/private IPs in production
+    if (import.meta.env.PROD) {
+      const hostname = urlObj.hostname;
+      if (hostname === 'localhost' || 
+          hostname.startsWith('127.') || 
+          hostname.startsWith('192.168.') ||
+          hostname.startsWith('10.') ||
+          hostname.match(/^172\.(1[6-9]|2\d|3[01])\./)) {
+        return { isValid: false, error: 'Private IP addresses are not allowed' };
+      }
+    }
+    
+    return { isValid: true };
+  } catch {
+    return { isValid: false, error: 'Please enter a valid URL' };
   }
 };
