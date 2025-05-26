@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,12 +9,26 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Brain, Loader2, AlertCircle, CheckCircle, Chrome } from 'lucide-react';
+import { 
+  Eye, 
+  EyeOff, 
+  Mail, 
+  Lock, 
+  User, 
+  ArrowRight, 
+  Brain, 
+  Loader2, 
+  AlertCircle, 
+  CheckCircle,
+  Shield,
+  Chrome
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Register = () => {
   const { user, signUp } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const nameInputRef = useRef<HTMLInputElement>(null);
   
@@ -26,62 +40,79 @@ const Register = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [errors, setErrors] = useState<{[key: string]: string}>({});
-  const [touched, setTouched] = useState<{[key: string]: boolean}>({});
+
+  // Get redirect path from URL params or default to dashboard
+  const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate(from, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, from]);
 
-  // Autofocus on first input
+  // Autofocus on name input
   useEffect(() => {
     if (nameInputRef.current) {
       nameInputRef.current.focus();
     }
   }, []);
 
-  // Real-time validation
-  const validateField = (field: string, value: string) => {
-    switch (field) {
-      case 'name':
-        if (!value.trim()) return 'Name is required';
-        if (value.trim().length < 2) return 'Name must be at least 2 characters';
-        return '';
-      case 'email':
-        if (!value.trim()) return 'Email is required';
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please enter a valid email address';
-        return '';
-      case 'password':
-        if (!value) return 'Password is required';
-        if (value.length < 8) return 'Password must be at least 8 characters';
-        if (!/(?=.*[a-z])/.test(value)) return 'Password must contain at least one lowercase letter';
-        if (!/(?=.*[A-Z])/.test(value)) return 'Password must contain at least one uppercase letter';
-        if (!/(?=.*\d)/.test(value)) return 'Password must contain at least one number';
-        return '';
-      case 'confirmPassword':
-        if (!value) return 'Please confirm your password';
-        if (value !== formData.password) return 'Passwords do not match';
-        return '';
-      default:
-        return '';
-    }
+  const getPasswordStrength = (password: string) => {
+    if (!password) return { strength: 'none', score: 0 };
+    
+    let score = 0;
+    const checks = {
+      length: password.length >= 8,
+      lowercase: /[a-z]/.test(password),
+      uppercase: /[A-Z]/.test(password),
+      numbers: /\d/.test(password),
+      symbols: /[^A-Za-z0-9]/.test(password)
+    };
+    
+    score = Object.values(checks).filter(Boolean).length;
+    
+    if (score < 3) return { strength: 'weak', score, checks };
+    if (score < 5) return { strength: 'medium', score, checks };
+    return { strength: 'strong', score, checks };
   };
+
+  const passwordStrength = getPasswordStrength(formData.password);
 
   const validateForm = () => {
     const newErrors: {[key: string]: string} = {};
     
-    Object.keys(formData).forEach(field => {
-      const error = validateField(field, formData[field as keyof typeof formData]);
-      if (error) newErrors[field] = error;
-    });
+    if (!formData.name.trim()) {
+      newErrors.name = 'Full name is required';
+    } else if (formData.name.trim().length < 2) {
+      newErrors.name = 'Name must be at least 2 characters';
+    }
     
-    if (!acceptedTerms) {
-      newErrors.terms = 'You must accept the terms and conditions';
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    } else if (passwordStrength.strength === 'weak') {
+      newErrors.password = 'Please create a stronger password';
+    }
+    
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    if (!acceptTerms) {
+      newErrors.terms = 'You must accept the Terms of Service to continue';
     }
     
     setErrors(newErrors);
@@ -106,16 +137,16 @@ const Register = () => {
     try {
       await signUp(formData.email.trim(), formData.password);
       toast({
-        title: "Welcome to Accio!",
-        description: "Your account has been created successfully. Welcome aboard!",
+        title: "Account created successfully!",
+        description: "Welcome to Accio! You can now start building your knowledge library.",
       });
-      navigate('/dashboard');
+      navigate(from, { replace: true });
     } catch (error: any) {
       console.error('Registration error:', error);
       const errorMessage = error.message || "Failed to create account. Please try again.";
       setErrors({ submit: errorMessage });
       toast({
-        title: "Registration failed",
+        title: "Account creation failed",
         description: errorMessage,
         variant: "destructive",
       });
@@ -126,43 +157,16 @@ const Register = () => {
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    setTouched(prev => ({ ...prev, [field]: true }));
-    
-    // Real-time validation
-    if (touched[field]) {
-      const error = validateField(field, value);
-      setErrors(prev => ({ ...prev, [field]: error, submit: '' }));
+    // Clear field-specific errors when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '', submit: '' }));
     }
   };
 
-  const handleBlur = (field: keyof typeof formData) => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    const error = validateField(field, formData[field]);
-    setErrors(prev => ({ ...prev, [field]: error }));
-  };
-
-  const getPasswordStrength = (password: string) => {
-    if (password.length === 0) return { strength: 0, label: '' };
-    if (password.length < 6) return { strength: 1, label: 'Weak' };
-    if (password.length < 8) return { strength: 2, label: 'Fair' };
-    
-    let score = 0;
-    if (/(?=.*[a-z])/.test(password)) score++;
-    if (/(?=.*[A-Z])/.test(password)) score++;
-    if (/(?=.*\d)/.test(password)) score++;
-    if (/(?=.*[!@#$%^&*])/.test(password)) score++;
-    
-    if (score < 2) return { strength: 2, label: 'Fair' };
-    if (score < 4) return { strength: 3, label: 'Good' };
-    return { strength: 4, label: 'Strong' };
-  };
-
-  const passwordStrength = getPasswordStrength(formData.password);
-
   return (
     <UnifiedPageLayout
-      title="Create Account - Join Accio"
-      description="Create your Accio account to start building your personal knowledge sanctuary with AI-powered insights."
+      title="Create Account - Join Accio | Accio"
+      description="Create your free Accio account to start building your personal knowledge sanctuary with AI-powered organization and insights."
       showNavigation={true}
       showFooter={true}
     >
@@ -176,9 +180,9 @@ const Register = () => {
               </div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Join Accio</h1>
+              <h1 className="text-3xl font-bold tracking-tight">Create your account</h1>
               <p className="mt-2 text-muted-foreground">
-                Start building your knowledge sanctuary today
+                Start building your knowledge library today
               </p>
             </div>
           </div>
@@ -186,9 +190,9 @@ const Register = () => {
           {/* Registration Form */}
           <Card className="shadow-xl border-0 bg-card/80 backdrop-blur-sm">
             <CardHeader className="space-y-1 pb-6">
-              <CardTitle className="text-2xl font-semibold text-center">Create your account</CardTitle>
+              <CardTitle className="text-2xl font-semibold text-center">Join Accio</CardTitle>
               <CardDescription className="text-center">
-                Fill in your details to get started with Accio
+                Create your free account and start organizing your knowledge
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -197,8 +201,7 @@ const Register = () => {
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
                     <User className="h-4 w-4" />
-                    Full Name
-                    <span className="text-destructive">*</span>
+                    Full name
                   </Label>
                   <div className="relative">
                     <Input
@@ -208,10 +211,9 @@ const Register = () => {
                       placeholder="Enter your full name"
                       value={formData.name}
                       onChange={(e) => handleInputChange('name', e.target.value)}
-                      onBlur={() => handleBlur('name')}
                       className={cn(
                         "pl-10 transition-all",
-                        errors.name && touched.name 
+                        errors.name 
                           ? 'border-destructive focus-visible:ring-destructive' 
                           : 'focus-visible:ring-primary'
                       )}
@@ -224,7 +226,7 @@ const Register = () => {
                       <User className="h-4 w-4" />
                     </div>
                   </div>
-                  {errors.name && touched.name && (
+                  {errors.name && (
                     <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
                       <AlertCircle className="h-3 w-3" />
                       {errors.name}
@@ -237,7 +239,6 @@ const Register = () => {
                   <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
                     <Mail className="h-4 w-4" />
                     Email address
-                    <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Input
@@ -246,10 +247,9 @@ const Register = () => {
                       placeholder="Enter your email address"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
-                      onBlur={() => handleBlur('email')}
                       className={cn(
                         "pl-10 transition-all",
-                        errors.email && touched.email 
+                        errors.email 
                           ? 'border-destructive focus-visible:ring-destructive' 
                           : 'focus-visible:ring-primary'
                       )}
@@ -262,12 +262,16 @@ const Register = () => {
                       <Mail className="h-4 w-4" />
                     </div>
                   </div>
-                  {errors.email && touched.email && (
+                  {errors.email && (
                     <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
                       <AlertCircle className="h-3 w-3" />
                       {errors.email}
                     </div>
                   )}
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    <Shield className="h-3 w-3" />
+                    We'll never share your email with anyone
+                  </p>
                 </div>
 
                 {/* Password Field */}
@@ -275,7 +279,6 @@ const Register = () => {
                   <Label htmlFor="password" className="text-sm font-medium flex items-center gap-2">
                     <Lock className="h-4 w-4" />
                     Password
-                    <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Input
@@ -284,10 +287,9 @@ const Register = () => {
                       placeholder="Create a strong password"
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
-                      onBlur={() => handleBlur('password')}
                       className={cn(
                         "pl-10 pr-10 transition-all",
-                        errors.password && touched.password 
+                        errors.password 
                           ? 'border-destructive focus-visible:ring-destructive' 
                           : 'focus-visible:ring-primary'
                       )}
@@ -320,31 +322,39 @@ const Register = () => {
                   {formData.password && (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <div className="flex-1 bg-muted rounded-full h-1.5">
-                          <div 
-                            className={cn(
-                              "h-1.5 rounded-full transition-all duration-300",
-                              passwordStrength.strength === 1 && "w-1/4 bg-red-500",
-                              passwordStrength.strength === 2 && "w-2/4 bg-orange-500",
-                              passwordStrength.strength === 3 && "w-3/4 bg-yellow-500",
-                              passwordStrength.strength === 4 && "w-full bg-green-500"
-                            )}
-                          />
-                        </div>
-                        <span className={cn(
-                          "text-xs font-medium",
-                          passwordStrength.strength === 1 && "text-red-600",
-                          passwordStrength.strength === 2 && "text-orange-600",
-                          passwordStrength.strength === 3 && "text-yellow-600",
-                          passwordStrength.strength === 4 && "text-green-600"
-                        )}>
-                          {passwordStrength.label}
-                        </span>
+                        {passwordStrength.strength === 'strong' && (
+                          <>
+                            <CheckCircle className="h-3 w-3 text-green-500" />
+                            <span className="text-xs text-green-600 font-medium">Strong password</span>
+                          </>
+                        )}
+                        {passwordStrength.strength === 'medium' && (
+                          <>
+                            <AlertCircle className="h-3 w-3 text-yellow-500" />
+                            <span className="text-xs text-yellow-600 font-medium">Good password</span>
+                          </>
+                        )}
+                        {passwordStrength.strength === 'weak' && (
+                          <>
+                            <AlertCircle className="h-3 w-3 text-red-500" />
+                            <span className="text-xs text-red-600 font-medium">Weak password</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-1.5">
+                        <div 
+                          className={cn(
+                            "h-1.5 rounded-full transition-all duration-300",
+                            passwordStrength.strength === 'weak' && "w-1/3 bg-red-500",
+                            passwordStrength.strength === 'medium' && "w-2/3 bg-yellow-500",
+                            passwordStrength.strength === 'strong' && "w-full bg-green-500"
+                          )}
+                        />
                       </div>
                     </div>
                   )}
                   
-                  {errors.password && touched.password && (
+                  {errors.password && (
                     <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
                       <AlertCircle className="h-3 w-3" />
                       {errors.password}
@@ -356,8 +366,7 @@ const Register = () => {
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword" className="text-sm font-medium flex items-center gap-2">
                     <Lock className="h-4 w-4" />
-                    Confirm Password
-                    <span className="text-destructive">*</span>
+                    Confirm password
                   </Label>
                   <div className="relative">
                     <Input
@@ -366,13 +375,10 @@ const Register = () => {
                       placeholder="Confirm your password"
                       value={formData.confirmPassword}
                       onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      onBlur={() => handleBlur('confirmPassword')}
                       className={cn(
                         "pl-10 pr-10 transition-all",
-                        errors.confirmPassword && touched.confirmPassword 
+                        errors.confirmPassword 
                           ? 'border-destructive focus-visible:ring-destructive' 
-                          : formData.confirmPassword && formData.confirmPassword === formData.password
-                          ? 'border-green-500 focus-visible:ring-green-500'
                           : 'focus-visible:ring-primary'
                       )}
                       autoComplete="new-password"
@@ -390,7 +396,7 @@ const Register = () => {
                       className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                       disabled={isLoading}
-                      aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                      aria-label={showConfirmPassword ? 'Hide password confirmation' : 'Show password confirmation'}
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -398,13 +404,8 @@ const Register = () => {
                         <Eye className="h-4 w-4 text-muted-foreground" />
                       )}
                     </Button>
-                    {formData.confirmPassword && formData.confirmPassword === formData.password && (
-                      <div className="absolute right-10 top-1/2 -translate-y-1/2">
-                        <CheckCircle className="h-4 w-4 text-green-500" />
-                      </div>
-                    )}
                   </div>
-                  {errors.confirmPassword && touched.confirmPassword && (
+                  {errors.confirmPassword && (
                     <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
                       <AlertCircle className="h-3 w-3" />
                       {errors.confirmPassword}
@@ -413,30 +414,45 @@ const Register = () => {
                 </div>
 
                 {/* Terms and Conditions */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-start space-x-3">
                     <Checkbox
                       id="terms"
-                      checked={acceptedTerms}
-                      onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
+                      checked={acceptTerms}
+                      onCheckedChange={(checked) => setAcceptTerms(checked === true)}
                       disabled={isLoading}
+                      aria-describedby="terms-description"
                       className={cn(
+                        "mt-0.5",
                         errors.terms && "border-destructive"
                       )}
                     />
-                    <Label
-                      htmlFor="terms"
-                      className="text-sm leading-relaxed cursor-pointer"
-                    >
-                      I agree to the{' '}
-                      <Link to="/terms" className="text-primary hover:underline">
-                        Terms of Service
-                      </Link>{' '}
-                      and{' '}
-                      <Link to="/privacy" className="text-primary hover:underline">
-                        Privacy Policy
-                      </Link>
-                    </Label>
+                    <div className="space-y-1">
+                      <Label 
+                        htmlFor="terms" 
+                        className="text-sm leading-relaxed cursor-pointer"
+                        id="terms-description"
+                      >
+                        I agree to the{' '}
+                        <Link 
+                          to="/terms" 
+                          className="text-primary hover:underline font-medium"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Terms of Service
+                        </Link>
+                        {' '}and{' '}
+                        <Link 
+                          to="/privacy" 
+                          className="text-primary hover:underline font-medium"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Privacy Policy
+                        </Link>
+                      </Label>
+                    </div>
                   </div>
                   {errors.terms && (
                     <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
@@ -463,7 +479,7 @@ const Register = () => {
                   type="submit"
                   className="w-full relative"
                   size="lg"
-                  disabled={isLoading || !acceptedTerms}
+                  disabled={isLoading}
                 >
                   {isLoading ? (
                     <>
@@ -489,7 +505,7 @@ const Register = () => {
                 </div>
               </div>
 
-              {/* Alternative Registration Methods */}
+              {/* Alternative Sign Up Methods */}
               <div className="space-y-3">
                 <Button
                   type="button"
