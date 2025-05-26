@@ -122,7 +122,17 @@ export const copy = {
 
   // Common terms
   common: {
-    required: 'Required'
+    required: 'Required',
+    optional: 'Optional',
+    loading: 'Loading...',
+    save: 'Save',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    edit: 'Edit',
+    close: 'Close',
+    back: 'Back',
+    next: 'Next',
+    finish: 'Finish'
   },
 
   // Loading states
@@ -226,5 +236,3 @@ export const copy = {
     optional: 'Optional'
   }
 };
-
-

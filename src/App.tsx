@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import ModernIndex from '@/pages/ModernIndex';
 import Login from '@/pages/Login';
+import UnifiedLogin from '@/pages/UnifiedLogin';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 import Collections from '@/pages/Collections';
@@ -20,7 +21,14 @@ import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
@@ -58,7 +66,7 @@ function App() {
                 
                 <Routes>
                   <Route path="/" element={<ModernIndex />} />
-                  <Route path="/login" element={<Login />} />
+                  <Route path="/login" element={<UnifiedLogin />} />
                   <Route path="/register" element={<Register />} />
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/collections" element={<Collections />} />
