@@ -104,7 +104,7 @@ const ContentIntelligence: React.FC = () => {
                       <div className="text-center py-12">
                         <Brain className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                         <Typography.H3 className="mb-2">Select Content to Analyze</Typography.H3>
-                        <Typography.P>Choose a content item to see AI-powered insights and analysis</Typography.P>
+                        <Typography.Body>Choose a content item to see AI-powered insights and analysis</Typography.Body>
                       </div>
                     )}
                   </div>
