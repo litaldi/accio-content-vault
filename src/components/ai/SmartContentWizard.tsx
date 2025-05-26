@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,7 @@ import {
   Wand2, 
   FileText, 
   BookOpen, 
-  CheckList, 
+  List, 
   Lightbulb,
   Copy,
   Download,
@@ -88,7 +87,7 @@ ${inputs.concepts}
     id: 'project-plan',
     name: 'Project Planning',
     description: 'Create structured project plans and ideas',
-    icon: CheckList,
+    icon: List,
     fields: [
       { name: 'projectName', placeholder: 'Project name', type: 'input' },
       { name: 'goal', placeholder: 'Project goal or objective', type: 'input' },
