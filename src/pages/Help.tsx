@@ -1,343 +1,309 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
+import MarketingFooter from '@/components/marketing/MarketingFooter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Search, 
-  BookOpen, 
-  MessageCircle, 
-  Mail, 
-  HelpCircle, 
-  FileText, 
-  Video,
-  Users,
-  Zap,
-  Shield,
-  ArrowRight,
-  ChevronRight,
-  ExternalLink
+  Search, BookOpen, Video, MessageCircle, Mail, Phone, 
+  ArrowRight, Zap, Users, GraduationCap, LifeBuoy 
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const Help = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-
-  const handleContactSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Handle contact form submission
-    console.log('Contact form submitted:', contactForm);
-  };
-
   const helpCategories = [
     {
-      title: "Getting Started",
       icon: Zap,
-      description: "Learn the basics and set up your account",
+      title: "Getting Started",
+      description: "Set up your account and start organizing in minutes",
       articles: [
-        { title: "Creating your first collection", href: "#" },
-        { title: "Installing the browser extension", href: "#" },
-        { title: "Importing your bookmarks", href: "#" },
-        { title: "Understanding AI organization", href: "#" }
-      ]
+        "How to create your first collection",
+        "Installing the browser extension", 
+        "Importing your existing bookmarks",
+        "Understanding AI organization"
+      ],
+      color: "text-green-600"
     },
     {
-      title: "Features & How-To",
-      icon: BookOpen,
-      description: "Master Accio's powerful features",
+      icon: Search,
+      title: "Search & Discovery",
+      description: "Master the art of finding exactly what you need",
       articles: [
-        { title: "Advanced search techniques", href: "#" },
-        { title: "Collaborating with teams", href: "#" },
-        { title: "Setting up integrations", href: "#" },
-        { title: "Using tags and categories", href: "#" }
-      ]
+        "Using natural language search",
+        "Advanced search operators",
+        "Creating smart filters",
+        "Search shortcuts and tips"
+      ],
+      color: "text-blue-600"
     },
     {
-      title: "Account & Billing",
       icon: Users,
-      description: "Manage your account and subscription",
+      title: "Team Collaboration",
+      description: "Share knowledge and collaborate effectively",
       articles: [
-        { title: "Upgrading your plan", href: "#" },
-        { title: "Managing billing information", href: "#" },
-        { title: "Canceling your subscription", href: "#" },
-        { title: "Data export and backup", href: "#" }
-      ]
+        "Creating shared collections",
+        "Managing team permissions",
+        "Collaborative tagging",
+        "Team analytics dashboard"
+      ],
+      color: "text-purple-600"
     },
     {
-      title: "Privacy & Security",
-      icon: Shield,
-      description: "Learn about data protection and security",
+      icon: GraduationCap,
+      title: "Best Practices",
+      description: "Pro tips from power users and productivity experts",
       articles: [
-        { title: "How we protect your data", href: "#" },
-        { title: "Two-factor authentication", href: "#" },
-        { title: "Privacy settings", href: "#" },
-        { title: "GDPR compliance", href: "#" }
-      ]
+        "Building an effective knowledge system",
+        "Organizing research projects",
+        "Creating learning collections",
+        "Productivity workflows"
+      ],
+      color: "text-orange-600"
     }
   ];
 
-  const quickActions = [
+  const supportOptions = [
     {
-      title: "Browse FAQ",
-      description: "Find answers to common questions",
-      icon: HelpCircle,
-      href: "/faq",
-      color: "bg-blue-500"
-    },
-    {
-      title: "Video Tutorials",
-      description: "Watch step-by-step guides",
-      icon: Video,
-      href: "#",
-      color: "bg-green-500"
-    },
-    {
-      title: "API Documentation",
-      description: "Technical reference for developers",
-      icon: FileText,
-      href: "#",
-      color: "bg-purple-500"
-    },
-    {
-      title: "Community Forum",
-      description: "Connect with other users",
       icon: MessageCircle,
-      href: "#",
-      color: "bg-orange-500"
+      title: "Live Chat",
+      description: "Get instant help from our support team",
+      action: "Start Chat",
+      available: "Available 24/7"
+    },
+    {
+      icon: Video,
+      title: "Video Tutorials",
+      description: "Watch step-by-step guides and walkthroughs", 
+      action: "Browse Videos",
+      available: "50+ tutorials"
+    },
+    {
+      icon: Mail,
+      title: "Email Support",
+      description: "Send us detailed questions for thorough assistance",
+      action: "Contact Us",
+      available: "Response within 4 hours"
     }
   ];
 
   const popularArticles = [
-    "How to organize content with AI",
-    "Setting up team workspaces", 
-    "Advanced search and filtering",
-    "Browser extension guide",
-    "Importing from other tools"
+    "How to save content from any website",
+    "Understanding AI-powered tagging",
+    "Setting up team workspaces",
+    "Exporting your data",
+    "Keyboard shortcuts guide",
+    "Troubleshooting sync issues"
   ];
 
   return (
-    <UnifiedLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Help Center - Get Support for Accio</title>
-        <meta name="description" content="Find help articles, tutorials, and support for Accio. Get answers to common questions and learn how to make the most of your knowledge management system." />
+        <title>Help Center - Accio Support & Learning Resources</title>
+        <meta name="description" content="Get help with Accio's knowledge management platform. Tutorials, guides, FAQs, and support to help you organize information and boost productivity." />
+        <meta name="keywords" content="accio help, knowledge management support, tutorials, how to guides, customer support" />
+        
+        <meta property="og:title" content="Accio Help Center - Get Support & Learn" />
+        <meta property="og:description" content="Complete support resources for Accio users. Tutorials, guides, and instant help to maximize your productivity." />
+        
+        <link rel="canonical" href="https://accio.app/help" />
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-primary/5 to-accent/5">
-        <div className="container mx-auto px-4 max-w-4xl text-center">
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-            How can we help you?
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Find answers, learn new features, and get the most out of your Accio experience.
-          </p>
-          
-          {/* Search Bar */}
-          <div className="relative max-w-2xl mx-auto mb-8">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input
-              type="text"
-              placeholder="Search help articles..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-12 h-12 text-lg"
-            />
-          </div>
+      <OrganizedNavigation />
 
-          {/* Popular Searches */}
-          <div className="flex flex-wrap justify-center gap-3">
-            <span className="text-sm text-muted-foreground">Popular:</span>
-            {popularArticles.slice(0, 3).map((article, index) => (
-              <Badge key={index} variant="secondary" className="cursor-pointer hover:bg-accent">
-                {article}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Actions */}
-      <section className="py-16">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Quick Help</h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {quickActions.map((action, index) => (
-              <Card key={index} className="hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                <CardContent className="p-6 text-center">
-                  <div className={`w-12 h-12 rounded-lg ${action.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                    <action.icon className="h-6 w-6 text-white" />
-                  </div>
-                  <h3 className="font-semibold mb-2">{action.title}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{action.description}</p>
-                  <Button variant="outline" size="sm" asChild>
-                    <Link to={action.href}>
-                      Learn More
-                      <ChevronRight className="ml-1 h-3 w-3" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Help Categories */}
-      <section className="py-16 bg-muted/30">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <h2 className="text-3xl font-bold text-center mb-12">Browse by Category</h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {helpCategories.map((category, index) => (
-              <Card key={index} className="hover:shadow-lg transition-shadow">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                      <category.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">{category.title}</CardTitle>
-                      <p className="text-sm text-muted-foreground">{category.description}</p>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {category.articles.map((article, articleIndex) => (
-                      <a
-                        key={articleIndex}
-                        href={article.href}
-                        className="flex items-center justify-between p-3 rounded-lg hover:bg-accent/50 transition-colors group"
-                      >
-                        <span className="text-sm">{article.title}</span>
-                        <ChevronRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                      </a>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section className="py-16" id="contact">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Still Need Help?</h2>
-            <p className="text-xl text-muted-foreground">
-              Can't find what you're looking for? Our support team is here to help.
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <Badge variant="outline" className="mb-6 bg-blue-50 border-blue-200 text-blue-800">
+              💡 Help Center
+            </Badge>
+            
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+              How can we help you succeed?
+            </h1>
+            
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Get the most out of Accio with our comprehensive guides, tutorials, 
+              and expert support. We're here to help you organize knowledge like a pro.
             </p>
+
+            {/* Search Bar */}
+            <div className="max-w-lg mx-auto mb-8">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input 
+                  type="search"
+                  placeholder="Search help articles..."
+                  className="pl-10 pr-4 py-3 text-lg"
+                />
+                <Button className="absolute right-1 top-1/2 transform -translate-y-1/2">
+                  Search
+                </Button>
+              </div>
+            </div>
+
+            {/* Quick Stats */}
+            <div className="grid grid-cols-3 gap-6 max-w-md mx-auto">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">50+</div>
+                <div className="text-sm text-muted-foreground">Video Tutorials</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">200+</div>
+                <div className="text-sm text-muted-foreground">Help Articles</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">24/7</div>
+                <div className="text-sm text-muted-foreground">Support</div>
+              </div>
+            </div>
           </div>
+        </section>
 
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Options */}
-            <div className="space-y-6">
-              <h3 className="text-2xl font-semibold mb-4">Get in Touch</h3>
-              
-              <Card className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Mail className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Email Support</h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Get help with your account, billing, or technical issues.
-                    </p>
-                    <p className="text-sm font-medium">support@accio.app</p>
-                    <p className="text-xs text-muted-foreground">Usually responds within 24 hours</p>
-                  </div>
-                </div>
-              </Card>
+        {/* Support Options */}
+        <section className="py-16 border-b border-border">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Get help your way</h2>
+              <p className="text-xl text-muted-foreground">
+                Choose the support method that works best for you
+              </p>
+            </div>
 
-              <Card className="p-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center">
-                    <MessageCircle className="h-5 w-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-1">Live Chat</h4>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Chat with our support team during business hours.
-                    </p>
-                    <Button size="sm" variant="outline">
-                      Start Chat
-                      <ExternalLink className="ml-2 h-3 w-3" />
+            <div className="grid md:grid-cols-3 gap-8">
+              {supportOptions.map((option, index) => (
+                <Card key={index} className="text-center hover:shadow-lg transition-shadow border-0 bg-background">
+                  <CardHeader>
+                    <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center">
+                      <option.icon className="h-8 w-8 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">{option.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground mb-4">{option.description}</p>
+                    <p className="text-sm text-primary font-medium mb-6">{option.available}</p>
+                    <Button className="w-full">
+                      {option.action}
+                      <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
-                    <p className="text-xs text-muted-foreground mt-2">Mon-Fri, 9am-6pm EST</p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-
-            {/* Contact Form */}
-            <div>
-              <h3 className="text-2xl font-semibold mb-4">Send us a Message</h3>
-              <Card className="p-6">
-                <form onSubmit={handleContactSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium mb-2">Name</label>
-                      <Input
-                        id="name"
-                        value={contactForm.name}
-                        onChange={(e) => setContactForm({...contactForm, name: e.target.value})}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={contactForm.email}
-                        onChange={(e) => setContactForm({...contactForm, email: e.target.value})}
-                        required
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium mb-2">Subject</label>
-                    <Input
-                      id="subject"
-                      value={contactForm.subject}
-                      onChange={(e) => setContactForm({...contactForm, subject: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium mb-2">Message</label>
-                    <Textarea
-                      id="message"
-                      rows={4}
-                      value={contactForm.message}
-                      onChange={(e) => setContactForm({...contactForm, message: e.target.value})}
-                      placeholder="Describe your issue or question..."
-                      required
-                    />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Send Message
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </Button>
-                </form>
-              </Card>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
-        </div>
-      </section>
-    </UnifiedLayout>
+        </section>
+
+        {/* Help Categories */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Browse by category</h2>
+              <p className="text-xl text-muted-foreground">
+                Find detailed guides organized by topic
+              </p>
+            </div>
+
+            <div className="grid lg:grid-cols-2 gap-8">
+              {helpCategories.map((category, index) => (
+                <Card key={index} className="hover:shadow-lg transition-shadow border-0 bg-background">
+                  <CardHeader>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                        <category.icon className={`h-6 w-6 ${category.color}`} />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">{category.title}</CardTitle>
+                        <p className="text-muted-foreground">{category.description}</p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {category.articles.map((article, articleIndex) => (
+                        <li key={articleIndex}>
+                          <a 
+                            href="#" 
+                            className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                          >
+                            <BookOpen className="h-4 w-4" />
+                            {article}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                    <Button variant="outline" className="w-full mt-6">
+                      View All Articles
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Popular Articles */}
+        <section className="py-20 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Most popular articles</h2>
+              <p className="text-xl text-muted-foreground">
+                Quick answers to the most common questions
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              {popularArticles.map((article, index) => (
+                <a
+                  key={index}
+                  href="#"
+                  className="flex items-center gap-3 p-4 bg-background rounded-xl border hover:border-primary/50 hover:shadow-sm transition-all group"
+                >
+                  <BookOpen className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                  <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                    {article}
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors ml-auto" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Contact CTA */}
+        <section className="py-20">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 rounded-3xl p-8 md:p-12">
+              <LifeBuoy className="h-16 w-16 mx-auto mb-6 text-primary" />
+              <h2 className="text-3xl font-bold mb-4">
+                Still need help?
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Our support team is standing by to help you succeed. 
+                Get personalized assistance from knowledge management experts.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" className="text-lg px-8 py-4">
+                  <MessageCircle className="mr-2 h-5 w-5" />
+                  Start Live Chat
+                </Button>
+                <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+                  <Mail className="mr-2 h-5 w-5" />
+                  Email Support
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mt-6">
+                Average response time: 4 hours • Available 24/7
+              </p>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <MarketingFooter />
+    </div>
   );
 };
 
