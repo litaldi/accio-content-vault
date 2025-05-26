@@ -4,24 +4,24 @@
  */
 
 // Enhanced email validation with comprehensive checks
-export const validateEmailEnhanced = (email: string): { isValid: boolean; message: string } => {
+export const validateEmailEnhanced = (email: string): { isValid: boolean; message: string; error?: string } => {
   if (!email || typeof email !== 'string') {
-    return { isValid: false, message: 'Email is required' };
+    return { isValid: false, message: 'Email is required', error: 'Email is required' };
   }
 
   // Basic format check
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(email)) {
-    return { isValid: false, message: 'Please enter a valid email address' };
+    return { isValid: false, message: 'Please enter a valid email address', error: 'Please enter a valid email address' };
   }
 
   // Length checks
   if (email.length > 254) {
-    return { isValid: false, message: 'Email address is too long' };
+    return { isValid: false, message: 'Email address is too long', error: 'Email address is too long' };
   }
 
   if (email.length < 5) {
-    return { isValid: false, message: 'Email address is too short' };
+    return { isValid: false, message: 'Email address is too short', error: 'Email address is too short' };
   }
 
   // Check for dangerous patterns
@@ -34,7 +34,7 @@ export const validateEmailEnhanced = (email: string): { isValid: boolean; messag
 
   for (const pattern of dangerousPatterns) {
     if (pattern.test(email)) {
-      return { isValid: false, message: 'Email contains invalid characters' };
+      return { isValid: false, message: 'Email contains invalid characters', error: 'Email contains invalid characters' };
     }
   }
 
@@ -42,12 +42,13 @@ export const validateEmailEnhanced = (email: string): { isValid: boolean; messag
 };
 
 // Enhanced password validation with security requirements
-export const validatePasswordComplexity = (password: string): { isValid: boolean; message: string; strength: number } => {
+export const validatePasswordComplexity = (password: string): { isValid: boolean; message: string; strength: number; errors?: string[] } => {
   if (!password || typeof password !== 'string') {
-    return { isValid: false, message: 'Password is required', strength: 0 };
+    return { isValid: false, message: 'Password is required', strength: 0, errors: ['Password is required'] };
   }
 
   let strength = 0;
+  const errors: string[] = [];
   const checks = {
     length: password.length >= 8,
     maxLength: password.length <= 128,
@@ -64,27 +65,22 @@ export const validatePasswordComplexity = (password: string): { isValid: boolean
   });
 
   if (!checks.length) {
-    return { isValid: false, message: 'Password must be at least 8 characters long', strength: strength * 14 };
+    errors.push('Password must be at least 8 characters long');
   }
-
   if (!checks.maxLength) {
-    return { isValid: false, message: 'Password must be less than 128 characters', strength: strength * 14 };
+    errors.push('Password must be less than 128 characters');
   }
-
   if (!checks.lowercase) {
-    return { isValid: false, message: 'Password must contain at least one lowercase letter', strength: strength * 14 };
+    errors.push('Password must contain at least one lowercase letter');
   }
-
   if (!checks.uppercase) {
-    return { isValid: false, message: 'Password must contain at least one uppercase letter', strength: strength * 14 };
+    errors.push('Password must contain at least one uppercase letter');
   }
-
   if (!checks.numbers) {
-    return { isValid: false, message: 'Password must contain at least one number', strength: strength * 14 };
+    errors.push('Password must contain at least one number');
   }
-
   if (!checks.noCommonPatterns) {
-    return { isValid: false, message: 'Password contains common patterns or repeated characters', strength: strength * 14 };
+    errors.push('Password contains common patterns or repeated characters');
   }
 
   const strengthScore = strength * 14; // Convert to percentage
@@ -95,9 +91,10 @@ export const validatePasswordComplexity = (password: string): { isValid: boolean
   else strengthMessage += 'acceptable';
 
   return { 
-    isValid: true, 
-    message: strengthMessage,
-    strength: strengthScore
+    isValid: errors.length === 0, 
+    message: errors.length > 0 ? errors[0] : strengthMessage,
+    strength: strengthScore,
+    errors: errors.length > 0 ? errors : undefined
   };
 };
 
@@ -106,13 +103,15 @@ export const sanitizeInput = (input: string, options: {
   allowHtml?: boolean;
   maxLength?: number;
   stripScripts?: boolean;
+  preserveLineBreaks?: boolean;
 } = {}): string => {
   if (typeof input !== 'string') return '';
 
   const {
     allowHtml = false,
     maxLength = 10000,
-    stripScripts = true
+    stripScripts = true,
+    preserveLineBreaks = false
   } = options;
 
   let sanitized = input.trim();
@@ -136,6 +135,11 @@ export const sanitizeInput = (input: string, options: {
   // Remove all HTML if not allowed
   if (!allowHtml) {
     sanitized = sanitized.replace(/<[^>]*>/g, '');
+  }
+
+  // Handle line breaks
+  if (!preserveLineBreaks) {
+    sanitized = sanitized.replace(/\n/g, ' ').replace(/\r/g, '');
   }
 
   return sanitized;
@@ -200,8 +204,61 @@ export class RateLimiter {
   }
 }
 
+// Unified rate limiter class for more advanced use cases
+export class UnifiedRateLimiter {
+  private attempts: Map<string, { count: number; lastAttempt: number; resetTime: number }> = new Map();
+  
+  constructor(
+    private maxAttempts: number = 5,
+    private windowMs: number = 60000,
+    private useExponentialBackoff: boolean = false
+  ) {}
+
+  canAttempt(identifier: string): { allowed: boolean; resetTime?: number; backoffTime?: number } {
+    const now = Date.now();
+    const record = this.attempts.get(identifier);
+    
+    if (!record) {
+      this.attempts.set(identifier, { count: 1, lastAttempt: now, resetTime: now + this.windowMs });
+      return { allowed: true };
+    }
+    
+    if (now >= record.resetTime) {
+      this.attempts.set(identifier, { count: 1, lastAttempt: now, resetTime: now + this.windowMs });
+      return { allowed: true };
+    }
+    
+    if (record.count >= this.maxAttempts) {
+      const backoffTime = this.useExponentialBackoff 
+        ? Math.min(this.windowMs * Math.pow(2, record.count - this.maxAttempts), 300000) // Max 5 minutes
+        : this.windowMs;
+      
+      return { 
+        allowed: false, 
+        resetTime: record.resetTime,
+        backoffTime: backoffTime
+      };
+    }
+    
+    this.attempts.set(identifier, { 
+      ...record, 
+      count: record.count + 1, 
+      lastAttempt: now 
+    });
+    
+    return { allowed: true };
+  }
+
+  reset(identifier: string): void {
+    this.attempts.delete(identifier);
+  }
+}
+
 // Auth-specific rate limiter
 export const authRateLimiter = new RateLimiter(5, 300000); // 5 attempts per 5 minutes
+
+// Contact-specific rate limiter
+export const contactRateLimiter = new RateLimiter(3, 60000); // 3 attempts per minute
 
 // CSRF protection utility
 export class CSRFManager {
@@ -262,6 +319,26 @@ export const detectXSS = (input: string): boolean => {
   ];
   
   return xssPatterns.some(pattern => pattern.test(input));
+};
+
+// URL validation
+export const validateSecureUrl = (url: string): boolean => {
+  if (!url || typeof url !== 'string') return false;
+  
+  try {
+    const parsedUrl = new URL(url);
+    const allowedProtocols = ['http:', 'https:'];
+    return allowedProtocols.includes(parsedUrl.protocol) && parsedUrl.hostname.length > 0;
+  } catch {
+    // Try without protocol
+    try {
+      const withProtocol = url.startsWith('//') ? `https:${url}` : `https://${url}`;
+      const parsedUrl = new URL(withProtocol);
+      return parsedUrl.hostname.length > 0;
+    } catch {
+      return false;
+    }
+  }
 };
 
 // Content validation

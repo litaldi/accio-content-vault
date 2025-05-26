@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import { EnhancedNavigation } from '@/components/navigation/EnhancedNavigation';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface UnifiedPageLayoutProps {
@@ -39,7 +39,7 @@ const UnifiedPageLayout: React.FC<UnifiedPageLayoutProps> = ({
 
       <div className="min-h-screen flex flex-col bg-background">
         {showNavigation && (
-          <EnhancedNavigation isAuthenticated={!!user} />
+          <EnhancedNavigation />
         )}
         
         <main className={className}>

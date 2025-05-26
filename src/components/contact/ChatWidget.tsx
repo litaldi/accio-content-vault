@@ -60,7 +60,7 @@ const ChatWidget: React.FC = () => {
 
     // Rate limiting check
     const rateLimitCheck = contactRateLimiter.canAttempt('chat-widget');
-    if (!rateLimitCheck.allowed) {
+    if (!rateLimitCheck) {
       showError('Too Many Messages', 'Please wait before sending another message.');
       return;
     }

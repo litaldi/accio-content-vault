@@ -55,7 +55,7 @@ const ContactForm: React.FC = () => {
     
     // Rate limiting check
     const rateLimitCheck = contactRateLimiter.canAttempt('contact-form');
-    if (!rateLimitCheck.allowed) {
+    if (!rateLimitCheck) {
       showError('Too Many Attempts', 'Please wait before submitting another message.');
       return;
     }
@@ -69,7 +69,7 @@ const ContactForm: React.FC = () => {
     // Validate email
     const emailValidation = validateEmailEnhanced(formData.email);
     if (!emailValidation.isValid) {
-      showError('Invalid Email', emailValidation.error || 'Please enter a valid email address.');
+      showError('Invalid Email', emailValidation.message);
       return;
     }
 

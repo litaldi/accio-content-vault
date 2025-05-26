@@ -33,15 +33,15 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
 
     // Validate email
     const emailValidation = validateEmail(email);
-    if (!emailValidation.isValid && emailValidation.error) {
-      newErrors.email = emailValidation.error;
+    if (!emailValidation.isValid) {
+      newErrors.email = emailValidation.message;
     }
 
     // Validate password
     if (mode === 'register') {
       const passwordValidation = validatePassword(password);
-      if (!passwordValidation.isValid && passwordValidation.errors.length > 0) {
-        newErrors.password = passwordValidation.errors[0];
+      if (!passwordValidation.isValid) {
+        newErrors.password = passwordValidation.message;
       }
     } else {
       if (!password || password.length === 0) {
@@ -77,11 +77,13 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
     }
   };
 
-  const getPasswordStrength = () => {
+  const getPasswordStrength = (): 'weak' | 'medium' | 'strong' | null => {
     if (mode !== 'register' || !password) return null;
     
     const { strength } = validatePassword(password);
-    return strength;
+    if (strength >= 85) return 'strong';
+    if (strength >= 55) return 'medium';
+    return 'weak';
   };
 
   const passwordStrength = getPasswordStrength();
