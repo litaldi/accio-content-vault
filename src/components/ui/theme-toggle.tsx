@@ -13,11 +13,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
   variant = 'icon',
   size = 'default' 
 }) => {
-  const { theme, setTheme } = useTheme();
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
+  const { theme, toggleTheme } = useTheme();
 
   if (variant === 'iconText') {
     return (
@@ -26,6 +22,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({
         size={size}
         onClick={toggleTheme}
         className="w-full justify-start gap-2"
+        aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       >
         {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
         <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>

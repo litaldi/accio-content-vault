@@ -5,13 +5,13 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { GlobalFeatures } from '@/components/GlobalFeatures/GlobalFeatures';
-import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
 import { EnhancedNavigation } from '@/components/navigation/EnhancedNavigation';
 import { SkipToContent } from '@/components/common/SkipToContent';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import Footer from '@/components/Footer';
 import Home from '@/pages/Home';
+import Features from '@/pages/Features';
+import Playground from '@/pages/Playground';
 import Dashboard from '@/pages/Dashboard';
 import Search from '@/pages/Search';
 import Collections from '@/pages/Collections';
@@ -21,8 +21,6 @@ import AccountSettings from '@/pages/AccountSettings';
 import Contact from '@/pages/Contact';
 import NotFound from '@/pages/NotFound';
 import QueryProvider from '@/providers/QueryProvider';
-import ChatWidget from '@/components/contact/ChatWidget';
-import Features from '@/pages/Features';
 
 const App: React.FC = () => {
   return (
@@ -39,6 +37,7 @@ const App: React.FC = () => {
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/features" element={<Features />} />
+                      <Route path="/playground" element={<Playground />} />
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/search" element={<Search />} />
                       <Route path="/collections" element={<Collections />} />
@@ -52,9 +51,6 @@ const App: React.FC = () => {
                 </ErrorBoundary>
                 <Footer />
                 <Toaster />
-                <ChatWidget />
-                <AIContentAssistant />
-                <GlobalFeatures />
               </div>
             </Router>
           </AuthProvider>
