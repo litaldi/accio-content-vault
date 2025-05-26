@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
@@ -13,8 +14,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { NavigationMenuDemo } from './NavigationMenu';
 import { AuthButtons } from './AuthButtons';
-import { ThemeToggle } from '@/components/ui/enhanced-theme-toggle';
-import { NavigationLogo } from './NavigationLogo';
+import { ThemeToggle } from '@/components/ui/theme-toggle';
+import NavigationLogo from './NavigationLogo';
 import { useNavigation } from '@/hooks/use-navigation';
 import { cn } from '@/lib/utils';
 import { copy } from '@/utils/copy';

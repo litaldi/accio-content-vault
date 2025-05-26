@@ -92,7 +92,6 @@ export const DashboardContent: React.FC<DashboardContentProps> = ({
           <ContentList 
             contents={filteredContent}
             searchQuery={searchQuery}
-            onOpenReadingMode={handleOpenReadingMode}
           />
         </div>
         

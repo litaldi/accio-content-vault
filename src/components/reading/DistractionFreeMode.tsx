@@ -165,14 +165,14 @@ export const DistractionFreeMode: React.FC<DistractionFreeModeProps> = ({
               <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
                 <span>Added {new Date(content.created_at).toLocaleDateString()}</span>
                 <span>•</span>
-                <span>{content.source}</span>
+                <span>{content.url || 'Uploaded content'}</span>
                 {content.tags.length > 0 && (
                   <>
                     <span>•</span>
                     <div className="flex gap-1">
                       {content.tags.slice(0, 3).map((tag, index) => (
                         <Badge key={index} variant="outline" className="text-xs">
-                          {tag}
+                          {tag.name}
                         </Badge>
                       ))}
                     </div>
