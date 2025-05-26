@@ -1,13 +1,12 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-export interface AccessibilityPreferences {
+interface AccessibilityPreferences {
+  fontSize: 'small' | 'medium' | 'large';
   highContrast: boolean;
   reducedMotion: boolean;
-  fontSize: 'small' | 'default' | 'large';
   language: 'en' | 'he' | 'ar';
-  announcements: boolean;
-  keyboardNavigation: boolean;
+  colorBlindness: 'none' | 'deuteranopia' | 'protanopia' | 'tritanopia';
 }
 
 interface AccessibilityContextType {
@@ -16,54 +15,66 @@ interface AccessibilityContextType {
   announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
 }
 
-const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
-
 const defaultPreferences: AccessibilityPreferences = {
+  fontSize: 'medium',
   highContrast: false,
   reducedMotion: false,
-  fontSize: 'default',
   language: 'en',
-  announcements: true,
-  keyboardNavigation: true,
+  colorBlindness: 'none',
 };
 
-export const AccessibilityProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [preferences, setPreferences] = useState<AccessibilityPreferences>(() => {
-    const saved = localStorage.getItem('accessibility-preferences');
-    return saved ? { ...defaultPreferences, ...JSON.parse(saved) } : defaultPreferences;
-  });
+const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
+
+export const useAccessibility = () => {
+  const context = useContext(AccessibilityContext);
+  if (context === undefined) {
+    throw new Error('useAccessibility must be used within an AccessibilityProvider');
+  }
+  return context;
+};
+
+interface AccessibilityProviderProps {
+  children: ReactNode;
+}
+
+export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
+  const [preferences, setPreferences] = useState<AccessibilityPreferences>(defaultPreferences);
 
   useEffect(() => {
-    localStorage.setItem('accessibility-preferences', JSON.stringify(preferences));
-    
-    // Apply system preferences detection
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
-    
-    if (prefersReducedMotion && !preferences.reducedMotion) {
+    // Load preferences from localStorage
+    const saved = localStorage.getItem('accessibility-preferences');
+    if (saved) {
+      try {
+        setPreferences({ ...defaultPreferences, ...JSON.parse(saved) });
+      } catch (error) {
+        console.error('Failed to parse accessibility preferences:', error);
+      }
+    }
+
+    // Check system preferences
+    const mediaQueries = {
+      reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)'),
+      highContrast: window.matchMedia('(prefers-contrast: high)'),
+    };
+
+    if (mediaQueries.reducedMotion.matches) {
       setPreferences(prev => ({ ...prev, reducedMotion: true }));
     }
-    
-    if (prefersHighContrast && !preferences.highContrast) {
+
+    if (mediaQueries.highContrast.matches) {
       setPreferences(prev => ({ ...prev, highContrast: true }));
     }
-    
-    // Apply CSS classes to document
-    document.documentElement.classList.toggle('high-contrast', preferences.highContrast);
-    document.documentElement.classList.toggle('reduce-motion', preferences.reducedMotion);
-    document.documentElement.classList.toggle('font-size-large', preferences.fontSize === 'large');
-    document.documentElement.classList.toggle('font-size-small', preferences.fontSize === 'small');
-    document.documentElement.setAttribute('dir', preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr');
-    document.documentElement.setAttribute('lang', preferences.language);
-  }, [preferences]);
+  }, []);
 
   const updatePreferences = (updates: Partial<AccessibilityPreferences>) => {
-    setPreferences(prev => ({ ...prev, ...updates }));
+    setPreferences(prev => {
+      const newPreferences = { ...prev, ...updates };
+      localStorage.setItem('accessibility-preferences', JSON.stringify(newPreferences));
+      return newPreferences;
+    });
   };
 
   const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
-    if (!preferences.announcements) return;
-    
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', priority);
     announcement.setAttribute('aria-atomic', 'true');
@@ -84,12 +95,4 @@ export const AccessibilityProvider: React.FC<{ children: ReactNode }> = ({ child
       {children}
     </AccessibilityContext.Provider>
   );
-};
-
-export const useAccessibility = () => {
-  const context = useContext(AccessibilityContext);
-  if (!context) {
-    throw new Error('useAccessibility must be used within an AccessibilityProvider');
-  }
-  return context;
 };

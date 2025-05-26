@@ -1,30 +1,19 @@
+import * as React from "react"
 
-import React, { useState } from 'react';
-
-export interface ToastActionElement {
-  altText?: string;
-  action: React.ReactNode;
-  onClick?: () => void;
-}
-
-export interface ToastProps {
-  id: string;
-  title?: string;
-  description?: string;
-  action?: ToastActionElement;
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  variant?: 'default' | 'destructive' | 'success';
-  duration?: number;
-  className?: string;
-}
-
-type ToasterToast = ToastProps & {
-  id: string;
-}
+import type {
+  ToastActionElement,
+  ToastProps,
+} from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
 const TOAST_REMOVE_DELAY = 1000000
+
+type ToasterToast = ToastProps & {
+  id: string
+  title?: React.ReactNode
+  description?: React.ReactNode
+  action?: ToastActionElement
+}
 
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
@@ -101,6 +90,8 @@ export const reducer = (state: State, action: Action): State => {
     case "DISMISS_TOAST": {
       const { toastId } = action
 
+      // ! Side effects ! - This could be extracted into a dismissToast() action,
+      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId)
       } else {
@@ -178,7 +169,7 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-  const [state, setState] = useState<State>(memoryState)
+  const [state, setState] = React.useState<State>(memoryState)
 
   React.useEffect(() => {
     listeners.push(setState)
@@ -198,4 +189,3 @@ function useToast() {
 }
 
 export { useToast, toast }
-export type { Toast };
