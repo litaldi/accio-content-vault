@@ -2,26 +2,23 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
+import { AccessibleFormField } from '@/components/forms/AccessibleFormField';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
-  Eye, 
-  EyeOff, 
-  Mail, 
-  Lock, 
-  User, 
-  ArrowRight, 
   Brain, 
+  ArrowRight, 
   Loader2, 
   AlertCircle, 
   CheckCircle,
   Shield,
-  Chrome
+  Chrome,
+  Mail,
+  Lock,
+  User
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -198,220 +195,104 @@ const Register = () => {
             <CardContent className="space-y-6">
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
                 {/* Name Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    Full name
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      ref={nameInputRef}
-                      id="name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      className={cn(
-                        "pl-10 transition-all",
-                        errors.name 
-                          ? 'border-destructive focus-visible:ring-destructive' 
-                          : 'focus-visible:ring-primary'
-                      )}
-                      autoComplete="name"
-                      required
-                      disabled={isLoading}
-                      aria-invalid={!!errors.name}
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                      <User className="h-4 w-4" />
-                    </div>
-                  </div>
-                  {errors.name && (
-                    <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.name}
-                    </div>
-                  )}
-                </div>
+                <AccessibleFormField
+                  ref={nameInputRef}
+                  label="Full name"
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  error={errors.name}
+                  required
+                  autoComplete="name"
+                  disabled={isLoading}
+                  icon={User}
+                />
 
                 {/* Email Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    Email address
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="email"
-                      type="email"
-                      placeholder="Enter your email address"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      className={cn(
-                        "pl-10 transition-all",
-                        errors.email 
-                          ? 'border-destructive focus-visible:ring-destructive' 
-                          : 'focus-visible:ring-primary'
-                      )}
-                      autoComplete="email"
-                      required
-                      disabled={isLoading}
-                      aria-invalid={!!errors.email}
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                      <Mail className="h-4 w-4" />
-                    </div>
-                  </div>
-                  {errors.email && (
-                    <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.email}
-                    </div>
-                  )}
-                  <p className="text-xs text-muted-foreground flex items-center gap-1">
-                    <Shield className="h-3 w-3" />
-                    We'll never share your email with anyone
-                  </p>
-                </div>
+                <AccessibleFormField
+                  label="Email address"
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  error={errors.email}
+                  required
+                  autoComplete="email"
+                  disabled={isLoading}
+                  icon={Mail}
+                  helpText="We'll never share your email with anyone"
+                />
 
                 {/* Password Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-medium flex items-center gap-2">
-                    <Lock className="h-4 w-4" />
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder="Create a strong password"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
-                      className={cn(
-                        "pl-10 pr-10 transition-all",
-                        errors.password 
-                          ? 'border-destructive focus-visible:ring-destructive' 
-                          : 'focus-visible:ring-primary'
+                <AccessibleFormField
+                  label="Password"
+                  type="password"
+                  placeholder="Create a strong password"
+                  value={formData.password}
+                  onChange={(e) => handleInputChange('password', e.target.value)}
+                  error={errors.password}
+                  required
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  icon={Lock}
+                  showPasswordToggle
+                  showPassword={showPassword}
+                  onTogglePassword={() => setShowPassword(!showPassword)}
+                />
+
+                {/* Password Strength Indicator */}
+                {formData.password && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      {passwordStrength.strength === 'strong' && (
+                        <>
+                          <CheckCircle className="h-3 w-3 text-green-500" />
+                          <span className="text-xs text-green-600 font-medium">Strong password</span>
+                        </>
                       )}
-                      autoComplete="new-password"
-                      required
-                      disabled={isLoading}
-                      aria-invalid={!!errors.password}
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                      <Lock className="h-4 w-4" />
+                      {passwordStrength.strength === 'medium' && (
+                        <>
+                          <AlertCircle className="h-3 w-3 text-yellow-500" />
+                          <span className="text-xs text-yellow-600 font-medium">Good password</span>
+                        </>
+                      )}
+                      {passwordStrength.strength === 'weak' && (
+                        <>
+                          <AlertCircle className="h-3 w-3 text-red-500" />
+                          <span className="text-xs text-red-600 font-medium">Weak password</span>
+                        </>
+                      )}
                     </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
-                      disabled={isLoading}
-                      aria-label={showPassword ? 'Hide password' : 'Show password'}
-                    >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
+                    <div className="w-full bg-muted rounded-full h-1.5">
+                      <div 
+                        className={cn(
+                          "h-1.5 rounded-full transition-all duration-300",
+                          passwordStrength.strength === 'weak' && "w-1/3 bg-red-500",
+                          passwordStrength.strength === 'medium' && "w-2/3 bg-yellow-500",
+                          passwordStrength.strength === 'strong' && "w-full bg-green-500"
+                        )}
+                      />
+                    </div>
                   </div>
-                  
-                  {/* Password Strength Indicator */}
-                  {formData.password && (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        {passwordStrength.strength === 'strong' && (
-                          <>
-                            <CheckCircle className="h-3 w-3 text-green-500" />
-                            <span className="text-xs text-green-600 font-medium">Strong password</span>
-                          </>
-                        )}
-                        {passwordStrength.strength === 'medium' && (
-                          <>
-                            <AlertCircle className="h-3 w-3 text-yellow-500" />
-                            <span className="text-xs text-yellow-600 font-medium">Good password</span>
-                          </>
-                        )}
-                        {passwordStrength.strength === 'weak' && (
-                          <>
-                            <AlertCircle className="h-3 w-3 text-red-500" />
-                            <span className="text-xs text-red-600 font-medium">Weak password</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="w-full bg-muted rounded-full h-1.5">
-                        <div 
-                          className={cn(
-                            "h-1.5 rounded-full transition-all duration-300",
-                            passwordStrength.strength === 'weak' && "w-1/3 bg-red-500",
-                            passwordStrength.strength === 'medium' && "w-2/3 bg-yellow-500",
-                            passwordStrength.strength === 'strong' && "w-full bg-green-500"
-                          )}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  
-                  {errors.password && (
-                    <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.password}
-                    </div>
-                  )}
-                </div>
+                )}
 
                 {/* Confirm Password Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-sm font-medium flex items-center gap-2">
-                    <Lock className="h-4 w-4" />
-                    Confirm password
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      placeholder="Confirm your password"
-                      value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      className={cn(
-                        "pl-10 pr-10 transition-all",
-                        errors.confirmPassword 
-                          ? 'border-destructive focus-visible:ring-destructive' 
-                          : 'focus-visible:ring-primary'
-                      )}
-                      autoComplete="new-password"
-                      required
-                      disabled={isLoading}
-                      aria-invalid={!!errors.confirmPassword}
-                    />
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                      <Lock className="h-4 w-4" />
-                    </div>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      disabled={isLoading}
-                      aria-label={showConfirmPassword ? 'Hide password confirmation' : 'Show password confirmation'}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
-                    </Button>
-                  </div>
-                  {errors.confirmPassword && (
-                    <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
-                      <AlertCircle className="h-3 w-3" />
-                      {errors.confirmPassword}
-                    </div>
-                  )}
-                </div>
+                <AccessibleFormField
+                  label="Confirm password"
+                  type="password"
+                  placeholder="Confirm your password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                  error={errors.confirmPassword}
+                  required
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  icon={Lock}
+                  showPasswordToggle
+                  showPassword={showConfirmPassword}
+                  onTogglePassword={() => setShowConfirmPassword(!showConfirmPassword)}
+                />
 
                 {/* Terms and Conditions */}
                 <div className="space-y-3">
@@ -428,7 +309,7 @@ const Register = () => {
                       )}
                     />
                     <div className="space-y-1">
-                      <Label 
+                      <label 
                         htmlFor="terms" 
                         className="text-sm leading-relaxed cursor-pointer"
                         id="terms-description"
@@ -451,7 +332,7 @@ const Register = () => {
                         >
                           Privacy Policy
                         </Link>
-                      </Label>
+                      </label>
                     </div>
                   </div>
                   {errors.terms && (
