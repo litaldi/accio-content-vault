@@ -2,7 +2,7 @@
 // Re-export security utilities for backward compatibility
 export { 
   validateEmailEnhanced, 
-  validatePasswordComplexity, 
+  validatePassword as validatePasswordComplexity, 
   sanitizeInput,
   authRateLimiter,
   CSRFManager 

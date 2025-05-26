@@ -28,10 +28,19 @@ export const useEnhancedToast = () => {
     });
   };
 
+  const showInfo = (title: string, description?: string) => {
+    toast({
+      title,
+      description,
+      variant: 'default'
+    });
+  };
+
   return {
     showSuccess,
     showError,
     showWarning,
+    showInfo,
     toast
   };
 };

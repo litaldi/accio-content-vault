@@ -6,12 +6,12 @@ import { useTheme } from '@/contexts/ThemeContext';
 
 interface ThemeToggleProps {
   variant?: 'icon' | 'iconText';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
 }
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ 
   variant = 'icon',
-  size = 'md' 
+  size = 'default' 
 }) => {
   const { theme, setTheme } = useTheme();
 

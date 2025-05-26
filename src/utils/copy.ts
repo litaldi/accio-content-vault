@@ -63,6 +63,7 @@ export const copy = {
   },
   onboarding: {
     welcome: 'Welcome to Accio',
+    subtitle: 'Let\'s set up your workspace to get the most out of your experience',
     step1: 'Set up your workspace',
     step2: 'Connect your tools',
     step3: 'Start organizing'
@@ -70,6 +71,36 @@ export const copy = {
   emptyStates: {
     noContent: 'No content found',
     getStarted: 'Get started by adding your first item',
-    noResults: 'No results found'
+    noResults: 'No results found',
+    library: {
+      title: 'Your library is empty',
+      description: 'Start building your knowledge base by adding your first content',
+      action: 'Add Content'
+    },
+    search: {
+      title: 'No search results',
+      description: 'Try adjusting your search terms or browse our suggestions',
+      action: 'Clear Search'
+    },
+    dashboard: {
+      title: 'Welcome to your dashboard',
+      description: 'This is where you\'ll see your recent activity and insights',
+      action: 'Get Started'
+    },
+    recent: {
+      title: 'No recent activity',
+      description: 'Your recent content and activity will appear here',
+      action: 'Browse Content'
+    }
+  },
+  success: {
+    saved: 'Content saved successfully',
+    updated: 'Content updated successfully',
+    deleted: 'Content deleted successfully'
+  },
+  errors: {
+    general: 'Something went wrong',
+    network: 'Network error occurred',
+    auth: 'Authentication failed'
   }
 };
