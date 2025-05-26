@@ -33,12 +33,15 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
   return (
     <div 
       className={cn(
-        "min-h-screen flex flex-col w-full bg-background text-foreground transition-colors duration-300",
+        "min-h-screen flex flex-col w-full transition-colors duration-300",
+        "bg-background text-foreground",
         // Apply accessibility preferences
         preferences.highContrast && "high-contrast",
         preferences.reducedMotion && "reduce-motion",
         preferences.fontSize === 'large' && "text-lg",
         preferences.fontSize === 'small' && "text-sm",
+        // Enhanced dark mode support
+        "dark:bg-background dark:text-foreground",
         className
       )}
       dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}

@@ -76,7 +76,10 @@ const AppFooter: React.FC = () => {
 
   return (
     <footer 
-      className="w-full border-t bg-background/95 backdrop-blur-sm mt-auto"
+      className={cn(
+        "w-full border-t bg-background/95 backdrop-blur-sm mt-auto",
+        "border-border/40 dark:border-border/20 dark:bg-background/90"
+      )}
       role="contentinfo"
       aria-label="Site footer"
     >
@@ -95,11 +98,20 @@ const AppFooter: React.FC = () => {
                 )}
                 aria-label="Accio - Go to homepage"
               >
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
-                  <span className="text-primary-foreground font-bold text-lg">A</span>
+                <div className={cn(
+                  "w-8 h-8 rounded-lg flex items-center justify-center shadow-sm",
+                  "bg-gradient-to-br from-primary to-primary/80",
+                  "dark:shadow-primary/20"
+                )}>
+                  <span className="text-primary-foreground font-bold text-lg" aria-hidden="true">A</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xl font-bold text-primary leading-none">Accio</span>
+                  <span className={cn(
+                    "text-xl font-bold leading-none",
+                    "bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent"
+                  )}>
+                    Accio
+                  </span>
                   <span className="text-xs text-muted-foreground leading-none">Knowledge Library</span>
                 </div>
               </Link>
@@ -117,8 +129,10 @@ const AppFooter: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      "p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200",
-                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                      "p-2 rounded-lg transition-all duration-200",
+                      "text-muted-foreground hover:text-foreground hover:bg-accent/50",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                      "dark:hover:bg-accent/30"
                     )}
                     aria-label={social['aria-label']}
                   >
@@ -143,7 +157,8 @@ const AppFooter: React.FC = () => {
                           target="_blank"
                           rel="noopener noreferrer"
                           className={cn(
-                            "inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200",
+                            "inline-flex items-center gap-2 text-sm transition-colors duration-200",
+                            "text-muted-foreground hover:text-foreground",
                             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
                           )}
                         >
@@ -154,7 +169,8 @@ const AppFooter: React.FC = () => {
                         <Link
                           to={link.href}
                           className={cn(
-                            "inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200",
+                            "inline-flex items-center gap-2 text-sm transition-colors duration-200",
+                            "text-muted-foreground hover:text-foreground",
                             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-sm"
                           )}
                         >
@@ -171,7 +187,10 @@ const AppFooter: React.FC = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="border-t py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className={cn(
+          "border-t py-6 flex flex-col sm:flex-row items-center justify-between gap-4",
+          "border-border/40 dark:border-border/20"
+        )}>
           <p className="text-xs text-muted-foreground text-center sm:text-left">
             © {currentYear} Accio. All rights reserved.
           </p>

@@ -34,13 +34,13 @@ const MainNavigation: React.FC = () => {
 
   const isLoggedIn = !!user;
 
-  // Optimized scroll handler
+  // Enhanced scroll handler with better performance
   useEffect(() => {
     let ticking = false;
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
-          setScrolled(window.scrollY > 10);
+          setScrolled(window.scrollY > 20);
           ticking = false;
         });
         ticking = true;
@@ -70,21 +70,23 @@ const MainNavigation: React.FC = () => {
   return (
     <header 
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300 border-b bg-background/95 backdrop-blur-md",
-        scrolled && "shadow-sm",
+        "sticky top-0 z-50 w-full transition-all duration-300",
+        "border-b border-border/40 bg-background/95 backdrop-blur-xl",
+        "supports-[backdrop-filter]:bg-background/80",
+        scrolled && "shadow-lg border-border/60",
         preferences.highContrast && "border-2 border-foreground",
-        "supports-[backdrop-filter]:bg-background/60"
+        "dark:border-border/20 dark:bg-background/90"
       )}
       role="banner"
       dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between gap-4">
           <NavigationLogo />
           <DesktopNav isLoggedIn={isLoggedIn} />
           
           {/* Right Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <LanguageSelector />
             <ModeToggle />
             <UserMenu isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} />
