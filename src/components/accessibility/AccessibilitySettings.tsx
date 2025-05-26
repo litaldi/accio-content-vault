@@ -43,6 +43,22 @@ export const AccessibilitySettings: React.FC = () => {
             />
           </div>
 
+          <div className="flex items-center justify-between">
+            <div className="space-y-0.5">
+              <Label htmlFor="grayscale">Grayscale Mode</Label>
+              <p className="text-sm text-muted-foreground">
+                Remove colors for focus enhancement
+              </p>
+            </div>
+            <Switch
+              id="grayscale"
+              checked={preferences.grayscale}
+              onCheckedChange={(checked) => 
+                updatePreferences({ grayscale: checked })
+              }
+            />
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="font-size">Font Size</Label>
             <Select
@@ -58,6 +74,25 @@ export const AccessibilitySettings: React.FC = () => {
                 <SelectItem value="small">Small</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="large">Large</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="line-spacing">Line Spacing</Label>
+            <Select
+              value={preferences.lineSpacing}
+              onValueChange={(value: 'normal' | 'relaxed' | 'loose') =>
+                updatePreferences({ lineSpacing: value })
+              }
+            >
+              <SelectTrigger id="line-spacing">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="relaxed">Relaxed</SelectItem>
+                <SelectItem value="loose">Loose</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -93,16 +128,16 @@ export const AccessibilitySettings: React.FC = () => {
           
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label htmlFor="announcements">Screen Reader Announcements</Label>
+              <Label htmlFor="screen-reader">Screen Reader Mode</Label>
               <p className="text-sm text-muted-foreground">
-                Enable audio announcements for actions
+                Optimize for screen reader navigation
               </p>
             </div>
             <Switch
-              id="announcements"
-              checked={preferences.announcements}
+              id="screen-reader"
+              checked={preferences.screenReaderMode}
               onCheckedChange={(checked) => 
-                updatePreferences({ announcements: checked })
+                updatePreferences({ screenReaderMode: checked })
               }
             />
           </div>
@@ -140,8 +175,10 @@ export const AccessibilitySettings: React.FC = () => {
               highContrast: false,
               reducedMotion: false,
               fontSize: 'medium',
-              announcements: true,
+              lineSpacing: 'normal',
+              grayscale: false,
               keyboardNavigation: true,
+              screenReaderMode: false,
             })}
           >
             Reset to Defaults
