@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
   Network, 
-  RefreshCw,
+  Sparkles,
   Maximize2,
   Filter,
-  Eye,
-  TrendingUp,
-  Zap
+  Zap,
+  Search,
+  Lightbulb
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -19,9 +19,16 @@ interface KnowledgeNode {
   title: string;
   category: string;
   connections: number;
-  strength: 'strong' | 'medium' | 'weak';
+  strength: number;
   x: number;
   y: number;
+}
+
+interface KnowledgeConnection {
+  from: string;
+  to: string;
+  strength: number;
+  type: 'strong' | 'medium' | 'weak';
 }
 
 interface AIKnowledgeGraphProps {
@@ -30,9 +37,10 @@ interface AIKnowledgeGraphProps {
 
 export const AIKnowledgeGraph: React.FC<AIKnowledgeGraphProps> = ({ className }) => {
   const [nodes, setNodes] = useState<KnowledgeNode[]>([]);
+  const [connections, setConnections] = useState<KnowledgeConnection[]>([]);
+  const [selectedNode, setSelectedNode] = useState<KnowledgeNode | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [viewMode, setViewMode] = useState<'network' | 'clusters'>('network');
+  const [insights, setInsights] = useState<string[]>([]);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -42,51 +50,64 @@ export const AIKnowledgeGraph: React.FC<AIKnowledgeGraphProps> = ({ className })
   const generateKnowledgeGraph = async () => {
     setIsGenerating(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       const mockNodes: KnowledgeNode[] = [
-        { id: '1', title: 'React Fundamentals', category: 'Frontend', connections: 8, strength: 'strong', x: 150, y: 100 },
-        { id: '2', title: 'JavaScript ES6+', category: 'Programming', connections: 12, strength: 'strong', x: 300, y: 150 },
-        { id: '3', title: 'Node.js APIs', category: 'Backend', connections: 6, strength: 'medium', x: 200, y: 250 },
-        { id: '4', title: 'Database Design', category: 'Data', connections: 4, strength: 'medium', x: 350, y: 200 },
-        { id: '5', title: 'UI/UX Principles', category: 'Design', connections: 5, strength: 'weak', x: 100, y: 200 },
-        { id: '6', title: 'TypeScript', category: 'Programming', connections: 9, strength: 'strong', x: 250, y: 50 }
+        { id: '1', title: 'React Hooks', category: 'Frontend', connections: 8, strength: 95, x: 50, y: 30 },
+        { id: '2', title: 'TypeScript', category: 'Programming', connections: 12, strength: 88, x: 80, y: 50 },
+        { id: '3', title: 'Node.js', category: 'Backend', connections: 6, strength: 72, x: 20, y: 70 },
+        { id: '4', title: 'Productivity', category: 'Skills', connections: 15, strength: 85, x: 70, y: 20 },
+        { id: '5', title: 'UI/UX Design', category: 'Design', connections: 9, strength: 78, x: 30, y: 60 },
+        { id: '6', title: 'Machine Learning', category: 'AI', connections: 4, strength: 65, x: 60, y: 80 }
+      ];
+
+      const mockConnections: KnowledgeConnection[] = [
+        { from: '1', to: '2', strength: 0.9, type: 'strong' },
+        { from: '1', to: '5', strength: 0.7, type: 'medium' },
+        { from: '2', to: '3', strength: 0.8, type: 'strong' },
+        { from: '4', to: '5', strength: 0.6, type: 'medium' },
+        { from: '2', to: '6', strength: 0.4, type: 'weak' }
+      ];
+
+      const mockInsights = [
+        'React and TypeScript show the strongest connection in your knowledge base',
+        'Consider exploring the gap between Machine Learning and your frontend skills',
+        'Your productivity knowledge could enhance all technical areas',
+        'UI/UX Design connects well with React - a strength to leverage'
       ];
 
       setNodes(mockNodes);
+      setConnections(mockConnections);
+      setInsights(mockInsights);
       
       toast({
         title: "Knowledge Graph Generated!",
-        description: "AI has mapped connections between your knowledge areas.",
+        description: "AI has mapped the connections in your knowledge base.",
       });
     } finally {
       setIsGenerating(false);
     }
   };
 
-  const categories = ['all', ...Array.from(new Set(nodes.map(node => node.category)))];
-
-  const filteredNodes = selectedCategory === 'all' 
-    ? nodes 
-    : nodes.filter(node => node.category === selectedCategory);
-
-  const getStrengthColor = (strength: string) => {
-    switch (strength) {
-      case 'strong': return 'bg-green-500';
-      case 'medium': return 'bg-yellow-500';
-      default: return 'bg-red-500';
-    }
+  const getCategoryColor = (category: string) => {
+    const colors: Record<string, string> = {
+      'Frontend': 'bg-blue-500',
+      'Backend': 'bg-green-500',
+      'Programming': 'bg-purple-500',
+      'Design': 'bg-pink-500',
+      'Skills': 'bg-orange-500',
+      'AI': 'bg-red-500'
+    };
+    return colors[category] || 'bg-gray-500';
   };
 
-  const getCategoryColor = (category: string) => {
-    const colors = {
-      'Frontend': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-      'Backend': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-      'Programming': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
-      'Design': 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300',
-      'Data': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300'
-    };
-    return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
+  const getConnectionColor = (type: string) => {
+    switch (type) {
+      case 'strong': return 'stroke-green-500';
+      case 'medium': return 'stroke-yellow-500';
+      case 'weak': return 'stroke-red-500';
+      default: return 'stroke-gray-400';
+    }
   };
 
   return (
@@ -99,129 +120,159 @@ export const AIKnowledgeGraph: React.FC<AIKnowledgeGraphProps> = ({ className })
             <Badge variant="secondary">Interactive</Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {/* Controls */}
-          <div className="flex flex-wrap gap-2 items-center">
+          <div className="flex gap-2">
             <Button
               onClick={generateKnowledgeGraph}
               disabled={isGenerating}
-              variant="outline"
-              size="sm"
               className="gap-2"
             >
               {isGenerating ? (
                 <>
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                  Analyzing...
+                  <div className="w-4 h-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  Mapping...
                 </>
               ) : (
                 <>
-                  <Zap className="h-4 w-4" />
-                  Regenerate
+                  <Sparkles className="h-4 w-4" />
+                  Regenerate Graph
                 </>
               )}
             </Button>
             
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-1 text-sm border rounded"
-            >
-              {categories.map(category => (
-                <option key={category} value={category}>
-                  {category === 'all' ? 'All Categories' : category}
-                </option>
-              ))}
-            </select>
-
-            <Button
-              variant={viewMode === 'network' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('network')}
-            >
-              <Network className="h-4 w-4" />
+            <Button variant="outline" size="sm" className="gap-1">
+              <Filter className="h-3 w-3" />
+              Filter
             </Button>
-            <Button
-              variant={viewMode === 'clusters' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setViewMode('clusters')}
-            >
-              <TrendingUp className="h-4 w-4" />
+            
+            <Button variant="outline" size="sm" className="gap-1">
+              <Maximize2 className="h-3 w-3" />
+              Full Screen
             </Button>
           </div>
 
-          {/* Knowledge Graph Visualization */}
-          <div className="relative border rounded-lg p-4 bg-muted/20 min-h-[400px] overflow-hidden">
-            <svg width="100%" height="400" className="absolute inset-0">
-              {/* Connection Lines */}
-              {filteredNodes.map((node, i) => (
-                filteredNodes.slice(i + 1).map((otherNode, j) => (
+          {/* Graph Visualization */}
+          <div className="relative bg-muted/30 rounded-lg" style={{ height: '300px' }}>
+            <svg width="100%" height="100%" className="absolute inset-0">
+              {/* Connections */}
+              {connections.map((connection, index) => {
+                const fromNode = nodes.find(n => n.id === connection.from);
+                const toNode = nodes.find(n => n.id === connection.to);
+                if (!fromNode || !toNode) return null;
+                
+                return (
                   <line
-                    key={`${node.id}-${otherNode.id}`}
-                    x1={node.x}
-                    y1={node.y}
-                    x2={otherNode.x}
-                    y2={otherNode.y}
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    opacity="0.2"
-                    className="text-muted-foreground"
+                    key={index}
+                    x1={`${fromNode.x}%`}
+                    y1={`${fromNode.y}%`}
+                    x2={`${toNode.x}%`}
+                    y2={`${toNode.y}%`}
+                    className={`${getConnectionColor(connection.type)} stroke-2 opacity-60`}
                   />
-                ))
-              ))}
+                );
+              })}
               
-              {/* Knowledge Nodes */}
-              {filteredNodes.map((node) => (
+              {/* Nodes */}
+              {nodes.map((node) => (
                 <g key={node.id}>
                   <circle
-                    cx={node.x}
-                    cy={node.y}
-                    r={Math.max(20, node.connections * 2)}
-                    className={`${getStrengthColor(node.strength)} opacity-80`}
-                    stroke="currentColor"
-                    strokeWidth="2"
+                    cx={`${node.x}%`}
+                    cy={`${node.y}%`}
+                    r={Math.max(8, node.connections)}
+                    className={`${getCategoryColor(node.category)} cursor-pointer hover:opacity-80 transition-opacity`}
+                    onClick={() => setSelectedNode(node)}
                   />
                   <text
-                    x={node.x}
-                    y={node.y + 5}
+                    x={`${node.x}%`}
+                    y={`${node.y + 15}%`}
                     textAnchor="middle"
-                    className="text-xs font-medium fill-white"
+                    className="text-xs font-medium fill-current"
                   >
-                    {node.title.length > 10 ? node.title.substring(0, 10) + '...' : node.title}
+                    {node.title}
                   </text>
                 </g>
               ))}
             </svg>
           </div>
 
-          {/* Node Details */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {filteredNodes.map((node) => (
-              <Card key={node.id} className="p-3">
-                <div className="flex items-center justify-between mb-2">
-                  <h4 className="font-medium text-sm">{node.title}</h4>
-                  <div className={`w-3 h-3 rounded-full ${getStrengthColor(node.strength)}`} />
+          {/* Selected Node Details */}
+          {selectedNode && (
+            <Card className="border-l-4 border-l-primary">
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold">{selectedNode.title}</h4>
+                    <Badge className={getCategoryColor(selectedNode.category)}>
+                      {selectedNode.category}
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4 text-sm">
+                    <div>
+                      <span className="text-muted-foreground">Connections:</span>
+                      <div className="font-medium">{selectedNode.connections}</div>
+                    </div>
+                    <div>
+                      <span className="text-muted-foreground">Strength:</span>
+                      <div className="font-medium">{selectedNode.strength}%</div>
+                    </div>
+                  </div>
+                  <Button size="sm" variant="outline" className="w-full gap-1">
+                    <Search className="h-3 w-3" />
+                    Explore Related Content
+                  </Button>
                 </div>
-                <div className="flex items-center justify-between">
-                  <Badge className={getCategoryColor(node.category)}>
-                    {node.category}
-                  </Badge>
-                  <span className="text-xs text-muted-foreground">
-                    {node.connections} connections
-                  </span>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* AI Insights */}
+          <div className="space-y-3">
+            <h4 className="font-medium flex items-center gap-2">
+              <Lightbulb className="h-4 w-4 text-yellow-600" />
+              Knowledge Insights
+            </h4>
+            <div className="space-y-2">
+              {insights.map((insight, index) => (
+                <div key={index} className="p-3 bg-blue-50 dark:bg-blue-950 rounded-lg text-sm">
+                  <div className="flex items-start gap-2">
+                    <Zap className="h-4 w-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                    <span>{insight}</span>
+                  </div>
                 </div>
-              </Card>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Insights */}
-          <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg text-sm">
-            <h4 className="font-medium mb-1">🧠 Knowledge Insights:</h4>
-            <ul className="text-muted-foreground space-y-1">
-              <li>• Larger nodes indicate more connected knowledge areas</li>
-              <li>• Green nodes show strong understanding, red nodes need attention</li>
-              <li>• Lines show relationships between different topics</li>
-            </ul>
+          {/* Legend */}
+          <div className="bg-muted/30 p-3 rounded-lg">
+            <h4 className="font-medium mb-3 text-sm">Graph Legend</h4>
+            <div className="grid grid-cols-2 gap-4 text-xs">
+              <div>
+                <h5 className="font-medium mb-2">Node Size</h5>
+                <div className="space-y-1">
+                  <div>• Larger = More connections</div>
+                  <div>• Color = Knowledge category</div>
+                </div>
+              </div>
+              <div>
+                <h5 className="font-medium mb-2">Connection Strength</h5>
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-0.5 bg-green-500"></div>
+                    <span>Strong</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-0.5 bg-yellow-500"></div>
+                    <span>Medium</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-0.5 bg-red-500"></div>
+                    <span>Weak</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

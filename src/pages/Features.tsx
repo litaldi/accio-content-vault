@@ -28,7 +28,8 @@ import {
   Volume2,
   PenTool,
   Folder,
-  Compass
+  Compass,
+  FolderTree
 } from 'lucide-react';
 import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
 import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
@@ -224,6 +225,13 @@ const Features: React.FC = () => {
       description: 'AI discovers and curates new content based on your interests and knowledge gaps.',
       status: 'active',
       benefit: 'Never run out of learning material'
+    },
+    {
+      icon: FolderTree,
+      title: 'Smart Content Organizer',
+      description: 'AI suggests optimal organization strategies and automatically structures your content library.',
+      status: 'active',
+      benefit: 'Effortless organization'
     }
   ];
 
@@ -318,6 +326,30 @@ const Features: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <LearningAnalytics />
               <ContentDiscovery />
+            </div>
+            
+            {/* Advanced Learning & Analysis */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <ContentGapAnalyzer />
+              <AIStudyBuddy />
+            </div>
+            
+            {/* Knowledge & Habits */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <AIKnowledgeGraph />
+              <SmartHabitTracker />
+            </div>
+            
+            {/* Smart Navigation & Focus */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <NaturalLanguageSearchBar />
+              <SmartFocusMode />
+            </div>
+            
+            {/* Organization & Actions */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <SmartContentOrganizer />
+              <NextActionsRecommender />
             </div>
             
             {/* Content Creation & Analysis */}

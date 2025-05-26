@@ -6,25 +6,33 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { 
   Calendar, 
-  Target,
   TrendingUp,
-  Brain,
-  Clock,
-  Award,
+  Target,
+  CheckCircle,
+  BarChart3,
   Flame,
-  BarChart3
+  Award,
+  Plus
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface LearningHabit {
   id: string;
   name: string;
+  description: string;
+  frequency: 'daily' | 'weekly' | 'monthly';
   currentStreak: number;
-  longestStreak: number;
-  weeklyGoal: number;
-  weeklyProgress: number;
-  trend: 'up' | 'down' | 'stable';
-  aiSuggestion: string;
+  bestStreak: number;
+  completionRate: number;
+  category: string;
+  isActive: boolean;
+}
+
+interface HabitInsight {
+  type: 'streak' | 'improvement' | 'recommendation';
+  title: string;
+  description: string;
+  actionable: string;
 }
 
 interface SmartHabitTrackerProps {
@@ -33,102 +41,126 @@ interface SmartHabitTrackerProps {
 
 export const SmartHabitTracker: React.FC<SmartHabitTrackerProps> = ({ className }) => {
   const [habits, setHabits] = useState<LearningHabit[]>([]);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [overallScore, setOverallScore] = useState(0);
+  const [insights, setInsights] = useState<HabitInsight[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    analyzeHabits();
+    loadHabitsAndInsights();
   }, []);
 
-  const analyzeHabits = async () => {
-    setIsAnalyzing(true);
+  const loadHabitsAndInsights = async () => {
+    setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1200));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       const mockHabits: LearningHabit[] = [
         {
           id: '1',
-          name: 'Daily Reading',
+          name: 'Daily Coding Practice',
+          description: 'Spend at least 30 minutes coding or learning programming concepts',
+          frequency: 'daily',
           currentStreak: 12,
-          longestStreak: 25,
-          weeklyGoal: 7,
-          weeklyProgress: 5,
-          trend: 'up',
-          aiSuggestion: 'Great consistency! Try adding 10 more minutes per session.'
+          bestStreak: 25,
+          completionRate: 85,
+          category: 'Programming',
+          isActive: true
         },
         {
           id: '2',
-          name: 'Code Practice',
-          currentStreak: 3,
-          longestStreak: 15,
-          weeklyGoal: 5,
-          weeklyProgress: 3,
-          trend: 'stable',
-          aiSuggestion: 'Consider practicing at the same time daily for better habit formation.'
+          name: 'Read Tech Articles',
+          description: 'Read and save at least 2 technical articles or tutorials',
+          frequency: 'daily',
+          currentStreak: 7,
+          bestStreak: 15,
+          completionRate: 78,
+          category: 'Learning',
+          isActive: true
         },
         {
           id: '3',
-          name: 'Note Taking',
-          currentStreak: 0,
-          longestStreak: 8,
-          weeklyGoal: 4,
-          weeklyProgress: 1,
-          trend: 'down',
-          aiSuggestion: 'Try the 2-minute rule: just write one quick note to restart.'
+          name: 'UI Design Study',
+          description: 'Study UI/UX design patterns and best practices',
+          frequency: 'weekly',
+          currentStreak: 3,
+          bestStreak: 8,
+          completionRate: 92,
+          category: 'Design',
+          isActive: true
         },
         {
           id: '4',
           name: 'Knowledge Review',
-          currentStreak: 7,
-          longestStreak: 20,
-          weeklyGoal: 6,
-          weeklyProgress: 4,
-          trend: 'up',
-          aiSuggestion: 'Excellent progress! Consider spaced repetition for better retention.'
+          description: 'Review and organize saved content and notes',
+          frequency: 'weekly',
+          currentStreak: 0,
+          bestStreak: 4,
+          completionRate: 45,
+          category: 'Organization',
+          isActive: false
+        }
+      ];
+
+      const mockInsights: HabitInsight[] = [
+        {
+          type: 'streak',
+          title: 'Amazing Coding Streak! 🔥',
+          description: 'You\'re on a 12-day coding streak, just 13 days away from your personal best!',
+          actionable: 'Keep the momentum going - schedule your next coding session.'
+        },
+        {
+          type: 'improvement',
+          title: 'Knowledge Review Needs Attention',
+          description: 'Your content review habit has a low completion rate (45%). Regular review improves retention.',
+          actionable: 'Try setting a weekly reminder or reducing the time commitment.'
+        },
+        {
+          type: 'recommendation',
+          title: 'Perfect Time for a New Habit',
+          description: 'Based on your consistent learning pattern, you could add a "Daily Reflection" habit.',
+          actionable: 'Consider spending 5 minutes daily reflecting on what you learned.'
         }
       ];
 
       setHabits(mockHabits);
-      
-      // Calculate overall score
-      const totalProgress = mockHabits.reduce((sum, habit) => 
-        sum + (habit.weeklyProgress / habit.weeklyGoal), 0);
-      const score = Math.round((totalProgress / mockHabits.length) * 100);
-      setOverallScore(score);
-      
-      toast({
-        title: "Habit Analysis Complete!",
-        description: "AI has analyzed your learning patterns and streaks.",
-      });
+      setInsights(mockInsights);
     } finally {
-      setIsAnalyzing(false);
+      setIsLoading(false);
     }
   };
 
-  const getTrendIcon = (trend: string) => {
-    switch (trend) {
-      case 'up': return <TrendingUp className="h-4 w-4 text-green-600" />;
-      case 'down': return <TrendingUp className="h-4 w-4 text-red-600 rotate-180" />;
-      default: return <BarChart3 className="h-4 w-4 text-yellow-600" />;
+  const markHabitComplete = (habitId: string) => {
+    setHabits(prev => prev.map(habit => 
+      habit.id === habitId 
+        ? { ...habit, currentStreak: habit.currentStreak + 1 }
+        : habit
+    ));
+    
+    toast({
+      title: "Habit Completed! 🎉",
+      description: "Great job maintaining your learning routine!",
+    });
+  };
+
+  const getFrequencyColor = (frequency: string) => {
+    switch (frequency) {
+      case 'daily': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      case 'weekly': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      case 'monthly': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
     }
   };
 
-  const getTrendColor = (trend: string) => {
-    switch (trend) {
-      case 'up': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'down': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      default: return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+  const getInsightIcon = (type: string) => {
+    switch (type) {
+      case 'streak': return <Flame className="h-4 w-4 text-orange-600" />;
+      case 'improvement': return <TrendingUp className="h-4 w-4 text-blue-600" />;
+      case 'recommendation': return <Target className="h-4 w-4 text-green-600" />;
+      default: return <BarChart3 className="h-4 w-4 text-purple-600" />;
     }
   };
 
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  if (isAnalyzing) {
+  if (isLoading) {
     return (
       <div className={className}>
         <Card>
@@ -154,114 +186,119 @@ export const SmartHabitTracker: React.FC<SmartHabitTrackerProps> = ({ className 
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Overall Score */}
-          <div className="text-center space-y-3">
-            <div className="flex items-center justify-center gap-2">
-              <Brain className="h-6 w-6 text-primary" />
-              <span className="text-sm font-medium">Learning Habit Score</span>
-            </div>
-            <div className={`text-4xl font-bold ${getScoreColor(overallScore)}`}>
-              {overallScore}/100
-            </div>
-            <Progress value={overallScore} className="h-3" />
-            <p className="text-sm text-muted-foreground">
-              Based on consistency, streaks, and goal achievement
-            </p>
-          </div>
-
-          {/* Habits Grid */}
+          {/* Active Habits */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-medium">Your Learning Habits</h3>
-              <Button variant="outline" size="sm" onClick={analyzeHabits}>
-                <Brain className="h-4 w-4 mr-1" />
-                Re-analyze
+              <h3 className="font-medium">Active Learning Habits</h3>
+              <Button size="sm" variant="outline" className="gap-1">
+                <Plus className="h-3 w-3" />
+                Add Habit
               </Button>
             </div>
             
-            <div className="space-y-3">
-              {habits.map((habit) => (
-                <Card key={habit.id} className="border-l-4 border-l-primary">
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
+            {habits.filter(habit => habit.isActive).map((habit) => (
+              <Card key={habit.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-4">
+                  <div className="space-y-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
                         <h4 className="font-medium">{habit.name}</h4>
-                        <div className="flex items-center gap-2">
-                          {getTrendIcon(habit.trend)}
-                          <Badge className={getTrendColor(habit.trend)}>
-                            {habit.trend}
-                          </Badge>
-                        </div>
+                        <p className="text-sm text-muted-foreground">{habit.description}</p>
                       </div>
-                      
-                      <div className="grid grid-cols-2 gap-4 text-sm">
-                        <div className="flex items-center gap-2">
-                          <Flame className="h-4 w-4 text-orange-500" />
-                          <span>Current: {habit.currentStreak} days</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Award className="h-4 w-4 text-yellow-500" />
-                          <span>Best: {habit.longestStreak} days</span>
-                        </div>
-                      </div>
-                      
-                      <div className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span>Weekly Progress</span>
-                          <span>{habit.weeklyProgress}/{habit.weeklyGoal}</span>
-                        </div>
-                        <Progress 
-                          value={(habit.weeklyProgress / habit.weeklyGoal) * 100} 
-                          className="h-2" 
-                        />
-                      </div>
-                      
-                      <div className="bg-blue-50 dark:bg-blue-950 p-2 rounded text-xs">
-                        <span className="font-medium">💡 AI Tip: </span>
-                        {habit.aiSuggestion}
+                      <div className="flex gap-2">
+                        <Badge className={getFrequencyColor(habit.frequency)}>
+                          {habit.frequency}
+                        </Badge>
+                        <Badge variant="outline">{habit.category}</Badge>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    
+                    <div className="grid grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <span className="text-muted-foreground">Current Streak</span>
+                        <div className="flex items-center gap-1">
+                          <Flame className="h-4 w-4 text-orange-500" />
+                          <span className="font-bold text-lg">{habit.currentStreak}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Best Streak</span>
+                        <div className="flex items-center gap-1">
+                          <Award className="h-4 w-4 text-yellow-500" />
+                          <span className="font-medium">{habit.bestStreak}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <span className="text-muted-foreground">Success Rate</span>
+                        <div className="font-medium">{habit.completionRate}%</div>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span>Completion Rate</span>
+                        <span>{habit.completionRate}%</span>
+                      </div>
+                      <Progress value={habit.completionRate} className="h-2" />
+                    </div>
+                    
+                    <Button
+                      onClick={() => markHabitComplete(habit.id)}
+                      className="w-full gap-2"
+                      size="sm"
+                    >
+                      <CheckCircle className="h-4 w-4" />
+                      Mark Complete Today
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
 
-          {/* Weekly Summary */}
-          <div className="bg-gradient-to-r from-primary/10 to-blue-500/10 p-4 rounded-lg">
-            <h4 className="font-medium mb-2 flex items-center gap-2">
-              <Target className="h-4 w-4" />
-              This Week's Insights
-            </h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-              <div className="text-center">
-                <div className="font-bold text-lg text-green-600">
-                  {habits.filter(h => h.trend === 'up').length}
+          {/* AI Insights */}
+          <div className="space-y-3">
+            <h4 className="font-medium">AI Insights & Recommendations</h4>
+            {insights.map((insight, index) => (
+              <div key={index} className="p-3 border rounded-lg">
+                <div className="flex items-start gap-3">
+                  {getInsightIcon(insight.type)}
+                  <div className="flex-1">
+                    <h5 className="font-medium text-sm">{insight.title}</h5>
+                    <p className="text-xs text-muted-foreground mb-2">{insight.description}</p>
+                    <p className="text-xs font-medium text-primary">{insight.actionable}</p>
+                  </div>
                 </div>
-                <div className="text-muted-foreground">Improving</div>
               </div>
-              <div className="text-center">
-                <div className="font-bold text-lg text-yellow-600">
-                  {habits.filter(h => h.trend === 'stable').length}
-                </div>
-                <div className="text-muted-foreground">Stable</div>
+            ))}
+          </div>
+
+          {/* Habit Performance Overview */}
+          <div className="bg-gradient-to-r from-primary/5 to-blue-500/5 p-4 rounded-lg">
+            <h4 className="font-medium mb-3">Weekly Performance</h4>
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-green-600">3</div>
+                <div className="text-xs text-muted-foreground">Habits Completed</div>
               </div>
-              <div className="text-center">
-                <div className="font-bold text-lg text-red-600">
-                  {habits.filter(h => h.trend === 'down').length}
-                </div>
-                <div className="text-muted-foreground">Need Attention</div>
+              <div>
+                <div className="text-2xl font-bold text-orange-600">12</div>
+                <div className="text-xs text-muted-foreground">Current Best Streak</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-blue-600">78%</div>
+                <div className="text-xs text-muted-foreground">Overall Success</div>
               </div>
             </div>
           </div>
 
           {/* Tips */}
-          <div className="bg-purple-50 dark:bg-purple-950 p-3 rounded-lg text-sm">
-            <h4 className="font-medium mb-1">🎯 Habit Building Tips:</h4>
+          <div className="bg-green-50 dark:bg-green-950 p-3 rounded-lg text-sm">
+            <h4 className="font-medium mb-1">🌱 Habit Building Tips:</h4>
             <ul className="text-muted-foreground space-y-1">
-              <li>• Start small: 2-minute habits are easier to maintain</li>
-              <li>• Stack habits: attach new ones to existing routines</li>
-              <li>• Track daily: consistency beats intensity</li>
+              <li>• Start small - consistency beats intensity</li>
+              <li>• AI tracks patterns to suggest optimal habit scheduling</li>
+              <li>• Review and adjust habits based on your success rates</li>
             </ul>
           </div>
         </CardContent>

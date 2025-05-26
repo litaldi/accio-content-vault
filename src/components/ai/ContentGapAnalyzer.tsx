@@ -7,12 +7,12 @@ import { Progress } from '@/components/ui/progress';
 import { 
   Search, 
   AlertTriangle,
+  TrendingUp,
   BookOpen,
   Target,
-  Plus,
-  TrendingUp,
-  CheckCircle,
-  ExternalLink
+  Lightbulb,
+  ExternalLink,
+  Plus
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -20,11 +20,19 @@ interface KnowledgeGap {
   id: string;
   topic: string;
   category: string;
-  severity: 'critical' | 'important' | 'nice-to-have';
-  reason: string;
+  priority: 'high' | 'medium' | 'low';
+  confidence: number;
+  description: string;
   suggestedResources: string[];
   relatedTopics: string[];
-  completionEstimate: string;
+  estimatedLearningTime: string;
+}
+
+interface LearningGoal {
+  id: string;
+  title: string;
+  progress: number;
+  missingSkills: string[];
 }
 
 interface ContentGapAnalyzerProps {
@@ -33,9 +41,9 @@ interface ContentGapAnalyzerProps {
 
 export const ContentGapAnalyzer: React.FC<ContentGapAnalyzerProps> = ({ className }) => {
   const [gaps, setGaps] = useState<KnowledgeGap[]>([]);
+  const [goals, setGoals] = useState<LearningGoal[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [analysisProgress, setAnalysisProgress] = useState(0);
-  const [knowledgeScore, setKnowledgeScore] = useState(0);
+  const [selectedGap, setSelectedGap] = useState<KnowledgeGap | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -44,112 +52,107 @@ export const ContentGapAnalyzer: React.FC<ContentGapAnalyzerProps> = ({ classNam
 
   const analyzeContentGaps = async () => {
     setIsAnalyzing(true);
-    setAnalysisProgress(0);
-
     try {
-      // Simulate AI analysis with progress
-      const progressInterval = setInterval(() => {
-        setAnalysisProgress(prev => Math.min(prev + 15, 90));
-      }, 300);
-
       await new Promise(resolve => setTimeout(resolve, 2000));
-      clearInterval(progressInterval);
-      setAnalysisProgress(100);
-
+      
       const mockGaps: KnowledgeGap[] = [
         {
           id: '1',
           topic: 'Advanced TypeScript Patterns',
           category: 'Programming',
-          severity: 'critical',
-          reason: 'You have React content but lack advanced TypeScript knowledge for complex patterns',
-          suggestedResources: ['TypeScript Deep Dive', 'Advanced TS Patterns Course', 'Generic Programming Guide'],
-          relatedTopics: ['React', 'JavaScript', 'Type Safety'],
-          completionEstimate: '2-3 weeks'
+          priority: 'high',
+          confidence: 92,
+          description: 'You have solid TypeScript basics but lack knowledge in advanced patterns like conditional types and template literals.',
+          suggestedResources: ['TypeScript Handbook Advanced Types', 'Conditional Types Deep Dive', 'TypeScript 4.9 Features'],
+          relatedTopics: ['Generic Constraints', 'Mapped Types', 'Utility Types'],
+          estimatedLearningTime: '2-3 weeks'
         },
         {
           id: '2',
-          topic: 'Performance Optimization',
-          category: 'Frontend',
-          severity: 'important',
-          reason: 'Your frontend skills are strong but missing performance optimization techniques',
-          suggestedResources: ['Web Performance Guide', 'Chrome DevTools Mastery', 'Bundle Analysis Tools'],
-          relatedTopics: ['React', 'JavaScript', 'Build Tools'],
-          completionEstimate: '1-2 weeks'
+          topic: 'Testing Strategies',
+          category: 'Development',
+          priority: 'high',
+          confidence: 88,
+          description: 'Limited content on testing frameworks and best practices. This is crucial for professional development.',
+          suggestedResources: ['Jest Testing Framework', 'React Testing Library', 'E2E Testing with Cypress'],
+          relatedTopics: ['Unit Testing', 'Integration Testing', 'Test-Driven Development'],
+          estimatedLearningTime: '3-4 weeks'
         },
         {
           id: '3',
-          topic: 'Testing Strategies',
-          category: 'Development',
-          severity: 'important',
-          reason: 'You have development content but limited testing methodology knowledge',
-          suggestedResources: ['Jest Documentation', 'Testing Library Guide', 'E2E Testing Best Practices'],
-          relatedTopics: ['JavaScript', 'React', 'Quality Assurance'],
-          completionEstimate: '1 week'
+          topic: 'System Design Principles',
+          category: 'Architecture',
+          priority: 'medium',
+          confidence: 78,
+          description: 'Your frontend skills are strong, but backend architecture and system design knowledge could be improved.',
+          suggestedResources: ['Designing Data-Intensive Applications', 'System Design Primer', 'Microservices Patterns'],
+          relatedTopics: ['Scalability', 'Database Design', 'Distributed Systems'],
+          estimatedLearningTime: '4-6 weeks'
         },
         {
           id: '4',
-          topic: 'Design Systems',
-          category: 'Design',
-          severity: 'nice-to-have',
-          reason: 'Would complement your UI development skills with systematic design approach',
-          suggestedResources: ['Design Systems Handbook', 'Component Library Patterns', 'Figma to Code Workflow'],
-          relatedTopics: ['UI/UX', 'Frontend', 'Collaboration'],
-          completionEstimate: '3-4 weeks'
+          topic: 'DevOps & Deployment',
+          category: 'Operations',
+          priority: 'medium',
+          confidence: 72,
+          description: 'Gap in deployment strategies and DevOps practices for modern web applications.',
+          suggestedResources: ['Docker Fundamentals', 'CI/CD Pipelines', 'AWS/Azure Basics'],
+          relatedTopics: ['Containerization', 'Cloud Services', 'Monitoring'],
+          estimatedLearningTime: '3-5 weeks'
+        }
+      ];
+
+      const mockGoals: LearningGoal[] = [
+        {
+          id: '1',
+          title: 'Become Full-Stack Developer',
+          progress: 65,
+          missingSkills: ['Backend APIs', 'Database Design', 'System Architecture']
+        },
+        {
+          id: '2',
+          title: 'Master Modern Frontend',
+          progress: 85,
+          missingSkills: ['Advanced TypeScript', 'Testing Strategies']
         }
       ];
 
       setGaps(mockGaps);
-      
-      // Calculate knowledge score based on gaps
-      const criticalGaps = mockGaps.filter(gap => gap.severity === 'critical').length;
-      const importantGaps = mockGaps.filter(gap => gap.severity === 'important').length;
-      const score = Math.max(40, 100 - (criticalGaps * 20) - (importantGaps * 10));
-      setKnowledgeScore(score);
+      setGoals(mockGoals);
       
       toast({
         title: "Gap Analysis Complete!",
-        description: `Found ${mockGaps.length} knowledge gaps to explore.`,
-      });
-    } catch (error) {
-      toast({
-        title: "Analysis Failed",
-        description: "Please try again.",
-        variant: "destructive"
+        description: `Found ${mockGaps.length} knowledge gaps to address.`,
       });
     } finally {
       setIsAnalyzing(false);
-      setTimeout(() => setAnalysisProgress(0), 1000);
     }
   };
 
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'critical': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      case 'important': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
-      default: return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-    }
-  };
-
-  const getSeverityIcon = (severity: string) => {
-    switch (severity) {
-      case 'critical': return <AlertTriangle className="h-4 w-4 text-red-600" />;
-      case 'important': return <Target className="h-4 w-4 text-yellow-600" />;
-      default: return <BookOpen className="h-4 w-4 text-blue-600" />;
-    }
-  };
-
-  const getScoreColor = (score: number) => {
-    if (score >= 80) return 'text-green-600';
-    if (score >= 60) return 'text-yellow-600';
-    return 'text-red-600';
-  };
-
-  const addToLearningPlan = (gap: KnowledgeGap) => {
+  const createLearningPlan = (gap: KnowledgeGap) => {
     toast({
-      title: "Added to Learning Plan!",
-      description: `${gap.topic} has been added to your learning queue.`,
+      title: "Learning Plan Created!",
+      description: `Created a personalized plan for ${gap.topic}.`,
     });
+  };
+
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+      case 'medium': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      case 'low': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+    }
+  };
+
+  const getCategoryColor = (category: string) => {
+    const colors: Record<string, string> = {
+      'Programming': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+      'Development': 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+      'Architecture': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300',
+      'Operations': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300'
+    };
+    return colors[category] || 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
   };
 
   return (
@@ -163,157 +166,206 @@ export const ContentGapAnalyzer: React.FC<ContentGapAnalyzerProps> = ({ classNam
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Knowledge Completeness Score */}
-          <div className="text-center space-y-3">
-            <div className="flex items-center justify-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              <span className="text-sm font-medium">Knowledge Completeness</span>
-            </div>
-            <div className={`text-4xl font-bold ${getScoreColor(knowledgeScore)}`}>
-              {knowledgeScore}%
-            </div>
-            <Progress value={knowledgeScore} className="h-3" />
-            <p className="text-sm text-muted-foreground">
-              Based on your content library and learning goals
-            </p>
+          {/* Controls */}
+          <div className="flex gap-2">
+            <Button
+              onClick={analyzeContentGaps}
+              disabled={isAnalyzing}
+              className="gap-2"
+            >
+              {isAnalyzing ? (
+                <>
+                  <div className="w-4 h-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  Analyzing...
+                </>
+              ) : (
+                <>
+                  <Search className="h-4 w-4" />
+                  Analyze Knowledge Gaps
+                </>
+              )}
+            </Button>
           </div>
 
-          {/* Analysis Progress */}
-          {isAnalyzing && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Analyzing knowledge patterns...</span>
-                <span>{analysisProgress}%</span>
-              </div>
-              <Progress value={analysisProgress} className="h-2" />
+          {/* Learning Goals Progress */}
+          {goals.length > 0 && (
+            <div className="space-y-3">
+              <h3 className="font-medium">Learning Goals Progress</h3>
+              {goals.map((goal) => (
+                <Card key={goal.id} className="border-l-4 border-l-blue-500">
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-medium">{goal.title}</h4>
+                        <span className="text-sm font-medium">{goal.progress}%</span>
+                      </div>
+                      <Progress value={goal.progress} className="h-2" />
+                      <div className="flex flex-wrap gap-1">
+                        <span className="text-xs text-muted-foreground">Missing skills:</span>
+                        {goal.missingSkills.map((skill, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {skill}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           )}
 
           {/* Knowledge Gaps */}
-          {gaps.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="font-medium">Identified Knowledge Gaps</h3>
-                <Button variant="outline" size="sm" onClick={analyzeContentGaps}>
-                  <Search className="h-4 w-4 mr-1" />
-                  Re-analyze
-                </Button>
+          <div className="space-y-4">
+            <h3 className="font-medium">Identified Knowledge Gaps</h3>
+            {gaps.length === 0 ? (
+              <div className="text-center py-8">
+                <Search className="h-8 w-8 text-muted-foreground mx-auto mb-3" />
+                <h3 className="font-medium mb-1">No Analysis Yet</h3>
+                <p className="text-sm text-muted-foreground">
+                  Click "Analyze Knowledge Gaps" to discover areas for improvement.
+                </p>
               </div>
-              
-              <div className="space-y-3">
-                {gaps.map((gap) => (
-                  <Card key={gap.id} className="border-l-4 border-l-primary">
-                    <CardContent className="p-4">
-                      <div className="space-y-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex items-center gap-2">
-                            {getSeverityIcon(gap.severity)}
-                            <div>
-                              <h4 className="font-medium">{gap.topic}</h4>
-                              <p className="text-sm text-muted-foreground">{gap.category}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge className={getSeverityColor(gap.severity)}>
-                              {gap.severity}
-                            </Badge>
-                            <Badge variant="outline">
-                              {gap.completionEstimate}
-                            </Badge>
-                          </div>
+            ) : (
+              gaps.map((gap) => (
+                <Card key={gap.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-4">
+                    <div className="space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-medium">{gap.topic}</h4>
+                          <p className="text-sm text-muted-foreground">{gap.description}</p>
                         </div>
-                        
-                        <p className="text-sm text-muted-foreground">
-                          <strong>Why this matters:</strong> {gap.reason}
-                        </p>
-                        
-                        <div className="space-y-2">
-                          <h5 className="text-sm font-medium">Suggested Resources:</h5>
-                          <div className="flex flex-wrap gap-2">
-                            {gap.suggestedResources.map((resource, index) => (
-                              <Badge key={index} variant="outline" className="text-xs">
-                                <BookOpen className="h-3 w-3 mr-1" />
-                                {resource}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-2">
-                          <h5 className="text-sm font-medium">Related Topics:</h5>
-                          <div className="flex flex-wrap gap-1">
-                            {gap.relatedTopics.map((topic, index) => (
-                              <Badge key={index} variant="secondary" className="text-xs">
-                                {topic}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        <div className="flex justify-between items-center pt-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-1"
-                          >
-                            <ExternalLink className="h-3 w-3" />
-                            Find Resources
-                          </Button>
-                          <Button
-                            size="sm"
-                            onClick={() => addToLearningPlan(gap)}
-                            className="gap-1"
-                          >
-                            <Plus className="h-3 w-3" />
-                            Add to Plan
-                          </Button>
+                        <div className="flex gap-2">
+                          <Badge className={getPriorityColor(gap.priority)}>
+                            {gap.priority}
+                          </Badge>
+                          <Badge className={getCategoryColor(gap.category)}>
+                            {gap.category}
+                          </Badge>
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
+                      
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-4">
+                          <span className="text-muted-foreground">Confidence: {gap.confidence}%</span>
+                          <span className="text-muted-foreground">⏱️ {gap.estimatedLearningTime}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <h5 className="text-sm font-medium">Suggested Resources:</h5>
+                        <div className="flex flex-wrap gap-1">
+                          {gap.suggestedResources.slice(0, 3).map((resource, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {resource}
+                            </Badge>
+                          ))}
+                          {gap.suggestedResources.length > 3 && (
+                            <Badge variant="secondary" className="text-xs">
+                              +{gap.suggestedResources.length - 3} more
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => createLearningPlan(gap)}
+                          className="gap-1"
+                        >
+                          <Target className="h-3 w-3" />
+                          Create Learning Plan
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setSelectedGap(gap)}
+                          className="gap-1"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                          View Details
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+
+          {/* Selected Gap Details */}
+          {selectedGap && (
+            <Card className="border-l-4 border-l-orange-500">
+              <CardContent className="p-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold">{selectedGap.topic}</h4>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setSelectedGap(null)}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <h5 className="text-sm font-medium mb-1">Related Topics:</h5>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedGap.relatedTopics.map((topic, index) => (
+                          <Badge key={index} variant="outline" className="text-xs">
+                            {topic}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h5 className="text-sm font-medium mb-1">All Suggested Resources:</h5>
+                      <div className="space-y-1">
+                        {selectedGap.suggestedResources.map((resource, index) => (
+                          <div key={index} className="flex items-center gap-2 text-sm">
+                            <BookOpen className="h-3 w-3 text-muted-foreground" />
+                            <span>{resource}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           )}
 
-          {/* Summary Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="text-center p-4">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <AlertTriangle className="h-4 w-4 text-red-600" />
-                <span className="text-sm font-medium">Critical</span>
+          {/* Gap Analysis Summary */}
+          <div className="bg-gradient-to-r from-primary/5 to-blue-500/5 p-4 rounded-lg">
+            <h4 className="font-medium mb-3">Gap Analysis Summary</h4>
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-red-600">{gaps.filter(g => g.priority === 'high').length}</div>
+                <div className="text-xs text-muted-foreground">High Priority</div>
               </div>
-              <div className="text-2xl font-bold text-red-600">
-                {gaps.filter(gap => gap.severity === 'critical').length}
+              <div>
+                <div className="text-2xl font-bold text-yellow-600">{gaps.filter(g => g.priority === 'medium').length}</div>
+                <div className="text-xs text-muted-foreground">Medium Priority</div>
               </div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <Target className="h-4 w-4 text-yellow-600" />
-                <span className="text-sm font-medium">Important</span>
+              <div>
+                <div className="text-2xl font-bold text-green-600">{gaps.filter(g => g.priority === 'low').length}</div>
+                <div className="text-xs text-muted-foreground">Low Priority</div>
               </div>
-              <div className="text-2xl font-bold text-yellow-600">
-                {gaps.filter(gap => gap.severity === 'important').length}
-              </div>
-            </Card>
-            <Card className="text-center p-4">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <BookOpen className="h-4 w-4 text-blue-600" />
-                <span className="text-sm font-medium">Nice-to-Have</span>
-              </div>
-              <div className="text-2xl font-bold text-blue-600">
-                {gaps.filter(gap => gap.severity === 'nice-to-have').length}
-              </div>
-            </Card>
+            </div>
           </div>
 
           {/* Tips */}
-          <div className="bg-green-50 dark:bg-green-950 p-3 rounded-lg text-sm">
-            <h4 className="font-medium mb-1">🎯 Gap Analysis Tips:</h4>
+          <div className="bg-yellow-50 dark:bg-yellow-950 p-3 rounded-lg text-sm">
+            <h4 className="font-medium mb-1">💡 Gap Analysis Tips:</h4>
             <ul className="text-muted-foreground space-y-1">
-              <li>• Focus on critical gaps first for maximum impact</li>
-              <li>• Build on existing knowledge to fill related gaps efficiently</li>
-              <li>• Regular analysis helps identify new gaps as you grow</li>
+              <li>• Focus on high-priority gaps that align with your goals</li>
+              <li>• AI analyzes your content to identify missing knowledge areas</li>
+              <li>• Regular gap analysis helps maintain comprehensive skill development</li>
             </ul>
           </div>
         </CardContent>
