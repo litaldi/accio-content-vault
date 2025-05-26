@@ -1,200 +1,280 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
-import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
-import NavigationButtons from '@/components/navigation/NavigationButtons';
-import ImprovedFooter from '@/components/Footer/ImprovedFooter';
-import ButtonAccessibilityChecker from '@/components/debug/ButtonAccessibilityChecker';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { MessageCircle, BookOpen, Video, Mail, Search } from 'lucide-react';
-import { useState } from 'react';
+import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
+import { 
+  HelpCircle, 
+  MessageCircle, 
+  FileText, 
+  Mail, 
+  Phone, 
+  Clock,
+  Search,
+  BookOpen,
+  Users,
+  Zap
+} from 'lucide-react';
 
-const Help = () => {
-  const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const faqItems = [
+const Help: React.FC = () => {
+  const faqs = [
     {
       question: "How do I save content to my library?",
-      answer: "You can save content by clicking the 'Save Content' button or using our browser extension. Simply paste a URL or upload a file.",
-      category: "Getting Started"
+      answer: "You can save content by pasting URLs, uploading files, or using our browser extension. All content is automatically organized and searchable."
     },
     {
-      question: "How does AI organization work?",
-      answer: "Our AI automatically reads and categorizes your content, adding relevant tags and organizing it into collections for easy discovery.",
-      category: "AI Features"
+      question: "Can I organize my saved content into collections?",
+      answer: "Yes! Create custom collections to organize your content by topic, project, or any other criteria that works for you."
     },
     {
-      question: "Can I search my content with natural language?",
-      answer: "Yes! Use natural language queries like 'articles about productivity' or 'videos from last week' to find what you're looking for.",
-      category: "Search"
+      question: "Is my data secure and private?",
+      answer: "Absolutely. We use enterprise-grade encryption and never share your personal data. You have full control over your content and privacy settings."
     },
     {
-      question: "How do I share collections with others?",
-      answer: "Collections can be shared via public links or by inviting specific users to collaborate on your knowledge library.",
-      category: "Collaboration"
+      question: "How does the AI summarization work?",
+      answer: "Our AI automatically generates summaries and key insights from your saved content, making it easier to quickly review and find what you need."
     }
   ];
 
-  const supportChannels = [
+  const supportOptions = [
     {
+      icon: MessageCircle,
       title: "Live Chat",
       description: "Get instant help from our support team",
-      icon: MessageCircle,
       action: "Start Chat",
-      available: true
+      available: "24/7"
     },
     {
-      title: "Documentation",
-      description: "Comprehensive guides and tutorials",
-      icon: BookOpen,
-      action: "Browse Docs",
-      available: true
-    },
-    {
-      title: "Video Tutorials",
-      description: "Step-by-step video guides",
-      icon: Video,
-      action: "Watch Videos",
-      available: true
-    },
-    {
-      title: "Email Support",
-      description: "Get help via email within 24 hours",
       icon: Mail,
+      title: "Email Support",
+      description: "Send us a detailed message about your issue",
       action: "Send Email",
-      available: true
+      available: "Response within 24h"
+    },
+    {
+      icon: FileText,
+      title: "Documentation",
+      description: "Browse our comprehensive guides and tutorials",
+      action: "View Docs",
+      available: "Always available"
+    },
+    {
+      icon: Users,
+      title: "Community Forum",
+      description: "Connect with other users and share tips",
+      action: "Join Forum",
+      available: "Community moderated"
     }
   ];
 
-  const filteredFAQs = faqItems.filter(item =>
-    item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.category.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <div className="min-h-screen flex flex-col">
+    <ImprovedUnifiedLayout>
       <Helmet>
         <title>Help & Support - Accio</title>
-        <meta name="description" content="Get help and support for using Accio knowledge library" />
+        <meta name="description" content="Get help with Accio. Find answers to common questions, contact support, and access documentation." />
       </Helmet>
-      
-      <EnhancedNavigation />
-      
-      <main className="flex-grow py-16">
-        <div className="container mx-auto px-4 max-w-6xl">
-          {/* Header */}
-          <div className="mb-16">
-            <NavigationButtons />
-            
-            <h1 className="text-4xl font-bold mb-4 mt-6">Help & Support</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl">
-              Find answers to common questions or get in touch with our support team
-            </p>
+
+      <div className="py-8 space-y-8">
+        {/* Hero Section */}
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center">
+            <HelpCircle className="h-8 w-8 text-primary" />
           </div>
+          <h1 className="text-4xl font-bold">How can we help you?</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Find answers to your questions, get support, and learn how to make the most of Accio.
+          </p>
+        </div>
 
-          {/* Accessibility Checker for Development */}
-          <div className="mb-16">
-            <h2 className="text-2xl font-semibold mb-6">Development Tools</h2>
-            <ButtonAccessibilityChecker />
-          </div>
-
-          {/* Support Channels */}
-          <div className="mb-16">
-            <h2 className="text-2xl font-semibold mb-6">Get Support</h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {supportChannels.map((channel) => (
-                <Card key={channel.title} className="text-center">
-                  <CardHeader>
-                    <div className="w-12 h-12 mx-auto mb-4 bg-primary/10 rounded-full flex items-center justify-center">
-                      <channel.icon className="h-6 w-6 text-primary" aria-hidden="true" />
-                    </div>
-                    <CardTitle className="text-lg">{channel.title}</CardTitle>
-                    <CardDescription>{channel.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      disabled={!channel.available}
-                      aria-label={`${channel.action} - ${channel.description}`}
-                    >
-                      {channel.action}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* FAQ Section */}
-          <div className="mb-16">
-            <h2 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h2>
-            
-            {/* Search FAQ */}
-            <div className="relative mb-8">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                type="text"
-                placeholder="Search FAQs..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            <div className="space-y-6">
-              {filteredFAQs.map((faq, index) => (
-                <Card key={index}>
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <CardTitle className="text-lg">{faq.question}</CardTitle>
-                      <Badge variant="secondary">{faq.category}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {filteredFAQs.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground">No FAQs found matching your search.</p>
+        {/* Search Help */}
+        <Card className="max-w-2xl mx-auto">
+          <CardContent className="p-6">
+            <div className="flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search for help articles, guides, and FAQs..."
+                  className="pl-10"
+                />
               </div>
-            )}
-          </div>
+              <Button>Search</Button>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Contact Form */}
+        {/* Support Options */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {supportOptions.map((option, index) => (
+            <Card key={index} className="hover:shadow-lg transition-shadow">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 mx-auto rounded-lg bg-primary/10 flex items-center justify-center">
+                  <option.icon className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle className="text-lg">{option.title}</CardTitle>
+                <CardDescription>{option.description}</CardDescription>
+              </CardHeader>
+              <CardContent className="text-center space-y-3">
+                <Button variant="outline" className="w-full">
+                  {option.action}
+                </Button>
+                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  {option.available}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Quick Links */}
+        <div className="grid md:grid-cols-3 gap-6">
           <Card>
             <CardHeader>
-              <CardTitle>Still need help?</CardTitle>
-              <CardDescription>
-                Send us a message and we'll get back to you within 24 hours.
-              </CardDescription>
+              <CardTitle className="flex items-center gap-2">
+                <Zap className="h-5 w-5" />
+                Getting Started
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid md:grid-cols-2 gap-4">
-                <Input placeholder="Your name" />
-                <Input type="email" placeholder="Your email" />
-              </div>
-              <Input placeholder="Subject" />
-              <Textarea placeholder="Describe your issue or question..." rows={4} />
-              <Button className="w-full">Send Message</Button>
+            <CardContent className="space-y-3">
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">Quick Start Guide</div>
+                  <div className="text-sm text-muted-foreground">Learn the basics in 5 minutes</div>
+                </div>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">Account Setup</div>
+                  <div className="text-sm text-muted-foreground">Configure your profile and preferences</div>
+                </div>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">First Steps</div>
+                  <div className="text-sm text-muted-foreground">Save your first piece of content</div>
+                </div>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5" />
+                Features & Tips
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">Advanced Search</div>
+                  <div className="text-sm text-muted-foreground">Find content faster with filters</div>
+                </div>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">Collections Management</div>
+                  <div className="text-sm text-muted-foreground">Organize your content effectively</div>
+                </div>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">AI Features</div>
+                  <div className="text-sm text-muted-foreground">Leverage AI for better insights</div>
+                </div>
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Users className="h-5 w-5" />
+                Account & Billing
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">Subscription Plans</div>
+                  <div className="text-sm text-muted-foreground">Compare features and pricing</div>
+                </div>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">Privacy Settings</div>
+                  <div className="text-sm text-muted-foreground">Control your data and privacy</div>
+                </div>
+              </Button>
+              <Button variant="ghost" className="w-full justify-start h-auto p-3">
+                <div className="text-left">
+                  <div className="font-medium">Account Management</div>
+                  <div className="text-sm text-muted-foreground">Update profile and preferences</div>
+                </div>
+              </Button>
             </CardContent>
           </Card>
         </div>
-      </main>
-      
-      <ImprovedFooter />
-    </div>
+
+        {/* FAQ Section */}
+        <div className="space-y-6">
+          <h2 className="text-2xl font-bold text-center">Frequently Asked Questions</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            {faqs.map((faq, index) => (
+              <Card key={index}>
+                <CardHeader>
+                  <CardTitle className="text-lg">{faq.question}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground">{faq.answer}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Contact Form */}
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle>Still Need Help?</CardTitle>
+            <CardDescription>
+              Send us a message and we'll get back to you as soon as possible.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label htmlFor="name" className="text-sm font-medium">Name</label>
+                <Input id="name" placeholder="Your name" />
+              </div>
+              <div className="space-y-2">
+                <label htmlFor="email" className="text-sm font-medium">Email</label>
+                <Input id="email" type="email" placeholder="your@email.com" />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="subject" className="text-sm font-medium">Subject</label>
+              <Input id="subject" placeholder="How can we help?" />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="message" className="text-sm font-medium">Message</label>
+              <Textarea 
+                id="message" 
+                placeholder="Describe your question or issue in detail..."
+                rows={4}
+              />
+            </div>
+            <Button className="w-full">
+              <Mail className="h-4 w-4 mr-2" />
+              Send Message
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </ImprovedUnifiedLayout>
   );
 };
 

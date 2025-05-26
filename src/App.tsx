@@ -20,6 +20,7 @@ import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import Search from "./pages/Search";
 import Profile from "./pages/Profile";
+import Help from "./pages/Help";
 
 // Import error pages
 import NotFound from "./pages/NotFound";
@@ -40,6 +41,7 @@ function App() {
                     <Route path="/" element={<Index />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/help" element={<Help />} />
                     
                     {/* Protected routes */}
                     <Route path="/dashboard" element={<EnhancedDashboard />} />

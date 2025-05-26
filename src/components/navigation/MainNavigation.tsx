@@ -18,10 +18,14 @@ import {
   Search,
   User,
   Languages,
-  Sparkles
+  Sparkles,
+  HelpCircle,
+  FileText,
+  Heart,
+  Archive
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenuLabel } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
@@ -87,10 +91,10 @@ const MainNavigation: React.FC = () => {
     announceToScreenReader(`Language changed to ${lang === 'en' ? 'English' : lang === 'he' ? 'Hebrew' : 'Arabic'}`);
   };
 
-  // Navigation structure based on auth status
+  // Enhanced navigation structure with all categories
   const publicNavItems = [
     { path: '/', label: 'Home', icon: Home },
-    { path: '/features', label: 'Features', icon: BookOpen },
+    { path: '/features', label: 'Features', icon: Sparkles },
     { path: '/pricing', label: 'Pricing', icon: BarChart3 },
     { path: '/about', label: 'About', icon: Users }
   ];
@@ -100,6 +104,12 @@ const MainNavigation: React.FC = () => {
     { path: '/save', label: 'Save Content', icon: Plus },
     { path: '/collections', label: 'Collections', icon: BookOpen },
     { path: '/analytics', label: 'Analytics', icon: BarChart3 }
+  ];
+
+  // Additional utility pages available to all users
+  const utilityPages = [
+    { path: '/search', label: 'Search', icon: Search },
+    { path: '/help', label: 'Help', icon: HelpCircle }
   ];
 
   const currentNavItems = isLoggedIn ? userNavItems : publicNavItems;
@@ -141,7 +151,7 @@ const MainNavigation: React.FC = () => {
             </div>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Enhanced Desktop Navigation with All Categories */}
           <nav 
             className="hidden md:flex items-center gap-1" 
             role="navigation" 
@@ -166,6 +176,53 @@ const MainNavigation: React.FC = () => {
                 <span>{item.label}</span>
               </Link>
             ))}
+
+            {/* More Menu for Additional Pages */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center gap-2 px-4 py-2 text-sm font-medium"
+                  aria-label="More pages and options"
+                >
+                  <FileText className="h-4 w-4" />
+                  <span>More</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Utility Pages</DropdownMenuLabel>
+                {utilityPages.map((page) => (
+                  <DropdownMenuItem key={page.path} asChild>
+                    <Link 
+                      to={page.path}
+                      className="flex items-center gap-2"
+                      onClick={() => announceToScreenReader(`Navigating to ${page.label}`)}
+                    >
+                      <page.icon className="h-4 w-4" />
+                      {page.label}
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+                {isLoggedIn && (
+                  <>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Account</DropdownMenuLabel>
+                    <DropdownMenuItem asChild>
+                      <Link to="/profile" className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        Profile
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to="/settings" className="flex items-center gap-2">
+                        <Settings className="h-4 w-4" />
+                        Settings
+                      </Link>
+                    </DropdownMenuItem>
+                  </>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
 
           {/* Right Actions */}
@@ -241,6 +298,10 @@ const MainNavigation: React.FC = () => {
                       <Home className="mr-2 h-4 w-4" />
                       Dashboard
                     </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/profile')}>
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => navigate('/settings')}>
                       <Settings className="mr-2 h-4 w-4" />
                       Settings
@@ -280,7 +341,7 @@ const MainNavigation: React.FC = () => {
               </div>
             )}
             
-            {/* Mobile Menu */}
+            {/* Enhanced Mobile Menu */}
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
                 <Button 
@@ -325,19 +386,39 @@ const MainNavigation: React.FC = () => {
                     </Link>
                   ))}
                   
-                  {/* Mobile-only additional options */}
-                  {isLoggedIn && (
-                    <>
+                  {/* Mobile utility pages */}
+                  <div className="border-t pt-4">
+                    <div className="text-sm font-medium text-muted-foreground mb-2 px-3">More Pages</div>
+                    {utilityPages.map((page) => (
                       <Link 
-                        to="/search"
+                        key={page.path}
+                        to={page.path}
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                         onClick={() => {
                           setMobileMenuOpen(false);
-                          announceToScreenReader('Opening search page');
+                          announceToScreenReader(`Opening ${page.label} page`);
                         }}
                       >
-                        <Search className="h-5 w-5" />
-                        Search
+                        <page.icon className="h-5 w-5" />
+                        {page.label}
+                      </Link>
+                    ))}
+                  </div>
+                  
+                  {/* Mobile-only additional options */}
+                  {isLoggedIn && (
+                    <div className="border-t pt-4">
+                      <div className="text-sm font-medium text-muted-foreground mb-2 px-3">Account</div>
+                      <Link 
+                        to="/profile"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          announceToScreenReader('Opening profile page');
+                        }}
+                      >
+                        <User className="h-5 w-5" />
+                        Profile
                       </Link>
                       <Link 
                         to="/settings"
@@ -350,7 +431,7 @@ const MainNavigation: React.FC = () => {
                         <Settings className="h-5 w-5" />
                         Settings
                       </Link>
-                    </>
+                    </div>
                   )}
                   
                   {!isLoggedIn && (
