@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Helmet } from 'react-helmet-async';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,215 +8,141 @@ import {
   Brain, 
   Zap, 
   Search, 
-  Smartphone,
   Shield,
   Users,
-  ArrowRight,
-  CheckCircle,
-  Star,
-  Clock,
-  TrendingUp,
-  Globe,
+  Cloud,
+  Smartphone,
   FileText,
-  Share,
-  Lock
+  Tag,
+  Network,
+  Star,
+  CheckCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Features = () => {
-  const features = [
+  const mainFeatures = [
     {
       icon: Brain,
       title: "AI-Powered Organization",
-      description: "Automatically categorize and tag your content with intelligent analysis that learns from your behavior",
-      benefits: ["Smart auto-tagging", "Content relationships", "Pattern recognition", "Context understanding"],
-      highlight: "99% accuracy"
+      description: "Our intelligent system automatically categorizes and connects your knowledge, creating meaningful relationships between your ideas.",
+      highlights: ["Smart tagging", "Auto-categorization", "Concept linking", "Pattern recognition"]
     },
     {
       icon: Zap,
-      title: "Lightning-Fast Search", 
-      description: "Find anything in your knowledge base in under 3 seconds with semantic search",
-      benefits: ["Natural language search", "Instant results", "Context-aware", "Semantic understanding"],
-      highlight: "Sub-second results"
-    },
-    {
-      icon: Smartphone,
-      title: "Cross-Device Sync",
-      description: "Access your knowledge empire from anywhere, anytime with real-time sync",
-      benefits: ["Real-time sync", "Offline access", "Universal compatibility", "Cloud backup"],
-      highlight: "Works everywhere"
+      title: "Lightning Fast Search",
+      description: "Find anything in seconds with our semantic search that understands context, not just keywords.",
+      highlights: ["Semantic understanding", "Context-aware results", "Instant suggestions", "Natural language queries"]
     },
     {
       icon: Shield,
       title: "Enterprise Security",
-      description: "Your data is protected with bank-level security protocols and encryption",
-      benefits: ["End-to-end encryption", "Privacy-first", "GDPR compliant", "Zero-trust architecture"],
-      highlight: "SOC 2 compliant"
-    },
-    {
-      icon: Users,
-      title: "Team Collaboration",
-      description: "Share knowledge and collaborate with your team seamlessly with advanced permissions",
-      benefits: ["Shared collections", "Team insights", "Permission controls", "Activity tracking"],
-      highlight: "Built for teams"
-    },
-    {
-      icon: Globe,
-      title: "Universal Capture",
-      description: "Save content from any website, document, or file format with one click",
-      benefits: ["Browser extension", "PDF support", "Image OCR", "Video transcription"],
-      highlight: "500+ formats"
+      description: "Your data stays private and secure with end-to-end encryption and enterprise-grade security measures.",
+      highlights: ["End-to-end encryption", "GDPR compliant", "Zero-knowledge architecture", "Regular security audits"]
     }
   ];
 
-  const stats = [
-    { value: "5+ Hours", label: "Saved Weekly", icon: Clock },
-    { value: "10x Faster", label: "Information Retrieval", icon: Zap },
-    { value: "99.9%", label: "Uptime Guarantee", icon: TrendingUp },
-    { value: "50,000+", label: "Happy Users", icon: Star }
-  ];
-
-  const useCases = [
-    {
-      title: "Research & Academia",
-      description: "Organize papers, citations, and research notes with AI-powered connections",
-      icon: FileText
-    },
-    {
-      title: "Product Management",
-      description: "Keep track of user feedback, market research, and competitive analysis",
-      icon: TrendingUp
-    },
-    {
-      title: "Content Creation",
-      description: "Save inspiration, organize ideas, and build comprehensive content libraries",
-      icon: Share
-    },
-    {
-      title: "Legal Practice",
-      description: "Manage case law, documents, and legal research with secure access controls",
-      icon: Lock
-    }
+  const additionalFeatures = [
+    { icon: Users, title: "Team Collaboration", description: "Share knowledge seamlessly with your team" },
+    { icon: Cloud, title: "Cloud Sync", description: "Access your knowledge from anywhere, anytime" },
+    { icon: Smartphone, title: "Mobile Ready", description: "Fully responsive design for all devices" },
+    { icon: FileText, title: "Rich Content", description: "Support for text, images, documents, and more" },
+    { icon: Tag, title: "Smart Tags", description: "Intelligent tagging system for better organization" },
+    { icon: Network, title: "Knowledge Graph", description: "Visualize connections between your ideas" }
   ];
 
   return (
     <UnifiedPageLayout
-      title="Features - AI-Powered Knowledge Management | Accio"
-      description="Discover Accio's powerful features: AI organization, lightning search, cross-device sync, team collaboration, and more."
+      title="Features - Accio Knowledge Engine"
+      description="Discover all the powerful features that make Accio the ultimate AI-powered knowledge management platform."
     >
       {/* Hero Section */}
       <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-background">
         <div className="container text-center">
-          <Badge variant="secondary" className="mb-6 bg-primary/10 text-primary border-primary/20">
+          <Badge variant="outline" className="mb-6">
             <Star className="h-3 w-3 mr-1" />
-            Advanced AI Technology
+            Features Overview
           </Badge>
-          
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6 bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Features that make you
-            <span className="text-primary block">10x more productive</span>
+          <h1 className="text-4xl lg:text-5xl font-bold mb-6">
+            Everything you need to build your
+            <span className="text-primary block">knowledge empire</span>
           </h1>
-          
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-            Discover powerful features that transform scattered information into organized intelligence. 
-            Every feature is designed to save you time and amplify your capabilities.
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Powerful features designed to amplify your intellectual capabilities and transform 
+            how you work with information.
           </p>
+          <Button size="lg" asChild>
+            <Link to="/register">
+              Start Free Trial
+            </Link>
+          </Button>
+        </div>
+      </section>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8 max-w-4xl mx-auto">
-            {stats.map((stat, index) => (
-              <div key={index} className="text-center group">
-                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-2 group-hover:bg-primary/20 transition-colors">
-                  <stat.icon className="h-6 w-6 text-primary" />
+      {/* Main Features */}
+      <section className="py-16">
+        <div className="container">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl font-bold mb-4">Core Features</h2>
+            <p className="text-xl text-muted-foreground">
+              The foundation of intelligent knowledge management
+            </p>
+          </div>
+
+          <div className="grid gap-12 lg:gap-16">
+            {mainFeatures.map((feature, index) => (
+              <div key={index} className={`grid lg:grid-cols-2 gap-8 items-center ${index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''}`}>
+                <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
+                  <Card className="border-0 shadow-lg">
+                    <CardHeader>
+                      <div className="w-16 h-16 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                        <feature.icon className="h-8 w-8 text-primary" />
+                      </div>
+                      <CardTitle className="text-2xl">{feature.title}</CardTitle>
+                      <CardDescription className="text-lg leading-relaxed">
+                        {feature.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="space-y-2">
+                        {feature.highlights.map((highlight, idx) => (
+                          <li key={idx} className="flex items-center gap-2">
+                            <CheckCircle className="h-4 w-4 text-primary" />
+                            <span className="text-sm">{highlight}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
                 </div>
-                <div className="text-2xl font-bold text-primary">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className={`bg-gradient-to-br from-primary/10 to-transparent rounded-lg p-8 flex items-center justify-center ${index % 2 === 1 ? 'lg:col-start-1' : ''}`}>
+                  <feature.icon className="h-32 w-32 text-primary/60" />
+                </div>
               </div>
             ))}
           </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
-              <Link to="/register">
-                Start Free Trial
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link to="/dashboard">Try Demo</Link>
-            </Button>
-          </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-24">
+      {/* Additional Features Grid */}
+      <section className="py-16 bg-muted/30">
         <div className="container">
-          <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">Core Features</Badge>
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Everything you need to build your knowledge empire
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Each feature is crafted to eliminate friction and amplify your intellectual capabilities
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Additional Features</h2>
+            <p className="text-lg text-muted-foreground">
+              Even more ways to enhance your knowledge workflow
             </p>
           </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-0 bg-background/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 group">
-                <CardHeader>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <feature.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <Badge variant="secondary" className="text-xs">
-                      {feature.highlight}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  <CardDescription className="text-base">
-                    {feature.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    {feature.benefits.map((benefit, idx) => (
-                      <li key={idx} className="flex items-center gap-2 text-sm">
-                        <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                        <span className="text-muted-foreground">{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Use Cases Section */}
-      <section className="py-24 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">Use Cases</Badge>
-            <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-              Built for every knowledge worker
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              From research to product management, Accio adapts to your workflow
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {useCases.map((useCase, index) => (
-              <Card key={index} className="border-0 bg-background/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-300 text-center">
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {additionalFeatures.map((feature, index) => (
+              <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <useCase.icon className="h-6 w-6 text-primary" />
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <feature.icon className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="text-lg font-semibold mb-2">{useCase.title}</h3>
-                  <p className="text-sm text-muted-foreground">{useCase.description}</p>
+                  <h3 className="font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -226,26 +151,25 @@ const Features = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-primary/10 via-primary/5 to-background">
-        <div className="container text-center">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-            Ready to transform your productivity?
-          </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of professionals who've revolutionized their knowledge management. 
-            Start building your knowledge empire today.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
-              <Link to="/register">
-                Start Building Your Empire
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link to="/help">Get Expert Help</Link>
-            </Button>
-          </div>
+      <section className="py-16">
+        <div className="container">
+          <Card className="border-0 bg-gradient-to-r from-primary/10 to-transparent">
+            <CardContent className="p-12 text-center">
+              <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
+              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+                Join thousands of professionals who've transformed their knowledge management. 
+                Start your free trial today.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" asChild>
+                  <Link to="/register">Start Free Trial</Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/contact">Contact Sales</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </UnifiedPageLayout>

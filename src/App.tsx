@@ -17,6 +17,7 @@ import Features from '@/pages/Features';
 import Blog from '@/pages/Blog';
 import Contact from '@/pages/Contact';
 import Help from '@/pages/Help';
+import About from '@/pages/About';
 import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
@@ -77,6 +78,7 @@ function App() {
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/help" element={<Help />} />
+                  <Route path="/about" element={<About />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 

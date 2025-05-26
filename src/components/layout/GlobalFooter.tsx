@@ -24,17 +24,17 @@ const GlobalFooter: React.FC = () => {
       links: [
         { name: 'Features', href: '/features' },
         { name: 'Dashboard', href: '/dashboard' },
-        { name: 'Help Center', href: '/help' },
-        { name: 'Contact', href: '/contact' },
+        { name: 'Analytics', href: '/analytics' },
+        { name: 'Collections', href: '/collections' },
       ]
     },
     {
       title: 'Resources',
       links: [
+        { name: 'Help Center', href: '/help', icon: HelpCircle },
         { name: 'Blog', href: '/blog' },
-        { name: 'About', href: '/about' },
-        { name: 'FAQ', href: '/faq' },
-        { name: 'Support', href: '/help' },
+        { name: 'Contact', href: '/contact', icon: Mail },
+        { name: 'About', href: '/about', icon: Globe },
       ]
     },
     {
@@ -55,7 +55,7 @@ const GlobalFooter: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-background border-t mt-auto" role="contentinfo">
+    <footer className="bg-background border-t" role="contentinfo">
       <div className="container mx-auto px-4 max-w-7xl">
         {/* Main Footer Content */}
         <div className="py-12 lg:py-16">
