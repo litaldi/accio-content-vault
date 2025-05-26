@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
-import MarketingFooter from '@/components/marketing/MarketingFooter';
+import ImprovedMainNavigation from '@/components/navigation/ImprovedMainNavigation';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -64,53 +63,26 @@ const About = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>About Accio - Our Mission to Organize the World's Knowledge</title>
-        <meta name="description" content="Learn about Accio's mission to eliminate information chaos and empower knowledge workers worldwide. Meet our team and discover our vision for the future of knowledge management." />
-        <meta name="keywords" content="about accio, team, mission, vision, knowledge management company, AI productivity" />
-        
-        <meta property="og:title" content="About Accio - Our Mission to Organize Knowledge" />
-        <meta property="og:description" content="Meet the team building the future of knowledge management. Our mission: eliminate information chaos for professionals worldwide." />
-        <meta property="og:type" content="website" />
-        
-        <link rel="canonical" href="https://accio.app/about" />
+        <title>About - Accio Knowledge Engine</title>
+        <meta name="description" content="Learn about Accio's mission to transform how people manage and discover knowledge. Meet our team and discover our story." />
       </Helmet>
 
-      <OrganizedNavigation />
+      <ImprovedMainNavigation />
 
-      <main className="flex-grow">
+      <main className="flex-grow" id="main-content">
         {/* Hero Section */}
-        <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
+        <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="outline" className="mb-6 bg-blue-50 border-blue-200 text-blue-800">
-              🚀 Our Story
-            </Badge>
-            
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-              We're on a mission to 
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block md:inline md:ml-3">
-                organize the world's knowledge
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              About
+              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
+                Accio
               </span>
             </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-              Every day, millions of professionals lose valuable information in the chaos of the internet. 
-              We're building AI-powered tools to turn that chaos into organized intelligence.
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              We're on a mission to transform how people manage and discover knowledge, 
+              making information chaos a thing of the past.
             </p>
-
-            <div className="grid md:grid-cols-3 gap-8 mt-12">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">10,000+</div>
-                <div className="text-muted-foreground">Professionals trust us</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">2M+</div>
-                <div className="text-muted-foreground">Items organized</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">22</div>
-                <div className="text-muted-foreground">Countries served</div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -258,7 +230,7 @@ const About = () => {
         </section>
       </main>
 
-      <MarketingFooter />
+      <ImprovedFooter />
     </div>
   );
 };

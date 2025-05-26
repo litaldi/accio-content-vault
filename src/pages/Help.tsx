@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
-import MarketingFooter from '@/components/marketing/MarketingFooter';
+import ImprovedMainNavigation from '@/components/navigation/ImprovedMainNavigation';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -91,59 +90,26 @@ const Help = () => {
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Help Center - Get Support and Learn How to Use Accio</title>
-        <meta name="description" content="Find answers, tutorials, and get support for Accio. Learn how to organize your knowledge effectively with our comprehensive help center." />
-        <meta name="keywords" content="help, support, tutorials, documentation, knowledge management help" />
-        
-        <meta property="og:title" content="Accio Help Center - Support & Tutorials" />
-        <meta property="og:description" content="Get help with Accio's knowledge management platform. Find tutorials, FAQs, and contact support." />
-        <meta property="og:type" content="website" />
-        
-        <link rel="canonical" href="https://accio.app/help" />
+        <title>Help Center - Accio Knowledge Engine</title>
+        <meta name="description" content="Get help and support for Accio. Find answers to common questions, tutorials, and contact our support team." />
       </Helmet>
 
-      <OrganizedNavigation />
+      <ImprovedMainNavigation />
 
-      <main className="flex-grow">
+      <main className="flex-grow" id="main-content">
         {/* Hero Section */}
-        <section className="py-16 lg:py-24 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
+        <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              How can we help you today?
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              Help
+              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
+                Center
+              </span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8">
-              Find answers, get support, and learn how to make the most of Accio's knowledge management platform.
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Get the help you need to make the most of Accio. Find answers, tutorials, 
+              and contact our support team.
             </p>
-
-            {/* Search Bar */}
-            <div className="relative max-w-2xl mx-auto mb-8">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-              <Input 
-                type="search"
-                placeholder="Search for help articles, tutorials, or features..."
-                className="pl-12 pr-4 py-4 text-lg border-2 focus:border-primary"
-                aria-label="Search help articles"
-              />
-              <Button className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                Search
-              </Button>
-            </div>
-
-            {/* Quick Stats */}
-            <div className="grid md:grid-cols-3 gap-6 mt-12">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-2">200+</div>
-                <div className="text-sm text-muted-foreground">Help articles</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-2">&lt;2min</div>
-                <div className="text-sm text-muted-foreground">Average response time</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary mb-2">24/7</div>
-                <div className="text-sm text-muted-foreground">Support available</div>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -272,7 +238,7 @@ const Help = () => {
         </section>
       </main>
 
-      <MarketingFooter />
+      <ImprovedFooter />
     </div>
   );
 };

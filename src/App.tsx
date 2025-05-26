@@ -12,6 +12,8 @@ import Index from '@/pages/Index';
 import About from '@/pages/About';
 import Help from '@/pages/Help';
 import FAQ from '@/pages/FAQ';
+import Features from '@/pages/Features';
+import Pricing from '@/pages/Pricing';
 
 function App() {
   return (
@@ -38,36 +40,28 @@ function App() {
                     "@context": "https://schema.org",
                     "@type": "Organization",
                     "name": "Accio",
-                    "url": "https://accio.app",
                     "description": "AI-powered knowledge management platform",
+                    "url": "https://accio.app",
+                    "logo": "https://accio.app/logo.png",
                     "sameAs": [
                       "https://twitter.com/accio",
-                      "https://linkedin.com/company/accio"
+                      "https://github.com/accio"
                     ]
                   })}
                 </script>
               </Helmet>
-              
-              <EnhancedAccessibility />
-              
+
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/features" element={<Features />} />
+                <Route path="/pricing" element={<Pricing />} />
                 <Route path="/help" element={<Help />} />
                 <Route path="/faq" element={<FAQ />} />
-                
-                {/* Marketing & Support Routes */}
-                <Route path="/contact" element={<Help />} />
-                <Route path="/support" element={<Help />} />
-                <Route path="/features" element={<Index />} />
-                <Route path="/pricing" element={<Index />} />
-                <Route path="/demo" element={<Index />} />
-                <Route path="/register" element={<Index />} />
-                
-                {/* Fallback route */}
-                <Route path="*" element={<Index />} />
+                {/* Add more routes as needed */}
               </Routes>
-              
+
+              <EnhancedAccessibility />
               <Toaster />
             </div>
           </Router>

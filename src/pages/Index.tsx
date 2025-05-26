@@ -3,11 +3,11 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import OrganizedNavigation from '@/components/navigation/OrganizedNavigation';
+import ImprovedMainNavigation from '@/components/navigation/ImprovedMainNavigation';
 import ValueProposition from '@/components/marketing/ValueProposition';
 import SocialProof from '@/components/marketing/SocialProof';
 import FeaturesShowcase from '@/components/marketing/FeaturesShowcase';
-import MarketingFooter from '@/components/marketing/MarketingFooter';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, TrendingUp, Users, Shield } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
@@ -73,10 +73,10 @@ const Index = () => {
       </Helmet>
 
       {/* Navigation */}
-      <OrganizedNavigation />
+      <ImprovedMainNavigation />
 
       {/* Main Content */}
-      <main className="flex-grow">
+      <main className="flex-grow" id="main-content">
         
         {/* Hero Section with Value Proposition */}
         <section className="py-20 lg:py-32 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
@@ -172,8 +172,8 @@ const Index = () => {
         )}
       </main>
 
-      {/* Marketing Footer */}
-      <MarketingFooter />
+      {/* Improved Footer */}
+      <ImprovedFooter />
 
       {/* Toast Notifications */}
       <Toaster />
