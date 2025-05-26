@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { useIsMobile } from '@/hooks/use-mobile';
 import NavbarHeader from './NavbarHeader';
 import NavbarDesktopLinks from './NavbarDesktopLinks';
@@ -19,7 +18,6 @@ const EnhancedNavbar: React.FC<EnhancedNavbarProps> = ({ onLogout }) => {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
   const { user, signOut } = useAuth();
-  const { preferences } = useAccessibility();
   const isLoggedIn = !!user;
   const isMobile = useIsMobile();
   
@@ -65,7 +63,7 @@ const EnhancedNavbar: React.FC<EnhancedNavbarProps> = ({ onLogout }) => {
           scrolled 
             ? 'bg-background/95 backdrop-blur-md shadow-sm border-border' 
             : 'bg-background border-transparent'
-        } ${preferences.highContrast ? 'border-foreground bg-background' : ''}`}
+        }`}
         role="banner"
         aria-label="Main navigation"
       >

@@ -2,7 +2,7 @@
 import React from 'react';
 import { ArrowRight, CheckCircle, Star, Sparkles, Users, TrendingUp, Shield, Zap } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Button } from '@/components/ui/button';
 import { ImprovedCard } from '@/components/ui/improved-card';
 import { Badge } from '@/components/ui/badge';
 import { Typography, Spacing, interactiveStyles, focusStyles } from '@/components/ui/design-system';
@@ -103,28 +103,27 @@ const OptimizedHeroSection: React.FC = () => {
             
             {/* Enhanced CTA Section */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-              <EnhancedButton 
+              <Button 
                 asChild 
-                size="xl" 
-                variant="gradient"
-                className={cn("shadow-2xl hover:shadow-3xl", interactiveStyles, focusStyles)}
+                size="lg" 
+                className={cn("shadow-2xl hover:shadow-3xl text-lg px-8 py-6 h-auto", interactiveStyles, focusStyles)}
               >
                 <Link to="/register">
                   Start Your Free Trial
-                  <ArrowRight className="h-5 w-5" />
+                  <ArrowRight className="h-5 w-5 ml-2" />
                 </Link>
-              </EnhancedButton>
+              </Button>
               
-              <EnhancedButton 
+              <Button 
                 asChild 
                 variant="outline" 
-                size="xl"
-                className={cn("border-2 hover:border-primary/50 backdrop-blur-sm", focusStyles)}
+                size="lg"
+                className={cn("border-2 hover:border-primary/50 backdrop-blur-sm text-lg px-8 py-6 h-auto", focusStyles)}
               >
                 <Link to="/playground">
                   Try Interactive Demo
                 </Link>
-              </EnhancedButton>
+              </Button>
             </div>
 
             {/* Social Proof */}

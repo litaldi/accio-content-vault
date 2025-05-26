@@ -1,49 +1,50 @@
 
 import React from 'react';
-import { Search as SearchIcon } from 'lucide-react';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
-import { ImprovedCard, ImprovedCardContent } from '@/components/ui/improved-card';
+import { Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 interface SearchInputProps {
   query: string;
   onQueryChange: (query: string) => void;
   placeholder?: string;
+  className?: string;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
   query,
   onQueryChange,
-  placeholder = "Search for 'productivity articles' or 'What did I save about React?'"
+  placeholder = "Search your knowledge library...",
+  className = ""
 }) => {
+  const handleClear = () => {
+    onQueryChange('');
+  };
+
   return (
-    <ImprovedCard className="mb-8 border-0 shadow-lg bg-background/80 backdrop-blur-sm">
-      <ImprovedCardContent padding="lg">
-        <div className="relative">
-          <SearchIcon 
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground"
-            aria-hidden="true"
-          />
-          <Input
-            placeholder={placeholder}
-            value={query}
-            onChange={(e) => onQueryChange(e.target.value)}
-            className="pl-12 py-6 text-base border-0 bg-background/50 focus:bg-background transition-colors shadow-inner"
-            aria-label="Search your content library"
-          />
-          {query && (
-            <EnhancedButton
-              variant="ghost"
-              size="sm"
-              onClick={() => onQueryChange('')}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2"
-              aria-label="Clear search"
-            >
-              Clear
-            </EnhancedButton>
-          )}
-        </div>
-      </ImprovedCardContent>
-    </ImprovedCard>
+    <div className={`relative ${className}`}>
+      <div className="relative">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+        <Input
+          type="text"
+          placeholder={placeholder}
+          value={query}
+          onChange={(e) => onQueryChange(e.target.value)}
+          className="pl-12 pr-12 h-12 text-lg border-2 focus:border-primary"
+          aria-label="Search content"
+        />
+        {query && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleClear}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 h-8 w-8 p-0"
+            aria-label="Clear search"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        )}
+      </div>
+    </div>
   );
 };

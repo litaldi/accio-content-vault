@@ -1,14 +1,11 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Github, Linkedin, Twitter, Mail, Heart, MapPin, Phone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
 const EnhancedFooter: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  const { preferences } = useAccessibility();
 
   const productLinks = [
     { path: '/features', label: 'Features' },
@@ -66,9 +63,7 @@ const EnhancedFooter: React.FC = () => {
 
   return (
     <footer 
-      className={`bg-background border-t border-border py-16 px-4 ${
-        preferences.highContrast ? 'border-foreground' : ''
-      }`} 
+      className="bg-background border-t border-border py-16 px-4" 
       role="contentinfo"
       aria-labelledby="footer-heading"
     >

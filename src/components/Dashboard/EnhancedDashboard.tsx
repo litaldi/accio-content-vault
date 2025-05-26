@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,11 +9,11 @@ import { DashboardContent } from './DashboardContent';
 import { ImprovedEmptyState } from './ImprovedEmptyState';
 import NotificationCenter from './NotificationCenter';
 import { ContentSkeleton } from '@/components/ui/content-skeleton';
-import { AccessibleButton } from '@/components/ui/accessible-button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Bell, Search, Settings, HelpCircle, Plus } from 'lucide-react';
-import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
+import { useToast } from '@/hooks/use-toast';
 import { SavedContent } from '@/types';
 
 // Mock notifications data
@@ -43,7 +42,7 @@ const mockNotifications = [
 
 const EnhancedDashboard = () => {
   const navigate = useNavigate();
-  const { showSuccess, showInfo } = useEnhancedToast();
+  const { toast } = useToast();
   const [notifications, setNotifications] = useState(mockNotifications);
   const [showNotifications, setShowNotifications] = useState(false);
   
@@ -62,10 +61,10 @@ const EnhancedDashboard = () => {
 
   const handleAddContent = () => {
     navigate('/save');
-    showSuccess(
-      "Let's add some content!",
-      "You'll be redirected to the save page where you can add URLs or upload files."
-    );
+    toast({
+      title: "Let's add some content!",
+      description: "You'll be redirected to the save page where you can add URLs or upload files."
+    });
   };
 
   const handleLogout = () => {
@@ -131,35 +130,31 @@ const EnhancedDashboard = () => {
                 </div>
                 
                 <div className="flex items-center gap-2">
-                  <AccessibleButton
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={handleSearch}
-                    leftIcon={<Search className="h-4 w-4" />}
                     aria-label="Search your content library"
-                    description="Search through your saved content using AI-powered search"
                   >
-                    <span className="hidden sm:inline">Search</span>
-                  </AccessibleButton>
+                    <Search className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Search</span>
+                  </Button>
                   
                   <div className="relative">
-                    <AccessibleButton
+                    <Button
                       variant="outline"
                       size="sm"
                       onClick={() => setShowNotifications(!showNotifications)}
-                      leftIcon={<Bell className="h-4 w-4" />}
                       aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ''}`}
-                      aria-expanded={showNotifications}
-                      aria-haspopup="dialog"
-                      description="View your notifications and updates"
                     >
-                      <span className="hidden sm:inline">Notifications</span>
+                      <Bell className="h-4 w-4" />
+                      <span className="hidden sm:inline ml-2">Notifications</span>
                       {unreadCount > 0 && (
-                        <Badge variant="destructive" className="ml-1 text-xs" aria-hidden="true">
+                        <Badge variant="destructive" className="ml-1 text-xs">
                           {unreadCount}
                         </Badge>
                       )}
-                    </AccessibleButton>
+                    </Button>
                     
                     {showNotifications && (
                       <div className="absolute right-0 top-full mt-2 w-96 z-50">
@@ -173,38 +168,35 @@ const EnhancedDashboard = () => {
                     )}
                   </div>
                   
-                  <AccessibleButton
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => navigate('/settings')}
-                    leftIcon={<Settings className="h-4 w-4" />}
                     aria-label="Open settings"
-                    description="Access your account settings and preferences"
                   >
-                    <span className="hidden sm:inline">Settings</span>
-                  </AccessibleButton>
+                    <Settings className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Settings</span>
+                  </Button>
                   
-                  <AccessibleButton
+                  <Button
                     variant="outline"
                     size="sm"
                     onClick={() => navigate('/help')}
-                    leftIcon={<HelpCircle className="h-4 w-4" />}
                     aria-label="Get help and support"
-                    description="Access help documentation and contact support"
                   >
-                    <span className="hidden sm:inline">Help</span>
-                  </AccessibleButton>
+                    <HelpCircle className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Help</span>
+                  </Button>
 
-                  <AccessibleButton
+                  <Button
                     variant="default"
                     size="sm"
                     onClick={handleAddContent}
-                    leftIcon={<Plus className="h-4 w-4" />}
                     aria-label="Add new content"
-                    description="Save new URLs, upload files, or create notes"
                   >
-                    <span className="hidden sm:inline">Add Content</span>
-                  </AccessibleButton>
+                    <Plus className="h-4 w-4" />
+                    <span className="hidden sm:inline ml-2">Add Content</span>
+                  </Button>
                 </div>
               </div>
             </div>

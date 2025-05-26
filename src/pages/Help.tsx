@@ -6,7 +6,7 @@ import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
 import NavigationButtons from '@/components/navigation/NavigationButtons';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import ButtonAccessibilityChecker from '@/components/debug/ButtonAccessibilityChecker';
-import { AccessibleButton } from '@/components/ui/accessible-button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -119,15 +119,14 @@ const Help = () => {
                     <CardDescription>{channel.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <AccessibleButton 
+                    <Button 
                       variant="outline" 
-                      fullWidth
+                      className="w-full"
                       disabled={!channel.available}
                       aria-label={`${channel.action} - ${channel.description}`}
-                      description={channel.available ? `Access ${channel.title.toLowerCase()}` : 'This feature is coming soon'}
                     >
                       {channel.action}
-                    </AccessibleButton>
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
@@ -136,21 +135,21 @@ const Help = () => {
 
           {/* FAQ Section */}
           <div className="mb-16">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold">Frequently Asked Questions</h2>
-              <div className="relative w-96">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" aria-hidden="true" />
-                <Input
-                  placeholder="Search FAQs..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                  aria-label="Search frequently asked questions"
-                />
-              </div>
-            </div>
+            <h2 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h2>
             
-            <div className="space-y-4">
+            {/* Search FAQ */}
+            <div className="relative mb-8">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Search FAQs..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+
+            <div className="space-y-6">
               {filteredFAQs.map((faq, index) => (
                 <Card key={index}>
                   <CardHeader>
@@ -160,99 +159,37 @@ const Help = () => {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground">{faq.answer}</p>
+                    <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
                   </CardContent>
                 </Card>
               ))}
-              
-              {filteredFAQs.length === 0 && searchQuery && (
-                <Card>
-                  <CardContent className="text-center py-8">
-                    <p className="text-muted-foreground">
-                      No FAQs found matching "{searchQuery}". Try a different search term or contact support.
-                    </p>
-                  </CardContent>
-                </Card>
-              )}
             </div>
+
+            {filteredFAQs.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-muted-foreground">No FAQs found matching your search.</p>
+              </div>
+            )}
           </div>
 
           {/* Contact Form */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-6">Still Need Help?</h2>
-            <Card>
-              <CardHeader>
-                <CardTitle>Contact Support</CardTitle>
-                <CardDescription>
-                  Send us a message and we'll get back to you within 24 hours
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium mb-2">
-                      Name *
-                    </label>
-                    <Input 
-                      id="name" 
-                      placeholder="Your name" 
-                      required
-                      aria-describedby="name-help"
-                    />
-                    <p id="name-help" className="sr-only">Enter your full name</p>
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium mb-2">
-                      Email *
-                    </label>
-                    <Input 
-                      id="email" 
-                      type="email" 
-                      placeholder="your@email.com" 
-                      required
-                      aria-describedby="email-help"
-                    />
-                    <p id="email-help" className="sr-only">Enter your email address for replies</p>
-                  </div>
-                </div>
-                
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-medium mb-2">
-                    Subject *
-                  </label>
-                  <Input 
-                    id="subject" 
-                    placeholder="How can we help?" 
-                    required
-                    aria-describedby="subject-help"
-                  />
-                  <p id="subject-help" className="sr-only">Brief description of your question or issue</p>
-                </div>
-                
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium mb-2">
-                    Message *
-                  </label>
-                  <Textarea 
-                    id="message" 
-                    placeholder="Describe your issue or question..."
-                    rows={6}
-                    required
-                    aria-describedby="message-help"
-                  />
-                  <p id="message-help" className="sr-only">Provide detailed information about your question or issue</p>
-                </div>
-                
-                <AccessibleButton 
-                  fullWidth
-                  aria-label="Send support message"
-                  description="Submit your support request to our team"
-                >
-                  Send Message
-                </AccessibleButton>
-              </CardContent>
-            </Card>
-          </div>
+          <Card>
+            <CardHeader>
+              <CardTitle>Still need help?</CardTitle>
+              <CardDescription>
+                Send us a message and we'll get back to you within 24 hours.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <Input placeholder="Your name" />
+                <Input type="email" placeholder="Your email" />
+              </div>
+              <Input placeholder="Subject" />
+              <Textarea placeholder="Describe your issue or question..." rows={4} />
+              <Button className="w-full">Send Message</Button>
+            </CardContent>
+          </Card>
         </div>
       </main>
       

@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Filter, SortDesc, Search as SearchIcon } from 'lucide-react';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Button } from '@/components/ui/button';
 import { ImprovedCard, ImprovedCardContent } from '@/components/ui/improved-card';
 import { Badge } from '@/components/ui/badge';
 import MainMenu from '@/components/navigation/MainMenu';
@@ -180,13 +180,13 @@ const ImprovedSearch = () => {
                       We couldn't find any content matching your search criteria. 
                       Try adjusting your search terms or removing some filters.
                     </p>
-                    <EnhancedButton 
+                    <Button 
                       variant="outline" 
                       onClick={handleClearFilters}
                       className="shadow-md"
                     >
                       Clear All Filters
-                    </EnhancedButton>
+                    </Button>
                   </div>
                 </ImprovedCardContent>
               </ImprovedCard>

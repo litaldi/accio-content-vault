@@ -1,11 +1,11 @@
 
 import React, { useState } from 'react';
 import { MessageSquare, Send, Star, ThumbsUp, ThumbsDown, X } from 'lucide-react';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Button } from '@/components/ui/button';
 import { EnhancedCard, EnhancedCardContent, EnhancedCardHeader, EnhancedCardTitle } from '@/components/ui/enhanced-card';
 import { EnhancedInput } from '@/components/ui/enhanced-input';
 import { Textarea } from '@/components/ui/textarea';
-import { useEnhancedToast } from './ToastEnhancer';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 
 interface FeedbackWidgetProps {
@@ -25,7 +25,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
   const [feedback, setFeedback] = useState('');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { showSuccess, showError } = useEnhancedToast();
+  const { toast } = useToast();
 
   const handleQuickRating = (type: 'positive' | 'negative') => {
     setRating(type === 'positive' ? 5 : 2);
@@ -49,10 +49,10 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      showSuccess(
-        'Thank you for your feedback!',
-        'Your input helps us improve the experience.'
-      );
+      toast({
+        title: 'Thank you for your feedback!',
+        description: 'Your input helps us improve the experience.'
+      });
       
       // Reset form
       setIsOpen(false);
@@ -61,10 +61,11 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
       setFeedback('');
       setEmail('');
     } catch (error) {
-      showError(
-        'Failed to submit feedback',
-        'Please try again or contact support.'
-      );
+      toast({
+        title: 'Failed to submit feedback',
+        description: 'Please try again or contact support.',
+        variant: 'destructive'
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -76,26 +77,27 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
         {/* Floating trigger button */}
         <div className={cn("fixed bottom-6 right-6 z-50", className)}>
           {!isOpen ? (
-            <EnhancedButton
+            <Button
               onClick={() => setIsOpen(true)}
               variant="default"
               size="lg"
               className="rounded-full w-14 h-14 shadow-2xl hover:shadow-3xl"
-              leftIcon={<MessageSquare className="h-5 w-5" />}
               aria-label="Give feedback"
-            />
+            >
+              <MessageSquare className="h-5 w-5" />
+            </Button>
           ) : (
             <EnhancedCard className="w-80 shadow-2xl border-2">
               <EnhancedCardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
                 <EnhancedCardTitle className="text-lg">Share your feedback</EnhancedCardTitle>
-                <EnhancedButton
+                <Button
                   variant="ghost"
                   size="icon"
                   onClick={() => setIsOpen(false)}
                   className="h-6 w-6"
                 >
                   <X className="h-4 w-4" />
-                </EnhancedButton>
+                </Button>
               </EnhancedCardHeader>
               
               <EnhancedCardContent className="space-y-4">
@@ -107,24 +109,24 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                     
                     {/* Quick rating buttons */}
                     <div className="flex gap-2">
-                      <EnhancedButton
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleQuickRating('positive')}
                         className="flex-1"
-                        leftIcon={<ThumbsUp className="h-4 w-4" />}
                       >
+                        <ThumbsUp className="h-4 w-4 mr-2" />
                         Good
-                      </EnhancedButton>
-                      <EnhancedButton
+                      </Button>
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => handleQuickRating('negative')}
                         className="flex-1"
-                        leftIcon={<ThumbsDown className="h-4 w-4" />}
                       >
+                        <ThumbsDown className="h-4 w-4 mr-2" />
                         Needs work
-                      </EnhancedButton>
+                      </Button>
                     </div>
                     
                     <div className="text-center">
@@ -171,23 +173,23 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                     />
                     
                     <div className="flex gap-2">
-                      <EnhancedButton
+                      <Button
                         variant="outline"
                         size="sm"
                         onClick={() => setStep('rating')}
                         className="flex-1"
                       >
                         Back
-                      </EnhancedButton>
-                      <EnhancedButton
+                      </Button>
+                      <Button
                         onClick={() => handleSubmit()}
-                        loading={isSubmitting}
+                        disabled={isSubmitting}
                         size="sm"
                         className="flex-1"
-                        leftIcon={<Send className="h-4 w-4" />}
                       >
+                        <Send className="h-4 w-4 mr-2" />
                         Send
-                      </EnhancedButton>
+                      </Button>
                     </div>
                   </div>
                 )}
@@ -214,14 +216,14 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
             placeholder="How can we improve your experience?"
             rows={4}
           />
-          <EnhancedButton
+          <Button
             onClick={() => handleSubmit()}
-            loading={isSubmitting}
+            disabled={isSubmitting}
             className="w-full"
-            leftIcon={<Send className="h-4 w-4" />}
           >
+            <Send className="h-4 w-4 mr-2" />
             Send Feedback
-          </EnhancedButton>
+          </Button>
         </div>
       </EnhancedCardContent>
     </EnhancedCard>

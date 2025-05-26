@@ -2,7 +2,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { AccessibilityButton } from '@/components/accessibility/AccessibilityButton';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import NavbarUserMenu from './NavbarUserMenu';
 import NavbarMobileMenu from './NavbarMobileMenu';
@@ -31,7 +30,6 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({
 
   return (
     <div className="flex items-center gap-4">
-      <AccessibilityButton />
       <ModeToggle />
       
       {isLoggedIn ? (
