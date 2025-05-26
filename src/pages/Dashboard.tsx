@@ -19,13 +19,12 @@ import {
   Tags,
   TrendingUp,
   Clock,
-  Plus,
   Star,
   ExternalLink
 } from 'lucide-react';
 
 const Dashboard = () => {
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
   const { savedItems, collections, analytics, isLoading, isDemoUser } = useDemoData();
 
   const quickActions = [
@@ -61,7 +60,7 @@ const Dashboard = () => {
 
   if (isLoading) {
     return (
-      <ImprovedUnifiedLayout isLoggedIn={!!user} user={user} onSignOut={signOut}>
+      <ImprovedUnifiedLayout>
         <Helmet>
           <title>Dashboard - Accio</title>
           <meta name="description" content="Your personal knowledge dashboard" />
@@ -82,7 +81,7 @@ const Dashboard = () => {
   }
 
   return (
-    <ImprovedUnifiedLayout isLoggedIn={!!user} user={user} onSignOut={signOut}>
+    <ImprovedUnifiedLayout>
       <Helmet>
         <title>Dashboard - Accio</title>
         <meta name="description" content="Your personal knowledge dashboard" />

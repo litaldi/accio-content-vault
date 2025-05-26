@@ -24,6 +24,7 @@ export const copy = {
     deselectAll: 'Deselect All'
   },
   nav: {
+    home: 'Home',
     dashboard: 'Dashboard',
     saveContent: 'Save Content',
     collections: 'Collections',

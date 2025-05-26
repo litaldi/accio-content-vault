@@ -4,7 +4,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import MarketingHeroSection from '@/components/home/MarketingHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
@@ -90,7 +91,7 @@ const UnifiedIndexContent = () => {
         Skip to main content
       </a>
       
-      <PrimaryNavigation />
+      <MainNavigation />
       
       <main id="main-content" className="flex-grow w-full" role="main">
         <MarketingHeroSection />
@@ -168,9 +169,11 @@ const UnifiedIndexContent = () => {
 const UnifiedIndex = () => {
   return (
     <ThemeProvider>
-      <AuthProvider>
-        <UnifiedIndexContent />
-      </AuthProvider>
+      <AccessibilityProvider>
+        <AuthProvider>
+          <UnifiedIndexContent />
+        </AuthProvider>
+      </AccessibilityProvider>
     </ThemeProvider>
   );
 };

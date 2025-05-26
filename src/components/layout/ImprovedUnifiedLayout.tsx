@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
@@ -27,10 +27,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
   className,
   showNavigation = true,
   showFooter = true,
-  fullWidth = false,
-  isLoggedIn = false,
-  user,
-  onSignOut
+  fullWidth = false
 }) => {
   const { isMobile } = useResponsiveDesign();
   const { preferences, announceToScreenReader } = useAccessibility();
@@ -58,13 +55,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
       <SkipLinks />
 
       {/* Navigation */}
-      {showNavigation && (
-        <PrimaryNavigation 
-          isLoggedIn={isLoggedIn}
-          user={user}
-          onSignOut={onSignOut}
-        />
-      )}
+      {showNavigation && <MainNavigation />}
 
       {/* Main Content */}
       <main
@@ -79,24 +70,6 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
       >
         {children}
       </main>
-
-      {/* Floating Action Button for Mobile */}
-      {isLoggedIn && isMobile && (
-        <Button
-          onClick={handleQuickAction}
-          className={cn(
-            "fixed bottom-20 right-6 z-40",
-            "w-14 h-14 rounded-full",
-            "shadow-lg hover:shadow-xl transition-all duration-200",
-            "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-            preferences.reducedMotion ? "transform-none" : "hover:scale-110"
-          )}
-          aria-label="Add content quickly"
-          size="icon"
-        >
-          <Plus className="h-6 w-6" />
-        </Button>
-      )}
 
       {/* Accessibility Button */}
       <AccessibilityButton variant="floating" />
