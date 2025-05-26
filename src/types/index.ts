@@ -1,3 +1,4 @@
+
 export interface User {
   id: string;
   email?: string;
@@ -15,6 +16,7 @@ export interface SavedContent {
   file_url?: string;
   file_type?: "image" | "pdf";
   file_size?: number;
+  content_type: string;
   created_at: string;
   tags: Tag[];
   embedding?: number[];

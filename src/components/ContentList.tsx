@@ -100,7 +100,11 @@ const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
                   <Badge variant="outline" className="capitalize">
                     {content.content_type}
                   </Badge>
-                  <SummaryButton contentId={content.id} size="sm" />
+                  <SummaryButton 
+                    contentId={content.id} 
+                    contentText={content.description || content.title || ''} 
+                    size="sm" 
+                  />
                 </div>
               </div>
             </CardHeader>
