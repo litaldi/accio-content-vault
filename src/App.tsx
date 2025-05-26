@@ -1,90 +1,64 @@
 
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
-import Dashboard from '@/pages/Dashboard';
-import Save from '@/pages/Save';
-import Collections from '@/pages/Collections';
-import Analytics from '@/pages/Analytics';
-import Settings from '@/pages/Settings';
-import About from '@/pages/About';
-import Features from '@/pages/Features';
-import Contact from '@/pages/Contact';
-import Pricing from '@/pages/Pricing';
-import Privacy from '@/pages/Privacy';
-import Terms from '@/pages/Terms';
-import AccessibilityTest from '@/pages/AccessibilityTest';
-import FAQ from '@/pages/FAQ';
-import Help from '@/pages/Help';
-import Blog from '@/pages/Blog';
-import Sitemap from '@/pages/Sitemap';
-import Reminders from '@/pages/Reminders';
-import OfflinePage from '@/pages/OfflinePage';
 import NotFound from '@/pages/NotFound';
-import ErrorBoundary from '@/components/error/ErrorBoundary';
-import '@/styles/accessibility.css';
+import { AuthProvider } from '@/contexts/AuthContext';
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    },
-  },
-});
+const queryClient = new QueryClient();
 
-const App: React.FC = () => {
+function App() {
   return (
-    <ErrorBoundary>
-      <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
-            <AccessibilityProvider>
-              <AuthProvider>
-                <Router>
-                  <div className="min-h-screen bg-background text-foreground">
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/save" element={<Save />} />
-                      <Route path="/collections" element={<Collections />} />
-                      <Route path="/analytics" element={<Analytics />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/about" element={<About />} />
-                      <Route path="/contact" element={<Contact />} />
-                      <Route path="/pricing" element={<Pricing />} />
-                      <Route path="/privacy" element={<Privacy />} />
-                      <Route path="/terms" element={<Terms />} />
-                      <Route path="/accessibility" element={<AccessibilityTest />} />
-                      <Route path="/faq" element={<FAQ />} />
-                      <Route path="/help" element={<Help />} />
-                      <Route path="/blog" element={<Blog />} />
-                      <Route path="/sitemap" element={<Sitemap />} />
-                      <Route path="/reminders" element={<Reminders />} />
-                      <Route path="/offline" element={<OfflinePage />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                    <Toaster />
-                  </div>
-                </Router>
-              </AuthProvider>
-            </AccessibilityProvider>
-          </ThemeProvider>
-        </QueryClientProvider>
-      </HelmetProvider>
-    </ErrorBoundary>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <TooltipProvider>
+            <Router>
+              <Helmet>
+                <html lang="en" />
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="description" content="Accio - Your AI-powered knowledge engine for organizing and accessing information instantly." />
+                <meta name="keywords" content="knowledge management, AI organization, digital library, search, productivity" />
+                <meta name="author" content="Accio" />
+                
+                {/* Open Graph Tags */}
+                <meta property="og:title" content="Accio - AI-Powered Knowledge Engine" />
+                <meta property="og:description" content="Transform how you save, organize, and access information with AI-powered intelligence." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={window.location.href} />
+                
+                {/* Twitter Card Tags */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content="Accio - AI-Powered Knowledge Engine" />
+                <meta name="twitter:description" content="Transform how you save, organize, and access information with AI-powered intelligence." />
+                
+                {/* Security Headers */}
+                <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
+                <meta httpEquiv="X-Frame-Options" content="DENY" />
+                <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
+                <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+              </Helmet>
+              
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              
+              <Toaster />
+            </Router>
+          </TooltipProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
-};
+}
 
 export default App;

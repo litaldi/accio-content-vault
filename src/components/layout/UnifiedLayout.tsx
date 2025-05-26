@@ -1,79 +1,43 @@
 
 import React from 'react';
-import { cn } from '@/lib/utils';
+import { Helmet } from 'react-helmet-async';
+import { Header } from './Header';
+import { Footer } from './Footer';
+import { QAButton } from './QAButton';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
-import ImprovedFooter from '@/components/layout/ImprovedFooter';
-import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
-import SkipToContent from '@/components/accessibility/SkipToContent';
-import { Toaster } from '@/components/ui/toaster';
 
 interface UnifiedLayoutProps {
   children: React.ReactNode;
   className?: string;
-  showNavigation?: boolean;
-  showFooter?: boolean;
-  fullWidth?: boolean;
 }
 
-export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({
-  children,
-  className,
-  showNavigation = true,
-  showFooter = true,
-  fullWidth = false
+export const UnifiedLayout: React.FC<UnifiedLayoutProps> = ({ 
+  children, 
+  className = '' 
 }) => {
   const { isMobile } = useResponsiveDesign();
-  const { preferences } = useAccessibility();
 
   return (
-    <div 
-      className={cn(
-        "min-h-screen flex flex-col w-full transition-all duration-300",
-        "bg-background text-foreground",
-        // Apply accessibility preferences
-        preferences.highContrast && "high-contrast",
-        preferences.reducedMotion && "reduce-motion",
-        preferences.fontSize === 'large' && "text-lg",
-        preferences.fontSize === 'small' && "text-sm",
-        className
-      )}
-      lang="en"
-    >
-      {/* Skip Links for accessibility */}
-      <SkipToContent />
-
-      {/* Navigation */}
-      {showNavigation && <ProfessionalNavigation />}
-
-      {/* Main Content */}
-      <main
-        id="main-content"
-        className={cn(
-          "flex-grow w-full relative",
-          "transition-all duration-300 ease-in-out",
-          !fullWidth && "container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
-        )}
-        role="main"
-        tabIndex={-1}
-        aria-label="Main content"
-      >
-        <div className="animate-fade-in">
+    <>
+      <Helmet>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="theme-color" content="#000000" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href={window.location.href} />
+      </Helmet>
+      
+      <div className={`min-h-screen flex flex-col bg-background text-foreground ${className}`}>
+        <Header />
+        
+        <main className="flex-1" role="main">
           {children}
-        </div>
-      </main>
-
-      {/* Accessibility Button */}
-      <AccessibilityButton variant="floating" />
-
-      {/* Footer */}
-      {showFooter && <ImprovedFooter />}
-
-      {/* Toast Notifications */}
-      <Toaster />
-    </div>
+        </main>
+        
+        <Footer />
+        
+        {/* QA Button for development */}
+        <QAButton />
+      </div>
+    </>
   );
 };
-
-export default UnifiedLayout;

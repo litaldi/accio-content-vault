@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { EnhancedInput } from '@/components/ui/enhanced-input';
@@ -279,11 +280,24 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
         onClose();
       }
     }}>
-      <DialogContent className="sm:max-w-md w-full max-h-[90vh] overflow-y-auto" role="dialog" aria-labelledby="auth-title">
+      <DialogContent 
+        className="sm:max-w-md w-full max-h-[90vh] overflow-y-auto" 
+        role="dialog" 
+        aria-labelledby="auth-modal-title"
+        aria-describedby="auth-modal-description"
+      >
         <DialogHeader>
-          <DialogTitle id="auth-title" className="text-2xl font-bold text-center">
+          <DialogTitle id="auth-modal-title" className="text-2xl font-bold text-center">
             {forgotPassword ? 'Reset Password' : 'Welcome to Accio'}
           </DialogTitle>
+          <DialogDescription id="auth-modal-description" className="text-center text-muted-foreground">
+            {forgotPassword 
+              ? 'Enter your email address and we\'ll send you a link to reset your password.'
+              : activeTab === 'signup' 
+                ? 'Create your account to start building your knowledge library'
+                : 'Welcome back! Sign in to access your knowledge library'
+            }
+          </DialogDescription>
         </DialogHeader>
 
         {forgotPassword ? (
