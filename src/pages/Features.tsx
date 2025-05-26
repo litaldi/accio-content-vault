@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,7 +20,9 @@ import {
   Mic,
   RefreshCw,
   GraduationCap,
-  BarChart3
+  BarChart3,
+  Focus,
+  Lightbulb
 } from 'lucide-react';
 import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
 import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
@@ -32,6 +35,10 @@ import { AIContentSummarizer } from '@/components/ai/AIContentSummarizer';
 import { AIWritingAssistant } from '@/components/ai/AIWritingAssistant';
 import { IntelligentContentInsights } from '@/components/ai/IntelligentContentInsights';
 import { SmartAutomationWorkflows } from '@/components/ai/SmartAutomationWorkflows';
+import { NaturalLanguageSearchBar } from '@/components/ai/NaturalLanguageSearchBar';
+import { SmartContentOrganizer } from '@/components/ai/SmartContentOrganizer';
+import { NextActionsRecommender } from '@/components/ai/NextActionsRecommender';
+import { SmartFocusMode } from '@/components/ai/SmartFocusMode';
 
 const Features: React.FC = () => {
   const aiFeatures = [
@@ -93,16 +100,30 @@ const Features: React.FC = () => {
     },
     {
       icon: Target,
-      title: 'Auto-Categorization',
+      title: 'Auto-Organization',
       description: 'AI analyzes your content library and suggests optimal organization strategies.',
       status: 'active',
       benefit: 'Keep organized effortlessly'
     },
     {
+      icon: Focus,
+      title: 'Smart Focus Mode',
+      description: 'AI-curated learning sessions that help you concentrate on specific goals.',
+      status: 'active',
+      benefit: 'Boost learning efficiency'
+    },
+    {
+      icon: Lightbulb,
+      title: 'Next Actions AI',
+      description: 'Personalized suggestions for what to do next based on your activity patterns.',
+      status: 'active',
+      benefit: 'Never wonder what to do next'
+    },
+    {
       icon: Zap,
       title: 'Instant Insights',
       description: 'Get key insights and trends from your saved content with one click.',
-      status: 'coming-soon',
+      status: 'active',
       benefit: 'Unlock hidden patterns'
     }
   ];
@@ -189,7 +210,19 @@ const Features: React.FC = () => {
               </p>
             </div>
             
-            {/* Smart Content Creation & Voice */}
+            {/* Smart Search & Organization */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <NaturalLanguageSearchBar />
+              <SmartContentOrganizer />
+            </div>
+            
+            {/* Focus & Recommendations */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <SmartFocusMode />
+              <NextActionsRecommender />
+            </div>
+            
+            {/* Content Creation & Voice */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <SmartContentWizard />
               <VoiceContentCreator />
