@@ -6,6 +6,9 @@
 
 /* Import enhanced styles */
 @import './styles/enhanced-globals.css';
+@import './styles/utilities.css';
+@import './styles/components.css';
+@import './styles/enterprise-animations.css';
 
 @layer base {
   :root {
@@ -60,14 +63,33 @@
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Enhanced typography for enterprise feel */
   h1, h2, h3, h4, h5, h6 {
     text-wrap: balance;
+    font-weight: 600;
+    letter-spacing: -0.025em;
   }
 
   p {
     text-wrap: pretty;
+    line-height: 1.7;
+  }
+
+  /* Focus management for accessibility */
+  *:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+  }
+
+  *:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
   }
 }
 
@@ -83,4 +105,36 @@
   .text-pretty {
     text-wrap: pretty;
   }
+
+  /* Enterprise-specific utilities */
+  .enterprise-shadow {
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .enterprise-shadow-lg {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+
+  .enterprise-border {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Custom scrollbar for enterprise look */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
 }
