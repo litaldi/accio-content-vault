@@ -1,23 +1,18 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Search, 
+  HelpCircle, 
+  MessageSquare, 
   BookOpen, 
-  MessageCircle, 
-  Mail, 
-  Phone, 
-  Clock,
-  ChevronRight,
-  HelpCircle,
   Zap,
+  Search,
   Users,
-  Settings
+  ExternalLink
 } from 'lucide-react';
 
 const Help = () => {
@@ -37,7 +32,7 @@ const Help = () => {
     {
       title: "Account & Settings",
       description: "Manage your account and preferences",
-      icon: Settings,
+      icon: Users,
       articles: [
         "Account settings and profile",
         "Privacy and security options",
@@ -70,7 +65,7 @@ const Help = () => {
     {
       title: "Contact Support",
       description: "Get help from our team",
-      icon: MessageCircle,
+      icon: MessageSquare,
       action: "Start Chat"
     },
     {
@@ -82,7 +77,7 @@ const Help = () => {
     {
       title: "Report a Bug",
       description: "Help us improve Accio",
-      icon: Mail,
+      icon: MessageSquare,
       action: "Report Issue"
     }
   ];
@@ -94,7 +89,7 @@ const Help = () => {
         <meta name="description" content="Get help and support for Accio. Find answers to common questions, tutorials, and contact our support team." />
       </Helmet>
 
-      <MainNavigation />
+      <ProfessionalNavigation />
 
       <main className="flex-grow" id="main-content">
         {/* Hero Section */}
@@ -136,7 +131,6 @@ const Help = () => {
                     </p>
                     <Button variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                       {action.action}
-                      <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
                   </CardContent>
                 </Card>
@@ -175,13 +169,9 @@ const Help = () => {
                     </p>
                     <div className="space-y-2">
                       {category.articles.map((article, articleIndex) => (
-                        <button 
-                          key={articleIndex}
-                          className="flex items-center justify-between w-full p-2 text-left text-sm hover:bg-muted/50 rounded-lg transition-colors"
-                        >
-                          <span>{article}</span>
-                          <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                        </button>
+                        <Button variant="link" key={articleIndex} className="w-full text-left">
+                          {article}
+                        </Button>
                       ))}
                     </div>
                   </CardContent>
@@ -201,17 +191,17 @@ const Help = () => {
             
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="text-center">
-                <MessageCircle className="h-8 w-8 mx-auto mb-3 opacity-90" />
+                <MessageSquare className="h-8 w-8 mx-auto mb-3 opacity-90" />
                 <h3 className="font-semibold mb-2">Live Chat</h3>
                 <p className="text-sm opacity-75">Available 24/7</p>
               </div>
               <div className="text-center">
-                <Mail className="h-8 w-8 mx-auto mb-3 opacity-90" />
+                <MessageSquare className="h-8 w-8 mx-auto mb-3 opacity-90" />
                 <h3 className="font-semibold mb-2">Email Support</h3>
                 <p className="text-sm opacity-75">help@accio.app</p>
               </div>
               <div className="text-center">
-                <Clock className="h-8 w-8 mx-auto mb-3 opacity-90" />
+                <HelpCircle className="h-8 w-8 mx-auto mb-3 opacity-90" />
                 <h3 className="font-semibold mb-2">Response Time</h3>
                 <p className="text-sm opacity-75">Under 2 minutes</p>
               </div>
@@ -222,7 +212,7 @@ const Help = () => {
                 size="lg" 
                 className="bg-white text-primary hover:bg-white/95 text-lg px-8 py-4 font-semibold"
               >
-                <MessageCircle className="mr-2 h-5 w-5" />
+                <MessageSquare className="mr-2 h-5 w-5" />
                 Start Live Chat
               </Button>
               <Button 
@@ -230,7 +220,7 @@ const Help = () => {
                 variant="outline" 
                 className="border-white/50 text-white hover:bg-white/10 text-lg px-8 py-4 font-semibold"
               >
-                <Mail className="mr-2 h-5 w-5" />
+                <MessageSquare className="mr-2 h-5 w-5" />
                 Send Email
               </Button>
             </div>

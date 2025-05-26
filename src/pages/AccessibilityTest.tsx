@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import NavigationButtons from '@/components/navigation/NavigationButtons';
 import AccessibilityAuditor from '@/components/debug/AccessibilityAuditor';
 import ButtonAccessibilityChecker from '@/components/debug/ButtonAccessibilityChecker';
@@ -17,7 +16,7 @@ const AccessibilityTest = () => {
         <meta name="description" content="Comprehensive accessibility testing and compliance checking tools" />
       </Helmet>
       
-      <EnhancedNavigation />
+      <ProfessionalNavigation />
       
       <main id="main-content" className="flex-grow py-8">
         <div className="container mx-auto px-4 max-w-7xl">

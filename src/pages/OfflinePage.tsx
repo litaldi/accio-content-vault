@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useOfflineContent } from '@/hooks/useOfflineContent';
@@ -6,7 +5,7 @@ import { ResponsiveLayout } from '@/components/ui/responsive-layout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import OfflineContentList from '@/components/OfflineContentList';
 import OfflineIndicator from '@/components/OfflineIndicator';
-import MainMenu from '@/components/navigation/MainMenu';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import { Download, Wifi, Database, RefreshCw } from 'lucide-react';
 
 const OfflinePage: React.FC = () => {
@@ -29,7 +28,7 @@ const OfflinePage: React.FC = () => {
         <meta name="description" content="Access your saved content offline" />
       </Helmet>
       
-      <MainMenu />
+      <ProfessionalNavigation />
       
       <ResponsiveLayout maxWidth="2xl" padding="lg" verticalSpacing="lg">
         {/* Header */}

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useParams, Link } from 'react-router-dom';
@@ -6,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Calendar, User, Clock } from 'lucide-react';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 
 const BlogPost = () => {
@@ -46,7 +45,7 @@ const BlogPost = () => {
         <meta name="description" content="Discover how AI is transforming knowledge management and information organization in the modern workplace." />
       </Helmet>
 
-      <MainNavigation />
+      <ProfessionalNavigation />
 
       <main className="flex-grow">
         {/* Article Header */}

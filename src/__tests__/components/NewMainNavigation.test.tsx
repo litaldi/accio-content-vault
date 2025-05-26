@@ -4,23 +4,26 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import { AuthProvider } from '@/contexts/AuthContext';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 
 const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <BrowserRouter>
     <ThemeProvider>
       <AccessibilityProvider>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </AccessibilityProvider>
     </ThemeProvider>
   </BrowserRouter>
 );
 
-describe('MainNavigation', () => {
+describe('ProfessionalNavigation', () => {
   it('renders navigation items correctly', () => {
     render(
       <TestWrapper>
-        <MainNavigation />
+        <ProfessionalNavigation />
       </TestWrapper>
     );
 
@@ -31,7 +34,7 @@ describe('MainNavigation', () => {
   it('has proper accessibility attributes', () => {
     render(
       <TestWrapper>
-        <MainNavigation />
+        <ProfessionalNavigation />
       </TestWrapper>
     );
 
@@ -42,30 +45,14 @@ describe('MainNavigation', () => {
     expect(mainNav).toBeInTheDocument();
   });
 
-  it('toggles theme correctly', () => {
-    render(
-      <TestWrapper>
-        <MainNavigation />
-      </TestWrapper>
-    );
-
-    const themeButton = screen.getByLabelText('Toggle theme');
-    expect(themeButton).toBeInTheDocument();
-    
-    fireEvent.click(themeButton);
-    expect(screen.getByText('Light')).toBeInTheDocument();
-    expect(screen.getByText('Dark')).toBeInTheDocument();
-    expect(screen.getByText('System')).toBeInTheDocument();
-  });
-
   it('handles mobile menu toggle', () => {
     render(
       <TestWrapper>
-        <MainNavigation />
+        <ProfessionalNavigation />
       </TestWrapper>
     );
 
-    const mobileMenuButton = screen.getByLabelText('Open navigation menu');
+    const mobileMenuButton = screen.getByLabelText('Toggle mobile menu');
     expect(mobileMenuButton).toBeInTheDocument();
   });
 });

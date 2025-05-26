@@ -1,8 +1,6 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
-import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -66,7 +64,7 @@ const Contact = () => {
   };
 
   return (
-    <EnhancedUnifiedLayout>
+    <UnifiedLayout>
       <Helmet>
         <title>Contact - Accio Knowledge Library</title>
         <meta name="description" content="Get in touch with the Accio team. We're here to help with questions, feedback, and support." />
@@ -234,7 +232,7 @@ const Contact = () => {
           </div>
         </UnifiedSpacing.Container>
       </UnifiedSpacing.Section>
-    </EnhancedUnifiedLayout>
+    </UnifiedLayout>
   );
 };
 

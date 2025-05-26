@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import NavigationButtons from '@/components/navigation/NavigationButtons';
 import { DashboardContent } from './DashboardContent';
 import { ImprovedEmptyState } from './ImprovedEmptyState';
@@ -97,7 +98,7 @@ const EnhancedDashboard = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen flex flex-col bg-background">
-        <EnhancedNavigation />
+        <ProfessionalNavigation />
         <div className="flex-grow container mx-auto px-4 py-8">
           <div className="space-y-8">
             <div className="h-24 bg-muted/30 rounded-lg animate-pulse" />
@@ -116,7 +117,7 @@ const EnhancedDashboard = () => {
       </Helmet>
       
       <div className="min-h-screen flex flex-col bg-background">
-        <EnhancedNavigation />
+        <ProfessionalNavigation />
         
         <main className="flex-grow">
           {/* Enhanced Header with Quick Actions */}

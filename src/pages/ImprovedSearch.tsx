@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Filter, SortDesc, Search as SearchIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ImprovedCard, ImprovedCardContent } from '@/components/ui/improved-card';
 import { Badge } from '@/components/ui/badge';
-import MainMenu from '@/components/navigation/MainMenu';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import { ResponsiveLayout } from '@/components/ui/responsive-layout';
 import { MultiTagFilter } from '@/components/filters/MultiTagFilter';
 import { SearchHeader } from '@/components/search/SearchHeader';
@@ -104,7 +103,7 @@ const ImprovedSearch = () => {
         <meta name="description" content="Search your personal content library with AI-powered intelligence" />
       </Helmet>
       
-      <MainMenu />
+      <ProfessionalNavigation />
       
       <ResponsiveLayout maxWidth="2xl" padding="lg" verticalSpacing="lg">
         <SearchHeader />

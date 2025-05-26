@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import {
   Accordion,
@@ -17,7 +17,7 @@ const FAQ = () => {
         <meta name="description" content="Frequently asked questions about Accio. Find quick answers to common questions about features, pricing, and usage." />
       </Helmet>
 
-      <MainNavigation />
+      <ProfessionalNavigation />
 
       <main className="flex-grow" id="main-content">
         {/* Hero Section */}

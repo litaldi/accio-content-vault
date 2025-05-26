@@ -1,3 +1,3 @@
 
 export { UnifiedLayout } from './UnifiedLayout';
-export { default as EnhancedUnifiedLayout } from './EnhancedUnifiedLayout';
+export { default as ImprovedFooter } from './ImprovedFooter';

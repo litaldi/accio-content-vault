@@ -1,8 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
-import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, User, Clock } from 'lucide-react';
@@ -75,104 +73,100 @@ const Blog = () => {
   const categories = ["All", "Productivity", "AI & Technology", "Learning", "Psychology", "Organization"];
 
   return (
-    <EnhancedUnifiedLayout>
+    <UnifiedLayout>
       <Helmet>
         <title>Blog - Accio Knowledge Library</title>
         <meta name="description" content="Insights, tips, and best practices for knowledge management and productivity." />
       </Helmet>
 
-      <UnifiedSpacing.Section>
-        <UnifiedSpacing.Container>
-          {/* Header */}
-          <div className="text-center mb-12">
-            <UnifiedTypography.H1>Blog</UnifiedTypography.H1>
-            <UnifiedTypography.Lead>
-              Insights, tips, and best practices for better knowledge management.
-            </UnifiedTypography.Lead>
-          </div>
+      {/* Header */}
+      <div className="text-center mb-12">
+        <UnifiedTypography.H1>Blog</UnifiedTypography.H1>
+        <UnifiedTypography.Lead>
+          Insights, tips, and best practices for better knowledge management.
+        </UnifiedTypography.Lead>
+      </div>
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap gap-2 justify-center mb-12">
-            {categories.map((category) => (
-              <Badge 
-                key={category} 
-                variant={category === "All" ? "default" : "outline"}
-                className="cursor-pointer hover:bg-accent"
-              >
-                {category}
+      {/* Category Filter */}
+      <div className="flex flex-wrap gap-2 justify-center mb-12">
+        {categories.map((category) => (
+          <Badge 
+            key={category} 
+            variant={category === "All" ? "default" : "outline"}
+            className="cursor-pointer hover:bg-accent"
+          >
+            {category}
+          </Badge>
+        ))}
+      </div>
+
+      {/* Blog Posts Grid */}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {blogPosts.map((post) => (
+          <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer">
+            {/* Post Image Placeholder */}
+            <div className="h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+              <span className="text-4xl text-primary/20">📰</span>
+            </div>
+            
+            <CardHeader>
+              <Badge variant="outline" className="w-fit mb-2">
+                {post.category}
               </Badge>
-            ))}
-          </div>
-
-          {/* Blog Posts Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post) => (
-              <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer">
-                {/* Post Image Placeholder */}
-                <div className="h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                  <span className="text-4xl text-primary/20">📰</span>
+              <CardTitle className="line-clamp-2 hover:text-primary transition-colors">
+                {post.title}
+              </CardTitle>
+              <CardDescription className="line-clamp-3">
+                {post.excerpt}
+              </CardDescription>
+            </CardHeader>
+            
+            <CardContent>
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <User className="h-3 w-3" />
+                  <span>{post.author}</span>
                 </div>
-                
-                <CardHeader>
-                  <Badge variant="outline" className="w-fit mb-2">
-                    {post.category}
-                  </Badge>
-                  <CardTitle className="line-clamp-2 hover:text-primary transition-colors">
-                    {post.title}
-                  </CardTitle>
-                  <CardDescription className="line-clamp-3">
-                    {post.excerpt}
-                  </CardDescription>
-                </CardHeader>
-                
-                <CardContent>
-                  <div className="flex items-center justify-between text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <User className="h-3 w-3" />
-                      <span>{post.author}</span>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>{new Date(post.date).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        <span>{post.readTime}</span>
-                      </div>
-                    </div>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    <span>{new Date(post.date).toLocaleDateString()}</span>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-
-          {/* Newsletter Signup */}
-          <div className="mt-16 text-center">
-            <Card className="max-w-2xl mx-auto">
-              <CardHeader>
-                <CardTitle>Stay Updated</CardTitle>
-                <CardDescription>
-                  Get the latest insights on knowledge management and productivity delivered to your inbox.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="flex gap-2 max-w-md mx-auto">
-                  <input 
-                    type="email" 
-                    placeholder="Enter your email" 
-                    className="flex-1 px-3 py-2 border border-input rounded-md text-sm"
-                  />
-                  <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 transition-colors">
-                    Subscribe
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span>{post.readTime}</span>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </UnifiedSpacing.Container>
-      </UnifiedSpacing.Section>
-    </EnhancedUnifiedLayout>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Newsletter Signup */}
+      <div className="mt-16 text-center">
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle>Stay Updated</CardTitle>
+            <CardDescription>
+              Get the latest insights on knowledge management and productivity delivered to your inbox.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex gap-2 max-w-md mx-auto">
+              <input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="flex-1 px-3 py-2 border border-input rounded-md text-sm"
+              />
+              <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 transition-colors">
+                Subscribe
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </UnifiedLayout>
   );
 };
 

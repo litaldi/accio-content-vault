@@ -1,85 +1,106 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
-import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { Card, CardContent } from '@/components/ui/card';
 
 const Terms = () => {
   return (
-    <EnhancedUnifiedLayout>
+    <UnifiedLayout>
       <Helmet>
         <title>Terms of Service - Accio Knowledge Library</title>
-        <meta name="description" content="Read our terms of service and understand your rights and responsibilities when using Accio." />
+        <meta name="description" content="Terms of service and usage guidelines for Accio Knowledge Library." />
       </Helmet>
 
-      <UnifiedSpacing.Section>
-        <UnifiedSpacing.Container>
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-8">
-              <UnifiedTypography.H1>Terms of Service</UnifiedTypography.H1>
-              <UnifiedTypography.Lead>
-                Last updated: December 2024
-              </UnifiedTypography.Lead>
-            </div>
+      <div className="py-8 space-y-8">
+        <div className="container mx-auto max-w-4xl">
+          <Card>
+            <CardContent className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
+              <h1>Terms of Service</h1>
 
-            <Card>
-              <CardContent className="prose prose-gray max-w-none pt-6">
-                <UnifiedTypography.H2>Acceptance of Terms</UnifiedTypography.H2>
-                <UnifiedTypography.Body>
-                  By accessing and using Accio, you accept and agree to be bound by the terms 
-                  and provision of this agreement. If you do not agree to abide by the above, 
-                  please do not use this service.
-                </UnifiedTypography.Body>
+              <h2>1. Acceptance of Terms</h2>
+              <p>
+                By accessing or using Accio Knowledge Library, you agree to be bound by these Terms of Service
+                ("Terms"). If you do not agree to these Terms, you may not access or use the Service.
+              </p>
 
-                <UnifiedTypography.H2>Use License</UnifiedTypography.H2>
-                <UnifiedTypography.Body>
-                  Permission is granted to temporarily use Accio for personal, non-commercial 
-                  transitory viewing only. This is the grant of a license, not a transfer of title.
-                </UnifiedTypography.Body>
+              <h2>2. Description of Service</h2>
+              <p>
+                Accio Knowledge Library provides a platform for users to save, organize, and manage their
+                personal knowledge. The Service may include features such as saving content, tagging,
+                searching, and AI-powered organization.
+              </p>
 
-                <UnifiedTypography.H2>User Account</UnifiedTypography.H2>
-                <UnifiedTypography.Body>
-                  When you create an account with us, you must provide accurate, complete, and 
-                  current information. You are responsible for safeguarding your password and 
-                  for all activities that occur under your account.
-                </UnifiedTypography.Body>
+              <h2>3. User Accounts</h2>
+              <p>
+                To access certain features of the Service, you may be required to create an account. You
+                are responsible for maintaining the confidentiality of your account credentials and for all
+                activities that occur under your account.
+              </p>
 
-                <UnifiedTypography.H2>Prohibited Uses</UnifiedTypography.H2>
-                <UnifiedTypography.Body>
-                  You may not use our service:
-                </UnifiedTypography.Body>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>For any unlawful purpose or to solicit others to unlawful acts</li>
-                  <li>To violate any international, federal, provincial, or state regulations or laws</li>
-                  <li>To transmit any malicious code or viruses</li>
-                  <li>To collect or track personal information of others</li>
-                </ul>
+              <h2>4. User Content</h2>
+              <p>
+                You retain ownership of the content you save to Accio Knowledge Library ("User Content").
+                By saving User Content to the Service, you grant Accio a license to use, reproduce,
+                modify, and distribute your User Content solely for the purpose of providing the Service.
+              </p>
 
-                <UnifiedTypography.H2>Content</UnifiedTypography.H2>
-                <UnifiedTypography.Body>
-                  You retain all rights to content you save in your library. We do not claim 
-                  ownership of your content. However, you grant us a license to use your content 
-                  to provide our services, such as AI-powered organization and search.
-                </UnifiedTypography.Body>
+              <h2>5. Prohibited Conduct</h2>
+              <p>
+                You agree not to engage in any of the following prohibited activities:
+              </p>
+              <ul>
+                <li>Violating any applicable law or regulation</li>
+                <li>Infringing the rights of others</li>
+                <li>Distributing malware or other harmful content</li>
+                <li>Interfering with the operation of the Service</li>
+              </ul>
 
-                <UnifiedTypography.H2>Service Availability</UnifiedTypography.H2>
-                <UnifiedTypography.Body>
-                  We strive to maintain high availability but cannot guarantee uninterrupted 
-                  service. We may suspend or terminate the service at any time with reasonable notice.
-                </UnifiedTypography.Body>
+              <h2>6. Intellectual Property</h2>
+              <p>
+                The Service and its original content, features, and functionality are owned by Accio and
+                are protected by copyright, trademark, and other intellectual property laws.
+              </p>
 
-                <UnifiedTypography.H2>Contact Information</UnifiedTypography.H2>
-                <UnifiedTypography.Body>
-                  If you have any questions about these Terms, please contact us at 
-                  legal@accio.app.
-                </UnifiedTypography.Body>
-              </CardContent>
-            </Card>
-          </div>
-        </UnifiedSpacing.Container>
-      </UnifiedSpacing.Section>
-    </EnhancedUnifiedLayout>
+              <h2>7. Disclaimer of Warranties</h2>
+              <p>
+                THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND,
+                EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY,
+                FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
+              </p>
+
+              <h2>8. Limitation of Liability</h2>
+              <p>
+                IN NO EVENT SHALL ACCIO BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL,
+                OR PUNITIVE DAMAGES ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE SERVICE.
+              </p>
+
+              <h2>9. Termination</h2>
+              <p>
+                Accio may terminate your access to the Service at any time, with or without cause.
+              </p>
+
+              <h2>10. Governing Law</h2>
+              <p>
+                These Terms shall be governed by and construed in accordance with the laws of the
+                State of California, without regard to its conflict of law principles.
+              </p>
+
+              <h2>11. Changes to Terms</h2>
+              <p>
+                Accio may modify these Terms at any time by posting the revised Terms on the Service.
+                Your continued use of the Service after the posting of revised Terms constitutes your
+                acceptance of the revised Terms.
+              </p>
+
+              <h2>12. Contact Us</h2>
+              <p>
+                If you have any questions about these Terms, please contact us at support@accio.app.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </UnifiedLayout>
   );
 };
 
