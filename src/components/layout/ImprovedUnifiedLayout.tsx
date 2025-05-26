@@ -5,6 +5,8 @@ import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
 import ImprovedFooter from '@/components/Footer/ImprovedFooter';
+import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
+import SkipLinks from '@/components/accessibility/SkipLinks';
 import { Toaster } from '@/components/ui/toaster';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -50,19 +52,10 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
         className
       )}
       dir={preferences.language === 'he' || preferences.language === 'ar' ? 'rtl' : 'ltr'}
+      lang={preferences.language}
     >
-      {/* Skip to main content link */}
-      <a
-        href="#main-content"
-        className={cn(
-          "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50",
-          "bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium",
-          "focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-          "transition-all duration-200"
-        )}
-      >
-        Skip to main content
-      </a>
+      {/* Skip Links */}
+      <SkipLinks />
 
       {/* Navigation */}
       {showNavigation && (
@@ -82,6 +75,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
         )}
         role="main"
         tabIndex={-1}
+        aria-label="Main content"
       >
         {children}
       </main>
@@ -91,7 +85,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
         <Button
           onClick={handleQuickAction}
           className={cn(
-            "fixed bottom-6 right-6 z-40",
+            "fixed bottom-20 right-6 z-40",
             "w-14 h-14 rounded-full",
             "shadow-lg hover:shadow-xl transition-all duration-200",
             "focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
@@ -104,11 +98,22 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
         </Button>
       )}
 
+      {/* Accessibility Button */}
+      <AccessibilityButton variant="floating" />
+
       {/* Footer */}
       {showFooter && <ImprovedFooter />}
 
       {/* Toast Notifications */}
       <Toaster />
+
+      {/* Screen reader announcements region */}
+      <div 
+        id="announcements" 
+        aria-live="polite" 
+        aria-atomic="true" 
+        className="sr-only"
+      />
     </div>
   );
 };
