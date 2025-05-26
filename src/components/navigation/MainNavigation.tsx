@@ -10,7 +10,7 @@ import {
   Home, 
   LayoutDashboard, 
   FolderOpen, 
-  BarChart3, 
+  Search as SearchIcon, 
   User, 
   Settings, 
   LogOut,
@@ -93,7 +93,7 @@ const MainNavigation = () => {
     { 
       to: '/search', 
       label: 'Search', 
-      icon: BarChart3,
+      icon: SearchIcon,
       description: 'Search your knowledge'
     },
     { 

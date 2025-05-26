@@ -17,6 +17,10 @@ import Collections from '@/pages/Collections';
 import Analytics from '@/pages/Analytics';
 import Profile from '@/pages/Profile';
 import Settings from '@/pages/Settings';
+import SaveContent from '@/pages/SaveContent';
+import Search from '@/pages/Search';
+import Terms from '@/pages/Terms';
+import Privacy from '@/pages/Privacy';
 import NotFound from '@/pages/NotFound';
 
 // Import styles
@@ -44,6 +48,10 @@ function App() {
                   <Route path="/analytics" element={<Analytics />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/save-content" element={<SaveContent />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/privacy" element={<Privacy />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <Toaster />

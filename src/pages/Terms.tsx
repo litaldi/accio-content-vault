@@ -1,106 +1,174 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Typography, Spacing } from '@/components/ui/design-system';
+import MainNavigation from '@/components/navigation/MainNavigation';
 
-const Terms = () => {
+const Terms: React.FC = () => {
   return (
-    <UnifiedLayout>
+    <>
       <Helmet>
-        <title>Terms of Service - Accio Knowledge Library</title>
-        <meta name="description" content="Terms of service and usage guidelines for Accio Knowledge Library." />
+        <title>Terms of Service - Accio</title>
+        <meta name="description" content="Read Accio's Terms of Service to understand your rights and responsibilities when using our knowledge management platform." />
       </Helmet>
 
-      <div className="py-8 space-y-8">
-        <div className="container mx-auto max-w-4xl">
-          <Card>
-            <CardContent className="prose prose-sm sm:prose-base lg:prose-lg max-w-none">
-              <h1>Terms of Service</h1>
+      <MainNavigation />
+      
+      <Spacing.Section className="bg-background">
+        <Spacing.Container size="lg">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-12">
+              <Typography.H1 className="mb-4">Terms of Service</Typography.H1>
+              <Typography.Lead>
+                Last updated: {new Date().toLocaleDateString()}
+              </Typography.Lead>
+            </div>
 
-              <h2>1. Acceptance of Terms</h2>
-              <p>
-                By accessing or using Accio Knowledge Library, you agree to be bound by these Terms of Service
-                ("Terms"). If you do not agree to these Terms, you may not access or use the Service.
-              </p>
+            <div className="space-y-8">
+              <Card>
+                <CardHeader>
+                  <CardTitle>1. Acceptance of Terms</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    By accessing and using Accio ("the Service"), you accept and agree to be bound by the terms and provision of this agreement. 
+                    If you do not agree to abide by the above, please do not use this service.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <h2>2. Description of Service</h2>
-              <p>
-                Accio Knowledge Library provides a platform for users to save, organize, and manage their
-                personal knowledge. The Service may include features such as saving content, tagging,
-                searching, and AI-powered organization.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>2. Use License</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    Permission is granted to temporarily access and use Accio for personal, non-commercial transitory viewing only. 
+                    This is the grant of a license, not a transfer of title, and under this license you may not:
+                  </p>
+                  <ul>
+                    <li>modify or copy the materials</li>
+                    <li>use the materials for any commercial purpose or for any public display</li>
+                    <li>attempt to reverse engineer any software contained on the website</li>
+                    <li>remove any copyright or other proprietary notations from the materials</li>
+                  </ul>
+                </CardContent>
+              </Card>
 
-              <h2>3. User Accounts</h2>
-              <p>
-                To access certain features of the Service, you may be required to create an account. You
-                are responsible for maintaining the confidentiality of your account credentials and for all
-                activities that occur under your account.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>3. User Accounts</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    When you create an account with us, you must provide information that is accurate, complete, and current at all times. 
+                    You are responsible for safeguarding the password and for all activities that occur under your account.
+                  </p>
+                  <p>
+                    You agree not to disclose your password to any third party and to take sole responsibility for activities and actions under your account.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <h2>4. User Content</h2>
-              <p>
-                You retain ownership of the content you save to Accio Knowledge Library ("User Content").
-                By saving User Content to the Service, you grant Accio a license to use, reproduce,
-                modify, and distribute your User Content solely for the purpose of providing the Service.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>4. Content and Conduct</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    You are solely responsible for all content you upload, post, or otherwise transmit via the Service. You agree not to use the Service to:
+                  </p>
+                  <ul>
+                    <li>Upload, post, or transmit any content that is illegal, harmful, threatening, abusive, harassing, or otherwise objectionable</li>
+                    <li>Impersonate any person or entity or misrepresent your affiliation with any person or entity</li>
+                    <li>Upload, post, or transmit any content that infringes upon the rights of any third party</li>
+                    <li>Interfere with or disrupt the Service or servers or networks connected to the Service</li>
+                  </ul>
+                </CardContent>
+              </Card>
 
-              <h2>5. Prohibited Conduct</h2>
-              <p>
-                You agree not to engage in any of the following prohibited activities:
-              </p>
-              <ul>
-                <li>Violating any applicable law or regulation</li>
-                <li>Infringing the rights of others</li>
-                <li>Distributing malware or other harmful content</li>
-                <li>Interfering with the operation of the Service</li>
-              </ul>
+              <Card>
+                <CardHeader>
+                  <CardTitle>5. Privacy Policy</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your information when you use our Service. 
+                    By using our Service, you agree to the collection and use of information in accordance with our Privacy Policy.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <h2>6. Intellectual Property</h2>
-              <p>
-                The Service and its original content, features, and functionality are owned by Accio and
-                are protected by copyright, trademark, and other intellectual property laws.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>6. Termination</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    We may terminate or suspend your account and bar access to the Service immediately, without prior notice or liability, 
+                    under our sole discretion, for any reason whatsoever and without limitation, including but not limited to a breach of the Terms.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <h2>7. Disclaimer of Warranties</h2>
-              <p>
-                THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND,
-                EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, WARRANTIES OF MERCHANTABILITY,
-                FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>7. Disclaimer</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    The information on this website is provided on an "as is" basis. To the fullest extent permitted by law, 
+                    this Company excludes all representations, warranties, conditions and all other terms which, but for this legal notice, 
+                    might have effect in relation to this website.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <h2>8. Limitation of Liability</h2>
-              <p>
-                IN NO EVENT SHALL ACCIO BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL,
-                OR PUNITIVE DAMAGES ARISING OUT OF OR IN CONNECTION WITH YOUR USE OF THE SERVICE.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>8. Limitation of Liability</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    In no event shall Accio or its suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, 
+                    or due to business interruption) arising out of the use or inability to use the materials on Accio's website, 
+                    even if Accio or an authorized representative has been notified orally or in writing of the possibility of such damage.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <h2>9. Termination</h2>
-              <p>
-                Accio may terminate your access to the Service at any time, with or without cause.
-              </p>
+              <Card>
+                <CardHeader>
+                  <CardTitle>9. Changes to Terms</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    We reserve the right, at our sole discretion, to modify or replace these Terms at any time. 
+                    If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect.
+                  </p>
+                </CardContent>
+              </Card>
 
-              <h2>10. Governing Law</h2>
-              <p>
-                These Terms shall be governed by and construed in accordance with the laws of the
-                State of California, without regard to its conflict of law principles.
-              </p>
-
-              <h2>11. Changes to Terms</h2>
-              <p>
-                Accio may modify these Terms at any time by posting the revised Terms on the Service.
-                Your continued use of the Service after the posting of revised Terms constitutes your
-                acceptance of the revised Terms.
-              </p>
-
-              <h2>12. Contact Us</h2>
-              <p>
-                If you have any questions about these Terms, please contact us at support@accio.app.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </UnifiedLayout>
+              <Card>
+                <CardHeader>
+                  <CardTitle>10. Contact Information</CardTitle>
+                </CardHeader>
+                <CardContent className="prose dark:prose-invert max-w-none">
+                  <p>
+                    If you have any questions about these Terms of Service, please contact us at:
+                  </p>
+                  <p>
+                    Email: legal@accio.com<br />
+                    Address: [Your Company Address]
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </Spacing.Container>
+      </Spacing.Section>
+    </>
   );
 };
 
