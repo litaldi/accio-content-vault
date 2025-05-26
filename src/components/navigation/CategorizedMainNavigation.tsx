@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   Home, 
@@ -9,7 +9,9 @@ import {
   Settings, 
   Brain, 
   Menu, 
-  X 
+  X,
+  BookOpen,
+  Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { NavigationMenuDemo } from './NavigationMenu';
@@ -24,6 +26,29 @@ import { OmniSearchBar } from '@/components/search/OmniSearchBar';
 export const CategorizedMainNavigation: React.FC = () => {
   const { scrolled } = useNavigation();
   const location = useLocation();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const mainNavItems = [
+    { to: '/', label: 'Home', icon: Home },
+    { to: '/features', label: 'Features', icon: Zap },
+    { to: '/playground', label: 'Playground', icon: BookOpen },
+  ];
+
+  const appNavItems = [
+    { to: '/dashboard', label: 'Dashboard', icon: Home },
+    { to: '/search', label: 'Search', icon: Search },
+    { to: '/collections', label: 'Collections', icon: FolderOpen },
+    { to: '/analytics', label: 'Analytics', icon: BarChart3 },
+    { to: '/intelligence', label: 'AI Intelligence', icon: Brain },
+    { to: '/account', label: 'Settings', icon: Settings },
+  ];
+
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
+
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
 
   return (
     <header className={cn(
@@ -37,13 +62,23 @@ export const CategorizedMainNavigation: React.FC = () => {
         {/* Desktop Navigation */}
         <div className="hidden md:flex md:flex-1 md:items-center md:justify-between ml-6">
           {/* Left side - Main navigation */}
-          <div className="flex items-center gap-4">
-            <Button asChild variant="ghost">
-              <Link to="/">{copy.navigation.home}</Link>
-            </Button>
-            <Button asChild variant="ghost">
-              <Link to="/features">{copy.navigation.features}</Link>
-            </Button>
+          <div className="flex items-center gap-1">
+            {mainNavItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Button
+                  key={item.to}
+                  asChild
+                  variant={isActive(item.to) ? "default" : "ghost"}
+                  size="sm"
+                >
+                  <Link to={item.to} className="flex items-center gap-2">
+                    <Icon className="h-4 w-4" />
+                    {item.label}
+                  </Link>
+                </Button>
+              );
+            })}
             <NavigationMenuDemo />
           </div>
           
@@ -60,59 +95,78 @@ export const CategorizedMainNavigation: React.FC = () => {
         </div>
 
         {/* Mobile menu button */}
-        <Button
-          variant="ghost"
-          size="sm"
-          className="md:hidden"
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </Button>
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={toggleMobileMenu}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {isMobileMenuOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
+          </Button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}
-      <div className="border-t md:hidden">
-        <div className="container py-2">
-          <div className="grid grid-cols-2 gap-2">
-            <Button asChild variant="ghost" className="justify-start">
-              <Link to="/" className="w-full">
-                <Home className="mr-2 h-4 w-4" />
-                {copy.navigation.home}
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" className="justify-start">
-              <Link to="/search" className="w-full">
-                <Search className="mr-2 h-4 w-4" />
-                {copy.navigation.search}
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" className="justify-start">
-              <Link to="/collections" className="w-full">
-                <FolderOpen className="mr-2 h-4 w-4" />
-                {copy.navigation.collections}
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" className="justify-start">
-              <Link to="/analytics" className="w-full">
-                <BarChart3 className="mr-2 h-4 w-4" />
-                {copy.navigation.analytics}
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" className="justify-start">
-              <Link to="/account" className="w-full">
-                <Settings className="mr-2 h-4 w-4" />
-                {copy.navigation.settings}
-              </Link>
-            </Button>
-            <Button asChild variant="ghost" className="justify-start">
-              <Link to="/intelligence" className="w-full">
-                <Brain className="mr-2 h-4 w-4" />
-                {copy.navigation.intelligence}
-              </Link>
-            </Button>
+      {isMobileMenuOpen && (
+        <div className="border-t md:hidden">
+          <div className="container py-4 space-y-2">
+            {/* Main navigation items */}
+            <div className="space-y-1 mb-4">
+              <h3 className="text-sm font-medium text-muted-foreground px-3">Main</h3>
+              {mainNavItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Button
+                    key={item.to}
+                    asChild
+                    variant={isActive(item.to) ? "default" : "ghost"}
+                    className="w-full justify-start"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link to={item.to}>
+                      <Icon className="mr-2 h-4 w-4" />
+                      {item.label}
+                    </Link>
+                  </Button>
+                );
+              })}
+            </div>
+
+            {/* App navigation items */}
+            <div className="space-y-1">
+              <h3 className="text-sm font-medium text-muted-foreground px-3">App</h3>
+              {appNavItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Button
+                    key={item.to}
+                    asChild
+                    variant={isActive(item.to) ? "default" : "ghost"}
+                    className="w-full justify-start"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Link to={item.to}>
+                      <Icon className="mr-2 h-4 w-4" />
+                      {item.label}
+                    </Link>
+                  </Button>
+                );
+              })}
+            </div>
+
+            {/* Auth buttons */}
+            <div className="pt-4 border-t">
+              <AuthButtons isLoggedIn={false} mobile />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
 };
