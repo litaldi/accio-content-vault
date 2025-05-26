@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AccessibleInput } from '@/components/forms/AccessibleInput';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Sparkles } from 'lucide-react';
@@ -111,16 +111,21 @@ const Register = () => {
                 )}
 
                 {/* Email */}
-                <AccessibleInput
-                  id="email"
-                  type="email"
-                  label="Email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  autoComplete="email"
-                />
+                <div className="space-y-2">
+                  <label htmlFor="email" className="text-sm font-medium text-foreground">
+                    Email
+                    <span className="text-destructive ml-1" aria-label="required">*</span>
+                  </label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    autoComplete="email"
+                  />
+                </div>
 
                 {/* Password */}
                 <div className="space-y-2">
@@ -129,17 +134,15 @@ const Register = () => {
                     <span className="text-destructive ml-1" aria-label="required">*</span>
                   </label>
                   <div className="relative">
-                    <AccessibleInput
+                    <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      label=""
                       placeholder="Create a password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       autoComplete="new-password"
                       className="pr-10"
-                      containerClassName="space-y-0"
                     />
                     <button
                       type="button"
@@ -164,17 +167,15 @@ const Register = () => {
                     <span className="text-destructive ml-1" aria-label="required">*</span>
                   </label>
                   <div className="relative">
-                    <AccessibleInput
+                    <Input
                       id="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
-                      label=""
                       placeholder="Confirm your password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                       autoComplete="new-password"
                       className="pr-10"
-                      containerClassName="space-y-0"
                     />
                     <button
                       type="button"
