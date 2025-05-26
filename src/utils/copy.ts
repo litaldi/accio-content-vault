@@ -1,5 +1,6 @@
 
 
+
 export const copy = {
   // Navigation
   navigation: {
@@ -92,6 +93,30 @@ export const copy = {
       title: 'Build Your Knowledge Empire',
       description: 'Transform scattered information into organized intelligence',
       tip: 'Connect ideas, discover patterns, and unlock insights from your data'
+    }
+  },
+
+  // Empty states
+  emptyStates: {
+    library: {
+      title: 'Your knowledge library awaits',
+      description: 'Start building your personal knowledge base by saving your first piece of content',
+      action: 'Save Your First Item'
+    },
+    search: {
+      title: 'No results found',
+      description: 'Try adjusting your search terms or browse your collections',
+      action: 'Clear Search'
+    },
+    dashboard: {
+      title: 'Welcome to your dashboard',
+      description: 'Your saved content and insights will appear here as you build your knowledge collection',
+      action: 'Get Started'
+    },
+    recent: {
+      title: 'No recent activity',
+      description: 'Your recently viewed and saved items will appear here',
+      action: 'Browse Collections'
     }
   },
 
@@ -201,4 +226,5 @@ export const copy = {
     optional: 'Optional'
   }
 };
+
 
