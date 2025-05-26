@@ -92,9 +92,12 @@ function App() {
                     <Route path="/features" element={<Navigate to="/#features" replace />} />
                     <Route path="/pricing" element={<Navigate to="/#pricing" replace />} />
                     <Route path="/about" element={<Navigate to="/#about" replace />} />
+                    <Route path="/terms" element={<Navigate to="/help#terms" replace />} />
+                    <Route path="/privacy" element={<Navigate to="/help#privacy" replace />} />
                     
                     {/* Redirect old routes */}
                     <Route path="/home" element={<Navigate to="/" replace />} />
+                    <Route path="/save-content" element={<Navigate to="/save" replace />} />
                     
                     {/* 404 fallback */}
                     <Route path="*" element={<NotFound />} />

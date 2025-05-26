@@ -3,7 +3,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import NewMainNavigation from '@/components/navigation/NewMainNavigation';
 import AppFooter from '@/components/layout/AppFooter';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import SkipLinks from '@/components/accessibility/SkipLinks';
@@ -51,7 +51,7 @@ export const ImprovedUnifiedLayout: React.FC<ImprovedUnifiedLayoutProps> = ({
       <SkipLinks />
 
       {/* Navigation */}
-      {showNavigation && <MainNavigation />}
+      {showNavigation && <NewMainNavigation />}
 
       {/* Main Content */}
       <main

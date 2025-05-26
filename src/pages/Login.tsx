@@ -73,15 +73,15 @@ const Login = () => {
               </div>
               <span className="text-2xl font-bold text-primary">Accio</span>
             </Link>
-            <h1 className="text-2xl font-bold">Welcome back</h1>
+            <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
             <p className="text-muted-foreground">Sign in to your knowledge library</p>
           </div>
 
           {/* Login Form */}
-          <Card>
+          <Card className="border-border bg-card">
             <CardHeader>
-              <CardTitle>Sign In</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-card-foreground">Sign In</CardTitle>
+              <CardDescription className="text-muted-foreground">
                 Enter your credentials to access your account
               </CardDescription>
             </CardHeader>
@@ -108,7 +108,7 @@ const Login = () => {
 
                 {/* Password */}
                 <div className="space-y-2">
-                  <label htmlFor="password" className="text-sm font-medium">
+                  <label htmlFor="password" className="text-sm font-medium text-foreground">
                     Password
                     <span className="text-destructive ml-1" aria-label="required">*</span>
                   </label>
@@ -158,14 +158,14 @@ const Login = () => {
               </form>
 
               {/* Demo Credentials */}
-              <div className="mt-4 p-4 bg-muted rounded-lg">
-                <h3 className="font-medium mb-2">Demo Accounts</h3>
-                <div className="space-y-2 text-sm">
+              <div className="mt-4 p-4 bg-muted rounded-lg border border-border">
+                <h3 className="font-medium mb-2 text-foreground">Demo Accounts</h3>
+                <div className="space-y-2 text-sm text-muted-foreground">
                   <div>
-                    <strong>Admin:</strong> admin@demo.com / Admin123!
+                    <strong className="text-foreground">Admin:</strong> admin@demo.com / Admin123!
                   </div>
                   <div>
-                    <strong>User:</strong> user@demo.com / User123!
+                    <strong className="text-foreground">User:</strong> user@demo.com / User123!
                   </div>
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
