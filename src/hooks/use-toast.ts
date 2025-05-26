@@ -35,5 +35,3 @@ export const useToast = () => {
 
   return { toast, toasts, dismiss };
 };
-
-export { toast } from './use-toast';

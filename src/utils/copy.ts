@@ -96,11 +96,13 @@ export const copy = {
   success: {
     saved: 'Content saved successfully',
     updated: 'Content updated successfully',
-    deleted: 'Content deleted successfully'
+    deleted: 'Content deleted successfully',
+    signIn: 'Successfully signed in'
   },
   errors: {
     general: 'Something went wrong',
     network: 'Network error occurred',
-    auth: 'Authentication failed'
+    auth: 'Authentication failed',
+    authentication: 'Authentication error occurred'
   }
 };

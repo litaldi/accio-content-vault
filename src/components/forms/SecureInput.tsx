@@ -95,9 +95,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
       onChange={handleChange}
       onBlur={handleBlur}
       placeholder={placeholder}
-      label={label}
-      error={!!(isTouched && error)}
-      success={isTouched && !error && value.length > 0}
+      error={isTouched && error ? error : undefined}
       rightIcon={sanitize ? <Shield className="h-4 w-4 text-muted-foreground" /> : undefined}
       className={className}
       maxLength={maxLength}

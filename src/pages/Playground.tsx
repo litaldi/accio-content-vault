@@ -83,6 +83,7 @@ const Playground = () => {
         });
         
         toast({
+          title: "Search completed",
           description: `Found 3 results for "${searchQuery}"`,
         });
       }
