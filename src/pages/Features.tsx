@@ -28,6 +28,10 @@ import { SmartTagging } from '@/components/ai/SmartTagging';
 import { PersonalizedRecommendations } from '@/components/ai/PersonalizedRecommendations';
 import { LearningPathGenerator } from '@/components/ai/LearningPathGenerator';
 import { ContentQualityAnalyzer } from '@/components/ai/ContentQualityAnalyzer';
+import { AIContentSummarizer } from '@/components/ai/AIContentSummarizer';
+import { AIWritingAssistant } from '@/components/ai/AIWritingAssistant';
+import { IntelligentContentInsights } from '@/components/ai/IntelligentContentInsights';
+import { SmartAutomationWorkflows } from '@/components/ai/SmartAutomationWorkflows';
 
 const Features: React.FC = () => {
   const aiFeatures = [
@@ -185,15 +189,21 @@ const Features: React.FC = () => {
               </p>
             </div>
             
-            {/* Smart Content Creation */}
+            {/* Smart Content Creation & Voice */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <SmartContentWizard />
               <VoiceContentCreator />
             </div>
             
-            {/* Content Enhancement */}
+            {/* Content Enhancement & Analysis */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <SmartContentRefinement />
+              <AIContentSummarizer />
+            </div>
+            
+            {/* Writing & Tagging */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <AIWritingAssistant />
               <SmartTagging />
             </div>
             
@@ -203,7 +213,13 @@ const Features: React.FC = () => {
               <LearningPathGenerator />
             </div>
             
-            {/* Content Analysis */}
+            {/* Advanced Features */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <IntelligentContentInsights />
+              <SmartAutomationWorkflows />
+            </div>
+            
+            {/* Content Quality Analysis - Full Width */}
             <div className="mb-8">
               <ContentQualityAnalyzer />
             </div>
