@@ -2,7 +2,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
+import Navigation from '@/components/layout/Navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Home, ArrowLeft, Search } from 'lucide-react';
@@ -15,7 +15,7 @@ const NotFound = () => {
         <meta name="description" content="The page you're looking for doesn't exist. Return to your knowledge collection." />
       </Helmet>
 
-      <Header />
+      <Navigation />
 
       <main className="flex-grow flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md space-y-8 text-center">
@@ -33,7 +33,7 @@ const NotFound = () => {
           </div>
 
           {/* Action Card */}
-          <Card>
+          <Card className="shadow-lg">
             <CardHeader>
               <CardTitle>What would you like to do?</CardTitle>
               <CardDescription>

@@ -1,9 +1,8 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Header } from '@/components/layout/Header';
+import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/Footer';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
-import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -90,7 +89,7 @@ const Analytics = () => {
         <meta name="description" content="Track your knowledge management progress and discover insights about your learning patterns." />
       </Helmet>
 
-      <Header />
+      <Navigation />
 
       <main className="flex-grow">
         {/* Header Section */}
@@ -118,7 +117,7 @@ const Analytics = () => {
           {/* Stats Grid */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, index) => (
-              <Card key={index} className="card-elevated">
+              <Card key={index} className="hover:shadow-md transition-shadow">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className={`w-10 h-10 rounded-lg bg-${stat.color}-500/10 flex items-center justify-center`}>
@@ -141,7 +140,7 @@ const Analytics = () => {
           {/* Charts and Insights */}
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Activity Chart Placeholder */}
-            <Card className="lg:col-span-2 card-elevated">
+            <Card className="lg:col-span-2 hover:shadow-md transition-shadow">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5 text-primary" />
@@ -164,7 +163,7 @@ const Analytics = () => {
 
             {/* Quick Insights */}
             <div className="space-y-6">
-              <Card className="card-elevated">
+              <Card className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Zap className="h-5 w-5 text-primary" />
@@ -184,7 +183,7 @@ const Analytics = () => {
                 </CardContent>
               </Card>
 
-              <Card className="card-elevated">
+              <Card className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle>Recent Activity</CardTitle>
                 </CardHeader>

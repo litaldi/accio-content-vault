@@ -2,14 +2,15 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import { Header } from '@/components/layout/Header';
+import Navigation from '@/components/layout/Navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Eye, EyeOff, Mail, Lock, User, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const Register = () => {
   const { user, signUp } = useAuth();
@@ -17,15 +18,17 @@ const Register = () => {
   const { toast } = useToast();
   
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
 
   // Redirect if already logged in
   useEffect(() => {
@@ -35,10 +38,14 @@ const Register = () => {
   }, [user, navigate]);
 
   const validateForm = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors: {[key: string]: string} = {};
     
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+    
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
     }
     
     if (!formData.email.trim()) {
@@ -49,12 +56,18 @@ const Register = () => {
     
     if (!formData.password.trim()) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
     }
     
-    if (formData.password !== formData.confirmPassword) {
+    if (!formData.confirmPassword.trim()) {
+      newErrors.confirmPassword = 'Please confirm your password';
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    if (!acceptTerms) {
+      newErrors.terms = 'Please accept the terms and conditions';
     }
     
     setErrors(newErrors);
@@ -73,14 +86,16 @@ const Register = () => {
       await signUp(formData.email.trim(), formData.password);
       toast({
         title: "Account created successfully!",
-        description: "Welcome to Accio. You can now start building your knowledge collection.",
+        description: "Welcome to Accio! You can now start building your knowledge collection.",
       });
       navigate('/dashboard');
     } catch (error: any) {
       console.error('Registration error:', error);
+      const errorMessage = error.message || "Failed to create account. Please try again.";
+      setErrors({ submit: errorMessage });
       toast({
         title: "Registration failed",
-        description: error.message || "Unable to create account. Please try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -96,14 +111,22 @@ const Register = () => {
     }
   };
 
+  const togglePasswordVisibility = (field: 'password' | 'confirmPassword') => {
+    if (field === 'password') {
+      setShowPassword(!showPassword);
+    } else {
+      setShowConfirmPassword(!showConfirmPassword);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
         <title>Create Account - Accio Knowledge Engine</title>
-        <meta name="description" content="Create your Accio account and start building your personal knowledge collection today." />
+        <meta name="description" content="Create your Accio account to start saving, organizing, and managing your knowledge collection with AI-powered insights." />
       </Helmet>
 
-      <Header />
+      <Navigation />
 
       <main className="flex-grow flex items-center justify-center py-12 px-4">
         <div className="w-full max-w-md space-y-8">
@@ -111,42 +134,68 @@ const Register = () => {
           <div className="text-center">
             <h1 className="text-3xl font-bold tracking-tight">Create your account</h1>
             <p className="mt-2 text-muted-foreground">
-              Join thousands of users building their knowledge collections with AI-powered organization
+              Join thousands of knowledge builders using Accio to organize their learning
             </p>
           </div>
 
           {/* Registration Form */}
           <Card className="shadow-lg">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-semibold">Get started</CardTitle>
+              <CardTitle className="text-2xl font-semibold">Sign up</CardTitle>
               <CardDescription>
-                Create your account to start organizing your knowledge
+                Enter your information to create your account
               </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Name Field */}
-                <div className="space-y-2">
-                  <Label htmlFor="name" className="text-sm font-medium">
-                    Full name
-                  </Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="name"
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={formData.name}
-                      onChange={(e) => handleInputChange('name', e.target.value)}
-                      className={`pl-10 ${errors.name ? 'border-destructive focus-visible:ring-destructive' : ''}`}
-                      autoComplete="name"
-                      autoFocus
-                      required
-                    />
+                {/* Name Fields */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName" className="text-sm font-medium">
+                      First name
+                    </Label>
+                    <div className="relative">
+                      <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                      <Input
+                        id="firstName"
+                        type="text"
+                        placeholder="John"
+                        value={formData.firstName}
+                        onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        className={`pl-10 ${errors.firstName ? 'border-destructive focus-visible:ring-destructive' : ''}`}
+                        autoComplete="given-name"
+                        required
+                        aria-describedby={errors.firstName ? "firstName-error" : undefined}
+                      />
+                    </div>
+                    {errors.firstName && (
+                      <p id="firstName-error" className="text-sm text-destructive" role="alert">
+                        {errors.firstName}
+                      </p>
+                    )}
                   </div>
-                  {errors.name && (
-                    <p className="text-sm text-destructive" role="alert">{errors.name}</p>
-                  )}
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName" className="text-sm font-medium">
+                      Last name
+                    </Label>
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Doe"
+                      value={formData.lastName}
+                      onChange={(e) => handleInputChange('lastName', e.target.value)}
+                      className={errors.lastName ? 'border-destructive focus-visible:ring-destructive' : ''}
+                      autoComplete="family-name"
+                      required
+                      aria-describedby={errors.lastName ? "lastName-error" : undefined}
+                    />
+                    {errors.lastName && (
+                      <p id="lastName-error" className="text-sm text-destructive" role="alert">
+                        {errors.lastName}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 {/* Email Field */}
@@ -159,16 +208,19 @@ const Register = () => {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="john@example.com"
                       value={formData.email}
                       onChange={(e) => handleInputChange('email', e.target.value)}
                       className={`pl-10 ${errors.email ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                       autoComplete="email"
                       required
+                      aria-describedby={errors.email ? "email-error" : undefined}
                     />
                   </div>
                   {errors.email && (
-                    <p className="text-sm text-destructive" role="alert">{errors.email}</p>
+                    <p id="email-error" className="text-sm text-destructive" role="alert">
+                      {errors.email}
+                    </p>
                   )}
                 </div>
 
@@ -182,19 +234,20 @@ const Register = () => {
                     <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="Create a password"
+                      placeholder="Create a strong password"
                       value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
                       className={`pl-10 pr-10 ${errors.password ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                       autoComplete="new-password"
                       required
+                      aria-describedby={errors.password ? "password-error" : undefined}
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
                       className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={() => togglePasswordVisibility('password')}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
                     >
                       {showPassword ? (
@@ -205,7 +258,9 @@ const Register = () => {
                     </Button>
                   </div>
                   {errors.password && (
-                    <p className="text-sm text-destructive" role="alert">{errors.password}</p>
+                    <p id="password-error" className="text-sm text-destructive" role="alert">
+                      {errors.password}
+                    </p>
                   )}
                 </div>
 
@@ -225,13 +280,14 @@ const Register = () => {
                       className={`pl-10 pr-10 ${errors.confirmPassword ? 'border-destructive focus-visible:ring-destructive' : ''}`}
                       autoComplete="new-password"
                       required
+                      aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
                       className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() => togglePasswordVisibility('confirmPassword')}
                       aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
                     >
                       {showConfirmPassword ? (
@@ -242,20 +298,73 @@ const Register = () => {
                     </Button>
                   </div>
                   {errors.confirmPassword && (
-                    <p className="text-sm text-destructive" role="alert">{errors.confirmPassword}</p>
+                    <p id="confirmPassword-error" className="text-sm text-destructive" role="alert">
+                      {errors.confirmPassword}
+                    </p>
                   )}
                 </div>
+
+                {/* Terms Checkbox */}
+                <div className="flex items-start space-x-3">
+                  <Checkbox
+                    id="terms"
+                    checked={acceptTerms}
+                    onCheckedChange={(checked) => {
+                      setAcceptTerms(!!checked);
+                      if (errors.terms) {
+                        setErrors(prev => ({ ...prev, terms: '' }));
+                      }
+                    }}
+                    className={errors.terms ? 'border-destructive' : ''}
+                    aria-describedby={errors.terms ? "terms-error" : undefined}
+                  />
+                  <div className="grid gap-1.5 leading-none">
+                    <Label 
+                      htmlFor="terms" 
+                      className="text-sm font-normal leading-5 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      I agree to the{' '}
+                      <Link to="/terms" className="text-primary underline underline-offset-2 hover:text-primary/80">
+                        Terms of Service
+                      </Link>
+                      {' '}and{' '}
+                      <Link to="/privacy" className="text-primary underline underline-offset-2 hover:text-primary/80">
+                        Privacy Policy
+                      </Link>
+                    </Label>
+                    {errors.terms && (
+                      <p id="terms-error" className="text-sm text-destructive" role="alert">
+                        {errors.terms}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Submit Error */}
+                {errors.submit && (
+                  <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                    <p className="text-sm text-destructive" role="alert">
+                      {errors.submit}
+                    </p>
+                  </div>
+                )}
 
                 {/* Submit Button */}
                 <Button
                   type="submit"
                   className="w-full"
                   disabled={isLoading}
-                  loading={isLoading}
-                  loadingText="Creating account..."
                 >
-                  {!isLoading && <ArrowRight className="h-4 w-4 mr-2" />}
-                  Create account
+                  {isLoading ? (
+                    <>
+                      Creating account...
+                    </>
+                  ) : (
+                    <>
+                      <ArrowRight className="h-4 w-4 mr-2" />
+                      Create account
+                    </>
+                  )}
                 </Button>
               </form>
 
@@ -279,18 +388,25 @@ const Register = () => {
             </CardContent>
           </Card>
 
-          {/* Terms Notice */}
+          {/* Benefits */}
           <div className="text-center">
-            <p className="text-xs text-muted-foreground">
-              By creating an account, you agree to our{' '}
-              <Button variant="link" className="p-0 h-auto text-xs">
-                Terms of Service
-              </Button>{' '}
-              and{' '}
-              <Button variant="link" className="p-0 h-auto text-xs">
-                Privacy Policy
-              </Button>
+            <p className="text-sm text-muted-foreground mb-4">
+              Join over 10,000+ knowledge builders who trust Accio
             </p>
+            <div className="flex justify-center items-center gap-4 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                Free to start
+              </div>
+              <div className="flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                No credit card required
+              </div>
+              <div className="flex items-center gap-1">
+                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                AI-powered organization
+              </div>
+            </div>
           </div>
         </div>
       </main>

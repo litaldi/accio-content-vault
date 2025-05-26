@@ -1,9 +1,8 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Header } from '@/components/layout/Header';
+import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/Footer';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
-import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -45,7 +44,7 @@ const Profile = () => {
         <meta name="description" content="Manage your profile, view your achievements, and track your knowledge management progress." />
       </Helmet>
 
-      <Header />
+      <Navigation />
 
       <main className="flex-grow">
         {/* Header Section */}
@@ -63,7 +62,7 @@ const Profile = () => {
             {/* Profile Info */}
             <div className="lg:col-span-2 space-y-6">
               {/* Basic Information */}
-              <Card className="card-elevated">
+              <Card className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <User className="h-5 w-5 text-primary" />
@@ -136,7 +135,7 @@ const Profile = () => {
               </Card>
 
               {/* Achievements */}
-              <Card className="card-elevated">
+              <Card className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Award className="h-5 w-5 text-primary" />
@@ -169,7 +168,7 @@ const Profile = () => {
             {/* Sidebar */}
             <div className="space-y-6">
               {/* Quick Stats */}
-              <Card className="card-elevated">
+              <Card className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle>Your Stats</CardTitle>
                 </CardHeader>
@@ -184,7 +183,7 @@ const Profile = () => {
               </Card>
 
               {/* Account Details */}
-              <Card className="card-elevated">
+              <Card className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle>Account Details</CardTitle>
                 </CardHeader>
@@ -205,7 +204,7 @@ const Profile = () => {
               </Card>
 
               {/* Quick Actions */}
-              <Card className="card-elevated">
+              <Card className="hover:shadow-md transition-shadow">
                 <CardHeader>
                   <CardTitle>Quick Actions</CardTitle>
                 </CardHeader>

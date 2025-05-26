@@ -5,7 +5,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Index from '@/pages/Index';
-import Login from '@/pages/Login';
+import ImprovedLogin from '@/pages/ImprovedLogin';
 import Register from '@/pages/Register';
 import Dashboard from '@/pages/Dashboard';
 import Collections from '@/pages/Collections';
@@ -52,7 +52,7 @@ function App() {
               
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<ImprovedLogin />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/collections" element={<Collections />} />

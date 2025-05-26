@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Header } from '@/components/layout/Header';
+import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -56,7 +56,7 @@ const Dashboard = () => {
         <meta name="description" content="Your personal knowledge dashboard - manage saved content, collections, and insights." />
       </Helmet>
 
-      <Header />
+      <Navigation />
 
       <main className="flex-grow">
         {/* Header Section */}

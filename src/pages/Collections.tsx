@@ -1,9 +1,8 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Header } from '@/components/layout/Header';
+import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/Footer';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
-import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -57,7 +56,7 @@ const Collections = () => {
         <meta name="description" content="Organize your saved content into smart collections for easy access and management." />
       </Helmet>
 
-      <Header />
+      <Navigation />
 
       <main className="flex-grow">
         {/* Header Section */}
@@ -93,7 +92,7 @@ const Collections = () => {
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {collections.map((collection) => (
-                <Card key={collection.id} className="card-interactive group">
+                <Card key={collection.id} className="hover:shadow-md transition-shadow group">
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-3">
@@ -138,7 +137,7 @@ const Collections = () => {
               ))}
               
               {/* Create New Collection Card */}
-              <Card className="card-interactive border-dashed hover:border-primary/50">
+              <Card className="hover:shadow-md transition-shadow border-dashed hover:border-primary/50">
                 <CardContent className="flex flex-col items-center justify-center py-12 text-center">
                   <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                     <Plus className="h-6 w-6 text-primary" />
