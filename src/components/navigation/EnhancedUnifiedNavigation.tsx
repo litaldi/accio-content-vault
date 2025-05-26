@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ModeToggle } from '@/components/ui/mode-toggle';
-import { useResponsiveDesign } from '@/hooks/use-responsive-design';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
+import EnhancedAccessibilityButton from '@/components/accessibility/EnhancedAccessibilityButton';
 import { 
   Menu, 
   X, 
@@ -15,23 +15,21 @@ import {
   Users, 
   Settings, 
   LogOut, 
-  Plus, 
-  Candy,
-  Search,
-  Globe,
-  Accessibility
+  Plus,
+  Search
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 
-interface NavigationProps {
+interface EnhancedUnifiedNavigationProps {
   isLoggedIn?: boolean;
   user?: { email?: string };
   onSignOut?: () => void;
 }
 
-const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
+const EnhancedUnifiedNavigation: React.FC<EnhancedUnifiedNavigationProps> = ({
   isLoggedIn = false,
   user,
   onSignOut
@@ -40,9 +38,8 @@ const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
   const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [language, setLanguage] = useState<'en' | 'he'>('en');
   const { isMobile } = useResponsiveDesign();
-  const { preferences, updatePreferences } = useAccessibility();
+  const { preferences } = useAccessibility();
 
   // Optimized scroll handler
   useEffect(() => {
@@ -68,34 +65,13 @@ const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
 
   const handleLogout = async () => {
     if (onSignOut) {
-      await onSignOut();
+      onSignOut();
     }
     navigate('/');
     setMobileMenuOpen(false);
   };
 
-  const toggleLanguage = () => {
-    setLanguage(prev => prev === 'en' ? 'he' : 'en');
-  };
-
-  const toggleAccessibilityFeature = (feature: string) => {
-    switch (feature) {
-      case 'highContrast':
-        updatePreferences({ highContrast: !preferences.highContrast });
-        break;
-      case 'reducedMotion':
-        updatePreferences({ reducedMotion: !preferences.reducedMotion });
-        break;
-      case 'fontSize':
-        const sizes: Array<'small' | 'medium' | 'large'> = ['small', 'medium', 'large'];
-        const currentIndex = sizes.indexOf(preferences.fontSize);
-        const nextIndex = (currentIndex + 1) % sizes.length;
-        updatePreferences({ fontSize: sizes[nextIndex] });
-        break;
-    }
-  };
-
-  // Navigation structure
+  // Unified navigation structure
   const publicNavItems = [
     { path: '/features', label: 'Features', icon: BookOpen },
     { path: '/pricing', label: 'Pricing', icon: BarChart },
@@ -122,14 +98,13 @@ const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300 border-b bg-background/95 backdrop-blur-md",
         scrolled && "shadow-sm",
-        preferences.highContrast && "border-foreground",
-        language === 'he' && "rtl"
+        preferences.highContrast && "border-foreground"
       )}
       role="banner"
     >
       <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
+          {/* Enhanced Logo */}
           <Link 
             to="/" 
             className={cn(
@@ -149,7 +124,7 @@ const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
 
           {/* Desktop Navigation */}
           {!isMobile && (
-            <nav className="hidden md:flex items-center gap-1" role="navigation">
+            <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
               {currentNavItems.map((item) => (
                 <Link
                   key={item.path}
@@ -158,7 +133,7 @@ const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
                     "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                     isActiveLink(item.path) 
-                      ? "text-primary border-b-2 border-primary bg-primary/5" 
+                      ? "bg-primary/10 text-primary border-b-2 border-primary" 
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                   aria-current={isActiveLink(item.path) ? 'page' : undefined}
@@ -172,102 +147,40 @@ const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
           
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            {/* Candy Easter Egg */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-amber-500 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950"
-              aria-label="Special features"
-              onClick={() => {
-                // Easter egg functionality
-                console.log('🍭 Sweet feature activated!');
-              }}
-            >
-              <Candy className="h-5 w-5" />
-            </Button>
-
-            {/* Language Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleLanguage}
-              className="hover:bg-accent"
-              aria-label={`Switch to ${language === 'en' ? 'Hebrew' : 'English'}`}
-            >
-              <Globe className="h-4 w-4" />
-            </Button>
-
-            {/* Theme Toggle */}
             <ModeToggle />
-
-            {/* Accessibility Menu */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="hover:bg-accent"
-                  aria-label="Accessibility options"
-                >
-                  <Accessibility className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuItem onClick={() => toggleAccessibilityFeature('highContrast')}>
-                  {preferences.highContrast ? '✓' : ''} High Contrast
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toggleAccessibilityFeature('reducedMotion')}>
-                  {preferences.reducedMotion ? '✓' : ''} Reduced Motion
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => toggleAccessibilityFeature('fontSize')}>
-                  Font Size: {preferences.fontSize}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <EnhancedAccessibilityButton />
             
             {isLoggedIn ? (
-              <>
-                {/* Add Content CTA */}
-                <Button 
-                  onClick={() => navigate('/save')}
-                  className="hidden md:flex bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Content
-                </Button>
-
-                {/* User Menu */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      className="relative h-8 w-8 rounded-full focus-visible:ring-2 focus-visible:ring-primary"
-                      aria-label="User menu"
-                    >
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback className="bg-primary/10 text-primary">
-                          {user?.email?.charAt(0).toUpperCase() || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-56">
-                    <DropdownMenuItem onClick={() => navigate('/dashboard')}>
-                      <Home className="mr-2 h-4 w-4" />
-                      Dashboard
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/settings')}>
-                      <Settings className="mr-2 h-4 w-4" />
-                      Settings
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      Sign Out
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button 
+                    variant="ghost" 
+                    className="relative h-8 w-8 rounded-full focus-visible:ring-2 focus-visible:ring-primary"
+                    aria-label="User menu"
+                  >
+                    <Avatar className="h-8 w-8">
+                      <AvatarFallback className="bg-primary/10 text-primary">
+                        {user?.email?.charAt(0).toUpperCase() || 'U'}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg z-50">
+                  <DropdownMenuItem onClick={() => navigate('/dashboard')}>
+                    <Home className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/settings')}>
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <div className="hidden md:flex items-center gap-2">
                 <Button 
@@ -294,27 +207,16 @@ const EnhancedUnifiedNavigation: React.FC<NavigationProps> = ({
                     variant="ghost" 
                     size="icon" 
                     className="md:hidden"
-                    aria-label="Navigation menu"
+                    aria-label="Toggle navigation menu"
                   >
                     {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px]">
+                <SheetContent side="right" className="w-[300px] z-50">
                   <SheetHeader>
                     <SheetTitle>Navigation</SheetTitle>
                   </SheetHeader>
-                  <nav className="flex flex-col gap-4 mt-6">
-                    {/* Mobile Add Content CTA */}
-                    {isLoggedIn && (
-                      <Button 
-                        onClick={() => { navigate('/save'); setMobileMenuOpen(false); }}
-                        className="w-full justify-start bg-primary hover:bg-primary/90 text-primary-foreground"
-                      >
-                        <Plus className="mr-3 h-5 w-5" />
-                        Add Content
-                      </Button>
-                    )}
-
+                  <nav className="flex flex-col gap-4 mt-6" role="navigation" aria-label="Mobile navigation">
                     {currentNavItems.map((item) => (
                       <Link 
                         key={item.path}

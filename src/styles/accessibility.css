@@ -32,7 +32,11 @@
 
 /* High contrast mode */
 .high-contrast {
-  filter: contrast(1.5);
+  filter: contrast(1.5) brightness(1.1);
+}
+
+.high-contrast * {
+  border-color: currentColor !important;
 }
 
 /* Grayscale mode */
@@ -54,6 +58,32 @@
   animation: none !important;
 }
 
+/* Remove all blinking and flashing animations */
+@keyframes none {
+  0%, 100% { opacity: 1; }
+}
+
+/* Override any potential blinking */
+*[class*="blink"],
+*[class*="flash"],
+.animate-pulse,
+.animate-bounce {
+  animation: none !important;
+}
+
+/* Safe, subtle animations only */
+.safe-fade {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.safe-scale {
+  transition: transform 0.2s ease-in-out;
+}
+
+.safe-scale:hover {
+  transform: scale(1.02);
+}
+
 /* Link highlighting */
 .highlight-links a {
   background-color: rgba(59, 130, 246, 0.1);
@@ -65,10 +95,6 @@
 }
 
 /* Screen reader mode improvements */
-.screen-reader-mode {
-  /* Improve focus indicators */
-}
-
 .screen-reader-mode *:focus {
   outline: 3px solid #005fcc !important;
   outline-offset: 2px !important;
@@ -87,6 +113,36 @@
   --foreground: 0 0% 100%;
   --primary: 210 100% 70%;
   --primary-foreground: 0 0% 0%;
+  --border: 0 0% 100%;
+}
+
+/* Improved focus indicators */
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+/* Skip link styling */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  z-index: 1000;
+  transition: top 0.2s ease-in-out;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 /* Print styles for accessibility */
@@ -101,21 +157,36 @@
     clip: auto !important;
     white-space: normal !important;
   }
+  
+  /* Hide decorative elements when printing */
+  .no-print {
+    display: none !important;
+  }
 }
 
-/* Focus trap styles */
-.focus-trap {
-  position: relative;
+/* RTL support improvements */
+[dir="rtl"] {
+  text-align: right;
 }
 
-.focus-trap::before,
-.focus-trap::after {
-  content: '';
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
+[dir="rtl"] .flex {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .ml-auto {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+[dir="rtl"] .mr-auto {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+/* Ensure proper contrast ratios */
+.text-muted-foreground {
+  color: hsl(var(--muted-foreground));
+  /* Ensure 4.5:1 contrast ratio minimum */
 }
 
 /* Announcement region */
@@ -125,4 +196,26 @@
   width: 1px;
   height: 1px;
   overflow: hidden;
+}
+
+/* Safe hover effects */
+.safe-hover:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: background-color 0.2s ease;
+}
+
+.dark .safe-hover:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Ensure minimum touch target size */
+@media (pointer: coarse) {
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a[role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }

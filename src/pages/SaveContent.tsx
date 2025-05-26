@@ -1,79 +1,205 @@
 
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import MainMenu from '@/components/navigation/MainMenu';
-import SaveContentComponent from '@/components/SaveContent';
-import { SaveContentMain } from '@/components/SaveContent/SaveContentMain';
-import { Tag } from '@/types';
+import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
+import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { Plus, Upload, Link as LinkIcon, FileText, Tag } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const SaveContent = () => {
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('url');
+  const [url, setUrl] = useState('');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [tags, setTags] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
-  const handleSaveContent = (url: string, tags: Tag[]) => {
-    console.log('Content saved:', { url, tags });
-    navigate('/dashboard');
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // Simulate saving content
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      toast({
+        title: "Content saved successfully!",
+        description: "Your content has been added to your library.",
+      });
+
+      // Reset form
+      setUrl('');
+      setTitle('');
+      setDescription('');
+      setTags('');
+    } catch (error) {
+      toast({
+        title: "Error saving content",
+        description: "Please try again later.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleFileUploadComplete = (fileDetails: {
-    file_url: string;
-    file_type: "image" | "pdf";
-    file_size: number;
-    title: string;
-  }) => {
-    console.log('File uploaded:', fileDetails);
-    navigate('/dashboard');
-  };
-
-  if (!user) {
-    navigate('/login');
-    return null;
-  }
+  const quickSaveOptions = [
+    {
+      title: "Save URL",
+      description: "Save any webpage or article",
+      icon: LinkIcon,
+      action: () => document.getElementById('url-input')?.focus()
+    },
+    {
+      title: "Upload File",
+      description: "Upload documents, images, or PDFs",
+      icon: Upload,
+      action: () => toast({ title: "File upload coming soon!" })
+    },
+    {
+      title: "Quick Note",
+      description: "Write and save a quick note",
+      icon: FileText,
+      action: () => document.getElementById('title-input')?.focus()
+    }
+  ];
 
   return (
-    <>
+    <EnhancedUnifiedLayout>
       <Helmet>
-        <title>Save Content - Accio</title>
-        <meta name="description" content="Save and organize your favorite web content with AI-powered tagging and insights" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Save Content - Accio Knowledge Library</title>
+        <meta name="description" content="Save articles, notes, and files to your personal knowledge library with AI-powered organization." />
       </Helmet>
-      
-      <div className="min-h-screen bg-background">
-        <MainMenu />
-        <main id="main-content" role="main" aria-label="Save content page" className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <SaveContentMain
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              handleSaveContent={handleSaveContent}
-              handleFileUploadComplete={handleFileUploadComplete}
-            />
-            
-            <div className="space-y-6">
-              <div className="bg-card rounded-lg border p-6">
-                <h3 className="font-semibold mb-4">Quick Tips</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li>• Paste any URL to save web content</li>
-                  <li>• Add tags to organize your content</li>
-                  <li>• Upload PDFs and images directly</li>
-                  <li>• Use AI-powered search to find content later</li>
-                </ul>
-              </div>
-              
-              <div className="bg-card rounded-lg border p-6">
-                <h3 className="font-semibold mb-4">Recent Activity</h3>
-                <p className="text-sm text-muted-foreground">
-                  Your recent saves will appear here
-                </p>
-              </div>
+
+      <UnifiedSpacing.Section>
+        <UnifiedSpacing.Container>
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-8">
+              <UnifiedTypography.H1>
+                Save Content to Your Library
+              </UnifiedTypography.H1>
+              <UnifiedTypography.Lead>
+                Add articles, notes, files, and more to your personal knowledge collection.
+              </UnifiedTypography.Lead>
             </div>
+
+            {/* Quick Save Options */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {quickSaveOptions.map((option, index) => (
+                <Card 
+                  key={index} 
+                  className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:-translate-y-1"
+                  onClick={option.action}
+                >
+                  <CardHeader className="text-center">
+                    <div className="w-12 h-12 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                      <option.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-lg">{option.title}</CardTitle>
+                    <CardDescription>{option.description}</CardDescription>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+
+            {/* Main Save Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Plus className="h-5 w-5" />
+                  Add New Content
+                </CardTitle>
+                <CardDescription>
+                  Fill in the details below to save content to your library.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  {/* URL Input */}
+                  <div className="space-y-2">
+                    <label htmlFor="url-input" className="text-sm font-medium">
+                      URL (optional)
+                    </label>
+                    <Input
+                      id="url-input"
+                      type="url"
+                      placeholder="https://example.com/article"
+                      value={url}
+                      onChange={(e) => setUrl(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Title Input */}
+                  <div className="space-y-2">
+                    <label htmlFor="title-input" className="text-sm font-medium">
+                      Title <span className="text-destructive">*</span>
+                    </label>
+                    <Input
+                      id="title-input"
+                      type="text"
+                      placeholder="Enter a title for your content"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      required
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div className="space-y-2">
+                    <label htmlFor="description" className="text-sm font-medium">
+                      Description (optional)
+                    </label>
+                    <Textarea
+                      id="description"
+                      placeholder="Add a description or notes about this content"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      rows={4}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Tags */}
+                  <div className="space-y-2">
+                    <label htmlFor="tags" className="text-sm font-medium flex items-center gap-2">
+                      <Tag className="h-4 w-4" />
+                      Tags (optional)
+                    </label>
+                    <Input
+                      id="tags"
+                      type="text"
+                      placeholder="research, productivity, web-dev (separate with commas)"
+                      value={tags}
+                      onChange={(e) => setTags(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+
+                  {/* Submit Button */}
+                  <Button 
+                    type="submit" 
+                    size="lg" 
+                    className="w-full" 
+                    disabled={isLoading || !title.trim()}
+                  >
+                    {isLoading ? 'Saving...' : 'Save Content'}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
-        </main>
-      </div>
-    </>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+    </EnhancedUnifiedLayout>
   );
 };
 

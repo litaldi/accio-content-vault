@@ -67,7 +67,7 @@ const EnhancedUnifiedFooter: React.FC = () => {
                   className="text-sm"
                   aria-label="Email address for newsletter"
                 />
-                <Button size="sm" className="shrink-0">
+                <Button size="sm" className="shrink-0" aria-label="Subscribe to newsletter">
                   <Mail className="h-4 w-4" />
                   <span className="sr-only">Subscribe</span>
                 </Button>
@@ -76,13 +76,13 @@ const EnhancedUnifiedFooter: React.FC = () => {
 
             {/* Social Links */}
             <div className="flex gap-2">
-              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Twitter">
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Follow us on Twitter">
                 <Twitter className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="GitHub">
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="View our GitHub">
                 <Github className="h-4 w-4" />
               </Button>
-              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="LinkedIn">
+              <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Connect on LinkedIn">
                 <Linkedin className="h-4 w-4" />
               </Button>
             </div>

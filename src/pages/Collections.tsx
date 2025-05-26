@@ -1,252 +1,167 @@
 
 import React, { useState } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import Navbar from '@/components/Navbar';
-import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
+import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
+import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { SavedContent } from '@/types';
-import { Folder, FolderPlus, MoreVertical, Plus } from 'lucide-react';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { mockContents } from '@/lib/mock-data';
-import { Collection } from '@/types';
-import ContentList from '@/components/ContentList';
-
-// Mock collection data
-const mockCollections: Collection[] = [
-  {
-    id: 'col1',
-    name: 'Work Resources',
-    description: 'Useful articles and resources for work',
-    content_ids: ['1', '2'],
-    created_at: new Date(2025, 4, 10).toISOString()
-  },
-  {
-    id: 'col2',
-    name: 'Learning Material',
-    description: 'Educational content for personal development',
-    content_ids: ['3', '4'],
-    created_at: new Date(2025, 4, 15).toISOString()
-  },
-  {
-    id: 'col3',
-    name: 'Project Ideas',
-    description: 'Inspiration for future projects',
-    content_ids: [],
-    created_at: new Date(2025, 4, 17).toISOString()
-  }
-];
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Search, Plus, Folder, FileText, Calendar, Tag } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const Collections = () => {
-  const [collections, setCollections] = useState<Collection[]>(mockCollections);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [newCollectionName, setNewCollectionName] = useState('');
-  const [newCollectionDescription, setNewCollectionDescription] = useState('');
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
-  const { toast } = useToast();
-  const navigate = useNavigate();
-  
-  // This would be replaced with actual authentication check
-  const isLoggedIn = true;
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleLogout = () => {
-    navigate('/');
-  };
-
-  const handleCreateCollection = () => {
-    if (!newCollectionName.trim()) {
-      toast({
-        title: "Name required",
-        description: "Please enter a collection name",
-        variant: "destructive",
-      });
-      return;
+  // Mock data for collections
+  const collections = [
+    {
+      id: 1,
+      name: "Web Development",
+      description: "Articles and resources about modern web development",
+      itemCount: 23,
+      tags: ["JavaScript", "React", "CSS"],
+      lastUpdated: "2 days ago",
+      color: "bg-blue-500"
+    },
+    {
+      id: 2,
+      name: "Design Inspiration",
+      description: "UI/UX designs and creative inspiration",
+      itemCount: 15,
+      tags: ["Design", "UI/UX", "Inspiration"],
+      lastUpdated: "1 week ago",
+      color: "bg-purple-500"
+    },
+    {
+      id: 3,
+      name: "Research Papers",
+      description: "Academic papers and research materials",
+      itemCount: 8,
+      tags: ["Research", "Academic", "Science"],
+      lastUpdated: "3 days ago",
+      color: "bg-green-500"
+    },
+    {
+      id: 4,
+      name: "Productivity Tips",
+      description: "Tools and techniques for better productivity",
+      itemCount: 31,
+      tags: ["Productivity", "Tools", "Workflows"],
+      lastUpdated: "5 days ago",
+      color: "bg-orange-500"
     }
-    
-    const newCollection: Collection = {
-      id: `col${collections.length + 1}`,
-      name: newCollectionName,
-      description: newCollectionDescription,
-      content_ids: [],
-      created_at: new Date().toISOString()
-    };
-    
-    setCollections([...collections, newCollection]);
-    setIsCreateDialogOpen(false);
-    setNewCollectionName('');
-    setNewCollectionDescription('');
-    
-    toast({
-      title: "Collection created",
-      description: "Your new collection has been created"
-    });
-  };
+  ];
 
-  const handleDeleteCollection = (collectionId: string) => {
-    const updatedCollections = collections.filter(collection => collection.id !== collectionId);
-    setCollections(updatedCollections);
-    
-    if (selectedCollection?.id === collectionId) {
-      setSelectedCollection(null);
-    }
-    
-    toast({
-      title: "Collection deleted",
-      description: "The collection has been deleted"
-    });
-  };
-
-  // Get contents for a specific collection
-  const getCollectionContents = (contentIds: string[]) => {
-    return mockContents.filter(content => contentIds.includes(content.id));
-  };
+  const filteredCollections = collections.filter(collection =>
+    collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    collection.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    collection.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold">Collections</h1>
-          <Button onClick={() => setIsCreateDialogOpen(true)} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" />
-            New Collection
-          </Button>
-        </div>
-        
-        {collections.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <FolderPlus className="h-8 w-8 text-primary" />
+    <EnhancedUnifiedLayout>
+      <Helmet>
+        <title>Collections - Accio Knowledge Library</title>
+        <meta name="description" content="Organize your saved content into collections for easy access and management." />
+      </Helmet>
+
+      <UnifiedSpacing.Section>
+        <UnifiedSpacing.Container>
+          {/* Header */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+              <UnifiedTypography.H1>Collections</UnifiedTypography.H1>
+              <UnifiedTypography.Lead>
+                Organize your knowledge into meaningful collections.
+              </UnifiedTypography.Lead>
             </div>
-            <h2 className="text-xl font-semibold mb-2">No collections yet</h2>
-            <p className="text-muted-foreground mb-6">
-              Create a collection to organize your saved content
-            </p>
-            <Button onClick={() => setIsCreateDialogOpen(true)}>Create Collection</Button>
+            <Button className="shrink-0">
+              <Plus className="h-4 w-4 mr-2" />
+              New Collection
+            </Button>
           </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {collections.map((collection) => (
-              <Card key={collection.id} className="hover:shadow-md transition-shadow">
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-start gap-2">
-                      <Folder className="h-5 w-5 text-primary mt-1" />
-                      <div>
-                        <CardTitle className="line-clamp-1">{collection.name}</CardTitle>
-                        <CardDescription>
-                          {getCollectionContents(collection.content_ids).length} items
-                        </CardDescription>
-                      </div>
+
+          {/* Search */}
+          <div className="relative mb-8">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+            <Input
+              type="text"
+              placeholder="Search collections..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+
+          {/* Collections Grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCollections.map((collection) => (
+              <Card 
+                key={collection.id} 
+                className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer"
+              >
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className={cn(
+                      "w-12 h-12 rounded-lg flex items-center justify-center",
+                      collection.color
+                    )}>
+                      <Folder className="h-6 w-6 text-white" />
                     </div>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <MoreVertical className="h-4 w-4" />
-                          <span className="sr-only">Menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem 
-                          onClick={() => handleDeleteCollection(collection.id)}
-                          className="text-destructive"
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Badge variant="secondary">
+                      {collection.itemCount} items
+                    </Badge>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                  <CardTitle className="line-clamp-1">{collection.name}</CardTitle>
+                  <CardDescription className="line-clamp-2">
                     {collection.description}
-                  </p>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-1">
+                    {collection.tags.map((tag, index) => (
+                      <Badge key={index} variant="outline" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  {/* Last Updated */}
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="h-3 w-3 mr-1" />
+                    Updated {collection.lastUpdated}
+                  </div>
                 </CardContent>
-                <CardFooter>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => setSelectedCollection(collection)}
-                  >
-                    View Contents
-                  </Button>
-                </CardFooter>
               </Card>
             ))}
           </div>
-        )}
-        
-        {/* Create Collection Dialog */}
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create New Collection</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <label htmlFor="name" className="text-sm font-medium">
-                  Name
-                </label>
-                <Input
-                  id="name"
-                  placeholder="Collection name"
-                  value={newCollectionName}
-                  onChange={(e) => setNewCollectionName(e.target.value)}
-                />
-              </div>
-              <div className="grid gap-2">
-                <label htmlFor="description" className="text-sm font-medium">
-                  Description (optional)
-                </label>
-                <Input
-                  id="description"
-                  placeholder="Brief description of this collection"
-                  value={newCollectionDescription}
-                  onChange={(e) => setNewCollectionDescription(e.target.value)}
-                />
-              </div>
+
+          {/* Empty State */}
+          {filteredCollections.length === 0 && (
+            <div className="text-center py-12">
+              <Folder className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <UnifiedTypography.H3 className="mb-2">
+                {searchQuery ? 'No collections found' : 'No collections yet'}
+              </UnifiedTypography.H3>
+              <UnifiedTypography.Body className="text-muted-foreground mb-4">
+                {searchQuery 
+                  ? 'Try adjusting your search terms.'
+                  : 'Create your first collection to organize your content.'
+                }
+              </UnifiedTypography.Body>
+              {!searchQuery && (
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Collection
+                </Button>
+              )}
             </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleCreateCollection}>Create Collection</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-        
-        {/* Collection Content View Dialog */}
-        <Dialog open={!!selectedCollection} onOpenChange={(open) => !open && setSelectedCollection(null)}>
-          <DialogContent className="sm:max-w-[800px] max-h-[80vh] overflow-y-auto">
-            {selectedCollection && (
-              <>
-                <DialogHeader>
-                  <DialogTitle>{selectedCollection.name}</DialogTitle>
-                </DialogHeader>
-                <div className="py-4">
-                  <p className="text-muted-foreground mb-4">
-                    {selectedCollection.description}
-                  </p>
-                  
-                  {selectedCollection.content_ids.length > 0 ? (
-                    <ContentList contents={getCollectionContents(selectedCollection.content_ids)} />
-                  ) : (
-                    <div className="text-center py-8">
-                      <p className="text-muted-foreground">
-                        This collection is empty. Add content from your dashboard.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </>
-            )}
-          </DialogContent>
-        </Dialog>
-      </main>
-    </div>
+          )}
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+    </EnhancedUnifiedLayout>
   );
 };
 

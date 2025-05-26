@@ -1,316 +1,186 @@
 
-import React, { useState, useEffect } from 'react';
-import { useToast } from '@/hooks/use-toast';
-import Navbar from '@/components/Navbar';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from '@/components/ui/button';
-import { RefreshCw, Download, Calendar } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import EnhancedAnalyticsCharts from '@/components/Analytics/EnhancedAnalyticsCharts';
-import { 
-  enhancedAnalyticsService, 
-  ContentStats, 
-  TagInsights, 
-  SearchInsights, 
-  ActivityInsights 
-} from '@/services/enhancedAnalyticsService';
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
+import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
+import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { TrendingUp, FileText, Calendar, Tag, Activity } from 'lucide-react';
 
 const Analytics = () => {
-  const [activeTab, setActiveTab] = useState<string>("overview");
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
-  
-  // Analytics data state
-  const [contentStats, setContentStats] = useState<ContentStats | null>(null);
-  const [tagInsights, setTagInsights] = useState<TagInsights | null>(null);
-  const [searchInsights, setSearchInsights] = useState<SearchInsights | null>(null);
-  const [activityInsights, setActivityInsights] = useState<ActivityInsights | null>(null);
-  
-  const navigate = useNavigate();
-  const { toast } = useToast();
+  // Mock data for charts
+  const monthlyData = [
+    { month: 'Jan', saved: 12, accessed: 45 },
+    { month: 'Feb', saved: 19, accessed: 52 },
+    { month: 'Mar', saved: 15, accessed: 38 },
+    { month: 'Apr', saved: 22, accessed: 67 },
+    { month: 'May', saved: 28, accessed: 73 },
+    { month: 'Jun', saved: 31, accessed: 89 }
+  ];
 
-  // This would be replaced with actual authentication check
-  const isLoggedIn = true;
+  const categoryData = [
+    { name: 'Web Development', value: 35, color: '#3b82f6' },
+    { name: 'Design', value: 25, color: '#8b5cf6' },
+    { name: 'Research', value: 20, color: '#10b981' },
+    { name: 'Productivity', value: 20, color: '#f59e0b' }
+  ];
 
-  const loadAnalyticsData = async () => {
-    try {
-      setIsRefreshing(true);
-      
-      // Simulate loading delay for better UX
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      const [content, tags, search, activity] = await Promise.all([
-        Promise.resolve(enhancedAnalyticsService.getContentStats()),
-        Promise.resolve(enhancedAnalyticsService.getTagInsights()),
-        Promise.resolve(enhancedAnalyticsService.getSearchInsights()),
-        Promise.resolve(enhancedAnalyticsService.getActivityInsights())
-      ]);
-
-      setContentStats(content);
-      setTagInsights(tags);
-      setSearchInsights(search);
-      setActivityInsights(activity);
-      setLastUpdated(new Date());
-      
-      toast({
-        title: "Analytics updated",
-        description: "Your latest insights have been loaded successfully."
-      });
-    } catch (error) {
-      console.error('Error loading analytics:', error);
-      toast({
-        title: "Error loading analytics",
-        description: "Failed to refresh your analytics data. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsRefreshing(false);
+  const stats = [
+    {
+      title: "Total Items",
+      value: "127",
+      change: "+12%",
+      icon: FileText,
+      color: "text-blue-600"
+    },
+    {
+      title: "This Month",
+      value: "31",
+      change: "+23%",
+      icon: Calendar,
+      color: "text-green-600"
+    },
+    {
+      title: "Active Tags",
+      value: "18",
+      change: "+5%",
+      icon: Tag,
+      color: "text-purple-600"
+    },
+    {
+      title: "Weekly Access",
+      value: "89",
+      change: "+18%",
+      icon: Activity,
+      color: "text-orange-600"
     }
-  };
-
-  const handleExportData = () => {
-    try {
-      const analyticsData = {
-        contentStats,
-        tagInsights,
-        searchInsights,
-        activityInsights,
-        exportedAt: new Date().toISOString()
-      };
-      
-      const dataStr = JSON.stringify(analyticsData, null, 2);
-      const dataBlob = new Blob([dataStr], { type: 'application/json' });
-      const url = URL.createObjectURL(dataBlob);
-      
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `analytics-export-${new Date().toISOString().split('T')[0]}.json`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-      
-      toast({
-        title: "Export successful",
-        description: "Your analytics data has been downloaded."
-      });
-    } catch (error) {
-      toast({
-        title: "Export failed",
-        description: "Failed to export analytics data. Please try again.",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleLogout = () => {
-    navigate('/');
-  };
-
-  // Load data on component mount
-  useEffect(() => {
-    loadAnalyticsData();
-  }, []);
-
-  if (!contentStats || !tagInsights || !searchInsights || !activityInsights) {
-    return (
-      <div className="min-h-screen flex flex-col bg-background">
-        <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-        <main className="flex-grow container mx-auto px-4 py-8">
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-      
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold">Enhanced Analytics</h1>
-            <p className="text-muted-foreground mt-1">
-              Comprehensive insights into your content library usage
-            </p>
+    <EnhancedUnifiedLayout>
+      <Helmet>
+        <title>Analytics - Accio Knowledge Library</title>
+        <meta name="description" content="Track your knowledge consumption patterns and discover insights about your learning habits." />
+      </Helmet>
+
+      <UnifiedSpacing.Section>
+        <UnifiedSpacing.Container>
+          {/* Header */}
+          <div className="mb-8">
+            <UnifiedTypography.H1>Analytics Dashboard</UnifiedTypography.H1>
+            <UnifiedTypography.Lead>
+              Insights into your knowledge consumption and learning patterns.
+            </UnifiedTypography.Lead>
           </div>
-          
-          <div className="flex items-center gap-3">
-            <div className="text-sm text-muted-foreground flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
-              Updated {lastUpdated.toLocaleTimeString()}
-            </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={loadAnalyticsData}
-              disabled={isRefreshing}
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
-              Refresh
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={handleExportData}
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
+
+          {/* Stats Grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {stats.map((stat, index) => (
+              <Card key={index}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium">
+                    {stat.title}
+                  </CardTitle>
+                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stat.value}</div>
+                  <p className="text-xs text-muted-foreground">
+                    <span className="text-green-600">{stat.change}</span> from last month
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </div>
-        
-        <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full max-w-md mx-auto grid-cols-3">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="performance">Performance</TabsTrigger>
-            <TabsTrigger value="insights">Insights</TabsTrigger>
-          </TabsList>
-          
-          <div className="mt-6">
-            <TabsContent value="overview">
-              <EnhancedAnalyticsCharts
-                contentStats={contentStats}
-                tagInsights={tagInsights}
-                searchInsights={searchInsights}
-                activityInsights={activityInsights}
-              />
-            </TabsContent>
-            
-            <TabsContent value="performance">
-              <div className="grid gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Tag Performance Summary</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid md:grid-cols-3 gap-6">
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-green-600">{tagInsights.confirmedTags}</div>
-                        <div className="text-sm text-muted-foreground">Confirmed Tags</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-red-600">{tagInsights.rejectedTags}</div>
-                        <div className="text-sm text-muted-foreground">Rejected Tags</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-primary">{tagInsights.confirmationRate.toFixed(1)}%</div>
-                        <div className="text-sm text-muted-foreground">Accuracy Rate</div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
 
-                <div className="grid md:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Search Efficiency</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <div className="flex justify-between">
-                          <span>Average Results per Search</span>
-                          <span className="font-medium">{searchInsights.averageResultsPerSearch}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Semantic Search Usage</span>
-                          <span className="font-medium">{searchInsights.semanticSearchUsage.toFixed(1)}%</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Query Diversity</span>
-                          <span className="font-medium">{((searchInsights.uniqueQueries / searchInsights.totalSearches) * 100).toFixed(1)}%</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+          {/* Charts Grid */}
+          <div className="grid lg:grid-cols-2 gap-8 mb-8">
+            {/* Monthly Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5" />
+                  Monthly Activity
+                </CardTitle>
+                <CardDescription>
+                  Content saved vs. accessed over time
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={monthlyData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Bar dataKey="saved" fill="#3b82f6" name="Saved" />
+                    <Bar dataKey="accessed" fill="#10b981" name="Accessed" />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Content Growth</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {contentStats.itemsByTimeframe.map((item) => (
-                          <div key={item.period} className="flex justify-between">
-                            <span>{item.period}</span>
-                            <span className="font-medium">{item.count} items</span>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="insights">
-              <div className="grid gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Key Insights & Recommendations</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {tagInsights.confirmationRate > 85 ? (
-                        <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                          <h3 className="font-medium text-green-800 dark:text-green-300">Excellent Tag Accuracy!</h3>
-                          <p className="text-sm text-green-700 dark:text-green-400 mt-1">
-                            Your tag confirmation rate of {tagInsights.confirmationRate.toFixed(1)}% indicates excellent AI tagging performance.
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-800">
-                          <h3 className="font-medium text-yellow-800 dark:text-yellow-300">Tag Accuracy Improving</h3>
-                          <p className="text-sm text-yellow-700 dark:text-yellow-400 mt-1">
-                            Continue providing feedback on tags to improve AI accuracy. Current rate: {tagInsights.confirmationRate.toFixed(1)}%
-                          </p>
-                        </div>
-                      )}
-
-                      {searchInsights.semanticSearchUsage < 30 ? (
-                        <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                          <h3 className="font-medium text-blue-800 dark:text-blue-300">Try Semantic Search</h3>
-                          <p className="text-sm text-blue-700 dark:text-blue-400 mt-1">
-                            You're using {searchInsights.semanticSearchUsage.toFixed(1)}% semantic search. Try natural language queries like "articles about career advice" for better results.
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
-                          <h3 className="font-medium text-purple-800 dark:text-purple-300">Great Search Habits!</h3>
-                          <p className="text-sm text-purple-700 dark:text-purple-400 mt-1">
-                            You're effectively using semantic search ({searchInsights.semanticSearchUsage.toFixed(1)}% of searches). This helps find content more intuitively.
-                          </p>
-                        </div>
-                      )}
-
-                      {activityInsights.engagementScore > 80 ? (
-                        <div className="p-4 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg border border-emerald-200 dark:border-emerald-800">
-                          <h3 className="font-medium text-emerald-800 dark:text-emerald-300">High Engagement</h3>
-                          <p className="text-sm text-emerald-700 dark:text-emerald-400 mt-1">
-                            Your engagement score of {activityInsights.engagementScore}% shows you're actively using your content library. Keep it up!
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="p-4 bg-orange-50 dark:bg-orange-900/20 rounded-lg border border-orange-200 dark:border-orange-800">
-                          <h3 className="font-medium text-orange-800 dark:text-orange-300">Room for Growth</h3>
-                          <p className="text-sm text-orange-700 dark:text-orange-400 mt-1">
-                            Consider setting up reminders or exploring more content to increase your engagement score ({activityInsights.engagementScore}%).
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
+            {/* Category Distribution */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Content by Category</CardTitle>
+                <CardDescription>
+                  Distribution of your saved content
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <PieChart>
+                    <Pie
+                      data={categoryData}
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={80}
+                      dataKey="value"
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {categoryData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
           </div>
-        </Tabs>
-      </main>
-    </div>
+
+          {/* Weekly Trend */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Weekly Access Pattern</CardTitle>
+              <CardDescription>
+                How often you access your knowledge library throughout the week
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={[
+                  { day: 'Mon', access: 12 },
+                  { day: 'Tue', access: 19 },
+                  { day: 'Wed', access: 15 },
+                  { day: 'Thu', access: 22 },
+                  { day: 'Fri', access: 28 },
+                  { day: 'Sat', access: 8 },
+                  { day: 'Sun', access: 5 }
+                ]}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="access" stroke="#3b82f6" strokeWidth={2} />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+    </EnhancedUnifiedLayout>
   );
 };
 

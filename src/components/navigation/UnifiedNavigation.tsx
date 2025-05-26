@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import EnhancedAccessibilityButton from '@/components/accessibility/EnhancedAccessibilityButton';
-import { Menu, X, Home, BookOpen, BarChart, Users, Settings, LogOut, Plus, Candy } from 'lucide-react';
+import { Menu, X, Home, BookOpen, BarChart, Users, Settings, LogOut, Plus } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
@@ -116,7 +116,7 @@ const UnifiedNavigation: React.FC = () => {
 
           {/* Desktop Navigation */}
           {!isMobile && (
-            <nav className="hidden md:flex items-center gap-1" role="navigation">
+            <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
               {currentNavItems.map((item) => (
                 <Link
                   key={item.path}
@@ -139,16 +139,6 @@ const UnifiedNavigation: React.FC = () => {
           
           {/* Right Actions */}
           <div className="flex items-center gap-2">
-            {/* Candy Button - moved to main navigation */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-amber-500 hover:text-amber-600 hover:bg-amber-50"
-              aria-label="Special features"
-            >
-              <Candy className="h-5 w-5" />
-            </Button>
-
             <ModeToggle />
             <EnhancedAccessibilityButton />
             
@@ -167,7 +157,7 @@ const UnifiedNavigation: React.FC = () => {
                     </Avatar>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">
+                <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg z-50">
                   <DropdownMenuItem onClick={() => navigate('/dashboard')}>
                     <Home className="mr-2 h-4 w-4" />
                     Dashboard
@@ -209,16 +199,16 @@ const UnifiedNavigation: React.FC = () => {
                     variant="ghost" 
                     size="icon" 
                     className="md:hidden"
-                    aria-label="Navigation menu"
+                    aria-label="Toggle navigation menu"
                   >
                     {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="right" className="w-[300px]">
+                <SheetContent side="right" className="w-[300px] z-50">
                   <SheetHeader>
                     <SheetTitle>Navigation</SheetTitle>
                   </SheetHeader>
-                  <nav className="flex flex-col gap-4 mt-6">
+                  <nav className="flex flex-col gap-4 mt-6" role="navigation" aria-label="Mobile navigation">
                     {currentNavItems.map((item) => (
                       <Link 
                         key={item.path}

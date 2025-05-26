@@ -1,234 +1,223 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
-import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
-import ImprovedFooter from '@/components/Footer/ImprovedFooter';
+import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
+import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Switch } from '@/components/ui/switch';
-import { useOnboardingContext } from '@/contexts/OnboardingContext';
-import { PlayCircle, User, Bell, Shield, Palette, ArrowLeft, Home } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { useToast } from '@/hooks/use-toast';
+import { User, Bell, Shield, Download, Trash2 } from 'lucide-react';
 
 const Settings = () => {
-  const navigate = useNavigate();
-  const { resetOnboarding } = useOnboardingContext();
+  const [name, setName] = useState('John Doe');
+  const [email, setEmail] = useState('john@example.com');
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: false,
+    weekly: true
+  });
+  const { toast } = useToast();
 
-  const handleRestartOnboarding = () => {
-    resetOnboarding();
-    window.location.reload(); // Refresh to show onboarding
+  const handleSaveProfile = () => {
+    toast({
+      title: "Profile updated",
+      description: "Your profile information has been saved.",
+    });
+  };
+
+  const handleExportData = () => {
+    toast({
+      title: "Export started",
+      description: "Your data export will be emailed to you shortly.",
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    toast({
+      title: "Account deletion requested",
+      description: "Please check your email to confirm account deletion.",
+      variant: "destructive",
+    });
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <EnhancedUnifiedLayout>
       <Helmet>
         <title>Settings - Accio Knowledge Library</title>
-        <meta name="description" content="Manage your account settings and preferences." />
+        <meta name="description" content="Manage your account settings, preferences, and privacy options." />
       </Helmet>
-      
-      <EnhancedNavigation />
-      
-      {/* Enhanced Header with Navigation */}
-      <div className="border-b bg-card/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(-1)}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate('/dashboard')}
-                className="flex items-center gap-2"
-              >
-                <Home className="h-4 w-4" />
-                Dashboard
-              </Button>
-              <div className="h-4 w-px bg-border" />
-              <h1 className="text-2xl font-bold">Settings</h1>
+
+      <UnifiedSpacing.Section>
+        <UnifiedSpacing.Container>
+          <div className="max-w-4xl mx-auto">
+            {/* Header */}
+            <div className="mb-8">
+              <UnifiedTypography.H1>Settings</UnifiedTypography.H1>
+              <UnifiedTypography.Lead>
+                Manage your account and application preferences.
+              </UnifiedTypography.Lead>
+            </div>
+
+            <div className="space-y-8">
+              {/* Profile Settings */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <User className="h-5 w-5" />
+                    Profile Information
+                  </CardTitle>
+                  <CardDescription>
+                    Update your personal information and email address.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label htmlFor="name" className="text-sm font-medium">
+                        Full Name
+                      </label>
+                      <Input
+                        id="name"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label htmlFor="email" className="text-sm font-medium">
+                        Email Address
+                      </label>
+                      <Input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                  <Button onClick={handleSaveProfile}>
+                    Save Changes
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Notification Settings */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5" />
+                    Notifications
+                  </CardTitle>
+                  <CardDescription>
+                    Configure how you want to receive notifications.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-sm font-medium">Email Notifications</div>
+                      <div className="text-sm text-muted-foreground">
+                        Receive notifications via email
+                      </div>
+                    </div>
+                    <Switch
+                      checked={notifications.email}
+                      onCheckedChange={(checked) =>
+                        setNotifications(prev => ({ ...prev, email: checked }))
+                      }
+                    />
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-sm font-medium">Push Notifications</div>
+                      <div className="text-sm text-muted-foreground">
+                        Receive push notifications in your browser
+                      </div>
+                    </div>
+                    <Switch
+                      checked={notifications.push}
+                      onCheckedChange={(checked) =>
+                        setNotifications(prev => ({ ...prev, push: checked }))
+                      }
+                    />
+                  </div>
+                  <Separator />
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-0.5">
+                      <div className="text-sm font-medium">Weekly Digest</div>
+                      <div className="text-sm text-muted-foreground">
+                        Get a weekly summary of your activity
+                      </div>
+                    </div>
+                    <Switch
+                      checked={notifications.weekly}
+                      onCheckedChange={(checked) =>
+                        setNotifications(prev => ({ ...prev, weekly: checked }))
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Privacy & Security */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Shield className="h-5 w-5" />
+                    Privacy & Security
+                  </CardTitle>
+                  <CardDescription>
+                    Manage your privacy settings and account security.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Button variant="outline" className="w-full justify-start">
+                    Change Password
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start">
+                    Two-Factor Authentication
+                  </Button>
+                  <Button variant="outline" className="w-full justify-start">
+                    Manage Connected Apps
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Data Management */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Data Management</CardTitle>
+                  <CardDescription>
+                    Export your data or delete your account.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-start"
+                    onClick={handleExportData}
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Export My Data
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    className="w-full justify-start"
+                    onClick={handleDeleteAccount}
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Account
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
-        </div>
-      </div>
-      
-      <main className="flex-grow py-16">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="mb-8">
-            <p className="text-xl text-muted-foreground">
-              Manage your account and preferences
-            </p>
-          </div>
-          
-          <div className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <PlayCircle className="h-5 w-5" />
-                  Onboarding & Tutorial
-                </CardTitle>
-                <CardDescription>
-                  Restart the onboarding process to learn about Accio's features
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Button onClick={handleRestartOnboarding} variant="outline">
-                  Restart Onboarding
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
-                  Account
-                </CardTitle>
-                <CardDescription>
-                  Manage your account information
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Email</p>
-                    <p className="text-sm text-muted-foreground">user@example.com</p>
-                  </div>
-                  <Button variant="outline" size="sm">Edit</Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Password</p>
-                    <p className="text-sm text-muted-foreground">Last changed 30 days ago</p>
-                  </div>
-                  <Button variant="outline" size="sm">Change</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="h-5 w-5" />
-                  Notifications
-                </CardTitle>
-                <CardDescription>
-                  Configure your notification preferences
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Email notifications</p>
-                    <p className="text-sm text-muted-foreground">Receive updates via email</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Weekly digest</p>
-                    <p className="text-sm text-muted-foreground">Get a summary of your activity</p>
-                  </div>
-                  <Switch defaultChecked />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Push notifications</p>
-                    <p className="text-sm text-muted-foreground">Get notified on your devices</p>
-                  </div>
-                  <Switch />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Privacy & Security
-                </CardTitle>
-                <CardDescription>
-                  Manage your privacy and security settings
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Two-factor authentication</p>
-                    <p className="text-sm text-muted-foreground">Add an extra layer of security</p>
-                  </div>
-                  <Button variant="outline" size="sm">Enable</Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Data export</p>
-                    <p className="text-sm text-muted-foreground">Download your data</p>
-                  </div>
-                  <Button variant="outline" size="sm">Export</Button>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Account deletion</p>
-                    <p className="text-sm text-muted-foreground">Permanently delete your account</p>
-                  </div>
-                  <Button variant="destructive" size="sm">Delete</Button>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Palette className="h-5 w-5" />
-                  Appearance & Accessibility
-                </CardTitle>
-                <CardDescription>
-                  Customize how Accio looks and feels
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Dark mode</p>
-                    <p className="text-sm text-muted-foreground">Switch to dark theme</p>
-                  </div>
-                  <Switch />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Compact view</p>
-                    <p className="text-sm text-muted-foreground">Show more content on screen</p>
-                  </div>
-                  <Switch />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">High contrast mode</p>
-                    <p className="text-sm text-muted-foreground">Improve readability</p>
-                  </div>
-                  <Switch />
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="font-medium">Reduce motion</p>
-                    <p className="text-sm text-muted-foreground">Minimize animations</p>
-                  </div>
-                  <Switch />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </main>
-      
-      <ImprovedFooter />
-    </div>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+    </EnhancedUnifiedLayout>
   );
 };
 
