@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Typography, Spacing } from '@/components/ui/design-system';
-import { Brain, Sparkles, ArrowRight, Play } from 'lucide-react';
+import { Brain, Sparkles, ArrowRight, Play, Search, TrendingUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HeroSection = () => {
