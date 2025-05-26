@@ -1,4 +1,6 @@
 
+import React from 'react';
+
 /**
  * Accessibility utilities and helpers
  */
@@ -98,23 +100,59 @@ export const keyboardNavigation = {
   }
 };
 
+export const getFocusableElements = (container: HTMLElement): HTMLElement[] => {
+  const selector = 'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  return Array.from(container.querySelectorAll(selector)) as HTMLElement[];
+};
+
+export const trapFocus = (container: HTMLElement) => {
+  const focusableElements = getFocusableElements(container);
+  
+  if (focusableElements.length === 0) return () => {};
+  
+  const firstElement = focusableElements[0];
+  const lastElement = focusableElements[focusableElements.length - 1];
+  
+  const handleTabKey = (e: KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      if (e.shiftKey) {
+        if (document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        }
+      } else {
+        if (document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    }
+  };
+  
+  container.addEventListener('keydown', handleTabKey);
+  
+  return () => container.removeEventListener('keydown', handleTabKey);
+};
+
 export const screenReader = {
   /**
-   * Create screen reader only text
+   * Create screen reader only text component
    */
-  onlyText: (text: string) => (
-    <span className="sr-only">{text}</span>
-  ),
+  createSROnlyText: (text: string): React.ReactElement => {
+    return React.createElement('span', { className: 'sr-only' }, text);
+  },
 
   /**
-   * Skip link for main content
+   * Create skip link component
    */
-  skipLink: (targetId: string, text: string = 'Skip to main content') => (
-    <a
-      href={`#${targetId}`}
-      className="sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-primary text-primary-foreground px-4 py-2 z-50"
-    >
-      {text}
-    </a>
-  )
+  createSkipLink: (targetId: string, text: string = 'Skip to main content'): React.ReactElement => {
+    return React.createElement(
+      'a',
+      {
+        href: `#${targetId}`,
+        className: 'sr-only focus:not-sr-only focus:absolute focus:top-0 focus:left-0 bg-primary text-primary-foreground px-4 py-2 z-50'
+      },
+      text
+    );
+  }
 };
