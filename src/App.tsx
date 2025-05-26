@@ -11,8 +11,12 @@ import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
+import ProtectedRoute from '@/components/ProtectedRoute';
 
-// Lazy load pages for better performance
+// Import Login directly instead of lazy loading to avoid the dynamic import error
+import Login from '@/pages/Login';
+
+// Lazy load other pages for better performance
 const ImprovedIndex = lazy(() => import('@/pages/ImprovedIndex'));
 const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const Save = lazy(() => import('@/pages/Save'));
@@ -44,10 +48,39 @@ function App() {
                       <Suspense fallback={<LoadingSpinner />}>
                         <Routes>
                           <Route path="/" element={<ImprovedIndex />} />
-                          <Route path="/dashboard" element={<Dashboard />} />
-                          <Route path="/save" element={<Save />} />
-                          <Route path="/search" element={<Search />} />
-                          <Route path="/settings" element={<Settings />} />
+                          <Route path="/login" element={<Login />} />
+                          <Route 
+                            path="/dashboard" 
+                            element={
+                              <ProtectedRoute>
+                                <Dashboard />
+                              </ProtectedRoute>
+                            } 
+                          />
+                          <Route 
+                            path="/save" 
+                            element={
+                              <ProtectedRoute>
+                                <Save />
+                              </ProtectedRoute>
+                            } 
+                          />
+                          <Route 
+                            path="/search" 
+                            element={
+                              <ProtectedRoute>
+                                <Search />
+                              </ProtectedRoute>
+                            } 
+                          />
+                          <Route 
+                            path="/settings" 
+                            element={
+                              <ProtectedRoute>
+                                <Settings />
+                              </ProtectedRoute>
+                            } 
+                          />
                         </Routes>
                       </Suspense>
                       

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -7,8 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -18,6 +18,14 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { signIn, user } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,18 +33,16 @@ const Login = () => {
     setError('');
 
     try {
-      // Simulate login
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { error: signInError } = await signIn(email, password);
       
-      // Mock validation
-      if (email === 'demo@accio.app' && password === 'password') {
+      if (signInError) {
+        setError('Invalid email or password. Please try again.');
+      } else {
         toast({
           title: "Welcome back!",
           description: "You've been successfully logged in.",
         });
         navigate('/dashboard');
-      } else {
-        setError('Invalid email or password. Try demo@accio.app / password');
       }
     } catch (error) {
       setError('Something went wrong. Please try again.');
@@ -134,7 +140,7 @@ const Login = () => {
             {/* Demo Notice */}
             <div className="mt-4 p-3 bg-muted rounded-lg">
               <p className="text-sm text-muted-foreground">
-                <strong>Demo:</strong> Use email "demo@accio.app" and password "password"
+                <strong>Demo:</strong> Use any email and password for testing
               </p>
             </div>
           </CardContent>
