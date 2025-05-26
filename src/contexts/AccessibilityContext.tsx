@@ -1,18 +1,20 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { announceToScreenReader } from '@/utils/accessibility';
 
 export interface AccessibilityPreferences {
   highContrast: boolean;
   reducedMotion: boolean;
-  fontSize: 'small' | 'medium' | 'large'; // Changed from 'default' to 'medium'
+  fontSize: 'small' | 'medium' | 'large';
   language: 'en' | 'he' | 'ar';
-  announcements: boolean; // Added
-  keyboardNavigation: boolean; // Added
+  announcements: boolean;
+  keyboardNavigation: boolean;
 }
 
 interface AccessibilityContextType {
   preferences: AccessibilityPreferences;
   updatePreferences: (updates: Partial<AccessibilityPreferences>) => void;
+  announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -33,18 +35,28 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
   const [preferences, setPreferences] = useState<AccessibilityPreferences>({
     highContrast: false,
     reducedMotion: false,
-    fontSize: 'medium', // Changed default
+    fontSize: 'medium',
     language: 'en',
-    announcements: true, // Added
-    keyboardNavigation: true, // Added
+    announcements: true,
+    keyboardNavigation: true,
   });
 
   const updatePreferences = (updates: Partial<AccessibilityPreferences>) => {
     setPreferences(prev => ({ ...prev, ...updates }));
   };
 
+  const handleAnnounceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+    if (preferences.announcements) {
+      announceToScreenReader(message, priority);
+    }
+  };
+
   return (
-    <AccessibilityContext.Provider value={{ preferences, updatePreferences }}>
+    <AccessibilityContext.Provider value={{ 
+      preferences, 
+      updatePreferences, 
+      announceToScreenReader: handleAnnounceToScreenReader 
+    }}>
       {children}
     </AccessibilityContext.Provider>
   );
