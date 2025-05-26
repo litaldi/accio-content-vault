@@ -5,7 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { UnifiedThemeProvider } from '@/contexts/UnifiedThemeContext';
-import { UnifiedMainNavigation } from '@/components/navigation/UnifiedMainNavigation';
+import { CategorizedMainNavigation } from '@/components/navigation/CategorizedMainNavigation';
 import { SkipToContent } from '@/components/common/SkipToContent';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import Footer from '@/components/Footer';
@@ -24,6 +24,7 @@ import Register from '@/pages/Register';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import NotFound from '@/pages/NotFound';
+import Save from '@/pages/Save';
 import QueryProvider from '@/providers/QueryProvider';
 
 const App: React.FC = () => {
@@ -35,7 +36,7 @@ const App: React.FC = () => {
             <Router>
               <div className="App min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
                 <SkipToContent />
-                <UnifiedMainNavigation />
+                <CategorizedMainNavigation />
                 <ErrorBoundary>
                   <main id="main-content" className="flex-grow" tabIndex={-1}>
                     <Routes>
@@ -47,6 +48,7 @@ const App: React.FC = () => {
                       <Route path="/collections" element={<Collections />} />
                       <Route path="/analytics" element={<Analytics />} />
                       <Route path="/integrations" element={<Integrations />} />
+                      <Route path="/save" element={<Save />} />
                       <Route path="/account" element={<AccountSettings />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/login" element={<Login />} />

@@ -13,10 +13,15 @@ export const copy = {
     settings: 'Settings',
     saveContent: 'Save Content',
     features: 'Features',
-    playground: 'Playground',
-    contact: 'Contact',
+    playground: 'Try Demo',
+    contact: 'Help & Support',
     search: 'Search',
-    integrations: 'Integrations'
+    integrations: 'Integrations',
+    overview: 'Overview',
+    tools: 'Tools',
+    content: 'Content',
+    support: 'Support',
+    explore: 'Explore'
   },
   auth: {
     signIn: 'Sign In',
@@ -25,7 +30,8 @@ export const copy = {
     welcome: 'Welcome back!',
     createAccount: 'Create Account',
     forgotPassword: 'Forgot Password?',
-    rememberMe: 'Remember me'
+    rememberMe: 'Remember me',
+    myAccount: 'My Account'
   },
   accessibility: {
     openMenu: 'Open navigation menu',
