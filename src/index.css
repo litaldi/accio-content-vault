@@ -32,6 +32,10 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 217.2 91.2% 59.8%;
     --radius: 0.75rem;
+    
+    /* Slack brand colors */
+    --slack-600: #4a154b;
+    --slack-700: #350d36;
   }
 
   .dark {
@@ -117,6 +121,19 @@
 
   .enterprise-border {
     border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  /* Slack brand utilities */
+  .bg-slack-600 {
+    background-color: hsl(var(--slack-600));
+  }
+
+  .bg-slack-700 {
+    background-color: hsl(var(--slack-700));
+  }
+
+  .hover\:bg-slack-700:hover {
+    background-color: hsl(var(--slack-700));
   }
 }
 

@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Brain, Menu, X, ChevronDown, Shield, Headphones, FileText } from 'lucide-react';
+import { Brain, Menu, X, ChevronDown, Shield, Headphones, FileText, Settings } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const EnterpriseNavigation = () => {
@@ -25,8 +25,8 @@ const EnterpriseNavigation = () => {
       ]
     },
     { name: 'Features', href: '/features', type: 'link' },
-    { name: 'Pricing', href: '/pricing', type: 'link' },
-    { name: 'Resources', href: '/resources', type: 'link' }
+    { name: 'Integrations', href: '/integrations', type: 'link' },
+    { name: 'Pricing', href: '/pricing', type: 'link' }
   ];
 
   const isActive = (href: string) => location.pathname === href;
