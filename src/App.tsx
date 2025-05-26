@@ -20,13 +20,14 @@ import Contact from '@/pages/Contact';
 import Pricing from '@/pages/Pricing';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
-import Accessibility from '@/pages/Accessibility';
+import AccessibilityTest from '@/pages/AccessibilityTest';
 import FAQ from '@/pages/FAQ';
 import Help from '@/pages/Help';
 import Blog from '@/pages/Blog';
 import Sitemap from '@/pages/Sitemap';
 import Reminders from '@/pages/Reminders';
 import OfflinePage from '@/pages/OfflinePage';
+import NotFound from '@/pages/NotFound';
 import ErrorBoundary from '@/components/error/ErrorBoundary';
 import '@/styles/accessibility.css';
 
@@ -64,14 +65,14 @@ const App: React.FC = () => {
                       <Route path="/pricing" element={<Pricing />} />
                       <Route path="/privacy" element={<Privacy />} />
                       <Route path="/terms" element={<Terms />} />
-                      <Route path="/accessibility" element={<Accessibility />} />
+                      <Route path="/accessibility" element={<AccessibilityTest />} />
                       <Route path="/faq" element={<FAQ />} />
                       <Route path="/help" element={<Help />} />
                       <Route path="/blog" element={<Blog />} />
                       <Route path="/sitemap" element={<Sitemap />} />
                       <Route path="/reminders" element={<Reminders />} />
                       <Route path="/offline" element={<OfflinePage />} />
-                      <Route path="*" element={<Navigate to="/" replace />} />
+                      <Route path="*" element={<NotFound />} />
                     </Routes>
                     <Toaster />
                   </div>
