@@ -1,11 +1,12 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useOfflineContent } from '@/hooks/useOfflineContent';
-import { ResponsiveLayout } from '@/components/ui/responsive-layout';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { UnifiedTypography } from '@/components/ui/unified-design-system';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import OfflineContentList from '@/components/OfflineContentList';
 import OfflineIndicator from '@/components/OfflineIndicator';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import { Download, Wifi, Database, RefreshCw } from 'lucide-react';
 
 const OfflinePage: React.FC = () => {
@@ -22,24 +23,20 @@ const OfflinePage: React.FC = () => {
   const cachedCount = offlineContents.length - offlineOnlyCount;
 
   return (
-    <div className="min-h-screen bg-background">
+    <UnifiedLayout>
       <Helmet>
         <title>Offline Access - Accio</title>
         <meta name="description" content="Access your saved content offline" />
       </Helmet>
       
-      <ProfessionalNavigation />
-      
-      <ResponsiveLayout maxWidth="2xl" padding="lg" verticalSpacing="lg">
+      <div className="py-8 max-w-7xl mx-auto space-y-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground mb-2">
-              Offline Access
-            </h1>
-            <p className="text-base text-muted-foreground">
+            <UnifiedTypography.H1>Offline Access</UnifiedTypography.H1>
+            <UnifiedTypography.Body>
               View and interact with your saved content, even without internet
-            </p>
+            </UnifiedTypography.Body>
           </div>
           
           <OfflineIndicator
@@ -50,7 +47,7 @@ const OfflinePage: React.FC = () => {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Cached Content</CardTitle>
@@ -127,8 +124,8 @@ const OfflinePage: React.FC = () => {
             </CardContent>
           </Card>
         )}
-      </ResponsiveLayout>
-    </div>
+      </div>
+    </UnifiedLayout>
   );
 };
 

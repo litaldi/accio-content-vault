@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { UnifiedTypography } from '@/components/ui/unified-design-system';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -36,21 +38,19 @@ const Reminders = () => {
   ]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <UnifiedLayout>
       <Helmet>
         <title>Reminders - Accio</title>
         <meta name="description" content="Manage your content reminders and notifications" />
       </Helmet>
       
-      <ProfessionalNavigation />
-      
-      <main className="container mx-auto px-4 py-8">
+      <div className="py-8">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold mb-2">Reminders</h1>
-            <p className="text-muted-foreground">
+            <UnifiedTypography.H1>Reminders</UnifiedTypography.H1>
+            <UnifiedTypography.Body>
               Stay on top of your important tasks and deadlines
-            </p>
+            </UnifiedTypography.Body>
           </div>
           <div className="flex items-center gap-3">
             <Button className="flex items-center gap-2">
@@ -66,7 +66,7 @@ const Reminders = () => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {reminders.map((reminder) => (
-            <Card key={reminder.id} className="card-interactive group">
+            <Card key={reminder.id} className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group cursor-pointer">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div>
@@ -103,7 +103,7 @@ const Reminders = () => {
           ))}
           
           {/* Create New Reminder Card */}
-          <Card className="card-interactive border-dashed hover:border-primary/50">
+          <Card className="border-dashed hover:border-primary/50 hover:shadow-lg transition-all duration-200 cursor-pointer">
             <CardContent className="flex flex-col items-center justify-center py-12 text-center">
               <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
                 <Plus className="h-6 w-6 text-primary" />
@@ -116,8 +116,8 @@ const Reminders = () => {
             </CardContent>
           </Card>
         </div>
-      </main>
-    </div>
+      </div>
+    </UnifiedLayout>
   );
 };
 

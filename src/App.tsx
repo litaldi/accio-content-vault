@@ -23,13 +23,18 @@ const Settings = lazy(() => import("./pages/Settings"));
 const About = lazy(() => import("./pages/About"));
 const Features = lazy(() => import("./pages/Features"));
 const Pricing = lazy(() => import("./pages/Pricing"));
+const Blog = lazy(() => import("./pages/Blog"));
 const FAQ = lazy(() => import("./pages/FAQ"));
 const Help = lazy(() => import("./pages/Help"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Terms = lazy(() => import("./pages/Terms"));
+const Privacy = lazy(() => import("./pages/Privacy"));
 const BlogPost = lazy(() => import("./pages/BlogPost"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AccessibilityTest = lazy(() => import("./pages/AccessibilityTest"));
 const AccessibilityStatement = lazy(() => import("./pages/AccessibilityStatement"));
 const OfflinePage = lazy(() => import("./pages/OfflinePage"));
+const Reminders = lazy(() => import("./pages/Reminders"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -74,12 +79,17 @@ const App = () => (
                     <Route path="/about" element={<About />} />
                     <Route path="/features" element={<Features />} />
                     <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/blog/:slug" element={<BlogPost />} />
                     <Route path="/faq" element={<FAQ />} />
                     <Route path="/help" element={<Help />} />
-                    <Route path="/blog/:slug" element={<BlogPost />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/privacy" element={<Privacy />} />
                     <Route path="/accessibility-test" element={<AccessibilityTest />} />
                     <Route path="/accessibility-statement" element={<AccessibilityStatement />} />
                     <Route path="/offline" element={<OfflinePage />} />
+                    <Route path="/reminders" element={<Reminders />} />
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </Suspense>

@@ -16,7 +16,8 @@ import {
   LogOut,
   Menu,
   X,
-  Sparkles
+  Sparkles,
+  Info
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -31,7 +32,7 @@ const ProfessionalNavigation: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Flat navigation structure - authenticated users
+  // Completely flat navigation - authenticated users
   const authenticatedNavItems = [
     { name: 'Home', path: '/', icon: Home },
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
@@ -43,12 +44,13 @@ const ProfessionalNavigation: React.FC = () => {
     { name: 'Settings', path: '/settings', icon: Settings },
   ];
 
-  // Flat navigation structure - public users
+  // Completely flat navigation - public users
   const publicNavItems = [
     { name: 'Home', path: '/', icon: Home },
     { name: 'Features', path: '/features', icon: Sparkles },
-    { name: 'About', path: '/about', icon: User },
+    { name: 'About', path: '/about', icon: Info },
     { name: 'Pricing', path: '/pricing', icon: BarChart3 },
+    { name: 'Blog', path: '/blog', icon: FolderOpen },
     { name: 'Help', path: '/help', icon: HelpCircle },
   ];
 
@@ -154,7 +156,7 @@ const ProfessionalNavigation: React.FC = () => {
 
         {/* Mobile Menu - Completely Flat */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border animate-slide-up">
+          <div className="lg:hidden py-4 border-t border-border animate-fade-in">
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
               {/* All Navigation Items */}
               {mainNavItems.map((item) => (

@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
-import ImprovedFooter from '@/components/layout/ImprovedFooter';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { UnifiedTypography } from '@/components/ui/unified-design-system';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -83,111 +84,103 @@ const Help = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <UnifiedLayout>
       <Helmet>
         <title>Help Center - Accio Knowledge Engine</title>
         <meta name="description" content="Get help and support for Accio. Find answers to common questions, tutorials, and contact our support team." />
       </Helmet>
 
-      <ProfessionalNavigation />
-
-      <main className="flex-grow" id="main-content">
-        {/* Hero Section */}
-        <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Help
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
-                Center
-              </span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Get the help you need to make the most of Accio. Find answers, tutorials, 
-              and contact our support team.
-            </p>
-          </div>
-        </section>
+      <div className="py-8 space-y-16">
+        {/* Header */}
+        <div className="text-center">
+          <UnifiedTypography.H1>
+            Help
+            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
+              Center
+            </span>
+          </UnifiedTypography.H1>
+          <UnifiedTypography.Lead>
+            Get the help you need to make the most of Accio. Find answers, tutorials, 
+            and contact our support team.
+          </UnifiedTypography.Lead>
+        </div>
 
         {/* Quick Actions */}
-        <section className="py-16 bg-muted/20">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Popular Help Topics</h2>
-              <p className="text-xl text-muted-foreground">
-                Quick access to the most requested support resources
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {quickActions.map((action, index) => (
-                <Card key={index} className="text-center border-0 bg-background hover:shadow-lg transition-all duration-300 group cursor-pointer">
-                  <CardContent className="pt-6">
-                    <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <action.icon className="h-8 w-8 text-primary" />
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2">{action.title}</h3>
-                    <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
-                      {action.description}
-                    </p>
-                    <Button variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                      {action.action}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+        <div>
+          <div className="text-center mb-12">
+            <UnifiedTypography.H2>Popular Help Topics</UnifiedTypography.H2>
+            <UnifiedTypography.Body>
+              Quick access to the most requested support resources
+            </UnifiedTypography.Body>
           </div>
-        </section>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {quickActions.map((action, index) => (
+              <Card key={index} className="text-center border-0 bg-card hover:shadow-lg transition-all duration-300 group cursor-pointer">
+                <CardContent className="pt-6">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <action.icon className="h-8 w-8 text-primary" />
+                  </div>
+                  <h3 className="text-lg font-semibold mb-2">{action.title}</h3>
+                  <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+                    {action.description}
+                  </p>
+                  <Button variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                    {action.action}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
 
         {/* Help Categories */}
-        <section className="py-16">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Browse by Category</h2>
-              <p className="text-xl text-muted-foreground">
-                Explore detailed guides and tutorials organized by topic
-              </p>
-            </div>
-
-            <div className="grid lg:grid-cols-3 gap-8">
-              {helpCategories.map((category, index) => (
-                <Card key={index} className="border-0 bg-background hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 rounded-2xl bg-muted">
-                        <category.icon className={`h-6 w-6 ${category.color}`} />
-                      </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {category.articles.length} articles
-                      </Badge>
-                    </div>
-                    <CardTitle className="text-xl">{category.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground mb-6 leading-relaxed">
-                      {category.description}
-                    </p>
-                    <div className="space-y-2">
-                      {category.articles.map((article, articleIndex) => (
-                        <Button variant="link" key={articleIndex} className="w-full text-left">
-                          {article}
-                        </Button>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+        <div>
+          <div className="text-center mb-12">
+            <UnifiedTypography.H2>Browse by Category</UnifiedTypography.H2>
+            <UnifiedTypography.Body>
+              Explore detailed guides and tutorials organized by topic
+            </UnifiedTypography.Body>
           </div>
-        </section>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {helpCategories.map((category, index) => (
+              <Card key={index} className="border-0 bg-card hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 rounded-2xl bg-muted">
+                      <category.icon className={`h-6 w-6 ${category.color}`} />
+                    </div>
+                    <Badge variant="secondary" className="text-xs">
+                      {category.articles.length} articles
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-xl">{category.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    {category.description}
+                  </p>
+                  <div className="space-y-2">
+                    {category.articles.map((article, articleIndex) => (
+                      <Button variant="link" key={articleIndex} className="w-full text-left justify-start h-auto p-0">
+                        {article}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
 
         {/* Contact Support */}
-        <section className="py-16 bg-gradient-to-r from-primary to-blue-600 text-white">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h2 className="text-3xl font-bold mb-6">Still need help?</h2>
-            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+        <div className="bg-gradient-to-r from-primary to-blue-600 text-white rounded-xl p-8">
+          <div className="text-center max-w-4xl mx-auto">
+            <UnifiedTypography.H2 className="text-white mb-6">Still need help?</UnifiedTypography.H2>
+            <UnifiedTypography.Lead className="text-white/90 mb-8">
               Our support team is here to help. Get in touch and we'll get back to you quickly.
-            </p>
+            </UnifiedTypography.Lead>
             
             <div className="grid md:grid-cols-3 gap-6 mb-8">
               <div className="text-center">
@@ -225,11 +218,9 @@ const Help = () => {
               </Button>
             </div>
           </div>
-        </section>
-      </main>
-
-      <ImprovedFooter />
-    </div>
+        </div>
+      </div>
+    </UnifiedLayout>
   );
 };
 
