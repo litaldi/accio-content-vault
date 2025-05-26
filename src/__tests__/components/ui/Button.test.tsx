@@ -2,7 +2,6 @@
 import { render, screen } from '../../utils/test-utils';
 import { axe } from 'jest-axe';
 import { Button } from '@/components/ui/button';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
 
 describe('Button', () => {
   it('should render correctly', () => {
@@ -26,32 +25,23 @@ describe('Button', () => {
     const results = await axe(container);
     expect(results).toHaveNoViolations();
   });
-});
 
-describe('EnhancedButton', () => {
   it('should render as disabled when loading prop is true', () => {
-    render(<EnhancedButton loading>Loading</EnhancedButton>);
+    render(<Button disabled>Loading</Button>);
     const button = screen.getByRole('button');
     expect(button).toBeDisabled();
-    expect(button).toHaveAttribute('aria-disabled', 'true');
   });
 
-  it('should show loading text when loading', () => {
-    render(<EnhancedButton loading loadingText="Please wait...">Submit</EnhancedButton>);
-    expect(screen.getByText('Please wait...')).toBeInTheDocument();
+  it('should render with loading state', () => {
+    render(<Button loading>Submit</Button>);
+    expect(screen.getByRole('button')).toBeDisabled();
   });
 
-  it('should render with left and right icons', () => {
-    const leftIcon = <span data-testid="left-icon">←</span>;
-    const rightIcon = <span data-testid="right-icon">→</span>;
-    
-    render(
-      <EnhancedButton leftIcon={leftIcon} rightIcon={rightIcon}>
-        Button with icons
-      </EnhancedButton>
-    );
-    
-    expect(screen.getByTestId('left-icon')).toBeInTheDocument();
-    expect(screen.getByTestId('right-icon')).toBeInTheDocument();
+  it('should render different sizes', () => {
+    const { rerender } = render(<Button size="sm">Small</Button>);
+    expect(screen.getByRole('button').className).toContain('h-9');
+
+    rerender(<Button size="lg">Large</Button>);
+    expect(screen.getByRole('button').className).toContain('h-11');
   });
 });

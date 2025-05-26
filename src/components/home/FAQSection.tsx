@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Button } from '@/components/ui/button';
 import { MessageCircle, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -47,7 +47,7 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 lg:py-24">
+    <section className="py-20 lg:py-24" id="faq-section">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6">
@@ -92,18 +92,18 @@ const FAQSection: React.FC = () => {
               Our friendly support team is here to help. Get answers in minutes, not hours.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <EnhancedButton asChild variant="outline" size="lg">
-                <Link to="/contact">
+              <Button asChild variant="outline" size="lg">
+                <Link to="/contact" className="inline-flex items-center gap-2">
                   Chat with Support
                   <MessageCircle className="h-4 w-4" />
                 </Link>
-              </EnhancedButton>
-              <EnhancedButton asChild size="lg">
-                <Link to="/register">
+              </Button>
+              <Button asChild size="lg">
+                <Link to="/register" className="inline-flex items-center gap-2">
                   Try It Free Instead
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-              </EnhancedButton>
+              </Button>
             </div>
           </div>
         </div>

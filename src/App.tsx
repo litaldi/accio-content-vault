@@ -1,4 +1,3 @@
-
 import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -6,7 +5,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
 // Lazy load pages for better performance
@@ -61,35 +59,33 @@ function App() {
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <ThemeProvider>
-            <AccessibilityProvider>
-              <TooltipProvider>
-                <BrowserRouter>
-                  <div className="min-h-screen bg-background text-foreground">
-                    <Suspense fallback={<LoadingSpinner />}>
-                      <Routes>
-                        <Route path="/" element={<UnifiedIndex />} />
-                        <Route path="/faq" element={<FAQ />} />
-                        <Route path="/dashboard" element={<Dashboard />} />
-                        <Route path="/features" element={<Features />} />
-                        <Route path="/pricing" element={<Pricing />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/save" element={<SaveContent />} />
-                        <Route path="/collections" element={<Collections />} />
-                        <Route path="/analytics" element={<Analytics />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/settings" element={<Settings />} />
-                        <Route path="/contact" element={<Contact />} />
-                        <Route path="/privacy" element={<Privacy />} />
-                        <Route path="/terms" element={<Terms />} />
-                        <Route path="/blog" element={<Blog />} />
-                      </Routes>
-                    </Suspense>
-                    <Toaster />
-                  </div>
-                </BrowserRouter>
-              </TooltipProvider>
-            </AccessibilityProvider>
+            <TooltipProvider>
+              <BrowserRouter>
+                <div className="min-h-screen bg-background text-foreground">
+                  <Suspense fallback={<LoadingSpinner />}>
+                    <Routes>
+                      <Route path="/" element={<UnifiedIndex />} />
+                      <Route path="/faq" element={<FAQ />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/features" element={<Features />} />
+                      <Route path="/pricing" element={<Pricing />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/save" element={<SaveContent />} />
+                      <Route path="/collections" element={<Collections />} />
+                      <Route path="/analytics" element={<Analytics />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="/blog" element={<Blog />} />
+                    </Routes>
+                  </Suspense>
+                  <Toaster />
+                </div>
+              </BrowserRouter>
+            </TooltipProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </HelmetProvider>

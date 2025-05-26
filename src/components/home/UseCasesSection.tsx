@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Button } from '@/components/ui/button';
 import { 
   Briefcase, 
   Palette, 
@@ -13,7 +13,6 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
 const UseCasesSection: React.FC = () => {
   const useCases = [
@@ -98,15 +97,15 @@ const UseCasesSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section size="lg">
-      <Spacing.Container size="lg">
+    <section className="py-20 lg:py-24">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center mb-16">
-          <Typography.H2 className="mb-6">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6">
             Who is Accio for?
-          </Typography.H2>
-          <Typography.Body size="lg" className="max-w-2xl mx-auto text-muted-foreground">
+          </h2>
+          <p className="text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto text-muted-foreground">
             Whether you're a solo creator or part of a large team, Accio adapts to your workflow
-          </Typography.Body>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -117,15 +116,15 @@ const UseCasesSection: React.FC = () => {
                   <useCase.icon className="h-8 w-8 text-primary" />
                 </div>
                 <CardTitle className="text-xl font-bold mb-2">{useCase.title}</CardTitle>
-                <Typography.Body className="text-primary font-semibold">
+                <p className="text-primary font-semibold">
                   {useCase.subtitle}
-                </Typography.Body>
+                </p>
               </CardHeader>
               
               <CardContent className="space-y-6">
-                <Typography.Body className="text-muted-foreground leading-relaxed">
+                <p className="text-muted-foreground leading-relaxed">
                   {useCase.description}
-                </Typography.Body>
+                </p>
                 
                 <ul className="space-y-2">
                   {useCase.features.map((feature, featureIndex) => (
@@ -136,16 +135,16 @@ const UseCasesSection: React.FC = () => {
                   ))}
                 </ul>
                 
-                <EnhancedButton 
+                <Button 
                   asChild 
                   variant="outline" 
                   className="w-full group-hover:border-primary/50"
                 >
-                  <Link to="/register">
+                  <Link to="/register" className="inline-flex items-center gap-2">
                     {useCase.cta}
                     <ArrowRight className="h-4 w-4" />
                   </Link>
-                </EnhancedButton>
+                </Button>
               </CardContent>
             </Card>
           ))}
@@ -154,27 +153,27 @@ const UseCasesSection: React.FC = () => {
         {/* Bottom CTA */}
         <div className="text-center mt-16">
           <div className="bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 rounded-2xl p-8 border border-primary/20">
-            <Typography.H3 className="mb-4">
+            <h3 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
               Ready to Transform Your Workflow?
-            </Typography.H3>
-            <Typography.Body className="mb-6 text-muted-foreground max-w-2xl mx-auto">
+            </h3>
+            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
               Join thousands of professionals who've already discovered the power of organized knowledge
-            </Typography.Body>
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <EnhancedButton asChild size="lg" variant="gradient">
-                <Link to="/register">
+              <Button asChild size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                <Link to="/register" className="inline-flex items-center gap-2">
                   Start Your Free Trial
                   <ArrowRight className="h-5 w-5" />
                 </Link>
-              </EnhancedButton>
-              <EnhancedButton asChild variant="outline" size="lg">
+              </Button>
+              <Button asChild variant="outline" size="lg">
                 <Link to="/contact">Schedule a Demo</Link>
-              </EnhancedButton>
+              </Button>
             </div>
           </div>
         </div>
-      </Spacing.Container>
-    </Spacing.Section>
+      </div>
+    </section>
   );
 };
 

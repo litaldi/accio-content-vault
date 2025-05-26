@@ -3,23 +3,14 @@ import React from 'react';
 import { ArrowRight, Search, BookOpen, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { cn } from '@/lib/utils';
 
 const ImprovedHeroSection: React.FC = () => {
-  const { preferences } = useAccessibility();
-
   return (
-    <section className={cn(
-      "py-20 lg:py-32 bg-gradient-to-br from-primary/5 via-background to-accent/5",
-      preferences.highContrast && 'bg-background'
-    )}>
+    <section className="py-20 lg:py-32 bg-gradient-to-br from-primary/5 via-background to-accent/5">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className={cn(
-            "text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground mb-6 leading-tight",
-            preferences.reduceAnimations ? '' : 'animate-fade-in'
-          )}>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground mb-6 leading-tight">
             Your Personal{' '}
             <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               Knowledge Library

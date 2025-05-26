@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Check, Star, Zap, Crown, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -45,7 +45,7 @@ const MarketingPricingSection: React.FC = () => {
         'Custom integrations'
       ],
       buttonText: 'Start 14-Day Free Trial',
-      buttonVariant: 'gradient' as const,
+      buttonVariant: 'default' as const,
       popular: true,
       savings: '40% off for early adopters'
     },
@@ -79,7 +79,7 @@ const MarketingPricingSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-muted/30 via-background to-accent/5">
+    <section className="py-20 bg-gradient-to-br from-muted/30 via-background to-accent/5" id="pricing-section">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-16">
@@ -142,7 +142,7 @@ const MarketingPricingSection: React.FC = () => {
               </CardHeader>
               
               <CardContent className="space-y-6">
-                <EnhancedButton 
+                <Button 
                   className="w-full" 
                   variant={plan.buttonVariant}
                   size="lg"
@@ -151,7 +151,7 @@ const MarketingPricingSection: React.FC = () => {
                   <Link to={plan.name === 'Team' ? '/contact' : '/register'}>
                     {plan.buttonText}
                   </Link>
-                </EnhancedButton>
+                </Button>
                 
                 <ul className="space-y-3">
                   {plan.features.map((feature, featureIndex) => (

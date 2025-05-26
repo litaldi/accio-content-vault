@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Button } from '@/components/ui/button';
 import { ArrowRight, Users, Clock, CheckCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -34,26 +34,26 @@ const CTASection: React.FC = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <EnhancedButton 
+            <Button 
               asChild 
-              size="xl" 
-              className="bg-white text-primary hover:bg-white/95 shadow-2xl"
+              size="lg" 
+              className="bg-white text-primary hover:bg-white/95 shadow-2xl h-14 px-12 text-lg"
             >
-              <Link to="/register">
+              <Link to="/register" className="inline-flex items-center gap-2">
                 Create My Free Account
                 <ArrowRight className="h-5 w-5" />
               </Link>
-            </EnhancedButton>
-            <EnhancedButton 
+            </Button>
+            <Button 
               asChild 
               variant="outline" 
-              size="xl"
-              className="border-2 border-white/60 hover:bg-white/15 hover:border-white text-white"
+              size="lg"
+              className="border-2 border-white/60 hover:bg-white/15 hover:border-white text-white h-14 px-12 text-lg"
             >
               <Link to="/contact">
                 Schedule a Demo
               </Link>
-            </EnhancedButton>
+            </Button>
           </div>
 
           {/* Social Proof */}

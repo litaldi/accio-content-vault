@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { AccessibleButton } from '@/components/ui/accessible-button';
+import { Button } from '@/components/ui/button';
 import { ArrowLeft, Home, Search, Settings, HelpCircle, Bell } from 'lucide-react';
 
 interface NavigationButtonsProps {
@@ -55,75 +55,74 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
   return (
     <div className={className} role="navigation" aria-label="Page navigation">
       {showBackButton && !isHomePage && (
-        <AccessibleButton
+        <Button
           variant="ghost"
           size="sm"
           onClick={handleBack}
-          leftIcon={<ArrowLeft className="h-4 w-4" />}
           aria-label="Go back to previous page"
-          description="Navigate to the previous page in your browsing history"
+          className="inline-flex items-center gap-2"
         >
+          <ArrowLeft className="h-4 w-4" />
           Back
-        </AccessibleButton>
+        </Button>
       )}
       
       {showHomeButton && !isHomePage && (
-        <AccessibleButton
+        <Button
           variant="ghost"
           size="sm"
           onClick={handleHome}
-          leftIcon={<Home className="h-4 w-4" />}
           aria-label="Go to homepage"
-          description="Navigate to the main homepage"
+          className="inline-flex items-center gap-2"
         >
+          <Home className="h-4 w-4" />
           Home
-        </AccessibleButton>
+        </Button>
       )}
 
       {!isDashboard && (
-        <AccessibleButton
+        <Button
           variant="ghost"
           size="sm"
           onClick={handleDashboard}
           aria-label="Go to dashboard"
-          description="Navigate to your personal dashboard"
         >
           Dashboard
-        </AccessibleButton>
+        </Button>
       )}
 
-      <AccessibleButton
+      <Button
         variant="outline"
         size="sm"
         onClick={handleSearch}
-        leftIcon={<Search className="h-4 w-4" />}
         aria-label="Search content"
-        description="Search through your saved content and knowledge library"
+        className="inline-flex items-center gap-2"
       >
+        <Search className="h-4 w-4" />
         <span className="hidden sm:inline">Search</span>
-      </AccessibleButton>
+      </Button>
 
-      <AccessibleButton
+      <Button
         variant="outline"
         size="sm"
         onClick={handleSettings}
-        leftIcon={<Settings className="h-4 w-4" />}
         aria-label="Open settings"
-        description="Access application settings and preferences"
+        className="inline-flex items-center gap-2"
       >
+        <Settings className="h-4 w-4" />
         <span className="hidden sm:inline">Settings</span>
-      </AccessibleButton>
+      </Button>
 
-      <AccessibleButton
+      <Button
         variant="outline"
         size="sm"
         onClick={handleHelp}
-        leftIcon={<HelpCircle className="h-4 w-4" />}
         aria-label="Get help"
-        description="Access help documentation and support"
+        className="inline-flex items-center gap-2"
       >
+        <HelpCircle className="h-4 w-4" />
         <span className="hidden sm:inline">Help</span>
-      </AccessibleButton>
+      </Button>
     </div>
   );
 };
