@@ -25,6 +25,7 @@ import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import NotFound from '@/pages/NotFound';
 import Save from '@/pages/Save';
+import ContentIntelligence from '@/pages/ContentIntelligence';
 import QueryProvider from '@/providers/QueryProvider';
 
 const App: React.FC = () => {
@@ -49,6 +50,7 @@ const App: React.FC = () => {
                       <Route path="/analytics" element={<Analytics />} />
                       <Route path="/integrations" element={<Integrations />} />
                       <Route path="/save" element={<Save />} />
+                      <Route path="/intelligence" element={<ContentIntelligence />} />
                       <Route path="/account" element={<AccountSettings />} />
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/login" element={<Login />} />

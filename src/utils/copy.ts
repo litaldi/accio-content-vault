@@ -17,6 +17,7 @@ export const copy = {
     contact: 'Help & Support',
     search: 'Search',
     integrations: 'Integrations',
+    intelligence: 'Intelligence',
     overview: 'Overview',
     tools: 'Tools',
     content: 'Content',
