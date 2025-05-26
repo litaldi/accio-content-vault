@@ -13,8 +13,9 @@ import LoadingSpinner from '@/components/ui/loading-spinner';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
-// Import Login directly instead of lazy loading to avoid the dynamic import error
+// Import Login and NotFound directly instead of lazy loading to avoid dynamic import errors
 import Login from '@/pages/Login';
+import NotFound from '@/pages/NotFound';
 
 // Lazy load other pages for better performance
 const ImprovedIndex = lazy(() => import('@/pages/ImprovedIndex'));
@@ -81,6 +82,8 @@ function App() {
                               </ProtectedRoute>
                             } 
                           />
+                          {/* Catch-all route for 404 pages */}
+                          <Route path="*" element={<NotFound />} />
                         </Routes>
                       </Suspense>
                       
