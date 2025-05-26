@@ -13,6 +13,19 @@ import ErrorBoundary from '@/components/ErrorBoundary';
 const UnifiedIndex = lazy(() => import('@/pages/UnifiedIndex'));
 const FAQ = lazy(() => import('@/pages/FAQ'));
 const Dashboard = lazy(() => import('@/components/Dashboard/Dashboard'));
+const Features = lazy(() => import('@/pages/Features'));
+const Pricing = lazy(() => import('@/pages/Pricing'));
+const About = lazy(() => import('@/pages/About'));
+const SaveContent = lazy(() => import('@/pages/SaveContent'));
+const Collections = lazy(() => import('@/pages/Collections'));
+const Analytics = lazy(() => import('@/pages/Analytics'));
+const Login = lazy(() => import('@/pages/Login'));
+const Register = lazy(() => import('@/pages/Register'));
+const Settings = lazy(() => import('@/pages/Settings'));
+const Contact = lazy(() => import('@/pages/Contact'));
+const Privacy = lazy(() => import('@/pages/Privacy'));
+const Terms = lazy(() => import('@/pages/Terms'));
+const Blog = lazy(() => import('@/pages/Blog'));
 
 // Create a client
 const queryClient = new QueryClient({

@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface AccessibilityPreferences {
@@ -13,6 +12,7 @@ interface AccessibilityPreferences {
   highlightLinks: boolean;
   lineSpacing: 'normal' | 'relaxed' | 'loose';
   screenReaderMode: boolean;
+  language: 'en' | 'he';
 }
 
 interface AccessibilityContextType {
@@ -39,6 +39,7 @@ const defaultPreferences: AccessibilityPreferences = {
   highlightLinks: false,
   lineSpacing: 'normal',
   screenReaderMode: false,
+  language: 'en',
 };
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);

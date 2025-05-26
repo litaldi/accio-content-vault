@@ -6,6 +6,7 @@ import { useAccessibility } from '@/contexts/AccessibilityContext';
 import EnhancedUnifiedNavigation from '@/components/navigation/EnhancedUnifiedNavigation';
 import EnhancedUnifiedFooter from '@/components/Footer/EnhancedUnifiedFooter';
 import { Toaster } from '@/components/ui/toaster';
+import { Plus } from 'lucide-react';
 
 interface EnhancedUnifiedLayoutProps {
   children: React.ReactNode;
