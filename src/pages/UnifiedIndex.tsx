@@ -3,6 +3,8 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
 import MarketingHeroSection from '@/components/home/MarketingHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
@@ -18,7 +20,7 @@ import ImprovedFooter from '@/components/Footer/ImprovedFooter';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Search, BookOpen, Bell, Settings, HelpCircle, Sparkles, BarChart3, Users, Mail, Star } from 'lucide-react';
+import { Search, BookOpen, BarChart3, Settings, Sparkles } from 'lucide-react';
 
 const UnifiedIndexContent = () => {
   const navigate = useNavigate();
@@ -65,10 +67,15 @@ const UnifiedIndexContent = () => {
         <meta property="og:title" content="Accio - Stop Losing Your Best Ideas. Start Building Brilliance." />
         <meta property="og:description" content="Turn scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve more." />
         <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://yoursite.com/" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Accio - Your AI Knowledge Engine" />
         <meta name="twitter:description" content="Save anything, find everything, achieve 10x productivity with AI-powered organization." />
         <link rel="canonical" href="https://yoursite.com/" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index, follow" />
+        <meta name="author" content="Accio" />
+        <meta name="theme-color" content="#3B82F6" />
       </Helmet>
       
       <PrimaryNavigation />
@@ -91,7 +98,7 @@ const UnifiedIndexContent = () => {
                 {quickActions.map((action) => (
                   <Card 
                     key={action.title} 
-                    className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2"
+                    className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 group"
                     onClick={action.action}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -104,7 +111,7 @@ const UnifiedIndexContent = () => {
                     aria-label={`${action.title}: ${action.description}`}
                   >
                     <CardHeader className="text-center">
-                      <div className={`w-12 h-12 mx-auto mb-4 ${action.color} rounded-full flex items-center justify-center`}>
+                      <div className={`w-12 h-12 mx-auto mb-4 ${action.color} rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <action.icon className="h-6 w-6 text-white" aria-hidden="true" />
                       </div>
                       <CardTitle className="text-lg">{action.title}</CardTitle>
@@ -113,12 +120,13 @@ const UnifiedIndexContent = () => {
                     <CardContent>
                       <Button 
                         variant="outline" 
-                        className="w-full"
+                        className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
                           action.action();
                         }}
                       >
+                        <Sparkles className="h-4 w-4 mr-2" />
                         Access Now
                       </Button>
                     </CardContent>
@@ -147,9 +155,13 @@ const UnifiedIndexContent = () => {
 
 const UnifiedIndex = () => {
   return (
-    <AuthProvider>
-      <UnifiedIndexContent />
-    </AuthProvider>
+    <ThemeProvider>
+      <AccessibilityProvider>
+        <AuthProvider>
+          <UnifiedIndexContent />
+        </AuthProvider>
+      </AccessibilityProvider>
+    </ThemeProvider>
   );
 };
 

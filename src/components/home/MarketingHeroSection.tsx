@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, ChevronDown, Sparkles, Shield, Zap, Brain, Users, Star, Play } from 'lucide-react';
+import { ArrowRight, ChevronDown, Sparkles, Shield, Brain, Users, Star, Play } from 'lucide-react';
 import { 
   Tooltip,
   TooltipContent,
@@ -29,14 +29,14 @@ const MarketingHeroSection = () => {
       aria-labelledby="hero-heading"
       id="hero-section"
     >
-      {/* Enhanced background effects */}
+      {/* Background effects - removed flashing animations */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/5 to-black/10 pointer-events-none" aria-hidden="true"></div>
-      <div className="absolute top-20 left-10 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" aria-hidden="true"></div>
-      <div className="absolute bottom-20 right-10 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000" aria-hidden="true"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl animate-pulse delay-2000" aria-hidden="true"></div>
+      <div className="absolute top-20 left-10 w-96 h-96 bg-white/10 rounded-full blur-3xl opacity-50" aria-hidden="true"></div>
+      <div className="absolute bottom-20 right-10 w-80 h-80 bg-white/5 rounded-full blur-3xl opacity-30" aria-hidden="true"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/5 rounded-full blur-3xl opacity-20" aria-hidden="true"></div>
       
       <div className="max-w-7xl mx-auto text-center relative z-10">
-        {/* Enhanced trust indicators with better spacing */}
+        {/* Trust indicators */}
         <div className="flex flex-wrap justify-center items-center gap-4 md:gap-8 mb-16 text-white/90 text-sm">
           <div className="flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 backdrop-blur-sm hover:bg-white/15 transition-colors">
             <Shield className="h-4 w-4" aria-hidden="true" />
@@ -56,7 +56,7 @@ const MarketingHeroSection = () => {
           </div>
         </div>
 
-        {/* Improved headline with better hierarchy */}
+        {/* Main headline */}
         <h1 
           id="hero-heading" 
           className="text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-8 leading-tight max-w-5xl mx-auto tracking-tight"
@@ -67,22 +67,22 @@ const MarketingHeroSection = () => {
           </span>
           <span className="bg-gradient-to-r from-white via-white/95 to-white/90 bg-clip-text text-transparent block relative">
             Start building brilliance.
-            <Sparkles className="absolute -top-4 -right-8 h-8 w-8 text-white/70 animate-pulse delay-1000" aria-hidden="true" />
+            <Sparkles className="absolute -top-4 -right-8 h-8 w-8 text-white/70" aria-hidden="true" />
           </span>
         </h1>
         
-        {/* Enhanced value proposition */}
+        {/* Value proposition */}
         <p className="text-lg md:text-xl lg:text-2xl text-white/95 mb-12 max-w-3xl mx-auto leading-relaxed">
           Transform scattered bookmarks into an AI-powered knowledge engine. 
           Save anything, find everything, and
           <span className="font-semibold text-white relative mx-2">
             achieve 10x productivity
-            <div className="absolute -bottom-1 left-0 w-full h-1 bg-white/30 rounded-full animate-pulse delay-1000" />
+            <div className="absolute -bottom-1 left-0 w-full h-1 bg-white/30 rounded-full" />
           </span> 
           with intelligent organization.
         </p>
 
-        {/* Enhanced CTA section with demo option */}
+        {/* CTA section */}
         <div className="flex flex-col items-center gap-8 mb-20">
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <TooltipProvider>
@@ -91,7 +91,7 @@ const MarketingHeroSection = () => {
                   <Button 
                     size="lg" 
                     onClick={() => navigate('/register')} 
-                    className="bg-white text-primary hover:bg-white/95 focus-visible:ring-offset-primary group shadow-2xl transform transition-all duration-300 hover:-translate-y-2 hover:shadow-3xl text-lg px-10 py-4 h-auto font-bold relative overflow-hidden"
+                    className="bg-white text-primary hover:bg-white/95 focus-visible:ring-offset-primary group shadow-2xl transform transition-all duration-300 hover:-translate-y-1 hover:shadow-3xl text-lg px-10 py-4 h-auto font-bold relative overflow-hidden focus:ring-2 focus:ring-white focus:ring-offset-2"
                   >
                     <Sparkles className="mr-3 h-5 w-5 relative z-10 transition-transform group-hover:rotate-12" aria-hidden="true" />
                     <span className="relative z-10">Start building your library</span>
@@ -110,29 +110,29 @@ const MarketingHeroSection = () => {
               size="lg" 
               variant="outline" 
               onClick={() => setShowDemo(!showDemo)} 
-              className="border-2 border-white/60 hover:bg-white/15 hover:border-white focus-visible:ring-offset-primary focus-visible:ring-white text-white backdrop-blur-sm transform transition-all duration-300 hover:-translate-y-2 text-lg px-10 py-4 h-auto font-semibold group"
+              className="border-2 border-white/60 hover:bg-white/15 hover:border-white focus-visible:ring-offset-primary focus-visible:ring-white text-white backdrop-blur-sm transform transition-all duration-300 hover:-translate-y-1 text-lg px-10 py-4 h-auto font-semibold group focus:ring-2 focus:ring-white focus:ring-offset-2"
             >
               <Play className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" aria-hidden="true" />
               See how it works
             </Button>
           </div>
 
-          {/* Quick demo preview */}
+          {/* Demo preview */}
           {showDemo && (
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-md">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 max-w-md" role="region" aria-labelledby="demo-heading">
               <div className="text-white/90 text-sm mb-4 text-center">
-                <p className="font-semibold mb-2">Watch Accio in action:</p>
+                <p id="demo-heading" className="font-semibold mb-2">Watch Accio in action:</p>
                 <div className="space-y-2 text-left">
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-green-400 rounded-full" aria-hidden="true"></div>
                     <span>Save any webpage in one click</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full" aria-hidden="true"></div>
                     <span>AI organizes everything automatically</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full" aria-hidden="true"></div>
                     <span>Find anything with smart search</span>
                   </div>
                 </div>
@@ -141,7 +141,7 @@ const MarketingHeroSection = () => {
                 size="sm" 
                 variant="ghost" 
                 onClick={() => setShowDemo(false)}
-                className="text-white/70 hover:text-white hover:bg-white/10 w-full"
+                className="text-white/70 hover:text-white hover:bg-white/10 w-full focus:ring-2 focus:ring-white focus:ring-offset-2"
               >
                 Got it, thanks!
               </Button>
@@ -149,11 +149,11 @@ const MarketingHeroSection = () => {
           )}
         </div>
 
-        {/* Enhanced social proof with better layout */}
+        {/* Social proof */}
         <div className="mb-20 text-white/80">
           <p className="text-lg mb-6 font-medium">Loved by knowledge workers at companies like Google, Microsoft, and Netflix</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2" role="img" aria-label="5 star rating">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star key={star} className="h-5 w-5 text-yellow-400 fill-current" aria-hidden="true" />
               ))}
@@ -164,12 +164,12 @@ const MarketingHeroSection = () => {
           </div>
         </div>
         
-        {/* Enhanced scroll indicator */}
+        {/* Scroll indicator */}
         <div className="mt-20">
           <a 
             href="#features-section" 
             onClick={handleScroll}
-            className="inline-flex flex-col items-center gap-4 text-white/90 hover:text-white transition-all duration-300 group"
+            className="inline-flex flex-col items-center gap-4 text-white/90 hover:text-white transition-all duration-300 group focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary rounded-lg"
             aria-label="Learn how Accio works"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
@@ -182,7 +182,7 @@ const MarketingHeroSection = () => {
               ></span>
             </span>
             <div className="bg-white/10 backdrop-blur-sm rounded-full p-3 group-hover:bg-white/20 transition-colors">
-              <ChevronDown className="h-6 w-6 animate-bounce group-hover:animate-pulse" aria-hidden="true" />
+              <ChevronDown className="h-6 w-6 group-hover:transform group-hover:translate-y-1 transition-transform" aria-hidden="true" />
             </div>
           </a>
         </div>
