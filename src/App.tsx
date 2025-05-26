@@ -10,8 +10,10 @@ import Collections from '@/pages/Collections';
 import Analytics from '@/pages/Analytics';
 import Integrations from '@/pages/Integrations';
 import AccountSettings from '@/pages/AccountSettings';
+import Contact from '@/pages/Contact';
 import NotFound from '@/pages/NotFound';
 import QueryProvider from '@/providers/QueryProvider';
+import ChatWidget from '@/components/contact/ChatWidget';
 
 const App: React.FC = () => {
   return (
@@ -27,9 +29,11 @@ const App: React.FC = () => {
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/integrations" element={<Integrations />} />
               <Route path="/account" element={<AccountSettings />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Toaster />
+            <ChatWidget />
           </div>
         </Router>
       </QueryProvider>
