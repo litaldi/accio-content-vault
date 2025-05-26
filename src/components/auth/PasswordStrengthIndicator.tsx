@@ -8,20 +8,36 @@ interface PasswordStrengthIndicatorProps {
   className?: string;
 }
 
+interface PasswordChecks {
+  length: boolean;
+  lowercase: boolean;
+  uppercase: boolean;
+  numbers: boolean;
+  symbols: boolean;
+}
+
 export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps> = ({
   password,
   className
 }) => {
   const getPasswordStrength = (password: string) => {
-    if (!password) return { strength: 'none', score: 0, checks: {} };
-    
-    const checks = {
-      length: password.length >= 8,
-      lowercase: /[a-z]/.test(password),
-      uppercase: /[A-Z]/.test(password),
-      numbers: /\d/.test(password),
-      symbols: /[^A-Za-z0-9]/.test(password)
+    const checks: PasswordChecks = {
+      length: false,
+      lowercase: false,
+      uppercase: false,
+      numbers: false,
+      symbols: false
     };
+
+    if (!password) {
+      return { strength: 'none' as const, score: 0, checks };
+    }
+    
+    checks.length = password.length >= 8;
+    checks.lowercase = /[a-z]/.test(password);
+    checks.uppercase = /[A-Z]/.test(password);
+    checks.numbers = /\d/.test(password);
+    checks.symbols = /[^A-Za-z0-9]/.test(password);
     
     const score = Object.values(checks).filter(Boolean).length;
     
