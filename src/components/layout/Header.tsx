@@ -1,13 +1,13 @@
 
 import React from 'react';
-import Navigation from './Navigation';
+import { UnifiedMainNavigation } from '@/components/navigation/UnifiedMainNavigation';
 
 /**
- * @deprecated Use Navigation component directly instead
+ * @deprecated Use UnifiedMainNavigation component directly instead
  * This component is kept for backward compatibility
  */
 export const Header: React.FC = () => {
-  return <Navigation />;
+  return <UnifiedMainNavigation />;
 };
 
 export default Header;

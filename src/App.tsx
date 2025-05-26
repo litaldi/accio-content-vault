@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { UnifiedNavigation } from '@/components/navigation/UnifiedNavigation';
+import { UnifiedThemeProvider } from '@/contexts/UnifiedThemeContext';
+import { UnifiedMainNavigation } from '@/components/navigation/UnifiedMainNavigation';
 import { SkipToContent } from '@/components/common/SkipToContent';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import Footer from '@/components/Footer';
@@ -21,19 +21,21 @@ import AccountSettings from '@/pages/AccountSettings';
 import Contact from '@/pages/Contact';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
 import NotFound from '@/pages/NotFound';
 import QueryProvider from '@/providers/QueryProvider';
 
 const App: React.FC = () => {
   return (
     <HelmetProvider>
-      <ThemeProvider defaultTheme="system" storageKey="accio-theme">
+      <UnifiedThemeProvider defaultTheme="system" storageKey="accio-ui-theme">
         <QueryProvider>
           <AuthProvider>
             <Router>
-              <div className="App min-h-screen flex flex-col bg-background text-foreground">
+              <div className="App min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
                 <SkipToContent />
-                <UnifiedNavigation />
+                <UnifiedMainNavigation />
                 <ErrorBoundary>
                   <main id="main-content" className="flex-grow" tabIndex={-1}>
                     <Routes>
@@ -49,6 +51,8 @@ const App: React.FC = () => {
                       <Route path="/contact" element={<Contact />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>
@@ -59,7 +63,7 @@ const App: React.FC = () => {
             </Router>
           </AuthProvider>
         </QueryProvider>
-      </ThemeProvider>
+      </UnifiedThemeProvider>
     </HelmetProvider>
   );
 };
