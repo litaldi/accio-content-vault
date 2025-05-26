@@ -1,6 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Clock, Tag, X } from 'lucide-react';
+import { Search, Clock, Tag, X, Sparkles, Brain } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -13,8 +13,9 @@ import { useVoiceSearch } from '@/hooks/useVoiceSearch';
 interface SearchSuggestion {
   id: string;
   text: string;
-  type: 'tag' | 'history' | 'suggestion';
+  type: 'tag' | 'history' | 'suggestion' | 'ai-suggestion';
   count?: number;
+  aiGenerated?: boolean;
 }
 
 interface EnhancedSearchBarProps {
@@ -33,6 +34,8 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   const [query, setQuery] = useState(searchQuery);
   const [isFocused, setIsFocused] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<SearchSuggestion[]>([]);
+  const [isGeneratingAI, setIsGeneratingAI] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
@@ -48,7 +51,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   });
 
   // Mock suggestions - in real app, these would come from your API
-  const suggestions: SearchSuggestion[] = [
+  const baseSuggestions: SearchSuggestion[] = [
     { id: '1', text: 'javascript', type: 'tag', count: 15 },
     { id: '2', text: 'react tutorial', type: 'history' },
     { id: '3', text: 'programming', type: 'tag', count: 23 },
@@ -56,7 +59,32 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
     { id: '5', text: 'web development', type: 'suggestion' },
   ];
 
-  const filteredSuggestions = suggestions.filter(suggestion =>
+  // Generate AI-powered search suggestions
+  const generateAISuggestions = async (searchTerm: string) => {
+    if (searchTerm.length < 3) return;
+    
+    setIsGeneratingAI(true);
+    try {
+      // Simulate AI suggestion generation
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      const aiSugs: SearchSuggestion[] = [
+        { id: 'ai-1', text: `${searchTerm} best practices`, type: 'ai-suggestion', aiGenerated: true },
+        { id: 'ai-2', text: `${searchTerm} tutorial for beginners`, type: 'ai-suggestion', aiGenerated: true },
+        { id: 'ai-3', text: `advanced ${searchTerm} techniques`, type: 'ai-suggestion', aiGenerated: true },
+        { id: 'ai-4', text: `${searchTerm} vs alternatives`, type: 'ai-suggestion', aiGenerated: true },
+      ];
+      
+      setAiSuggestions(aiSugs);
+    } catch (error) {
+      console.error('Failed to generate AI suggestions:', error);
+    } finally {
+      setIsGeneratingAI(false);
+    }
+  };
+
+  const allSuggestions = [...baseSuggestions, ...aiSuggestions];
+  const filteredSuggestions = allSuggestions.filter(suggestion =>
     suggestion.text.toLowerCase().includes(query.toLowerCase()) && query.length > 0
   );
 
@@ -69,6 +97,14 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   useEffect(() => {
     setQuery(transcript);
   }, [transcript]);
+
+  useEffect(() => {
+    if (query.length >= 3 && isFocused) {
+      generateAISuggestions(query);
+    } else {
+      setAiSuggestions([]);
+    }
+  }, [query, isFocused]);
 
   const handleSearch = (searchTerm: string = query) => {
     if (!searchTerm.trim()) {
@@ -92,6 +128,13 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
   const handleSuggestionClick = (suggestion: SearchSuggestion) => {
     setQuery(suggestion.text);
     handleSearch(suggestion.text);
+    
+    if (suggestion.aiGenerated) {
+      toast({
+        title: "AI Suggestion Used",
+        description: "Searching with AI-generated query suggestion",
+      });
+    }
   };
 
   const clearQuery = () => {
@@ -114,7 +157,7 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
             ref={inputRef}
             type="text"
             placeholder={placeholder}
-            className="pl-10 pr-24 border-0 shadow-none focus-visible:ring-0"
+            className="pl-10 pr-32 border-0 shadow-none focus-visible:ring-0"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => {
@@ -191,25 +234,63 @@ const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
                 ))}
               </>
             ) : (
-              filteredSuggestions.map((suggestion) => (
-                <div
-                  key={suggestion.id}
-                  className="flex items-center gap-2 px-2 py-1.5 hover:bg-muted rounded cursor-pointer transition-colors"
-                  onClick={() => handleSuggestionClick(suggestion)}
-                >
-                  {suggestion.type === 'tag' && <Tag className="h-3 w-3 text-primary" />}
-                  {suggestion.type === 'history' && <Clock className="h-3 w-3 text-muted-foreground" />}
-                  {suggestion.type === 'suggestion' && <Search className="h-3 w-3 text-muted-foreground" />}
-                  
-                  <span className="text-sm flex-1">{suggestion.text}</span>
-                  
-                  {suggestion.count && (
-                    <Badge variant="outline" className="text-xs">
-                      {suggestion.count}
-                    </Badge>
-                  )}
-                </div>
-              ))
+              <>
+                {/* Regular suggestions */}
+                {filteredSuggestions.filter(s => !s.aiGenerated).map((suggestion) => (
+                  <div
+                    key={suggestion.id}
+                    className="flex items-center gap-2 px-2 py-1.5 hover:bg-muted rounded cursor-pointer transition-colors"
+                    onClick={() => handleSuggestionClick(suggestion)}
+                  >
+                    {suggestion.type === 'tag' && <Tag className="h-3 w-3 text-primary" />}
+                    {suggestion.type === 'history' && <Clock className="h-3 w-3 text-muted-foreground" />}
+                    {suggestion.type === 'suggestion' && <Search className="h-3 w-3 text-muted-foreground" />}
+                    
+                    <span className="text-sm flex-1">{suggestion.text}</span>
+                    
+                    {suggestion.count && (
+                      <Badge variant="outline" className="text-xs">
+                        {suggestion.count}
+                      </Badge>
+                    )}
+                  </div>
+                ))}
+                
+                {/* AI Suggestions */}
+                {filteredSuggestions.filter(s => s.aiGenerated).length > 0 && (
+                  <>
+                    <div className="border-t my-1" />
+                    <div className="text-xs font-medium text-muted-foreground mb-2 px-2 flex items-center gap-1">
+                      <Brain className="h-3 w-3 text-primary" />
+                      AI Suggestions
+                    </div>
+                    {filteredSuggestions.filter(s => s.aiGenerated).map((suggestion) => (
+                      <div
+                        key={suggestion.id}
+                        className="flex items-center gap-2 px-2 py-1.5 hover:bg-muted rounded cursor-pointer transition-colors"
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        <Sparkles className="h-3 w-3 text-primary" />
+                        <span className="text-sm flex-1">{suggestion.text}</span>
+                        <Badge variant="secondary" className="text-xs">
+                          AI
+                        </Badge>
+                      </div>
+                    ))}
+                  </>
+                )}
+                
+                {/* Loading AI suggestions */}
+                {isGeneratingAI && (
+                  <>
+                    <div className="border-t my-1" />
+                    <div className="flex items-center gap-2 px-2 py-1.5 text-muted-foreground">
+                      <Brain className="h-3 w-3 animate-pulse" />
+                      <span className="text-xs">Generating AI suggestions...</span>
+                    </div>
+                  </>
+                )}
+              </>
             )}
           </CardContent>
         </Card>

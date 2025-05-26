@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,11 +17,17 @@ import {
   MessageCircle,
   Wand2,
   Mic,
-  RefreshCw
+  RefreshCw,
+  GraduationCap,
+  BarChart3
 } from 'lucide-react';
 import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
 import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
 import { SmartContentRefinement } from '@/components/ai/SmartContentRefinement';
+import { SmartTagging } from '@/components/ai/SmartTagging';
+import { PersonalizedRecommendations } from '@/components/ai/PersonalizedRecommendations';
+import { LearningPathGenerator } from '@/components/ai/LearningPathGenerator';
+import { ContentQualityAnalyzer } from '@/components/ai/ContentQualityAnalyzer';
 
 const Features: React.FC = () => {
   const aiFeatures = [
@@ -180,13 +185,27 @@ const Features: React.FC = () => {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Smart Content Creation */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <SmartContentWizard />
               <VoiceContentCreator />
             </div>
             
-            <div className="mt-8">
+            {/* Content Enhancement */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <SmartContentRefinement />
+              <SmartTagging />
+            </div>
+            
+            {/* Personalization & Learning */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <PersonalizedRecommendations />
+              <LearningPathGenerator />
+            </div>
+            
+            {/* Content Analysis */}
+            <div className="mb-8">
+              <ContentQualityAnalyzer />
             </div>
           </div>
         </section>
