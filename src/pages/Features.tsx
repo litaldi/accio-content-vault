@@ -26,7 +26,8 @@ import {
   Network,
   Calendar,
   Map,
-  Volume2
+  Volume2,
+  PenTool
 } from 'lucide-react';
 import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
 import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
@@ -71,6 +72,13 @@ const Features: React.FC = () => {
       description: 'Generate concise summaries of articles, documents, and long-form content instantly.',
       status: 'active',
       benefit: 'Understand content quickly'
+    },
+    {
+      icon: PenTool,
+      title: 'AI Writing Assistant',
+      description: 'Real-time writing help with grammar, style, and tone suggestions as you type.',
+      status: 'active',
+      benefit: 'Improve writing quality'
     },
     {
       icon: TrendingUp,
@@ -129,11 +137,18 @@ const Features: React.FC = () => {
       benefit: 'Never wonder what to do next'
     },
     {
-      icon: Zap,
-      title: 'Instant Insights',
-      description: 'Get key insights and trends from your saved content with one click.',
+      icon: BarChart3,
+      title: 'Intelligent Insights',
+      description: 'AI analyzes your knowledge patterns and provides actionable insights.',
       status: 'active',
       benefit: 'Unlock hidden patterns'
+    },
+    {
+      icon: Zap,
+      title: 'Smart Automation',
+      description: 'Automate repetitive tasks with intelligent workflows and rules.',
+      status: 'active',
+      benefit: 'Save hours of manual work'
     },
     {
       icon: Network,
@@ -261,7 +276,19 @@ const Features: React.FC = () => {
               </p>
             </div>
             
-            {/* New AI Features - Latest */}
+            {/* Latest AI Features */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <AIContentSummarizer />
+              <AIWritingAssistant />
+            </div>
+            
+            {/* Analytics & Automation */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <IntelligentContentInsights />
+              <SmartAutomationWorkflows />
+            </div>
+            
+            {/* Learning & Paths */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <AILearningPathGenerator />
               <VoiceContentCreator />
@@ -300,24 +327,12 @@ const Features: React.FC = () => {
             {/* Content Creation & Writing */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
               <SmartContentWizard />
-              <AIWritingAssistant />
-            </div>
-            
-            {/* Content Analysis */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <AIContentSummarizer />
               <PersonalizedRecommendations />
-            </div>
-            
-            {/* Learning & Paths */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <LearningPathGenerator />
-              <IntelligentContentInsights />
             </div>
             
             {/* Advanced Features */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              <SmartAutomationWorkflows />
+              <LearningPathGenerator />
               <ContentQualityAnalyzer />
             </div>
           </div>

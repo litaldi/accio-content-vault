@@ -2,111 +2,85 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
 import { 
   FileText, 
-  Zap, 
+  Zap,
   Copy,
-  RefreshCw,
-  CheckCircle,
+  Check,
+  Download,
+  BookOpen,
   Clock,
-  BarChart3
+  TrendingDown
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface SummaryResult {
+  shortSummary: string;
   keyPoints: string[];
-  summary: string;
   readingTime: string;
-  wordCount: number;
-  sentiment: 'positive' | 'neutral' | 'negative';
+  complexity: 'simple' | 'moderate' | 'complex';
 }
 
 interface AIContentSummarizerProps {
-  initialContent?: string;
-  onSummaryGenerated?: (summary: SummaryResult) => void;
   className?: string;
 }
 
-export const AIContentSummarizer: React.FC<AIContentSummarizerProps> = ({
-  initialContent = '',
-  onSummaryGenerated,
-  className
-}) => {
-  const [content, setContent] = useState(initialContent);
+export const AIContentSummarizer: React.FC<AIContentSummarizerProps> = ({ className }) => {
+  const [content, setContent] = useState('');
   const [summary, setSummary] = useState<SummaryResult | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [progress, setProgress] = useState(0);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [summaryLength, setSummaryLength] = useState<'short' | 'medium' | 'detailed'>('medium');
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
   const generateSummary = async () => {
     if (!content.trim()) {
       toast({
-        title: "No Content",
-        description: "Please enter content to summarize.",
+        title: "Content Required",
+        description: "Please enter some content to summarize.",
         variant: "destructive"
       });
       return;
     }
 
-    setIsGenerating(true);
-    setProgress(0);
-
+    setIsProcessing(true);
     try {
-      // Simulate AI processing with progress updates
-      const progressInterval = setInterval(() => {
-        setProgress(prev => Math.min(prev + 10, 90));
-      }, 200);
-
+      // Simulate AI processing
       await new Promise(resolve => setTimeout(resolve, 2000));
-      clearInterval(progressInterval);
-      setProgress(100);
-
-      // Generate mock summary based on content
-      const wordCount = content.split(/\s+/).length;
-      const readingTime = Math.ceil(wordCount / 200);
       
       const mockSummary: SummaryResult = {
+        shortSummary: `AI-generated ${summaryLength} summary: This content discusses key concepts and insights related to the topic. The main focus is on providing valuable information and actionable takeaways for readers.`,
         keyPoints: [
-          "Main concept: Core ideas and principles discussed in the content",
-          "Key insights: Important findings and observations highlighted",
-          "Practical applications: Real-world uses and implementations mentioned",
-          "Future implications: Potential developments and next steps outlined"
+          'Primary concept or methodology explained',
+          'Key benefits and applications discussed',
+          'Practical implementation strategies outlined',
+          'Important considerations and best practices highlighted'
         ],
-        summary: `This content explores important concepts and provides valuable insights. The material covers approximately ${wordCount} words and discusses key themes that are relevant to the topic. The content presents both theoretical foundations and practical applications, making it useful for understanding and implementation.`,
-        readingTime: `${readingTime} min read`,
-        wordCount,
-        sentiment: wordCount > 500 ? 'positive' : wordCount > 200 ? 'neutral' : 'negative'
+        readingTime: '3-5 minutes',
+        complexity: content.length > 1000 ? 'complex' : content.length > 500 ? 'moderate' : 'simple'
       };
 
       setSummary(mockSummary);
-      onSummaryGenerated?.(mockSummary);
-      
       toast({
         title: "Summary Generated!",
-        description: "AI has analyzed and summarized your content.",
-      });
-    } catch (error) {
-      toast({
-        title: "Generation Failed",
-        description: "Please try again.",
-        variant: "destructive"
+        description: "AI has created an intelligent summary of your content.",
       });
     } finally {
-      setIsGenerating(false);
-      setTimeout(() => setProgress(0), 1000);
+      setIsProcessing(false);
     }
   };
 
-  const copySummary = async () => {
+  const copyToClipboard = async () => {
     if (!summary) return;
     
-    const textToCopy = `Summary:\n${summary.summary}\n\nKey Points:\n${summary.keyPoints.map(point => `• ${point}`).join('\n')}`;
+    const summaryText = `${summary.shortSummary}\n\nKey Points:\n${summary.keyPoints.map(point => `• ${point}`).join('\n')}`;
     
     try {
-      await navigator.clipboard.writeText(textToCopy);
+      await navigator.clipboard.writeText(summaryText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
       toast({
         title: "Copied!",
         description: "Summary copied to clipboard.",
@@ -114,17 +88,17 @@ export const AIContentSummarizer: React.FC<AIContentSummarizerProps> = ({
     } catch (error) {
       toast({
         title: "Copy Failed",
-        description: "Please select and copy manually.",
+        description: "Could not copy to clipboard.",
         variant: "destructive"
       });
     }
   };
 
-  const getSentimentColor = (sentiment: string) => {
-    switch (sentiment) {
-      case 'positive': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'negative': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      default: return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+  const getComplexityColor = (complexity: string) => {
+    switch (complexity) {
+      case 'simple': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      case 'moderate': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
+      default: return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
     }
   };
 
@@ -135,115 +109,154 @@ export const AIContentSummarizer: React.FC<AIContentSummarizerProps> = ({
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5 text-primary" />
             AI Content Summarizer
-            <Badge variant="secondary">AI-Powered</Badge>
+            <Badge variant="secondary">Intelligent</Badge>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
           {/* Content Input */}
-          <div className="space-y-2">
+          <div className="space-y-3">
             <label className="text-sm font-medium">Content to Summarize</label>
             <Textarea
-              placeholder="Paste your article, document, or any text content here..."
+              placeholder="Paste your article, document, or any long-form content here..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              rows={6}
-              className="text-sm"
+              className="min-h-[120px]"
             />
-            <div className="flex justify-between items-center">
-              <span className="text-xs text-muted-foreground">
-                {content.split(/\s+/).filter(word => word.length > 0).length} words
-              </span>
-              <Button
-                onClick={generateSummary}
-                disabled={!content.trim() || isGenerating}
-                className="gap-2"
-              >
-                {isGenerating ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 animate-spin" />
-                    Analyzing...
-                  </>
-                ) : (
-                  <>
-                    <Zap className="h-4 w-4" />
-                    Generate Summary
-                  </>
-                )}
-              </Button>
+            <p className="text-xs text-muted-foreground">
+              {content.length} characters • {content.split(' ').filter(w => w.length > 0).length} words
+            </p>
+          </div>
+
+          {/* Summary Length Options */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Summary Length</label>
+            <div className="flex gap-2">
+              {[
+                { key: 'short', label: 'Short', desc: '1-2 sentences' },
+                { key: 'medium', label: 'Medium', desc: '1 paragraph' },
+                { key: 'detailed', label: 'Detailed', desc: 'Key points + summary' }
+              ].map((option) => (
+                <Button
+                  key={option.key}
+                  variant={summaryLength === option.key ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setSummaryLength(option.key as any)}
+                  className="flex-1 flex-col h-auto py-2"
+                >
+                  <span className="font-medium">{option.label}</span>
+                  <span className="text-xs opacity-70">{option.desc}</span>
+                </Button>
+              ))}
             </div>
           </div>
 
-          {/* Progress Bar */}
-          {isGenerating && (
-            <div className="space-y-2">
-              <div className="flex justify-between text-sm">
-                <span>Processing content...</span>
-                <span>{progress}%</span>
-              </div>
-              <Progress value={progress} className="h-2" />
-            </div>
-          )}
+          {/* Generate Button */}
+          <Button
+            onClick={generateSummary}
+            disabled={isProcessing || !content.trim()}
+            className="w-full gap-2"
+            size="lg"
+          >
+            {isProcessing ? (
+              <>
+                <div className="w-4 h-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                Analyzing Content...
+              </>
+            ) : (
+              <>
+                <Zap className="h-4 w-4" />
+                Generate Summary
+              </>
+            )}
+          </Button>
 
           {/* Summary Results */}
           {summary && (
             <div className="space-y-4">
-              {/* Metadata */}
-              <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className="gap-1">
-                  <Clock className="h-3 w-3" />
-                  {summary.readingTime}
-                </Badge>
-                <Badge variant="outline" className="gap-1">
-                  <BarChart3 className="h-3 w-3" />
-                  {summary.wordCount} words
-                </Badge>
-                <Badge className={getSentimentColor(summary.sentiment)}>
-                  {summary.sentiment} tone
-                </Badge>
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium">AI Summary</h3>
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={copyToClipboard}
+                    className="gap-1"
+                  >
+                    {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                    {copied ? 'Copied' : 'Copy'}
+                  </Button>
+                  <Button variant="outline" size="sm" className="gap-1">
+                    <Download className="h-3 w-3" />
+                    Export
+                  </Button>
+                </div>
               </div>
 
-              {/* Summary */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <div className="flex justify-between items-center">
-                    <CardTitle className="text-base">Summary</CardTitle>
-                    <Button variant="outline" size="sm" onClick={copySummary}>
-                      <Copy className="h-4 w-4 mr-1" />
-                      Copy
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground">{summary.summary}</p>
-                </CardContent>
-              </Card>
+              {/* Summary Metadata */}
+              <div className="flex flex-wrap gap-4 text-sm">
+                <div className="flex items-center gap-1">
+                  <Clock className="h-4 w-4 text-muted-foreground" />
+                  <span>Reading: {summary.readingTime}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <TrendingDown className="h-4 w-4 text-muted-foreground" />
+                  <Badge className={getComplexityColor(summary.complexity)} variant="outline">
+                    {summary.complexity}
+                  </Badge>
+                </div>
+              </div>
 
-              {/* Key Points */}
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-base">Key Points</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
+              {/* Summary Content */}
+              <div className="bg-muted/30 p-4 rounded-lg space-y-4">
+                <div>
+                  <h4 className="font-medium mb-2">Summary</h4>
+                  <p className="text-sm leading-relaxed">{summary.shortSummary}</p>
+                </div>
+                
+                <div>
+                  <h4 className="font-medium mb-2">Key Points</h4>
+                  <ul className="space-y-1">
                     {summary.keyPoints.map((point, index) => (
-                      <li key={index} className="flex items-start gap-2 text-sm">
-                        <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                      <li key={index} className="text-sm flex items-start gap-2">
+                        <span className="text-primary mt-1">•</span>
                         <span>{point}</span>
                       </li>
                     ))}
                   </ul>
-                </CardContent>
-              </Card>
+                </div>
+              </div>
             </div>
           )}
 
+          {/* Quick Examples */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm">Quick Examples</h4>
+            <div className="grid gap-2">
+              {[
+                "Artificial intelligence is transforming how we work and live...",
+                "The latest research in productivity shows that focused work sessions...",
+                "Climate change impacts are accelerating globally, with rising temperatures..."
+              ].map((example, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setContent(example + " [This is a sample text for demonstration purposes. In real usage, you would paste your full content here.]")}
+                  className="text-left justify-start text-xs h-auto p-2"
+                >
+                  "{example}"
+                </Button>
+              ))}
+            </div>
+          </div>
+
           {/* Tips */}
           <div className="bg-blue-50 dark:bg-blue-950 p-3 rounded-lg text-sm">
-            <h4 className="font-medium mb-1">🚀 Summarization Tips:</h4>
+            <h4 className="font-medium mb-1">📝 Summarization Tips:</h4>
             <ul className="text-muted-foreground space-y-1">
-              <li>• Works best with articles, documents, and structured content</li>
-              <li>• Longer content (500+ words) produces more detailed summaries</li>
-              <li>• AI identifies key themes, insights, and actionable items</li>
+              <li>• Works best with articles, reports, and structured content</li>
+              <li>• Try different summary lengths for various use cases</li>
+              <li>• Use detailed summaries for complex technical content</li>
             </ul>
           </div>
         </CardContent>

@@ -9,12 +9,14 @@ import {
   Play,
   Pause,
   Settings,
-  CheckCircle,
+  Plus,
   Clock,
-  Tag,
-  Bell,
+  Target,
   Filter,
-  Send
+  Bell,
+  Mail,
+  Calendar,
+  RefreshCw
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -24,112 +26,130 @@ interface AutomationRule {
   description: string;
   trigger: string;
   action: string;
-  isActive: boolean;
-  executionCount: number;
-  icon: React.ComponentType<{ className?: string }>;
+  enabled: boolean;
+  frequency: 'immediate' | 'daily' | 'weekly';
+  lastRun?: Date;
+  runsCount: number;
 }
 
 interface SmartAutomationWorkflowsProps {
   className?: string;
 }
 
-export const SmartAutomationWorkflows: React.FC<SmartAutomationWorkflowsProps> = ({
-  className
-}) => {
-  const [automations, setAutomations] = useState<AutomationRule[]>([
+export const SmartAutomationWorkflows: React.FC<SmartAutomationWorkflowsProps> = ({ className }) => {
+  const [workflows, setWorkflows] = useState<AutomationRule[]>([
     {
-      id: 'auto-tag',
-      name: 'Smart Auto-Tagging',
-      description: 'Automatically tag content based on AI analysis',
-      trigger: 'When new content is saved',
-      action: 'Apply relevant tags using AI',
-      isActive: true,
-      executionCount: 127,
-      icon: Tag
+      id: '1',
+      name: 'Auto-Tag New Content',
+      description: 'Automatically tag incoming content based on AI analysis',
+      trigger: 'New content saved',
+      action: 'Apply smart tags',
+      enabled: true,
+      frequency: 'immediate',
+      lastRun: new Date(Date.now() - 2 * 60 * 60 * 1000),
+      runsCount: 47
     },
     {
-      id: 'weekly-digest',
+      id: '2',
       name: 'Weekly Learning Digest',
-      description: 'Compile and send weekly summary of saved content',
-      trigger: 'Every Sunday at 6 PM',
-      action: 'Generate and email content summary',
-      isActive: true,
-      executionCount: 8,
-      icon: Send
+      description: 'Send summary of unread content and learning progress',
+      trigger: 'Every Monday 9 AM',
+      action: 'Send email digest',
+      enabled: true,
+      frequency: 'weekly',
+      lastRun: new Date(Date.now() - 24 * 60 * 60 * 1000),
+      runsCount: 12
     },
     {
-      id: 'duplicate-filter',
-      name: 'Duplicate Content Filter',
-      description: 'Prevent saving duplicate or similar content',
-      trigger: 'Before saving any content',
-      action: 'Check for duplicates and warn user',
-      isActive: false,
-      executionCount: 23,
-      icon: Filter
-    },
-    {
-      id: 'reminder-system',
-      name: 'Smart Reminders',
-      description: 'Remind you to review saved content based on importance',
-      trigger: 'Based on content priority and time',
-      action: 'Send notification to review content',
-      isActive: true,
-      executionCount: 45,
-      icon: Bell
-    },
-    {
-      id: 'collection-organizer',
-      name: 'Auto-Collection Organization',
-      description: 'Automatically organize content into relevant collections',
-      trigger: 'When content reaches threshold',
-      action: 'Create collections and move content',
-      isActive: false,
-      executionCount: 12,
-      icon: CheckCircle
+      id: '3',
+      name: 'Smart Content Cleanup',
+      description: 'Archive old, untagged content automatically',
+      trigger: 'Content older than 3 months',
+      action: 'Archive and suggest tags',
+      enabled: false,
+      frequency: 'weekly',
+      runsCount: 0
     }
   ]);
-
+  
+  const [isCreating, setIsCreating] = useState(false);
   const { toast } = useToast();
 
-  const toggleAutomation = (id: string) => {
-    setAutomations(prev => 
-      prev.map(automation => 
-        automation.id === id 
-          ? { ...automation, isActive: !automation.isActive }
-          : automation
-      )
-    );
-
-    const automation = automations.find(a => a.id === id);
-    if (automation) {
-      toast({
-        title: `Automation ${automation.isActive ? 'Disabled' : 'Enabled'}`,
-        description: `${automation.name} is now ${automation.isActive ? 'inactive' : 'active'}.`,
-      });
-    }
-  };
-
-  const executeNow = (id: string) => {
-    const automation = automations.find(a => a.id === id);
-    if (!automation) return;
-
-    // Simulate execution
-    setAutomations(prev => 
-      prev.map(a => 
-        a.id === id 
-          ? { ...a, executionCount: a.executionCount + 1 }
-          : a
-      )
-    );
-
+  const toggleWorkflow = (id: string) => {
+    setWorkflows(prev => prev.map(workflow => 
+      workflow.id === id 
+        ? { ...workflow, enabled: !workflow.enabled }
+        : workflow
+    ));
+    
+    const workflow = workflows.find(w => w.id === id);
     toast({
-      title: "Automation Executed",
-      description: `${automation.name} has been run successfully.`,
+      title: workflow?.enabled ? "Workflow Disabled" : "Workflow Enabled",
+      description: `${workflow?.name} has been ${workflow?.enabled ? 'disabled' : 'enabled'}.`,
     });
   };
 
-  const totalExecutions = automations.reduce((sum, auto) => sum + auto.executionCount, 0);
-  const activeAutomations = automations.filter(auto => auto.isActive).length;
+  const runWorkflow = async (id: string) => {
+    const workflow = workflows.find(w => w.id === id);
+    if (!workflow) return;
+
+    setWorkflows(prev => prev.map(w => 
+      w.id === id 
+        ? { ...w, lastRun: new Date(), runsCount: w.runsCount + 1 }
+        : w
+    ));
+
+    toast({
+      title: "Workflow Executed",
+      description: `${workflow.name} has been run successfully.`,
+    });
+  };
+
+  const createNewWorkflow = async () => {
+    setIsCreating(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const newWorkflow: AutomationRule = {
+        id: Date.now().toString(),
+        name: 'Custom Workflow',
+        description: 'A new automation workflow',
+        trigger: 'Custom trigger',
+        action: 'Custom action',
+        enabled: false,
+        frequency: 'daily',
+        runsCount: 0
+      };
+
+      setWorkflows(prev => [newWorkflow, ...prev]);
+      
+      toast({
+        title: "Workflow Created!",
+        description: "New automation workflow has been created.",
+      });
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const getFrequencyColor = (frequency: string) => {
+    switch (frequency) {
+      case 'immediate': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+      case 'daily': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
+      default: return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
+    }
+  };
+
+  const formatLastRun = (date?: Date) => {
+    if (!date) return 'Never';
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours}h ago`;
+    return `${Math.floor(diffHours / 24)}d ago`;
+  };
 
   return (
     <div className={className}>
@@ -138,129 +158,184 @@ export const SmartAutomationWorkflows: React.FC<SmartAutomationWorkflowsProps> =
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
             Smart Automation Workflows
-            <Badge variant="secondary">AI-Driven</Badge>
+            <Badge variant="secondary">Intelligent</Badge>
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Overview Stats */}
-          <div className="grid grid-cols-3 gap-4">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{activeAutomations}</div>
-              <div className="text-xs text-muted-foreground">Active Workflows</div>
+          {/* Create New Workflow */}
+          <div className="flex items-center justify-between p-4 border border-dashed border-muted-foreground/25 rounded-lg">
+            <div>
+              <h3 className="font-medium">Create New Workflow</h3>
+              <p className="text-sm text-muted-foreground">Automate repetitive tasks with AI-powered rules</p>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">{totalExecutions}</div>
-              <div className="text-xs text-muted-foreground">Total Executions</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-primary">98%</div>
-              <div className="text-xs text-muted-foreground">Success Rate</div>
-            </div>
+            <Button
+              onClick={createNewWorkflow}
+              disabled={isCreating}
+              className="gap-2"
+            >
+              {isCreating ? (
+                <>
+                  <div className="w-4 h-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                  Creating...
+                </>
+              ) : (
+                <>
+                  <Plus className="h-4 w-4" />
+                  Create
+                </>
+              )}
+            </Button>
           </div>
 
-          {/* Automation Rules */}
+          {/* Active Workflows */}
           <div className="space-y-4">
-            <h3 className="font-medium">Available Automations</h3>
-            <div className="space-y-3">
-              {automations.map((automation) => (
-                <Card key={automation.id} className={`transition-all duration-200 ${
-                  automation.isActive ? 'border-primary/20 bg-primary/5' : ''
-                }`}>
-                  <CardContent className="p-4">
-                    <div className="space-y-3">
-                      <div className="flex items-start justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className={`p-2 rounded-lg ${
-                            automation.isActive ? 'bg-primary/10' : 'bg-muted'
-                          }`}>
-                            <automation.icon className={`h-4 w-4 ${
-                              automation.isActive ? 'text-primary' : 'text-muted-foreground'
-                            }`} />
-                          </div>
-                          <div>
-                            <h4 className="font-medium">{automation.name}</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {automation.description}
-                            </p>
-                          </div>
+            <h3 className="font-medium">Your Automation Workflows</h3>
+            {workflows.map((workflow) => (
+              <Card key={workflow.id} className={`${workflow.enabled ? 'ring-1 ring-primary/20' : ''}`}>
+                <CardContent className="p-4">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-medium">{workflow.name}</h4>
+                        <Badge className={getFrequencyColor(workflow.frequency)} variant="outline">
+                          {workflow.frequency}
+                        </Badge>
+                        {workflow.enabled && (
+                          <Badge variant="outline" className="bg-green-50 text-green-700 dark:bg-green-950">
+                            Active
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3">{workflow.description}</p>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div className="flex items-center gap-2">
+                          <Target className="h-3 w-3 text-muted-foreground" />
+                          <span><strong>Trigger:</strong> {workflow.trigger}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Badge variant="outline" className="text-xs">
-                            {automation.executionCount} runs
-                          </Badge>
-                          <Switch
-                            checked={automation.isActive}
-                            onCheckedChange={() => toggleAutomation(automation.id)}
-                          />
+                          <Zap className="h-3 w-3 text-muted-foreground" />
+                          <span><strong>Action:</strong> {workflow.action}</span>
                         </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-                        <div>
-                          <span className="font-medium">Trigger: </span>
-                          <span className="text-muted-foreground">{automation.trigger}</span>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-3 w-3 text-muted-foreground" />
+                          <span><strong>Last run:</strong> {formatLastRun(workflow.lastRun)}</span>
                         </div>
-                        <div>
-                          <span className="font-medium">Action: </span>
-                          <span className="text-muted-foreground">{automation.action}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-2 border-t">
-                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
-                          Last run: 2 hours ago
-                        </div>
-                        <div className="flex gap-2">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            disabled={!automation.isActive}
-                            onClick={() => executeNow(automation.id)}
-                          >
-                            <Play className="h-3 w-3 mr-1" />
-                            Run Now
-                          </Button>
-                          <Button variant="ghost" size="sm">
-                            <Settings className="h-3 w-3" />
-                          </Button>
+                        <div className="flex items-center gap-2">
+                          <RefreshCw className="h-3 w-3 text-muted-foreground" />
+                          <span><strong>Runs:</strong> {workflow.runsCount}</span>
                         </div>
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                    
+                    <div className="flex flex-col items-end gap-2">
+                      <Switch
+                        checked={workflow.enabled}
+                        onCheckedChange={() => toggleWorkflow(workflow.id)}
+                      />
+                      <div className="flex gap-1">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => runWorkflow(workflow.id)}
+                          className="gap-1"
+                        >
+                          <Play className="h-3 w-3" />
+                          Run
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="gap-1"
+                        >
+                          <Settings className="h-3 w-3" />
+                          Edit
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Workflow Templates */}
+          <div className="space-y-3">
+            <h4 className="font-medium text-sm">Popular Workflow Templates</h4>
+            <div className="grid gap-3">
+              {[
+                {
+                  icon: Bell,
+                  name: 'Smart Notifications',
+                  description: 'Get notified about important content updates',
+                  trigger: 'High-priority content detected'
+                },
+                {
+                  icon: Mail,
+                  name: 'Content Recommendations',
+                  description: 'Daily personalized content suggestions',
+                  trigger: 'Based on reading patterns'
+                },
+                {
+                  icon: Calendar,
+                  name: 'Learning Reminders',
+                  description: 'Schedule review sessions for saved content',
+                  trigger: 'Time-based scheduling'
+                },
+                {
+                  icon: Filter,
+                  name: 'Auto-Organization',
+                  description: 'Automatically organize content into collections',
+                  trigger: 'Content similarity analysis'
+                }
+              ].map((template, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-3 p-3 border border-muted-foreground/20 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                >
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <template.icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h5 className="font-medium text-sm">{template.name}</h5>
+                    <p className="text-xs text-muted-foreground">{template.description}</p>
+                  </div>
+                  <Button size="sm" variant="outline">
+                    Use Template
+                  </Button>
+                </div>
               ))}
             </div>
           </div>
 
-          {/* Quick Actions */}
-          <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950 dark:to-blue-950">
-            <CardContent className="p-4">
-              <h4 className="font-medium mb-3">🚀 Automation Benefits</h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span>Save 2+ hours per week</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span>Consistent organization</span>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span>Never miss important content</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-600" />
-                    <span>AI-powered intelligence</span>
-                  </div>
-                </div>
+          {/* Automation Stats */}
+          <div className="bg-gradient-to-r from-primary/5 to-blue-500/5 p-4 rounded-lg">
+            <h4 className="font-medium mb-3">Automation Impact</h4>
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div>
+                <div className="text-2xl font-bold text-primary">2.5h</div>
+                <div className="text-xs text-muted-foreground">Time Saved</div>
               </div>
-            </CardContent>
-          </Card>
+              <div>
+                <div className="text-2xl font-bold text-green-600">94%</div>
+                <div className="text-xs text-muted-foreground">Accuracy</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-blue-600">156</div>
+                <div className="text-xs text-muted-foreground">Tasks Automated</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Tips */}
+          <div className="bg-orange-50 dark:bg-orange-950 p-3 rounded-lg text-sm">
+            <h4 className="font-medium mb-1">⚡ Automation Tips:</h4>
+            <ul className="text-muted-foreground space-y-1">
+              <li>• Start with simple workflows and gradually add complexity</li>
+              <li>• Monitor workflow performance and adjust triggers as needed</li>
+              <li>• Use templates to quickly set up common automation patterns</li>
+            </ul>
+          </div>
         </CardContent>
       </Card>
     </div>
