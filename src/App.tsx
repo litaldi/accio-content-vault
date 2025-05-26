@@ -5,6 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { RadixProviders } from '@/components/providers/RadixProviders';
 import { Toaster } from '@/components/ui/toaster';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
@@ -21,6 +22,7 @@ import SaveContent from '@/pages/SaveContent';
 import Search from '@/pages/Search';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
+import RadixDemo from '@/pages/RadixDemo';
 import NotFound from '@/pages/NotFound';
 
 // Import styles
@@ -34,29 +36,32 @@ function App() {
       <ThemeProvider>
         <AccessibilityProvider>
           <AuthProvider>
-            <Router>
-              <div className="min-h-screen bg-background text-foreground">
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/help" element={<Help />} />
-                  <Route path="/features" element={<Features />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/collections" element={<Collections />} />
-                  <Route path="/analytics" element={<Analytics />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/save-content" element={<SaveContent />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/terms" element={<Terms />} />
-                  <Route path="/privacy" element={<Privacy />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                <Toaster />
-              </div>
-            </Router>
+            <RadixProviders>
+              <Router>
+                <div className="min-h-screen bg-background text-foreground">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/help" element={<Help />} />
+                    <Route path="/features" element={<Features />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/collections" element={<Collections />} />
+                    <Route path="/analytics" element={<Analytics />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/settings" element={<Settings />} />
+                    <Route path="/save-content" element={<SaveContent />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/terms" element={<Terms />} />
+                    <Route path="/privacy" element={<Privacy />} />
+                    <Route path="/radix-demo" element={<RadixDemo />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                  <Toaster />
+                </div>
+              </Router>
+            </RadixProviders>
           </AuthProvider>
         </AccessibilityProvider>
       </ThemeProvider>
