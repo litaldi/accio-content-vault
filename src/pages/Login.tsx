@@ -10,7 +10,6 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -54,13 +53,13 @@ const Login = () => {
   };
 
   return (
-    <ImprovedUnifiedLayout showNavigation={false} showFooter={false}>
+    <>
       <Helmet>
         <title>Sign In - Accio Knowledge Library</title>
         <meta name="description" content="Sign in to your Accio account and access your personal knowledge library." />
       </Helmet>
 
-      <div className="min-h-screen flex items-center justify-center px-4 py-12">
+      <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
         <div className="w-full max-w-md space-y-8">
           {/* Header */}
           <div className="text-center">
@@ -190,7 +189,7 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </ImprovedUnifiedLayout>
+    </>
   );
 };
 
