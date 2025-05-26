@@ -8,7 +8,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
-import ErrorBoundary from '@/components/error/ErrorBoundary';
+import ErrorBoundary from '@/components/ErrorBoundary';
 import LoadingSpinner from '@/components/ui/loading-spinner';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 

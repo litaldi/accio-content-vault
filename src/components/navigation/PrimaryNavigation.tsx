@@ -1,230 +1,197 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import { UnifiedAuthModal } from '@/components/auth/UnifiedAuthModal';
-import { useAuth } from '@/contexts/AuthContext';
-import { LogIn, UserPlus, Menu, X } from 'lucide-react';
+import { useResponsiveDesign } from '@/hooks/use-responsive-design';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { Menu, X, Search, BookOpen, Save, Settings, User, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-const PrimaryNavigation = () => {
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authModalTab, setAuthModalTab] = useState<'signup' | 'login'>('signup');
+interface PrimaryNavigationProps {
+  isLoggedIn?: boolean;
+  user?: any;
+  onSignOut?: () => void;
+}
+
+const PrimaryNavigation: React.FC<PrimaryNavigationProps> = ({
+  isLoggedIn = false,
+  user,
+  onSignOut
+}) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const handleGetStarted = () => {
-    setAuthModalTab('signup');
-    setAuthModalOpen(true);
-  };
-
-  const handleLogin = () => {
-    setAuthModalTab('login');
-    setAuthModalOpen(true);
-  };
+  const { isMobile } = useResponsiveDesign();
+  const { preferences, announceToScreenReader } = useAccessibility();
+  const location = useLocation();
 
   const navigationItems = [
-    { label: 'Features', href: '#features-section' },
-    { label: 'Pricing', href: '#pricing-section' },
-    { label: 'About', href: '/about' },
-    { label: 'FAQ', href: '#faq-section' },
+    { name: 'Dashboard', href: '/dashboard', icon: BookOpen, requiresAuth: true },
+    { name: 'Save Content', href: '/save', icon: Save, requiresAuth: true },
+    { name: 'Search', href: '/search', icon: Search, requiresAuth: true },
+    { name: 'Settings', href: '/settings', icon: Settings, requiresAuth: true },
   ];
 
-  const handleNavClick = (href: string, e: React.MouseEvent) => {
-    if (href.startsWith('#')) {
-      e.preventDefault();
-      const element = document.querySelector(href);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-    setMobileMenuOpen(false);
+  const visibleItems = navigationItems.filter(item => 
+    !item.requiresAuth || isLoggedIn
+  );
+
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+    announceToScreenReader(
+      mobileMenuOpen ? 'Menu closed' : 'Menu opened'
+    );
+  };
+
+  const handleSignOut = () => {
+    onSignOut?.();
+    announceToScreenReader('Signed out successfully');
   };
 
   return (
-    <>
-      <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <nav className="container flex h-16 items-center justify-between px-4" role="navigation" aria-label="Primary navigation">
+    <nav 
+      className={cn(
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        preferences.highContrast && "border-2"
+      )}
+      role="navigation"
+      aria-label="Primary navigation"
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link 
-            to="/" 
-            className="flex items-center gap-3 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md"
-            aria-label="Accio - Go to homepage"
+          <Link
+            to="/"
+            className={cn(
+              "flex items-center space-x-2 font-bold text-xl",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md p-1"
+            )}
           >
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg" aria-hidden="true">A</span>
-            </div>
-            <span className="text-xl font-bold text-primary">Accio</span>
+            <span className="text-primary">Accio</span>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-6">
-            {navigationItems.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={(e) => handleNavClick(item.href, e)}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md px-2 py-1"
-              >
-                {item.label}
-              </a>
-            ))}
-          </div>
-
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
-            <ModeToggle />
-            
-            {!user ? (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleLogin}
-                  className="flex items-center gap-2 text-sm font-medium"
-                  aria-label="Log in to your account"
+          {!isMobile && (
+            <div className="hidden md:flex md:items-center md:space-x-6">
+              {visibleItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center space-x-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                    location.pathname === item.href
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
                 >
-                  <LogIn className="h-4 w-4" aria-hidden="true" />
-                  <span>Log In</span>
-                </Button>
+                  <item.icon className="h-4 w-4" aria-hidden="true" />
+                  <span>{item.name}</span>
+                </Link>
+              ))}
+            </div>
+          )}
 
-                <Button
-                  onClick={handleGetStarted}
-                  size="sm"
-                  className="flex items-center gap-2 text-sm font-medium"
-                  aria-label="Get started with Accio"
-                >
-                  <UserPlus className="h-4 w-4" aria-hidden="true" />
-                  <span>Get Started</span>
-                </Button>
-              </div>
+          {/* User Menu / Auth Buttons */}
+          <div className="flex items-center space-x-4">
+            {isLoggedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="relative h-8 w-8 rounded-full"
+                  >
+                    <User className="h-4 w-4" />
+                    <span className="sr-only">Open user menu</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <div className="px-2 py-1.5 text-sm font-medium">
+                    {user?.email || 'User'}
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings" className="flex items-center">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  asChild
-                >
-                  <Link to="/dashboard">Dashboard</Link>
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">Sign in</Link>
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => signOut()}
-                >
-                  Sign Out
+                <Button size="sm" asChild>
+                  <Link to="/register">Sign up</Link>
                 </Button>
               </div>
             )}
-          </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden items-center gap-2">
-            <ModeToggle />
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-              aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-menu"
-            >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5" aria-hidden="true" />
-              ) : (
-                <Menu className="h-5 w-5" aria-hidden="true" />
-              )}
-            </Button>
+            {/* Mobile Menu Button */}
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden"
+                onClick={handleMobileMenuToggle}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-menu"
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-5 w-5" aria-hidden="true" />
+                )}
+                <span className="sr-only">
+                  {mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                </span>
+              </Button>
+            )}
           </div>
-        </nav>
+        </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div 
+        {isMobile && mobileMenuOpen && (
+          <div
             id="mobile-menu"
-            className="md:hidden border-t bg-background/95 backdrop-blur"
-            role="menu"
-            aria-orientation="vertical"
+            className="md:hidden border-t bg-background py-2"
           >
-            <div className="container px-4 py-4">
-              <div className="flex flex-col gap-4">
-                {/* Navigation Items */}
-                <div className="flex flex-col gap-2">
-                  {navigationItems.map((item) => (
-                    <a
-                      key={item.label}
-                      href={item.href}
-                      onClick={(e) => handleNavClick(item.href, e)}
-                      className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors px-2 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                      role="menuitem"
-                    >
-                      {item.label}
-                    </a>
-                  ))}
-                </div>
-
-                {/* Mobile Actions */}
-                <div className="pt-4 border-t">
-                  {!user ? (
-                    <div className="flex flex-col gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={handleLogin}
-                        className="w-full justify-start"
-                        aria-label="Log in to your account"
-                      >
-                        <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
-                        Log In
-                      </Button>
-                      <Button
-                        onClick={handleGetStarted}
-                        className="w-full justify-start"
-                        aria-label="Get started with Accio"
-                      >
-                        <UserPlus className="h-4 w-4 mr-2" aria-hidden="true" />
-                        Get Started
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col gap-2">
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          navigate('/dashboard');
-                          setMobileMenuOpen(false);
-                        }}
-                        className="w-full justify-start"
-                      >
-                        Dashboard
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        onClick={() => {
-                          signOut();
-                          setMobileMenuOpen(false);
-                        }}
-                        className="w-full justify-start"
-                      >
-                        Sign Out
-                      </Button>
-                    </div>
+            <div className="space-y-1 px-2">
+              {visibleItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={cn(
+                    "flex items-center space-x-3 rounded-md px-3 py-2 text-base font-medium",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                    location.pathname === item.href
+                      ? "bg-accent text-accent-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   )}
-                </div>
-              </div>
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <item.icon className="h-5 w-5" aria-hidden="true" />
+                  <span>{item.name}</span>
+                </Link>
+              ))}
             </div>
           </div>
         )}
-      </header>
-
-      {/* Unified Auth Modal */}
-      <UnifiedAuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        defaultTab={authModalTab}
-      />
-    </>
+      </div>
+    </nav>
   );
 };
 
