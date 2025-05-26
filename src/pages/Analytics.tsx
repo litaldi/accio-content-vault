@@ -1,210 +1,195 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import Navigation from '@/components/layout/Navigation';
+import CleanNavigation from '@/components/navigation/CleanNavigation';
 import Footer from '@/components/Footer';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
   BarChart3, 
   TrendingUp, 
   Clock, 
+  Star,
   BookOpen,
-  Target,
-  Zap,
-  Calendar,
-  Award
+  FolderOpen,
+  Brain,
+  Target
 } from 'lucide-react';
 
 const Analytics = () => {
   const stats = [
-    {
-      title: "Items Saved",
-      value: "1,247",
-      change: "+12%",
-      trend: "up",
-      icon: BookOpen,
-      color: "blue"
-    },
-    {
-      title: "Time Saved",
-      value: "24.5 hrs",
-      change: "+8%",
-      trend: "up",
-      icon: Clock,
-      color: "green"
-    },
-    {
-      title: "Collections",
-      value: "18",
-      change: "+3",
-      trend: "up",
-      icon: Target,
-      color: "purple"
-    },
-    {
-      title: "Knowledge Score",
-      value: "92%",
-      change: "+5%",
-      trend: "up",
-      icon: Award,
-      color: "orange"
-    }
+    { label: "Total Knowledge Items", value: "1,247", icon: BookOpen, change: "+23%" },
+    { label: "Active Collections", value: "18", icon: FolderOpen, change: "+3" },
+    { label: "Time Saved This Month", value: "28.5h", icon: Clock, change: "+12%" },
+    { label: "Learning Streak", value: "12 days", icon: Target, change: "New!" }
   ];
 
-  const insights = [
-    {
-      title: "Most Active Day",
-      value: "Tuesday",
-      description: "You save 40% more content on Tuesdays"
-    },
-    {
-      title: "Top Category",
-      value: "Research",
-      description: "45% of your saved content is research-related"
-    },
-    {
-      title: "Average Read Time",
-      value: "8 minutes",
-      description: "Perfect for focused learning sessions"
-    },
-    {
-      title: "Streak",
-      value: "12 days",
-      description: "Current knowledge building streak"
-    }
+  const weeklyActivity = [
+    { day: "Mon", saves: 12 },
+    { day: "Tue", saves: 8 },
+    { day: "Wed", saves: 15 },
+    { day: "Thu", saves: 22 },
+    { day: "Fri", saves: 18 },
+    { day: "Sat", saves: 5 },
+    { day: "Sun", saves: 9 }
   ];
 
-  const recentActivity = [
-    { action: "Saved article", title: "AI in Knowledge Management", time: "2 hours ago" },
-    { action: "Created collection", title: "Machine Learning Papers", time: "5 hours ago" },
-    { action: "Added tags", title: "React Best Practices", time: "1 day ago" },
-    { action: "Shared collection", title: "Design Resources", time: "2 days ago" }
+  const topCollections = [
+    { name: "AI & Future Tech", items: 47, growth: "+12" },
+    { name: "Developer's Toolkit", items: 89, growth: "+15" },
+    { name: "Design Mastery", items: 33, growth: "+8" },
+    { name: "Business Strategy", items: 24, growth: "+6" }
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Analytics - Accio Knowledge Engine</title>
-        <meta name="description" content="Track your knowledge management progress and discover insights about your learning patterns." />
+        <title>Analytics - Accio</title>
+        <meta name="description" content="Track your knowledge growth, learning patterns, and productivity insights with detailed analytics." />
       </Helmet>
 
-      <Navigation />
+      <CleanNavigation />
 
       <main className="flex-grow">
-        {/* Header Section */}
-        <section className="py-8 border-b">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        {/* Header */}
+        <section className="border-b bg-muted/30 py-8">
+          <div className="container">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
               <div>
-                <h1 className="text-3xl font-bold mb-2">Analytics</h1>
-                <p className="text-muted-foreground">
-                  Track your knowledge management journey and discover insights
+                <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                  <BarChart3 className="h-8 w-8 text-primary" />
+                  Analytics Dashboard
+                </h1>
+                <p className="text-muted-foreground text-lg">
+                  Track your knowledge growth and learning patterns
                 </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
-                  Last 30 days
-                </Badge>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Main Content */}
-        <div className="container mx-auto px-4 max-w-6xl py-8 space-y-8">
-          {/* Stats Grid */}
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat, index) => (
-              <Card key={index} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className={`w-10 h-10 rounded-lg bg-${stat.color}-500/10 flex items-center justify-center`}>
-                      <stat.icon className={`h-5 w-5 text-${stat.color}-500`} />
+        {/* Stats Overview */}
+        <section className="py-8">
+          <div className="container">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {stats.map((stat, index) => (
+                <Card key={index}>
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-muted-foreground">{stat.label}</p>
+                        <p className="text-2xl font-bold">{stat.value}</p>
+                        <Badge variant="secondary" className="mt-1 text-xs">
+                          {stat.change}
+                        </Badge>
+                      </div>
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <stat.icon className="h-6 w-6 text-primary" />
+                      </div>
                     </div>
-                    <Badge variant={stat.trend === 'up' ? 'default' : 'secondary'} className="text-xs">
-                      <TrendingUp className="h-3 w-3 mr-1" />
-                      {stat.change}
-                    </Badge>
-                  </div>
-                  <div>
-                    <p className="text-2xl font-bold mb-1">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.title}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
+        </section>
 
-          {/* Charts and Insights */}
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Activity Chart Placeholder */}
-            <Card className="lg:col-span-2 hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5 text-primary" />
-                  Saving Activity
-                </CardTitle>
-                <CardDescription>
-                  Your content saving patterns over the last 30 days
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 rounded-lg bg-muted/20 flex items-center justify-center border-2 border-dashed border-border">
-                  <div className="text-center">
-                    <BarChart3 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <p className="text-muted-foreground">Interactive chart coming soon</p>
-                    <p className="text-sm text-muted-foreground">Track your daily saving habits</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Insights */}
-            <div className="space-y-6">
-              <Card className="hover:shadow-md transition-shadow">
+        {/* Charts Section */}
+        <section className="py-8">
+          <div className="container">
+            <div className="grid lg:grid-cols-2 gap-8">
+              {/* Weekly Activity */}
+              <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <Zap className="h-5 w-5 text-primary" />
-                    Quick Insights
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    Weekly Activity
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {insights.map((insight, index) => (
-                    <div key={index} className="pb-4 border-b border-border/50 last:border-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-medium">{insight.title}</p>
-                        <p className="text-sm font-bold text-primary">{insight.value}</p>
+                <CardContent>
+                  <div className="space-y-4">
+                    {weeklyActivity.map((day, index) => (
+                      <div key={index} className="flex items-center gap-4">
+                        <div className="w-12 text-sm text-muted-foreground">{day.day}</div>
+                        <div className="flex-1 bg-muted rounded-full h-2 relative">
+                          <div 
+                            className="bg-primary h-2 rounded-full transition-all"
+                            style={{ width: `${(day.saves / 25) * 100}%` }}
+                          />
+                        </div>
+                        <div className="w-8 text-sm font-medium">{day.saves}</div>
                       </div>
-                      <p className="text-xs text-muted-foreground">{insight.description}</p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-md transition-shadow">
+              {/* Top Collections */}
+              <Card>
                 <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
+                  <CardTitle className="flex items-center gap-2">
+                    <FolderOpen className="h-5 w-5 text-primary" />
+                    Top Collections
+                  </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3">
-                  {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-start gap-3 pb-3 border-b border-border/50 last:border-0">
-                      <div className="w-2 h-2 rounded-full bg-primary mt-2"></div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm">
-                          <span className="font-medium">{activity.action}</span>:{" "}
-                          <span className="text-muted-foreground">{activity.title}</span>
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">{activity.time}</p>
+                <CardContent>
+                  <div className="space-y-4">
+                    {topCollections.map((collection, index) => (
+                      <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                        <div>
+                          <div className="font-medium">{collection.name}</div>
+                          <div className="text-sm text-muted-foreground">{collection.items} items</div>
+                        </div>
+                        <Badge variant="secondary" className="text-xs">
+                          {collection.growth}
+                        </Badge>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Insights Section */}
+        <section className="py-8 bg-muted/30">
+          <div className="container">
+            <div className="grid md:grid-cols-2 gap-8">
+              <Card>
+                <CardContent className="p-8">
+                  <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mb-4">
+                    <Brain className="h-6 w-6 text-green-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Knowledge Growth</h3>
+                  <p className="text-muted-foreground mb-4">
+                    You're on track to save 40+ hours this month through better knowledge organization.
+                  </p>
+                  <Badge variant="outline" className="bg-green-50 text-green-700">
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                    +35% vs last month
+                  </Badge>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="p-8">
+                  <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mb-4">
+                    <Star className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">Learning Insights</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Your most productive learning day is Thursday, with an average of 22 saves.
+                  </p>
+                  <Badge variant="outline" className="bg-purple-50 text-purple-700">
+                    <Target className="h-3 w-3 mr-1" />
+                    Peak performance
+                  </Badge>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
       </main>
 
       <Footer />

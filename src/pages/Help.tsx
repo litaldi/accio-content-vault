@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ResponsiveNavigation from '@/components/navigation/ResponsiveNavigation';
+import CleanNavigation from '@/components/navigation/CleanNavigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,12 +12,9 @@ import {
   MessageCircle, 
   Mail,
   Search,
-  Zap,
-  Brain,
-  ArrowRight,
-  CheckCircle
+  CheckCircle,
+  ArrowRight
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const Help = () => {
   const faqItems = [
@@ -51,64 +49,54 @@ const Help = () => {
       icon: BookOpen,
       title: "Documentation",
       description: "Complete guides and tutorials",
-      action: "Browse Docs",
-      color: "blue"
+      action: "Browse Docs"
     },
     {
       icon: MessageCircle,
       title: "Community Forum",
       description: "Get help from other users",
-      action: "Join Discussion",
-      color: "green"
+      action: "Join Discussion"
     },
     {
       icon: Mail,
       title: "Contact Support",
       description: "Direct help from our team",
-      action: "Send Message",
-      color: "purple"
+      action: "Send Message"
     }
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Help & Support - Get Expert Assistance | Accio</title>
+        <title>Help & Support - Accio</title>
         <meta name="description" content="Get help with Accio. Find answers to common questions, browse documentation, and contact our support team." />
-        <meta name="keywords" content="help, support, FAQ, documentation, contact, assistance" />
-        <link rel="canonical" href="/help" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
       </Helmet>
 
-      <ResponsiveNavigation />
+      <CleanNavigation />
 
       <main className="flex-grow">
-        {/* Hero Section - Responsive */}
-        <section className="py-12 sm:py-16 bg-gradient-to-br from-primary/5 via-blue-50 to-purple-50 dark:from-primary/10 dark:via-blue-950/30 dark:to-purple-950/30">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl text-center">
-            <Badge variant="secondary" className="mb-6 px-4 sm:px-6 py-2 sm:py-3 text-xs sm:text-sm font-semibold">
-              <HelpCircle className="h-3 w-3 sm:h-4 sm:w-4 mr-2" />
+        {/* Hero Section */}
+        <section className="py-16 bg-muted/30">
+          <div className="container text-center">
+            <Badge variant="secondary" className="mb-6">
+              <HelpCircle className="h-3 w-3 mr-1" />
               24/7 Support Available
             </Badge>
             
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              We're Here to
-              <span className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent block mt-2">
-                Help You Succeed
-              </span>
+            <h1 className="text-4xl font-bold mb-6">
+              We're here to
+              <span className="text-primary block">help you succeed</span>
             </h1>
             
-            <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
               Find answers, get support, and master Accio with our comprehensive help resources. 
               Your success is our mission.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-              <Button size="lg" className="gap-2 shadow-lg" asChild>
-                <Link to="#faq">
-                  <Search className="h-4 w-4 sm:h-5 sm:w-5" />
-                  Find Answers
-                </Link>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg">
+                <Search className="h-4 w-4 mr-2" />
+                Find Answers
               </Button>
               <Button variant="outline" size="lg">
                 <Mail className="h-4 w-4 mr-2" />
@@ -118,31 +106,27 @@ const Help = () => {
           </div>
         </section>
 
-        {/* Help Resources - Responsive Grid */}
-        <section className="py-12 sm:py-16">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
-            <div className="text-center mb-8 sm:mb-12">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
-                Multiple Ways to Get Help
+        {/* Help Resources */}
+        <section className="py-16">
+          <div className="container">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">
+                Multiple ways to get help
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-xl text-muted-foreground">
                 Choose the support method that works best for you
               </p>
             </div>
 
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {helpResources.map((resource, index) => (
-                <Card key={index} className="hover:shadow-xl transition-all group border-0 bg-gradient-to-br from-background to-accent/10">
-                  <CardHeader className="text-center pb-4">
-                    <div className={`w-16 h-16 rounded-2xl bg-${resource.color}-500/10 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                      <resource.icon className={`h-8 w-8 text-${resource.color}-500`} />
+                <Card key={index} className="hover:shadow-md transition-shadow">
+                  <CardHeader className="text-center">
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                      <resource.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                      {resource.title}
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      {resource.description}
-                    </CardDescription>
+                    <CardTitle>{resource.title}</CardTitle>
+                    <CardDescription>{resource.description}</CardDescription>
                   </CardHeader>
                   <CardContent className="text-center">
                     <Button variant="outline" className="w-full">
@@ -156,21 +140,21 @@ const Help = () => {
           </div>
         </section>
 
-        {/* FAQ Section - Responsive */}
-        <section id="faq" className="py-12 sm:py-16 bg-muted/30">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+        {/* FAQ Section */}
+        <section className="py-16 bg-muted/30">
+          <div className="container max-w-4xl">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Frequently Asked Questions
+              <h2 className="text-3xl font-bold mb-4">
+                Frequently asked questions
               </h2>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-xl text-muted-foreground">
                 Quick answers to the most common questions
               </p>
             </div>
 
             <div className="space-y-6">
               {faqItems.map((item, index) => (
-                <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+                <Card key={index}>
                   <CardHeader>
                     <CardTitle className="text-lg flex items-start gap-3">
                       <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
@@ -188,53 +172,53 @@ const Help = () => {
           </div>
         </section>
 
-        {/* Quick Start Guide - Responsive */}
-        <section className="py-12 sm:py-16">
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+        {/* Quick Start Guide */}
+        <section className="py-16">
+          <div className="container">
             <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">
-                Quick Start Guide
+              <h2 className="text-3xl font-bold mb-4">
+                Quick start guide
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-xl text-muted-foreground">
                 Get up and running with Accio in minutes
               </p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-8">
-              <Card className="border-0 bg-gradient-to-br from-primary/5 to-blue-50 dark:from-primary/10 dark:to-blue-950/30">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-bold text-primary">1</span>
                   </div>
-                  <CardTitle>Create Your Account</CardTitle>
-                  <CardDescription>
+                  <h3 className="text-xl font-bold mb-2">Create Account</h3>
+                  <p className="text-muted-foreground">
                     Sign up for free and set up your knowledge empire in 30 seconds
-                  </CardDescription>
-                </CardHeader>
+                  </p>
+                </CardContent>
               </Card>
 
-              <Card className="border-0 bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900/30 dark:to-blue-950/30">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center mb-4">
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-bold text-green-600">2</span>
                   </div>
-                  <CardTitle>Start Saving Content</CardTitle>
-                  <CardDescription>
-                    Use our browser extension or web app to capture your first brilliant discoveries
-                  </CardDescription>
-                </CardHeader>
+                  <h3 className="text-xl font-bold mb-2">Save Content</h3>
+                  <p className="text-muted-foreground">
+                    Use our web app to capture your first brilliant discoveries
+                  </p>
+                </CardContent>
               </Card>
 
-              <Card className="border-0 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-950/30">
-                <CardHeader>
-                  <div className="w-12 h-12 bg-purple-500/10 rounded-xl flex items-center justify-center mb-4">
+              <Card>
+                <CardContent className="p-8 text-center">
+                  <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl font-bold text-purple-600">3</span>
                   </div>
-                  <CardTitle>Let AI Organize</CardTitle>
-                  <CardDescription>
+                  <h3 className="text-xl font-bold mb-2">Let AI Organize</h3>
+                  <p className="text-muted-foreground">
                     Watch as our AI automatically organizes and connects your knowledge
-                  </CardDescription>
-                </CardHeader>
+                  </p>
+                </CardContent>
               </Card>
             </div>
           </div>
