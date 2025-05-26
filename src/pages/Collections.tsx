@@ -1,167 +1,161 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
-import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, Plus, Folder, FileText, Calendar, Tag } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { 
+  FolderOpen, 
+  Plus, 
+  Search, 
+  Filter,
+  Star,
+  Clock,
+  Share,
+  MoreHorizontal
+} from 'lucide-react';
 
 const Collections = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  // Mock data for collections
+  // Sample collections data
   const collections = [
     {
       id: 1,
-      name: "Web Development",
-      description: "Articles and resources about modern web development",
-      itemCount: 23,
-      tags: ["JavaScript", "React", "CSS"],
-      lastUpdated: "2 days ago",
-      color: "bg-blue-500"
+      name: "Research Papers",
+      description: "Academic papers and research materials for my thesis",
+      itemCount: 24,
+      lastUpdated: "2 hours ago",
+      starred: true,
+      color: "blue"
     },
     {
       id: 2,
       name: "Design Inspiration",
-      description: "UI/UX designs and creative inspiration",
-      itemCount: 15,
-      tags: ["Design", "UI/UX", "Inspiration"],
-      lastUpdated: "1 week ago",
-      color: "bg-purple-500"
+      description: "UI/UX designs, color palettes, and creative references",
+      itemCount: 18,
+      lastUpdated: "1 day ago",
+      starred: false,
+      color: "purple"
     },
     {
       id: 3,
-      name: "Research Papers",
-      description: "Academic papers and research materials",
-      itemCount: 8,
-      tags: ["Research", "Academic", "Science"],
+      name: "Code Snippets",
+      description: "Useful code examples and programming resources",
+      itemCount: 32,
       lastUpdated: "3 days ago",
-      color: "bg-green-500"
-    },
-    {
-      id: 4,
-      name: "Productivity Tips",
-      description: "Tools and techniques for better productivity",
-      itemCount: 31,
-      tags: ["Productivity", "Tools", "Workflows"],
-      lastUpdated: "5 days ago",
-      color: "bg-orange-500"
+      starred: true,
+      color: "green"
     }
   ];
 
-  const filteredCollections = collections.filter(collection =>
-    collection.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    collection.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    collection.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
   return (
-    <EnhancedUnifiedLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Collections - Accio Knowledge Library</title>
-        <meta name="description" content="Organize your saved content into collections for easy access and management." />
+        <title>Collections - Accio Knowledge Engine</title>
+        <meta name="description" content="Organize your saved content into smart collections for easy access and management." />
       </Helmet>
 
-      <UnifiedSpacing.Section>
-        <UnifiedSpacing.Container>
-          {/* Header */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-            <div>
-              <UnifiedTypography.H1>Collections</UnifiedTypography.H1>
-              <UnifiedTypography.Lead>
-                Organize your knowledge into meaningful collections.
-              </UnifiedTypography.Lead>
+      <ProfessionalNavigation />
+
+      <main className="flex-grow">
+        {/* Header Section */}
+        <section className="py-8 border-b">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">Collections</h1>
+                <p className="text-muted-foreground">
+                  Organize your knowledge into smart collections
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Search className="h-4 w-4" />
+                  Search
+                </Button>
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  Filter
+                </Button>
+                <Button className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  New Collection
+                </Button>
+              </div>
             </div>
-            <Button className="shrink-0">
-              <Plus className="h-4 w-4 mr-2" />
-              New Collection
-            </Button>
           </div>
+        </section>
 
-          {/* Search */}
-          <div className="relative mb-8">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Search collections..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-
-          {/* Collections Grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCollections.map((collection) => (
-              <Card 
-                key={collection.id} 
-                className="hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer"
-              >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className={cn(
-                      "w-12 h-12 rounded-lg flex items-center justify-center",
-                      collection.color
-                    )}>
-                      <Folder className="h-6 w-6 text-white" />
+        {/* Collections Grid */}
+        <section className="py-8">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {collections.map((collection) => (
+                <Card key={collection.id} className="card-interactive group">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className={`w-10 h-10 rounded-lg bg-${collection.color}-500/10 flex items-center justify-center`}>
+                          <FolderOpen className={`h-5 w-5 text-${collection.color}-500`} />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                            {collection.name}
+                          </CardTitle>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Badge variant="secondary" className="text-xs">
+                              {collection.itemCount} items
+                            </Badge>
+                            {collection.starred && (
+                              <Star className="h-3 w-3 text-yellow-500 fill-current" />
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <Badge variant="secondary">
-                      {collection.itemCount} items
-                    </Badge>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="mb-4 line-clamp-2">
+                      {collection.description}
+                    </CardDescription>
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {collection.lastUpdated}
+                      </div>
+                      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Share className="h-3 w-3 mr-1" />
+                        Share
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+              
+              {/* Create New Collection Card */}
+              <Card className="card-interactive border-dashed hover:border-primary/50">
+                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                    <Plus className="h-6 w-6 text-primary" />
                   </div>
-                  <CardTitle className="line-clamp-1">{collection.name}</CardTitle>
-                  <CardDescription className="line-clamp-2">
-                    {collection.description}
+                  <CardTitle className="text-lg mb-2">Create New Collection</CardTitle>
+                  <CardDescription className="mb-4">
+                    Start organizing your content into themed collections
                   </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1">
-                    {collection.tags.map((tag, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  
-                  {/* Last Updated */}
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <Calendar className="h-3 w-3 mr-1" />
-                    Updated {collection.lastUpdated}
-                  </div>
+                  <Button>Get Started</Button>
                 </CardContent>
               </Card>
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {filteredCollections.length === 0 && (
-            <div className="text-center py-12">
-              <Folder className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <UnifiedTypography.H3 className="mb-2">
-                {searchQuery ? 'No collections found' : 'No collections yet'}
-              </UnifiedTypography.H3>
-              <UnifiedTypography.Body className="text-muted-foreground mb-4">
-                {searchQuery 
-                  ? 'Try adjusting your search terms.'
-                  : 'Create your first collection to organize your content.'
-                }
-              </UnifiedTypography.Body>
-              {!searchQuery && (
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Create Collection
-                </Button>
-              )}
             </div>
-          )}
-        </UnifiedSpacing.Container>
-      </UnifiedSpacing.Section>
-    </EnhancedUnifiedLayout>
+          </div>
+        </section>
+      </main>
+
+      <ImprovedFooter />
+    </div>
   );
 };
 

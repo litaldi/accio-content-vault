@@ -1,200 +1,301 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
+import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
-import { Settings as SettingsIcon, Palette, Bell, Shield, Database } from 'lucide-react';
-import { useTheme } from '@/components/theme/ThemeProvider';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Settings as SettingsIcon, 
+  Bell, 
+  Shield, 
+  Download,
+  Trash2,
+  Eye,
+  Globe,
+  Smartphone,
+  Save,
+  AlertTriangle
+} from 'lucide-react';
 
 const Settings = () => {
-  const { theme, setTheme } = useTheme();
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: false,
+    weekly: true,
+    marketing: false
+  });
 
-  const settingsCategories = [
-    {
-      title: 'Appearance',
-      description: 'Customize how Accio looks and feels',
-      icon: Palette,
-      settings: [
-        {
-          label: 'Theme',
-          description: 'Choose your preferred color scheme',
-          type: 'select',
-          value: theme,
-          options: [
-            { value: 'light', label: 'Light' },
-            { value: 'dark', label: 'Dark' },
-            { value: 'system', label: 'System' }
-          ],
-          onChange: setTheme
-        },
-        {
-          label: 'Compact Mode',
-          description: 'Show more content in less space',
-          type: 'switch',
-          value: false
-        }
-      ]
-    },
-    {
-      title: 'Notifications',
-      description: 'Manage how you receive updates',
-      icon: Bell,
-      settings: [
-        {
-          label: 'Email Notifications',
-          description: 'Receive updates via email',
-          type: 'switch',
-          value: true
-        },
-        {
-          label: 'Weekly Summary',
-          description: 'Get a weekly summary of your activity',
-          type: 'switch',
-          value: true
-        },
-        {
-          label: 'Feature Updates',
-          description: 'Notify me about new features',
-          type: 'switch',
-          value: false
-        }
-      ]
-    },
-    {
-      title: 'Privacy & Security',
-      description: 'Control your data and privacy settings',
-      icon: Shield,
-      settings: [
-        {
-          label: 'Make Profile Public',
-          description: 'Allow others to see your public collections',
-          type: 'switch',
-          value: false
-        },
-        {
-          label: 'Analytics',
-          description: 'Help improve Accio by sharing usage data',
-          type: 'switch',
-          value: true
-        }
-      ]
-    },
-    {
-      title: 'Data Management',
-      description: 'Manage your data and storage',
-      icon: Database,
-      settings: [
-        {
-          label: 'Auto-save Frequency',
-          description: 'How often to automatically save changes',
-          type: 'select',
-          value: 'medium',
-          options: [
-            { value: 'low', label: 'Every 5 minutes' },
-            { value: 'medium', label: 'Every 2 minutes' },
-            { value: 'high', label: 'Every 30 seconds' }
-          ]
-        }
-      ]
-    }
-  ];
+  const [privacy, setPrivacy] = useState({
+    profileVisible: true,
+    shareStats: false,
+    analytics: true
+  });
 
   return (
-    <UnifiedLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Settings - Accio</title>
-        <meta name="description" content="Customize your Accio experience with personalized settings and preferences." />
+        <title>Settings - Accio Knowledge Engine</title>
+        <meta name="description" content="Customize your account preferences, privacy settings, and notification options." />
       </Helmet>
 
-      <div className="max-w-4xl mx-auto py-8 space-y-8">
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
-            <SettingsIcon className="h-8 w-8 text-primary" />
-          </div>
-          <div>
-            <h1 className="text-3xl font-bold">Settings</h1>
-            <p className="text-muted-foreground">Customize your Accio experience</p>
-          </div>
-        </div>
+      <ProfessionalNavigation />
 
-        {/* Settings Categories */}
-        <div className="space-y-6">
-          {settingsCategories.map((category) => (
-            <Card key={category.title}>
-              <CardHeader>
-                <div className="flex items-center gap-3">
-                  <category.icon className="h-5 w-5 text-primary" />
+      <main className="flex-grow">
+        {/* Header Section */}
+        <section className="py-8 border-b">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <h1 className="text-3xl font-bold mb-2">Settings</h1>
+            <p className="text-muted-foreground">
+              Customize your account preferences and privacy settings
+            </p>
+          </div>
+        </section>
+
+        <div className="container mx-auto px-4 max-w-4xl py-8 space-y-8">
+          {/* Account Settings */}
+          <Card className="card-elevated">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <SettingsIcon className="h-5 w-5 text-primary" />
+                Account Settings
+              </CardTitle>
+              <CardDescription>
+                Manage your account preferences and display settings
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="timezone">Timezone</Label>
+                  <Select defaultValue="pst">
+                    <SelectTrigger id="timezone">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pst">Pacific Standard Time</SelectItem>
+                      <SelectItem value="est">Eastern Standard Time</SelectItem>
+                      <SelectItem value="cst">Central Standard Time</SelectItem>
+                      <SelectItem value="mst">Mountain Standard Time</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="language">Language</Label>
+                  <Select defaultValue="en">
+                    <SelectTrigger id="language">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">English</SelectItem>
+                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="de">Deutsch</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
                   <div>
-                    <CardTitle>{category.title}</CardTitle>
-                    <CardDescription>{category.description}</CardDescription>
+                    <Label>Auto-save enabled</Label>
+                    <p className="text-sm text-muted-foreground">Automatically save content as you browse</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Smart categorization</Label>
+                    <p className="text-sm text-muted-foreground">Let AI automatically categorize your content</p>
+                  </div>
+                  <Switch defaultChecked />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Offline mode</Label>
+                    <p className="text-sm text-muted-foreground">Enable offline access to your content</p>
+                  </div>
+                  <Switch />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Notifications */}
+          <Card className="card-elevated">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Bell className="h-5 w-5 text-primary" />
+                Notifications
+              </CardTitle>
+              <CardDescription>
+                Choose how you want to be notified about important updates
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Email notifications</Label>
+                  <p className="text-sm text-muted-foreground">Receive updates via email</p>
+                </div>
+                <Switch 
+                  checked={notifications.email}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, email: checked}))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Push notifications</Label>
+                  <p className="text-sm text-muted-foreground">Get real-time browser notifications</p>
+                </div>
+                <Switch 
+                  checked={notifications.push}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, push: checked}))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Weekly digest</Label>
+                  <p className="text-sm text-muted-foreground">Summary of your activity and insights</p>
+                </div>
+                <Switch 
+                  checked={notifications.weekly}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, weekly: checked}))}
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Marketing emails</Label>
+                  <p className="text-sm text-muted-foreground">Updates about new features and tips</p>
+                </div>
+                <Switch 
+                  checked={notifications.marketing}
+                  onCheckedChange={(checked) => setNotifications(prev => ({...prev, marketing: checked}))}
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Privacy & Security */}
+          <Card className="card-elevated">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Shield className="h-5 w-5 text-primary" />
+                Privacy & Security
+              </CardTitle>
+              <CardDescription>
+                Control your privacy settings and data sharing preferences
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Public profile</Label>
+                    <p className="text-sm text-muted-foreground">Make your profile visible to other users</p>
+                  </div>
+                  <Switch 
+                    checked={privacy.profileVisible}
+                    onCheckedChange={(checked) => setPrivacy(prev => ({...prev, profileVisible: checked}))}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Share usage statistics</Label>
+                    <p className="text-sm text-muted-foreground">Help improve Accio with anonymous usage data</p>
+                  </div>
+                  <Switch 
+                    checked={privacy.shareStats}
+                    onCheckedChange={(checked) => setPrivacy(prev => ({...prev, shareStats: checked}))}
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Analytics tracking</Label>
+                    <p className="text-sm text-muted-foreground">Allow analytics to improve your experience</p>
+                  </div>
+                  <Switch 
+                    checked={privacy.analytics}
+                    onCheckedChange={(checked) => setPrivacy(prev => ({...prev, analytics: checked}))}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="password">Change Password</Label>
+                <div className="flex gap-2">
+                  <Input id="password" type="password" placeholder="Enter new password" className="flex-1" />
+                  <Button variant="outline">Update</Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Data Management */}
+          <Card className="card-elevated">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Download className="h-5 w-5 text-primary" />
+                Data Management
+              </CardTitle>
+              <CardDescription>
+                Export, backup, or delete your data
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Download className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <h4 className="font-medium">Export Data</h4>
+                    <p className="text-sm text-muted-foreground">Download all your content and collections</p>
                   </div>
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                {category.settings.map((setting, index) => (
-                  <div key={index} className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <Label className="font-medium">{setting.label}</Label>
-                      <p className="text-sm text-muted-foreground">{setting.description}</p>
-                    </div>
-                    <div>
-                      {setting.type === 'switch' && (
-                        <Switch checked={setting.value} />
-                      )}
-                      {setting.type === 'select' && setting.options && (
-                        <Select value={setting.value} onValueChange={setting.onChange}>
-                          <SelectTrigger className="w-40">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {setting.options.map((option) => (
-                              <SelectItem key={option.value} value={option.value}>
-                                {option.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                <Button variant="outline">Export</Button>
+              </div>
 
-        {/* Danger Zone */}
-        <Card className="border-destructive/20">
-          <CardHeader>
-            <CardTitle className="text-destructive">Danger Zone</CardTitle>
-            <CardDescription>
-              Irreversible actions that will affect your account permanently
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between p-4 border border-destructive/20 rounded-lg">
-              <div>
-                <h4 className="font-medium">Export Data</h4>
-                <p className="text-sm text-muted-foreground">Download all your saved content and data</p>
+              <div className="flex items-center justify-between p-4 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Globe className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <h4 className="font-medium">API Access</h4>
+                    <p className="text-sm text-muted-foreground">Generate API keys for third-party integrations</p>
+                  </div>
+                </div>
+                <Button variant="outline">Manage</Button>
               </div>
-              <Button variant="outline">Export</Button>
-            </div>
-            <div className="flex items-center justify-between p-4 border border-destructive/20 rounded-lg">
-              <div>
-                <h4 className="font-medium">Delete Account</h4>
-                <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
+
+              <div className="flex items-center justify-between p-4 border border-destructive/20 rounded-lg bg-destructive/5">
+                <div className="flex items-center gap-3">
+                  <Trash2 className="h-5 w-5 text-destructive" />
+                  <div>
+                    <h4 className="font-medium text-destructive">Delete Account</h4>
+                    <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
+                  </div>
+                </div>
+                <Button variant="destructive">Delete</Button>
               </div>
-              <Button variant="destructive">Delete</Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </UnifiedLayout>
+            </CardContent>
+          </Card>
+
+          {/* Save Changes */}
+          <div className="flex justify-end">
+            <Button className="flex items-center gap-2">
+              <Save className="h-4 w-4" />
+              Save All Changes
+            </Button>
+          </div>
+        </div>
+      </main>
+
+      <ImprovedFooter />
+    </div>
   );
 };
 

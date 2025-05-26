@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,17 +13,17 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { 
   Home, 
+  LayoutDashboard,
+  Save,
+  FolderOpen,
   BarChart3, 
-  BookOpen, 
-  Plus, 
-  Search, 
   HelpCircle, 
   Settings, 
   User, 
   LogOut,
   Menu,
   X,
-  Zap
+  Sparkles
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -32,29 +33,32 @@ const ProfessionalNavigation: React.FC = () => {
   const navigate = useNavigate();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    if (path === '/') return location.pathname === '/';
+    return location.pathname.startsWith(path);
+  };
 
-  const mainNavItems = [
+  // Flat menu structure - no dropdowns, all top-level
+  const mainNavItems = user ? [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Features', path: '/features', icon: Zap },
-    { name: 'About', path: '/about', icon: BookOpen },
+    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Save Content', path: '/save', icon: Save },
+    { name: 'Collections', path: '/collections', icon: FolderOpen },
+    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+    { name: 'Help', path: '/help', icon: HelpCircle },
+  ] : [
+    { name: 'Home', path: '/', icon: Home },
+    { name: 'Features', path: '/features', icon: Sparkles },
+    { name: 'About', path: '/about', icon: User },
+    { name: 'Pricing', path: '/pricing', icon: BarChart3 },
     { name: 'Help', path: '/help', icon: HelpCircle },
   ];
-
-  const dashboardNavItems = [
-    { name: 'Dashboard', path: '/dashboard', icon: Home },
-    { name: 'Save Content', path: '/save-content', icon: Plus },
-    { name: 'Collections', path: '/collections', icon: BookOpen },
-    { name: 'Analytics', path: '/analytics', icon: BarChart3 },
-    { name: 'Search', path: '/search', icon: Search },
-  ];
-
-  const navItems = user ? dashboardNavItems : mainNavItems;
 
   const handleSignOut = async () => {
     try {
       await signOut();
       navigate('/');
+      setIsMobileMenuOpen(false);
     } catch (error) {
       console.error('Error signing out:', error);
     }
@@ -76,17 +80,17 @@ const ProfessionalNavigation: React.FC = () => {
             <span className="text-2xl font-bold text-foreground">Accio</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-8" aria-label="Main navigation">
-            {navItems.map((item) => (
+          {/* Desktop Navigation - Flat Structure */}
+          <nav className="hidden lg:flex items-center gap-6" aria-label="Main navigation">
+            {mainNavItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
-                  "nav-link flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors",
+                  "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg",
                   isActive(item.path) 
-                    ? "text-primary active" 
-                    : "text-muted-foreground hover:text-foreground"
+                    ? "bg-primary/10 text-primary" 
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 )}
                 aria-current={isActive(item.path) ? 'page' : undefined}
               >
@@ -96,43 +100,58 @@ const ProfessionalNavigation: React.FC = () => {
             ))}
           </nav>
 
-          {/* Desktop Auth Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          {/* Desktop Right Side Actions */}
+          <div className="hidden lg:flex items-center gap-3">
+            {/* Accessibility Button */}
+            <AccessibilityButton variant="header" />
+
             {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className="flex items-center gap-2 hover:bg-accent"
-                    aria-label="User menu"
-                  >
-                    <User className="h-4 w-4" />
-                    <span className="max-w-32 truncate">
-                      {user.email?.split('@')[0] || 'User'}
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48 bg-popover border border-border shadow-lg">
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings" className="flex items-center gap-2 cursor-pointer">
-                      <Settings className="h-4 w-4" />
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="flex items-center gap-2 cursor-pointer text-destructive">
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <>
+                {/* Profile & Settings */}
+                <Link
+                  to="/profile"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg",
+                    isActive('/profile')
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  )}
+                >
+                  <User className="h-4 w-4" />
+                  Profile
+                </Link>
+                <Link
+                  to="/settings"
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg",
+                    isActive('/settings')
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  )}
+                >
+                  <Settings className="h-4 w-4" />
+                  Settings
+                </Link>
+                <Button 
+                  variant="ghost" 
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 text-sm font-medium"
+                  aria-label="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </>
             ) : (
               <div className="flex items-center gap-3">
                 <Button variant="ghost" asChild>
                   <Link to="/login">Sign In</Link>
                 </Button>
-                <Button asChild className="btn-primary">
-                  <Link to="/register">Get Started</Link>
+                <Button asChild className="bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
+                  <Link to="/register" className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    Start Now
+                  </Link>
                 </Button>
               </div>
             )}
@@ -142,7 +161,7 @@ const ProfessionalNavigation: React.FC = () => {
           <Button
             variant="ghost"
             size="sm"
-            className="md:hidden"
+            className="lg:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
             aria-expanded={isMobileMenuOpen}
@@ -153,14 +172,15 @@ const ProfessionalNavigation: React.FC = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border animate-slide-up">
+          <div className="lg:hidden py-4 border-t border-border animate-slide-up">
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
-              {navItems.map((item) => (
+              {/* Main Navigation Items */}
+              {mainNavItems.map((item) => (
                 <Link
                   key={item.path}
                   to={item.path}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors",
+                    "flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors",
                     isActive(item.path)
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -173,23 +193,30 @@ const ProfessionalNavigation: React.FC = () => {
                 </Link>
               ))}
               
+              <div className="border-t border-border my-3"></div>
+              
+              {/* User Actions */}
               {user ? (
                 <>
-                  <div className="border-t border-border my-2"></div>
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <User className="h-4 w-4" />
+                    Profile
+                  </Link>
                   <Link
                     to="/settings"
-                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     <Settings className="h-4 w-4" />
                     Settings
                   </Link>
                   <button
-                    onClick={() => {
-                      handleSignOut();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors w-full text-left"
+                    onClick={handleSignOut}
+                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors w-full text-left"
                   >
                     <LogOut className="h-4 w-4" />
                     Sign Out
@@ -197,20 +224,20 @@ const ProfessionalNavigation: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <div className="border-t border-border my-2"></div>
                   <Link
                     to="/login"
-                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
+                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/register"
-                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors"
+                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Get Started
+                    <Sparkles className="h-4 w-4" />
+                    Start Now
                   </Link>
                 </>
               )}
