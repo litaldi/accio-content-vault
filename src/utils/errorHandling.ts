@@ -1,7 +1,8 @@
-
 /**
  * Centralized error handling utilities - optimized and secure
  */
+
+import React from 'react';
 
 export class AppError extends Error {
   public readonly isOperational: boolean;
@@ -44,7 +45,7 @@ export class RateLimitError extends AppError {
 
 // Secure error logging that doesn't expose sensitive information
 export const logError = (error: Error, context?: Record<string, any>) => {
-  const errorInfo = {
+  const errorInfo: Record<string, any> = {
     message: error.message,
     name: error.name,
     timestamp: new Date().toISOString(),

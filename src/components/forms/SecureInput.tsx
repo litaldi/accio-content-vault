@@ -1,7 +1,7 @@
 
 import React, { useState, useCallback } from 'react';
 import { EnhancedInput } from '@/components/ui/enhanced-input';
-import { sanitizeTextInput } from '@/utils/input-validation';
+import { sanitizeInput } from '@/utils/unified-security';
 import { Shield } from 'lucide-react';
 
 interface SecureInputProps {
@@ -73,7 +73,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
     let newValue = e.target.value;
     
     if (sanitize) {
-      newValue = sanitizeTextInput(newValue, maxLength);
+      newValue = sanitizeInput(newValue, { maxLength });
     }
 
     const validationError = validateInput(newValue);

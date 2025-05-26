@@ -107,6 +107,32 @@ export const copy = {
     startSaving: 'Start by saving your first piece of content',
     getStarted: 'Get Started',
     noResults: 'No results found',
-    tryDifferent: 'Try a different search term'
+    tryDifferent: 'Try a different search term',
+    library: {
+      title: 'Your library is empty',
+      description: 'Start building your knowledge collection by saving your first piece of content.',
+      action: 'Save Your First Content'
+    },
+    search: {
+      title: 'No search results found',
+      description: 'Try adjusting your search terms or browse your saved content.',
+      action: 'Browse All Content'
+    },
+    dashboard: {
+      title: 'Welcome to your dashboard',
+      description: 'Get started by saving some content to see insights and analytics here.',
+      action: 'Save Content'
+    },
+    recent: {
+      title: 'No recent activity',
+      description: 'Your recent activity will appear here as you use the platform.',
+      action: 'Explore Features'
+    }
+  },
+  success: {
+    signIn: 'Successfully signed in'
+  },
+  errors: {
+    authentication: 'Authentication failed'
   }
 };
