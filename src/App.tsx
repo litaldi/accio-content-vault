@@ -13,6 +13,8 @@ import Analytics from '@/pages/Analytics';
 import Profile from '@/pages/Profile';
 import Settings from '@/pages/Settings';
 import Features from '@/pages/Features';
+import Blog from '@/pages/Blog';
+import Contact from '@/pages/Contact';
 import Help from '@/pages/Help';
 import NotFound from '@/pages/NotFound';
 import { AuthProvider } from '@/contexts/AuthContext';

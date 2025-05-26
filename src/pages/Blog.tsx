@@ -1,176 +1,172 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
-import { UnifiedTypography } from '@/components/ui/unified-design-system';
+import ModernNavigation from '@/components/navigation/ModernNavigation';
+import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, User, Clock } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { CalendarDays, Clock, ArrowRight, User } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Blog = () => {
-  // Mock blog posts
   const blogPosts = [
     {
-      id: 1,
-      title: "10 Tips for Better Knowledge Management",
-      excerpt: "Discover proven strategies to organize and access your digital content more effectively.",
+      title: "The Future of Knowledge Management: AI-Powered Organization",
+      excerpt: "Discover how artificial intelligence is revolutionizing the way we organize and access information in the digital age.",
       author: "Sarah Chen",
-      date: "2024-12-15",
+      date: "2024-01-15",
       readTime: "5 min read",
-      category: "Productivity",
-      image: "/api/placeholder/400/200"
-    },
-    {
-      id: 2,
-      title: "The Future of AI-Powered Research",
-      excerpt: "How artificial intelligence is transforming the way we collect and analyze information.",
-      author: "Michael Rodriguez",
-      date: "2024-12-10",
-      readTime: "8 min read",
       category: "AI & Technology",
-      image: "/api/placeholder/400/200"
+      featured: true
     },
     {
-      id: 3,
-      title: "Building Your Personal Learning System",
-      excerpt: "Create a systematic approach to continuous learning and knowledge retention.",
-      author: "Emma Thompson",
-      date: "2024-12-05",
-      readTime: "6 min read",
-      category: "Learning",
-      image: "/api/placeholder/400/200"
-    },
-    {
-      id: 4,
-      title: "Digital Minimalism for Knowledge Workers",
-      excerpt: "Reduce information overload and focus on what truly matters for your productivity.",
-      author: "David Park",
-      date: "2024-11-28",
+      title: "10 Productivity Tips for Knowledge Workers",
+      excerpt: "Practical strategies to boost your productivity and make the most of your digital knowledge base.",
+      author: "Marcus Johnson",
+      date: "2024-01-12",
       readTime: "7 min read",
-      category: "Productivity",
-      image: "/api/placeholder/400/200"
+      category: "Productivity"
     },
     {
-      id: 5,
-      title: "The Psychology of Information Hoarding",
-      excerpt: "Understanding why we save so much content and how to break the hoarding cycle.",
-      author: "Dr. Lisa Wong",
-      date: "2024-11-20",
-      readTime: "4 min read",
-      category: "Psychology",
-      image: "/api/placeholder/400/200"
+      title: "Building Your Second Brain: A Complete Guide",
+      excerpt: "Learn how to create a comprehensive system for capturing, organizing, and connecting your ideas.",
+      author: "Elena Rodriguez",
+      date: "2024-01-10",
+      readTime: "12 min read",
+      category: "Knowledge Management"
     },
     {
-      id: 6,
-      title: "Effective Tagging Strategies for Content Organization",
-      excerpt: "Master the art of tagging to make your content library truly searchable and useful.",
-      author: "Alex Johnson",
-      date: "2024-11-15",
-      readTime: "5 min read",
-      category: "Organization",
-      image: "/api/placeholder/400/200"
+      title: "The Science Behind Effective Note-Taking",
+      excerpt: "Explore the research-backed methods that make note-taking more effective for learning and retention.",
+      author: "Dr. James Wilson",
+      date: "2024-01-08",
+      readTime: "8 min read",
+      category: "Research"
     }
   ];
 
-  const categories = ["All", "Productivity", "AI & Technology", "Learning", "Psychology", "Organization"];
-
   return (
-    <UnifiedLayout>
+    <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>Blog - Accio Knowledge Library</title>
-        <meta name="description" content="Insights, tips, and best practices for knowledge management and productivity." />
+        <title>Blog - Insights & Tips | Accio</title>
+        <meta name="description" content="Discover insights, tips, and best practices for knowledge management, productivity, and AI-powered organization." />
       </Helmet>
 
-      <div className="py-8 space-y-12">
-        {/* Header */}
-        <div className="text-center">
-          <UnifiedTypography.H1>Blog</UnifiedTypography.H1>
-          <UnifiedTypography.Lead>
-            Insights, tips, and best practices for better knowledge management.
-          </UnifiedTypography.Lead>
-        </div>
+      <ModernNavigation />
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap gap-2 justify-center">
-          {categories.map((category) => (
-            <Badge 
-              key={category} 
-              variant={category === "All" ? "default" : "outline"}
-              className="cursor-pointer hover:bg-accent"
-            >
-              {category}
-            </Badge>
-          ))}
-        </div>
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-background">
+          <div className="container text-center">
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
+              Knowledge & Insights
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              Discover the latest insights on knowledge management, productivity tips, 
+              and how AI is transforming the way we work with information.
+            </p>
+          </div>
+        </section>
 
-        {/* Blog Posts Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post) => (
-            <Card key={post.id} className="overflow-hidden hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer">
-              {/* Post Image Placeholder */}
-              <div className="h-48 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
-                <span className="text-4xl text-primary/20">📰</span>
+        {/* Blog Posts */}
+        <section className="py-16">
+          <div className="container">
+            <div className="grid gap-8">
+              {/* Featured Post */}
+              {blogPosts
+                .filter(post => post.featured)
+                .map((post, index) => (
+                  <Card key={index} className="border-0 bg-gradient-to-r from-primary/5 to-transparent shadow-lg">
+                    <CardHeader>
+                      <div className="flex items-center gap-2 mb-4">
+                        <Badge variant="default" className="bg-primary">Featured</Badge>
+                        <Badge variant="outline">{post.category}</Badge>
+                      </div>
+                      <CardTitle className="text-2xl lg:text-3xl mb-4">
+                        {post.title}
+                      </CardTitle>
+                      <CardDescription className="text-lg leading-relaxed">
+                        {post.excerpt}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-1">
+                            <User className="h-4 w-4" />
+                            {post.author}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <CalendarDays className="h-4 w-4" />
+                            {new Date(post.date).toLocaleDateString()}
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            {post.readTime}
+                          </div>
+                        </div>
+                        <Button asChild>
+                          <Link to="#" className="flex items-center gap-2">
+                            Read More
+                            <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+
+              {/* Regular Posts */}
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {blogPosts
+                  .filter(post => !post.featured)
+                  .map((post, index) => (
+                    <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-all duration-300">
+                      <CardHeader>
+                        <Badge variant="outline" className="w-fit mb-4">{post.category}</Badge>
+                        <CardTitle className="text-xl mb-2">
+                          {post.title}
+                        </CardTitle>
+                        <CardDescription className="leading-relaxed">
+                          {post.excerpt}
+                        </CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                            <div className="flex items-center gap-1">
+                              <User className="h-3 w-3" />
+                              {post.author}
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {post.readTime}
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">
+                              {new Date(post.date).toLocaleDateString()}
+                            </span>
+                            <Button variant="ghost" size="sm" asChild>
+                              <Link to="#" className="flex items-center gap-1">
+                                Read More
+                                <ArrowRight className="h-3 w-3" />
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
               </div>
-              
-              <CardHeader>
-                <Badge variant="outline" className="w-fit mb-2">
-                  {post.category}
-                </Badge>
-                <CardTitle className="line-clamp-2 hover:text-primary transition-colors">
-                  {post.title}
-                </CardTitle>
-                <CardDescription className="line-clamp-3">
-                  {post.excerpt}
-                </CardDescription>
-              </CardHeader>
-              
-              <CardContent>
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <User className="h-3 w-3" />
-                    <span>{post.author}</span>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      <span>{new Date(post.date).toLocaleDateString()}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      <span>{post.readTime}</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+            </div>
+          </div>
+        </section>
+      </main>
 
-        {/* Newsletter Signup */}
-        <div className="text-center">
-          <Card className="max-w-2xl mx-auto">
-            <CardHeader>
-              <CardTitle>Stay Updated</CardTitle>
-              <CardDescription>
-                Get the latest insights on knowledge management and productivity delivered to your inbox.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2 max-w-md mx-auto">
-                <input 
-                  type="email" 
-                  placeholder="Enter your email" 
-                  className="flex-1 px-3 py-2 border border-input rounded-md text-sm bg-background"
-                />
-                <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm hover:bg-primary/90 transition-colors">
-                  Subscribe
-                </button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    </UnifiedLayout>
+      <Footer />
+    </div>
   );
 };
 

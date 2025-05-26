@@ -18,11 +18,17 @@ import {
   LogIn,
   Brain,
   BookmarkPlus,
-  ArrowRight
+  ArrowRight,
+  FileText,
+  Mail,
+  Sun,
+  Moon
 } from 'lucide-react';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const ModernNavigation = () => {
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -49,7 +55,9 @@ const ModernNavigation = () => {
   const publicNavItems = [
     { to: '/', label: 'Home', icon: Home },
     { to: '/features', label: 'Features', icon: LayoutDashboard },
-    { to: '/help', label: 'Help', icon: HelpCircle }
+    { to: '/blog', label: 'Blog', icon: FileText },
+    { to: '/help', label: 'Help', icon: HelpCircle },
+    { to: '/contact', label: 'Contact', icon: Mail }
   ];
 
   const userNavItems = [
@@ -60,12 +68,14 @@ const ModernNavigation = () => {
     { to: '/settings', label: 'Settings', icon: Settings }
   ];
 
-  const navItems = user ? [...publicNavItems.slice(0, 1), ...userNavItems] : publicNavItems;
+  const navItems = user ? [...publicNavItems.slice(0, 1), ...userNavItems, ...publicNavItems.slice(-2)] : publicNavItems;
 
   const isActive = (path: string) => {
     if (path === '/') return location.pathname === '/';
     return location.pathname.startsWith(path);
   };
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
@@ -74,11 +84,12 @@ const ModernNavigation = () => {
           {/* Logo */}
           <Link 
             to="/" 
-            className="flex items-center space-x-3 hover:opacity-80 transition-opacity"
-            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg p-1"
+            onClick={closeMobileMenu}
+            aria-label="Accio - Go to homepage"
           >
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-              <Brain className="h-5 w-5 text-white" />
+              <Brain className="h-5 w-5 text-white" aria-hidden="true" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
               Accio
@@ -86,7 +97,7 @@ const ModernNavigation = () => {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
+          <nav className="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
             {navItems.map((item) => (
               <Button
                 key={item.to}
@@ -108,12 +119,27 @@ const ModernNavigation = () => {
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden lg:flex items-center space-x-3">
+            {/* Theme Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="w-9 h-9"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Moon className="h-4 w-4" aria-hidden="true" />
+              )}
+            </Button>
+
             {user ? (
               <div className="flex items-center space-x-2">
                 <Button variant="outline" size="sm" asChild>
                   <Link to="/dashboard" className="flex items-center space-x-2">
-                    <BookmarkPlus className="h-4 w-4" />
+                    <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
                     <span>Save Content</span>
                   </Link>
                 </Button>
@@ -123,7 +149,7 @@ const ModernNavigation = () => {
                   onClick={handleSignOut}
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  <LogOut className="h-4 w-4 mr-2" />
+                  <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
                   Sign Out
                 </Button>
               </div>
@@ -131,14 +157,14 @@ const ModernNavigation = () => {
               <div className="flex items-center space-x-2">
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/login">
-                    <LogIn className="h-4 w-4 mr-2" />
+                    <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
                     Sign In
                   </Link>
                 </Button>
                 <Button size="sm" asChild className="bg-primary hover:bg-primary/90">
                   <Link to="/register" className="flex items-center space-x-2">
                     <span>Get Started</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </Button>
               </div>
@@ -146,21 +172,43 @@ const ModernNavigation = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="md:hidden"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={isMobileMenuOpen}
-          >
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+          <div className="lg:hidden flex items-center space-x-2">
+            {/* Mobile Theme Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="w-9 h-9"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Moon className="h-4 w-4" aria-hidden="true" />
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t bg-background/95 backdrop-blur-md">
+          <div 
+            id="mobile-navigation"
+            className="lg:hidden border-t bg-background/95 backdrop-blur-md"
+            role="navigation"
+            aria-label="Mobile navigation"
+          >
             <div className="container py-4 space-y-2">
               {navItems.map((item) => (
                 <Button
@@ -172,7 +220,7 @@ const ModernNavigation = () => {
                 >
                   <Link 
                     to={item.to}
-                    onClick={() => setIsMobileMenuOpen(false)}
+                    onClick={closeMobileMenu}
                     className="flex items-center space-x-2"
                     aria-current={isActive(item.to) ? 'page' : undefined}
                   >
@@ -186,8 +234,8 @@ const ModernNavigation = () => {
                 {user ? (
                   <>
                     <Button variant="outline" size="sm" className="w-full justify-start" asChild>
-                      <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                        <BookmarkPlus className="h-4 w-4 mr-2" />
+                      <Link to="/dashboard" onClick={closeMobileMenu}>
+                        <BookmarkPlus className="h-4 w-4 mr-2" aria-hidden="true" />
                         Save Content
                       </Link>
                     </Button>
@@ -197,22 +245,22 @@ const ModernNavigation = () => {
                       className="w-full justify-start"
                       onClick={handleSignOut}
                     >
-                      <LogOut className="h-4 w-4 mr-2" />
+                      <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
                       Sign Out
                     </Button>
                   </>
                 ) : (
                   <>
                     <Button variant="ghost" size="sm" className="w-full justify-start" asChild>
-                      <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                        <LogIn className="h-4 w-4 mr-2" />
+                      <Link to="/login" onClick={closeMobileMenu}>
+                        <LogIn className="h-4 w-4 mr-2" aria-hidden="true" />
                         Sign In
                       </Link>
                     </Button>
                     <Button size="sm" className="w-full" asChild>
-                      <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                      <Link to="/register" onClick={closeMobileMenu}>
                         Get Started
-                        <ArrowRight className="h-4 w-4 ml-2" />
+                        <ArrowRight className="h-4 w-4 ml-2" aria-hidden="true" />
                       </Link>
                     </Button>
                   </>
