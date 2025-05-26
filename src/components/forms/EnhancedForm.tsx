@@ -81,8 +81,8 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
     if (mode !== 'register' || !password) return null;
     
     const { strength } = validatePassword(password);
-    if (strength >= 85) return 'strong';
-    if (strength >= 55) return 'medium';
+    if (strength >= 80) return 'strong';
+    if (strength >= 60) return 'medium';
     return 'weak';
   };
 
