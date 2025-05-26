@@ -48,6 +48,40 @@ export const copy = {
     showPassword: 'Show password',
     hidePassword: 'Hide password'
   },
+  headlines: {
+    hero: 'Your Personal Knowledge Engine',
+    subhero: 'Transform scattered bookmarks into an AI-powered knowledge base. Save anything, find everything, achieve more.'
+  },
+  social: {
+    companies: 'Trusted by teams at leading companies',
+    userCount: '10,000+',
+    rating: '4.8/5 stars'
+  },
+  trust: {
+    freeTrial: 'Free 14-day trial'
+  },
+  emptyStates: {
+    library: {
+      title: 'Your library is empty',
+      description: 'Start building your knowledge base by saving your first piece of content.',
+      action: 'Save Content'
+    },
+    search: {
+      title: 'No results found',
+      description: 'Try adjusting your search terms or browse your collections.',
+      action: 'Browse Collections'
+    },
+    dashboard: {
+      title: 'Welcome to your dashboard',
+      description: 'Once you start saving content, your insights and analytics will appear here.',
+      action: 'Get Started'
+    },
+    recent: {
+      title: 'No recent activity',
+      description: 'Your recently viewed content will appear here as you browse.',
+      action: 'Explore Content'
+    }
+  },
   onboarding: {
     welcome: {
       subtitle: 'Welcome to Accio'
@@ -87,7 +121,9 @@ export const copy = {
     back: 'Back',
     next: 'Next',
     finish: 'Get Started',
-    close: 'Close'
+    close: 'Close',
+    getStarted: 'Get Started',
+    exploreFeatures: 'Explore Features'
   },
   loading: {
     loading: 'Loading...'
