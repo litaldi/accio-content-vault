@@ -5,7 +5,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import { EnhancedNavigation } from '@/components/navigation/EnhancedNavigation';
+import { UnifiedNavigation } from '@/components/navigation/UnifiedNavigation';
 import { SkipToContent } from '@/components/common/SkipToContent';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import Footer from '@/components/Footer';
@@ -31,7 +31,7 @@ const App: React.FC = () => {
             <Router>
               <div className="App min-h-screen flex flex-col bg-background text-foreground">
                 <SkipToContent />
-                <EnhancedNavigation />
+                <UnifiedNavigation />
                 <ErrorBoundary>
                   <main id="main-content" className="flex-grow" tabIndex={-1}>
                     <Routes>

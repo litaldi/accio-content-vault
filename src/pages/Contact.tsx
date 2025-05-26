@@ -1,83 +1,190 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnterpriseNavigation from '@/components/navigation/EnterpriseNavigation';
-import EnterpriseFooter from '@/components/layout/EnterpriseFooter';
-import { EnterpriseTypography, EnterpriseSpacing } from '@/components/ui/enterprise-design-system';
-import ContactForm from '@/components/contact/ContactForm';
-import { Mail, MessageSquare, Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { 
+  Mail, 
+  MessageCircle, 
+  Phone, 
+  MapPin,
+  Clock,
+  Send
+} from 'lucide-react';
 
 const Contact: React.FC = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Handle form submission
+    console.log('Contact form submitted');
+  };
+
+  const contactMethods = [
+    {
+      icon: Mail,
+      title: 'Email Support',
+      description: 'Get help via email within 24 hours',
+      contact: 'support@accio.com',
+      action: 'Send Email'
+    },
+    {
+      icon: MessageCircle,
+      title: 'Live Chat',
+      description: 'Chat with our support team in real-time',
+      contact: 'Available 9 AM - 6 PM EST',
+      action: 'Start Chat'
+    },
+    {
+      icon: Phone,
+      title: 'Phone Support',
+      description: 'Speak directly with our experts',
+      contact: '+1 (555) 123-4567',
+      action: 'Call Now'
+    }
+  ];
+
   return (
     <>
       <Helmet>
-        <title>Contact Us - Accio Enterprise</title>
-        <meta name="description" content="Get in touch with our team. We're here to help with any questions about Accio Enterprise." />
+        <title>Contact Us - Accio | Get Help & Support</title>
+        <meta name="description" content="Get in touch with the Accio team. We're here to help with questions, support, and feedback about your knowledge management journey." />
       </Helmet>
-      
-      <div className="min-h-screen flex flex-col bg-background">
-        <EnterpriseNavigation />
-        
-        <main className="flex-grow">
-          <EnterpriseSpacing.Section>
-            <EnterpriseSpacing.Container>
-              {/* Header */}
-              <div className="text-center mb-12">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="p-3 bg-primary/10 rounded-xl">
-                    <Mail className="h-6 w-6 text-primary" />
+
+      <div className="container mx-auto px-4 py-12">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="text-center mb-16">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Get in Touch</h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              We're here to help you make the most of your knowledge management journey. 
+              Reach out with questions, feedback, or just to say hello.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Form */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Send className="h-5 w-5" />
+                  Send us a Message
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form below and we'll get back to you as soon as possible.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input id="firstName" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input id="lastName" required />
+                    </div>
                   </div>
-                  <EnterpriseTypography.H1>
-                    Contact Our Team
-                  </EnterpriseTypography.H1>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" required />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="subject">Subject</Label>
+                    <Input id="subject" required />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Message</Label>
+                    <Textarea 
+                      id="message" 
+                      rows={6} 
+                      required 
+                      placeholder="Tell us how we can help you..."
+                    />
+                  </div>
+                  
+                  <Button type="submit" className="w-full">
+                    Send Message
+                    <Send className="ml-2 h-4 w-4" />
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+
+            {/* Contact Methods & Info */}
+            <div className="space-y-8">
+              {/* Contact Methods */}
+              <div>
+                <h2 className="text-2xl font-semibold mb-6">Other Ways to Reach Us</h2>
+                <div className="space-y-4">
+                  {contactMethods.map((method, index) => (
+                    <Card key={index}>
+                      <CardContent className="p-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <method.icon className="h-5 w-5 text-primary" />
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="font-semibold mb-1">{method.title}</h3>
+                            <p className="text-sm text-muted-foreground mb-2">{method.description}</p>
+                            <p className="text-sm font-medium mb-3">{method.contact}</p>
+                            <Button variant="outline" size="sm">
+                              {method.action}
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
                 </div>
-                <EnterpriseTypography.Lead>
-                  Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-                </EnterpriseTypography.Lead>
               </div>
 
-              {/* Contact Form */}
-              <ContactForm />
-
-              {/* Additional Info */}
-              <div className="mt-16 text-center">
-                <div className="grid md:grid-cols-3 gap-8">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <MessageSquare className="h-6 w-6 text-blue-600" />
-                    </div>
-                    <h3 className="font-semibold mb-2">Live Chat</h3>
+              {/* Office Info */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <MapPin className="h-5 w-5" />
+                    Our Office
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <p className="font-medium">Accio Headquarters</p>
                     <p className="text-sm text-muted-foreground">
-                      Use our floating chat widget for quick questions and instant support.
+                      123 Innovation Drive<br />
+                      Tech City, TC 12345<br />
+                      United States
                     </p>
                   </div>
                   
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Mail className="h-6 w-6 text-green-600" />
-                    </div>
-                    <h3 className="font-semibold mb-2">Email Support</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Send detailed questions and we'll provide comprehensive answers within 24 hours.
-                    </p>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    <span>Monday - Friday, 9:00 AM - 6:00 PM EST</span>
                   </div>
-                  
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <Users className="h-6 w-6 text-purple-600" />
-                    </div>
-                    <h3 className="font-semibold mb-2">Enterprise Support</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Priority support, dedicated account manager, and 24/7 availability for Enterprise customers.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </EnterpriseSpacing.Container>
-          </EnterpriseSpacing.Section>
-        </main>
-        
-        <EnterpriseFooter />
+                </CardContent>
+              </Card>
+
+              {/* FAQ Link */}
+              <Card>
+                <CardContent className="p-6 text-center">
+                  <h3 className="font-semibold mb-2">Looking for Quick Answers?</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Check out our frequently asked questions for instant help.
+                  </p>
+                  <Button variant="outline">
+                    View FAQ
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );

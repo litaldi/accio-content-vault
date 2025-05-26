@@ -30,6 +30,7 @@ const validateSecureUrl = (url: string): boolean => {
 
 /**
  * Secure input component with built-in validation and sanitization
+ * Follows WCAG 2.1 accessibility guidelines
  */
 export const SecureInput: React.FC<SecureInputProps> = ({
   type = 'text',
@@ -108,6 +109,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
           onClick={togglePasswordVisibility}
           className="h-auto p-1 hover:bg-transparent"
           aria-label={showPassword ? 'Hide password' : 'Show password'}
+          tabIndex={0}
         >
           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </Button>
@@ -115,7 +117,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
     }
     
     if (sanitize) {
-      return <Shield className="h-4 w-4 text-muted-foreground" />;
+      return <Shield className="h-4 w-4 text-muted-foreground" title="Input is sanitized for security" />;
     }
     
     return undefined;
@@ -124,9 +126,12 @@ export const SecureInput: React.FC<SecureInputProps> = ({
   return (
     <div className="space-y-1">
       {label && (
-        <label htmlFor={`secure-input-${label}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+        <label 
+          htmlFor={`secure-input-${label}`} 
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
           {label}
-          {required && <span className="text-destructive ml-1">*</span>}
+          {required && <span className="text-destructive ml-1" aria-label="Required field">*</span>}
         </label>
       )}
       <EnhancedInput
@@ -144,6 +149,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
         required={required}
         aria-describedby={error ? `${label}-error` : undefined}
         aria-invalid={!!(isTouched && error)}
+        autoComplete={type === 'password' ? 'current-password' : type === 'email' ? 'email' : undefined}
       />
     </div>
   );

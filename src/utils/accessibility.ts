@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 
 /**
@@ -135,7 +134,7 @@ export const trapFocus = (container: HTMLElement) => {
   return () => container.removeEventListener('keydown', handleTabKey);
 };
 
-// Missing functions that are being imported by tests and components
+// Screen reader utilities
 export const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
   const announcer = document.createElement('div');
   announcer.setAttribute('aria-live', priority);
@@ -150,6 +149,7 @@ export const announceToScreenReader = (message: string, priority: 'polite' | 'as
   }, 1000);
 };
 
+// Accessibility preference detection
 export const prefersReducedMotion = (): boolean => {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
@@ -158,12 +158,14 @@ export const getPreferredColorScheme = (): 'light' | 'dark' => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
+// Color contrast utilities
 export const meetsContrastRequirement = (foreground: string, background: string, level: 'AA' | 'AAA' = 'AA'): boolean => {
   // Simplified implementation - in production, use a proper color contrast calculation
-  // This mock implementation assumes colors meet requirements
+  // This mock implementation assumes colors meet requirements for testing purposes
   return true;
 };
 
+// Screen reader component creators
 export const screenReader = {
   /**
    * Create screen reader only text component

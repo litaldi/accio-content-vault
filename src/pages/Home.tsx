@@ -1,156 +1,239 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { 
   Brain, 
   Search, 
   FolderOpen, 
   BarChart3, 
-  ArrowRight,
-  Sparkles,
   Shield,
-  Zap
+  Zap,
+  Globe,
+  Smartphone,
+  ArrowRight,
+  CheckCircle,
+  Star,
+  Users,
+  TrendingUp,
+  Sparkles
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const features = [
     {
       icon: Brain,
       title: 'AI-Powered Organization',
-      description: 'Intelligent content categorization and smart tagging powered by advanced AI'
+      description: 'Let artificial intelligence automatically categorize and organize your knowledge base.'
     },
     {
       icon: Search,
-      title: 'Smart Search',
-      description: 'Find anything instantly with natural language search and semantic understanding'
+      title: 'Semantic Search',
+      description: 'Find exactly what you need with natural language search that understands context.'
     },
     {
       icon: FolderOpen,
-      title: 'Dynamic Collections',
-      description: 'Organize content automatically with intelligent collections that adapt to your needs'
+      title: 'Smart Collections',
+      description: 'Organize content into intelligent collections that adapt to your workflow.'
     },
     {
       icon: BarChart3,
       title: 'Insightful Analytics',
-      description: 'Track your knowledge growth with detailed insights and personalized recommendations'
+      description: 'Track your knowledge growth and discover patterns in your learning journey.'
     }
+  ];
+
+  const benefits = [
+    {
+      icon: Shield,
+      title: 'Enterprise Security',
+      description: 'Bank-level encryption and security protocols'
+    },
+    {
+      icon: Zap,
+      title: 'Lightning Fast',
+      description: 'Optimized performance for instant access'
+    },
+    {
+      icon: Globe,
+      title: 'Universal Access',
+      description: 'Access your knowledge from anywhere'
+    },
+    {
+      icon: Smartphone,
+      title: 'Mobile Ready',
+      description: 'Fully responsive on all devices'
+    }
+  ];
+
+  const stats = [
+    { label: 'Active Users', value: '10,000+', icon: Users },
+    { label: 'Knowledge Items', value: '1M+', icon: Brain },
+    { label: 'Satisfaction Rate', value: '98%', icon: Star },
+    { label: 'Growth Rate', value: '150%', icon: TrendingUp }
   ];
 
   return (
     <>
       <Helmet>
-        <title>Accio - Your Personal Knowledge Sanctuary</title>
-        <meta name="description" content="Organize, discover, and grow your knowledge with AI-powered insights and seamless content management." />
+        <title>Accio - AI-Powered Knowledge Management Platform</title>
+        <meta name="description" content="Transform how you capture, organize, and access knowledge with Accio's AI-powered platform. Build your personal knowledge sanctuary and discover insights like never before." />
+        <meta name="keywords" content="knowledge management, AI, organization, search, productivity, learning" />
       </Helmet>
 
-      <div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-        {/* Hero Section */}
-        <section className="container mx-auto px-4 py-20 text-center">
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium">
-              <Sparkles className="h-4 w-4" />
-              Your Personal Knowledge Sanctuary
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Remember Everything You Discover Online
-            </h1>
-            
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Accio transforms how you capture, organize, and rediscover knowledge. 
-              Save content from anywhere, let AI organize it intelligently, and find insights that matter.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button asChild size="lg" className="gap-2 shadow-lg">
-                <Link to="/features">
-                  <Zap className="h-5 w-5" />
-                  Explore Features
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="gap-2">
-                <Link to="/contact">
-                  Learn More
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Grid */}
-        <section className="container mx-auto px-4 py-20">
-          <div className="text-center space-y-4 mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold">Powerful Features</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Experience the next generation of knowledge management with AI-powered tools designed for modern learners.
-            </p>
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-blue-500/5">
+        <div className="container mx-auto px-4 text-center">
+          <Badge variant="outline" className="mb-6">
+            <Sparkles className="h-3 w-3 mr-1" />
+            AI-Powered Knowledge Management
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            Organize Your Knowledge with 
+            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block sm:inline">
+              {" "}AI Intelligence
+            </span>
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Transform scattered information into actionable insights with Accio's smart knowledge management platform. 
+            Capture, organize, and discover your knowledge like never before.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <Button size="lg" asChild>
+              <Link to="/dashboard">
+                Get Started Free
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/playground">Try Demo</Link>
+            </Button>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* Trust Signals */}
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
+              <span>Free 14-day trial</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
+              <span>No credit card required</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
+              <span>2-minute setup</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center">
+                <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <stat.icon className="h-6 w-6 text-primary" />
+                </div>
+                <div className="text-3xl font-bold mb-2">{stat.value}</div>
+                <div className="text-muted-foreground">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Powerful Features for Modern Knowledge Workers</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Everything you need to build, organize, and leverage your personal knowledge base
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
             {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-md hover:shadow-lg transition-shadow">
-                <CardHeader className="text-center">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="h-6 w-6 text-primary" />
+              <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
+                <CardHeader>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <feature.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
                   </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-muted-foreground text-center">
+                  <CardDescription className="text-base">
                     {feature.description}
-                  </p>
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-12">
+            <Button size="lg" asChild>
+              <Link to="/features">
+                Explore All Features
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Built for Performance & Security</h2>
+            <p className="text-xl text-muted-foreground">
+              Enterprise-grade platform with modern standards for security, performance, and accessibility
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {benefits.map((benefit, index) => (
+              <Card key={index} className="text-center hover:bg-card/80 transition-colors">
+                <CardContent className="pt-6">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <benefit.icon className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">{benefit.title}</h3>
+                  <p className="text-sm text-muted-foreground">{benefit.description}</p>
                 </CardContent>
               </Card>
             ))}
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Trust Section */}
-        <section className="container mx-auto px-4 py-20">
-          <Card className="border-primary/20 bg-primary/5">
-            <CardContent className="p-8 text-center">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                <Shield className="h-6 w-6 text-primary" />
-                <h3 className="text-2xl font-bold">Built for Privacy & Security</h3>
-              </div>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Your knowledge is precious. That's why Accio is built with privacy-first principles, 
-                end-to-end encryption, and complete data ownership. Your information stays yours, always.
-              </p>
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* CTA Section */}
-        <section className="container mx-auto px-4 py-20 text-center">
-          <div className="max-w-2xl mx-auto space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold">
-              Ready to Transform Your Knowledge?
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Join thousands of learners, researchers, and professionals who trust Accio 
-              to organize their digital knowledge.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="gap-2 shadow-lg">
-                <Link to="/dashboard">
-                  <Sparkles className="h-5 w-5" />
-                  Get Started Free
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg">
-                <Link to="/contact">
-                  Contact Sales
-                </Link>
-              </Button>
-            </div>
+      {/* CTA Section */}
+      <section className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Transform Your Knowledge Management?</h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Join thousands of knowledge workers who have already revolutionized how they capture, 
+            organize, and access information with Accio.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild>
+              <Link to="/dashboard">
+                Start Building Your Knowledge Base
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/contact">Talk to Sales</Link>
+            </Button>
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </>
   );
 };

@@ -1,327 +1,148 @@
-import React, { useState } from "react";
-import { Helmet } from "react-helmet-async";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Sparkles, Search, Tag, Bookmark, FileText } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { useToast } from "@/hooks/use-toast";
 
-const Playground = () => {
-  const { toast } = useToast();
-  const [url, setUrl] = useState("");
-  const [content, setContent] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [demoResult, setDemoResult] = useState<any>(null);
+import React from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Brain, 
+  Search, 
+  FolderOpen, 
+  BarChart3, 
+  Play,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 
-  const handleDemoSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    setIsProcessing(true);
-    
-    // Simulate processing
-    setTimeout(() => {
-      setIsProcessing(false);
-      
-      if (url) {
-        // Simulate saving URL
-        setDemoResult({
-          type: 'url',
-          title: "How to Build Better Mental Models",
-          domain: "fs.blog",
-          excerpt: "Mental models are frameworks for thinking. They simplify complex things so your brain can reason through them. They are shortcuts through the noise.",
-          tags: ["productivity", "learning", "mental-models", "cognition"],
-          wordCount: 1823,
-          readTime: "9 min"
-        });
-        
-        toast({
-          title: "Content saved successfully!",
-          description: "We've analyzed and tagged your content.",
-        });
-      } else if (content) {
-        // Simulate processing text
-        setDemoResult({
-          type: 'text',
-          excerpt: content.substring(0, 150) + (content.length > 150 ? "..." : ""),
-          tags: ["custom-content", "notes"],
-          wordCount: content.split(/\s+/).filter(Boolean).length,
-          readTime: Math.ceil(content.split(/\s+/).filter(Boolean).length / 200) + " min"
-        });
-        
-        toast({
-          title: "Text processed successfully!",
-          description: "We've analyzed and tagged your content.",
-        });
-      } else if (searchQuery) {
-        // Simulate search results
-        setDemoResult({
-          type: 'search',
-          query: searchQuery,
-          results: [
-            {
-              title: "The Psychology of Persuasion",
-              relevance: "98%",
-              excerpt: "Understanding how persuasion works can help you identify when you're being influenced..."
-            },
-            {
-              title: "Effective Learning Strategies",
-              relevance: "87%",
-              excerpt: "Spaced repetition and active recall are proven to be more effective than highlighting..."
-            },
-            {
-              title: "Building Neural Connections",
-              relevance: "79%",
-              excerpt: "The brain forms new neural pathways when learning new skills, a process called neuroplasticity..."
-            }
-          ]
-        });
-        
-        toast({
-          title: "Search completed",
-          description: `Found 3 results for "${searchQuery}"`,
-        });
-      }
-    }, 2000);
-  };
+const Playground: React.FC = () => {
+  const demoFeatures = [
+    {
+      icon: Brain,
+      title: 'AI Content Analysis',
+      description: 'See how our AI analyzes and categorizes your content automatically.',
+      action: 'Try Demo',
+      disabled: false
+    },
+    {
+      icon: Search,
+      title: 'Semantic Search',
+      description: 'Experience natural language search across your knowledge base.',
+      action: 'Search Demo',
+      disabled: false
+    },
+    {
+      icon: FolderOpen,
+      title: 'Smart Collections',
+      description: 'Watch as content organizes itself into intelligent collections.',
+      action: 'View Collections',
+      disabled: false
+    },
+    {
+      icon: BarChart3,
+      title: 'Analytics Dashboard',
+      description: 'Explore insights about your knowledge management patterns.',
+      action: 'View Analytics',
+      disabled: false
+    }
+  ];
 
   return (
     <>
       <Helmet>
-        <title>Interactive Demo | Accio</title>
-        <meta name="description" content="Try out Accio's features in this interactive playground. See how our AI-powered tagging and semantic search work." />
+        <title>Playground - Accio | Try Our AI-Powered Features</title>
+        <meta name="description" content="Experience Accio's powerful AI features in our interactive playground. Try semantic search, content analysis, and smart organization tools." />
       </Helmet>
-      
-      <Navbar isLoggedIn={false} />
 
-      <main className="container mx-auto px-4 py-12">
-        <div className="mb-12 text-center">
-          <h1 className="text-4xl font-bold mb-4">Interactive Playground</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Try out Accio's features and see the power of AI-assisted content management
+      {/* Hero Section */}
+      <section className="py-20 bg-gradient-to-br from-primary/5 via-background to-blue-500/5">
+        <div className="container mx-auto px-4 text-center">
+          <Badge variant="outline" className="mb-6">
+            <Play className="h-3 w-3 mr-1" />
+            Interactive Demo
+          </Badge>
+          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            Try Accio 
+            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block sm:inline">
+              {" "}Risk-Free
+            </span>
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+            Explore our AI-powered knowledge management features in this interactive playground. 
+            No signup required - just click and experience the magic.
           </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg">
+              Start Exploring
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/features">Learn More</Link>
+            </Button>
+          </div>
         </div>
-        
-        <div className="max-w-4xl mx-auto">
-          <Tabs defaultValue="save" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="save">
-                <Bookmark className="h-4 w-4 mr-2" />
-                Save Content
-              </TabsTrigger>
-              <TabsTrigger value="text">
-                <FileText className="h-4 w-4 mr-2" />
-                Process Text
-              </TabsTrigger>
-              <TabsTrigger value="search">
-                <Search className="h-4 w-4 mr-2" />
-                Semantic Search
-              </TabsTrigger>
-            </TabsList>
-            
-            <div className="mt-6">
-              <TabsContent value="save" className="mt-0">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Save Web Content</CardTitle>
-                    <CardDescription>
-                      Enter a URL and see how Accio analyzes and tags the content
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleDemoSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="url">URL</Label>
-                        <Input
-                          id="url"
-                          placeholder="https://example.com/article"
-                          value={url}
-                          onChange={(e) => setUrl(e.target.value)}
-                        />
-                      </div>
-                      <Button 
-                        type="submit" 
-                        disabled={isProcessing || !url}
-                        className="w-full"
-                      >
-                        {isProcessing ? (
-                          <>Processing...</>
-                        ) : (
-                          <>
-                            <Sparkles className="mr-2 h-4 w-4" />
-                            Save and Analyze
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="text" className="mt-0">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Process Text Content</CardTitle>
-                    <CardDescription>
-                      Paste text to see how Accio analyzes and organizes it
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleDemoSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="content">Text Content</Label>
-                        <Textarea
-                          id="content"
-                          placeholder="Paste or type your content here..."
-                          className="min-h-[200px]"
-                          value={content}
-                          onChange={(e) => setContent(e.target.value)}
-                        />
-                      </div>
-                      <Button 
-                        type="submit" 
-                        disabled={isProcessing || !content}
-                        className="w-full"
-                      >
-                        {isProcessing ? (
-                          <>Processing...</>
-                        ) : (
-                          <>
-                            <Tag className="mr-2 h-4 w-4" />
-                            Process and Tag
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-              
-              <TabsContent value="search" className="mt-0">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Semantic Search Demo</CardTitle>
-                    <CardDescription>
-                      Try our natural language search capabilities
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleDemoSubmit} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="search">Search Query</Label>
-                        <Input
-                          id="search"
-                          placeholder="How does the brain form new connections?"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                        <p className="text-sm text-muted-foreground">
-                          Try questions or natural language queries
-                        </p>
-                      </div>
-                      <Button 
-                        type="submit" 
-                        disabled={isProcessing || !searchQuery}
-                        className="w-full"
-                      >
-                        {isProcessing ? (
-                          <>Searching...</>
-                        ) : (
-                          <>
-                            <Search className="mr-2 h-4 w-4" />
-                            Semantic Search
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </div>
-          </Tabs>
-          
-          {demoResult && (
-            <div className="mt-10">
-              <Card>
+      </section>
+
+      {/* Demo Features */}
+      <section className="py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Interactive Demos</h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Experience each feature hands-on with sample data and real AI processing
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {demoFeatures.map((feature, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
                 <CardHeader>
-                  <CardTitle>{demoResult.type === 'search' ? 'Search Results' : 'Analysis Results'}</CardTitle>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                      <feature.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">{feature.title}</CardTitle>
+                  </div>
+                  <CardDescription className="text-base">
+                    {feature.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {demoResult.type === 'url' && (
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-semibold">{demoResult.title}</h3>
-                      <p className="text-sm text-muted-foreground">Source: {demoResult.domain}</p>
-                      <div className="p-4 bg-muted/30 rounded-md">
-                        <p>{demoResult.excerpt}</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {demoResult.tags.map((tag: string) => (
-                          <span 
-                            key={tag} 
-                            className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex gap-4 text-sm text-muted-foreground">
-                        <span>{demoResult.wordCount} words</span>
-                        <span>{demoResult.readTime} read</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {demoResult.type === 'text' && (
-                    <div className="space-y-4">
-                      <div className="p-4 bg-muted/30 rounded-md">
-                        <p>{demoResult.excerpt}</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2 mt-4">
-                        {demoResult.tags.map((tag: string) => (
-                          <span 
-                            key={tag} 
-                            className="px-3 py-1 bg-primary/10 text-primary rounded-full text-sm"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex gap-4 text-sm text-muted-foreground">
-                        <span>{demoResult.wordCount} words</span>
-                        <span>{demoResult.readTime} read</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {demoResult.type === 'search' && (
-                    <div className="space-y-6">
-                      <p className="text-sm text-muted-foreground">
-                        Results for: <span className="font-medium text-foreground">"{demoResult.query}"</span>
-                      </p>
-                      {demoResult.results.map((result: any, index: number) => (
-                        <div key={index} className="p-4 border border-border rounded-md hover:bg-accent/5 transition-colors">
-                          <div className="flex justify-between">
-                            <h3 className="font-medium">{result.title}</h3>
-                            <span className="text-sm text-primary">{result.relevance}</span>
-                          </div>
-                          <p className="text-sm text-muted-foreground mt-2">{result.excerpt}</p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  <Button 
+                    className="w-full" 
+                    disabled={feature.disabled}
+                    variant={feature.disabled ? "outline" : "default"}
+                  >
+                    {feature.action}
+                    <Play className="ml-2 h-4 w-4" />
+                  </Button>
                 </CardContent>
               </Card>
-            </div>
-          )}
+            ))}
+          </div>
         </div>
-      </main>
+      </section>
 
-      <Footer />
+      {/* Getting Started */}
+      <section className="py-20 bg-muted/30">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Build Your Knowledge Base?</h2>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Start your journey with Accio and transform how you manage and access information.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" asChild>
+              <Link to="/dashboard">
+                <Sparkles className="mr-2 h-4 w-4" />
+                Get Started Free
+              </Link>
+            </Button>
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/contact">Talk to Sales</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
     </>
   );
 };
