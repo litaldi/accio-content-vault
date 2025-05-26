@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -16,6 +15,7 @@ import {
   Brain,
   TrendingUp
 } from 'lucide-react';
+import { Typography, Spacing } from '@/components/ui/design-system';
 
 const HeroSection = () => {
   const { user } = useAuth();

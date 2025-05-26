@@ -63,7 +63,7 @@ export const AccessibilitySettings: React.FC = () => {
             <Label htmlFor="font-size">Font Size</Label>
             <Select
               value={preferences.fontSize}
-              onValueChange={(value: 'small' | 'medium' | 'large') =>
+              onValueChange={(value: 'normal' | 'large' | 'larger') =>
                 updatePreferences({ fontSize: value })
               }
             >
@@ -71,9 +71,9 @@ export const AccessibilitySettings: React.FC = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="small">Small</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
+                <SelectItem value="normal">Normal</SelectItem>
                 <SelectItem value="large">Large</SelectItem>
+                <SelectItem value="larger">Larger</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -174,7 +174,7 @@ export const AccessibilitySettings: React.FC = () => {
             onClick={() => updatePreferences({
               highContrast: false,
               reducedMotion: false,
-              fontSize: 'medium',
+              fontSize: 'normal',
               lineSpacing: 'normal',
               grayscale: false,
               keyboardNavigation: true,

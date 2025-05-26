@@ -1,118 +1,59 @@
-
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { UnifiedTypography } from '@/components/ui/unified-design-system';
-import { 
-  Brain, 
-  Search, 
-  Zap, 
-  Shield, 
-  Users, 
-  BarChart3,
-  ArrowRight,
-  Sparkles 
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { CheckCircle, Rocket, ShieldCheck, Lightbulb } from 'lucide-react';
+import { Typography, Spacing } from '@/components/ui/design-system';
 
-const EnhancedFeaturesSection = () => {
+const EnhancedFeaturesSection: React.FC = () => {
   const features = [
     {
-      icon: Brain,
-      title: "AI-Powered Intelligence",
-      description: "Advanced machine learning automatically categorizes and tags your content with 95% accuracy.",
-      benefits: ["Auto-categorization", "Smart tagging", "Content analysis"],
-      gradient: "from-blue-500 to-purple-600"
+      icon: Rocket,
+      title: 'AI-Powered Insights',
+      description: 'Unlock deeper understanding with AI-generated summaries, key concepts, and related content suggestions.',
     },
     {
-      icon: Search,
-      title: "Semantic Search",
-      description: "Find anything with natural language queries. Our AI understands context, not just keywords.",
-      benefits: ["Natural language", "Context awareness", "Instant results"],
-      gradient: "from-green-500 to-blue-500"
+      icon: ShieldCheck,
+      title: 'Secure Knowledge Base',
+      description: 'Your data is encrypted and securely stored, ensuring your knowledge remains private and protected.',
     },
     {
-      icon: Zap,
-      title: "Lightning Performance",
-      description: "Optimized infrastructure ensures sub-second search times even with thousands of items.",
-      benefits: ["Sub-second search", "99.9% uptime", "Global CDN"],
-      gradient: "from-yellow-500 to-orange-500"
+      icon: Lightbulb,
+      title: 'Smart Organization',
+      description: 'Automatically categorize and tag your content, making it easier to find and connect related ideas.',
     },
     {
-      icon: Shield,
-      title: "Enterprise Security",
-      description: "Bank-level encryption and security measures protect your valuable knowledge assets.",
-      benefits: ["End-to-end encryption", "SOC 2 compliant", "Regular audits"],
-      gradient: "from-red-500 to-pink-500"
+      icon: CheckCircle,
+      title: 'Seamless Integration',
+      description: 'Connect with your favorite tools and platforms, creating a unified knowledge ecosystem.',
     },
-    {
-      icon: Users,
-      title: "Team Collaboration",
-      description: "Share knowledge bases with your team and work together more effectively.",
-      benefits: ["Shared collections", "Permission controls", "Real-time sync"],
-      gradient: "from-purple-500 to-blue-500"
-    },
-    {
-      icon: BarChart3,
-      title: "Smart Analytics",
-      description: "Gain insights into your knowledge patterns and discover trending topics.",
-      benefits: ["Usage analytics", "Trend detection", "Personal insights"],
-      gradient: "from-indigo-500 to-purple-500"
-    }
   ];
 
   return (
-    <section className="py-20 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="text-center mb-16">
-          <Badge variant="secondary" className="mb-4">
-            <Sparkles className="h-3 w-3 mr-2" />
-            Powerful Features
-          </Badge>
-          <UnifiedTypography.H2>
-            Everything You Need to Organize Your Digital Life
-          </UnifiedTypography.H2>
-          <UnifiedTypography.Body size="lg" className="max-w-3xl mx-auto">
-            Discover the comprehensive suite of tools designed to make knowledge management effortless and intelligent.
-          </UnifiedTypography.Body>
+    <Spacing.Section size="lg">
+      <Spacing.Container>
+        <div className="text-center mb-12">
+          <Typography.H2>
+            Supercharge Your Knowledge Workflow
+          </Typography.H2>
+          <Typography.Lead className="max-w-3xl mx-auto">
+            Discover the features that make Accio the ultimate tool for knowledge workers
+          </Typography.Lead>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
-            <Card 
-              key={index} 
-              className="group hover:shadow-xl transition-all duration-500 hover:-translate-y-2 border-0 bg-gradient-to-br from-background to-muted/30"
-            >
-              <CardHeader className="pb-4">
-                <div className={cn(
-                  "w-16 h-16 rounded-2xl flex items-center justify-center mb-4 bg-gradient-to-br",
-                  feature.gradient,
-                  "group-hover:scale-110 transition-transform duration-300"
-                )}>
-                  <feature.icon className="h-8 w-8 text-white" />
-                </div>
-                <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                  {feature.title}
-                </CardTitle>
+            <Card key={index} className="shadow-md hover:shadow-lg transition-shadow duration-300">
+              <CardHeader>
+                <feature.icon className="h-8 w-8 mx-auto mb-3 text-primary" />
+                <CardTitle className="text-lg">{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </p>
-                <ul className="space-y-2">
-                  {feature.benefits.map((benefit, i) => (
-                    <li key={i} className="flex items-center gap-2 text-sm">
-                      <ArrowRight className="h-3 w-3 text-primary" />
-                      <span>{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
+              <CardContent>
+                <CardDescription>{feature.description}</CardDescription>
               </CardContent>
             </Card>
           ))}
         </div>
-      </div>
-    </section>
+      </Spacing.Container>
+    </Spacing.Section>
   );
 };
 

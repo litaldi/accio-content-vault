@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
@@ -7,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Plus, Bell, Clock, Calendar, MoreHorizontal } from 'lucide-react';
+import { Typography, Spacing } from '@/components/ui/design-system';
 
 const Reminders = () => {
   // Sample reminders data

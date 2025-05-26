@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useOfflineContent } from '@/hooks/useOfflineContent';
@@ -8,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import OfflineContentList from '@/components/OfflineContentList';
 import OfflineIndicator from '@/components/OfflineIndicator';
 import { Download, Wifi, Database, RefreshCw } from 'lucide-react';
+import { Typography, Spacing } from '@/components/ui/design-system';
 
 const OfflinePage: React.FC = () => {
   const {

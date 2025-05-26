@@ -6,11 +6,16 @@ interface AccessibilityPreferences {
   highContrast: boolean;
   screenReader: boolean;
   fontSize: 'normal' | 'large' | 'larger';
+  grayscale: boolean;
+  lineSpacing: 'normal' | 'relaxed' | 'loose';
+  keyboardNavigation: boolean;
+  screenReaderMode: boolean;
 }
 
 interface AccessibilityContextType {
   preferences: AccessibilityPreferences;
   updatePreferences: (prefs: Partial<AccessibilityPreferences>) => void;
+  announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -21,6 +26,10 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     highContrast: false,
     screenReader: false,
     fontSize: 'normal',
+    grayscale: false,
+    lineSpacing: 'normal',
+    keyboardNavigation: true,
+    screenReaderMode: false,
   });
 
   useEffect(() => {
@@ -54,8 +63,22 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   };
 
+  const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', priority);
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    
+    document.body.appendChild(announcement);
+    
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  };
+
   return (
-    <AccessibilityContext.Provider value={{ preferences, updatePreferences }}>
+    <AccessibilityContext.Provider value={{ preferences, updatePreferences, announceToScreenReader }}>
       {children}
     </AccessibilityContext.Provider>
   );

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 import { Button } from '@/components/ui/button';
@@ -23,6 +22,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Typography, Spacing } from '@/components/ui/design-system';
 
 const Features = () => {
   const mainFeatures = [

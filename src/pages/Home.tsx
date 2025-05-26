@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
@@ -24,6 +23,7 @@ import {
   Zap,
   Target
 } from 'lucide-react';
+import { Typography, Spacing } from '@/components/ui/design-system';
 
 const Home = () => {
   const features = [

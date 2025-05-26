@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
@@ -9,6 +8,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion"
+import { Typography, Spacing } from '@/components/ui/design-system';
 
 const FAQ = () => {
   return (

@@ -1,77 +1,57 @@
-
 import React from 'react';
-import { UnifiedTypography } from '@/components/ui/unified-design-system';
-import { Badge } from '@/components/ui/badge';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { HelpCircle } from 'lucide-react';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Typography, Spacing } from '@/components/ui/design-system';
 
-const FAQSection = () => {
+const FAQSection: React.FC = () => {
   const faqs = [
     {
-      question: "How does the AI tagging work?",
-      answer: "Our AI analyzes the content you save and automatically generates relevant tags based on the topic, sentiment, and context. It learns from your preferences over time to provide increasingly accurate categorization."
+      question: "What is Accio and how does it work?",
+      answer: "Accio is a knowledge management tool that helps you organize and understand information. It uses AI to automatically tag, categorize, and summarize content from various sources, making it easier to find and use."
     },
     {
-      question: "Can I import my existing bookmarks?",
-      answer: "Yes! Accio supports importing bookmarks from all major browsers including Chrome, Firefox, Safari, and Edge. You can also import from other bookmark managers and read-later apps."
+      question: "How secure is my data with Accio?",
+      answer: "We take data security seriously. Accio uses industry-standard encryption and security protocols to protect your information. Your data is stored securely and is only accessible to you."
     },
     {
-      question: "Is my data secure and private?",
-      answer: "Absolutely. We use enterprise-grade encryption to protect your data both in transit and at rest. Your content is never shared with third parties, and you maintain full control over your information."
+      question: "Can I use Accio for team collaboration?",
+      answer: "Yes, Accio supports team collaboration. You can share your knowledge collections with team members, allowing for seamless collaboration and knowledge sharing."
     },
     {
-      question: "How does the search functionality work?",
-      answer: "Accio uses advanced semantic search that understands context and meaning, not just keywords. You can search using natural language, and our AI will find relevant content even if the exact words don't match."
+      question: "What types of content can I save to Accio?",
+      answer: "You can save a wide variety of content to Accio, including web pages, documents, PDFs, images, and more. Our AI will analyze and organize the content, regardless of its format."
     },
     {
-      question: "Can I collaborate with my team?",
-      answer: "Yes! You can create shared collections and invite team members to collaborate. Set different permission levels and keep everyone aligned with shared knowledge bases."
+      question: "Is there a limit to the amount of content I can save?",
+      answer: "Accio offers different subscription plans with varying storage limits. Please check our pricing page for more details on storage capacity."
     },
     {
-      question: "What happens if I cancel my subscription?",
-      answer: "You can always export your data before canceling. Free users keep access to basic features, while your content remains safely stored. You can reactivate premium features anytime."
+      question: "How does Accio's AI improve my knowledge management?",
+      answer: "Accio's AI automatically tags and categorizes your content, saving you time and effort. It also provides summaries and insights, helping you quickly understand the key points of any document or article."
     }
   ];
 
   return (
-    <section className="py-20">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-4">
-            <HelpCircle className="h-3 w-3 mr-2" />
-            Frequently Asked Questions
-          </Badge>
-          <UnifiedTypography.H2>
-            Everything You Need to Know
-          </UnifiedTypography.H2>
-          <UnifiedTypography.Body size="lg" className="max-w-2xl mx-auto">
-            Get quick answers to the most common questions about Accio.
-          </UnifiedTypography.Body>
+    <Spacing.Section size="lg">
+      <Spacing.Container>
+        <div className="text-center mb-12">
+          <Typography.H2 className="mb-4">Frequently Asked Questions</Typography.H2>
+          <Typography.Lead className="max-w-3xl mx-auto">
+            Everything you need to know about using Accio to manage your knowledge effectively.
+          </Typography.Lead>
         </div>
 
-        <Accordion type="single" collapsible className="space-y-4">
+        <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
-            <AccordionItem 
-              key={index} 
-              value={`item-${index}`}
-              className="border border-border rounded-lg px-6"
-            >
-              <AccordionTrigger className="text-left hover:no-underline py-6">
-                <span className="font-semibold">{faq.question}</span>
-              </AccordionTrigger>
-              <AccordionContent className="pb-6 text-muted-foreground leading-relaxed">
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger className="text-lg font-medium">{faq.question}</AccordionTrigger>
+              <AccordionContent className="text-muted-foreground">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
-      </div>
-    </section>
+      </Spacing.Container>
+    </Spacing.Section>
   );
 };
 

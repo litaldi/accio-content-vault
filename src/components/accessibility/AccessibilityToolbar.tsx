@@ -20,7 +20,7 @@ import {
 const AccessibilityToolbar: React.FC = () => {
   const { preferences, updatePreferences, announceToScreenReader } = useAccessibility();
 
-  const handleFontSizeChange = (size: 'small' | 'medium' | 'large') => {
+  const handleFontSizeChange = (size: 'normal' | 'large' | 'larger') => {
     updatePreferences({ fontSize: size });
     announceToScreenReader(`Font size changed to ${size}`);
   };
@@ -38,7 +38,7 @@ const AccessibilityToolbar: React.FC = () => {
 
   const resetToDefaults = () => {
     updatePreferences({
-      fontSize: 'medium',
+      fontSize: 'normal',
       lineSpacing: 'normal',
       highContrast: false,
       reducedMotion: false,
@@ -85,7 +85,7 @@ const AccessibilityToolbar: React.FC = () => {
           <Label className="text-sm font-medium">Font Size</Label>
         </div>
         <div className="flex gap-2">
-          {(['small', 'medium', 'large'] as const).map((size) => (
+          {(['normal', 'large', 'larger'] as const).map((size) => (
             <Button
               key={size}
               variant={preferences.fontSize === size ? 'default' : 'outline'}
@@ -94,8 +94,8 @@ const AccessibilityToolbar: React.FC = () => {
               className="flex-1 capitalize"
               aria-pressed={preferences.fontSize === size}
             >
-              {size === 'small' && <Minus className="h-3 w-3 mr-1" />}
-              {size === 'large' && <Plus className="h-3 w-3 mr-1" />}
+              {size === 'normal' && <Minus className="h-3 w-3 mr-1" />}
+              {size === 'larger' && <Plus className="h-3 w-3 mr-1" />}
               {size}
             </Button>
           ))}

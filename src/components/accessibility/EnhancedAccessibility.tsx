@@ -11,14 +11,15 @@ const EnhancedAccessibility: React.FC = () => {
     // Apply font size
     root.classList.remove('text-sm', 'text-base', 'text-lg');
     switch (preferences.fontSize) {
-      case 'small':
-        root.classList.add('text-sm');
+      case 'normal':
+        root.classList.add('text-base');
         break;
       case 'large':
         root.classList.add('text-lg');
         break;
-      default:
-        root.classList.add('text-base');
+      case 'larger':
+        root.classList.add('text-xl');
+        break;
     }
 
     // Apply high contrast
