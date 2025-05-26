@@ -34,13 +34,13 @@ export const NavigationMenuDemo: React.FC = () => {
                   </Link>
                 </NavigationMenuLink>
               </li>
-              <ListItem href="/save" title="Quick Save">
+              <ListItem to="/save" title="Quick Save">
                 Save content from any URL or upload files instantly.
               </ListItem>
-              <ListItem href="/collections" title="Collections">
+              <ListItem to="/collections" title="Collections">
                 Organize your content into smart collections.
               </ListItem>
-              <ListItem href="/analytics" title="Analytics">
+              <ListItem to="/analytics" title="Analytics">
                 Track your learning progress and content usage.
               </ListItem>
             </ul>
