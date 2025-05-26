@@ -62,23 +62,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Check for demo users first
     const demoUser = getDemoUserByEmail(email);
     if (demoUser && demoUser.password === password) {
-      // Create a mock session for demo users
-      const mockUser = {
+      // Create a complete mock user object that matches the Supabase User type
+      const mockUser: User = {
         id: `demo-${demoUser.role}`,
+        aud: 'authenticated',
+        role: 'authenticated',
         email: demoUser.email,
-        created_at: demoUser.profile.joinDate,
+        email_confirmed_at: new Date().toISOString(),
+        phone: '',
+        confirmed_at: new Date().toISOString(),
+        last_sign_in_at: new Date().toISOString(),
+        app_metadata: {
+          provider: 'demo',
+          providers: ['demo']
+        },
         user_metadata: {
           firstName: demoUser.profile.firstName,
           lastName: demoUser.profile.lastName,
           role: demoUser.role
-        }
-      } as User;
+        },
+        identities: [],
+        created_at: demoUser.profile.joinDate,
+        updated_at: new Date().toISOString()
+      };
 
-      const mockSession = {
+      const mockSession: Session = {
         access_token: 'demo-token',
+        refresh_token: 'demo-refresh-token',
+        expires_in: 3600,
+        expires_at: Math.floor(Date.now() / 1000) + 3600,
         token_type: 'bearer',
         user: mockUser
-      } as Session;
+      };
 
       setUser(mockUser);
       setSession(mockSession);
