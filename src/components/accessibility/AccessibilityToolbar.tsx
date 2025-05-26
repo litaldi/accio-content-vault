@@ -1,257 +1,220 @@
 
-import React, { useState } from 'react';
+import React from 'react';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetClose } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 import { 
-  Accessibility, 
-  Eye, 
   Type, 
-  Contrast, 
-  Zap, 
-  X,
-  Settings,
-  Plus,
-  Minus,
-  RotateCcw
+  Eye, 
+  Move3D, 
+  Palette, 
+  Volume2, 
+  Monitor,
+  Accessibility,
+  X
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface AccessibilityToolbarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AccessibilityToolbar: React.FC<AccessibilityToolbarProps> = ({ isOpen, onClose }) => {
-  const { preferences, updatePreferences } = useAccessibility();
-  const [zoomLevel, setZoomLevel] = useState(100);
+const AccessibilityToolbar: React.FC<AccessibilityToolbarProps> = ({ 
+  isOpen, 
+  onClose 
+}) => {
+  const { preferences, updatePreferences, announceToScreenReader } = useAccessibility();
 
   const handleFontSizeChange = (size: 'small' | 'medium' | 'large') => {
     updatePreferences({ fontSize: size });
+    announceToScreenReader(`Font size changed to ${size}`);
   };
 
-  const handleZoomChange = (direction: 'in' | 'out' | 'reset') => {
-    let newZoom = zoomLevel;
-    
-    if (direction === 'in' && zoomLevel < 200) {
-      newZoom = Math.min(200, zoomLevel + 10);
-    } else if (direction === 'out' && zoomLevel > 50) {
-      newZoom = Math.max(50, zoomLevel - 10);
-    } else if (direction === 'reset') {
-      newZoom = 100;
-    }
-    
-    setZoomLevel(newZoom);
-    document.documentElement.style.zoom = `${newZoom}%`;
+  const handleHighContrastToggle = (enabled: boolean) => {
+    updatePreferences({ highContrast: enabled });
+    announceToScreenReader(`High contrast ${enabled ? 'enabled' : 'disabled'}`);
   };
 
-  const resetAllSettings = () => {
-    updatePreferences({
-      highContrast: false,
-      reducedMotion: false,
-      fontSize: 'medium',
-      announcements: true,
-      keyboardNavigation: true,
-    });
-    setZoomLevel(100);
-    document.documentElement.style.zoom = '100%';
+  const handleReducedMotionToggle = (enabled: boolean) => {
+    updatePreferences({ reducedMotion: enabled });
+    announceToScreenReader(`Reduced motion ${enabled ? 'enabled' : 'disabled'}`);
   };
 
-  if (!isOpen) return null;
+  const handleLineSpacingChange = (spacing: 'normal' | 'relaxed' | 'loose') => {
+    updatePreferences({ lineSpacing: spacing });
+    announceToScreenReader(`Line spacing changed to ${spacing}`);
+  };
 
   return (
-    <div 
-      className="fixed inset-0 z-50 bg-black/50"
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="accessibility-toolbar-title"
-    >
-      <div className="fixed top-4 right-4 max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <Card className="bg-background shadow-xl border-2">
-          <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
-              <CardTitle id="accessibility-toolbar-title" className="flex items-center gap-2">
-                <Accessibility className="h-5 w-5" />
-                Accessibility Tools
-              </CardTitle>
-              <Button
-                variant="ghost"
+    <Sheet open={isOpen} onOpenChange={onClose}>
+      <SheetContent 
+        side="right" 
+        className="w-80 overflow-y-auto"
+        aria-label="Accessibility settings"
+      >
+        <SheetHeader className="pb-6">
+          <div className="flex items-center justify-between">
+            <SheetTitle className="flex items-center gap-2">
+              <Accessibility className="h-5 w-5" />
+              Accessibility Settings
+            </SheetTitle>
+            <SheetClose asChild>
+              <Button 
+                variant="ghost" 
                 size="icon"
-                onClick={onClose}
                 aria-label="Close accessibility toolbar"
               >
                 <X className="h-4 w-4" />
               </Button>
+            </SheetClose>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Customize your experience for better accessibility
+          </p>
+        </SheetHeader>
+
+        <div className="space-y-8">
+          {/* Font Size */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Type className="h-4 w-4" />
+              <Label className="text-base font-medium">Font Size</Label>
             </div>
-          </CardHeader>
-          
-          <CardContent className="space-y-4">
-            <Tabs defaultValue="display" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="display">Display</TabsTrigger>
-                <TabsTrigger value="navigation">Navigation</TabsTrigger>
-              </TabsList>
+            <div className="grid grid-cols-3 gap-2">
+              {(['small', 'medium', 'large'] as const).map((size) => (
+                <Button
+                  key={size}
+                  variant={preferences.fontSize === size ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleFontSizeChange(size)}
+                  className="capitalize"
+                >
+                  {size}
+                </Button>
+              ))}
+            </div>
+          </div>
 
-              <TabsContent value="display" className="space-y-4 mt-4">
-                {/* Font Size Controls */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Font Size</label>
-                  <div className="flex gap-2">
-                    {(['small', 'medium', 'large'] as const).map((size) => (
-                      <Button
-                        key={size}
-                        variant={preferences.fontSize === size ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => handleFontSizeChange(size)}
-                        className="flex-1"
-                      >
-                        <Type className="h-3 w-3 mr-1" />
-                        {size.charAt(0).toUpperCase() + size.slice(1)}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
+          {/* Line Spacing */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Move3D className="h-4 w-4" />
+              <Label className="text-base font-medium">Line Spacing</Label>
+            </div>
+            <div className="grid grid-cols-3 gap-2">
+              {(['normal', 'relaxed', 'loose'] as const).map((spacing) => (
+                <Button
+                  key={spacing}
+                  variant={preferences.lineSpacing === spacing ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => handleLineSpacingChange(spacing)}
+                  className="capitalize"
+                >
+                  {spacing}
+                </Button>
+              ))}
+            </div>
+          </div>
 
-                {/* Zoom Controls */}
-                <div className="space-y-2">
-                  <label className="text-sm font-medium">Zoom Level: {zoomLevel}%</label>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleZoomChange('out')}
-                      disabled={zoomLevel <= 50}
-                      aria-label="Zoom out"
-                    >
-                      <Minus className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleZoomChange('reset')}
-                      className="flex-1"
-                    >
-                      <RotateCcw className="h-3 w-3 mr-1" />
-                      Reset
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleZoomChange('in')}
-                      disabled={zoomLevel >= 200}
-                      aria-label="Zoom in"
-                    >
-                      <Plus className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
+          {/* High Contrast */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Palette className="h-4 w-4" />
+                <Label htmlFor="high-contrast" className="text-base font-medium">
+                  High Contrast
+                </Label>
+              </div>
+              <Switch
+                id="high-contrast"
+                checked={preferences.highContrast}
+                onCheckedChange={handleHighContrastToggle}
+                aria-describedby="high-contrast-description"
+              />
+            </div>
+            <p id="high-contrast-description" className="text-sm text-muted-foreground">
+              Increases color contrast for better visibility
+            </p>
+          </div>
 
-                {/* High Contrast Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Contrast className="h-4 w-4" />
-                    <span className="text-sm font-medium">High Contrast</span>
-                  </div>
-                  <Button
-                    variant={preferences.highContrast ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => updatePreferences({ highContrast: !preferences.highContrast })}
-                    aria-pressed={preferences.highContrast}
-                  >
-                    {preferences.highContrast ? 'On' : 'Off'}
-                  </Button>
-                </div>
+          {/* Reduced Motion */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Eye className="h-4 w-4" />
+                <Label htmlFor="reduced-motion" className="text-base font-medium">
+                  Reduced Motion
+                </Label>
+              </div>
+              <Switch
+                id="reduced-motion"
+                checked={preferences.reducedMotion}
+                onCheckedChange={handleReducedMotionToggle}
+                aria-describedby="reduced-motion-description"
+              />
+            </div>
+            <p id="reduced-motion-description" className="text-sm text-muted-foreground">
+              Reduces animations and transitions
+            </p>
+          </div>
 
-                {/* Reduced Motion Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4" />
-                    <span className="text-sm font-medium">Reduced Motion</span>
-                  </div>
-                  <Button
-                    variant={preferences.reducedMotion ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => updatePreferences({ reducedMotion: !preferences.reducedMotion })}
-                    aria-pressed={preferences.reducedMotion}
-                  >
-                    {preferences.reducedMotion ? 'On' : 'Off'}
-                  </Button>
-                </div>
-              </TabsContent>
+          {/* Keyboard Navigation Help */}
+          <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Monitor className="h-4 w-4" />
+              <Label className="text-base font-medium">Keyboard Navigation</Label>
+            </div>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Navigate:</span>
+                <Badge variant="outline">Tab</Badge>
+              </div>
+              <div className="flex justify-between">
+                <span>Activate:</span>
+                <Badge variant="outline">Enter / Space</Badge>
+              </div>
+              <div className="flex justify-between">
+                <span>Skip to content:</span>
+                <Badge variant="outline">Tab from top</Badge>
+              </div>
+            </div>
+          </div>
 
-              <TabsContent value="navigation" className="space-y-4 mt-4">
-                {/* Keyboard Navigation Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Settings className="h-4 w-4" />
-                    <span className="text-sm font-medium">Enhanced Keyboard Navigation</span>
-                  </div>
-                  <Button
-                    variant={preferences.keyboardNavigation ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => updatePreferences({ keyboardNavigation: !preferences.keyboardNavigation })}
-                    aria-pressed={preferences.keyboardNavigation}
-                  >
-                    {preferences.keyboardNavigation ? 'On' : 'Off'}
-                  </Button>
-                </div>
+          {/* Screen Reader Support */}
+          <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+            <div className="flex items-center gap-2">
+              <Volume2 className="h-4 w-4" />
+              <Label className="text-base font-medium">Screen Reader Support</Label>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              This site is optimized for screen readers with proper ARIA labels, 
+              landmarks, and announcements.
+            </p>
+          </div>
 
-                {/* Screen Reader Announcements Toggle */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Eye className="h-4 w-4" />
-                    <span className="text-sm font-medium">Screen Reader Announcements</span>
-                  </div>
-                  <Button
-                    variant={preferences.announcements ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => updatePreferences({ announcements: !preferences.announcements })}
-                    aria-pressed={preferences.announcements}
-                  >
-                    {preferences.announcements ? 'On' : 'Off'}
-                  </Button>
-                </div>
-
-                {/* Keyboard Shortcuts Info */}
-                <div className="p-3 bg-muted rounded-lg">
-                  <h4 className="text-sm font-medium mb-2">Keyboard Shortcuts</h4>
-                  <div className="space-y-1 text-xs">
-                    <div><Badge variant="outline">Ctrl+S</Badge> Save content</div>
-                    <div><Badge variant="outline">Ctrl+D</Badge> Dashboard</div>
-                    <div><Badge variant="outline">Ctrl+K</Badge> Search</div>
-                    <div><Badge variant="outline">?</Badge> Show shortcuts</div>
-                  </div>
-                </div>
-
-                {/* Current Settings Summary */}
-                <div className="p-3 bg-muted rounded-lg">
-                  <h4 className="text-sm font-medium mb-2">Current Settings</h4>
-                  <div className="space-y-1 text-xs">
-                    <div>Font: {preferences.fontSize}</div>
-                    <div>Zoom: {zoomLevel}%</div>
-                    <div>High Contrast: {preferences.highContrast ? 'On' : 'Off'}</div>
-                    <div>Reduced Motion: {preferences.reducedMotion ? 'On' : 'Off'}</div>
-                  </div>
-                </div>
-              </TabsContent>
-            </Tabs>
-
-            {/* Reset All Settings */}
-            <Button
-              variant="destructive"
-              size="sm"
-              onClick={resetAllSettings}
-              className="w-full"
-            >
-              <RotateCcw className="h-3 w-3 mr-2" />
-              Reset All Settings
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          {/* Reset Button */}
+          <Button 
+            variant="outline" 
+            onClick={() => {
+              updatePreferences({
+                fontSize: 'medium',
+                lineSpacing: 'normal',
+                highContrast: false,
+                reducedMotion: false
+              });
+              announceToScreenReader('Accessibility settings reset to defaults');
+            }}
+            className="w-full"
+          >
+            Reset to Defaults
+          </Button>
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 };
 

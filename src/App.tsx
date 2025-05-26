@@ -1,118 +1,53 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { HelmetProvider } from 'react-helmet-async';
-import { ThemeProvider } from "@/components/theme/ThemeProvider";
-import { AuthProvider } from "@/contexts/AuthContext";
-import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import { Toaster } from '@/components/ui/toaster';
+import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 
 // Import pages
-import Index from "./pages/Index";
-import EnhancedDashboard from "./pages/EnhancedDashboard";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import SaveContent from "./pages/SaveContent";
-import Collections from "./pages/Collections";
-import Analytics from "./pages/Analytics";
-import Settings from "./pages/Settings";
-import Search from "./pages/Search";
-import Profile from "./pages/Profile";
-import Help from "./pages/Help";
-import About from "./pages/About";
-import FAQ from "./pages/FAQ";
-
-// Import error pages
-import NotFound from "./pages/NotFound";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      retry: 1,
-    },
-  },
-});
+import Index from '@/pages/Index';
+import About from '@/pages/About';
+import Help from '@/pages/Help';
+import FAQ from '@/pages/FAQ';
 
 function App() {
   return (
     <HelmetProvider>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <AccessibilityProvider>
-            <AuthProvider>
-              <TooltipProvider>
-                <BrowserRouter>
-                  <Routes>
-                    {/* Public routes */}
-                    <Route path="/" element={<Index />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/help" element={<Help />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    
-                    {/* Protected routes - require authentication */}
-                    <Route path="/dashboard" element={
-                      <ProtectedRoute>
-                        <EnhancedDashboard />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/save" element={
-                      <ProtectedRoute>
-                        <SaveContent />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/collections" element={
-                      <ProtectedRoute>
-                        <Collections />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/analytics" element={
-                      <ProtectedRoute>
-                        <Analytics />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/settings" element={
-                      <ProtectedRoute>
-                        <Settings />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/search" element={
-                      <ProtectedRoute>
-                        <Search />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/profile" element={
-                      <ProtectedRoute>
-                        <Profile />
-                      </ProtectedRoute>
-                    } />
-                    
-                    {/* Marketing pages - redirect to home for now */}
-                    <Route path="/features" element={<Navigate to="/#features" replace />} />
-                    <Route path="/pricing" element={<Navigate to="/#pricing" replace />} />
-                    <Route path="/terms" element={<Navigate to="/help#terms" replace />} />
-                    <Route path="/privacy" element={<Navigate to="/help#privacy" replace />} />
-                    
-                    {/* Redirect old routes */}
-                    <Route path="/home" element={<Navigate to="/" replace />} />
-                    <Route path="/save-content" element={<Navigate to="/save" replace />} />
-                    
-                    {/* 404 fallback */}
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </BrowserRouter>
-                <Toaster />
-                <Sonner />
-              </TooltipProvider>
-            </AuthProvider>
-          </AccessibilityProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <ThemeProvider defaultTheme="system" storageKey="accio-ui-theme">
+        <AccessibilityProvider>
+          <Router>
+            <div className="min-h-screen w-full">
+              <Helmet>
+                <html lang="en" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <meta name="theme-color" content="#3B82F6" />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+              </Helmet>
+              
+              <EnhancedAccessibility />
+              
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/help" element={<Help />} />
+                <Route path="/faq" element={<FAQ />} />
+                
+                {/* Redirect common paths to help maintain SEO */}
+                <Route path="/contact" element={<Help />} />
+                <Route path="/support" element={<Help />} />
+                
+                {/* Fallback route */}
+                <Route path="*" element={<Index />} />
+              </Routes>
+              
+              <Toaster />
+            </div>
+          </Router>
+        </AccessibilityProvider>
+      </ThemeProvider>
     </HelmetProvider>
   );
 }
