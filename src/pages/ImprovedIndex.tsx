@@ -3,7 +3,8 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import PrimaryNavigation from '@/components/navigation/PrimaryNavigation';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
+import ImprovedUnifiedLayout from '@/components/layout/ImprovedUnifiedLayout';
 import MarketingHeroSection from '@/components/home/MarketingHeroSection';
 import ImprovedPageShowcase from '@/components/home/ImprovedPageShowcase';
 import FeaturesSection from '@/components/home/FeaturesSection';
@@ -14,12 +15,11 @@ import TestimonialsSection from '@/components/home/TestimonialsSection';
 import SocialProofSection from '@/components/home/SocialProofSection';
 import UseCasesSection from '@/components/home/UseCasesSection';
 import TrustSignalsSection from '@/components/home/TrustSignalsSection';
-import ImprovedFooter from '@/components/Footer/ImprovedFooter';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { EnhancedCard, EnhancedCardContent, EnhancedCardDescription, EnhancedCardHeader, EnhancedCardTitle } from '@/components/ui/enhanced-card';
+import { ImprovedButton } from '@/components/ui/improved-button';
 import { Search, BookOpen, BarChart3, Settings, Sparkles } from 'lucide-react';
 
-const ImprovedIndex = () => {
+const ImprovedIndexContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const isLoggedIn = !!user;
@@ -56,7 +56,7 @@ const ImprovedIndex = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col w-full">
+    <ImprovedUnifiedLayout isLoggedIn={isLoggedIn} user={user}>
       <Helmet>
         <title>Accio - AI-Powered Knowledge Management | Save, Organize, Find Everything</title>
         <meta name="description" content="Transform scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything, achieve 10x productivity. Trusted by 10K+ professionals. Free forever plan available." />
@@ -76,21 +76,9 @@ const ImprovedIndex = () => {
         <meta name="author" content="Accio" />
         <meta name="theme-color" content="#3B82F6" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Helmet>
-      
-      {/* Skip to main content link for keyboard users */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-      >
-        Skip to main content
-      </a>
-      
-      <PrimaryNavigation />
-      
-      <main id="main-content" className="flex-grow w-full" role="main">
+
+      <div className="space-y-16">
         <MarketingHeroSection />
         
         {/* Quick Access Section for returning users */}
@@ -106,9 +94,10 @@ const ImprovedIndex = () => {
               
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 {quickActions.map((action) => (
-                  <Card 
-                    key={action.title} 
-                    className="cursor-pointer hover:shadow-lg transition-all duration-200 hover:scale-105 focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 group"
+                  <EnhancedCard 
+                    key={action.title}
+                    interactive
+                    elevated
                     onClick={action.action}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' || e.key === ' ') {
@@ -116,19 +105,18 @@ const ImprovedIndex = () => {
                         action.action();
                       }
                     }}
-                    tabIndex={0}
-                    role="button"
                     aria-label={`${action.title}: ${action.description}`}
+                    className="group"
                   >
-                    <CardHeader className="text-center">
+                    <EnhancedCardHeader className="text-center">
                       <div className={`w-12 h-12 mx-auto mb-4 ${action.color} rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                         <action.icon className="h-6 w-6 text-white" aria-hidden="true" />
                       </div>
-                      <CardTitle className="text-lg">{action.title}</CardTitle>
-                      <CardDescription>{action.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <Button 
+                      <EnhancedCardTitle className="text-lg">{action.title}</EnhancedCardTitle>
+                      <EnhancedCardDescription>{action.description}</EnhancedCardDescription>
+                    </EnhancedCardHeader>
+                    <EnhancedCardContent>
+                      <ImprovedButton 
                         variant="outline" 
                         className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                         onClick={(e) => {
@@ -138,9 +126,9 @@ const ImprovedIndex = () => {
                       >
                         <Sparkles className="h-4 w-4 mr-2" />
                         Access Now
-                      </Button>
-                    </CardContent>
-                  </Card>
+                      </ImprovedButton>
+                    </EnhancedCardContent>
+                  </EnhancedCard>
                 ))}
               </div>
             </div>
@@ -156,10 +144,16 @@ const ImprovedIndex = () => {
         <TrustSignalsSection />
         <FAQSection />
         <CTASection />
-      </main>
-      
-      <ImprovedFooter />
-    </div>
+      </div>
+    </ImprovedUnifiedLayout>
+  );
+};
+
+const ImprovedIndex = () => {
+  return (
+    <AccessibilityProvider>
+      <ImprovedIndexContent />
+    </AccessibilityProvider>
   );
 };
 
