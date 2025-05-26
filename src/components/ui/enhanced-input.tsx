@@ -1,50 +1,48 @@
 
-import React from 'react';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
+import * as React from "react"
+import { cn } from "@/lib/utils"
 
-interface EnhancedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+export interface EnhancedInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   description?: string;
+  rightIcon?: React.ReactNode;
 }
 
-export const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
-  ({ className, leftIcon, rightIcon, error, description, ...props }, ref) => {
+const EnhancedInput = React.forwardRef<HTMLInputElement, EnhancedInputProps>(
+  ({ className, type, error, description, rightIcon, ...props }, ref) => {
     return (
-      <div className="space-y-1">
-        <div className="relative">
-          {leftIcon && (
-            <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-              {leftIcon}
-            </div>
+      <div className="relative">
+        <input
+          type={type}
+          className={cn(
+            "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+            rightIcon && "pr-10",
+            error && "border-destructive focus-visible:ring-destructive",
+            className
           )}
-          <Input
-            className={cn(
-              leftIcon && "pl-10",
-              rightIcon && "pr-10",
-              error && "border-destructive focus-visible:ring-destructive",
-              className
-            )}
-            ref={ref}
-            {...props}
-          />
-          {rightIcon && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground">
-              {rightIcon}
-            </div>
-          )}
-        </div>
-        {description && !error && (
-          <p className="text-sm text-muted-foreground">{description}</p>
+          ref={ref}
+          {...props}
+        />
+        {rightIcon && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2">
+            {rightIcon}
+          </div>
         )}
         {error && (
-          <p className="text-sm text-destructive">{error}</p>
+          <p className="text-sm text-destructive mt-1" role="alert">
+            {error}
+          </p>
+        )}
+        {description && !error && (
+          <p className="text-sm text-muted-foreground mt-1">
+            {description}
+          </p>
         )}
       </div>
-    );
+    )
   }
-);
+)
+EnhancedInput.displayName = "EnhancedInput"
 
-EnhancedInput.displayName = "EnhancedInput";
+export { EnhancedInput }

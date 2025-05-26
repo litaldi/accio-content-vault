@@ -1,50 +1,44 @@
 
 /**
- * Unified Security Utilities
- * Provides comprehensive security functions for input validation, sanitization, and rate limiting
+ * Unified security utilities for input sanitization and validation
  */
 
-// Input Sanitization
-export interface SanitizeOptions {
-  allowHtml?: boolean;
+interface SanitizeOptions {
   maxLength?: number;
-  stripScripts?: boolean;
-  preserveLineBreaks?: boolean;
+  allowHtml?: boolean;
+  stripWhitespace?: boolean;
 }
 
-export const sanitizeInput = (
-  input: string, 
-  options: SanitizeOptions = {}
-): string => {
+/**
+ * Sanitize user input to prevent XSS and other security issues
+ */
+export const sanitizeInput = (input: string, options: SanitizeOptions = {}): string => {
   const {
-    allowHtml = false,
     maxLength = 1000,
-    stripScripts = true,
-    preserveLineBreaks = false
+    allowHtml = false,
+    stripWhitespace = true
   } = options;
 
-  if (!input || typeof input !== 'string') return '';
+  if (typeof input !== 'string') {
+    return '';
+  }
 
-  let sanitized = input.trim();
+  let sanitized = input;
 
-  // Remove HTML tags unless explicitly allowed
+  // Remove or escape HTML if not allowed
   if (!allowHtml) {
-    sanitized = sanitized.replace(/<[^>]*>/g, '');
+    sanitized = sanitized
+      .replace(/[<>]/g, '') // Remove angle brackets
+      .replace(/javascript:/gi, '') // Remove javascript: protocol
+      .replace(/on\w+=/gi, ''); // Remove event handlers
   }
 
-  // Always strip script tags for security
-  if (stripScripts) {
-    sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-    sanitized = sanitized.replace(/javascript:/gi, '');
-    sanitized = sanitized.replace(/on\w+\s*=/gi, '');
+  // Strip excessive whitespace
+  if (stripWhitespace) {
+    sanitized = sanitized.trim().replace(/\s+/g, ' ');
   }
 
-  // Handle line breaks
-  if (!preserveLineBreaks) {
-    sanitized = sanitized.replace(/\n/g, ' ').replace(/\r/g, ' ');
-  }
-
-  // Apply length limit
+  // Truncate to max length
   if (sanitized.length > maxLength) {
     sanitized = sanitized.substring(0, maxLength);
   }
@@ -52,132 +46,34 @@ export const sanitizeInput = (
   return sanitized;
 };
 
-// Email Validation
-export interface EmailValidationResult {
-  isValid: boolean;
-  message: string;
-}
-
-export const validateEmailEnhanced = (email: string): EmailValidationResult => {
-  if (!email || typeof email !== 'string') {
-    return { isValid: false, message: 'Email is required' };
-  }
-
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const trimmedEmail = email.trim().toLowerCase();
-
-  if (!emailRegex.test(trimmedEmail)) {
-    return { isValid: false, message: 'Please enter a valid email address' };
-  }
-
-  if (trimmedEmail.length > 254) {
-    return { isValid: false, message: 'Email address is too long' };
-  }
-
-  return { isValid: true, message: 'Valid email address' };
+/**
+ * Validate email format
+ */
+export const isValidEmail = (email: string): boolean => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
 };
 
-// URL Validation
-export const validateSecureUrl = (url: string): boolean => {
-  if (!url || typeof url !== 'string') return false;
-  
+/**
+ * Validate URL format and security
+ */
+export const isValidSecureUrl = (url: string): boolean => {
   try {
-    const urlObj = new URL(url.startsWith('http') ? url : `https://${url}`);
-    const allowedProtocols = ['http:', 'https:'];
-    return allowedProtocols.includes(urlObj.protocol);
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'https:' || urlObj.protocol === 'http:';
   } catch {
     return false;
   }
 };
 
-// Rate Limiting
-export interface RateLimitResult {
-  allowed: boolean;
-  resetTime?: number;
-}
-
-export class UnifiedRateLimiter {
-  private attempts: Map<string, { count: number; resetTime: number }> = new Map();
-
-  constructor(
-    private maxAttempts: number,
-    private windowMs: number
-  ) {}
-
-  canAttempt(identifier: string): RateLimitResult {
-    const now = Date.now();
-    const record = this.attempts.get(identifier);
-
-    if (!record || now > record.resetTime) {
-      this.attempts.set(identifier, { count: 1, resetTime: now + this.windowMs });
-      return { allowed: true };
-    }
-
-    if (record.count >= this.maxAttempts) {
-      return { allowed: false, resetTime: record.resetTime };
-    }
-
-    record.count++;
-    return { allowed: true };
+/**
+ * Generate a secure random string
+ */
+export const generateSecureToken = (length: number = 32): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
   }
-
-  reset(identifier: string): void {
-    this.attempts.delete(identifier);
-  }
-}
-
-// Pre-configured rate limiters
-export const authRateLimiter = new UnifiedRateLimiter(5, 15 * 60 * 1000); // 5 attempts per 15 minutes
-export const contactRateLimiter = new UnifiedRateLimiter(3, 60 * 1000); // 3 attempts per minute
-
-// CSRF Protection
-export class CSRFManager {
-  static generate(): string {
-    return Math.random().toString(36).substring(2) + Date.now().toString(36);
-  }
-
-  static validate(token: string): boolean {
-    return typeof token === 'string' && token.length > 10;
-  }
-}
-
-// Password Validation
-export interface PasswordValidationResult {
-  isValid: boolean;
-  message: string;
-  strength: number;
-}
-
-export const validatePassword = (password: string): PasswordValidationResult => {
-  if (!password) {
-    return { isValid: false, message: 'Password is required', strength: 0 };
-  }
-
-  let strength = 0;
-  const checks = {
-    length: password.length >= 8,
-    lowercase: /[a-z]/.test(password),
-    uppercase: /[A-Z]/.test(password),
-    number: /\d/.test(password),
-    special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
-  };
-
-  // Calculate strength
-  Object.values(checks).forEach(check => {
-    if (check) strength += 20;
-  });
-
-  if (!checks.length) {
-    return { isValid: false, message: 'Password must be at least 8 characters long', strength };
-  }
-
-  if (strength < 60) {
-    return { 
-      isValid: false, 
-      message: 'Password should include uppercase, lowercase, numbers, and special characters', 
-      strength 
-    };
-  }
-
-  return { isValid: true, message: 'Strong password', strength };
+  return result;
 };

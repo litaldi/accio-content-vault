@@ -4,21 +4,15 @@ import React, { createContext, useContext, useState, useEffect, ReactNode } from
 interface User {
   id: string;
   email: string;
-  name?: string;
-  user_metadata?: {
-    role?: string;
-    [key: string]: any;
-  };
+  name: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  signIn: (email: string, password: string) => Promise<{ error?: Error }>;
-  signUp: (email: string, password: string) => Promise<{ error?: Error }>;
+  isLoading: boolean;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, metadata?: { name?: string }) => Promise<void>;
   signOut: () => Promise<void>;
-  signInWithProvider: (provider: 'google' | 'github') => Promise<{ error?: Error }>;
-  loading: boolean;
-  isDemoMode?: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -37,90 +31,88 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate checking for existing session
-    const checkAuth = async () => {
+    // Check for stored user session
+    const storedUser = localStorage.getItem('accio_user');
+    if (storedUser) {
       try {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
+        setUser(JSON.parse(storedUser));
       } catch (error) {
-        console.error('Error checking auth:', error);
-      } finally {
-        setLoading(false);
+        localStorage.removeItem('accio_user');
       }
-    };
-
-    checkAuth();
+    }
+    setIsLoading(false);
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<{ error?: Error }> => {
-    setLoading(true);
+  const signIn = async (email: string, password: string): Promise<void> => {
+    setIsLoading(true);
     try {
-      // Simulate API call
-      const mockUser = { id: '1', email, name: email.split('@')[0] };
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return {};
-    } catch (error) {
-      return { error: new Error('Failed to sign in') };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signUp = async (email: string, password: string): Promise<{ error?: Error }> => {
-    setLoading(true);
-    try {
-      // Simulate API call
-      const mockUser = { id: '1', email, name: email.split('@')[0] };
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return {};
-    } catch (error) {
-      return { error: new Error('Failed to sign up') };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signInWithProvider = async (provider: 'google' | 'github'): Promise<{ error?: Error }> => {
-    setLoading(true);
-    try {
-      // Simulate OAuth flow
-      const mockUser = { 
-        id: '1', 
-        email: `user@${provider}.com`, 
-        name: `${provider} User` 
+      // Simulate API call - replace with actual authentication
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const mockUser: User = {
+        id: '1',
+        email,
+        name: email.split('@')[0]
       };
+      
       setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return {};
+      localStorage.setItem('accio_user', JSON.stringify(mockUser));
     } catch (error) {
-      return { error: new Error(`Failed to sign in with ${provider}`) };
+      throw new Error('Invalid email or password');
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  const signOut = async () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const signUp = async (email: string, password: string, metadata?: { name?: string }): Promise<void> => {
+    setIsLoading(true);
+    try {
+      // Simulate API call - replace with actual authentication
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const mockUser: User = {
+        id: Date.now().toString(),
+        email,
+        name: metadata?.name || email.split('@')[0]
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('accio_user', JSON.stringify(mockUser));
+    } catch (error) {
+      throw new Error('Failed to create account');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signOut = async (): Promise<void> => {
+    setIsLoading(true);
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      setUser(null);
+      localStorage.removeItem('accio_user');
+    } catch (error) {
+      throw new Error('Failed to sign out');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const value: AuthContextType = {
+    user,
+    isLoading,
+    signIn,
+    signUp,
+    signOut
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      signIn,
-      signUp,
-      signInWithProvider,
-      signOut,
-      loading,
-      isDemoMode: false
-    }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

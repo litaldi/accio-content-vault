@@ -19,6 +19,8 @@ import Analytics from '@/pages/Analytics';
 import Integrations from '@/pages/Integrations';
 import AccountSettings from '@/pages/AccountSettings';
 import Contact from '@/pages/Contact';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
 import NotFound from '@/pages/NotFound';
 import QueryProvider from '@/providers/QueryProvider';
 
@@ -45,6 +47,8 @@ const App: React.FC = () => {
                       <Route path="/integrations" element={<Integrations />} />
                       <Route path="/account" element={<AccountSettings />} />
                       <Route path="/contact" element={<Contact />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </main>

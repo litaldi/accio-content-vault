@@ -1,8 +1,8 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Props {
   children: ReactNode;
@@ -32,21 +32,27 @@ export class ErrorBoundary extends Component<Props, State> {
         <div className="min-h-screen flex items-center justify-center p-4">
           <Card className="max-w-md w-full">
             <CardHeader className="text-center">
-              <div className="w-12 h-12 bg-destructive/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <AlertCircle className="h-6 w-6 text-destructive" />
+              <div className="mx-auto w-12 h-12 bg-destructive/10 rounded-full flex items-center justify-center mb-4">
+                <AlertTriangle className="h-6 w-6 text-destructive" />
               </div>
               <CardTitle>Something went wrong</CardTitle>
+              <CardDescription>
+                We apologize for the inconvenience. An unexpected error occurred.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="text-center space-y-4">
-              <p className="text-muted-foreground">
-                We're sorry, but something unexpected happened. Please try refreshing the page.
-              </p>
-              <Button
-                onClick={() => window.location.reload()}
-                className="gap-2"
+            <CardContent className="space-y-4">
+              <Button 
+                onClick={() => this.setState({ hasError: false, error: undefined })}
+                className="w-full"
               >
-                <RefreshCw className="h-4 w-4" />
-                Refresh Page
+                Try again
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => window.location.reload()}
+                className="w-full"
+              >
+                Reload page
               </Button>
             </CardContent>
           </Card>
