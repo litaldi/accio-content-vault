@@ -4,143 +4,111 @@ import { Helmet } from 'react-helmet-async';
 import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
 import ImprovedFooter from '@/components/layout/ImprovedFooter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, Target, Award, Heart, Zap, Shield } from 'lucide-react';
+import { 
+  Users, 
+  Target, 
+  Heart, 
+  Lightbulb,
+  Award,
+  Globe
+} from 'lucide-react';
 
 const About = () => {
-  const teamMembers = [
-    {
-      name: "Sarah Chen",
-      role: "Founder & CEO",
-      description: "Former Google researcher passionate about knowledge organization",
-      icon: Users
-    },
-    {
-      name: "Marcus Rodriguez", 
-      role: "CTO",
-      description: "AI expert with 10+ years in machine learning and NLP",
-      icon: Zap
-    },
-    {
-      name: "Emily Johnson",
-      role: "Head of Design",
-      description: "UX designer focused on accessibility and user-centered design",
-      icon: Heart
-    }
-  ];
-
   const values = [
     {
-      title: "Privacy First",
-      description: "Your data belongs to you. We use end-to-end encryption and never sell your information.",
-      icon: Shield
+      icon: Target,
+      title: "Purpose-Driven",
+      description: "We believe knowledge should be accessible, organized, and actionable for everyone."
     },
     {
-      title: "Accessibility",
-      description: "Knowledge should be accessible to everyone, regardless of ability or background.",
-      icon: Users
+      icon: Heart,
+      title: "User-Centric",
+      description: "Every feature we build starts with understanding real user needs and challenges."
     },
     {
+      icon: Lightbulb,
       title: "Innovation",
-      description: "We continuously push the boundaries of what's possible with AI and knowledge management.",
-      icon: Zap
+      description: "We leverage cutting-edge AI to make knowledge management effortless and intelligent."
+    },
+    {
+      icon: Award,
+      title: "Excellence",
+      description: "We're committed to delivering the highest quality experience in every interaction."
     }
   ];
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <Helmet>
-        <title>About Us - Accio Knowledge Engine</title>
-        <meta name="description" content="Learn about Accio's mission to transform how people organize and access information through AI-powered knowledge management." />
+        <title>About - Accio Knowledge Engine</title>
+        <meta name="description" content="Learn about Accio's mission to revolutionize how people capture, organize, and discover knowledge." />
       </Helmet>
 
       <ProfessionalNavigation />
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="py-20 bg-gradient-to-br from-background via-primary/5 to-blue-500/5">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="outline" className="mb-6 bg-primary/10 text-primary border-primary/20">Our Story</Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Building the Future of
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
-                Knowledge Management
-              </span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              We believe that everyone deserves access to organized, searchable knowledge. 
-              Our mission is to eliminate information chaos and help people focus on what matters most.
-            </p>
+        <section className="py-16 border-b">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <Badge variant="outline" className="mb-6">About Accio</Badge>
+                <h1 className="text-4xl md:text-5xl font-bold mb-6">
+                  Empowering Knowledge <span className="text-primary">Discovery</span>
+                </h1>
+                <p className="text-xl text-muted-foreground mb-8">
+                  We're on a mission to transform how people capture, organize, and discover knowledge in the digital age.
+                </p>
+                <Button size="lg" asChild>
+                  <a href="/register">Join Our Mission</a>
+                </Button>
+              </div>
+              <div className="lg:text-center">
+                <div className="inline-flex items-center justify-center w-64 h-64 rounded-full bg-gradient-to-br from-primary/20 to-blue-500/20 border border-primary/20">
+                  <Globe className="h-32 w-32 text-primary" />
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Mission Section */}
         <section className="py-16">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className="animate-fade-in">
-                <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
-                <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                  In a world overflowing with information, we're building the tools to help people 
-                  capture, organize, and rediscover their knowledge effortlessly. Accio combines 
-                  the power of AI with intuitive design to create a personal knowledge engine 
-                  that grows with you.
-                </p>
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  Started in 2024, we've helped over 50,000 professionals, researchers, and 
-                  lifelong learners transform their relationship with information.
-                </p>
-              </div>
-              <div className="grid grid-cols-2 gap-6 animate-slide-in-right">
-                <Card className="text-center p-6 card-elevated">
-                  <CardContent className="pt-6">
-                    <div className="text-3xl font-bold text-primary mb-2">50K+</div>
-                    <p className="text-sm text-muted-foreground">Active Users</p>
-                  </CardContent>
-                </Card>
-                <Card className="text-center p-6 card-elevated">
-                  <CardContent className="pt-6">
-                    <div className="text-3xl font-bold text-primary mb-2">2M+</div>
-                    <p className="text-sm text-muted-foreground">Items Saved</p>
-                  </CardContent>
-                </Card>
-                <Card className="text-center p-6 card-elevated">
-                  <CardContent className="pt-6">
-                    <div className="text-3xl font-bold text-primary mb-2">99.9%</div>
-                    <p className="text-sm text-muted-foreground">Uptime</p>
-                  </CardContent>
-                </Card>
-                <Card className="text-center p-6 card-elevated">
-                  <CardContent className="pt-6">
-                    <div className="text-3xl font-bold text-primary mb-2">4.9★</div>
-                    <p className="text-sm text-muted-foreground">User Rating</p>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
+            <p className="text-lg text-muted-foreground leading-relaxed">
+              In an age of information overload, we believe that knowledge should work for you, not against you. 
+              Accio was born from the frustration of losing important information in the digital chaos. Our goal 
+              is to create an intelligent, intuitive platform that helps you capture, organize, and rediscover 
+              knowledge effortlessly, turning information into insight and insight into action.
+            </p>
           </div>
         </section>
 
         {/* Values Section */}
-        <section className="py-16 bg-muted/20">
+        <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Our Values</h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-muted-foreground">
                 The principles that guide everything we do
               </p>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid gap-8 md:grid-cols-2">
               {values.map((value, index) => (
-                <Card key={index} className="text-center card-elevated hover:-translate-y-1">
+                <Card key={index} className="card-elevated">
                   <CardHeader>
-                    <div className="w-16 h-16 mx-auto mb-4 bg-primary/10 rounded-2xl flex items-center justify-center">
-                      <value.icon className="h-8 w-8 text-primary" />
+                    <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
+                      <value.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle>{value.title}</CardTitle>
+                    <CardTitle className="text-xl">{value.title}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{value.description}</p>
+                    <CardDescription className="text-base">
+                      {value.description}
+                    </CardDescription>
                   </CardContent>
                 </Card>
               ))}
@@ -150,29 +118,32 @@ const About = () => {
 
         {/* Team Section */}
         <section className="py-16">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Meet Our Team</h2>
-              <p className="text-xl text-muted-foreground">
-                The people building the future of knowledge management
-              </p>
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-6">Built by Knowledge Enthusiasts</h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Our team consists of researchers, designers, and engineers who are passionate about 
+              making knowledge more accessible and actionable for everyone.
+            </p>
+            <div className="flex items-center justify-center gap-4">
+              <Users className="h-8 w-8 text-primary" />
+              <span className="text-2xl font-bold">Remote-First Team</span>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
-              {teamMembers.map((member, index) => (
-                <Card key={index} className="text-center card-elevated hover:-translate-y-1">
-                  <CardHeader>
-                    <div className="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-primary to-blue-600 rounded-full flex items-center justify-center">
-                      <member.icon className="h-10 w-10 text-white" />
-                    </div>
-                    <CardTitle>{member.name}</CardTitle>
-                    <CardDescription className="text-primary font-medium">{member.role}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{member.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <p className="text-muted-foreground mt-2">
+              Working across time zones to serve users worldwide
+            </p>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-16 bg-primary/5 border-t">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-4">Ready to Join Us?</h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Start your knowledge management journey today
+            </p>
+            <Button size="lg" asChild>
+              <a href="/register">Get Started Now</a>
+            </Button>
           </div>
         </section>
       </main>

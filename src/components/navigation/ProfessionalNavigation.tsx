@@ -4,13 +4,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { 
   Home, 
   LayoutDashboard,
@@ -38,21 +31,28 @@ const ProfessionalNavigation: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Flat menu structure - no dropdowns, all top-level
-  const mainNavItems = user ? [
+  // Flat navigation structure - authenticated users
+  const authenticatedNavItems = [
     { name: 'Home', path: '/', icon: Home },
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Save Content', path: '/save', icon: Save },
     { name: 'Collections', path: '/collections', icon: FolderOpen },
     { name: 'Analytics', path: '/analytics', icon: BarChart3 },
     { name: 'Help', path: '/help', icon: HelpCircle },
-  ] : [
+    { name: 'Profile', path: '/profile', icon: User },
+    { name: 'Settings', path: '/settings', icon: Settings },
+  ];
+
+  // Flat navigation structure - public users
+  const publicNavItems = [
     { name: 'Home', path: '/', icon: Home },
     { name: 'Features', path: '/features', icon: Sparkles },
     { name: 'About', path: '/about', icon: User },
     { name: 'Pricing', path: '/pricing', icon: BarChart3 },
     { name: 'Help', path: '/help', icon: HelpCircle },
   ];
+
+  const mainNavItems = user ? authenticatedNavItems : publicNavItems;
 
   const handleSignOut = async () => {
     try {
@@ -62,6 +62,11 @@ const ProfessionalNavigation: React.FC = () => {
     } catch (error) {
       console.error('Error signing out:', error);
     }
+  };
+
+  const handleMobileNavClick = (path: string) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -77,25 +82,29 @@ const ProfessionalNavigation: React.FC = () => {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
               <span className="text-primary-foreground font-bold text-xl" aria-hidden="true">A</span>
             </div>
-            <span className="text-2xl font-bold text-foreground">Accio</span>
+            <div className="flex flex-col">
+              <span className="text-2xl font-bold text-foreground">Accio</span>
+              <span className="text-xs text-muted-foreground leading-none hidden sm:block">Knowledge Engine</span>
+            </div>
           </Link>
 
-          {/* Desktop Navigation - Flat Structure */}
-          <nav className="hidden lg:flex items-center gap-6" aria-label="Main navigation">
+          {/* Desktop Navigation - Completely Flat */}
+          <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
             {mainNavItems.map((item) => (
               <Link
                 key={item.path}
                 to={item.path}
                 className={cn(
                   "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                   isActive(item.path) 
-                    ? "bg-primary/10 text-primary" 
+                    ? "bg-primary text-primary-foreground shadow-sm" 
                     : "text-muted-foreground hover:text-foreground hover:bg-accent"
                 )}
                 aria-current={isActive(item.path) ? 'page' : undefined}
               >
-                <item.icon className="h-4 w-4" />
-                {item.name}
+                <item.icon className="h-4 w-4" aria-hidden="true" />
+                <span>{item.name}</span>
               </Link>
             ))}
           </nav>
@@ -106,42 +115,15 @@ const ProfessionalNavigation: React.FC = () => {
             <AccessibilityButton variant="header" />
 
             {user ? (
-              <>
-                {/* Profile & Settings */}
-                <Link
-                  to="/profile"
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg",
-                    isActive('/profile')
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  )}
-                >
-                  <User className="h-4 w-4" />
-                  Profile
-                </Link>
-                <Link
-                  to="/settings"
-                  className={cn(
-                    "flex items-center gap-2 px-3 py-2 text-sm font-medium transition-colors rounded-lg",
-                    isActive('/settings')
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
-                  )}
-                >
-                  <Settings className="h-4 w-4" />
-                  Settings
-                </Link>
-                <Button 
-                  variant="ghost" 
-                  onClick={handleSignOut}
-                  className="flex items-center gap-2 text-sm font-medium"
-                  aria-label="Sign out"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </Button>
-              </>
+              <Button 
+                variant="ghost" 
+                onClick={handleSignOut}
+                className="flex items-center gap-2 text-sm font-medium"
+                aria-label="Sign out"
+              >
+                <LogOut className="h-4 w-4" />
+                Sign Out
+              </Button>
             ) : (
               <div className="flex items-center gap-3">
                 <Button variant="ghost" asChild>
@@ -170,77 +152,62 @@ const ProfessionalNavigation: React.FC = () => {
           </Button>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile Menu - Completely Flat */}
         {isMobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-border animate-slide-up">
             <nav className="flex flex-col gap-2" aria-label="Mobile navigation">
-              {/* Main Navigation Items */}
+              {/* All Navigation Items */}
               {mainNavItems.map((item) => (
-                <Link
+                <button
                   key={item.path}
-                  to={item.path}
+                  onClick={() => handleMobileNavClick(item.path)}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors",
+                    "flex items-center gap-3 px-3 py-3 text-sm font-medium rounded-lg transition-colors w-full text-left",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
                     isActive(item.path)
-                      ? "bg-primary/10 text-primary"
+                      ? "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
-                  onClick={() => setIsMobileMenuOpen(false)}
                   aria-current={isActive(item.path) ? 'page' : undefined}
                 >
                   <item.icon className="h-4 w-4" />
                   {item.name}
-                </Link>
+                </button>
               ))}
               
               <div className="border-t border-border my-3"></div>
               
-              {/* User Actions */}
+              {/* Auth Actions */}
               {user ? (
-                <>
-                  <Link
-                    to="/profile"
-                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <User className="h-4 w-4" />
-                    Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Settings className="h-4 w-4" />
-                    Settings
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors w-full text-left"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </button>
-                </>
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors w-full text-left"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </button>
               ) : (
                 <>
-                  <Link
-                    to="/login"
-                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  <button
+                    onClick={() => handleMobileNavClick('/login')}
+                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors w-full text-left"
                   >
                     Sign In
-                  </Link>
-                  <Link
-                    to="/register"
-                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors"
-                    onClick={() => setIsMobileMenuOpen(false)}
+                  </button>
+                  <button
+                    onClick={() => handleMobileNavClick('/register')}
+                    className="flex items-center gap-3 px-3 py-3 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-lg transition-colors w-full text-left"
                   >
                     <Sparkles className="h-4 w-4" />
                     Start Now
-                  </Link>
+                  </button>
                 </>
               )}
+
+              {/* Accessibility Button for Mobile */}
+              <div className="px-3 py-2">
+                <AccessibilityButton variant="header" />
+              </div>
             </nav>
           </div>
         )}
