@@ -1,132 +1,89 @@
 
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { UnifiedTypography } from '@/components/ui/unified-design-system';
 import { Star, Quote } from 'lucide-react';
-import { Typography, Spacing } from '@/components/ui/design-system';
 
-const TestimonialsSection: React.FC = () => {
+const TestimonialsSection = () => {
   const testimonials = [
     {
-      text: "Ever since we started using Accio, managing our research team's knowledge base has become 10x easier. The AI organization is incredible - it's like having a personal research assistant.",
-      author: "Sarah Chen",
-      role: "Product Manager",
-      company: "Google",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b647?auto=format&fit=crop&w=120&q=80",
-      rating: 5
+      name: "Sarah Chen",
+      role: "Product Designer",
+      company: "TechFlow",
+      content: "Accio has completely transformed how I organize my research. The AI tagging is incredibly accurate and saves me hours every week.",
+      rating: 5,
+      avatar: "SC"
     },
     {
-      text: "I finally feel like my team is in sync. Accio has transformed how we share and discover knowledge. Cut our research time by 40% and everyone can find what they need instantly.",
-      author: "Michael Torres",
-      role: "Strategy Consultant",
-      company: "McKinsey & Company",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=120&q=80",
-      rating: 5
+      name: "Marcus Rodriguez",
+      role: "Content Manager",
+      company: "Creative Studio",
+      content: "The search functionality is phenomenal. I can find articles I saved months ago in seconds. It's like having a personal librarian.",
+      rating: 5,
+      avatar: "MR"
     },
     {
-      text: "The smart tagging and search features are game-changers. No more digital chaos - everything is organized intelligently. I've saved 5+ hours per week since switching to Accio.",
-      author: "Emily Rodriguez",
-      role: "Research Director",
-      company: "Microsoft",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80",
-      rating: 5
-    },
-    {
-      text: "Accio is one source of truth for our entire creative pipeline. The interface is clean, intuitive, and incredibly powerful. Finally, no more scattered bookmarks and lost ideas.",
-      author: "David Kim",
-      role: "Creative Director",
-      company: "Netflix",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80",
-      rating: 5
-    },
-    {
-      text: "The AI suggestions speed up our creative flow with helpful prompts. It's like having an intelligent assistant that knows exactly what content we need when we need it.",
-      author: "Lisa Wang",
-      role: "Design Lead",
-      company: "Figma",
-      avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=120&q=80",
-      rating: 5
-    },
-    {
-      text: "As a freelancer, Accio helps me organize and share work easily with clients. The collaboration features are perfect for remote work and the mobile app keeps me productive anywhere.",
-      author: "Alex Johnson",
-      role: "Freelance Designer",
-      company: "Independent",
-      avatar: "https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?auto=format&fit=crop&w=120&q=80",
-      rating: 5
+      name: "Emily Watson",
+      role: "Researcher",
+      company: "Innovation Labs",
+      content: "Best investment for my productivity. The smart recommendations help me discover related content I would have missed otherwise.",
+      rating: 5,
+      avatar: "EW"
     }
   ];
 
   return (
-    <Spacing.Section size="lg" className="bg-muted/30">
-      <Spacing.Container size="lg">
+    <section className="py-20 bg-muted/30">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="text-center mb-16">
-          <Typography.H2 className="mb-6">
-            Loved by Knowledge Workers Worldwide
-          </Typography.H2>
-          <Typography.Body size="lg" className="max-w-2xl mx-auto text-muted-foreground">
-            Join thousands of professionals who've transformed their productivity with Accio
-          </Typography.Body>
+          <Badge variant="secondary" className="mb-4">
+            <Star className="h-3 w-3 mr-2" />
+            Loved by 10,000+ Users
+          </Badge>
+          <UnifiedTypography.H2>
+            What Our Users Say
+          </UnifiedTypography.H2>
+          <UnifiedTypography.Body size="lg" className="max-w-2xl mx-auto">
+            Don't just take our word for it. See what professionals are saying about Accio.
+          </UnifiedTypography.Body>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="relative bg-background/80 backdrop-blur-sm border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-              <CardContent className="p-8">
-                {/* Quote Icon */}
-                <Quote className="h-8 w-8 text-primary/20 mb-4" />
-                
-                {/* Rating */}
+            <Card key={index} className="relative hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+              <CardContent className="p-6">
                 <div className="flex items-center mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
                   ))}
                 </div>
                 
-                {/* Testimonial Text */}
-                <Typography.Body className="mb-6 text-foreground/90 leading-relaxed">
-                  "{testimonial.text}"
-                </Typography.Body>
+                <Quote className="h-8 w-8 text-primary/20 mb-4" />
                 
-                {/* Author Info */}
-                <div className="flex items-center gap-4">
-                  <img 
-                    src={testimonial.avatar} 
-                    alt={`${testimonial.author} avatar`}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
+                <p className="text-muted-foreground mb-6 leading-relaxed">
+                  "{testimonial.content}"
+                </p>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-primary font-semibold text-sm">
+                      {testimonial.avatar}
+                    </span>
+                  </div>
                   <div>
-                    <Typography.Body className="font-semibold text-foreground mb-1">
-                      {testimonial.author}
-                    </Typography.Body>
-                    <Typography.Caption className="text-muted-foreground">
-                      {testimonial.role} • {testimonial.company}
-                    </Typography.Caption>
+                    <div className="font-semibold">{testimonial.name}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {testimonial.role} at {testimonial.company}
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
-
-        {/* Trust Stats */}
-        <div className="mt-16 text-center">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div>
-              <Typography.H3 className="text-primary mb-2">10,000+</Typography.H3>
-              <Typography.Body className="text-muted-foreground">Happy Users</Typography.Body>
-            </div>
-            <div>
-              <Typography.H3 className="text-primary mb-2">4.9/5</Typography.H3>
-              <Typography.Body className="text-muted-foreground">Average Rating</Typography.Body>
-            </div>
-            <div>
-              <Typography.H3 className="text-primary mb-2">500+</Typography.H3>
-              <Typography.Body className="text-muted-foreground">Companies Trust Us</Typography.Body>
-            </div>
-          </div>
-        </div>
-      </Spacing.Container>
-    </Spacing.Section>
+      </div>
+    </section>
   );
 };
 

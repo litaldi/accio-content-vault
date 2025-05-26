@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -22,6 +21,9 @@ import {
   Globe,
   Clock
 } from 'lucide-react';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import EnhancedFeaturesSection from '@/components/home/EnhancedFeaturesSection';
+import FAQSection from '@/components/home/FAQSection';
 
 const Index = () => {
   const { user } = useAuth();
@@ -158,35 +160,11 @@ const Index = () => {
           ))}
         </section>
 
-        {/* Features Section */}
-        <section className="space-y-16" aria-labelledby="features-heading">
-          <div className="text-center space-y-4">
-            <UnifiedTypography.H2 id="features-heading">
-              Powerful Features for Modern Knowledge Work
-            </UnifiedTypography.H2>
-            <UnifiedTypography.Body size="lg" className="max-w-2xl mx-auto">
-              Everything you need to organize, access, and share your digital knowledge
-            </UnifiedTypography.Body>
-          </div>
+        {/* Enhanced Features Section */}
+        <EnhancedFeaturesSection />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group">
-                <CardHeader className="pb-4">
-                  <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-4 group-hover:bg-primary/20 transition-colors">
-                    <feature.icon className="h-7 w-7 text-primary" aria-hidden="true" />
-                  </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-base leading-relaxed">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </section>
+        {/* Testimonials Section */}
+        <TestimonialsSection />
 
         {/* Benefits Section */}
         <section className="bg-gradient-to-br from-muted/30 to-muted/10 rounded-3xl p-8 lg:p-16" aria-labelledby="benefits-heading">
@@ -238,6 +216,9 @@ const Index = () => {
             </div>
           </div>
         </section>
+
+        {/* FAQ Section */}
+        <FAQSection />
 
         {/* CTA Section */}
         {!user && (

@@ -1,112 +1,75 @@
 
 import React from 'react';
+import { UnifiedTypography } from '@/components/ui/unified-design-system';
+import { Badge } from '@/components/ui/badge';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { Button } from '@/components/ui/button';
-import { MessageCircle, ArrowRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { HelpCircle } from 'lucide-react';
 
-const FAQSection: React.FC = () => {
+const FAQSection = () => {
   const faqs = [
     {
-      question: "Is Accio really free? What's the catch?",
-      answer: "Yes! Our Starter plan is completely free forever with no hidden fees. You can save up to 500 items and use core features. We never share your email or sell your data. Upgrade only when you're ready for unlimited storage and advanced features."
+      question: "How does the AI tagging work?",
+      answer: "Our AI analyzes the content you save and automatically generates relevant tags based on the topic, sentiment, and context. It learns from your preferences over time to provide increasingly accurate categorization."
     },
     {
-      question: "How do I invite my team? Is collaboration easy?",
-      answer: "Super easy! Just send a simple invite link to teammates. They'll have access to shared collections instantly. No complicated setup - everyone can start collaborating in minutes, whether they're across the hall or across the world."
-    },
-    {
-      question: "What happens to my data if I cancel?",
-      answer: "Your data always belongs to you. Export everything with one click at any time. Even if you cancel, you have 30 days to download your data. We believe in data freedom - no lock-in, ever."
-    },
-    {
-      question: "Does it work on mobile and tablets?",
-      answer: "Absolutely! Our mobile apps (iOS & Android) and responsive web interface work seamlessly across all devices. Save content, search, and collaborate from anywhere. Your knowledge library syncs instantly."
-    },
-    {
-      question: "How smart is the AI organization really?",
-      answer: "Our AI learns from your behavior and automatically tags, categorizes, and suggests related content. It understands context - so a design article about 'buttons' won't get mixed up with clothing buttons. The more you use it, the smarter it gets."
-    },
-    {
-      question: "Can I import my existing bookmarks and notes?",
-      answer: "Yes! Import from Chrome, Safari, Notion, Evernote, and 20+ other tools. Our migration wizard makes it painless - usually takes less than 5 minutes. Keep all your existing organization or let our AI reorganize everything smartly."
+      question: "Can I import my existing bookmarks?",
+      answer: "Yes! Accio supports importing bookmarks from all major browsers including Chrome, Firefox, Safari, and Edge. You can also import from other bookmark managers and read-later apps."
     },
     {
       question: "Is my data secure and private?",
-      answer: "Bank-level security with 256-bit encryption. We're SOC 2 compliant and GDPR ready. Your data is encrypted at rest and in transit. We can't read your content even if we wanted to - that's true privacy."
+      answer: "Absolutely. We use enterprise-grade encryption to protect your data both in transit and at rest. Your content is never shared with third parties, and you maintain full control over your information."
     },
     {
-      question: "What if I need help getting started?",
-      answer: "We're here for you! Get onboarding help via chat, email, or video call. Our team loves helping new users discover the full power of Accio. Plus, we have a helpful community of 10,000+ users sharing tips and templates."
+      question: "How does the search functionality work?",
+      answer: "Accio uses advanced semantic search that understands context and meaning, not just keywords. You can search using natural language, and our AI will find relevant content even if the exact words don't match."
+    },
+    {
+      question: "Can I collaborate with my team?",
+      answer: "Yes! You can create shared collections and invite team members to collaborate. Set different permission levels and keep everyone aligned with shared knowledge bases."
+    },
+    {
+      question: "What happens if I cancel my subscription?",
+      answer: "You can always export your data before canceling. Free users keep access to basic features, while your content remains safely stored. You can reactivate premium features anytime."
     }
   ];
 
   return (
-    <section className="py-20 lg:py-24" id="faq-section">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+    <section className="py-20">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
         <div className="text-center mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight tracking-tight mb-6">
+          <Badge variant="outline" className="mb-4">
+            <HelpCircle className="h-3 w-3 mr-2" />
             Frequently Asked Questions
-          </h2>
-          <p className="text-lg sm:text-xl leading-relaxed max-w-2xl mx-auto text-muted-foreground">
-            Got questions? We've got answers. If you can't find what you're looking for, our friendly support team is here to help.
-          </p>
+          </Badge>
+          <UnifiedTypography.H2>
+            Everything You Need to Know
+          </UnifiedTypography.H2>
+          <UnifiedTypography.Body size="lg" className="max-w-2xl mx-auto">
+            Get quick answers to the most common questions about Accio.
+          </UnifiedTypography.Body>
         </div>
 
-        <div className="max-w-4xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4">
-            {faqs.map((faq, index) => (
-              <AccordionItem 
-                key={index} 
-                value={`item-${index}`}
-                className="border border-border/50 rounded-lg px-6 bg-background/80 backdrop-blur-sm"
-              >
-                <AccordionTrigger className="text-left hover:no-underline py-6">
-                  <p className="font-semibold text-foreground mb-0 text-left">
-                    {faq.question}
-                  </p>
-                </AccordionTrigger>
-                <AccordionContent className="pb-6">
-                  <p className="text-muted-foreground leading-relaxed mb-0">
-                    {faq.answer}
-                  </p>
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-
-        {/* Contact Support CTA */}
-        <div className="text-center mt-16">
-          <div className="bg-primary/5 border border-primary/20 rounded-2xl p-8 max-w-2xl mx-auto">
-            <MessageCircle className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h3 className="text-2xl sm:text-3xl font-bold leading-tight mb-4">
-              Still have questions?
-            </h3>
-            <p className="text-muted-foreground mb-6">
-              Our friendly support team is here to help. Get answers in minutes, not hours.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild variant="outline" size="lg">
-                <Link to="/contact" className="inline-flex items-center gap-2">
-                  Chat with Support
-                  <MessageCircle className="h-4 w-4" />
-                </Link>
-              </Button>
-              <Button asChild size="lg">
-                <Link to="/register" className="inline-flex items-center gap-2">
-                  Try It Free Instead
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </div>
+        <Accordion type="single" collapsible className="space-y-4">
+          {faqs.map((faq, index) => (
+            <AccordionItem 
+              key={index} 
+              value={`item-${index}`}
+              className="border border-border rounded-lg px-6"
+            >
+              <AccordionTrigger className="text-left hover:no-underline py-6">
+                <span className="font-semibold">{faq.question}</span>
+              </AccordionTrigger>
+              <AccordionContent className="pb-6 text-muted-foreground leading-relaxed">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
       </div>
     </section>
   );
