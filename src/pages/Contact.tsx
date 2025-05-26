@@ -1,6 +1,8 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';

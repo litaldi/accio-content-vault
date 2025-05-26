@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
+import { UnifiedTypography } from '@/components/ui/unified-design-system';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, User, Clock } from 'lucide-react';
