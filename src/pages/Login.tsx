@@ -79,7 +79,7 @@ const Login = () => {
       const errorMessage = error.message || "Invalid credentials. Please try again.";
       setErrors({ submit: errorMessage });
       toast({
-        title: copy.error.signIn,
+        title: copy.errors.signIn,
         description: errorMessage,
         variant: "destructive",
       });
