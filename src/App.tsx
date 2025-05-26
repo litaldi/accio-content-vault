@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { Toaster } from '@/components/ui/toaster';
 import Home from '@/pages/Home';
 import Login from '@/pages/Login';
@@ -27,27 +28,29 @@ function App() {
   return (
     <HelmetProvider>
       <ThemeProvider>
-        <AuthProvider>
-          <Router>
-            <div className="min-h-screen bg-background text-foreground">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/features" element={<Features />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/collections" element={<Collections />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Toaster />
-            </div>
-          </Router>
-        </AuthProvider>
+        <AccessibilityProvider>
+          <AuthProvider>
+            <Router>
+              <div className="min-h-screen bg-background text-foreground">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/help" element={<Help />} />
+                  <Route path="/features" element={<Features />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/collections" element={<Collections />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <Toaster />
+              </div>
+            </Router>
+          </AuthProvider>
+        </AccessibilityProvider>
       </ThemeProvider>
     </HelmetProvider>
   );

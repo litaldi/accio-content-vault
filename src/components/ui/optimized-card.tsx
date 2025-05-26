@@ -1,16 +1,15 @@
 
-import * as React from "react";
-import { cn } from "@/lib/utils";
-import { cardVariants } from "./design-system";
+import React from 'react';
+import { cn } from '@/lib/utils';
 
-export interface ImprovedCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface OptimizedCardProps extends React.HTMLAttributes<HTMLDivElement> {
   hover?: boolean;
   elevated?: boolean;
   interactive?: boolean;
   padding?: 'none' | 'sm' | 'default' | 'lg';
 }
 
-const ImprovedCard = React.forwardRef<HTMLDivElement, ImprovedCardProps>(
+const OptimizedCard = React.forwardRef<HTMLDivElement, OptimizedCardProps>(
   ({ className, hover = false, elevated = false, interactive = false, padding = 'default', children, ...props }, ref) => {
     const paddingClasses = {
       none: '',
@@ -19,16 +18,22 @@ const ImprovedCard = React.forwardRef<HTMLDivElement, ImprovedCardProps>(
       lg: 'p-8'
     };
 
-    const variant = interactive ? 'interactive' : hover ? 'interactive' : elevated ? 'elevated' : 'default';
-
     return (
       <div
         ref={ref}
         className={cn(
-          cardVariants[variant],
+          "rounded-xl border bg-card text-card-foreground shadow-sm",
+          elevated && "shadow-md hover:shadow-lg",
+          (hover || interactive) && [
+            "cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-1",
+            "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+          ],
+          interactive && "hover:border-primary/20",
           paddingClasses[padding],
           className
         )}
+        tabIndex={interactive ? 0 : undefined}
+        role={interactive ? "button" : undefined}
         {...props}
       >
         {children}
@@ -37,10 +42,9 @@ const ImprovedCard = React.forwardRef<HTMLDivElement, ImprovedCardProps>(
   }
 );
 
-ImprovedCard.displayName = "ImprovedCard";
+OptimizedCard.displayName = "OptimizedCard";
 
-// Card content components
-const ImprovedCardHeader = React.forwardRef<
+const OptimizedCardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -51,10 +55,10 @@ const ImprovedCardHeader = React.forwardRef<
   />
 ));
 
-ImprovedCardHeader.displayName = "ImprovedCardHeader";
+OptimizedCardHeader.displayName = "OptimizedCardHeader";
 
-const ImprovedCardTitle = React.forwardRef<
-  HTMLParagraphElement,
+const OptimizedCardTitle = React.forwardRef<
+  HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement> & { size?: 'sm' | 'default' | 'lg' }
 >(({ className, size = 'default', ...props }, ref) => (
   <h3
@@ -70,9 +74,9 @@ const ImprovedCardTitle = React.forwardRef<
   />
 ));
 
-ImprovedCardTitle.displayName = "ImprovedCardTitle";
+OptimizedCardTitle.displayName = "OptimizedCardTitle";
 
-const ImprovedCardDescription = React.forwardRef<
+const OptimizedCardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
@@ -83,19 +87,17 @@ const ImprovedCardDescription = React.forwardRef<
   />
 ));
 
-ImprovedCardDescription.displayName = "ImprovedCardDescription";
+OptimizedCardDescription.displayName = "OptimizedCardDescription";
 
-const ImprovedCardContent = React.forwardRef<
+const OptimizedCardContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & { padding?: 'none' | 'sm' | 'default' | 'lg' | 'md' | 'xl' }
+  React.HTMLAttributes<HTMLDivElement> & { padding?: 'none' | 'sm' | 'default' | 'lg' }
 >(({ className, padding = 'default', ...props }, ref) => {
   const paddingClasses = {
     none: '',
     sm: 'p-4',
-    default: 'p-6',
-    md: 'p-5',
-    lg: 'p-8',
-    xl: 'p-10'
+    default: 'p-6 pt-0',
+    lg: 'p-8 pt-0'
   };
 
   return (
@@ -107,9 +109,9 @@ const ImprovedCardContent = React.forwardRef<
   );
 });
 
-ImprovedCardContent.displayName = "ImprovedCardContent";
+OptimizedCardContent.displayName = "OptimizedCardContent";
 
-const ImprovedCardFooter = React.forwardRef<
+const OptimizedCardFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -120,13 +122,13 @@ const ImprovedCardFooter = React.forwardRef<
   />
 ));
 
-ImprovedCardFooter.displayName = "ImprovedCardFooter";
+OptimizedCardFooter.displayName = "OptimizedCardFooter";
 
 export { 
-  ImprovedCard, 
-  ImprovedCardHeader, 
-  ImprovedCardTitle, 
-  ImprovedCardDescription, 
-  ImprovedCardContent, 
-  ImprovedCardFooter 
+  OptimizedCard, 
+  OptimizedCardHeader, 
+  OptimizedCardTitle, 
+  OptimizedCardDescription, 
+  OptimizedCardContent, 
+  OptimizedCardFooter 
 };
