@@ -2,8 +2,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase';
 
-// For development without environment variables, we'll use demo values
-// In production, these should be set as environment variables
+// Use environment variables for Supabase configuration
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://demo-project.supabase.co';
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'demo-anon-key';
 
