@@ -81,9 +81,11 @@ export function NavigationMenuDemo() {
           </NavigationMenuContent>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link to="/pricing" legacyBehavior passHref>
-            <NavigationMenuLink className="font-medium">Pricing</NavigationMenuLink>
-          </Link>
+          <NavigationMenuLink asChild>
+            <Link to="/pricing" className="font-medium">
+              Pricing
+            </Link>
+          </NavigationMenuLink>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>
