@@ -1,240 +1,254 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import UnifiedTopNavigation from '@/components/navigation/UnifiedTopNavigation';
+import GlobalFooter from '@/components/layout/GlobalFooter';
 import { 
   Brain, 
   Zap, 
-  Search, 
-  Shield,
+  Shield, 
+  Search,
+  BookmarkPlus,
+  Tag,
+  Network,
   ArrowRight,
-  CheckCircle,
   Star,
+  CheckCircle,
   Users,
-  Bookmark,
-  TrendingUp
+  Clock,
+  Globe
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const ModernIndex = () => {
   const features = [
     {
       icon: Brain,
       title: "AI-Powered Organization",
-      description: "Automatically categorize and connect your knowledge with intelligent tagging and smart relationships."
+      description: "Smart categorization and automatic tagging of your knowledge with advanced AI.",
+      color: "from-blue-500 to-cyan-500"
     },
     {
       icon: Zap,
-      title: "Lightning Fast Search",
-      description: "Find anything in your knowledge base instantly with semantic search that understands context."
+      title: "Lightning Search",
+      description: "Find anything instantly with semantic search that understands context.",
+      color: "from-yellow-500 to-orange-500"
     },
     {
       icon: Shield,
       title: "Secure & Private",
-      description: "Your data stays private with enterprise-grade security and end-to-end encryption."
+      description: "Enterprise-grade security with end-to-end encryption for your data.",
+      color: "from-green-500 to-emerald-500"
+    },
+    {
+      icon: Network,
+      title: "Knowledge Graph",
+      description: "Visualize connections between your ideas and discover new insights.",
+      color: "from-purple-500 to-pink-500"
     }
   ];
 
+  const benefits = [
+    "Never lose important information again",
+    "Save hours of searching and organizing",
+    "Discover hidden connections in your knowledge",
+    "Work more efficiently with AI assistance"
+  ];
+
   const stats = [
-    { value: "50,000+", label: "Active Users" },
-    { value: "1M+", label: "Items Saved" },
-    { value: "99.9%", label: "Uptime" },
-    { value: "5+ hrs", label: "Saved Weekly" }
+    { value: "50K+", label: "Active Users", icon: Users },
+    { value: "1M+", label: "Items Saved", icon: BookmarkPlus },
+    { value: "99.9%", label: "Uptime", icon: Clock },
+    { value: "150+", label: "Countries", icon: Globe }
   ];
 
   return (
-    <UnifiedPageLayout
-      title="Accio - Your AI Knowledge Management Platform"
-      description="Transform scattered information into organized intelligence. Save, organize, and discover insights with AI-powered knowledge management."
-    >
-      {/* Hero Section */}
-      <section className="py-24 lg:py-32">
-        <div className="container">
-          <div className="mx-auto max-w-4xl text-center">
-            <Badge variant="secondary" className="mb-6">
+    <div className="min-h-screen flex flex-col bg-background">
+      <Helmet>
+        <title>Accio - AI-Powered Knowledge Engine</title>
+        <meta name="description" content="Transform scattered information into organized intelligence. Save, organize, and rediscover everything that matters with AI-powered knowledge management." />
+        <meta name="keywords" content="knowledge management, AI organization, digital library, search, productivity" />
+      </Helmet>
+
+      <UnifiedTopNavigation />
+
+      <main className="flex-grow">
+        {/* Hero Section */}
+        <section className="relative py-20 lg:py-32 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-background" />
+          <div className="container relative z-10 text-center">
+            <Badge variant="outline" className="mb-6 animate-fade-in">
               <Star className="h-3 w-3 mr-1" />
-              Trusted by 50,000+ professionals
+              AI-Powered Knowledge Engine
             </Badge>
             
-            <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6">
-              Your AI-powered
-              <span className="text-primary block">knowledge engine</span>
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6 animate-fade-in">
+              Transform scattered information into
+              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
+                organized intelligence
+              </span>
             </h1>
             
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-              Stop losing brilliant ideas. Transform scattered information into organized intelligence 
-              and reclaim 5+ hours weekly with AI-powered knowledge management.
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed animate-fade-in">
+              Save, organize, and rediscover everything that matters. Accio's AI-powered platform 
+              helps you build a personal knowledge empire that grows smarter with every interaction.
             </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-              <Button size="lg" asChild>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-in">
+              <Button size="lg" className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all" asChild>
                 <Link to="/register">
-                  Get Started Free
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link to="/features">See Features</Link>
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6" asChild>
+                <Link to="/features">
+                  See How It Works
+                </Link>
               </Button>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-2xl mx-auto">
+            {/* Trust Indicators */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto animate-fade-in">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-2xl font-bold text-primary">{stat.value}</div>
-                  <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  <div className="flex items-center justify-center mb-2">
+                    <stat.icon className="h-5 w-5 text-primary mr-2" />
+                    <span className="text-2xl font-bold">{stat.value}</span>
+                  </div>
+                  <span className="text-sm text-muted-foreground">{stat.label}</span>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-muted/30">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
-              Everything you need to build your knowledge empire
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Powerful features designed to amplify your intellectual capabilities
-            </p>
+        {/* Features Section */}
+        <section className="py-20 bg-muted/30">
+          <div className="container">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
+                Powerful features for modern knowledge workers
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Everything you need to capture, organize, and leverage your knowledge effectively
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {features.map((feature, index) => (
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer">
+                  <CardHeader className="pb-4">
+                    <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                      <feature.icon className="h-6 w-6 text-white" />
+                    </div>
+                    <CardTitle className="text-lg group-hover:text-primary transition-colors">
+                      {feature.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <CardDescription className="leading-relaxed">
+                      {feature.description}
+                    </CardDescription>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
+        </section>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
-                <CardContent className="p-8">
-                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                    <feature.icon className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {feature.description}
-                  </p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof */}
-      <section className="py-24">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">
-              Join thousands of knowledge workers
-            </h2>
-            <p className="text-xl text-muted-foreground">
-              Professionals from leading companies trust Accio
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <Card className="border-0 shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+        {/* Benefits Section */}
+        <section className="py-20">
+          <div className="container">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div>
+                <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+                  Why choose Accio for your knowledge management?
+                </h2>
+                <div className="space-y-4">
+                  {benefits.map((benefit, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <CheckCircle className="h-6 w-6 text-primary mt-0.5 flex-shrink-0" />
+                      <span className="text-lg">{benefit}</span>
+                    </div>
                   ))}
                 </div>
-                <p className="text-muted-foreground mb-4">
-                  "Accio has transformed how I manage research. What used to take hours now takes minutes."
-                </p>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Users className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Sarah Chen</div>
-                    <div className="text-sm text-muted-foreground">Research Director</div>
-                  </div>
+                <div className="mt-8">
+                  <Button size="lg" asChild>
+                    <Link to="/features">
+                      Explore All Features
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Link>
+                  </Button>
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  "The AI organization is incredible. It finds connections I never would have discovered."
-                </p>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Users className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Marcus Rodriguez</div>
-                    <div className="text-sm text-muted-foreground">Product Manager</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-sm">
-              <CardContent className="p-6">
-                <div className="flex items-center space-x-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-muted-foreground mb-4">
-                  "Finally, a knowledge management tool that actually understands how I think and work."
-                </p>
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
-                    <Users className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <div className="font-medium">Emma Thompson</div>
-                    <div className="text-sm text-muted-foreground">Consultant</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-2xl" />
+                <Card className="border-0 shadow-2xl relative z-10">
+                  <CardContent className="p-8">
+                    <div className="space-y-6">
+                      <div className="flex items-center gap-3">
+                        <BookmarkPlus className="h-8 w-8 text-primary" />
+                        <div>
+                          <h3 className="font-semibold">Quick Capture</h3>
+                          <p className="text-sm text-muted-foreground">Save content from anywhere</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Tag className="h-8 w-8 text-primary" />
+                        <div>
+                          <h3 className="font-semibold">Smart Tagging</h3>
+                          <p className="text-sm text-muted-foreground">AI automatically organizes</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Search className="h-8 w-8 text-primary" />
+                        <div>
+                          <h3 className="font-semibold">Instant Search</h3>
+                          <p className="text-sm text-muted-foreground">Find anything in seconds</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-primary/5">
-        <div className="container">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">
-              Ready to transform your productivity?
+        {/* CTA Section */}
+        <section className="py-20 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
+          <div className="container text-center">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-6">
+              Ready to build your knowledge empire?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of professionals who've revolutionized their knowledge management. 
-              Start building your knowledge empire today.
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Join thousands of professionals who've transformed their knowledge management. 
+              Start your free trial today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
+              <Button size="lg" className="text-lg px-8 py-6 shadow-lg" asChild>
                 <Link to="/register">
-                  Start Free Trial
-                  <ArrowRight className="h-4 w-4 ml-2" />
+                  Get Started Free
+                  <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link to="/features">Learn More</Link>
+              <Button variant="outline" size="lg" className="text-lg px-8 py-6" asChild>
+                <Link to="/contact">
+                  Talk to Sales
+                </Link>
               </Button>
             </div>
-            <p className="text-sm text-muted-foreground mt-4">
-              Free forever plan available • No credit card required
-            </p>
           </div>
-        </div>
-      </section>
-    </UnifiedPageLayout>
+        </section>
+      </main>
+
+      <GlobalFooter />
+    </div>
   );
 };
 
