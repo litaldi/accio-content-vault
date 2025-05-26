@@ -1,161 +1,157 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import ProfessionalNavigation from '@/components/navigation/ProfessionalNavigation';
-import ImprovedFooter from '@/components/layout/ImprovedFooter';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
-  FolderOpen, 
-  Plus, 
+  Bookmark, 
   Search, 
-  Filter,
-  Star,
+  Filter, 
+  Grid3X3, 
+  List, 
+  Plus,
   Clock,
-  Share,
-  MoreHorizontal
+  Tag,
+  ExternalLink
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { mockContents } from '@/lib/mock-data';
+import { useState } from 'react';
 
 const Collections = () => {
-  // Sample collections data
-  const collections = [
-    {
-      id: 1,
-      name: "Research Papers",
-      description: "Academic papers and research materials for my thesis",
-      itemCount: 24,
-      lastUpdated: "2 hours ago",
-      starred: true,
-      color: "blue"
-    },
-    {
-      id: 2,
-      name: "Design Inspiration",
-      description: "UI/UX designs, color palettes, and creative references",
-      itemCount: 18,
-      lastUpdated: "1 day ago",
-      starred: false,
-      color: "purple"
-    },
-    {
-      id: 3,
-      name: "Code Snippets",
-      description: "Useful code examples and programming resources",
-      itemCount: 32,
-      lastUpdated: "3 days ago",
-      starred: true,
-      color: "green"
-    }
-  ];
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  const filteredContent = mockContents.filter(item =>
+    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <UnifiedLayout>
       <Helmet>
-        <title>Collections - Accio Knowledge Engine</title>
-        <meta name="description" content="Organize your saved content into smart collections for easy access and management." />
+        <title>Collections - Accio | Your Saved Content</title>
+        <meta name="description" content="Browse and manage your saved content collections in Accio." />
       </Helmet>
 
-      <ProfessionalNavigation />
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Collections</h1>
+            <p className="text-muted-foreground mt-2">
+              Your saved content organized and ready to explore
+            </p>
+          </div>
+          <Button className="flex items-center gap-2">
+            <Plus className="h-4 w-4" />
+            Save New Content
+          </Button>
+        </div>
 
-      <main className="flex-grow">
-        {/* Header Section */}
-        <section className="py-8 border-b">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">Collections</h1>
-                <p className="text-muted-foreground">
-                  Organize your knowledge into smart collections
+        {/* Search and Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search your collections..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <Filter className="h-4 w-4 mr-2" />
+              Filter
+            </Button>
+            <div className="flex border rounded-md">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className="rounded-r-none"
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="rounded-l-none"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Content Grid/List */}
+        <div className={
+          viewMode === 'grid' 
+            ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" 
+            : "space-y-4"
+        }>
+          {filteredContent.map((item) => (
+            <Card key={item.id} className="hover:shadow-lg transition-shadow">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <CardTitle className="text-lg line-clamp-2">{item.title}</CardTitle>
+                  <Button variant="ghost" size="sm">
+                    <Bookmark className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {item.image_url && (
+                  <img 
+                    src={item.image_url} 
+                    alt={item.title}
+                    className="w-full h-32 object-cover rounded-md mb-3"
+                  />
+                )}
+                <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                  {item.description}
                 </p>
-              </div>
-              <div className="flex items-center gap-3">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Search className="h-4 w-4" />
-                  Search
-                </Button>
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Filter className="h-4 w-4" />
-                  Filter
-                </Button>
-                <Button className="flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  New Collection
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Collections Grid */}
-        <section className="py-8">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {collections.map((collection) => (
-                <Card key={collection.id} className="card-interactive group">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-lg bg-${collection.color}-500/10 flex items-center justify-center`}>
-                          <FolderOpen className={`h-5 w-5 text-${collection.color}-500`} />
-                        </div>
-                        <div>
-                          <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                            {collection.name}
-                          </CardTitle>
-                          <div className="flex items-center gap-2 mt-1">
-                            <Badge variant="secondary" className="text-xs">
-                              {collection.itemCount} items
-                            </Badge>
-                            {collection.starred && (
-                              <Star className="h-3 w-3 text-yellow-500 fill-current" />
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="mb-4 line-clamp-2">
-                      {collection.description}
-                    </CardDescription>
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
-                        {collection.lastUpdated}
-                      </div>
-                      <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Share className="h-3 w-3 mr-1" />
-                        Share
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-              
-              {/* Create New Collection Card */}
-              <Card className="card-interactive border-dashed hover:border-primary/50">
-                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
-                    <Plus className="h-6 w-6 text-primary" />
+                <div className="flex flex-wrap gap-1 mb-3">
+                  {item.tags?.slice(0, 3).map((tag) => (
+                    <Badge key={tag.id} variant="secondary" className="text-xs">
+                      <Tag className="h-3 w-3 mr-1" />
+                      {tag.name}
+                    </Badge>
+                  ))}
+                </div>
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    {new Date(item.created_at).toLocaleDateString()}
                   </div>
-                  <CardTitle className="text-lg mb-2">Create New Collection</CardTitle>
-                  <CardDescription className="mb-4">
-                    Start organizing your content into themed collections
-                  </CardDescription>
-                  <Button>Get Started</Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
-      </main>
+                  {item.url && (
+                    <Button variant="ghost" size="sm" asChild>
+                      <a href={item.url} target="_blank" rel="noopener noreferrer">
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-      <ImprovedFooter />
-    </div>
+        {filteredContent.length === 0 && (
+          <div className="text-center py-12">
+            <Bookmark className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No content found</h3>
+            <p className="text-muted-foreground">
+              {searchQuery ? 'Try adjusting your search terms' : 'Start saving content to see it here'}
+            </p>
+          </div>
+        )}
+      </div>
+    </UnifiedLayout>
   );
 };
 

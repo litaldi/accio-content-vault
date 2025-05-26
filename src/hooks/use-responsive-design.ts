@@ -1,53 +1,41 @@
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-interface ResponsiveBreakpoints {
+interface ResponsiveState {
   isMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
-  isLarge: boolean;
   screenWidth: number;
 }
 
-export const useResponsiveDesign = (): ResponsiveBreakpoints => {
-  const [breakpoints, setBreakpoints] = useState<ResponsiveBreakpoints>({
+export const useResponsiveDesign = (): ResponsiveState => {
+  const [state, setState] = useState<ResponsiveState>({
     isMobile: false,
     isTablet: false,
-    isDesktop: false,
-    isLarge: false,
-    screenWidth: 0,
+    isDesktop: true,
+    screenWidth: typeof window !== 'undefined' ? window.innerWidth : 1024
   });
 
   useEffect(() => {
-    const updateBreakpoints = () => {
+    const handleResize = () => {
       const width = window.innerWidth;
-      
-      setBreakpoints({
+      setState({
         isMobile: width < 768,
         isTablet: width >= 768 && width < 1024,
-        isDesktop: width >= 1024 && width < 1440,
-        isLarge: width >= 1440,
-        screenWidth: width,
+        isDesktop: width >= 1024,
+        screenWidth: width
       });
     };
 
-    // Set initial values
-    updateBreakpoints();
+    // Set initial state
+    handleResize();
 
-    // Add event listener with debouncing
-    let timeoutId: NodeJS.Timeout;
-    const debouncedResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(updateBreakpoints, 150);
-    };
+    // Add event listener
+    window.addEventListener('resize', handleResize, { passive: true });
 
-    window.addEventListener('resize', debouncedResize);
-    
-    return () => {
-      window.removeEventListener('resize', debouncedResize);
-      clearTimeout(timeoutId);
-    };
+    // Cleanup
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return breakpoints;
+  return state;
 };
