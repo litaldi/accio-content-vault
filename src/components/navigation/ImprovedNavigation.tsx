@@ -1,261 +1,199 @@
 
-import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { useNavigation } from '@/hooks/use-navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useResponsiveDesign } from '@/hooks/use-responsive-design';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { Menu, X, Search, BookOpen, Save, Settings, User, LogOut, Home } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useResponsiveLayout } from '@/hooks/use-responsive-layout';
-import { 
-  Menu, 
-  X, 
-  Home, 
-  BookOpen, 
-  Settings, 
-  HelpCircle,
-  Search,
-  Plus
-} from 'lucide-react';
-import { copy } from '@/utils/copy';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-export const ImprovedNavigation: React.FC = () => {
-  const navigate = useNavigate();
+interface ImprovedNavigationProps {
+  isLoggedIn?: boolean;
+  user?: any;
+  onSignOut?: () => void;
+}
+
+const ImprovedNavigation: React.FC<ImprovedNavigationProps> = ({
+  isLoggedIn = false,
+  user,
+  onSignOut
+}) => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isMobile } = useResponsiveDesign();
+  const { preferences, announceToScreenReader } = useAccessibility();
   const location = useLocation();
-  const { user } = useAuth();
-  const { isMobileMenuOpen, setMobileMenuOpen, scrolled } = useNavigation();
-  const { isMobile, isTablet } = useResponsiveLayout();
 
-  const isAuthenticated = !!user;
-
-  const mainNavItems = [
-    { 
-      label: copy.nav.home, 
-      path: '/', 
-      icon: Home,
-      description: 'Go to homepage'
-    },
-    { 
-      label: copy.nav.features, 
-      path: '/features', 
-      icon: BookOpen,
-      description: 'Explore features'
-    },
-    { 
-      label: copy.nav.pricing, 
-      path: '/pricing', 
-      icon: Search,
-      description: 'View pricing plans'
-    },
-    { 
-      label: copy.nav.about, 
-      path: '/about', 
-      icon: HelpCircle,
-      description: 'Learn about us'
-    },
+  const navigationItems = [
+    { name: 'Home', href: '/', icon: Home, requiresAuth: false },
+    { name: 'Dashboard', href: '/dashboard', icon: BookOpen, requiresAuth: true },
+    { name: 'Save Content', href: '/save', icon: Save, requiresAuth: true },
+    { name: 'Search', href: '/search', icon: Search, requiresAuth: true },
+    { name: 'Settings', href: '/settings', icon: Settings, requiresAuth: true },
   ];
 
-  const userNavItems = isAuthenticated ? [
-    { 
-      label: copy.nav.dashboard, 
-      path: '/dashboard', 
-      icon: Home,
-      description: 'View your dashboard'
-    },
-    { 
-      label: copy.nav.library, 
-      path: '/library', 
-      icon: BookOpen,
-      description: 'Browse your library'
-    },
-    { 
-      label: copy.nav.settings, 
-      path: '/settings', 
-      icon: Settings,
-      description: 'Manage settings'
-    },
-  ] : [];
+  const visibleItems = navigationItems.filter(item => 
+    !item.requiresAuth || isLoggedIn
+  );
 
-  const isActiveRoute = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
+  const handleMobileMenuToggle = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+    announceToScreenReader(
+      mobileMenuOpen ? 'Menu closed' : 'Menu opened'
+    );
   };
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-    setMobileMenuOpen(false);
+  const handleSignOut = () => {
+    onSignOut?.();
+    announceToScreenReader('Signed out successfully');
   };
 
   return (
     <nav 
       className={cn(
-        "sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur-md transition-all duration-300",
-        scrolled && "shadow-sm border-border/40"
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        preferences.highContrast && "border-2",
+        "transition-all duration-300"
       )}
       role="navigation"
-      aria-label="Main navigation"
+      aria-label="Primary navigation"
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo/Brand */}
-          <div className="flex items-center">
-            <button
-              onClick={() => handleNavigation('/')}
-              className="flex items-center gap-2 text-xl font-bold text-primary hover:text-primary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-md"
-              aria-label="Go to homepage"
-            >
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-sm">A</span>
-              </div>
+          {/* Logo */}
+          <Link
+            to="/"
+            className={cn(
+              "flex items-center space-x-2 font-bold text-xl",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md p-2",
+              "hover:opacity-80 transition-opacity"
+            )}
+            aria-label="Accio home"
+          >
+            <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
               Accio
-            </button>
-          </div>
+            </span>
+          </Link>
 
           {/* Desktop Navigation */}
           {!isMobile && (
             <div className="hidden md:flex md:items-center md:space-x-1">
-              {(isAuthenticated ? userNavItems : mainNavItems).map((item) => (
-                <Button
-                  key={item.path}
-                  variant={isActiveRoute(item.path) ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => handleNavigation(item.path)}
+              {visibleItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
                   className={cn(
-                    "relative text-sm font-medium transition-all duration-200",
-                    isActiveRoute(item.path) 
-                      ? "bg-primary text-primary-foreground shadow-sm" 
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    "flex items-center space-x-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                    "hover:bg-accent/50 hover:text-accent-foreground",
+                    location.pathname === item.href
+                      ? "bg-accent text-accent-foreground shadow-sm"
+                      : "text-muted-foreground"
                   )}
-                  aria-label={item.description}
-                  aria-current={isActiveRoute(item.path) ? "page" : undefined}
+                  aria-current={location.pathname === item.href ? 'page' : undefined}
                 >
-                  <item.icon className="mr-2 h-4 w-4" aria-hidden="true" />
-                  {item.label}
-                </Button>
+                  <item.icon className="h-4 w-4" aria-hidden="true" />
+                  <span>{item.name}</span>
+                </Link>
               ))}
             </div>
           )}
 
-          {/* Auth Buttons (Desktop) */}
-          {!isMobile && (
-            <div className="hidden md:flex md:items-center md:space-x-2">
-              {isAuthenticated ? (
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={() => handleNavigation('/save')}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
-                >
-                  <Plus className="mr-2 h-4 w-4" />
-                  {copy.buttons.save}
-                </Button>
-              ) : (
-                <>
+          {/* User Menu / Auth Buttons */}
+          <div className="flex items-center space-x-2">
+            {isLoggedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
                     size="sm"
-                    onClick={() => handleNavigation('/login')}
-                    className="text-muted-foreground hover:text-foreground"
+                    className="relative h-9 w-9 rounded-full hover:bg-accent/50"
                   >
-                    {copy.buttons.logIn}
+                    <User className="h-4 w-4" />
+                    <span className="sr-only">Open user menu</span>
                   </Button>
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => handleNavigation('/register')}
-                    className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm"
-                  >
-                    {copy.buttons.getStarted}
-                  </Button>
-                </>
-              )}
-            </div>
-          )}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-background border shadow-lg">
+                  <div className="px-2 py-1.5 text-sm font-medium">
+                    {user?.email || 'User'}
+                  </div>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings" className="flex items-center cursor-pointer">
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                    <LogOut className="mr-2 h-4 w-4" />
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button variant="ghost" size="sm" asChild className="hover:bg-accent/50">
+                  <Link to="/login">Sign in</Link>
+                </Button>
+                <Button size="sm" asChild className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                  <Link to="/register">Sign up</Link>
+                </Button>
+              </div>
+            )}
 
-          {/* Mobile Menu Button */}
-          {isMobile && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden"
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={isMobileMenuOpen}
-              aria-controls="mobile-menu"
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" aria-hidden="true" />
-              ) : (
-                <Menu className="h-5 w-5" aria-hidden="true" />
-              )}
-            </Button>
-          )}
+            {/* Mobile Menu Button */}
+            {isMobile && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden hover:bg-accent/50"
+                onClick={handleMobileMenuToggle}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              >
+                {mobileMenuOpen ? (
+                  <X className="h-5 w-5" aria-hidden="true" />
+                ) : (
+                  <Menu className="h-5 w-5" aria-hidden="true" />
+                )}
+              </Button>
+            )}
+          </div>
         </div>
 
-        {/* Mobile Navigation Menu */}
-        {isMobile && isMobileMenuOpen && (
+        {/* Mobile Menu */}
+        {isMobile && mobileMenuOpen && (
           <div
             id="mobile-menu"
-            className="md:hidden border-t border-border/40 bg-background"
-            role="menu"
-            aria-label="Mobile navigation menu"
+            className="md:hidden border-t bg-background/95 py-2 backdrop-blur"
           >
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {(isAuthenticated ? userNavItems : mainNavItems).map((item) => (
-                <Button
-                  key={item.path}
-                  variant={isActiveRoute(item.path) ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => handleNavigation(item.path)}
+            <div className="space-y-1 px-2">
+              {visibleItems.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
                   className={cn(
-                    "w-full justify-start text-base font-medium",
-                    isActiveRoute(item.path) 
-                      ? "bg-primary text-primary-foreground" 
-                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                    "flex items-center space-x-3 rounded-lg px-3 py-3 text-base font-medium transition-all duration-200",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                    location.pathname === item.href
+                      ? "bg-accent text-accent-foreground shadow-sm"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground"
                   )}
-                  role="menuitem"
-                  aria-current={isActiveRoute(item.path) ? "page" : undefined}
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-current={location.pathname === item.href ? 'page' : undefined}
                 >
-                  <item.icon className="mr-3 h-5 w-5" aria-hidden="true" />
-                  {item.label}
-                </Button>
+                  <item.icon className="h-5 w-5" aria-hidden="true" />
+                  <span>{item.name}</span>
+                </Link>
               ))}
-              
-              {/* Mobile Auth Actions */}
-              <div className="border-t border-border/40 pt-3 mt-3 space-y-2">
-                {isAuthenticated ? (
-                  <Button
-                    variant="default"
-                    size="sm"
-                    onClick={() => handleNavigation('/save')}
-                    className="w-full justify-start bg-primary hover:bg-primary/90 text-primary-foreground"
-                    role="menuitem"
-                  >
-                    <Plus className="mr-3 h-5 w-5" />
-                    {copy.buttons.save}
-                  </Button>
-                ) : (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleNavigation('/login')}
-                      className="w-full justify-start text-muted-foreground hover:text-foreground"
-                      role="menuitem"
-                    >
-                      {copy.buttons.logIn}
-                    </Button>
-                    <Button
-                      variant="default"
-                      size="sm"
-                      onClick={() => handleNavigation('/register')}
-                      className="w-full justify-start bg-primary hover:bg-primary/90 text-primary-foreground"
-                      role="menuitem"
-                    >
-                      {copy.buttons.getStarted}
-                    </Button>
-                  </>
-                )}
-              </div>
             </div>
           </div>
         )}

@@ -1,66 +1,104 @@
 
 import React from 'react';
-import { ArrowRight, Search, BookOpen, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { useResponsiveDesign } from '@/hooks/use-responsive-design';
+import { ArrowRight, Sparkles, BookOpen } from 'lucide-react';
 
 const ImprovedHeroSection: React.FC = () => {
+  const navigate = useNavigate();
+  const { preferences } = useAccessibility();
+  const { isMobile } = useResponsiveDesign();
+
   return (
-    <section className="py-20 lg:py-32 bg-gradient-to-br from-primary/5 via-background to-accent/5">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground mb-6 leading-tight">
-            Your Personal{' '}
+    <section 
+      className={cn(
+        "relative overflow-hidden bg-gradient-to-br from-background via-background to-accent/20",
+        "py-20 lg:py-32"
+      )}
+      aria-labelledby="hero-heading"
+    >
+      {/* Background Pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" aria-hidden="true" />
+      
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="max-w-4xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center rounded-full px-4 py-2 bg-accent/50 text-accent-foreground text-sm font-medium mb-8 border">
+            <Sparkles className="h-4 w-4 mr-2" aria-hidden="true" />
+            <span>AI-Powered Knowledge Management</span>
+          </div>
+
+          {/* Main Heading */}
+          <h1 
+            id="hero-heading"
+            className={cn(
+              "font-extrabold tracking-tight text-balance leading-tight mb-6",
+              isMobile 
+                ? "text-4xl sm:text-5xl" 
+                : "text-5xl lg:text-6xl xl:text-7xl",
+              preferences.fontSize === 'large' && "text-5xl lg:text-7xl xl:text-8xl"
+            )}
+          >
+            Stop Losing Your Best Ideas.{' '}
             <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-              Knowledge Library
+              Start Building Brilliance.
             </span>
           </h1>
-          
-          <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground mb-8 leading-relaxed max-w-3xl mx-auto">
-            Transform the internet into your curated knowledge base. Save, organize, 
-            and rediscover content with AI-powered intelligence.
+
+          {/* Subtitle */}
+          <p 
+            className={cn(
+              "text-muted-foreground leading-relaxed text-pretty mb-10",
+              isMobile ? "text-lg" : "text-xl lg:text-2xl",
+              "max-w-3xl mx-auto"
+            )}
+          >
+            Transform scattered bookmarks into an AI-powered knowledge engine. 
+            Save anything, find everything, achieve 10x productivity with intelligent organization.
           </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button asChild size="lg" className="text-lg px-8 py-6 h-auto">
-              <Link to="/register" className="inline-flex items-center gap-2">
-                Get Started Free
-                <ArrowRight className="h-5 w-5" />
-              </Link>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
+            <Button
+              size={isMobile ? "default" : "lg"}
+              className={cn(
+                "bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70",
+                "shadow-lg hover:shadow-xl transition-all duration-300",
+                "min-w-[200px]"
+              )}
+              onClick={() => navigate('/register')}
+            >
+              <span>Start Free Today</span>
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
             
-            <Button asChild variant="outline" size="lg" className="text-lg px-8 py-6 h-auto">
-              <Link to="/features">
-                Explore Features
-              </Link>
+            <Button
+              variant="outline"
+              size={isMobile ? "default" : "lg"}
+              className={cn(
+                "min-w-[200px] hover:bg-accent/50 transition-all duration-300"
+              )}
+              onClick={() => navigate('/demo')}
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              <span>View Demo</span>
             </Button>
           </div>
-          
-          {/* Feature highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div className="flex items-center gap-3 p-4 rounded-lg bg-background/80 border border-border/50">
-              <Search className="h-6 w-6 text-primary flex-shrink-0" />
-              <div className="text-left">
-                <h3 className="font-semibold text-sm">Smart Search</h3>
-                <p className="text-xs text-muted-foreground">Find anything instantly</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3 p-4 rounded-lg bg-background/80 border border-border/50">
-              <BookOpen className="h-6 w-6 text-primary flex-shrink-0" />
-              <div className="text-left">
-                <h3 className="font-semibold text-sm">Auto-Organize</h3>
-                <p className="text-xs text-muted-foreground">AI-powered categorization</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-3 p-4 rounded-lg bg-background/80 border border-border/50">
-              <Zap className="h-6 w-6 text-primary flex-shrink-0" />
-              <div className="text-left">
-                <h3 className="font-semibold text-sm">Quick Save</h3>
-                <p className="text-xs text-muted-foreground">Save from anywhere</p>
-              </div>
+
+          {/* Trust Indicators */}
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground mb-4">
+              Trusted by 10,000+ professionals worldwide
+            </p>
+            <div className="flex items-center justify-center space-x-8 opacity-60">
+              {/* Placeholder for company logos */}
+              <div className="h-8 w-20 bg-muted rounded" aria-label="Company logo" />
+              <div className="h-8 w-20 bg-muted rounded" aria-label="Company logo" />
+              <div className="h-8 w-20 bg-muted rounded" aria-label="Company logo" />
+              <div className="h-8 w-20 bg-muted rounded" aria-label="Company logo" />
             </div>
           </div>
         </div>

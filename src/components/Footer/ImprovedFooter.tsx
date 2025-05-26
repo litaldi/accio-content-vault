@@ -1,50 +1,121 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { Heart, Github, Twitter, Mail } from 'lucide-react';
 
 const ImprovedFooter: React.FC = () => {
+  const { preferences } = useAccessibility();
+  const currentYear = new Date().getFullYear();
+
+  const footerLinks = {
+    product: [
+      { name: 'Features', href: '/#features' },
+      { name: 'Pricing', href: '/#pricing' },
+      { name: 'FAQ', href: '/#faq' },
+    ],
+    company: [
+      { name: 'About', href: '/about' },
+      { name: 'Blog', href: '/blog' },
+      { name: 'Careers', href: '/careers' },
+    ],
+    support: [
+      { name: 'Help Center', href: '/help' },
+      { name: 'Contact', href: '/contact' },
+      { name: 'Status', href: '/status' },
+    ],
+    legal: [
+      { name: 'Privacy', href: '/privacy' },
+      { name: 'Terms', href: '/terms' },
+      { name: 'Security', href: '/security' },
+    ]
+  };
+
+  const socialLinks = [
+    { name: 'Twitter', href: 'https://twitter.com', icon: Twitter },
+    { name: 'GitHub', href: 'https://github.com', icon: Github },
+    { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail },
+  ];
+
   return (
-    <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="font-semibold text-lg mb-4">Accio</h3>
-            <p className="text-sm text-muted-foreground">
-              Your personal knowledge library powered by AI
+    <footer 
+      className={cn(
+        "border-t bg-background/95 backdrop-blur",
+        preferences.highContrast && "border-2"
+      )}
+      role="contentinfo"
+      aria-label="Site footer"
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-1">
+            <Link 
+              to="/" 
+              className="flex items-center space-x-2 font-bold text-xl mb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md"
+            >
+              <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                Accio
+              </span>
+            </Link>
+            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+              Transform scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything.
             </p>
+            <div className="flex space-x-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  className={cn(
+                    "text-muted-foreground hover:text-foreground transition-colors",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md p-1"
+                  )}
+                  aria-label={`Follow us on ${social.name}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <social.icon className="h-5 w-5" />
+                </a>
+              ))}
+            </div>
           </div>
-          
-          <div>
-            <h4 className="font-medium mb-4">Product</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link></li>
-              <li><Link to="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
-              <li><Link to="/faq" className="text-muted-foreground hover:text-foreground">FAQ</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-medium mb-4">Company</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
-              <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link></li>
-              <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link></li>
-              <li><Link to="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link></li>
-            </ul>
-          </div>
-          
-          <div>
-            <h4 className="font-medium mb-4">Support</h4>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">Help Center</Link></li>
-              <li><Link to="/accessibility" className="text-muted-foreground hover:text-foreground">Accessibility</Link></li>
-              <li><Link to="/sitemap" className="text-muted-foreground hover:text-foreground">Sitemap</Link></li>
-            </ul>
-          </div>
+
+          {/* Links Sections */}
+          {Object.entries(footerLinks).map(([category, links]) => (
+            <div key={category}>
+              <h3 className="font-semibold text-foreground mb-4 capitalize">
+                {category}
+              </h3>
+              <ul className="space-y-3">
+                {links.map((link) => (
+                  <li key={link.name}>
+                    <Link
+                      to={link.href}
+                      className={cn(
+                        "text-sm text-muted-foreground hover:text-foreground transition-colors",
+                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md"
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
-        
-        <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 Accio. All rights reserved.</p>
+
+        {/* Bottom Section */}
+        <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
+            <span>© {currentYear} Accio. Made with</span>
+            <Heart className="h-4 w-4 text-red-500" aria-label="love" />
+            <span>for productivity enthusiasts.</span>
+          </div>
+          <div className="mt-4 md:mt-0 text-sm text-muted-foreground">
+            <span>All rights reserved.</span>
+          </div>
         </div>
       </div>
     </footer>
