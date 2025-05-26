@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import UnifiedLayout from '@/components/layout/UnifiedLayout';
+import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
 import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
 import { useResponsiveDesign } from '@/hooks/use-responsive-design';
 import { 
@@ -67,7 +66,7 @@ const UnifiedIndex = () => {
   ];
 
   return (
-    <UnifiedLayout fullWidth>
+    <EnhancedUnifiedLayout fullWidth isLoggedIn={isLoggedIn}>
       <Helmet>
         <title>Accio - Transform Chaos Into Your AI-Powered Knowledge Engine</title>
         <meta name="description" content="Stop losing your best ideas. Save anything, find everything, achieve 10x productivity with AI-powered organization. Trusted by 10,000+ professionals worldwide." />
@@ -123,7 +122,7 @@ const UnifiedIndex = () => {
 
             {/* Benefits List */}
             <div className="flex flex-wrap justify-center gap-4 mb-8">
-              {benefits.map((benefit, index) => (
+              {["Save 2+ hours daily", "Never lose information", "Find content in 3 seconds", "Works on all devices"].map((benefit, index) => (
                 <div key={index} className="flex items-center gap-2 text-sm bg-accent/50 rounded-full px-4 py-2">
                   <CheckCircle className="h-4 w-4 text-green-500" aria-hidden="true" />
                   <span>{benefit}</span>
@@ -146,10 +145,10 @@ const UnifiedIndex = () => {
               <Button 
                 size="lg" 
                 variant="outline"
-                onClick={() => navigate('/demo')}
+                onClick={() => navigate('/features')}
                 className="hover:bg-accent transition-all duration-300 hover:-translate-y-1"
               >
-                Watch 2-minute demo
+                Explore Features
               </Button>
             </div>
 
@@ -179,7 +178,12 @@ const UnifiedIndex = () => {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
+            {[
+              { icon: Brain, title: "AI-Powered Organization", description: "Automatically categorize and tag your content with intelligent AI.", highlight: "Smart" },
+              { icon: Search, title: "Instant Search", description: "Find anything in seconds with natural language search.", highlight: "Fast" },
+              { icon: Shield, title: "Secure & Private", description: "Your data is encrypted and stays completely private.", highlight: "Secure" },
+              { icon: Globe, title: "Works Everywhere", description: "Save content from any device, anywhere in the world.", highlight: "Global" }
+            ].map((feature, index) => (
               <Card key={index} className="text-center hover:shadow-lg transition-all duration-200 hover:-translate-y-1">
                 <CardHeader>
                   <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
@@ -232,7 +236,7 @@ const UnifiedIndex = () => {
           </div>
         </UnifiedSpacing.Container>
       </UnifiedSpacing.Section>
-    </UnifiedLayout>
+    </EnhancedUnifiedLayout>
   );
 };
 

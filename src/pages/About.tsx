@@ -1,91 +1,175 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
-import ImprovedFooter from '@/components/Footer/ImprovedFooter';
+import EnhancedUnifiedLayout from '@/components/layout/EnhancedUnifiedLayout';
+import { UnifiedTypography, UnifiedSpacing } from '@/components/ui/unified-design-system';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
+import { Target, Users, Lightbulb, Shield } from 'lucide-react';
 
 const About = () => {
+  const navigate = useNavigate();
+
+  const values = [
+    {
+      icon: Target,
+      title: "Mission-Driven",
+      description: "We believe everyone deserves powerful tools to organize and access their knowledge effortlessly."
+    },
+    {
+      icon: Users,
+      title: "User-Centric",
+      description: "Every feature is designed with real user needs in mind, based on extensive research and feedback."
+    },
+    {
+      icon: Lightbulb,
+      title: "Innovation",
+      description: "We push the boundaries of what's possible with AI and modern technology to solve real problems."
+    },
+    {
+      icon: Shield,
+      title: "Privacy First",
+      description: "Your data is yours. We never sell your information and use bank-level security to protect it."
+    }
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <EnhancedUnifiedLayout>
       <Helmet>
         <title>About - Accio Knowledge Library</title>
-        <meta name="description" content="Learn about Accio's mission to transform how people organize and access knowledge." />
+        <meta name="description" content="Learn about Accio's mission to transform how people organize and access their digital knowledge." />
+        <meta name="keywords" content="about, mission, team, knowledge management, AI, productivity" />
       </Helmet>
-      
-      <EnhancedNavigation />
-      
-      <main className="flex-grow py-16">
-        <div className="container mx-auto px-4 max-w-4xl">
+
+      {/* Hero Section */}
+      <UnifiedSpacing.Section size="lg" className="text-center">
+        <UnifiedSpacing.Container>
+          <Badge variant="outline" className="mb-4">
+            Our Story
+          </Badge>
+          <UnifiedTypography.H1>
+            Building the future of{' '}
+            <span className="text-primary">knowledge management</span>
+          </UnifiedTypography.H1>
+          
+          <UnifiedTypography.Lead>
+            We started Accio because we were tired of losing our best ideas in 
+            the chaos of digital information overload.
+          </UnifiedTypography.Lead>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+
+      {/* Story Section */}
+      <UnifiedSpacing.Section>
+        <UnifiedSpacing.Container>
+          <div className="max-w-4xl mx-auto prose prose-lg">
+            <UnifiedTypography.H2>The Problem We're Solving</UnifiedTypography.H2>
+            <UnifiedTypography.Body size="lg">
+              In today's digital world, we're constantly saving articles, bookmarking websites, 
+              and collecting information. But when we need to find something specific, 
+              it's buried in endless folders or lost in the void of our browser bookmarks.
+            </UnifiedTypography.Body>
+            
+            <UnifiedTypography.Body size="lg">
+              Traditional solutions are either too complex for everyday use or too simple 
+              to handle the sophisticated needs of modern knowledge workers. We built Accio 
+              to bridge that gap—powerful AI organization that works invisibly in the background, 
+              combined with an interface so intuitive you'll forget you're using software.
+            </UnifiedTypography.Body>
+
+            <UnifiedTypography.H2>Our Vision</UnifiedTypography.H2>
+            <UnifiedTypography.Body size="lg">
+              We envision a world where your knowledge works for you, not against you. 
+              Where finding that perfect article you saved three months ago takes seconds, 
+              not hours. Where your digital library becomes your most valuable professional asset.
+            </UnifiedTypography.Body>
+          </div>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+
+      {/* Values Section */}
+      <UnifiedSpacing.Section className="bg-muted/30">
+        <UnifiedSpacing.Container>
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">About Accio</h1>
-            <p className="text-xl text-muted-foreground">
-              Transforming how people organize and access knowledge
-            </p>
+            <UnifiedTypography.H2>Our Values</UnifiedTypography.H2>
+            <UnifiedTypography.Lead>
+              The principles that guide everything we build
+            </UnifiedTypography.Lead>
           </div>
           
-          <div className="prose prose-lg max-w-none dark:prose-invert">
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
-              <p className="text-lg text-muted-foreground mb-6">
-                We believe that knowledge should be easily accessible and well-organized. Accio was created to solve the problem of scattered information across multiple platforms, helping people build their personal knowledge libraries with the power of AI.
-              </p>
-              <p className="text-lg text-muted-foreground">
-                Our goal is to make knowledge management effortless, allowing you to focus on learning and creating rather than organizing.
-              </p>
-            </section>
-            
-            <section className="mb-12">
-              <h2 className="text-3xl font-bold mb-6">Why Accio?</h2>
-              <div className="grid md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">Save Everything</h3>
-                  <p className="text-muted-foreground">
-                    Never lose important content again. Save from any website, upload files, and keep everything in one place.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">AI-Powered</h3>
-                  <p className="text-muted-foreground">
-                    Let AI do the heavy lifting. Automatic tagging, categorization, and smart search make finding content effortless.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">Privacy First</h3>
-                  <p className="text-muted-foreground">
-                    Your knowledge is yours. We use enterprise-grade security and never sell your data.
-                  </p>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-3">Always Accessible</h3>
-                  <p className="text-muted-foreground">
-                    Access your knowledge library from any device, anywhere, with real-time sync across platforms.
-                  </p>
-                </div>
-              </div>
-            </section>
-            
-            <section className="text-center">
-              <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
-              <p className="text-lg text-muted-foreground mb-8">
-                Join thousands of users who have transformed their knowledge management with Accio.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button asChild size="lg">
-                  <Link to="/register">Start Free Trial</Link>
-                </Button>
-                <Button variant="outline" size="lg" asChild>
-                  <Link to="/features">Explore Features</Link>
-                </Button>
-              </div>
-            </section>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {values.map((value, index) => (
+              <Card key={index} className="text-center">
+                <CardHeader>
+                  <div className="w-16 h-16 mx-auto bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                    <value.icon className="h-8 w-8 text-primary" />
+                  </div>
+                  <CardTitle className="text-lg">{value.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <CardDescription className="text-center">
+                    {value.description}
+                  </CardDescription>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </div>
-      </main>
-      
-      <ImprovedFooter />
-    </div>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+
+      {/* Stats Section */}
+      <UnifiedSpacing.Section>
+        <UnifiedSpacing.Container>
+          <div className="text-center space-y-16">
+            <div>
+              <UnifiedTypography.H2>Trusted by Knowledge Workers Worldwide</UnifiedTypography.H2>
+              <UnifiedTypography.Lead>
+                Join thousands who've transformed their productivity with Accio
+              </UnifiedTypography.Lead>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary mb-2">10,000+</div>
+                <div className="text-muted-foreground">Active Users</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary mb-2">1M+</div>
+                <div className="text-muted-foreground">Items Saved</div>
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-primary mb-2">99.9%</div>
+                <div className="text-muted-foreground">Uptime</div>
+              </div>
+            </div>
+          </div>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+
+      {/* CTA Section */}
+      <UnifiedSpacing.Section className="bg-primary text-primary-foreground">
+        <UnifiedSpacing.Container>
+          <div className="text-center space-y-8">
+            <UnifiedTypography.H2 className="text-primary-foreground">
+              Ready to join our mission?
+            </UnifiedTypography.H2>
+            <UnifiedTypography.Lead className="text-primary-foreground/90">
+              Help us build the future of knowledge management. Start your journey today.
+            </UnifiedTypography.Lead>
+            <Button 
+              size="lg" 
+              variant="secondary"
+              onClick={() => navigate('/register')}
+              className="shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              Get Started Free
+            </Button>
+          </div>
+        </UnifiedSpacing.Container>
+      </UnifiedSpacing.Section>
+    </EnhancedUnifiedLayout>
   );
 };
 
