@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ModeToggle } from '@/components/ui/mode-toggle';
 import { UnifiedAuthModal } from '@/components/auth/UnifiedAuthModal';
 import { useAuth } from '@/contexts/AuthContext';
 import { LogIn, UserPlus } from 'lucide-react';
@@ -44,9 +43,6 @@ export const EnhancedHeader: React.FC<EnhancedHeaderProps> = ({ className }) => 
 
           {/* Right side controls */}
           <div className="flex items-center gap-3">
-            {/* Theme Toggle */}
-            <ModeToggle />
-
             {/* Authentication Buttons or User Menu */}
             {!user ? (
               <div className="flex items-center gap-2">

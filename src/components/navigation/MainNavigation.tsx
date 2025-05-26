@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { ModeToggle } from '@/components/ui/mode-toggle';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
@@ -248,9 +247,6 @@ const MainNavigation: React.FC = () => {
         <div className="flex items-center gap-2">
           {/* Accessibility Button */}
           <AccessibilityButton variant="header" />
-          
-          {/* Theme Toggle */}
-          <ModeToggle />
 
           {/* Auth Actions - Desktop */}
           <div className="hidden lg:flex items-center gap-2">
