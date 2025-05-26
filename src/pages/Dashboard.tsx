@@ -1,6 +1,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
+import ResponsiveNavigation from '@/components/navigation/ResponsiveNavigation';
 import Footer from '@/components/Footer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -90,7 +90,7 @@ const Dashboard = () => {
         <link rel="canonical" href="/dashboard" />
       </Helmet>
 
-      <UnifiedNavigation />
+      <ResponsiveNavigation />
 
       <main className="flex-grow">
         {/* Enhanced Header Section */}
