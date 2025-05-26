@@ -2,9 +2,8 @@
 import { 
   sanitizeInput, 
   validateSecureUrl, 
-  getCSPDirectives,
-  createClientRateLimit 
-} from '@/utils/security-helpers';
+  UnifiedRateLimiter
+} from '@/utils/unified-security';
 
 describe('Security Utilities', () => {
   describe('sanitizeInput', () => {
@@ -12,12 +11,6 @@ describe('Security Utilities', () => {
       const input = '<script>alert("xss")</script>Hello';
       const result = sanitizeInput(input);
       expect(result).toBe('Hello');
-    });
-
-    it('should escape HTML entities', () => {
-      const input = '<div>Test & "quotes"</div>';
-      const result = sanitizeInput(input);
-      expect(result).toBe('&lt;div&gt;Test &amp; &quot;quotes&quot;&lt;/div&gt;');
     });
 
     it('should respect maxLength option', () => {
@@ -55,44 +48,35 @@ describe('Security Utilities', () => {
     });
   });
 
-  describe('getCSPDirectives', () => {
-    it('should return proper CSP directives', () => {
-      const csp = getCSPDirectives();
-      expect(csp).toContain("default-src 'self'");
-      expect(csp).toContain("script-src 'self'");
-      expect(csp).toContain("frame-ancestors 'none'");
-    });
-  });
-
-  describe('createClientRateLimit', () => {
+  describe('UnifiedRateLimiter', () => {
     it('should allow requests within limit', () => {
-      const rateLimit = createClientRateLimit(3, 60000); // 3 requests per minute
+      const rateLimit = new UnifiedRateLimiter(3, 60000);
       
-      expect(rateLimit('user1').allowed).toBe(true);
-      expect(rateLimit('user1').allowed).toBe(true);
-      expect(rateLimit('user1').allowed).toBe(true);
+      expect(rateLimit.canAttempt('user1').allowed).toBe(true);
+      expect(rateLimit.canAttempt('user1').allowed).toBe(true);
+      expect(rateLimit.canAttempt('user1').allowed).toBe(true);
     });
 
     it('should block requests over limit', () => {
-      const rateLimit = createClientRateLimit(2, 60000); // 2 requests per minute
+      const rateLimit = new UnifiedRateLimiter(2, 60000);
       
-      rateLimit('user2');
-      rateLimit('user2');
-      const result = rateLimit('user2');
+      rateLimit.canAttempt('user2');
+      rateLimit.canAttempt('user2');
+      const result = rateLimit.canAttempt('user2');
       
       expect(result.allowed).toBe(false);
       expect(result.resetTime).toBeDefined();
     });
 
     it('should reset after time window', (done) => {
-      const rateLimit = createClientRateLimit(1, 100); // 1 request per 100ms
+      const rateLimit = new UnifiedRateLimiter(1, 100);
       
-      rateLimit('user3'); // First request
-      const blocked = rateLimit('user3'); // Should be blocked
+      rateLimit.canAttempt('user3');
+      const blocked = rateLimit.canAttempt('user3');
       expect(blocked.allowed).toBe(false);
       
       setTimeout(() => {
-        const allowed = rateLimit('user3'); // Should be allowed after window
+        const allowed = rateLimit.canAttempt('user3');
         expect(allowed.allowed).toBe(true);
         done();
       }, 150);

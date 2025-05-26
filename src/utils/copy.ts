@@ -74,5 +74,39 @@ export const copy = {
     passwordTooShort: 'Password must be at least 8 characters',
     fileTooLarge: 'File size must be less than 10MB',
     invalidFileType: 'File type not supported'
+  },
+  headlines: {
+    hero: 'Transform Your Knowledge Into Actionable Insights',
+    subhero: 'Save, organize, and discover your digital content with AI-powered intelligence that actually understands what matters to you.'
+  },
+  buttons: {
+    getStarted: 'Get Started Free',
+    learnMore: 'Learn More',
+    tryDemo: 'Try Demo',
+    signUp: 'Sign Up',
+    signIn: 'Sign In'
+  },
+  trust: {
+    security: 'Bank-level security',
+    freeTrial: '14-day free trial',
+    noCredit: 'No credit card required',
+    setupTime: '2-minute setup',
+    userCount: '50,000+'
+  },
+  social: {
+    companies: 'Trusted by teams at innovative companies',
+    userCount: '50,000+',
+    rating: '4.8/5 stars'
+  },
+  onboarding: {
+    welcome: 'Welcome to Accio',
+    subtitle: 'Let\'s get you set up in just a few steps'
+  },
+  emptyStates: {
+    noContent: 'No content saved yet',
+    startSaving: 'Start by saving your first piece of content',
+    getStarted: 'Get Started',
+    noResults: 'No results found',
+    tryDifferent: 'Try a different search term'
   }
 };
