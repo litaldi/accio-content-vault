@@ -1,179 +1,155 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { UnifiedLayout } from '@/components/layout/UnifiedLayout';
-import { UnifiedTypography } from '@/components/ui/unified-design-system';
 import { Button } from '@/components/ui/button';
-import { EnhancedForm } from '@/components/forms/EnhancedForm';
+import { Badge } from '@/components/ui/badge';
+import { EnhancedAuthModal } from '@/components/auth/EnhancedAuthModal';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { createRateLimit } from '@/utils/input-validation';
-import { ArrowLeft, Shield, CheckCircle } from 'lucide-react';
-
-// Rate limiting: 3 attempts per 10 minutes
-const registerRateLimit = createRateLimit(3, 10 * 60 * 1000);
+import { ArrowLeft, Sparkles, Shield, Zap, Users, CheckCircle } from 'lucide-react';
 
 const Register = () => {
-  const { signUp } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(true);
 
-  const handleRegister = async (data: { email: string; password: string; csrfToken: string }) => {
-    // Check rate limiting
-    const identifier = `register_${data.email}`;
-    const rateLimitResult = registerRateLimit(identifier);
-    
-    if (!rateLimitResult.allowed) {
-      const resetTime = rateLimitResult.resetTime ? new Date(rateLimitResult.resetTime) : null;
-      toast({
-        title: "Too many attempts",
-        description: resetTime 
-          ? `Please try again after ${resetTime.toLocaleTimeString()}`
-          : "Please try again later",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      const { error } = await signUp(data.email, data.password);
-      
-      if (error) {
-        let errorMessage = "An error occurred during registration. Please try again.";
-        
-        if (error.message.includes('already registered')) {
-          errorMessage = "An account with this email already exists. Please sign in instead.";
-        } else if (error.message.includes('password')) {
-          errorMessage = "Password doesn't meet security requirements. Please choose a stronger password.";
-        } else if (error.message.includes('email')) {
-          errorMessage = "Please enter a valid email address.";
-        }
-        
-        toast({
-          title: "Registration failed",
-          description: errorMessage,
-          variant: "destructive"
-        });
-        return;
-      }
-
-      toast({
-        title: "Account created successfully!",
-        description: "Welcome to Accio. You can now start organizing your knowledge.",
-        variant: "default"
-      });
-      
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
       navigate('/dashboard');
-    } catch (error) {
-      console.error('Registration error:', error);
-      toast({
-        title: "Registration failed",
-        description: "An unexpected error occurred. Please try again.",
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
     }
-  };
+  }, [user, navigate]);
 
-  const securityFeatures = [
-    "End-to-end encryption",
-    "Secure data storage",
-    "Privacy-first design",
-    "GDPR compliant"
+  const benefits = [
+    "Unlimited content saving and organization",
+    "AI-powered intelligent search and tagging",
+    "Cross-platform synchronization",
+    "Advanced security and privacy protection",
+    "24/7 customer support",
+    "Free 14-day trial with all features"
   ];
 
   return (
     <UnifiedLayout>
       <Helmet>
-        <title>Create Account - Accio</title>
-        <meta name="description" content="Create your free Accio account and start organizing your digital knowledge with AI-powered tools." />
-        <meta name="robots" content="noindex" />
+        <title>Sign Up - Accio | Start Your AI Knowledge Journey</title>
+        <meta name="description" content="Create your Accio account and start organizing your digital knowledge with AI. Free trial, no credit card required." />
+        <meta name="keywords" content="sign up, register, knowledge management, AI organization, free trial" />
+        <meta name="robots" content="index, follow" />
       </Helmet>
 
       <div className="min-h-[calc(100vh-200px)] flex items-center justify-center py-12">
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl w-full">
-          {/* Left Column - Benefits */}
-          <div className="space-y-8 flex flex-col justify-center">
-            <div className="space-y-4">
-              <UnifiedTypography.H2>
-                Start Your Knowledge Journey
-              </UnifiedTypography.H2>
-              <UnifiedTypography.Body>
-                Join thousands of professionals who have transformed their digital workspace with Accio's AI-powered organization.
-              </UnifiedTypography.Body>
+        <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Side - Benefits and Features */}
+          <div className="space-y-8 text-center lg:text-left">
+            {/* Back Button */}
+            <div className="flex justify-center lg:justify-start">
+              <Button variant="ghost" asChild className="group">
+                <Link to="/" className="flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
+                  Back to Home
+                </Link>
+              </Button>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <Shield className="h-5 w-5 text-primary" />
-                <UnifiedTypography.Body className="font-medium">
-                  Enterprise-grade security
-                </UnifiedTypography.Body>
-              </div>
+            {/* Hero Content */}
+            <div className="space-y-6">
+              <Badge variant="secondary" className="mx-auto lg:mx-0 px-4 py-2">
+                <Sparkles className="h-3 w-3 mr-2" />
+                Start Your Free Trial
+              </Badge>
               
-              <ul className="space-y-3 ml-8">
-                {securityFeatures.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-2 text-sm">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
-                    {feature}
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-4">
+                <h1 className="text-4xl lg:text-5xl font-bold tracking-tight">
+                  Join thousands building their
+                  <span className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent block">
+                    Digital Knowledge Empire
+                  </span>
+                </h1>
+                <p className="text-xl text-muted-foreground max-w-md mx-auto lg:mx-0">
+                  Transform how you save, organize, and access information with AI-powered intelligence
+                </p>
+              </div>
+
+              {/* Benefits List */}
+              <div className="space-y-3">
+                <h3 className="font-semibold text-foreground">What you'll get:</h3>
+                <div className="space-y-2">
+                  {benefits.map((benefit, index) => (
+                    <div key={index} className="flex items-start gap-3">
+                      <CheckCircle className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                      <span className="text-sm text-muted-foreground text-left">{benefit}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <Button variant="ghost" asChild className="self-start group">
-              <Link to="/" className="flex items-center gap-2">
-                <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-                Back to Home
-              </Link>
-            </Button>
+            {/* Social Proof */}
+            <div className="flex justify-center lg:justify-start items-center gap-8 pt-6 border-t">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">10K+</div>
+                <div className="text-xs text-muted-foreground">Active Users</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">1M+</div>
+                <div className="text-xs text-muted-foreground">Items Saved</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-primary">99.9%</div>
+                <div className="text-xs text-muted-foreground">Uptime</div>
+              </div>
+            </div>
           </div>
 
-          {/* Right Column - Form */}
-          <div className="flex flex-col justify-center">
-            <EnhancedForm
-              mode="register"
-              onSubmit={handleRegister}
-              isLoading={isLoading}
-            />
-
-            {/* Sign In Link */}
-            <div className="text-center mt-6 space-y-4">
-              <UnifiedTypography.Body className="text-sm">
-                Already have an account?{' '}
-                <Link 
-                  to="/login" 
-                  className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+          {/* Right Side - Auth Modal Trigger */}
+          <div className="flex justify-center lg:justify-end">
+            <div className="w-full max-w-md">
+              <div className="text-center space-y-6 p-8 border rounded-xl bg-card">
+                <div className="space-y-2">
+                  <h2 className="text-2xl font-semibold">Create Your Account</h2>
+                  <p className="text-muted-foreground">
+                    Start your 14-day free trial today
+                  </p>
+                </div>
+                
+                <Button 
+                  onClick={() => setShowAuthModal(true)}
+                  size="lg"
+                  className="w-full group"
                 >
-                  Sign in here
-                </Link>
-              </UnifiedTypography.Body>
-              
-              <div className="text-xs text-muted-foreground">
-                By creating an account, you agree to our{' '}
-                <Link 
-                  to="/terms" 
-                  className="hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
-                >
-                  Terms of Service
-                </Link>
-                {' and '}
-                <Link 
-                  to="/privacy" 
-                  className="hover:text-foreground transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
-                >
-                  Privacy Policy
-                </Link>
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  Get Started Free
+                </Button>
+                
+                <div className="space-y-3">
+                  <p className="text-xs text-muted-foreground">
+                    ✓ No credit card required • ✓ Cancel anytime • ✓ Full feature access
+                  </p>
+                  
+                  <p className="text-sm text-muted-foreground">
+                    Already have an account?{' '}
+                    <Link 
+                      to="/login" 
+                      className="font-medium text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                    >
+                      Sign in here
+                    </Link>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Enhanced Auth Modal */}
+      <EnhancedAuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        defaultTab="signup"
+      />
     </UnifiedLayout>
   );
 };
