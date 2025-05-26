@@ -1,427 +1,394 @@
 
 import React, { useState } from 'react';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Settings as SettingsIcon, 
-  Bell, 
-  Shield, 
-  Moon, 
-  Sun, 
-  Globe, 
-  Database,
+  Settings as SettingsIcon,
+  Bell,
+  Shield,
+  Palette,
+  Globe,
   Download,
   Trash2,
-  Key,
+  AlertTriangle,
+  Save,
+  Moon,
+  Sun,
+  Monitor,
   Mail,
   Smartphone,
-  Volume2,
   Eye,
-  Zap
+  Lock,
+  CreditCard
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const Settings = () => {
-  const { theme, toggleTheme } = useTheme();
+  const { toast } = useToast();
+  const { theme, setTheme } = useTheme();
+  
   const [settings, setSettings] = useState({
-    notifications: {
-      email: true,
-      push: false,
-      digest: true,
-      marketing: false
-    },
-    privacy: {
-      profilePublic: true,
-      analyticsSharing: false,
-      activityVisible: true
-    },
-    preferences: {
-      language: 'en',
-      timezone: 'America/Los_Angeles',
-      itemsPerPage: '20',
-      autoSave: true,
-      soundEffects: true
-    }
+    // Notifications
+    emailNotifications: true,
+    pushNotifications: false,
+    weeklyDigest: true,
+    learningReminders: true,
+    
+    // Privacy
+    profileVisibility: 'private',
+    dataSharing: false,
+    analyticsTracking: true,
+    
+    // Preferences
+    language: 'en',
+    timezone: 'America/Los_Angeles',
+    dateFormat: 'MM/DD/YYYY',
+    autoSave: true,
+    
+    // AI Settings
+    aiSuggestions: true,
+    autoTagging: true,
+    smartCategories: true
   });
 
-  const handleNotificationChange = (key: string, value: boolean) => {
-    setSettings(prev => ({
-      ...prev,
-      notifications: { ...prev.notifications, [key]: value }
-    }));
+  const handleSettingChange = (key: string, value: any) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
   };
 
-  const handlePrivacyChange = (key: string, value: boolean) => {
-    setSettings(prev => ({
-      ...prev,
-      privacy: { ...prev.privacy, [key]: value }
-    }));
+  const handleSave = () => {
+    toast({
+      title: "Settings saved",
+      description: "Your preferences have been updated successfully.",
+    });
   };
 
-  const handlePreferenceChange = (key: string, value: string | boolean) => {
-    setSettings(prev => ({
-      ...prev,
-      preferences: { ...prev.preferences, [key]: value }
-    }));
+  const handleExportData = () => {
+    toast({
+      title: "Export started",
+      description: "Your data export will be emailed to you shortly.",
+    });
   };
+
+  const handleDeleteAccount = () => {
+    toast({
+      title: "Account deletion requested",
+      description: "Please check your email to confirm this action.",
+      variant: "destructive",
+    });
+  };
+
+  const settingSections = [
+    {
+      id: 'notifications',
+      title: 'Notifications',
+      description: 'Manage how you receive updates and alerts',
+      icon: Bell,
+      settings: [
+        {
+          key: 'emailNotifications',
+          label: 'Email Notifications',
+          description: 'Receive notifications via email',
+          type: 'switch'
+        },
+        {
+          key: 'pushNotifications',
+          label: 'Push Notifications',
+          description: 'Get browser push notifications',
+          type: 'switch'
+        },
+        {
+          key: 'weeklyDigest',
+          label: 'Weekly Digest',
+          description: 'Summary of your week\'s activity',
+          type: 'switch'
+        },
+        {
+          key: 'learningReminders',
+          label: 'Learning Reminders',
+          description: 'Reminders to review saved content',
+          type: 'switch'
+        }
+      ]
+    },
+    {
+      id: 'appearance',
+      title: 'Appearance',
+      description: 'Customize how Accio looks and feels',
+      icon: Palette,
+      settings: [
+        {
+          key: 'theme',
+          label: 'Theme',
+          description: 'Choose your preferred color scheme',
+          type: 'theme-select'
+        }
+      ]
+    },
+    {
+      id: 'preferences',
+      title: 'Preferences',
+      description: 'Language, timezone, and display options',
+      icon: Globe,
+      settings: [
+        {
+          key: 'language',
+          label: 'Language',
+          description: 'Choose your display language',
+          type: 'select',
+          options: [
+            { value: 'en', label: 'English' },
+            { value: 'es', label: 'Español' },
+            { value: 'fr', label: 'Français' },
+            { value: 'de', label: 'Deutsch' }
+          ]
+        },
+        {
+          key: 'timezone',
+          label: 'Timezone',
+          description: 'Your local timezone',
+          type: 'select',
+          options: [
+            { value: 'America/Los_Angeles', label: 'Pacific Time' },
+            { value: 'America/Denver', label: 'Mountain Time' },
+            { value: 'America/Chicago', label: 'Central Time' },
+            { value: 'America/New_York', label: 'Eastern Time' }
+          ]
+        },
+        {
+          key: 'autoSave',
+          label: 'Auto-save',
+          description: 'Automatically save your work',
+          type: 'switch'
+        }
+      ]
+    },
+    {
+      id: 'privacy',
+      title: 'Privacy & Security',
+      description: 'Control your data and security settings',
+      icon: Shield,
+      settings: [
+        {
+          key: 'profileVisibility',
+          label: 'Profile Visibility',
+          description: 'Who can see your profile',
+          type: 'select',
+          options: [
+            { value: 'public', label: 'Public' },
+            { value: 'private', label: 'Private' },
+            { value: 'friends', label: 'Friends Only' }
+          ]
+        },
+        {
+          key: 'dataSharing',
+          label: 'Data Sharing',
+          description: 'Share anonymous usage data to improve Accio',
+          type: 'switch'
+        },
+        {
+          key: 'analyticsTracking',
+          label: 'Analytics Tracking',
+          description: 'Allow analytics to improve your experience',
+          type: 'switch'
+        }
+      ]
+    },
+    {
+      id: 'ai',
+      title: 'AI & Automation',
+      description: 'Configure AI-powered features',
+      icon: SettingsIcon,
+      settings: [
+        {
+          key: 'aiSuggestions',
+          label: 'AI Suggestions',
+          description: 'Get AI-powered content recommendations',
+          type: 'switch'
+        },
+        {
+          key: 'autoTagging',
+          label: 'Auto-tagging',
+          description: 'Automatically tag saved content',
+          type: 'switch'
+        },
+        {
+          key: 'smartCategories',
+          label: 'Smart Categories',
+          description: 'AI-suggested content categorization',
+          type: 'switch'
+        }
+      ]
+    }
+  ];
 
   return (
     <UnifiedPageLayout
-      title="Settings - Customize Your Experience | Accio"
-      description="Manage your account settings, preferences, and privacy controls for your Accio knowledge management experience."
+      title="Settings - Configure Your Experience | Accio"
+      description="Customize your Accio experience with personal preferences, privacy settings, and notification controls."
     >
       <div className="container py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Settings</h1>
-          <p className="text-muted-foreground">
-            Customize your Accio experience and manage your account preferences.
-          </p>
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Settings</h1>
+            <p className="text-muted-foreground">
+              Customize your Accio experience and manage your account preferences.
+            </p>
+          </div>
+          <Button onClick={handleSave} className="mt-4 lg:mt-0 gap-2">
+            <Save className="h-4 w-4" />
+            Save Changes
+          </Button>
         </div>
 
         <div className="grid lg:grid-cols-4 gap-8">
           {/* Settings Navigation */}
           <div className="lg:col-span-1">
             <Card>
-              <CardContent className="p-4">
-                <nav className="space-y-1">
-                  <a href="#general" className="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium">
-                    <SettingsIcon className="h-4 w-4" />
-                    General
-                  </a>
-                  <a href="#notifications" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors">
-                    <Bell className="h-4 w-4" />
-                    Notifications
-                  </a>
-                  <a href="#privacy" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors">
-                    <Shield className="h-4 w-4" />
-                    Privacy & Security
-                  </a>
-                  <a href="#data" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-muted/50 transition-colors">
-                    <Database className="h-4 w-4" />
-                    Data Management
-                  </a>
-                </nav>
+              <CardHeader>
+                <CardTitle className="text-lg">Settings</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {settingSections.map((section) => (
+                  <Button
+                    key={section.id}
+                    variant="ghost"
+                    className="w-full justify-start gap-3"
+                  >
+                    <section.icon className="h-4 w-4" />
+                    {section.title}
+                  </Button>
+                ))}
+                <Separator className="my-4" />
+                <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground">
+                  <CreditCard className="h-4 w-4" />
+                  Billing
+                  <Badge variant="outline" className="ml-auto">Pro</Badge>
+                </Button>
               </CardContent>
             </Card>
           </div>
 
           {/* Settings Content */}
-          <div className="lg:col-span-3 space-y-6">
-            {/* General Settings */}
-            <Card id="general">
+          <div className="lg:col-span-3 space-y-8">
+            {settingSections.map((section) => (
+              <Card key={section.id}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <section.icon className="h-5 w-5" />
+                    {section.title}
+                  </CardTitle>
+                  <CardDescription>{section.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {section.settings.map((setting) => (
+                    <div key={setting.key} className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <Label className="text-sm font-medium">{setting.label}</Label>
+                        <p className="text-sm text-muted-foreground">{setting.description}</p>
+                      </div>
+                      <div className="ml-4">
+                        {setting.type === 'switch' && (
+                          <Switch
+                            checked={settings[setting.key as keyof typeof settings] as boolean}
+                            onCheckedChange={(checked) => handleSettingChange(setting.key, checked)}
+                          />
+                        )}
+                        {setting.type === 'select' && setting.options && (
+                          <Select
+                            value={settings[setting.key as keyof typeof settings] as string}
+                            onValueChange={(value) => handleSettingChange(setting.key, value)}
+                          >
+                            <SelectTrigger className="w-48">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {setting.options.map((option) => (
+                                <SelectItem key={option.value} value={option.value}>
+                                  {option.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        )}
+                        {setting.type === 'theme-select' && (
+                          <Select value={theme} onValueChange={setTheme}>
+                            <SelectTrigger className="w-48">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="light">
+                                <div className="flex items-center gap-2">
+                                  <Sun className="h-4 w-4" />
+                                  Light
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="dark">
+                                <div className="flex items-center gap-2">
+                                  <Moon className="h-4 w-4" />
+                                  Dark
+                                </div>
+                              </SelectItem>
+                              <SelectItem value="system">
+                                <div className="flex items-center gap-2">
+                                  <Monitor className="h-4 w-4" />
+                                  System
+                                </div>
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
+            ))}
+
+            {/* Account Management */}
+            <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <SettingsIcon className="h-5 w-5" />
-                  General Settings
+                  <Lock className="h-5 w-5" />
+                  Account Management
                 </CardTitle>
                 <CardDescription>
-                  Configure your basic preferences and appearance
+                  Manage your account data and security
                 </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
-                {/* Theme */}
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Theme</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Choose your preferred color scheme
-                    </p>
-                  </div>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={toggleTheme}
-                    className="gap-2"
-                  >
-                    {theme === 'dark' ? (
-                      <>
-                        <Sun className="h-4 w-4" />
-                        Light
-                      </>
-                    ) : (
-                      <>
-                        <Moon className="h-4 w-4" />
-                        Dark
-                      </>
-                    )}
-                  </Button>
-                </div>
-
-                <Separator />
-
-                {/* Language */}
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Language</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Select your preferred language
-                    </p>
-                  </div>
-                  <Select value={settings.preferences.language} onValueChange={(value) => handlePreferenceChange('language', value)}>
-                    <SelectTrigger className="w-40">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="es">Español</SelectItem>
-                      <SelectItem value="fr">Français</SelectItem>
-                      <SelectItem value="de">Deutsch</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Separator />
-
-                {/* Auto-save */}
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Auto-save</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Automatically save your work as you type
-                    </p>
-                  </div>
-                  <Switch
-                    checked={settings.preferences.autoSave}
-                    onCheckedChange={(checked) => handlePreferenceChange('autoSave', checked)}
-                  />
-                </div>
-
-                <Separator />
-
-                {/* Sound Effects */}
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Sound Effects</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Play sounds for actions and notifications
-                    </p>
-                  </div>
-                  <Switch
-                    checked={settings.preferences.soundEffects}
-                    onCheckedChange={(checked) => handlePreferenceChange('soundEffects', checked)}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Notifications */}
-            <Card id="notifications">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Bell className="h-5 w-5" />
-                  Notification Settings
-                </CardTitle>
-                <CardDescription>
-                  Control how and when you receive notifications
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5 text-muted-foreground" />
-                    <div className="space-y-1">
-                      <Label className="text-base font-medium">Email Notifications</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Receive important updates via email
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={settings.notifications.email}
-                    onCheckedChange={(checked) => handleNotificationChange('email', checked)}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Smartphone className="h-5 w-5 text-muted-foreground" />
-                    <div className="space-y-1">
-                      <Label className="text-base font-medium">Push Notifications</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Get instant notifications on your device
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={settings.notifications.push}
-                    onCheckedChange={(checked) => handleNotificationChange('push', checked)}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Zap className="h-5 w-5 text-muted-foreground" />
-                    <div className="space-y-1">
-                      <Label className="text-base font-medium">Weekly Digest</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Summary of your weekly activity and insights
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={settings.notifications.digest}
-                    onCheckedChange={(checked) => handleNotificationChange('digest', checked)}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Marketing Communications</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Product updates, tips, and promotional content
-                    </p>
-                  </div>
-                  <Switch
-                    checked={settings.notifications.marketing}
-                    onCheckedChange={(checked) => handleNotificationChange('marketing', checked)}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Privacy & Security */}
-            <Card id="privacy">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Privacy & Security
-                </CardTitle>
-                <CardDescription>
-                  Manage your privacy settings and account security
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <Eye className="h-5 w-5 text-muted-foreground" />
-                    <div className="space-y-1">
-                      <Label className="text-base font-medium">Public Profile</Label>
-                      <p className="text-sm text-muted-foreground">
-                        Allow others to see your profile and collections
-                      </p>
-                    </div>
-                  </div>
-                  <Switch
-                    checked={settings.privacy.profilePublic}
-                    onCheckedChange={(checked) => handlePrivacyChange('profilePublic', checked)}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Analytics Sharing</Label>
-                    <p className="text-sm text-muted-foreground">
-                      Help improve Accio by sharing anonymous usage data
-                    </p>
-                  </div>
-                  <Switch
-                    checked={settings.privacy.analyticsSharing}
-                    onCheckedChange={(checked) => handlePrivacyChange('analyticsSharing', checked)}
-                  />
-                </div>
-
-                <Separator />
-
-                <div className="space-y-4">
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border">
                   <div>
-                    <Label className="text-base font-medium">Two-Factor Authentication</Label>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Add an extra layer of security to your account
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <Badge variant="outline" className="gap-1">
-                        <Key className="h-3 w-3" />
-                        Not Enabled
-                      </Badge>
-                      <Button size="sm">Enable 2FA</Button>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-4">
-                  <div>
-                    <Label className="text-base font-medium">Active Sessions</Label>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Manage devices where you're currently signed in
-                    </p>
-                    <Button variant="outline" size="sm">
-                      View Sessions
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Data Management */}
-            <Card id="data">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Database className="h-5 w-5" />
-                  Data Management
-                </CardTitle>
-                <CardDescription>
-                  Export, backup, or delete your data
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Export Data</Label>
+                    <h4 className="font-medium">Export Data</h4>
                     <p className="text-sm text-muted-foreground">
-                      Download all your saved content and collections
+                      Download a copy of all your data
                     </p>
                   </div>
-                  <Button variant="outline" size="sm" className="gap-2">
+                  <Button variant="outline" onClick={handleExportData} className="gap-2">
                     <Download className="h-4 w-4" />
                     Export
                   </Button>
                 </div>
 
-                <Separator />
-
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <Label className="text-base font-medium">Storage Usage</Label>
-                    <p className="text-sm text-muted-foreground">
-                      You're using 2.3 GB of 10 GB available
-                    </p>
-                    <div className="w-64 bg-muted rounded-full h-2 mt-2">
-                      <div className="bg-primary h-2 rounded-full" style={{width: '23%'}}></div>
-                    </div>
-                  </div>
-                  <Badge variant="secondary">23% used</Badge>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-4">
+                <div className="flex items-center justify-between p-4 rounded-lg border border-destructive/20 bg-destructive/5">
                   <div>
-                    <Label className="text-base font-medium text-destructive">Delete Account</Label>
-                    <p className="text-sm text-muted-foreground mb-3">
-                      Permanently delete your account and all associated data
+                    <h4 className="font-medium text-destructive">Delete Account</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Permanently delete your account and all data
                     </p>
-                    <Button variant="destructive" size="sm" className="gap-2">
-                      <Trash2 className="h-4 w-4" />
-                      Delete Account
-                    </Button>
                   </div>
+                  <Button variant="destructive" onClick={handleDeleteAccount} className="gap-2">
+                    <Trash2 className="h-4 w-4" />
+                    Delete
+                  </Button>
                 </div>
               </CardContent>
             </Card>

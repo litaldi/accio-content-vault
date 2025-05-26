@@ -1,219 +1,261 @@
 
 import React, { useState } from 'react';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { 
-  User, 
-  Mail, 
-  Calendar, 
-  MapPin, 
-  Edit, 
-  Save, 
+  User,
+  Mail,
+  MapPin,
+  Calendar,
+  Edit3,
   Camera,
-  Trophy,
-  BookmarkPlus,
-  Brain,
+  Award,
+  Target,
   TrendingUp,
-  Settings,
-  Shield
+  BookOpen,
+  Zap,
+  Save,
+  X
 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const Profile = () => {
+  const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
+  const [profileData, setProfileData] = useState({
     name: 'Alex Johnson',
     email: 'alex.johnson@example.com',
     bio: 'Passionate learner and knowledge curator. I love exploring new technologies and sharing insights with the community.',
     location: 'San Francisco, CA',
     website: 'https://alexjohnson.dev',
-    joinDate: 'March 2023'
+    joinDate: '2024-01-15'
   });
 
   const stats = [
-    { label: "Content Saved", value: "1,247", icon: BookmarkPlus, color: "text-blue-600" },
-    { label: "Collections", value: "23", icon: Trophy, color: "text-purple-600" },
-    { label: "AI Insights", value: "156", icon: Brain, color: "text-green-600" },
-    { label: "Learning Streak", value: "42 days", icon: TrendingUp, color: "text-orange-600" }
+    { label: 'Items Saved', value: '1,247', icon: BookOpen },
+    { label: 'Collections', value: '23', icon: Target },
+    { label: 'Learning Streak', value: '45 days', icon: Zap },
+    { label: 'Knowledge Score', value: '87%', icon: TrendingUp }
   ];
 
   const achievements = [
-    { name: "Early Adopter", description: "Joined in the first month", icon: "🌟" },
-    { name: "Knowledge Explorer", description: "Saved 1000+ items", icon: "🔍" },
-    { name: "Consistent Learner", description: "40+ day learning streak", icon: "📚" },
-    { name: "AI Enthusiast", description: "Generated 100+ insights", icon: "🤖" },
-    { name: "Collection Master", description: "Created 20+ collections", icon: "📁" }
+    { title: 'Early Adopter', description: 'Joined Accio in its first month', icon: Award, earned: true },
+    { title: 'Knowledge Curator', description: 'Saved 1000+ items', icon: BookOpen, earned: true },
+    { title: 'Consistent Learner', description: '30-day learning streak', icon: Target, earned: true },
+    { title: 'Collection Master', description: 'Created 20+ collections', icon: Zap, earned: false }
   ];
 
   const recentActivity = [
-    { action: "Saved article", item: "The Future of Web Development", time: "2 hours ago" },
-    { action: "Created collection", item: "React Best Practices", time: "1 day ago" },
-    { action: "Generated insight", item: "AI in Education trends", time: "2 days ago" },
-    { action: "Updated collection", item: "Machine Learning Resources", time: "3 days ago" }
+    { action: 'Saved', item: 'Advanced React Patterns', time: '2 hours ago' },
+    { action: 'Created', item: 'Frontend Architecture collection', time: '1 day ago' },
+    { action: 'Completed', item: 'JavaScript Fundamentals learning path', time: '3 days ago' },
+    { action: 'Shared', item: 'AI Tools for Developers', time: '1 week ago' }
   ];
 
   const handleSave = () => {
-    setIsEditing(false);
     // Here you would typically save to backend
+    setIsEditing(false);
+    toast({
+      title: "Profile updated",
+      description: "Your profile has been successfully updated.",
+    });
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+  const handleCancel = () => {
+    setIsEditing(false);
+    // Reset form data to original values
   };
 
   return (
     <UnifiedPageLayout
       title="Profile - Manage Your Account | Accio"
-      description="View and manage your Accio profile, track your learning progress, and customize your account settings."
+      description="View and edit your profile information, track your learning achievements, and manage your account settings."
     >
       <div className="container py-8">
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-2">Profile</h1>
+            <p className="text-muted-foreground">
+              Manage your account information and track your learning journey.
+            </p>
+          </div>
+          <Button 
+            onClick={() => setIsEditing(!isEditing)}
+            variant={isEditing ? "outline" : "default"}
+            className="mt-4 lg:mt-0 gap-2"
+          >
+            {isEditing ? (
+              <>
+                <X className="h-4 w-4" />
+                Cancel
+              </>
+            ) : (
+              <>
+                <Edit3 className="h-4 w-4" />
+                Edit Profile
+              </>
+            )}
+          </Button>
+        </div>
+
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Profile Card */}
-          <div className="lg:col-span-1">
+          {/* Profile Info */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Basic Info */}
             <Card>
-              <CardContent className="p-6">
+              <CardHeader>
+                <CardTitle>Profile Information</CardTitle>
+                <CardDescription>
+                  Update your personal information and bio
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
                 {/* Avatar Section */}
-                <div className="text-center mb-6">
-                  <div className="relative inline-block">
-                    <div className="w-24 h-24 bg-gradient-to-br from-primary to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mb-4">
-                      {formData.name.split(' ').map(n => n[0]).join('')}
-                    </div>
-                    <Button size="sm" className="absolute -bottom-2 -right-2 rounded-full w-8 h-8 p-0">
-                      <Camera className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  
-                  {isEditing ? (
-                    <div className="space-y-3">
-                      <Input
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        className="text-center font-semibold"
-                      />
-                    </div>
-                  ) : (
-                    <>
-                      <h2 className="text-xl font-bold mb-1">{formData.name}</h2>
-                      <p className="text-muted-foreground text-sm">Knowledge Curator</p>
-                    </>
-                  )}
-                </div>
-
-                {/* Profile Info */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3 text-sm">
-                    <Mail className="h-4 w-4 text-muted-foreground" />
-                    {isEditing ? (
-                      <Input
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        className="text-sm"
-                      />
-                    ) : (
-                      <span>{formData.email}</span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-3 text-sm">
-                    <MapPin className="h-4 w-4 text-muted-foreground" />
-                    {isEditing ? (
-                      <Input
-                        value={formData.location}
-                        onChange={(e) => handleInputChange('location', e.target.value)}
-                        className="text-sm"
-                      />
-                    ) : (
-                      <span>{formData.location}</span>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center gap-3 text-sm">
-                    <Calendar className="h-4 w-4 text-muted-foreground" />
-                    <span>Joined {formData.joinDate}</span>
-                  </div>
-                </div>
-
-                <Separator className="my-6" />
-
-                {/* Bio Section */}
-                <div>
-                  <Label className="text-sm font-medium mb-2 block">Bio</Label>
-                  {isEditing ? (
-                    <Textarea
-                      value={formData.bio}
-                      onChange={(e) => handleInputChange('bio', e.target.value)}
-                      className="min-h-[80px] text-sm"
-                    />
-                  ) : (
-                    <p className="text-sm text-muted-foreground">{formData.bio}</p>
-                  )}
-                </div>
-
-                <Separator className="my-6" />
-
-                {/* Action Buttons */}
-                <div className="space-y-2">
-                  {isEditing ? (
-                    <div className="flex gap-2">
-                      <Button onClick={handleSave} size="sm" className="flex-1 gap-2">
-                        <Save className="h-4 w-4" />
-                        Save
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={() => setIsEditing(false)}
-                        className="flex-1"
+                <div className="flex items-center gap-6">
+                  <div className="relative">
+                    <Avatar className="w-24 h-24">
+                      <AvatarImage src="/placeholder-avatar.jpg" alt="Profile picture" />
+                      <AvatarFallback className="text-lg">
+                        {profileData.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    {isEditing && (
+                      <Button
+                        size="icon"
+                        variant="outline"
+                        className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full"
                       >
-                        Cancel
+                        <Camera className="h-4 w-4" />
                       </Button>
-                    </div>
-                  ) : (
-                    <Button 
-                      onClick={() => setIsEditing(true)} 
-                      variant="outline" 
-                      size="sm" 
-                      className="w-full gap-2"
-                    >
-                      <Edit className="h-4 w-4" />
-                      Edit Profile
+                    )}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">{profileData.name}</h3>
+                    <p className="text-muted-foreground">Member since {new Date(profileData.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
+                  </div>
+                </div>
+
+                {/* Form Fields */}
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      value={profileData.name}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={profileData.email}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Location</Label>
+                    <Input
+                      id="location"
+                      value={profileData.location}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, location: e.target.value }))}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="website">Website</Label>
+                    <Input
+                      id="website"
+                      value={profileData.website}
+                      onChange={(e) => setProfileData(prev => ({ ...prev, website: e.target.value }))}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="bio">Bio</Label>
+                  <Textarea
+                    id="bio"
+                    value={profileData.bio}
+                    onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
+                    disabled={!isEditing}
+                    rows={4}
+                    placeholder="Tell us about yourself..."
+                  />
+                </div>
+
+                {isEditing && (
+                  <div className="flex gap-3 pt-4">
+                    <Button onClick={handleSave} className="gap-2">
+                      <Save className="h-4 w-4" />
+                      Save Changes
                     </Button>
-                  )}
-                  
-                  <Button variant="ghost" size="sm" className="w-full gap-2">
-                    <Settings className="h-4 w-4" />
-                    Account Settings
-                  </Button>
+                    <Button variant="outline" onClick={handleCancel}>
+                      Cancel
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                  Your latest actions and achievements
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {recentActivity.map((activity, index) => (
+                    <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
+                      <div className="w-2 h-2 bg-primary rounded-full"></div>
+                      <div className="flex-1">
+                        <p className="text-sm">
+                          <span className="font-medium">{activity.action}</span> {activity.item}
+                        </p>
+                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          {/* Sidebar */}
+          <div className="space-y-6">
             {/* Stats */}
             <Card>
               <CardHeader>
                 <CardTitle>Your Stats</CardTitle>
-                <CardDescription>
-                  Overview of your learning and engagement metrics
-                </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="space-y-4">
                   {stats.map((stat, index) => (
-                    <div key={index} className="text-center p-4 rounded-lg bg-muted/30">
-                      <div className={`w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center mx-auto mb-2`}>
-                        <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                    <div key={index} className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                          <stat.icon className="h-4 w-4 text-primary" />
+                        </div>
+                        <span className="text-sm">{stat.label}</span>
                       </div>
-                      <p className="text-xl font-bold">{stat.value}</p>
-                      <p className="text-xs text-muted-foreground">{stat.label}</p>
+                      <span className="font-semibold">{stat.value}</span>
                     </div>
                   ))}
                 </div>
@@ -225,89 +267,47 @@ const Profile = () => {
               <CardHeader>
                 <CardTitle>Achievements</CardTitle>
                 <CardDescription>
-                  Milestones you've unlocked on your learning journey
+                  Your learning milestones
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-4">
                   {achievements.map((achievement, index) => (
-                    <div key={index} className="flex items-center gap-3 p-4 rounded-lg border">
-                      <div className="text-2xl">{achievement.icon}</div>
-                      <div>
-                        <h4 className="font-semibold">{achievement.name}</h4>
-                        <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                    <div key={index} className={`flex items-start gap-3 p-3 rounded-lg ${achievement.earned ? 'bg-primary/5' : 'opacity-50'}`}>
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${achievement.earned ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+                        <achievement.icon className="h-4 w-4" />
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Recent Activity */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Recent Activity</CardTitle>
-                <CardDescription>
-                  Your latest interactions and contributions
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {recentActivity.map((activity, index) => (
-                    <div key={index} className="flex items-center gap-4 p-4 rounded-lg hover:bg-muted/50 transition-colors">
-                      <div className="w-2 h-2 bg-primary rounded-full flex-shrink-0"></div>
                       <div className="flex-1">
-                        <p className="text-sm">
-                          <span className="font-medium">{activity.action}</span>
-                          {' "'}
-                          <span className="text-muted-foreground">{activity.item}</span>
-                          {'"'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">{activity.time}</p>
+                        <h4 className="font-medium text-sm">{achievement.title}</h4>
+                        <p className="text-xs text-muted-foreground">{achievement.description}</p>
                       </div>
+                      {achievement.earned && (
+                        <Badge variant="secondary" className="text-xs">Earned</Badge>
+                      )}
                     </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
 
-            {/* Privacy & Security */}
+            {/* Quick Actions */}
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="h-5 w-5" />
-                  Privacy & Security
-                </CardTitle>
-                <CardDescription>
-                  Manage your privacy settings and account security
-                </CardDescription>
+                <CardTitle>Quick Actions</CardTitle>
               </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Profile Visibility</h4>
-                      <p className="text-sm text-muted-foreground">Control who can see your profile</p>
-                    </div>
-                    <Badge variant="secondary">Public</Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Data Export</h4>
-                      <p className="text-sm text-muted-foreground">Download your data anytime</p>
-                    </div>
-                    <Button variant="outline" size="sm">Export</Button>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium">Two-Factor Authentication</h4>
-                      <p className="text-sm text-muted-foreground">Add extra security to your account</p>
-                    </div>
-                    <Button variant="outline" size="sm">Enable</Button>
-                  </div>
-                </div>
+              <CardContent className="space-y-3">
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <User className="h-4 w-4" />
+                  Account Settings
+                </Button>
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <Mail className="h-4 w-4" />
+                  Email Preferences
+                </Button>
+                <Button variant="outline" className="w-full justify-start gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  Learning Goals
+                </Button>
               </CardContent>
             </Card>
           </div>

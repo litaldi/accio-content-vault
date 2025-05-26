@@ -1,80 +1,60 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Eye, EyeOff, Mail, Lock, ArrowRight, Shield, Phone, Chrome, Brain, Loader2, AlertCircle } from 'lucide-react';
-import { copy } from '@/utils/copy';
+import { Eye, EyeOff, Mail, Lock, ArrowRight, Brain, Loader2, AlertCircle, Chrome } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Login = () => {
   const { user, signIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const emailInputRef = useRef<HTMLInputElement>(null);
   
-  const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; phone?: string; password?: string; submit?: string }>({});
-  const [touched, setTouched] = useState<{ email?: boolean; phone?: boolean; password?: boolean }>({});
+  const [errors, setErrors] = useState<{[key: string]: string}>({});
+
+  // Get redirect path from URL params or default to dashboard
+  const from = (location.state as any)?.from?.pathname || '/dashboard';
 
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      navigate(from, { replace: true });
     }
-  }, [user, navigate]);
+  }, [user, navigate, from]);
 
-  // Autofocus on first input
+  // Autofocus on email input
   useEffect(() => {
     if (emailInputRef.current) {
       emailInputRef.current.focus();
     }
   }, []);
 
-  // Real-time validation
-  const validateField = (field: 'email' | 'phone' | 'password', value: string) => {
-    switch (field) {
-      case 'email':
-        if (!value.trim()) return 'Email is required';
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please enter a valid email address';
-        return '';
-      case 'phone':
-        if (!value.trim()) return 'Phone number is required';
-        if (!/^\+?[\d\s\-\(\)]{10,}$/.test(value.replace(/\s/g, ''))) return 'Please enter a valid phone number';
-        return '';
-      case 'password':
-        if (!value.trim()) return 'Password is required';
-        if (value.length < 6) return 'Password must be at least 6 characters';
-        return '';
-      default:
-        return '';
-    }
-  };
-
   const validateForm = () => {
-    const newErrors: { email?: string; phone?: string; password?: string } = {};
+    const newErrors: {[key: string]: string} = {};
     
-    if (loginMethod === 'email') {
-      const emailError = validateField('email', email);
-      if (emailError) newErrors.email = emailError;
-    } else {
-      const phoneError = validateField('phone', phone);
-      if (phoneError) newErrors.phone = phoneError;
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
     }
     
-    const passwordError = validateField('password', password);
-    if (passwordError) newErrors.password = passwordError;
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    }
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -96,16 +76,15 @@ const Login = () => {
     setErrors({});
     
     try {
-      const credential = loginMethod === 'email' ? email.trim() : phone.trim();
-      await signIn(credential, password);
+      await signIn(formData.email.trim(), formData.password);
       toast({
         title: "Welcome back!",
-        description: "You've been successfully signed in.",
+        description: "You've successfully signed in to your account.",
       });
-      navigate('/dashboard');
+      navigate(from, { replace: true });
     } catch (error: any) {
       console.error('Login error:', error);
-      const errorMessage = error.message || "Invalid credentials. Please check your information and try again.";
+      const errorMessage = error.message || "Invalid email or password. Please try again.";
       setErrors({ submit: errorMessage });
       toast({
         title: "Sign in failed",
@@ -117,68 +96,18 @@ const Login = () => {
     }
   };
 
-  const handleInputChange = (field: 'email' | 'phone' | 'password', value: string) => {
-    // Update value
-    if (field === 'email') {
-      setEmail(value);
-    } else if (field === 'phone') {
-      setPhone(value);
-    } else {
-      setPassword(value);
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    // Clear field-specific errors when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '', submit: '' }));
     }
-    
-    // Mark as touched
-    setTouched(prev => ({ ...prev, [field]: true }));
-    
-    // Real-time validation
-    if (touched[field]) {
-      const error = validateField(field, value);
-      setErrors(prev => ({ ...prev, [field]: error, submit: '' }));
-    }
-  };
-
-  const handleBlur = (field: 'email' | 'phone' | 'password') => {
-    setTouched(prev => ({ ...prev, [field]: true }));
-    const value = field === 'email' ? email : field === 'phone' ? phone : password;
-    const error = validateField(field, value);
-    setErrors(prev => ({ ...prev, [field]: error }));
-  };
-
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    try {
-      // Mock Google login - in real app, integrate with Google OAuth
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast({
-        title: "Google sign-in coming soon!",
-        description: "This feature will be available in the next update.",
-      });
-    } catch (error) {
-      toast({
-        title: "Google sign-in failed",
-        description: "Please try again or use email/phone login.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDemoLogin = async () => {
-    setEmail('demo@accio.app');
-    setPassword('demo123');
-    setLoginMethod('email');
-    
-    // Auto-submit after a short delay
-    setTimeout(() => {
-      handleSubmit(new Event('submit') as any);
-    }, 100);
   };
 
   return (
     <UnifiedPageLayout
-      title="Sign In - Accio Knowledge Engine"
-      description="Sign in to your Accio account to access your knowledge collection and insights."
+      title="Sign In - Access Your Account | Accio"
+      description="Sign in to your Accio account to access your personal knowledge sanctuary and AI-powered insights."
       showNavigation={true}
       showFooter={true}
     >
@@ -192,9 +121,9 @@ const Login = () => {
               </div>
             </div>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Welcome back to Accio</h1>
+              <h1 className="text-3xl font-bold tracking-tight">Welcome back</h1>
               <p className="mt-2 text-muted-foreground">
-                Continue building your knowledge sanctuary
+                Sign in to your knowledge sanctuary
               </p>
             </div>
           </div>
@@ -204,90 +133,44 @@ const Login = () => {
             <CardHeader className="space-y-1 pb-6">
               <CardTitle className="text-2xl font-semibold text-center">Sign in to your account</CardTitle>
               <CardDescription className="text-center">
-                Choose your preferred sign-in method below
+                Enter your credentials to access your dashboard
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Login Method Toggle */}
-              <div className="flex rounded-lg bg-muted p-1" role="tablist" aria-label="Login method">
-                <Button
-                  type="button"
-                  variant={loginMethod === 'email' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="flex-1 transition-all"
-                  onClick={() => setLoginMethod('email')}
-                  role="tab"
-                  aria-selected={loginMethod === 'email'}
-                  aria-controls="email-panel"
-                >
-                  <Mail className="h-4 w-4 mr-2" />
-                  Email
-                </Button>
-                <Button
-                  type="button"
-                  variant={loginMethod === 'phone' ? 'default' : 'ghost'}
-                  size="sm"
-                  className="flex-1 transition-all"
-                  onClick={() => setLoginMethod('phone')}
-                  role="tab"
-                  aria-selected={loginMethod === 'phone'}
-                  aria-controls="phone-panel"
-                >
-                  <Phone className="h-4 w-4 mr-2" />
-                  Phone
-                </Button>
-              </div>
-
               <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-                {/* Email/Phone Field */}
+                {/* Email Field */}
                 <div className="space-y-2">
-                  <Label htmlFor={loginMethod} className="text-sm font-medium flex items-center gap-2">
-                    {loginMethod === 'email' ? (
-                      <>
-                        <Mail className="h-4 w-4" />
-                        Email address
-                      </>
-                    ) : (
-                      <>
-                        <Phone className="h-4 w-4" />
-                        Phone number
-                      </>
-                    )}
-                    <span className="text-destructive">*</span>
+                  <Label htmlFor="email" className="text-sm font-medium flex items-center gap-2">
+                    <Mail className="h-4 w-4" />
+                    Email address
                   </Label>
                   <div className="relative">
                     <Input
-                      ref={loginMethod === 'email' ? emailInputRef : undefined}
-                      id={loginMethod}
-                      type={loginMethod === 'email' ? 'email' : 'tel'}
-                      placeholder={loginMethod === 'email' ? 'Enter your email address' : 'Enter your phone number'}
-                      value={loginMethod === 'email' ? email : phone}
-                      onChange={(e) => handleInputChange(loginMethod, e.target.value)}
-                      onBlur={() => handleBlur(loginMethod)}
+                      ref={emailInputRef}
+                      id="email"
+                      type="email"
+                      placeholder="Enter your email address"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
                       className={cn(
                         "pl-10 transition-all",
-                        errors[loginMethod] && touched[loginMethod] 
+                        errors.email 
                           ? 'border-destructive focus-visible:ring-destructive' 
                           : 'focus-visible:ring-primary'
                       )}
-                      autoComplete={loginMethod === 'email' ? 'email' : 'tel'}
+                      autoComplete="email"
                       required
                       disabled={isLoading}
-                      aria-invalid={!!errors[loginMethod]}
-                      aria-describedby={errors[loginMethod] ? `${loginMethod}-error` : undefined}
+                      aria-invalid={!!errors.email}
                     />
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-                      {loginMethod === 'email' ? (
-                        <Mail className="h-4 w-4" />
-                      ) : (
-                        <Phone className="h-4 w-4" />
-                      )}
+                      <Mail className="h-4 w-4" />
                     </div>
                   </div>
-                  {errors[loginMethod] && touched[loginMethod] && (
-                    <div id={`${loginMethod}-error`} className="flex items-center gap-1 text-sm text-destructive" role="alert">
+                  {errors.email && (
+                    <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
                       <AlertCircle className="h-3 w-3" />
-                      {errors[loginMethod]}
+                      {errors.email}
                     </div>
                   )}
                 </div>
@@ -297,19 +180,17 @@ const Login = () => {
                   <Label htmlFor="password" className="text-sm font-medium flex items-center gap-2">
                     <Lock className="h-4 w-4" />
                     Password
-                    <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Input
                       id="password"
                       type={showPassword ? 'text' : 'password'}
                       placeholder="Enter your password"
-                      value={password}
+                      value={formData.password}
                       onChange={(e) => handleInputChange('password', e.target.value)}
-                      onBlur={() => handleBlur('password')}
                       className={cn(
                         "pl-10 pr-10 transition-all",
-                        errors.password && touched.password 
+                        errors.password 
                           ? 'border-destructive focus-visible:ring-destructive' 
                           : 'focus-visible:ring-primary'
                       )}
@@ -317,7 +198,6 @@ const Login = () => {
                       required
                       disabled={isLoading}
                       aria-invalid={!!errors.password}
-                      aria-describedby={errors.password ? "password-error" : undefined}
                     />
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
                       <Lock className="h-4 w-4" />
@@ -338,12 +218,21 @@ const Login = () => {
                       )}
                     </Button>
                   </div>
-                  {errors.password && touched.password && (
-                    <div id="password-error" className="flex items-center gap-1 text-sm text-destructive" role="alert">
+                  {errors.password && (
+                    <div className="flex items-center gap-1 text-sm text-destructive" role="alert">
                       <AlertCircle className="h-3 w-3" />
                       {errors.password}
                     </div>
                   )}
+                </div>
+
+                {/* Forgot Password Link */}
+                <div className="flex justify-end">
+                  <Button variant="link" className="p-0 h-auto text-sm" asChild>
+                    <Link to="/forgot-password">
+                      Forgot your password?
+                    </Link>
+                  </Button>
                 </div>
 
                 {/* Submit Error */}
@@ -372,18 +261,11 @@ const Login = () => {
                     </>
                   ) : (
                     <>
-                      Sign in
+                      Sign In
                       <ArrowRight className="h-4 w-4 ml-2" />
                     </>
                   )}
                 </Button>
-
-                {/* Forgot Password */}
-                <div className="text-center">
-                  <Button variant="link" className="text-sm text-muted-foreground hover:text-primary p-0" type="button">
-                    Forgot your password?
-                  </Button>
-                </div>
               </form>
 
               {/* Divider */}
@@ -396,28 +278,16 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Alternative Login Methods */}
+              {/* Alternative Sign In Methods */}
               <div className="space-y-3">
                 <Button
                   type="button"
                   variant="outline"
                   className="w-full"
-                  onClick={handleGoogleLogin}
                   disabled={isLoading}
                 >
                   <Chrome className="h-4 w-4 mr-2" />
                   Sign in with Google
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  onClick={handleDemoLogin}
-                  disabled={isLoading}
-                >
-                  <Brain className="h-4 w-4 mr-2" />
-                  Try Demo Account
                 </Button>
               </div>
 
@@ -428,29 +298,18 @@ const Login = () => {
                     <span className="w-full border-t" />
                   </div>
                   <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">New to Accio?</span>
+                    <span className="bg-background px-2 text-muted-foreground">Don't have an account?</span>
                   </div>
                 </div>
                 
                 <Button variant="outline" className="w-full" asChild>
                   <Link to="/register">
-                    Create an account
+                    Create account
                   </Link>
                 </Button>
               </div>
             </CardContent>
           </Card>
-
-          {/* Security Notice */}
-          <div className="text-center space-y-2">
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <Shield className="h-4 w-4" />
-              <span>Your data is secure and encrypted</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              This is a demo application. Use any email/phone and password to sign in, or try the demo account.
-            </p>
-          </div>
         </div>
       </div>
     </UnifiedPageLayout>
