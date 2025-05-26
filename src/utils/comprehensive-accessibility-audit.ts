@@ -17,6 +17,7 @@ export interface A11yAuditReport {
   overall: 'pass' | 'fail' | 'warning';
   score: number;
   results: A11yResult[];
+  issues: A11yResult[]; // Add the missing issues property
   summary: {
     passed: number;
     failed: number;
@@ -117,8 +118,13 @@ const checkColorContrast = (): A11yResult[] => {
     const fontSize = parseFloat(styles.fontSize);
     const fontWeight = styles.fontWeight;
     
+    // Convert font weight to number for comparison
+    const numericFontWeight = fontWeight === 'normal' ? 400 : 
+                             fontWeight === 'bold' ? 700 : 
+                             parseInt(fontWeight) || 400;
+    
     // Basic heuristic - this would need actual color contrast calculation in production
-    if (fontSize < 14 && fontWeight < 600) {
+    if (fontSize < 14 && numericFontWeight < 600) {
       contrastIssues++;
     }
   });
@@ -237,6 +243,9 @@ export const runComprehensiveAccessibilityAudit = (): A11yAuditReport => {
   const score = Math.round(((summary.passed + summary.warnings * 0.5) / allResults.length) * 100);
   const overall = summary.failed > 0 ? 'fail' : summary.warnings > 0 ? 'warning' : 'pass';
 
+  // Extract issues (failed and warning results)
+  const issues = allResults.filter(r => r.status === 'fail' || r.status === 'warning');
+
   console.log(`♿ Accessibility Score: ${score}/100`);
   console.log(`✅ Passed: ${summary.passed}`);
   console.log(`⚠️ Warnings: ${summary.warnings}`);
@@ -264,6 +273,7 @@ export const runComprehensiveAccessibilityAudit = (): A11yAuditReport => {
     overall,
     score,
     results: allResults,
+    issues, // Now properly included
     summary
   };
 };
