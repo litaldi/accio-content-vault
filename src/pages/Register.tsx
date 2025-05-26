@@ -104,9 +104,7 @@ const Register = () => {
     setErrors({});
     
     try {
-      await signUp(formData.email.trim(), formData.password, {
-        full_name: formData.name.trim()
-      });
+      await signUp(formData.email.trim(), formData.password);
       toast({
         title: "Welcome to Accio!",
         description: "Your account has been created successfully. Welcome aboard!",
@@ -420,7 +418,7 @@ const Register = () => {
                     <Checkbox
                       id="terms"
                       checked={acceptedTerms}
-                      onCheckedChange={setAcceptedTerms}
+                      onCheckedChange={(checked) => setAcceptedTerms(checked === true)}
                       disabled={isLoading}
                       className={cn(
                         errors.terms && "border-destructive"

@@ -100,8 +100,8 @@ const Dashboard = () => {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {quickActions.map((action, index) => (
-                    <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer group" asChild>
-                      <Link to={action.href}>
+                    <Link key={index} to={action.href} className="block">
+                      <Card className="hover:shadow-md transition-shadow cursor-pointer group h-full">
                         <CardContent className="p-4">
                           <div className="flex items-start gap-3">
                             <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -113,8 +113,8 @@ const Dashboard = () => {
                             </div>
                           </div>
                         </CardContent>
-                      </Link>
-                    </Card>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               </CardContent>
