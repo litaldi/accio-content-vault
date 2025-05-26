@@ -1,4 +1,5 @@
 
+
 export const copy = {
   // Navigation
   navigation: {
@@ -32,6 +33,76 @@ export const copy = {
     dontHaveAccount: "Don't have an account?",
     acceptTerms: 'I agree to the Terms of Service and Privacy Policy',
     demoNote: 'Demo app - use any email and password to sign in'
+  },
+
+  // Headlines
+  headlines: {
+    hero: 'Transform Information Into Intelligence',
+    subhero: 'The AI-powered knowledge engine that helps you save, organize, and rediscover everything that matters.'
+  },
+
+  // Trust indicators
+  trust: {
+    security: 'Enterprise-grade security',
+    freeTrial: 'Free 14-day trial',
+    noCredit: 'No credit card required',
+    setupTime: 'Setup in 2 minutes'
+  },
+
+  // Social proof
+  social: {
+    companies: 'Trusted by leading companies worldwide',
+    userCount: '10,000+',
+    rating: '4.9/5 stars'
+  },
+
+  // Benefits
+  benefits: {
+    saveAnything: 'Save anything, anywhere',
+    crossDevice: 'Access across all devices',
+    smartTags: 'Smart auto-tagging',
+    aiOrganization: 'AI-powered organization',
+    findFast: 'Find anything instantly',
+    neverLose: 'Never lose important info',
+    timeBack: 'Get your time back',
+    instantSync: 'Instant sync everywhere'
+  },
+
+  // Onboarding
+  onboarding: {
+    welcome: {
+      subtitle: 'Welcome Guide'
+    },
+    step1: {
+      title: 'Save Everything That Matters',
+      description: 'Capture articles, videos, documents, and ideas with one click',
+      tip: 'Use our browser extension or mobile app to save content from anywhere'
+    },
+    step2: {
+      title: 'AI Organizes Automatically',
+      description: 'Our smart AI categorizes and tags your content without any effort',
+      tip: 'Watch as your knowledge base organizes itself intelligently'
+    },
+    step3: {
+      title: 'Find Anything Instantly',
+      description: 'Search your entire knowledge base with natural language queries',
+      tip: 'Ask questions like "Show me articles about productivity from last month"'
+    },
+    step4: {
+      title: 'Build Your Knowledge Empire',
+      description: 'Transform scattered information into organized intelligence',
+      tip: 'Connect ideas, discover patterns, and unlock insights from your data'
+    }
+  },
+
+  // Common terms
+  common: {
+    required: 'Required'
+  },
+
+  // Loading states
+  loading: {
+    loading: 'Loading...'
   },
 
   // Error messages
@@ -98,7 +169,11 @@ export const copy = {
     readMore: 'Read More',
     learnMore: 'Learn More',
     getStarted: 'Get Started',
-    viewAll: 'View All'
+    viewAll: 'View All',
+    close: 'Close',
+    back: 'Back',
+    next: 'Next',
+    finish: 'Get Started'
   },
 
   // Accessibility
@@ -126,3 +201,4 @@ export const copy = {
     optional: 'Optional'
   }
 };
+
