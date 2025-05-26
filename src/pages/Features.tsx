@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -22,7 +21,9 @@ import {
   GraduationCap,
   BarChart3,
   Focus,
-  Lightbulb
+  Lightbulb,
+  Network,
+  Calendar
 } from 'lucide-react';
 import { SmartContentWizard } from '@/components/ai/SmartContentWizard';
 import { VoiceContentCreator } from '@/components/ai/VoiceContentCreator';
@@ -39,6 +40,10 @@ import { NaturalLanguageSearchBar } from '@/components/ai/NaturalLanguageSearchB
 import { SmartContentOrganizer } from '@/components/ai/SmartContentOrganizer';
 import { NextActionsRecommender } from '@/components/ai/NextActionsRecommender';
 import { SmartFocusMode } from '@/components/ai/SmartFocusMode';
+import { AIKnowledgeGraph } from '@/components/ai/AIKnowledgeGraph';
+import { SmartHabitTracker } from '@/components/ai/SmartHabitTracker';
+import { ContentGapAnalyzer } from '@/components/ai/ContentGapAnalyzer';
+import { AIStudyBuddy } from '@/components/ai/AIStudyBuddy';
 
 const Features: React.FC = () => {
   const aiFeatures = [
@@ -125,6 +130,34 @@ const Features: React.FC = () => {
       description: 'Get key insights and trends from your saved content with one click.',
       status: 'active',
       benefit: 'Unlock hidden patterns'
+    },
+    {
+      icon: Network,
+      title: 'AI Knowledge Graph',
+      description: 'Visualize connections between your knowledge areas and discover hidden relationships.',
+      status: 'active',
+      benefit: 'See the big picture'
+    },
+    {
+      icon: Calendar,
+      title: 'Smart Habit Tracker',
+      description: 'AI analyzes your learning patterns and provides insights to build better habits.',
+      status: 'active',
+      benefit: 'Build lasting habits'
+    },
+    {
+      icon: Search,
+      title: 'Content Gap Analyzer',
+      description: 'Identify missing knowledge areas and get personalized learning recommendations.',
+      status: 'active',
+      benefit: 'Fill knowledge gaps'
+    },
+    {
+      icon: GraduationCap,
+      title: 'AI Study Buddy',
+      description: 'Interactive learning companion that explains concepts and keeps you motivated.',
+      status: 'active',
+      benefit: 'Never study alone'
     }
   ];
 
@@ -208,6 +241,18 @@ const Features: React.FC = () => {
               <p className="text-muted-foreground">
                 Experience our AI-powered tools in action with these interactive demos.
               </p>
+            </div>
+            
+            {/* Knowledge & Analytics */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <AIKnowledgeGraph />
+              <SmartHabitTracker />
+            </div>
+            
+            {/* Gap Analysis & Study Buddy */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              <ContentGapAnalyzer />
+              <AIStudyBuddy />
             </div>
             
             {/* Smart Search & Organization */}
