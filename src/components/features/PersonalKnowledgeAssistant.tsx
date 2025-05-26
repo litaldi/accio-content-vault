@@ -15,9 +15,10 @@ import {
   Clock,
   Sparkles
 } from 'lucide-react';
+import { ChatMessage, AssistantMessage } from '@/types/chat';
 
 export const PersonalKnowledgeAssistant = () => {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: '1',
       type: 'assistant',
@@ -32,9 +33,9 @@ export const PersonalKnowledgeAssistant = () => {
   const sendMessage = async () => {
     if (!input.trim()) return;
 
-    const userMessage = {
+    const userMessage: ChatMessage = {
       id: Date.now().toString(),
-      type: 'user' as const,
+      type: 'user',
       content: input,
       timestamp: new Date()
     };
@@ -45,9 +46,9 @@ export const PersonalKnowledgeAssistant = () => {
 
     // Simulate AI response
     setTimeout(() => {
-      const assistantMessage = {
+      const assistantMessage: AssistantMessage = {
         id: (Date.now() + 1).toString(),
-        type: 'assistant' as const,
+        type: 'assistant',
         content: getAIResponse(input),
         timestamp: new Date(),
         suggestions: ['Tell me more', 'Find related content', 'Save this insight']
@@ -112,7 +113,7 @@ export const PersonalKnowledgeAssistant = () => {
                     {message.timestamp.toLocaleTimeString()}
                   </div>
 
-                  {message.suggestions && message.type === 'assistant' && (
+                  {message.type === 'assistant' && message.suggestions && (
                     <div className="flex flex-wrap gap-1">
                       {message.suggestions.map((suggestion, index) => (
                         <Button
