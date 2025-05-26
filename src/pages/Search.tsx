@@ -26,6 +26,7 @@ const Search: React.FC = () => {
   const mockContent: SavedContent[] = [
     {
       id: '1',
+      user_id: 'user123',
       title: 'React Hooks Complete Guide',
       description: 'A comprehensive tutorial covering all React hooks with practical examples and best practices.',
       url: 'https://example.com/react-hooks',
@@ -35,11 +36,11 @@ const Search: React.FC = () => {
         { id: '1', name: 'react', auto_generated: true, confirmed: true },
         { id: '2', name: 'programming', auto_generated: true, confirmed: true }
       ],
-      created_at: '2024-01-15T10:00:00Z',
-      updated_at: '2024-01-15T10:00:00Z'
+      created_at: '2024-01-15T10:00:00Z'
     },
     {
       id: '2',
+      user_id: 'user123',
       title: 'Machine Learning Fundamentals',
       description: 'Understanding the basics of machine learning algorithms and their applications.',
       url: 'https://example.com/ml-fundamentals',
@@ -49,8 +50,7 @@ const Search: React.FC = () => {
         { id: '3', name: 'machine-learning', auto_generated: true, confirmed: true },
         { id: '4', name: 'ai', auto_generated: true, confirmed: true }
       ],
-      created_at: '2024-01-14T15:30:00Z',
-      updated_at: '2024-01-14T15:30:00Z'
+      created_at: '2024-01-14T15:30:00Z'
     }
   ];
 
