@@ -18,10 +18,11 @@ interface AuthContextType {
   isConfigured?: boolean;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  register: (email: string, password: string, name?: string) => Promise<void>;
+  register: (email: string, password: string, options?: { displayName?: string; subscribeNewsletter?: boolean }) => Promise<void>;
   signOut: () => void;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, name?: string) => Promise<void>;
+  signUp: (email: string, password: string, options?: { displayName?: string; subscribeNewsletter?: boolean }) => Promise<void>;
+  signInWithProvider: (provider: 'google' | 'github') => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -68,11 +69,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout();
   };
 
-  const register = async (email: string, password: string, name?: string) => {
+  const register = async (email: string, password: string, options?: { displayName?: string; subscribeNewsletter?: boolean }) => {
     setIsLoading(true);
     try {
-      console.log('Register attempt:', email);
-      const mockUser: User = { id: '1', email, name: name || 'New User' };
+      console.log('Register attempt:', email, options);
+      const mockUser: User = { id: '1', email, name: options?.displayName || 'New User' };
       setUser(mockUser);
       setSession({ user: mockUser, access_token: 'mock-token' });
     } finally {
@@ -80,8 +81,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const signUp = async (email: string, password: string, name?: string) => {
-    await register(email, password, name);
+  const signUp = async (email: string, password: string, options?: { displayName?: string; subscribeNewsletter?: boolean }) => {
+    await register(email, password, options);
+  };
+
+  const signInWithProvider = async (provider: 'google' | 'github') => {
+    setIsLoading(true);
+    try {
+      console.log('Social auth attempt:', provider);
+      const mockUser: User = { id: '1', email: `user@${provider}.com`, name: `${provider} User` };
+      setUser(mockUser);
+      setSession({ user: mockUser, access_token: 'mock-token' });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -95,7 +108,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       register,
       signOut,
       signIn,
-      signUp
+      signUp,
+      signInWithProvider
     }}>
       {children}
     </AuthContext.Provider>

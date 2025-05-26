@@ -4,8 +4,8 @@ import { Button } from '@/components/ui/button';
 import { EnhancedUnifiedLayout } from '@/components/layout/EnhancedUnifiedLayout';
 import { useAuth } from '@/contexts/AuthContext';
 import { Helmet } from 'react-helmet-async';
-import SaveContentMain from '@/components/SaveContent/SaveContentMain';
-import SaveContentSidebar from '@/components/SaveContent/SaveContentSidebar';
+import { SaveContentMain } from '@/components/SaveContent/SaveContentMain';
+import { SaveContentSidebar } from '@/components/SaveContent/SaveContentSidebar';
 
 const Save = () => {
   const { user } = useAuth();
@@ -39,12 +39,17 @@ const Save = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               {/* Main Content Area */}
               <div className="lg:col-span-2">
-                <SaveContentMain />
+                <SaveContentMain 
+                  activeTab="url"
+                  setActiveTab={() => {}}
+                  handleSaveContent={() => {}}
+                  handleFileUploadComplete={() => {}}
+                />
               </div>
 
               {/* Sidebar */}
               <div className="lg:col-span-1">
-                <SaveContentSidebar />
+                <SaveContentSidebar activeTab="url" />
               </div>
             </div>
           </div>
