@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { AccessibleButton } from '@/components/ui/accessible-button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { runButtonAuditReport, auditAllButtons } from '@/utils/button-audit';
@@ -31,16 +31,14 @@ export const ButtonAccessibilityChecker: React.FC = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-4">
-          <AccessibleButton
+          <Button
             onClick={runAudit}
-            loading={isRunning}
-            loadingText="Running audit..."
-            leftIcon={<Bug className="h-4 w-4" />}
-            aria-label="Run accessibility audit on all buttons"
-            description="Scan all buttons on the current page for accessibility issues"
+            disabled={isRunning}
+            className="flex items-center gap-2"
           >
-            Run Button Audit
-          </AccessibleButton>
+            <Bug className="h-4 w-4" />
+            {isRunning ? "Running audit..." : "Run Button Audit"}
+          </Button>
           
           <p className="text-sm text-muted-foreground self-center">
             This will check all buttons on the current page for accessibility compliance
