@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Brain, Eye, EyeOff, ArrowLeft, Loader2, Mail } from 'lucide-react';
+import { Brain, Eye, EyeOff, ArrowLeft, Loader2, Mail, Chrome } from 'lucide-react';
 import { DemoLoginOptions } from '@/components/auth/DemoLoginOptions';
 import { validateEmailEnhanced, sanitizeInput } from '@/utils/unified-security';
 import { authRateLimiter } from '@/utils/unified-security';
@@ -19,6 +19,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
   const [errors, setErrors] = useState<{email?: string; password?: string}>({});
   
   const { signIn, signInWithProvider, user, isLoading } = useAuth();
@@ -28,7 +29,6 @@ const Login = () => {
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
 
-  // Redirect if already logged in
   useEffect(() => {
     if (user && !isLoading) {
       navigate(from, { replace: true });
@@ -58,7 +58,6 @@ const Login = () => {
     
     if (!validateForm()) return;
     
-    // Rate limiting check
     const canAttempt = authRateLimiter.canAttempt(email);
     if (!canAttempt.allowed) {
       toast({
@@ -91,7 +90,7 @@ const Login = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      setIsSubmitting(true);
+      setIsGoogleLoading(true);
       const result = await signInWithProvider('google');
       
       if (result.error) {
@@ -105,7 +104,7 @@ const Login = () => {
         variant: "destructive",
       });
     } finally {
-      setIsSubmitting(false);
+      setIsGoogleLoading(false);
     }
   };
 
@@ -134,7 +133,6 @@ const Login = () => {
       </Helmet>
 
       <div className="w-full max-w-md space-y-6">
-        {/* Back to home link */}
         <Link 
           to="/" 
           className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
@@ -144,7 +142,6 @@ const Login = () => {
           Back to home
         </Link>
 
-        {/* Logo and branding */}
         <div className="text-center space-y-2">
           <div className="mx-auto w-12 h-12 bg-primary rounded-xl flex items-center justify-center mb-4">
             <Brain className="h-7 w-7 text-primary-foreground" />
@@ -155,7 +152,6 @@ const Login = () => {
           </p>
         </div>
 
-        {/* Login form */}
         <Card>
           <CardHeader className="space-y-1">
             <CardTitle className="text-xl text-center">Sign in</CardTitle>
@@ -164,6 +160,30 @@ const Login = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Google Sign In */}
+            <Button
+              variant="outline"
+              className="w-full h-12"
+              onClick={handleGoogleSignIn}
+              disabled={isSubmitting || isGoogleLoading}
+            >
+              {isGoogleLoading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Chrome className="mr-2 h-4 w-4" />
+              )}
+              Continue with Google
+            </Button>
+
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator className="w-full" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">or continue with email</span>
+              </div>
+            </div>
+
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
               <div className="space-y-2">
                 <Label htmlFor="email">Email address</Label>
@@ -238,7 +258,7 @@ const Login = () => {
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={isSubmitting}
+                disabled={isSubmitting || isGoogleLoading}
               >
                 {isSubmitting ? (
                   <>
@@ -251,27 +271,6 @@ const Login = () => {
               </Button>
             </form>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">or continue with</span>
-              </div>
-            </div>
-
-            {/* Google Sign In */}
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={handleGoogleSignIn}
-              disabled={isSubmitting}
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              Continue with Google
-            </Button>
-
-            {/* Demo Login Options */}
             <DemoLoginOptions onDemoSelect={handleDemoSelect} />
 
             <div className="mt-6 text-center text-sm">
@@ -286,7 +285,6 @@ const Login = () => {
           </CardContent>
         </Card>
 
-        {/* Additional help */}
         <div className="text-center text-xs text-muted-foreground">
           <p>
             Need help? <Link to="/contact" className="text-primary hover:underline">Contact support</Link>

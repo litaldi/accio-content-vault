@@ -2,129 +2,79 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useToast } from '@/hooks/use-toast';
 import { 
   Menu, 
   X, 
-  Home, 
-  LayoutDashboard, 
-  FolderOpen, 
-  BarChart3, 
-  User, 
-  Settings, 
-  LogOut,
-  Sparkles,
   Brain,
-  Search,
-  Puzzle,
+  LogOut,
+  Sun,
+  Moon,
+  User,
+  Settings,
+  Home,
   Star,
+  BookOpen,
   MessageCircle,
-  Zap
+  LayoutDashboard,
+  Search,
+  FolderOpen,
+  BarChart3
 } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-export const UnifiedNavigation = () => {
+const UnifiedNavigation: React.FC = () => {
   const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Handle scroll effect
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Close menu when route changes
-  useEffect(() => {
-    setIsMenuOpen(false);
+    setIsMobileMenuOpen(false);
   }, [location.pathname]);
 
   const handleSignOut = async () => {
     try {
       await signOut();
       toast({
-        title: "See you soon!",
-        description: "You've been signed out successfully.",
+        title: "Successfully signed out",
+        description: "See you next time!",
       });
       navigate('/');
     } catch (error) {
       toast({
-        title: "Oops!",
-        description: "There was an issue signing you out. Please try again.",
+        title: "Error signing out",
+        description: "Please try again.",
         variant: "destructive",
       });
     }
   };
 
   const publicNavItems = [
-    { 
-      to: '/', 
-      label: 'Home', 
-      icon: Home,
-      description: 'Discover Accio'
-    },
-    { 
-      to: '/features', 
-      label: 'Features', 
-      icon: Star,
-      description: 'Explore capabilities'
-    },
-    { 
-      to: '/playground', 
-      label: 'Playground', 
-      icon: Puzzle,
-      description: 'Try interactive demo'
-    },
-    { 
-      to: '/contact', 
-      label: 'Contact', 
-      icon: MessageCircle,
-      description: 'Get help and support'
-    }
+    { to: '/', label: 'Home', icon: Home },
+    { to: '/features', label: 'Features', icon: Star },
+    { to: '/help', label: 'Help', icon: BookOpen },
+    { to: '/contact', label: 'Contact', icon: MessageCircle },
   ];
 
   const authenticatedNavItems = [
-    { 
-      to: '/dashboard', 
-      label: 'Dashboard', 
-      icon: LayoutDashboard,
-      description: 'Your command center'
-    },
-    { 
-      to: '/search', 
-      label: 'Search', 
-      icon: Search,
-      description: 'Find knowledge'
-    },
-    { 
-      to: '/collections', 
-      label: 'Collections', 
-      icon: FolderOpen,
-      description: 'Organized content'
-    },
-    { 
-      to: '/analytics', 
-      label: 'Analytics', 
-      icon: BarChart3,
-      description: 'Track insights'
-    },
-    { 
-      to: '/integrations', 
-      label: 'Integrations', 
-      icon: Zap,
-      description: 'Connect tools'
-    }
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/search', label: 'Search', icon: Search },
+    { to: '/collections', label: 'Collections', icon: FolderOpen },
+    { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   ];
 
-  const navItems = user ? [...publicNavItems.slice(0, 1), ...authenticatedNavItems, ...publicNavItems.slice(1)] : publicNavItems;
+  const navItems = user ? authenticatedNavItems : publicNavItems;
 
   const isActiveRoute = (path: string) => {
     if (path === '/') {
@@ -133,19 +83,14 @@ export const UnifiedNavigation = () => {
     return location.pathname.startsWith(path);
   };
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-
   return (
-    <header className={`sticky top-0 z-50 transition-all duration-200 ${
-      scrolled ? 'bg-background/95 backdrop-blur-md border-b shadow-sm' : 'bg-background border-b'
-    }`} role="banner">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav className="container mx-auto px-4 max-w-7xl" role="navigation" aria-label="Main navigation">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo/Brand */}
+        <div className="flex h-16 items-center justify-between">
           <Link 
             to="/" 
-            className="flex items-center gap-3 font-bold text-xl hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg p-1"
-            aria-label="Accio - Go to homepage"
+            className="flex items-center gap-3 font-bold text-xl hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1"
+            aria-label="Accio homepage"
           >
             <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
               <Brain className="h-5 w-5 text-white" aria-hidden="true" />
@@ -155,142 +100,179 @@ export const UnifiedNavigation = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`
-                  flex items-center gap-2 px-4 py-2 rounded-lg transition-all font-medium text-sm
-                  hover:bg-accent/80 hover:text-accent-foreground
-                  focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                  ${isActiveRoute(item.to) 
-                    ? 'bg-primary text-primary-foreground shadow-md' 
-                    : 'text-muted-foreground hover:text-foreground'
-                  }
-                `}
-                aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                title={item.description}
-              >
-                <item.icon className="h-4 w-4" aria-hidden="true" />
-                {item.label}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className={`
+                    flex items-center gap-2 px-4 py-2 rounded-lg transition-all font-medium text-sm
+                    hover:bg-accent hover:text-accent-foreground
+                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                    ${isActiveRoute(item.to) 
+                      ? 'bg-primary text-primary-foreground shadow-sm' 
+                      : 'text-muted-foreground'
+                    }
+                  `}
+                  aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                >
+                  <Icon className="h-4 w-4" aria-hidden="true" />
+                  {item.label}
+                </Link>
+              );
+            })}
           </div>
 
-          {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center gap-3">
-            <ThemeToggle />
-            
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="hover:bg-accent"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Moon className="h-4 w-4" aria-hidden="true" />
+              )}
+            </Button>
+
             {user ? (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="gap-2 hover:bg-accent/80"
-                  asChild
-                >
-                  <Link to="/account">
-                    <User className="h-4 w-4" />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="gap-2">
+                    <User className="h-4 w-4" aria-hidden="true" />
                     Account
-                  </Link>
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleSignOut}
-                  className="gap-2 hover:bg-destructive/10 hover:text-destructive"
-                >
-                  <LogOut className="h-4 w-4" />
-                  Sign Out
-                </Button>
-              </>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile" className="w-full cursor-pointer">
+                      <User className="h-4 w-4 mr-2" aria-hidden="true" />
+                      Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings" className="w-full cursor-pointer">
+                      <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
+                      Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
+                    <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <>
                 <Button variant="ghost" size="sm" asChild>
                   <Link to="/login">Sign In</Link>
                 </Button>
-                <Button size="sm" className="gap-2 shadow-lg" asChild>
-                  <Link to="/register">
-                    <Sparkles className="h-4 w-4" />
-                    Get Started
-                  </Link>
+                <Button size="sm" className="shadow-sm" asChild>
+                  <Link to="/register">Get Started</Link>
                 </Button>
               </>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center gap-2">
-            <ThemeToggle />
-            
             <Button
               variant="ghost"
               size="sm"
-              onClick={toggleMenu}
-              aria-expanded={isMenuOpen}
-              aria-controls="mobile-menu"
-              aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
             >
-              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4" aria-hidden="true" />
+              ) : (
+                <Moon className="h-4 w-4" aria-hidden="true" />
+              )}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-menu"
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {isMobileMenuOpen ? (
+                <X className="h-5 w-5" aria-hidden="true" />
+              ) : (
+                <Menu className="h-5 w-5" aria-hidden="true" />
+              )}
             </Button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
-        {isMenuOpen && (
+        {isMobileMenuOpen && (
           <div 
             id="mobile-menu"
-            className="md:hidden absolute top-16 left-0 right-0 bg-background border-b shadow-xl z-50"
+            className="md:hidden border-t bg-background shadow-lg"
             role="navigation"
             aria-label="Mobile navigation"
           >
-            <div className="container mx-auto px-4 py-6 space-y-4">
-              {/* Mobile Navigation Links */}
-              {navItems.map((item) => (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`
-                    flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium
-                    hover:bg-accent/80 hover:text-accent-foreground
-                    focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2
-                    ${isActiveRoute(item.to) 
-                      ? 'bg-primary text-primary-foreground shadow-md' 
-                      : 'text-muted-foreground hover:text-foreground'
-                    }
-                  `}
-                  aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                >
-                  <item.icon className="h-5 w-5" aria-hidden="true" />
-                  <div>
-                    <div className="font-medium">{item.label}</div>
-                    <div className="text-xs opacity-70">{item.description}</div>
-                  </div>
-                </Link>
-              ))}
+            <div className="px-4 py-6 space-y-4">
+              <nav className="space-y-2" role="none">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className={`
+                        flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium
+                        hover:bg-accent hover:text-accent-foreground
+                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
+                        ${isActiveRoute(item.to) 
+                          ? 'bg-primary text-primary-foreground shadow-sm' 
+                          : 'text-muted-foreground'
+                        }
+                      `}
+                      aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                    >
+                      <Icon className="h-5 w-5" aria-hidden="true" />
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
 
-              {/* Mobile Auth Buttons */}
               <div className="pt-4 border-t space-y-3">
                 {user ? (
                   <>
                     <Button
-                      className="w-full justify-start gap-3"
                       variant="outline"
+                      className="w-full justify-start gap-3"
                       asChild
                     >
-                      <Link to="/account">
-                        <User className="h-5 w-5" />
-                        Account Settings
+                      <Link to="/profile">
+                        <User className="h-5 w-5" aria-hidden="true" />
+                        Profile
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-3"
+                      asChild
+                    >
+                      <Link to="/settings">
+                        <Settings className="h-5 w-5" aria-hidden="true" />
+                        Settings
                       </Link>
                     </Button>
                     <Button
                       variant="ghost"
                       onClick={handleSignOut}
-                      className="w-full justify-start gap-3 hover:bg-destructive/10 hover:text-destructive"
+                      className="w-full justify-start gap-3 text-destructive hover:bg-destructive/10"
                     >
-                      <LogOut className="h-5 w-5" />
+                      <LogOut className="h-5 w-5" aria-hidden="true" />
                       Sign Out
                     </Button>
                   </>
@@ -304,13 +286,10 @@ export const UnifiedNavigation = () => {
                       <Link to="/login">Sign In</Link>
                     </Button>
                     <Button 
-                      className="w-full gap-2 shadow-lg"
+                      className="w-full shadow-sm"
                       asChild
                     >
-                      <Link to="/register">
-                        <Sparkles className="h-4 w-4" />
-                        Get Started
-                      </Link>
+                      <Link to="/register">Get Started</Link>
                     </Button>
                   </>
                 )}
@@ -322,3 +301,5 @@ export const UnifiedNavigation = () => {
     </header>
   );
 };
+
+export default UnifiedNavigation;
