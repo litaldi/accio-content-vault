@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import MegaMenuNavigation from '@/components/navigation/MegaMenuNavigation';
 import Home from '@/pages/Home';
 import Features from '@/pages/Features';
 import Search from '@/pages/Search';
@@ -21,7 +21,7 @@ function App() {
         <AuthProvider>
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <div className="min-h-screen bg-background font-sans antialiased">
-              <MainNavigation />
+              <MegaMenuNavigation />
               <main className="relative">
                 <Routes>
                   <Route path="/" element={<Home />} />

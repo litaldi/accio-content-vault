@@ -22,7 +22,8 @@ import {
   BellRing,
   MapPin,
   Eye,
-  Edit3
+  Edit3,
+  Users
 } from 'lucide-react';
 
 // Import all feature components
@@ -38,6 +39,8 @@ import { AILearningPathGenerator } from '@/components/features/AILearningPathGen
 import { SmartNotifications } from '@/components/features/SmartNotifications';
 import { AIInsightsWidget } from '@/components/features/AIInsightsWidget';
 import { AIWritingAssistant } from '@/components/features/AIWritingAssistant';
+import { AIKnowledgeGraph } from '@/components/features/AIKnowledgeGraph';
+import { AIStudyBuddy } from '@/components/features/AIStudyBuddy';
 
 const Features: React.FC = () => {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
@@ -139,7 +142,7 @@ const Features: React.FC = () => {
       description: 'Enhance, summarize, expand, and improve your writing with AI',
       icon: Edit3,
       category: 'AI',
-      component: () => React.createElement(require('@/components/features/AIWritingAssistant').AIWritingAssistant),
+      component: AIWritingAssistant,
       highlights: ['Improve writing', 'Summarize text', 'Expand ideas', 'Simplify content']
     },
     {
@@ -148,8 +151,26 @@ const Features: React.FC = () => {
       description: 'Real-time AI-powered insights about your learning patterns',
       icon: Brain,
       category: 'AI',
-      component: () => React.createElement(require('@/components/features/AIInsightsWidget').AIInsightsWidget),
+      component: AIInsightsWidget,
       highlights: ['Pattern detection', 'Smart recommendations', 'Live insights']
+    },
+    {
+      id: 'knowledge-graph',
+      title: 'AI Knowledge Graph',
+      description: 'Visualize connections between your knowledge and skills',
+      icon: MapPin,
+      category: 'AI',
+      component: AIKnowledgeGraph,
+      highlights: ['Interactive visualization', 'Knowledge mapping', 'Skill tracking']
+    },
+    {
+      id: 'study-buddy',
+      title: 'AI Study Buddy',
+      description: 'Collaborative learning with AI-powered insights and social features',
+      icon: Users,
+      category: 'AI',
+      component: AIStudyBuddy,
+      highlights: ['Social learning', 'Study sessions', 'Achievement tracking']
     }
   ];
 
@@ -215,7 +236,7 @@ const Features: React.FC = () => {
                       <Brain className="h-12 w-12 text-primary mx-auto mb-4" />
                       <Typography.H2 className="mb-4">AI-Powered Intelligence</Typography.H2>
                       <Typography.P className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                        Experience the next generation of knowledge management with {aiFeatures.length} AI-driven features 
+                        Experience the next generation of knowledge management with {features.filter(f => f.category === 'AI').length} AI-driven features 
                         that understand your content, learn from your patterns, and enhance your productivity.
                       </Typography.P>
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
@@ -314,7 +335,7 @@ const Features: React.FC = () => {
                       <div className="text-sm text-muted-foreground">Total Features</div>
                     </div>
                     <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">{aiFeatures.length}</div>
+                      <div className="text-3xl font-bold text-primary">{features.filter(f => f.category === 'AI').length}</div>
                       <div className="text-sm text-muted-foreground">AI-Powered</div>
                     </div>
                     <div className="text-center">
