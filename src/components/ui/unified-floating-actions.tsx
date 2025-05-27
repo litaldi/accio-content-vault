@@ -1,204 +1,169 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 import { 
-  ArrowUp, 
   Plus, 
+  Search, 
   Sparkles, 
-  MessageSquare, 
-  Search,
-  HelpCircle,
-  Brain
+  HelpCircle, 
+  ChevronUp,
+  Bookmark,
+  MessageCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
-
-interface FloatingActionButtonProps {
-  icon: React.ElementType;
-  label: string;
-  onClick: () => void;
-  className?: string;
-  variant?: 'default' | 'secondary' | 'outline';
-  primary?: boolean;
-}
-
-const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
-  icon: Icon,
-  label,
-  onClick,
-  className,
-  variant = 'outline',
-  primary = false
-}) => (
-  <Button
-    onClick={onClick}
-    size="icon"
-    variant={variant}
-    className={cn(
-      "h-12 w-12 rounded-full shadow-lg transition-all duration-300",
-      "hover:scale-110 active:scale-95",
-      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
-      primary ? "bg-gradient-to-r from-primary to-purple-600 text-white hover:from-primary/90 hover:to-purple-600/90" 
-               : "bg-background/95 backdrop-blur-sm border-2 hover:bg-accent",
-      className
-    )}
-    aria-label={label}
-    title={label}
-  >
-    <Icon className="h-5 w-5" aria-hidden="true" />
-  </Button>
-);
 
 export const UnifiedFloatingActions: React.FC = () => {
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+  const [isExpanded, setIsExpanded] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 800);
-    };
+  // Don't show on certain pages to avoid clutter
+  const hiddenPaths = ['/login', '/register', '/save'];
+  const isHidden = hiddenPaths.some(path => location.pathname.startsWith(path));
 
-    const throttledHandleScroll = throttle(handleScroll, 100);
-    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', throttledHandleScroll);
-  }, []);
+  if (isHidden) return null;
 
-  function throttle(func: Function, delay: number) {
-    let timeoutId: NodeJS.Timeout;
-    let lastExecTime = 0;
-    return function (...args: any[]) {
-      const currentTime = Date.now();
-      if (currentTime - lastExecTime > delay) {
-        func(...args);
-        lastExecTime = currentTime;
-      } else {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          func(...args);
-          lastExecTime = Date.now();
-        }, delay - (currentTime - lastExecTime));
-      }
-    };
-  }
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleQuickCapture = () => {
+  const handleQuickSave = () => {
     if (user) {
       navigate('/save');
       toast({
-        title: "Ready to Capture Knowledge",
-        description: "Save anything and let AI organize it for you."
+        title: "Quick Save",
+        description: "Ready to capture your knowledge!",
       });
     } else {
       navigate('/register');
       toast({
-        title: "Transform Your Knowledge Today",
-        description: "Join thousands building their knowledge empires."
+        title: "Sign up to save content",
+        description: "Create your account to start capturing knowledge.",
       });
     }
+    setIsExpanded(false);
+  };
+
+  const handleQuickSearch = () => {
+    if (user) {
+      navigate('/search');
+    } else {
+      navigate('/features');
+      toast({
+        title: "Powerful Search",
+        description: "Sign up to unlock AI-powered search capabilities.",
+      });
+    }
+    setIsExpanded(false);
   };
 
   const handleAIAssistant = () => {
-    navigate(user ? '/ai-features' : '/features');
-    toast({
-      title: user ? "AI Assistant Ready" : "Discover AI Power",
-      description: user ? "Your intelligent knowledge companion awaits." : "See how AI transforms knowledge management."
-    });
-  };
-
-  const handleSmartSearch = () => {
-    navigate(user ? '/search' : '/features');
-    if (!user) {
+    if (user) {
+      navigate('/ai-features');
+    } else {
+      navigate('/features');
       toast({
-        title: "Powerful Search Awaits",
-        description: "Find anything instantly with semantic search."
+        title: "AI Assistant",
+        description: "Discover how AI can enhance your knowledge management.",
       });
     }
+    setIsExpanded(false);
   };
 
-  const handleSupport = () => {
-    window.open('mailto:support@accio.app?subject=I need help with Accio', '_blank');
+  const handleHelp = () => {
+    // This could open a help modal or navigate to help
     toast({
-      title: "Help is on the way",
-      description: "We'll respond within 24 hours."
+      title: "Help & Support",
+      description: "Contact us at support@accio.app for assistance.",
     });
+    setIsExpanded(false);
   };
 
   const floatingActions = [
     {
       icon: Plus,
-      label: user ? "Capture Knowledge Instantly" : "Start Your Knowledge Journey",
-      onClick: handleQuickCapture,
-      variant: 'default' as const,
-      className: "bg-primary text-primary-foreground hover:bg-primary/90"
-    },
-    {
-      icon: Brain,
-      label: user ? "AI Knowledge Assistant" : "Discover AI Features",
-      onClick: handleAIAssistant,
-      variant: 'outline' as const
+      label: user ? "Quick Save" : "Get Started",
+      action: handleQuickSave,
+      primary: true,
+      description: user ? "Save content instantly" : "Start your knowledge journey"
     },
     {
       icon: Search,
-      label: user ? "Smart Knowledge Search" : "See Search Power",
-      onClick: handleSmartSearch,
-      variant: 'outline' as const
+      label: user ? "Quick Search" : "Explore Search",
+      action: handleQuickSearch,
+      description: user ? "Find your content fast" : "See search capabilities"
+    },
+    {
+      icon: Sparkles,
+      label: user ? "AI Assistant" : "AI Features",
+      action: handleAIAssistant,
+      description: user ? "Get AI help" : "Discover AI features"
     },
     {
       icon: HelpCircle,
-      label: "Get Expert Support",
-      onClick: handleSupport,
-      variant: 'outline' as const
+      label: "Help",
+      action: handleHelp,
+      description: "Get support and guidance"
     }
   ];
 
-  if (!showBackToTop && !isExpanded) return null;
-
   return (
-    <div 
-      className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3"
-      role="region"
-      aria-label="Quick actions"
-    >
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+      {/* Expanded Actions */}
       {isExpanded && (
-        <div className="flex flex-col gap-3 animate-fade-in">
-          {floatingActions.map((action, index) => (
-            <FloatingActionButton
-              key={index}
-              icon={action.icon}
-              label={action.label}
-              onClick={action.onClick}
-              variant={action.variant}
-              className={action.className}
-            />
+        <div className="flex flex-col gap-2 animate-fade-in">
+          {floatingActions.slice(1).map((action, index) => (
+            <div key={index} className="group flex items-center gap-3">
+              <div className="hidden group-hover:block bg-popover text-popover-foreground px-3 py-2 rounded-lg shadow-lg text-sm font-medium animate-fade-in whitespace-nowrap">
+                {action.description}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={action.action}
+                className="w-12 h-12 rounded-full shadow-lg bg-background border-2 hover:scale-110 transition-all duration-200"
+                aria-label={action.label}
+                title={action.label}
+              >
+                <action.icon className="h-5 w-5" />
+              </Button>
+            </div>
           ))}
         </div>
       )}
 
-      <div className="flex gap-3">
-        {showBackToTop && (
-          <FloatingActionButton
-            icon={ArrowUp}
-            label="Back to Top"
-            onClick={scrollToTop}
-          />
+      {/* Toggle Button */}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={cn(
+          "w-12 h-12 rounded-full shadow-lg bg-muted/80 backdrop-blur border-2",
+          "hover:scale-110 transition-all duration-200",
+          isExpanded && "rotate-180"
         )}
-        
-        <FloatingActionButton
-          icon={isExpanded ? MessageSquare : Sparkles}
-          label={isExpanded ? "Close Quick Actions" : "Quick Actions"}
-          onClick={() => setIsExpanded(!isExpanded)}
-          primary={true}
-        />
-      </div>
+        aria-label={isExpanded ? "Collapse quick actions" : "Expand quick actions"}
+        title={isExpanded ? "Collapse quick actions" : "Show quick actions"}
+      >
+        <ChevronUp className="h-5 w-5" />
+      </Button>
+
+      {/* Primary Action Button */}
+      <Button
+        onClick={floatingActions[0].action}
+        className={cn(
+          "w-14 h-14 rounded-full shadow-xl hover:shadow-2xl",
+          "bg-gradient-to-r from-primary via-blue-600 to-purple-600",
+          "hover:from-primary/90 hover:via-blue-600/90 hover:to-purple-600/90",
+          "hover:scale-110 transition-all duration-200",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+        )}
+        aria-label={floatingActions[0].label}
+        title={floatingActions[0].description}
+      >
+        <floatingActions[0].icon className="h-6 w-6 text-white" />
+      </Button>
     </div>
   );
 };

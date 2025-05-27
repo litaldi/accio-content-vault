@@ -6,11 +6,12 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import StreamlinedMainNavigation from '@/components/navigation/StreamlinedMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
 import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import ErrorBoundary from '@/components/ui/error-boundary';
+import { Toaster } from '@/components/ui/toaster';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import SavedContent from '@/pages/SavedContent';
@@ -36,8 +37,8 @@ function App() {
                 <KeyboardShortcutsProvider>
                   <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
                     <EnhancedAccessibility />
-                    <MainNavigation />
-                    <main className="flex-1 relative" role="main">
+                    <StreamlinedMainNavigation />
+                    <main className="flex-1 relative" role="main" id="main-content">
                       <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/features" element={<Features />} />
@@ -59,6 +60,7 @@ function App() {
                     <EnhancedQuickCaptureWidget />
                     <AIContentAssistant />
                     <UnifiedFloatingActions />
+                    <Toaster />
                   </div>
                 </KeyboardShortcutsProvider>
               </AccessibilityProvider>
