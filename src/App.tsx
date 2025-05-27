@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -20,12 +19,13 @@ import Features from '@/pages/Features';
 import Search from '@/pages/Search';
 import SaveContent from '@/pages/SaveContent';
 import Settings from '@/pages/EnhancedSettings';
-import Pricing from '@/pages/Pricing';
+import Pricing from '@/pages/EnhancedPricing';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import AIFeatures from '@/pages/AIFeatures';
 import { EnhancedQuickCaptureWidget } from '@/components/QuickCapture/EnhancedQuickCaptureWidget';
 import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
+import EnhancedAccessibilityHelper from '@/components/accessibility/EnhancedAccessibilityHelper';
 
 function App() {
   return (
@@ -45,7 +45,7 @@ function App() {
                           <Route path="/" element={<Home />} />
                           <Route path="/features" element={<Features />} />
                           <Route path="/ai-features" element={<AIFeatures />} />
-                          <Route path="/pricing" element={<Pricing />} />
+                          <Route path="/pricing" element={<EnhancedPricing />} />
                           <Route path="/dashboard" element={<Dashboard />} />
                           <Route path="/search" element={<Search />} />
                           <Route path="/saved" element={<SavedContent />} />
@@ -62,6 +62,7 @@ function App() {
                       <EnhancedQuickCaptureWidget />
                       <AIContentAssistant />
                       <UnifiedFloatingActions />
+                      <EnhancedAccessibilityHelper />
                       <Toaster />
                     </div>
                   </AccessibilityAnnouncer>
