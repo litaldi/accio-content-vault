@@ -1,123 +1,84 @@
 
-import { useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-interface UseKeyboardShortcutsProps {
-  onOpenQuickCapture?: () => void;
-  onOpenShortcuts?: () => void;
-  onToggleSidebar?: () => void;
-  onFocusSearch?: () => void;
+interface KeyboardShortcut {
+  key: string;
+  ctrlKey?: boolean;
+  metaKey?: boolean;
+  shiftKey?: boolean;
+  action: () => void;
+  description: string;
 }
 
-export const useKeyboardShortcuts = ({
-  onOpenQuickCapture,
-  onOpenShortcuts,
-  onToggleSidebar,
-  onFocusSearch,
-}: UseKeyboardShortcutsProps = {}) => {
+export const useKeyboardShortcuts = () => {
   const navigate = useNavigate();
 
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    // Ignore shortcuts when typing in inputs
-    if (e.target instanceof HTMLInputElement || 
-        e.target instanceof HTMLTextAreaElement || 
-        e.target instanceof HTMLSelectElement ||
-        (e.target as HTMLElement).contentEditable === 'true') {
-      return;
-    }
-
-    // Handle single key shortcuts
-    switch (e.key) {
-      case '?':
-        e.preventDefault();
-        onOpenShortcuts?.();
-        break;
-        
-      case '/':
-        e.preventDefault();
-        onFocusSearch?.();
-        break;
-        
-      case 'n':
-        e.preventDefault();
-        onOpenQuickCapture?.();
-        break;
-        
-      case 'r':
-        if (!e.ctrlKey && !e.metaKey) {
-          e.preventDefault();
-          window.location.reload();
-        }
-        break;
-    }
-
-    // Handle Ctrl/Cmd combinations
-    if (e.ctrlKey || e.metaKey) {
-      switch (e.key) {
-        case '/':
-          e.preventDefault();
-          onToggleSidebar?.();
-          break;
-          
-        case 'k':
-          e.preventDefault();
-          // Command palette would go here
-          console.log('Command palette shortcut triggered');
-          break;
-      }
-      
-      // Handle Ctrl+Shift combinations
-      if (e.shiftKey) {
-        switch (e.key) {
-          case 'C':
-            e.preventDefault();
-            onOpenQuickCapture?.();
-            break;
-        }
-      }
-    }
-
-    // Handle 'g' key sequences for navigation
-    if (e.key === 'g' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
-      e.preventDefault();
-      
-      // Set up a temporary listener for the next key
-      const handleNextKey = (nextE: KeyboardEvent) => {
-        nextE.preventDefault();
-        document.removeEventListener('keydown', handleNextKey);
-        
-        switch (nextE.key) {
-          case 'd':
-            navigate('/dashboard');
-            break;
-          case 's':
-            navigate('/search');
-            break;
-          case 'c':
-            navigate('/collections');
-            break;
-          case 'a':
-            navigate('/analytics');
-            break;
-          case 'h':
-            navigate('/');
-            break;
-        }
-      };
-      
-      document.addEventListener('keydown', handleNextKey);
-      
-      // Clean up if no second key is pressed within 2 seconds
-      setTimeout(() => {
-        document.removeEventListener('keydown', handleNextKey);
-      }, 2000);
-    }
-  }, [navigate, onOpenQuickCapture, onOpenShortcuts, onToggleSidebar, onFocusSearch]);
+  const shortcuts: KeyboardShortcut[] = [
+    {
+      key: 'k',
+      ctrlKey: true,
+      action: () => navigate('/search'),
+      description: 'Open search',
+    },
+    {
+      key: 'n',
+      ctrlKey: true,
+      action: () => navigate('/save'),
+      description: 'Add new content',
+    },
+    {
+      key: 'd',
+      ctrlKey: true,
+      action: () => navigate('/dashboard'),
+      description: 'Go to dashboard',
+    },
+    {
+      key: 's',
+      ctrlKey: true,
+      action: () => navigate('/saved'),
+      description: 'View saved content',
+    },
+    {
+      key: 'j',
+      ctrlKey: true,
+      action: () => navigate('/ai-features'),
+      description: 'Open AI assistant',
+    },
+  ];
 
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Don't trigger shortcuts when user is typing in input fields
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement ||
+        (event.target as HTMLElement)?.contentEditable === 'true'
+      ) {
+        return;
+      }
+
+      const shortcut = shortcuts.find(
+        (s) =>
+          s.key.toLowerCase() === event.key.toLowerCase() &&
+          !!s.ctrlKey === (event.ctrlKey || event.metaKey) &&
+          !!s.shiftKey === event.shiftKey
+      );
+
+      if (shortcut) {
+        event.preventDefault();
+        shortcut.action();
+      }
+    };
+
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [handleKeyDown]);
+  }, [navigate]);
+
+  return { shortcuts };
 };
 
-export default useKeyboardShortcuts;
+export const KeyboardShortcutsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  useKeyboardShortcuts();
+  return <>{children}</>;
+};

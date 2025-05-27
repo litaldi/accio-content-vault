@@ -21,14 +21,15 @@ import {
   Bookmark,
   BarChart3,
   User,
-  Settings,
   LogOut,
   LogIn,
   Sparkles,
   Sun,
   Moon,
   Menu,
-  X
+  X,
+  Pricing,
+  Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -64,7 +65,7 @@ const EnhancedMainNavigation: React.FC = () => {
   const exploreLinks = [
     { to: '/', label: 'Home', icon: Home, description: 'Welcome to Accio' },
     { to: '/features', label: 'Discover', icon: Compass, description: 'Explore features' },
-    { to: '/pricing', label: 'Pricing', icon: BarChart3, description: 'View plans' },
+    { to: '/pricing', label: 'Pricing', icon: Zap, description: 'View plans' },
     { to: '/collections', label: 'Collections', icon: FolderOpen, description: 'Browse collections' }
   ];
 
@@ -75,8 +76,7 @@ const EnhancedMainNavigation: React.FC = () => {
   ] : [];
 
   const accountLinks = user ? [
-    { to: '/profile', label: 'Profile', icon: User, description: 'Manage profile' },
-    { to: '/settings', label: 'Settings', icon: Settings, description: 'App preferences' }
+    { to: '/profile', label: 'Profile', icon: User, description: 'Manage profile' }
   ] : [];
 
   const NavGroup = ({ title, links, mobile = false }: { 
@@ -146,12 +146,12 @@ const EnhancedMainNavigation: React.FC = () => {
               <NavigationMenuList>
                 {/* Explore Group */}
                 <NavigationMenuItem>
-                  <NavigationMenuTrigger className="gap-2">
+                  <NavigationMenuTrigger className="gap-2 bg-transparent hover:bg-accent data-[state=open]:bg-accent">
                     <Compass className="h-4 w-4" />
                     Explore
                   </NavigationMenuTrigger>
                   <NavigationMenuContent>
-                    <div className="grid gap-3 p-6 w-64">
+                    <div className="grid gap-3 p-6 w-64 bg-popover">
                       {exploreLinks.map((link) => (
                         <Link
                           key={link.to}
@@ -174,12 +174,12 @@ const EnhancedMainNavigation: React.FC = () => {
                 {/* Workspace Group - Only if user is logged in */}
                 {user && workspaceLinks.length > 0 && (
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="gap-2">
+                    <NavigationMenuTrigger className="gap-2 bg-transparent hover:bg-accent data-[state=open]:bg-accent">
                       <LayoutDashboard className="h-4 w-4" />
-                      Workspace
+                      Your Workspace
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="grid gap-3 p-6 w-64">
+                      <div className="grid gap-3 p-6 w-64 bg-popover">
                         {workspaceLinks.map((link) => (
                           <Link
                             key={link.to}
@@ -203,12 +203,12 @@ const EnhancedMainNavigation: React.FC = () => {
                 {/* Account Group - Only if user is logged in */}
                 {user && accountLinks.length > 0 && (
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="gap-2">
+                    <NavigationMenuTrigger className="gap-2 bg-transparent hover:bg-accent data-[state=open]:bg-accent">
                       <User className="h-4 w-4" />
                       Account
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
-                      <div className="grid gap-3 p-6 w-64">
+                      <div className="grid gap-3 p-6 w-64 bg-popover">
                         {accountLinks.map((link) => (
                           <Link
                             key={link.to}
