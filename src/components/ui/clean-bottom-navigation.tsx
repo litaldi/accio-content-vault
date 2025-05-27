@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Search, Home, Sparkles } from 'lucide-react';
+import { Plus, Search, Sparkles, Home } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
@@ -40,7 +40,7 @@ export const CleanBottomNavigation: React.FC = () => {
 
   return (
     <nav 
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-gray-100 px-4 py-3 md:hidden"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-t border-border/50 px-4 py-2 md:hidden"
       role="navigation"
       aria-label="Mobile bottom navigation"
     >
@@ -56,10 +56,10 @@ export const CleanBottomNavigation: React.FC = () => {
               variant={item.primary ? 'default' : 'ghost'}
               size="sm"
               className={cn(
-                'flex flex-col items-center gap-1 h-auto py-3 px-4 min-w-0 min-h-[48px] rounded-2xl',
+                'flex flex-col items-center gap-1 h-auto py-2 px-3 min-w-0 min-h-[44px]',
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-                isActive && !item.primary && 'text-primary bg-gray-50',
-                item.primary && 'bg-primary text-white hover:bg-primary/90 shadow-sm'
+                isActive && !item.primary && 'text-primary bg-primary/10',
+                item.primary && 'bg-primary text-primary-foreground hover:bg-primary/90'
               )}
             >
               <Link 

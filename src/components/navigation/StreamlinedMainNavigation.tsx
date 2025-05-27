@@ -17,11 +17,13 @@ import {
   Brain,
   LogOut,
   LogIn,
+  Sparkles,
+  Sun,
+  Moon,
+  Zap,
   Plus,
   CreditCard,
-  User,
-  Sparkles,
-  Zap
+  User
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -35,6 +37,7 @@ interface NavItem {
 
 const StreamlinedMainNavigation: React.FC = () => {
   const { user, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -99,31 +102,7 @@ const StreamlinedMainNavigation: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
-  const handleQuickCapture = () => {
-    if (user) {
-      navigate('/save');
-      toast({
-        title: "Quick Capture",
-        description: "Save anything and let AI organize it for you.",
-      });
-    } else {
-      navigate('/register');
-    }
-  };
-
-  const handleAIAssistant = () => {
-    if (user) {
-      navigate('/ai-features');
-      toast({
-        title: "AI Assistant",
-        description: "Explore AI-powered features to enhance your workflow.",
-      });
-    } else {
-      navigate('/features');
-    }
-  };
-
-  // Clean navigation - clear hierarchy
+  // Streamlined navigation - clear hierarchy
   const publicNavItems: NavItem[] = [
     { to: '/', label: 'Home', icon: Home, exactMatch: true },
     { to: '/features', label: 'Features', icon: Zap },
@@ -138,45 +117,57 @@ const StreamlinedMainNavigation: React.FC = () => {
 
   const currentNavItems = user ? [...publicNavItems.slice(0, 1), ...authenticatedNavItems] : publicNavItems;
 
+  const handleQuickStart = () => {
+    if (user) {
+      navigate('/save');
+      toast({
+        title: "Ready to capture knowledge",
+        description: "Save anything and let AI organize it for you.",
+      });
+    } else {
+      navigate('/register');
+    }
+  };
+
   return (
     <>
       <header 
         className={cn(
-          "sticky top-0 z-50 w-full bg-white border-b border-gray-100",
-          scrolled && "shadow-sm"
+          "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+          scrolled && "shadow-lg"
         )}
         role="banner"
       >
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
-            {/* Logo - Lemonade style */}
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            {/* Logo */}
             <Link 
               to="/" 
-              className="flex items-center gap-3 font-bold text-2xl hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-2xl px-3 py-2"
+              className="flex items-center gap-3 font-bold text-xl hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg px-2 py-1"
               onClick={() => setIsMobileMenuOpen(false)}
               aria-label="Accio - Your Knowledge Sanctuary - Go to homepage"
             >
-              <div className="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center shadow-sm">
-                <Brain className="h-7 w-7 text-white" aria-hidden="true" />
+              <div className="w-10 h-10 bg-gradient-to-br from-primary via-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+                <Brain className="h-6 w-6 text-white" aria-hidden="true" />
               </div>
-              <span className="text-primary font-bold">
+              <span className="bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent font-extrabold">
                 Accio
               </span>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
+            <nav className="hidden lg:flex items-center space-x-2" role="navigation" aria-label="Main navigation">
               {currentNavItems.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
                   className={cn(
-                    "flex items-center gap-2 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200",
-                    "hover:bg-gray-50 hover:text-primary",
+                    "flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
+                    "hover:bg-accent hover:text-accent-foreground hover:scale-105",
                     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
                     isActiveRoute(item.to, item.exactMatch) 
-                      ? "bg-primary text-white shadow-sm" 
-                      : "text-gray-600 hover:text-primary"
+                      ? "bg-primary text-primary-foreground shadow-md" 
+                      : "text-muted-foreground hover:text-foreground"
                   )}
                   aria-current={isActiveRoute(item.to, item.exactMatch) ? 'page' : undefined}
                 >
@@ -186,39 +177,26 @@ const StreamlinedMainNavigation: React.FC = () => {
               ))}
             </nav>
 
-            {/* Desktop Actions - Clean header placement */}
+            {/* Desktop Actions */}
             <div className="hidden lg:flex items-center gap-3">
-              {/* Quick Actions in Header */}
+              {/* Quick Actions */}
               <div className="flex items-center gap-2">
                 <AccessibilityButton variant="header" />
                 
-                {user && (
-                  <>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleQuickCapture}
-                      className="gap-2 rounded-2xl"
-                      title="Quick Capture - Save content instantly"
-                      aria-label="Quick Capture - Save content instantly"
-                    >
-                      <Plus className="h-4 w-4" />
-                      <span className="hidden xl:inline">Quick Capture</span>
-                    </Button>
-                    
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={handleAIAssistant}
-                      className="gap-2 rounded-2xl"
-                      title="AI Assistant - Explore AI features"
-                      aria-label="AI Assistant - Explore AI features"
-                    >
-                      <Sparkles className="h-4 w-4" />
-                      <span className="hidden xl:inline">AI Assistant</span>
-                    </Button>
-                  </>
-                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  className="gap-2"
+                  aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                  title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+                >
+                  {theme === 'dark' ? (
+                    <Sun className="h-4 w-4" aria-hidden="true" />
+                  ) : (
+                    <Moon className="h-4 w-4" aria-hidden="true" />
+                  )}
+                </Button>
               </div>
 
               {/* Auth Actions */}
@@ -227,8 +205,20 @@ const StreamlinedMainNavigation: React.FC = () => {
                   <Button
                     variant="ghost"
                     size="sm"
+                    onClick={handleQuickStart}
+                    className="gap-2"
+                    title="Quick capture content"
+                    aria-label="Quick capture content"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span className="hidden xl:inline">Quick Save</span>
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
                     asChild
-                    className="gap-2 rounded-2xl"
+                    className="gap-2"
                     title="Profile and settings"
                   >
                     <Link to="/settings">
@@ -241,7 +231,7 @@ const StreamlinedMainNavigation: React.FC = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleSignOut}
-                    className="gap-2 rounded-2xl"
+                    className="gap-2"
                   >
                     <LogOut className="h-4 w-4" />
                     <span className="hidden xl:inline">Sign Out</span>
@@ -249,7 +239,7 @@ const StreamlinedMainNavigation: React.FC = () => {
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
-                  <Button variant="ghost" size="sm" asChild className="rounded-2xl">
+                  <Button variant="ghost" size="sm" asChild>
                     <Link to="/login" className="gap-2">
                       <LogIn className="h-4 w-4" />
                       Sign In
@@ -257,11 +247,11 @@ const StreamlinedMainNavigation: React.FC = () => {
                   </Button>
                   <Button 
                     size="sm" 
-                    onClick={() => navigate('/register')}
-                    className="gap-2 rounded-2xl shadow-sm"
+                    onClick={handleQuickStart}
+                    className="gap-2 bg-gradient-to-r from-primary via-blue-600 to-purple-600 hover:from-primary/90 hover:via-blue-600/90 hover:to-purple-600/90 shadow-lg hover:shadow-xl transition-all"
                   >
                     <Sparkles className="h-4 w-4" />
-                    Get Started
+                    Start Now
                   </Button>
                 </div>
               )}
@@ -270,6 +260,19 @@ const StreamlinedMainNavigation: React.FC = () => {
             {/* Mobile Controls */}
             <div className="lg:hidden flex items-center gap-2">
               <AccessibilityButton variant="header" />
+              
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              >
+                {theme === 'dark' ? (
+                  <Sun className="h-4 w-4" aria-hidden="true" />
+                ) : (
+                  <Moon className="h-4 w-4" aria-hidden="true" />
+                )}
+              </Button>
 
               <Button
                 variant="ghost"
@@ -278,7 +281,6 @@ const StreamlinedMainNavigation: React.FC = () => {
                 aria-expanded={isMobileMenuOpen}
                 aria-controls="mobile-menu"
                 aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-                className="rounded-2xl"
               >
                 {isMobileMenuOpen ? (
                   <X className="h-5 w-5" aria-hidden="true" />
@@ -294,11 +296,11 @@ const StreamlinedMainNavigation: React.FC = () => {
         {isMobileMenuOpen && (
           <div 
             id="mobile-menu"
-            className="lg:hidden border-t border-gray-100 bg-white shadow-sm animate-gentle-fade-in"
+            className="lg:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 shadow-xl animate-fade-in"
             role="menu"
             aria-label="Mobile navigation menu"
           >
-            <div className="container mx-auto px-6 py-6 space-y-6">
+            <div className="container mx-auto px-4 py-6 space-y-6">
               {/* Main Navigation */}
               <div>
                 <nav className="space-y-2" role="none">
@@ -308,12 +310,12 @@ const StreamlinedMainNavigation: React.FC = () => {
                       to={item.to}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
-                        "flex items-center gap-3 px-4 py-4 rounded-2xl transition-all font-medium text-base",
-                        "hover:bg-gray-50 hover:text-primary",
+                        "flex items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium text-base",
+                        "hover:bg-accent hover:text-accent-foreground hover:scale-105",
                         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
                         isActiveRoute(item.to, item.exactMatch) 
-                          ? "bg-primary text-white shadow-sm" 
-                          : "text-gray-700 hover:bg-gray-50"
+                          ? "bg-primary text-primary-foreground shadow-lg" 
+                          : "text-foreground hover:bg-muted"
                       )}
                       aria-current={isActiveRoute(item.to, item.exactMatch) ? 'page' : undefined}
                       role="menuitem"
@@ -325,35 +327,21 @@ const StreamlinedMainNavigation: React.FC = () => {
                 </nav>
               </div>
 
-              {/* Mobile Quick Actions */}
-              {user && (
-                <div className="pt-4 border-t border-gray-100 space-y-3">
-                  <Button
-                    variant="outline"
-                    onClick={handleQuickCapture}
-                    className="w-full justify-start gap-3 h-14 rounded-2xl"
-                  >
-                    <Plus className="h-5 w-5" />
-                    Quick Capture
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={handleAIAssistant}
-                    className="w-full justify-start gap-3 h-14 rounded-2xl"
-                  >
-                    <Sparkles className="h-5 w-5" />
-                    AI Assistant
-                  </Button>
-                </div>
-              )}
-
               {/* Mobile Auth Actions */}
-              <div className="pt-4 border-t border-gray-100 space-y-3">
+              <div className="pt-4 border-t space-y-3">
                 {user ? (
                   <>
+                    <Button
+                      variant="outline"
+                      onClick={handleQuickStart}
+                      className="w-full justify-start gap-3 h-12"
+                    >
+                      <Plus className="h-5 w-5" />
+                      Quick Save Content
+                    </Button>
                     <Button 
                       variant="ghost" 
-                      className="w-full justify-start gap-3 h-14 rounded-2xl"
+                      className="w-full justify-start gap-3 h-12"
                       asChild
                     >
                       <Link to="/settings" onClick={() => setIsMobileMenuOpen(false)}>
@@ -364,7 +352,7 @@ const StreamlinedMainNavigation: React.FC = () => {
                     <Button
                       variant="ghost"
                       onClick={handleSignOut}
-                      className="w-full justify-start gap-3 h-14 rounded-2xl hover:bg-red-50 hover:text-red-600"
+                      className="w-full justify-start gap-3 h-12 hover:bg-destructive/10 hover:text-destructive"
                     >
                       <LogOut className="h-5 w-5" />
                       Sign Out
@@ -374,7 +362,7 @@ const StreamlinedMainNavigation: React.FC = () => {
                   <>
                     <Button 
                       variant="outline" 
-                      className="w-full justify-start gap-3 h-14 rounded-2xl"
+                      className="w-full justify-start gap-3 h-12"
                       asChild
                     >
                       <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
@@ -385,12 +373,12 @@ const StreamlinedMainNavigation: React.FC = () => {
                     <Button 
                       onClick={() => {
                         setIsMobileMenuOpen(false);
-                        navigate('/register');
+                        handleQuickStart();
                       }}
-                      className="w-full justify-start gap-3 h-14 rounded-2xl shadow-sm"
+                      className="w-full justify-start gap-3 h-12 bg-gradient-to-r from-primary via-blue-600 to-purple-600 hover:from-primary/90 hover:via-blue-600/90 hover:to-purple-600/90 shadow-lg"
                     >
                       <Sparkles className="h-5 w-5" />
-                      Get Started - It's Free
+                      Start Now - It's Free
                     </Button>
                   </>
                 )}
