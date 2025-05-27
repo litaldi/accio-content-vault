@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -7,14 +6,13 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Brain, LogIn, Github, Mail, Lock, Info, Copy, Eye, EyeOff, User, Shield, Sparkles } from 'lucide-react';
+import { Brain, LogIn, Eye, EyeOff, Sparkles, UserPlus, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
 import { DemoAccountSection } from '@/components/auth/DemoAccountSection';
 
 const Login = () => {
-  const [activeView, setActiveView] = useState<'initial' | 'login' | 'signup'>('initial');
+  const [activeView, setActiveView] = useState<'welcome' | 'login' | 'signup'>('welcome');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -36,97 +34,106 @@ const Login = () => {
     }, 1500);
   };
 
-  const resetToInitial = () => {
-    setActiveView('initial');
+  const resetToWelcome = () => {
+    setActiveView('welcome');
     setEmail('');
     setPassword('');
     setShowPassword(false);
   };
 
-  if (activeView === 'initial') {
+  // Welcome/Landing View
+  if (activeView === 'welcome') {
     return (
       <>
         <Helmet>
-          <title>Welcome - Accio Knowledge Management</title>
-          <meta name="description" content="Sign in to your Accio account or create a new one to start building your knowledge empire." />
+          <title>Welcome to Accio - Transform Knowledge Into Power</title>
+          <meta name="description" content="Join thousands of knowledge builders using Accio to capture, organize, and discover insights. Start your free account today." />
         </Helmet>
 
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background py-12 px-4 sm:px-6 lg:px-8">
-          <div className="w-full max-w-lg space-y-8">
-            {/* Welcome Header */}
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/10 to-background py-12 px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-lg space-y-8 animate-fade-in">
+            {/* Brand Header */}
             <div className="text-center space-y-6">
               <div className="flex justify-center">
                 <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-xl animate-pulse">
                   <Brain className="h-8 w-8 text-white" />
                 </div>
               </div>
-              <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              <div className="space-y-3">
+                <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
                   Welcome to Accio
                 </h1>
-                <p className="text-lg text-muted-foreground">
-                  Your intelligent knowledge management platform
+                <p className="text-xl text-muted-foreground leading-relaxed">
+                  Transform scattered information into organized intelligence
                 </p>
               </div>
             </div>
 
-            {/* Action Cards */}
+            {/* Primary Action Cards */}
             <div className="space-y-4">
-              <Card className="border-2 border-dashed border-primary/20 hover:border-primary/40 transition-all duration-300 cursor-pointer group" 
+              {/* Create Account Card */}
+              <Card className="border-2 border-dashed border-primary/30 hover:border-primary/50 transition-all duration-300 cursor-pointer group transform hover:scale-[1.02] hover:shadow-xl" 
                     onClick={() => setActiveView('signup')}>
-                <CardHeader className="text-center pb-4">
-                  <div className="flex justify-center mb-3">
-                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                      <Sparkles className="h-6 w-6 text-primary" />
+                <CardContent className="p-8">
+                  <div className="text-center space-y-4">
+                    <div className="flex justify-center">
+                      <div className="w-14 h-14 bg-gradient-to-r from-primary to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
+                        <Sparkles className="h-7 w-7 text-white" />
+                      </div>
                     </div>
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-bold">Start New Account</h3>
+                      <p className="text-muted-foreground text-lg">
+                        Begin your knowledge journey with a free account
+                      </p>
+                    </div>
+                    <Button size="lg" className="w-full group-hover:shadow-lg transition-all">
+                      Start Your Journey
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
                   </div>
-                  <CardTitle className="text-xl">Start New Account</CardTitle>
-                  <CardDescription className="text-base">
-                    Create your free account and begin building your knowledge empire
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full" size="lg">
-                    Create Your Free Account
-                  </Button>
                 </CardContent>
               </Card>
 
-              <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer group" 
+              {/* Existing User Card */}
+              <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-[1.02]" 
                     onClick={() => setActiveView('login')}>
-                <CardHeader className="text-center pb-4">
-                  <div className="flex justify-center mb-3">
-                    <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center group-hover:bg-muted/80 transition-colors">
-                      <LogIn className="h-6 w-6 text-muted-foreground" />
+                <CardContent className="p-8">
+                  <div className="text-center space-y-4">
+                    <div className="flex justify-center">
+                      <div className="w-14 h-14 bg-muted/50 rounded-xl flex items-center justify-center group-hover:bg-muted/70 transition-colors">
+                        <LogIn className="h-7 w-7 text-muted-foreground" />
+                      </div>
                     </div>
+                    <div className="space-y-2">
+                      <h3 className="text-2xl font-bold">Log In with Existing Account</h3>
+                      <p className="text-muted-foreground text-lg">
+                        Welcome back! Continue building your knowledge empire
+                      </p>
+                    </div>
+                    <Button variant="outline" size="lg" className="w-full border-2 group-hover:border-primary/50 transition-all">
+                      Continue Your Journey
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Button>
                   </div>
-                  <CardTitle className="text-xl">Log In with Existing Account</CardTitle>
-                  <CardDescription className="text-base">
-                    Welcome back! Continue building your knowledge collection
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full" size="lg">
-                    Sign In to Your Account
-                  </Button>
                 </CardContent>
               </Card>
             </div>
 
             {/* Trust Indicators */}
-            <div className="text-center space-y-4">
-              <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground">
+            <div className="text-center space-y-4 pt-4">
+              <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-green-500" />
-                  <span>Bank-level security</span>
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                  <span>50K+ users trust us</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-blue-500" />
-                  <span>50K+ users trust us</span>
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
+                  <span>Bank-level security</span>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
-                No credit card required • 14 days free • Ready in 2 minutes
+                No credit card required • Free forever • Ready in 2 minutes
               </p>
             </div>
           </div>
@@ -135,57 +142,65 @@ const Login = () => {
     );
   }
 
+  // Login/Signup Form View
   return (
     <>
       <Helmet>
-        <title>{activeView === 'login' ? 'Sign In' : 'Create Account'} - Accio Knowledge Management</title>
-        <meta name="description" content={activeView === 'login' ? 'Sign in to your Accio account to access your knowledge collection.' : 'Create your free Accio account and start building your knowledge empire.'} />
+        <title>{activeView === 'login' ? 'Welcome Back' : 'Start Your Journey'} - Accio</title>
+        <meta name="description" content={activeView === 'login' ? 'Sign in to continue building your knowledge collection with Accio.' : 'Create your free Accio account and transform how you organize information.'} />
       </Helmet>
 
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/20 to-background py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-6">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/10 to-background py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-md space-y-6 animate-fade-in">
           {/* Back Button */}
           <Button
             variant="ghost"
-            onClick={resetToInitial}
-            className="mb-4"
+            onClick={resetToWelcome}
+            className="mb-4 text-muted-foreground hover:text-foreground transition-colors"
           >
             ← Back to options
           </Button>
 
-          <Card className="shadow-xl border-0 bg-card/95 backdrop-blur">
-            <CardHeader className="space-y-1 text-center">
-              <div className="flex justify-center mb-4">
+          <Card className="shadow-2xl border-0 bg-card/95 backdrop-blur-sm">
+            <CardHeader className="space-y-4 text-center pb-6">
+              <div className="flex justify-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
                   <Brain className="h-6 w-6 text-white" />
                 </div>
               </div>
-              <CardTitle className="text-2xl font-bold">
-                {activeView === 'login' ? 'Welcome back!' : 'Start your journey'}
-              </CardTitle>
-              <CardDescription>
-                {activeView === 'login' 
-                  ? 'Sign in to continue building your knowledge collection'
-                  : 'Create your account to start organizing your knowledge'
-                }
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {activeView === 'login' && <DemoAccountSection />}
-
-              <div className="relative">
-                <Separator />
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="bg-card px-2 text-xs text-muted-foreground">
-                    {activeView === 'login' ? 'OR SIGN IN WITH EMAIL' : 'OR CREATE WITH EMAIL'}
-                  </span>
-                </div>
+              <div className="space-y-2">
+                <CardTitle className="text-2xl font-bold">
+                  {activeView === 'login' ? 'Welcome back!' : 'Start your journey'}
+                </CardTitle>
+                <CardDescription className="text-base">
+                  {activeView === 'login' 
+                    ? 'Continue building your knowledge collection'
+                    : 'Create your account to organize your knowledge'
+                  }
+                </CardDescription>
               </div>
+            </CardHeader>
 
+            <CardContent className="space-y-6 pt-0">
+              {/* Demo Account Section - Only for Login */}
+              {activeView === 'login' && (
+                <>
+                  <DemoAccountSection />
+                  <div className="relative">
+                    <Separator />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wide">
+                        Or sign in with email
+                      </span>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Email/Password Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
+                  <Label htmlFor="email" className="text-sm font-medium">
                     Email Address
                   </Label>
                   <Input 
@@ -195,86 +210,114 @@ const Login = () => {
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-12"
+                    className="h-11 text-base"
+                    disabled={isLoading}
                   />
                 </div>
+
                 <div className="space-y-2">
-                  <Label htmlFor="password" className="flex items-center gap-2">
-                    <Lock className="h-4 w-4" />
+                  <Label htmlFor="password" className="text-sm font-medium">
                     Password
                   </Label>
                   <div className="relative">
                     <Input 
                       id="password"
                       type={showPassword ? 'text' : 'password'}
-                      placeholder="••••••••"
+                      placeholder={activeView === 'login' ? 'Enter your password' : 'Create a secure password'}
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="h-12 pr-10"
+                      className="h-11 text-base pr-10"
+                      disabled={isLoading}
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="sm"
-                      className="absolute right-0 top-0 h-12 w-12 px-3"
+                      className="absolute right-0 top-0 h-11 w-11 px-3"
                       onClick={() => setShowPassword(!showPassword)}
+                      disabled={isLoading}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </Button>
                   </div>
+                  
                   {activeView === 'login' && (
                     <div className="text-right">
                       <Link 
                         to="/forgot-password" 
-                        className="text-sm text-primary hover:underline"
+                        className="text-sm text-primary hover:underline transition-colors"
                       >
                         Forgot password?
                       </Link>
                     </div>
                   )}
                 </div>
+
                 <Button 
                   type="submit" 
-                  className="w-full h-12" 
+                  className="w-full h-11 text-base font-medium shadow-lg hover:shadow-xl transition-all" 
                   disabled={isLoading}
-                  loading={isLoading}
                 >
                   {isLoading ? (
                     activeView === 'login' ? 'Signing in...' : 'Creating account...'
                   ) : (
                     <>
-                      <LogIn className="h-4 w-4 mr-2" />
-                      {activeView === 'login' ? 'Sign In' : 'Create Account'}
+                      {activeView === 'login' ? (
+                        <>
+                          <LogIn className="h-4 w-4 mr-2" />
+                          Sign In
+                        </>
+                      ) : (
+                        <>
+                          <UserPlus className="h-4 w-4 mr-2" />
+                          Create Account
+                        </>
+                      )}
                     </>
                   )}
                 </Button>
               </form>
 
-              <SocialLoginButtons />
+              {/* Social Login Section */}
+              <div className="space-y-4">
+                <div className="relative">
+                  <Separator />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wide">
+                      Or continue with
+                    </span>
+                  </div>
+                </div>
 
-              <div className="text-center text-sm text-muted-foreground">
-                {activeView === 'login' ? (
-                  <p>
-                    New to Accio?{" "}
-                    <button 
-                      onClick={() => setActiveView('signup')}
-                      className="text-primary font-medium hover:underline"
-                    >
-                      Create your free account
-                    </button>
-                  </p>
-                ) : (
-                  <p>
-                    Already have an account?{" "}
-                    <button 
-                      onClick={() => setActiveView('login')}
-                      className="text-primary font-medium hover:underline"
-                    >
-                      Sign in instead
-                    </button>
-                  </p>
-                )}
+                <SocialLoginButtons />
+              </div>
+
+              {/* Switch Between Login/Signup */}
+              <div className="text-center pt-2">
+                <p className="text-sm text-muted-foreground">
+                  {activeView === 'login' ? (
+                    <>
+                      New to Accio?{" "}
+                      <button 
+                        onClick={() => setActiveView('signup')}
+                        className="text-primary font-medium hover:underline transition-colors"
+                      >
+                        Create your free account
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      Already have an account?{" "}
+                      <button 
+                        onClick={() => setActiveView('login')}
+                        className="text-primary font-medium hover:underline transition-colors"
+                      >
+                        Sign in instead
+                      </button>
+                    </>
+                  )}
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -282,7 +325,7 @@ const Login = () => {
           {/* Security Notice */}
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <Shield className="h-4 w-4" />
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
               <span>Your data is secure and encrypted</span>
             </div>
           </div>
