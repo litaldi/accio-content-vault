@@ -11,3 +11,4 @@ export { default as UserMenu } from './UserMenu';
 export { default as CategorizedMainNavigation } from './CategorizedMainNavigation';
 export { default as CleanNavigation } from './CleanNavigation';
 export { UnifiedMainNavigation } from './UnifiedMainNavigation';
+export { default as MainNavigation } from './MainNavigation';

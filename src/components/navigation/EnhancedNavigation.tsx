@@ -1,12 +1,12 @@
 
 import React from 'react';
-import StreamlinedMainNavigation from './StreamlinedMainNavigation';
+import MainNavigation from './MainNavigation';
 
 /**
- * Enhanced navigation component - uses the streamlined navigation
+ * Enhanced navigation component - uses the new unified main navigation
  */
 const EnhancedNavigation: React.FC = () => {
-  return <StreamlinedMainNavigation />;
+  return <MainNavigation />;
 };
 
 export default EnhancedNavigation;

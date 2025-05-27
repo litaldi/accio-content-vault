@@ -1,13 +1,13 @@
 
 import React from 'react';
-import StreamlinedMainNavigation from '@/components/navigation/StreamlinedMainNavigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 
 interface NavbarProps {
   isLoggedIn?: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
-  return <StreamlinedMainNavigation />;
+  return <MainNavigation />;
 };
 
 export default Navbar;
