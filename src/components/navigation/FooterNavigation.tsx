@@ -1,119 +1,122 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { useToast } from '@/hooks/use-toast';
 import { 
-  Plus, 
+  Home, 
   Search, 
-  Sparkles, 
-  HelpCircle,
-  Home,
-  User
+  Bookmark, 
+  Plus, 
+  User,
+  LayoutDashboard
 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
-export const FooterNavigation: React.FC = () => {
+const FooterNavigation: React.FC = () => {
+  const location = useLocation();
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
 
-  const handleQuickSave = () => {
-    if (user) {
-      navigate('/save');
-      toast({
-        title: "Quick Save",
-        description: "Ready to capture your knowledge!",
-      });
-    } else {
-      navigate('/register');
-      toast({
-        title: "Sign up to save content",
-        description: "Create your account to start capturing knowledge.",
-      });
+  // Don't show footer nav on auth pages
+  if (location.pathname.includes('/login') || location.pathname.includes('/register')) {
+    return null;
+  }
+
+  const isActiveRoute = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
     }
+    return location.pathname.startsWith(path);
   };
 
-  const handleQuickSearch = () => {
-    if (user) {
-      navigate('/search');
-    } else {
-      navigate('/features');
-      toast({
-        title: "Powerful Search",
-        description: "Sign up to unlock AI-powered search capabilities.",
-      });
+  const navigationItems = user ? [
+    { 
+      path: '/dashboard', 
+      icon: LayoutDashboard, 
+      label: 'Dashboard',
+      ariaLabel: 'Go to dashboard'
+    },
+    { 
+      path: '/search', 
+      icon: Search, 
+      label: 'Search',
+      ariaLabel: 'Search content'
+    },
+    { 
+      path: '/save', 
+      icon: Plus, 
+      label: 'Save',
+      ariaLabel: 'Save new content'
+    },
+    { 
+      path: '/saved', 
+      icon: Bookmark, 
+      label: 'Saved',
+      ariaLabel: 'View saved content'
+    },
+    { 
+      path: '/profile', 
+      icon: User, 
+      label: 'Profile',
+      ariaLabel: 'View profile'
     }
-  };
-
-  const handleAIAssistant = () => {
-    if (user) {
-      navigate('/ai-features');
-    } else {
-      navigate('/features');
-      toast({
-        title: "AI Assistant",
-        description: "Discover how AI can enhance your knowledge management.",
-      });
+  ] : [
+    { 
+      path: '/', 
+      icon: Home, 
+      label: 'Home',
+      ariaLabel: 'Go to home page'
+    },
+    { 
+      path: '/features', 
+      icon: Search, 
+      label: 'Features',
+      ariaLabel: 'View features'
+    },
+    { 
+      path: '/pricing', 
+      icon: Bookmark, 
+      label: 'Pricing',
+      ariaLabel: 'View pricing'
+    },
+    { 
+      path: '/login', 
+      icon: User, 
+      label: 'Login',
+      ariaLabel: 'Sign in to your account'
     }
-  };
-
-  const navigationItems = [
-    {
-      icon: Home,
-      label: "Home",
-      action: () => navigate('/'),
-    },
-    {
-      icon: Plus,
-      label: user ? "Save" : "Get Started",
-      action: handleQuickSave,
-      primary: true,
-    },
-    {
-      icon: Search,
-      label: "Search",
-      action: handleQuickSearch,
-    },
-    {
-      icon: Sparkles,
-      label: "AI",
-      action: handleAIAssistant,
-    },
-    {
-      icon: user ? User : HelpCircle,
-      label: user ? "Profile" : "Help",
-      action: () => user ? navigate('/profile') : window.open('mailto:support@accio.app', '_blank'),
-    },
   ];
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur-sm border-t border-border">
-      <div className="max-w-md mx-auto px-4 py-3">
-        <nav className="flex items-center justify-around">
-          {navigationItems.map((item, index) => {
-            const ItemIcon = item.icon;
-            return (
-              <Button
-                key={index}
-                variant={item.primary ? "default" : "ghost"}
-                size="sm"
-                onClick={item.action}
-                className={cn(
-                  "flex flex-col items-center gap-1 h-auto py-2 px-3 min-w-0",
-                  item.primary && "bg-primary hover:bg-primary/90 text-primary-foreground"
-                )}
-                aria-label={item.label}
-              >
-                <ItemIcon className="h-5 w-5" />
-                <span className="text-xs font-medium">{item.label}</span>
-              </Button>
-            );
-          })}
-        </nav>
+    <nav 
+      className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-40"
+      role="navigation"
+      aria-label="Mobile navigation"
+    >
+      <div className="flex items-center justify-around px-2 py-2">
+        {navigationItems.map((item) => {
+          const isActive = isActiveRoute(item.path);
+          const Icon = item.icon;
+          
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`
+                flex flex-col items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 min-h-[64px] min-w-[64px]
+                ${isActive 
+                  ? 'text-primary bg-primary/10' 
+                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                }
+              `}
+              aria-label={item.ariaLabel}
+              aria-current={isActive ? 'page' : undefined}
+            >
+              <Icon className="h-5 w-5 mb-1" aria-hidden="true" />
+              <span className="leading-none">{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
-    </footer>
+    </nav>
   );
 };
 

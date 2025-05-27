@@ -38,32 +38,28 @@ import Accessibility from '@/pages/Accessibility';
 function App() {
   const location = useLocation();
 
-  // Scroll to top on route change
+  // Scroll to top on route change for better UX
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Determine if we should show the footer based on the route
-  const shouldShowFooter = !location.pathname.includes('/dashboard') && 
-                          !location.pathname.includes('/profile') &&
-                          !location.pathname.includes('/saved') &&
-                          !location.pathname.includes('/save') &&
-                          !location.pathname.includes('/collections') &&
-                          !location.pathname.includes('/activity') &&
-                          !location.pathname.includes('/settings') &&
-                          !location.pathname.includes('/search');
-  
-  const shouldShowMobileNav = !location.pathname.includes('/login') && 
-                             !location.pathname.includes('/register');
+  // Define route groups for better organization
+  const publicRoutes = ['/', '/features', '/ai-features', '/pricing', '/help', '/contact', '/blog', '/about', '/privacy', '/terms', '/tutorials', '/accessibility'];
+  const authRoutes = ['/login', '/register'];
+  const protectedRoutes = ['/dashboard', '/profile', '/saved', '/save', '/collections', '/activity', '/settings', '/search'];
 
-  const isAuthenticatedRoute = location.pathname.includes('/dashboard') ||
-                              location.pathname.includes('/profile') ||
-                              location.pathname.includes('/saved') ||
-                              location.pathname.includes('/save') ||
-                              location.pathname.includes('/collections') ||
-                              location.pathname.includes('/activity') ||
-                              location.pathname.includes('/settings') ||
-                              location.pathname.includes('/search');
+  const isPublicRoute = publicRoutes.includes(location.pathname);
+  const isAuthRoute = authRoutes.includes(location.pathname);
+  const isProtectedRoute = protectedRoutes.some(route => location.pathname.startsWith(route));
+
+  // Show main navigation on public routes
+  const shouldShowMainNav = isPublicRoute;
+  
+  // Show marketing footer on public routes (not auth or protected routes)
+  const shouldShowMarketingFooter = isPublicRoute;
+  
+  // Show mobile footer navigation (handles its own visibility logic)
+  const shouldShowMobileNav = true;
 
   return (
     <HelmetProvider>
@@ -71,15 +67,35 @@ function App() {
         <AuthProvider>
           <Helmet titleTemplate="%s | Accio" defaultTitle="Accio - AI-Powered Knowledge Management" />
           
+          {/* Skip link for accessibility */}
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium z-50 transition-all duration-200"
+            onClick={(e) => {
+              e.preventDefault();
+              const mainContent = document.getElementById('main-content');
+              if (mainContent) {
+                mainContent.focus();
+                mainContent.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+          >
+            Skip to main content
+          </a>
+          
           <div className="flex flex-col min-h-screen">
-            {!isAuthenticatedRoute && <MainNavigation />}
+            {shouldShowMainNav && <MainNavigation />}
             
-            <main className="flex-1">
+            <main 
+              className="flex-1" 
+              role="main" 
+              id="main-content" 
+              tabIndex={-1}
+              aria-label="Main content"
+            >
               <Routes>
                 {/* Public routes */}
                 <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
                 <Route path="/features" element={<Features />} />
                 <Route path="/ai-features" element={<AIFeatures />} />
                 <Route path="/pricing" element={<Pricing />} />
@@ -91,6 +107,10 @@ function App() {
                 <Route path="/terms" element={<Terms />} />
                 <Route path="/tutorials" element={<Tutorials />} />
                 <Route path="/accessibility" element={<Accessibility />} />
+                
+                {/* Authentication routes */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
                 
                 {/* Protected routes with internal navigation */}
                 <Route path="/dashboard" element={
@@ -134,13 +154,17 @@ function App() {
                   </ProtectedRoute>
                 } />
                 
-                {/* Catch all route */}
+                {/* Catch all route - must be last */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </main>
             
-            {shouldShowFooter && <MarketingFooter />}
+            {/* Footer sections */}
+            {shouldShowMarketingFooter && <MarketingFooter />}
             {shouldShowMobileNav && <FooterNavigation />}
+            
+            {/* Add bottom padding for mobile nav when needed */}
+            {isProtectedRoute && <div className="md:hidden h-20" aria-hidden="true" />}
           </div>
           
           <Toaster />
