@@ -1,3 +1,4 @@
+
 import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -6,17 +7,13 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
-import LoadingSpinner from '@/components/LoadingSpinner';
+import LoadingSpinner from '@/components/ui/loading-spinner';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import Save from '@/pages/Save';
 import Settings from '@/pages/Settings';
 import Profile from '@/pages/Profile';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
-import Cookies from '@/pages/Cookies';
-import ResetPassword from '@/pages/ResetPassword';
-import Navigation from '@/components/layout/Navigation';
-import Footer from '@/components/Footer';
 
 // Lazy load pages for better performance
 const Index = lazy(() => import('@/pages/Index'));
@@ -24,6 +21,8 @@ const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const Login = lazy(() => import('@/pages/Login'));
 const Register = lazy(() => import('@/pages/Register'));
 const FeatureTest = lazy(() => import('@/pages/FeatureTest'));
+const Cookies = lazy(() => import('@/pages/Cookies'));
+const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
