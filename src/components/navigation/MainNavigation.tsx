@@ -1,12 +1,13 @@
 
 import React from 'react';
-import ResponsiveNavigation from './ResponsiveNavigation';
+import MegaMenuNavigation from './MegaMenuNavigation';
 
 /**
- * Main navigation component - uses the responsive navigation
+ * Main navigation component - now uses the new mega menu system
+ * This provides a comprehensive, organized navigation experience aligned with the footer structure
  */
 const MainNavigation: React.FC = () => {
-  return <ResponsiveNavigation />;
+  return <MegaMenuNavigation />;
 };
 
 export default MainNavigation;

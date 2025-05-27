@@ -1,16 +1,13 @@
 
 import React from 'react';
-import ResponsiveNavigation from './navigation/ResponsiveNavigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 
 interface NavbarProps {
   isLoggedIn?: boolean;
 }
 
-/**
- * Navbar component - uses the responsive navigation
- */
 const Navbar: React.FC<NavbarProps> = ({ isLoggedIn }) => {
-  return <ResponsiveNavigation />;
+  return <MainNavigation />;
 };
 
 export default Navbar;

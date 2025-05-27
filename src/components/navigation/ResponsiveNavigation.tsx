@@ -22,7 +22,7 @@ import {
   Brain,
   Sun,
   Moon,
-  Zap
+  Star
 } from 'lucide-react';
 
 const ResponsiveNavigation = () => {
@@ -52,17 +52,17 @@ const ResponsiveNavigation = () => {
   };
 
   const publicNavItems = [
-    { to: '/', label: 'Home', icon: Home },
-    { to: '/features', label: 'Features', icon: Sparkles },
-    { to: '/help', label: 'Help', icon: HelpCircle }
+    { to: '/', label: 'Home', icon: Home, description: 'Discover Accio' },
+    { to: '/features', label: 'Features', icon: Sparkles, description: 'Explore capabilities' },
+    { to: '/help', label: 'Help', icon: HelpCircle, description: 'Get support' }
   ];
 
   const userNavItems = user ? [
-    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/collections', label: 'Collections', icon: FolderOpen },
-    { to: '/analytics', label: 'Analytics', icon: BarChart3 },
-    { to: '/profile', label: 'Profile', icon: User },
-    { to: '/settings', label: 'Settings', icon: Settings }
+    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard, description: 'Your command center' },
+    { to: '/collections', label: 'Collections', icon: FolderOpen, description: 'Organized content' },
+    { to: '/analytics', label: 'Analytics', icon: BarChart3, description: 'Track progress' },
+    { to: '/profile', label: 'Profile', icon: User, description: 'Account settings' },
+    { to: '/settings', label: 'Settings', icon: Settings, description: 'Preferences' }
   ] : [];
 
   const allNavItems = [...publicNavItems, ...userNavItems];
@@ -82,7 +82,7 @@ const ResponsiveNavigation = () => {
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <div className="flex items-center justify-between h-16">
-          {/* Logo/Brand */}
+          {/* Logo/Brand - Responsive sizing */}
           <Link 
             to="/" 
             className="flex items-center gap-2 sm:gap-3 font-bold text-lg sm:text-xl hover:opacity-80 transition-opacity focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-lg p-1"
@@ -97,7 +97,7 @@ const ResponsiveNavigation = () => {
             </span>
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Hidden on mobile/tablet */}
           <div className="hidden lg:flex items-center space-x-1">
             {allNavItems.map((item) => (
               <Link
@@ -113,6 +113,7 @@ const ResponsiveNavigation = () => {
                   }
                 `}
                 aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                title={item.description}
               >
                 <item.icon className="h-4 w-4" aria-hidden="true" />
                 <span className="hidden xl:inline">{item.label}</span>
@@ -120,7 +121,7 @@ const ResponsiveNavigation = () => {
             ))}
           </div>
 
-          {/* Desktop Actions */}
+          {/* Desktop Actions - Hidden on mobile/tablet */}
           <div className="hidden lg:flex items-center gap-2 xl:gap-3">
             {/* Theme Toggle */}
             <Button
@@ -135,6 +136,9 @@ const ResponsiveNavigation = () => {
               ) : (
                 <Moon className="h-4 w-4" aria-hidden="true" />
               )}
+              <span className="hidden xl:inline text-sm">
+                {theme === 'dark' ? 'Light' : 'Dark'}
+              </span>
             </Button>
 
             {user ? (
@@ -168,21 +172,17 @@ const ResponsiveNavigation = () => {
                     <span className="hidden sm:inline">Sign In</span>
                   </Link>
                 </Button>
-                <Button 
-                  size="sm" 
-                  className="gap-2 shadow-lg bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 font-semibold" 
-                  asChild
-                >
+                <Button size="sm" className="gap-2 shadow-lg" asChild>
                   <Link to="/register">
-                    <Zap className="h-4 w-4" aria-hidden="true" />
-                    <span className="hidden sm:inline">Start Now</span>
+                    <Sparkles className="h-4 w-4" aria-hidden="true" />
+                    <span className="hidden sm:inline">Start Free</span>
                   </Link>
                 </Button>
               </>
             )}
           </div>
 
-          {/* Mobile Menu Button and Theme Toggle */}
+          {/* Mobile/Tablet Menu Button and Theme Toggle */}
           <div className="lg:hidden flex items-center gap-2">
             {/* Mobile Theme Toggle */}
             <Button
@@ -215,7 +215,7 @@ const ResponsiveNavigation = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Mobile/Tablet Menu */}
         {isMenuOpen && (
           <div 
             id="mobile-menu"
@@ -243,7 +243,10 @@ const ResponsiveNavigation = () => {
                     role="menuitem"
                   >
                     <item.icon className="h-5 w-5" aria-hidden="true" />
-                    <span className="font-medium">{item.label}</span>
+                    <div>
+                      <div className="font-medium">{item.label}</div>
+                      <div className="text-xs opacity-70">{item.description}</div>
+                    </div>
                   </Link>
                 ))}
               </nav>
@@ -289,13 +292,13 @@ const ResponsiveNavigation = () => {
                       </Link>
                     </Button>
                     <Button 
-                      className="w-full justify-start gap-3 shadow-lg bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90 font-semibold"
+                      className="w-full justify-start gap-3 shadow-lg"
                       asChild
                       onClick={closeMenu}
                     >
                       <Link to="/register">
-                        <Zap className="h-5 w-5" aria-hidden="true" />
-                        Start Now - Free
+                        <Sparkles className="h-5 w-5" aria-hidden="true" />
+                        Start Free
                       </Link>
                     </Button>
                   </>
