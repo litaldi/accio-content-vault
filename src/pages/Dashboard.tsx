@@ -23,22 +23,21 @@ import { useFeatureGating } from '@/hooks/useFeatureGating';
 import UpgradeNotification from '@/components/pricing/UpgradeNotification';
 
 const Dashboard = () => {
-  const featureGating = useFeatureGating?.() || {};
-  const { 
-    currentPlan = 'free', 
-    usageStats = {
-      savesUsed: 0,
-      aiActionsUsed: 0,
-      collectionsUsed: 0
-    }, 
-    limits = {
-      maxSaves: 100,
-      aiActionsPerMonth: 50,
-      maxCollections: 10
-    }, 
-    hasReachedLimit = () => false, 
-    getRemainingUsage = () => null 
-  } = featureGating;
+  const featureGating = useFeatureGating?.();
+  
+  const currentPlan = featureGating?.currentPlan || 'free';
+  const usageStats = featureGating?.usageStats || {
+    savesUsed: 0,
+    aiActionsUsed: 0,
+    collectionsUsed: 0
+  };
+  const limits = featureGating?.limits || {
+    maxSaves: 100,
+    aiActionsPerMonth: 50,
+    maxCollections: 10
+  };
+  const hasReachedLimit = featureGating?.hasReachedLimit || (() => false);
+  const getRemainingUsage = featureGating?.getRemainingUsage || (() => null);
 
   const recentItems = [
     { 
