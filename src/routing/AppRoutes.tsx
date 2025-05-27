@@ -5,44 +5,71 @@ import { Status } from '@/components/design-system/DesignSystem';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { Helmet } from 'react-helmet-async';
 
-// === LAZY LOADED COMPONENTS ===
-// Public Pages
+// Lazy load components for better performance
 const EnhancedHome = React.lazy(() => import('@/pages/EnhancedHome'));
+const Index = React.lazy(() => import('@/pages/Index'));
+const ModernIndex = React.lazy(() => import('@/pages/ModernIndex'));
 const Login = React.lazy(() => import('@/pages/Login'));
 const Register = React.lazy(() => import('@/pages/Register'));
 const Help = React.lazy(() => import('@/pages/Help'));
-const Features = React.lazy(() => import('@/pages/Features'));
-const Contact = React.lazy(() => import('@/pages/Contact'));
-const About = React.lazy(() => import('@/pages/About'));
-const Pricing = React.lazy(() => import('@/pages/Pricing'));
 
-// Protected Pages
+// Protected pages
 const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
 const Profile = React.lazy(() => import('@/pages/Profile'));
 const Settings = React.lazy(() => import('@/pages/Settings'));
 
-// === ERROR BOUNDARY FOR ROUTE-LEVEL ERRORS ===
+// Placeholder components for missing pages
+const Features = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-4xl font-bold mb-4">Features</h1>
+      <p className="text-muted-foreground">Coming soon - detailed feature showcase</p>
+    </div>
+  </div>
+);
+
+const Pricing = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-4xl font-bold mb-4">Pricing</h1>
+      <p className="text-muted-foreground">Coming soon - transparent pricing plans</p>
+    </div>
+  </div>
+);
+
+const About = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-4xl font-bold mb-4">About Accio</h1>
+      <p className="text-muted-foreground">Coming soon - our story and mission</p>
+    </div>
+  </div>
+);
+
+const Contact = () => (
+  <div className="min-h-screen flex items-center justify-center">
+    <div className="text-center">
+      <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
+      <p className="text-muted-foreground">Coming soon - get in touch with our team</p>
+    </div>
+  </div>
+);
+
+// Error boundary for route-level errors
 const RouteErrorBoundary = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Suspense fallback={<Status.Loading message="Loading page..." />}>
+    <Suspense 
+      fallback={<Status.Loading message="Loading page..." />}
+    >
       {children}
     </Suspense>
   );
 };
 
-/**
- * AppRoutes - Main routing configuration
- * 
- * Route Groups:
- * 1. Public Routes - Accessible to all users
- * 2. Authentication Routes - Login/Register flows  
- * 3. Protected Routes - Require authentication
- * 4. 404 Handler - Catch-all for unknown routes
- */
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* === PUBLIC ROUTES === */}
+      {/* Public Routes */}
       <Route 
         path="/" 
         element={
@@ -121,7 +148,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* === AUTHENTICATION ROUTES === */}
+      {/* Authentication Routes */}
       <Route 
         path="/login" 
         element={
@@ -148,7 +175,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* === PROTECTED ROUTES === */}
+      {/* Protected Routes */}
       <Route 
         path="/dashboard" 
         element={
@@ -194,7 +221,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* === 404 CATCH-ALL ROUTE === */}
+      {/* 404 Route */}
       <Route 
         path="*" 
         element={

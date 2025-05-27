@@ -1,96 +1,73 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Typography, Layout, Card } from '@/components/design-system/DesignSystem';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
 import { 
   Mail, 
-  MessageSquare, 
-  Clock, 
   MapPin, 
-  Phone,
+  Phone, 
+  MessageCircle,
+  Clock,
   Send,
-  CheckCircle
+  Building,
+  Users,
+  Headphones
 } from 'lucide-react';
 
-const Contact: React.FC = () => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    company: '',
-    subject: '',
-    message: '',
-    inquiryType: ''
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 2000));
-
-    toast({
-      title: "Message sent successfully!",
-      description: "We'll get back to you within 24 hours.",
-    });
-
-    setFormData({
-      name: '',
-      email: '',
-      company: '',
-      subject: '',
-      message: '',
-      inquiryType: ''
-    });
-    setIsSubmitting(false);
-  };
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  const contactMethods = [
+const Contact = () => {
+  const contactInfo = [
     {
       icon: Mail,
-      title: 'Email Support',
-      description: 'Get help from our support team',
-      contact: 'support@accio.com',
-      availability: '24/7 response'
-    },
-    {
-      icon: MessageSquare,
-      title: 'Live Chat',
-      description: 'Chat with our team in real-time',
-      contact: 'Available in app',
-      availability: 'Mon-Fri, 9AM-6PM PST'
+      title: 'Email Us',
+      info: 'hello@accio.app',
+      description: 'General inquiries and support',
+      href: 'mailto:hello@accio.app'
     },
     {
       icon: Phone,
-      title: 'Phone Support',
-      description: 'Speak directly with our experts',
-      contact: '+1 (555) 123-4567',
-      availability: 'Mon-Fri, 9AM-6PM PST'
+      title: 'Call Us',
+      info: '+1 (555) 123-ACCIO',
+      description: 'Phone support during business hours',
+      href: 'tel:+15551232224'
+    },
+    {
+      icon: MapPin,
+      title: 'Visit Us',
+      info: 'San Francisco, CA',
+      description: 'Schedule a meeting at our office',
+      href: '#'
+    },
+    {
+      icon: MessageCircle,
+      title: 'Live Chat',
+      info: 'Available 24/7',
+      description: 'Instant support through our app',
+      href: '#'
     }
   ];
 
-  const officeLocations = [
+  const departments = [
     {
-      city: 'San Francisco',
-      address: '123 Innovation Drive, Suite 100, San Francisco, CA 94105',
-      timezone: 'Pacific Time'
+      icon: Headphones,
+      title: 'Customer Support',
+      email: 'support@accio.app',
+      description: 'Technical help and account assistance'
     },
     {
-      city: 'New York',
-      address: '456 Tech Avenue, Floor 25, New York, NY 10001',
-      timezone: 'Eastern Time'
+      icon: Building,
+      title: 'Sales & Partnerships',
+      email: 'sales@accio.app',
+      description: 'Enterprise solutions and partnerships'
+    },
+    {
+      icon: Users,
+      title: 'Media & Press',
+      email: 'press@accio.app',
+      description: 'Press inquiries and media resources'
     }
   ];
 
@@ -98,209 +75,160 @@ const Contact: React.FC = () => {
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Contact Us - Accio</title>
-        <meta name="description" content="Get in touch with the Accio team for support or partnership opportunities." />
+        <meta name="description" content="Get in touch with the Accio team. Contact us for support, sales, partnerships, or general inquiries." />
       </Helmet>
 
-      {/* Hero Section */}
-      <Layout.Section spacing="default" background="primary">
-        <Layout.Container size="lg" className="text-center">
-          <Typography.H1 className="mb-4">Get in Touch</Typography.H1>
-          <Typography.Lead className="max-w-2xl mx-auto">
-            Have questions about Accio? Need help getting started? Our team is here to help you 
-            build your knowledge empire.
-          </Typography.Lead>
-        </Layout.Container>
-      </Layout.Section>
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          </p>
+        </div>
 
-      <Layout.Section spacing="lg">
-        <Layout.Container size="lg">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Contact Form */}
-            <div>
-              <Typography.H2 className="mb-6">Send us a message</Typography.H2>
-              
-              <Card.Root>
-                <Card.Content className="p-6">
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <Label htmlFor="name">Full Name *</Label>
-                        <Input
-                          id="name"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
-                          required
-                          placeholder="John Doe"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor="email">Email *</Label>
-                        <Input
-                          id="email"
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
-                          required
-                          placeholder="john@company.com"
-                        />
-                      </div>
-                    </div>
-
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Contact Form */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-2xl">Send us a message</CardTitle>
+                <CardDescription>
+                  Fill out the form below and we'll get back to you within 24 hours.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="company">Company</Label>
-                      <Input
-                        id="company"
-                        value={formData.company}
-                        onChange={(e) => handleInputChange('company', e.target.value)}
-                        placeholder="Your Company"
-                      />
+                      <Label htmlFor="firstName">First Name *</Label>
+                      <Input id="firstName" placeholder="John" required />
                     </div>
-
                     <div>
-                      <Label htmlFor="inquiryType">Type of Inquiry</Label>
-                      <Select onValueChange={(value) => handleInputChange('inquiryType', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select inquiry type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="general">General Question</SelectItem>
-                          <SelectItem value="support">Technical Support</SelectItem>
-                          <SelectItem value="sales">Sales Inquiry</SelectItem>
-                          <SelectItem value="partnership">Partnership</SelectItem>
-                          <SelectItem value="feedback">Feature Request</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <Label htmlFor="lastName">Last Name *</Label>
+                      <Input id="lastName" placeholder="Doe" required />
                     </div>
-
-                    <div>
-                      <Label htmlFor="subject">Subject *</Label>
-                      <Input
-                        id="subject"
-                        value={formData.subject}
-                        onChange={(e) => handleInputChange('subject', e.target.value)}
-                        required
-                        placeholder="How can we help you?"
-                      />
-                    </div>
-
-                    <div>
-                      <Label htmlFor="message">Message *</Label>
-                      <Textarea
-                        id="message"
-                        value={formData.message}
-                        onChange={(e) => handleInputChange('message', e.target.value)}
-                        required
-                        placeholder="Tell us more about your inquiry..."
-                        rows={5}
-                      />
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      size="lg" 
-                      className="w-full"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <>Sending...</>
-                      ) : (
-                        <>
-                          <Send className="h-4 w-4 mr-2" />
-                          Send Message
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </Card.Content>
-              </Card.Root>
-            </div>
-
-            {/* Contact Information */}
-            <div className="space-y-8">
-              <div>
-                <Typography.H2 className="mb-6">Other ways to reach us</Typography.H2>
-                
-                <div className="space-y-6">
-                  {contactMethods.map((method, index) => (
-                    <Card.Root key={index}>
-                      <Card.Content className="p-4">
-                        <div className="flex items-start gap-4">
-                          <div className="p-2 bg-primary/10 rounded-lg">
-                            <method.icon className="h-5 w-5 text-primary" />
-                          </div>
-                          <div>
-                            <Typography.H3 className="text-lg mb-1">{method.title}</Typography.H3>
-                            <Typography.Body className="text-sm text-muted-foreground mb-2">
-                              {method.description}
-                            </Typography.Body>
-                            <Typography.Body className="font-medium">{method.contact}</Typography.Body>
-                            <Typography.Body className="text-sm text-muted-foreground">
-                              {method.availability}
-                            </Typography.Body>
-                          </div>
-                        </div>
-                      </Card.Content>
-                    </Card.Root>
-                  ))}
-                </div>
-              </div>
-
-              {/* Office Locations */}
-              <div>
-                <Typography.H2 className="mb-6">Our Offices</Typography.H2>
-                
-                <div className="space-y-4">
-                  {officeLocations.map((office, index) => (
-                    <Card.Root key={index}>
-                      <Card.Content className="p-4">
-                        <div className="flex items-start gap-3">
-                          <MapPin className="h-5 w-5 text-primary mt-1" />
-                          <div>
-                            <Typography.H3 className="text-lg mb-1">{office.city}</Typography.H3>
-                            <Typography.Body className="text-sm text-muted-foreground mb-1">
-                              {office.address}
-                            </Typography.Body>
-                            <Typography.Body className="text-sm text-muted-foreground">
-                              {office.timezone}
-                            </Typography.Body>
-                          </div>
-                        </div>
-                      </Card.Content>
-                    </Card.Root>
-                  ))}
-                </div>
-              </div>
-
-              {/* FAQ Link */}
-              <Card.Root>
-                <Card.Content className="p-6 text-center">
-                  <Typography.H3 className="mb-2">Need help right away?</Typography.H3>
-                  <Typography.Body className="text-muted-foreground mb-4">
-                    Check out our help center for instant answers to common questions.
-                  </Typography.Body>
-                  <Button variant="outline" className="w-full">
-                    Visit Help Center
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="email">Email Address *</Label>
+                    <Input id="email" type="email" placeholder="john@company.com" required />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="company">Company</Label>
+                    <Input id="company" placeholder="Your company name" />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="subject">Subject *</Label>
+                    <Input id="subject" placeholder="How can we help you?" required />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="message">Message *</Label>
+                    <Textarea 
+                      id="message" 
+                      placeholder="Tell us more about your inquiry..."
+                      rows={6}
+                      required 
+                    />
+                  </div>
+                  
+                  <Button type="submit" className="w-full" size="lg">
+                    Send Message
+                    <Send className="ml-2 h-4 w-4" />
                   </Button>
-                </Card.Content>
-              </Card.Root>
-            </div>
+                </form>
+              </CardContent>
+            </Card>
           </div>
-        </Layout.Container>
-      </Layout.Section>
 
-      {/* Response Time */}
-      <Layout.Section spacing="default" background="muted">
-        <Layout.Container size="default" className="text-center">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Clock className="h-6 w-6 text-primary" />
-            <Typography.H3>Quick Response Times</Typography.H3>
+          {/* Contact Information */}
+          <div className="space-y-6">
+            {/* Quick Contact */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Contact</CardTitle>
+                <CardDescription>
+                  Get in touch through your preferred method
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {contactInfo.map((contact, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <contact.icon className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-medium">{contact.title}</h4>
+                      <a href={contact.href} className="text-primary hover:underline">
+                        {contact.info}
+                      </a>
+                      <p className="text-sm text-muted-foreground">
+                        {contact.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Departments */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Departments</CardTitle>
+                <CardDescription>
+                  Contact the right team for your specific needs
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {departments.map((dept, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <dept.icon className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-medium">{dept.title}</h4>
+                      <a href={`mailto:${dept.email}`} className="text-primary hover:underline">
+                        {dept.email}
+                      </a>
+                      <p className="text-sm text-muted-foreground">
+                        {dept.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Business Hours */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                  Business Hours
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Monday - Friday</span>
+                    <span>9:00 AM - 6:00 PM PST</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Saturday</span>
+                    <span>10:00 AM - 4:00 PM PST</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Sunday</span>
+                    <span>Closed</span>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-4">
+                  Emergency support available 24/7 through live chat
+                </p>
+              </CardContent>
+            </Card>
           </div>
-          <Typography.Body className="text-muted-foreground">
-            We typically respond to all inquiries within 24 hours. For urgent technical issues, 
-            our support team is available via live chat during business hours.
-          </Typography.Body>
-        </Layout.Container>
-      </Layout.Section>
+        </div>
+      </div>
     </div>
   );
 };
