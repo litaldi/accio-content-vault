@@ -2,7 +2,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Status } from '@/components/design-system/DesignSystem';
-import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import { Helmet } from 'react-helmet-async';
 
 // Lazy load components for better performance
@@ -58,11 +58,11 @@ const Contact = () => (
 // Error boundary for route-level errors
 const RouteErrorBoundary = ({ children }: { children: React.ReactNode }) => {
   return (
-    <React.Suspense 
+    <Suspense 
       fallback={<Status.Loading message="Loading page..." />}
     >
       {children}
-    </React.Suspense>
+    </Suspense>
   );
 };
 
