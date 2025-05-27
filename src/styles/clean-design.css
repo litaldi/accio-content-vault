@@ -1,0 +1,94 @@
+
+/* Clean Design System Styles - Lemonade Inspired */
+
+/* Clean card hover effects */
+.clean-card {
+  @apply bg-background border border-border/50 rounded-xl shadow-sm transition-all duration-200;
+}
+
+.clean-card:hover {
+  @apply shadow-md border-primary/20 -translate-y-0.5;
+}
+
+/* Clean button animations */
+.clean-button {
+  @apply transition-all duration-200 hover:scale-[1.02] active:scale-[0.98];
+}
+
+/* Spacious layouts */
+.clean-section {
+  @apply py-16 md:py-20 lg:py-24;
+}
+
+.clean-container {
+  @apply max-w-7xl mx-auto px-6 lg:px-8;
+}
+
+/* Typography improvements */
+.clean-heading {
+  @apply font-semibold tracking-tight text-foreground;
+}
+
+.clean-body {
+  @apply leading-relaxed text-foreground;
+}
+
+/* Minimal shadows */
+.clean-shadow {
+  @apply shadow-sm border border-border/50;
+}
+
+.clean-shadow-hover {
+  @apply hover:shadow-md hover:border-primary/20 transition-all duration-200;
+}
+
+/* Gentle animations */
+.clean-fade-in {
+  animation: clean-fade-in 0.4s ease-out;
+}
+
+@keyframes clean-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus states */
+.clean-focus {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+}
+
+/* Grid layouts */
+.clean-grid {
+  @apply grid gap-8 md:gap-12;
+}
+
+.clean-grid-responsive {
+  @apply grid-cols-1 md:grid-cols-2 lg:grid-cols-3;
+}
+
+/* Form styling */
+.clean-input {
+  @apply rounded-lg border-border/60 focus:border-primary focus:ring-primary;
+}
+
+/* Navigation */
+.clean-nav {
+  @apply bg-background/95 backdrop-blur-sm border-b border-border/50;
+}
+
+/* Remove floating button disruption */
+.no-floating-buttons {
+  padding-bottom: 80px; /* Space for footer navigation */
+}
+
+@media (min-width: 768px) {
+  .no-floating-buttons {
+    padding-bottom: 0; /* Remove on larger screens where footer nav is hidden */
+  }
+}

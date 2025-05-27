@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -55,8 +56,8 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
         const result = onClick(event);
         
         // Handle async operations - check if result is a Promise
-        // Check if result is defined and is a thenable object
-        if (result !== undefined && result !== null && typeof result === 'object' && 'then' in result && typeof result.then === 'function') {
+        // Properly handle the case where result might be void/undefined/null
+        if (result != null && typeof result === 'object' && 'then' in result && typeof result.then === 'function') {
           await result;
           
           if (showFeedback && successText) {
@@ -107,33 +108,26 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
     return props.variant || 'default';
   };
 
-  // Intent-based styling
-  const intentClasses = intent ? {
-    primary: 'bg-gradient-to-r from-primary via-blue-600 to-purple-600 hover:from-primary/90 hover:via-blue-600/90 hover:to-purple-600/90 text-white shadow-lg',
-    secondary: 'bg-secondary hover:bg-secondary/80',
-    success: 'bg-green-500 hover:bg-green-600 text-white',
-    warning: 'bg-amber-500 hover:bg-amber-600 text-white',
-    error: 'bg-destructive hover:bg-destructive/90'
-  }[intent] : '';
+  // Clean, minimal styling for the new design
+  const cleanStyles = intent === 'primary' 
+    ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
+    : '';
 
   return (
     <Button
       ref={buttonRef}
       className={cn(
-        // Enhanced accessibility
-        DesignTokens.interactions.focusRing,
-        DesignTokens.sizing.touchTarget,
-        // Enhanced interactions
-        DesignTokens.interactions.hoverScale,
-        DesignTokens.interactions.activeScale,
+        // Clean, minimal accessibility
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+        'min-h-[44px] min-w-[44px]',
+        // Clean transitions
+        'transition-all duration-200',
         // Visual feedback
         isPressed && 'scale-95',
-        feedback === 'success' && 'bg-green-500 text-white',
+        feedback === 'success' && 'bg-primary text-primary-foreground',
         feedback === 'error' && 'bg-red-500 text-white',
-        // Intent styling
-        intentClasses,
-        // Smooth transitions
-        'transition-all duration-200',
+        // Clean styling
+        cleanStyles,
         className
       )}
       variant={getVariant()}
