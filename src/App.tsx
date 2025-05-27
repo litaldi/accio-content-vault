@@ -23,6 +23,8 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import Collections from "./pages/Collections";
 import Analytics from "./pages/Analytics";
+import Save from "./pages/Save";
+import Upgrade from "./pages/Upgrade";
 import "./App.css";
 
 const queryClient = new QueryClient();
@@ -78,6 +80,16 @@ function App() {
                     <Route path="/settings" element={
                       <ProtectedRoute>
                         <EnhancedSettings />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/save" element={
+                      <ProtectedRoute>
+                        <Save />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/upgrade" element={
+                      <ProtectedRoute>
+                        <Upgrade />
                       </ProtectedRoute>
                     } />
                   </Routes>
