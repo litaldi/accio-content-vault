@@ -1,22 +1,18 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { 
-  TrendingUp, 
   Brain, 
-  BookOpen, 
-  Clock,
-  Star,
-  Eye,
-  ArrowRight,
-  Filter,
   RefreshCw,
-  Target,
-  Lightbulb,
-  Users
+  TrendingUp,
+  Users,
+  Filter
 } from 'lucide-react';
+import { RecommendationFilters } from './recommendation/RecommendationFilters';
+import { LearningGoalsProgress } from './recommendation/LearningGoalsProgress';
+import { RecommendationsList } from './recommendation/RecommendationsList';
 
 export const ContentRecommendationEngine = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
@@ -96,25 +92,6 @@ export const ContentRecommendationEngine = () => {
     setRefreshing(false);
   };
 
-  const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Easy': return 'bg-green-500';
-      case 'Medium': return 'bg-yellow-500';
-      case 'Advanced': return 'bg-red-500';
-      default: return 'bg-gray-500';
-    }
-  };
-
-  const getTypeIcon = (type: string) => {
-    switch (type) {
-      case 'article': return '📄';
-      case 'course': return '🎓';
-      case 'video': return '🎥';
-      case 'research': return '🔬';
-      default: return '📝';
-    }
-  };
-
   return (
     <div className="space-y-6">
       <Card>
@@ -133,117 +110,16 @@ export const ContentRecommendationEngine = () => {
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Category Filters */}
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <Button
-                  key={category.id}
-                  variant={selectedCategory === category.id ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setSelectedCategory(category.id)}
-                >
-                  {category.label}
-                  <Badge variant="secondary" className="ml-2">
-                    {category.count}
-                  </Badge>
-                </Button>
-              ))}
-            </div>
-          </div>
+          <RecommendationFilters
+            categories={categories}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+          />
 
-          {/* Learning Goals Progress */}
-          <div>
-            <h4 className="font-medium mb-3 flex items-center gap-2">
-              <Target className="h-4 w-4" />
-              Your Learning Goals
-            </h4>
-            <div className="space-y-3">
-              {learningGoals.map((goal, index) => (
-                <Card key={index} className="bg-muted/20">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <h5 className="font-medium">{goal.goal}</h5>
-                      <span className="text-sm text-muted-foreground">{goal.progress}%</span>
-                    </div>
-                    <Progress value={goal.progress} className="mb-2" />
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Next: {goal.nextStep}</span>
-                      <Button variant="ghost" size="sm">
-                        <ArrowRight className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+          <LearningGoalsProgress goals={learningGoals} />
 
-          {/* Recommendations */}
-          <div>
-            <h4 className="font-medium mb-3 flex items-center gap-2">
-              <Lightbulb className="h-4 w-4" />
-              Recommended for You
-            </h4>
-            <div className="space-y-4">
-              {filteredRecommendations.map((rec) => (
-                <Card key={rec.id} className="hover:shadow-md transition-shadow cursor-pointer">
-                  <CardContent className="p-4">
-                    <div className="flex items-start gap-4">
-                      <div className="text-2xl">{getTypeIcon(rec.type)}</div>
-                      <div className="flex-1">
-                        <div className="flex items-start justify-between mb-2">
-                          <h5 className="font-medium">{rec.title}</h5>
-                          <Badge variant="outline" className="ml-2">
-                            {rec.relevanceScore}% match
-                          </Badge>
-                        </div>
-                        
-                        <p className="text-sm text-muted-foreground mb-3">{rec.reason}</p>
-                        
-                        <div className="flex items-center gap-2 mb-3">
-                          {rec.tags.map(tag => (
-                            <Badge key={tag} variant="outline" className="text-xs">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                        
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1">
-                              <Clock className="h-3 w-3" />
-                              {rec.readingTime}
-                            </span>
-                            <span>{rec.source}</span>
-                            <div className="flex items-center gap-1">
-                              <div className={`w-2 h-2 rounded-full ${getDifficultyColor(rec.difficulty)}`}></div>
-                              <span>{rec.difficulty}</span>
-                            </div>
-                          </div>
-                          
-                          <div className="flex gap-2">
-                            <Button variant="ghost" size="sm">
-                              <Eye className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <BookOpen className="h-3 w-3" />
-                            </Button>
-                            <Button variant="ghost" size="sm">
-                              <Star className="h-3 w-3" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+          <RecommendationsList recommendations={filteredRecommendations} />
 
-          {/* Quick Actions */}
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
               <TrendingUp className="h-4 w-4 mr-2" />
