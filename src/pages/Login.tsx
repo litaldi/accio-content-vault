@@ -9,10 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Brain, Eye, EyeOff, ArrowLeft, Loader2, Mail, Chrome } from 'lucide-react';
+import { Brain, Eye, EyeOff, ArrowLeft, Loader2, Chrome } from 'lucide-react';
 import { DemoLoginOptions } from '@/components/auth/DemoLoginOptions';
-import { validateEmailEnhanced, sanitizeInput } from '@/utils/unified-security';
-import { authRateLimiter } from '@/utils/unified-security';
+import { validateEmailSecure, validatePasswordSecure, authRateLimiter, logSecurityEvent } from '@/utils/security-validation-enhanced';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -38,15 +37,14 @@ const Login = () => {
   const validateForm = () => {
     const newErrors: {email?: string; password?: string} = {};
     
-    const emailValidation = validateEmailEnhanced(email);
+    const emailValidation = validateEmailSecure(email);
     if (!emailValidation.isValid) {
       newErrors.email = emailValidation.message;
     }
     
-    if (!password) {
-      newErrors.password = 'Password is required';
-    } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+    const passwordValidation = validatePasswordSecure(password);
+    if (!passwordValidation.isValid) {
+      newErrors.password = passwordValidation.message;
     }
     
     setErrors(newErrors);
@@ -56,10 +54,14 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!validateForm()) return;
+    if (!validateForm()) {
+      logSecurityEvent('LOGIN_VALIDATION_FAILED', { email });
+      return;
+    }
     
-    const canAttempt = authRateLimiter.canAttempt(email);
-    if (!canAttempt.allowed) {
+    const rateLimit = authRateLimiter.canAttempt(email);
+    if (!rateLimit.allowed) {
+      logSecurityEvent('LOGIN_RATE_LIMITED', { email });
       toast({
         title: "Too many attempts",
         description: "Please wait before trying again.",
@@ -72,15 +74,20 @@ const Login = () => {
     setErrors({});
     
     try {
-      const sanitizedEmail = sanitizeInput(email);
+      const emailValidation = validateEmailSecure(email);
+      const sanitizedEmail = emailValidation.sanitizedValue || email;
+      
+      authRateLimiter.recordAttempt(email);
       const result = await signIn(sanitizedEmail, password);
       
       if (result.error) {
         throw result.error;
       }
       
+      logSecurityEvent('LOGIN_SUCCESS', { email: sanitizedEmail });
       navigate(from, { replace: true });
     } catch (error: any) {
+      logSecurityEvent('LOGIN_FAILED', { email, error: error.message });
       console.error('Login error:', error);
       setErrors({ email: 'Invalid email or password. Please try again.' });
     } finally {
@@ -91,12 +98,17 @@ const Login = () => {
   const handleGoogleSignIn = async () => {
     try {
       setIsGoogleLoading(true);
+      logSecurityEvent('GOOGLE_SIGNIN_ATTEMPT');
+      
       const result = await signInWithProvider('google');
       
       if (result.error) {
         throw result.error;
       }
+      
+      logSecurityEvent('GOOGLE_SIGNIN_SUCCESS');
     } catch (error: any) {
+      logSecurityEvent('GOOGLE_SIGNIN_FAILED', { error: error.message });
       console.error('Google sign in error:', error);
       toast({
         title: "Google Sign In Failed",
@@ -112,6 +124,7 @@ const Login = () => {
     setEmail(demoEmail);
     setPassword(demoPassword);
     setErrors({});
+    logSecurityEvent('DEMO_ACCOUNT_SELECTED', { email: demoEmail });
   };
 
   if (isLoading) {

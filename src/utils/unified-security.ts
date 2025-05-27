@@ -1,19 +1,26 @@
 
-// Re-export enhanced security utilities
+// Re-export all security utilities from the enhanced security validation
 export { 
-  validateEmailSecurity as validateEmailEnhanced,
-  validatePasswordSecurity as validatePassword,
-  sanitizeUserInput as sanitizeInput,
+  validateEmailSecure as validateEmailEnhanced,
+  validatePasswordSecure as validatePassword,
+  sanitizeInput,
+  sanitizeHtml,
+  sanitizeForDatabase,
+  validateUrlSecure as validateUrl,
   authRateLimiter,
+  apiRateLimiter,
+  contactRateLimiter,
   CSRFTokenManager as CSRFManager,
   SecurityRateLimiter as UnifiedRateLimiter,
-  contactRateLimiter,
-  apiRateLimiter,
-  logSecurityEvent
-} from './security-enhanced';
+  logSecurityEvent,
+  getSecurityHeaders
+} from './security-validation-enhanced';
 
-// Legacy compatibility exports
-export { sanitizeHtml, validateEmailSecurity as validateEmail } from './security-enhanced';
+// Additional utilities for backward compatibility
+export { 
+  validateInput,
+  RateLimiter
+} from './security';
 
 /**
  * Simple email validation for backward compatibility
@@ -46,6 +53,3 @@ export const generateSecureToken = (length: number = 32): string => {
   }
   return result;
 };
-
-// Backward compatibility aliases
-export const validateSecureUrl = isValidSecureUrl;
