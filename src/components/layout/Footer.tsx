@@ -72,7 +72,7 @@ export const Footer: React.FC = () => {
           {/* Footer Sections */}
           {footerSections.map((section, index) => (
             <div key={index} className="space-y-4">
-              <Typography.H4 className="font-semibold">{section.title}</Typography.H4>
+              <h4 className="font-semibold text-base">{section.title}</h4>
               <ul className="space-y-2">
                 {section.links.map((link, linkIndex) => (
                   <li key={linkIndex}>
