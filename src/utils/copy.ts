@@ -1,5 +1,3 @@
-
-
 export const copy = {
   headlines: {
     hero: "Transform Information Into Personal Intelligence",
@@ -9,12 +7,20 @@ export const copy = {
     getStarted: "Start Building for Free",
     seeHowItWorks: "See How It Works",
     signUp: "Start Building for Free",
-    contact: "Get in Touch"
+    contact: "Get in Touch",
+    tryDemo: "Try Interactive Demo",
+    scheduleDemo: "Schedule Personal Demo",
+    learnMore: "Learn More",
+    startTrial: "Start Free Trial",
+    viewFeatures: "View All Features"
   },
   trust: {
     noCredit: "No credit card required",
     freeTrial: "14-day free trial",
-    setupTime: "Setup in 30 seconds"
+    setupTime: "Setup in 30 seconds",
+    cancelAnytime: "Cancel anytime",
+    secureData: "Your data is secure",
+    gdprCompliant: "GDPR compliant"
   },
   marketing: {
     social: {
@@ -26,7 +32,11 @@ export const copy = {
   },
   onboarding: {
     welcome: "Welcome to Accio",
-    getStarted: "Let's get you started with your knowledge management journey"
+    getStarted: "Let's get you started with your knowledge management journey",
+    stepOne: "Connect your accounts",
+    stepTwo: "Import your content", 
+    stepThree: "Start organizing",
+    complete: "You're all set!"
   },
   emptyStates: {
     noContent: {
@@ -51,15 +61,55 @@ export const copy = {
     }
   },
   accessibility: {
-    toggleTheme: "Toggle theme"
+    toggleTheme: "Toggle theme",
+    openMenu: "Open navigation menu",
+    closeMenu: "Close navigation menu",
+    skipToContent: "Skip to main content",
+    searchPlaceholder: "Search your knowledge...",
+    loadingContent: "Loading content, please wait"
   },
   microcopy: {
     personalInfo: "Personal Information",
     settings: {
       profile: "Profile Settings",
-      preferences: "Preferences",
+      preferences: "Preferences", 
       security: "Security"
+    },
+    success: {
+      saved: "Successfully saved!",
+      updated: "Changes updated successfully",
+      deleted: "Item deleted",
+      copied: "Copied to clipboard"
+    },
+    errors: {
+      generic: "Something went wrong. Please try again.",
+      network: "Network error. Check your connection.",
+      notFound: "Content not found",
+      unauthorized: "You don't have permission to access this"
+    },
+    prompts: {
+      confirmDelete: "Are you sure you want to delete this item?",
+      unsavedChanges: "You have unsaved changes. Continue?",
+      enableNotifications: "Enable notifications to stay updated",
+      completeProfile: "Complete your profile to get personalized recommendations"
+    }
+  },
+  features: {
+    capture: {
+      title: "Capture Everything",
+      description: "Save any content with one click"
+    },
+    organize: {
+      title: "Smart Organization", 
+      description: "AI automatically categorizes your content"
+    },
+    search: {
+      title: "Find Instantly",
+      description: "Search by meaning, not just keywords"
+    },
+    collaborate: {
+      title: "Work Together",
+      description: "Share knowledge with your team"
     }
   }
 };
-

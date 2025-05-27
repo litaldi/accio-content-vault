@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ArrowRight, Brain, Search, Shield, Zap, CheckCircle, Star, Users, Globe, Clock, Sparkles, Play, TrendingUp, BookOpen, Target } from 'lucide-react';
+import { ArrowRight, Brain, Search, Shield, Zap, CheckCircle, Star, Users, Globe, Clock, Sparkles, Play, TrendingUp, BookOpen, Target, Rocket, Award, Heart } from 'lucide-react';
+import { Typography, Layout, Interactive, animations, accessibility } from '@/components/ui/enhanced-design-system';
 import { copy } from '@/utils/copy';
 
 const Home: React.FC = () => {
@@ -13,25 +14,28 @@ const Home: React.FC = () => {
     {
       icon: Zap,
       title: "Save Instantly",
-      description: "Capture any content with one click from any website or app"
+      description: "Capture any content with one click from any website or app",
+      color: "from-yellow-500 to-orange-500"
     },
     {
       icon: Brain,
       title: "Smart Organization",
-      description: "AI automatically categorizes and tags everything perfectly"
+      description: "AI automatically categorizes and tags everything perfectly",
+      color: "from-purple-500 to-blue-500"
     },
     {
       icon: Search,
       title: "Find Anything",
-      description: "Natural language search finds exactly what you need in seconds"
+      description: "Natural language search finds exactly what you need in seconds",
+      color: "from-green-500 to-teal-500"
     }
   ];
 
   const valueProps = [
-    "Never lose important information again",
-    "Save 5+ hours weekly on research and organization", 
-    "Discover hidden insights in your knowledge",
-    "Build expertise that compounds over time"
+    { icon: Target, text: "Never lose important information again" },
+    { icon: Clock, text: "Save 5+ hours weekly on research and organization" }, 
+    { icon: Brain, text: "Discover hidden insights in your knowledge" },
+    { icon: TrendingUp, text: "Build expertise that compounds over time" }
   ];
 
   const features = [
@@ -62,6 +66,27 @@ const Home: React.FC = () => {
     { value: "150+", label: "Countries", icon: Globe }
   ];
 
+  const testimonials = [
+    {
+      quote: "Accio transformed how I manage my research. I can finally find everything I've saved instantly!",
+      author: "Sarah Chen",
+      role: "Research Scientist",
+      avatar: "SC"
+    },
+    {
+      quote: "The AI organization is incredible. It knows exactly where to put things before I even think about it.",
+      author: "Marcus Johnson",
+      role: "Product Manager",
+      avatar: "MJ"
+    },
+    {
+      quote: "I save 10+ hours every week just on finding and organizing information. Game changer.",
+      author: "Elena Rodriguez",
+      role: "Consultant",
+      avatar: "ER"
+    }
+  ];
+
   return (
     <>
       <Helmet>
@@ -71,39 +96,69 @@ const Home: React.FC = () => {
       </Helmet>
       
       <div className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <section className="relative py-20 lg:py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-background to-blue-500/5" />
+        {/* Enhanced Hero Section */}
+        <Layout.Section size="xl" background="accent" className="relative overflow-hidden">
+          {/* Background Elements */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-blue-500/5" />
           <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
           
-          <div className="container relative z-10">
-            <div className="text-center max-w-5xl mx-auto">
-              <Badge variant="outline" className="mb-8 animate-fade-in text-sm px-4 py-2">
-                <Star className="h-4 w-4 mr-2" />
-                Trusted by 50,000+ Knowledge Workers
-              </Badge>
+          <Layout.Container className="relative z-10">
+            <div className="text-center max-w-6xl mx-auto">
+              {/* Social Proof Badge */}
+              <div className={cn("mb-8", animations.fadeIn)}>
+                <Interactive.Badge variant="info" className="text-sm px-6 py-3 border bg-card/50 backdrop-blur-sm">
+                  <Star className="h-4 w-4 fill-current" />
+                  Trusted by 50,000+ Knowledge Workers
+                </Interactive.Badge>
+              </div>
               
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-8 animate-fade-in">
-                Transform Information Into
-                <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent block mt-2">
-                  Personal Intelligence
-                </span>
-              </h1>
+              {/* Hero Headline */}
+              <div className={cn("mb-8", animations.fadeIn)} style={{ animationDelay: '200ms' }}>
+                <Typography.Hero className="mb-6">
+                  Transform Information Into
+                  <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent block mt-2">
+                    Personal Intelligence
+                  </span>
+                </Typography.Hero>
+              </div>
               
-              <p className="text-xl lg:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in">
-                Stop losing valuable insights in digital chaos. Accio captures, organizes, and transforms 
-                <strong className="text-foreground"> any content into searchable knowledge</strong> that grows smarter with every addition.
-              </p>
+              {/* Hero Subheadline */}
+              <div className={cn("mb-12", animations.fadeIn)} style={{ animationDelay: '400ms' }}>
+                <Typography.Lead className="max-w-5xl mx-auto">
+                  Stop losing valuable insights in digital chaos. Accio captures, organizes, and transforms 
+                  <strong className="text-foreground"> any content into searchable knowledge</strong> that grows smarter with every addition.
+                </Typography.Lead>
+              </div>
               
-              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16 animate-fade-in">
-                <Button size="lg" className="text-lg px-10 py-6 shadow-xl hover:shadow-2xl transition-all group bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" asChild>
+              {/* CTA Buttons */}
+              <div className={cn("flex flex-col sm:flex-row gap-6 justify-center mb-16", animations.fadeIn)} style={{ animationDelay: '600ms' }}>
+                <Button 
+                  size="lg" 
+                  className={cn(
+                    "text-lg px-10 py-6 shadow-xl group bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90",
+                    animations.hoverGlow,
+                    accessibility.focusRing
+                  )} 
+                  asChild
+                >
                   <Link to="/register">
                     <Sparkles className="mr-3 h-5 w-5 group-hover:rotate-12 transition-transform" />
                     Start Building for Free
                     <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="text-lg px-10 py-6 border-2 hover:bg-primary/5 group" asChild>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className={cn(
+                    "text-lg px-10 py-6 border-2 hover:bg-primary/5 group backdrop-blur-sm",
+                    animations.hoverLift,
+                    accessibility.focusRing
+                  )} 
+                  asChild
+                >
                   <Link to="/features">
                     <Play className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
                     See How It Works
@@ -112,61 +167,73 @@ const Home: React.FC = () => {
               </div>
 
               {/* Key Benefits */}
-              <div className="grid md:grid-cols-3 gap-8 mb-16 animate-fade-in">
+              <Layout.Grid cols="3" gap="lg" className={cn("mb-16", animations.fadeIn)} style={{ animationDelay: '800ms' }}>
                 {keyBenefits.map((benefit, index) => (
-                  <div 
+                  <Interactive.Card 
                     key={index}
-                    className="bg-card/50 backdrop-blur border rounded-xl p-6 hover:bg-card/80 transition-all duration-300 group"
-                    style={{ animationDelay: `${index * 100}ms` }}
+                    variant="glass"
+                    interactive
+                    className={cn("p-6 text-center", animations.stagger)}
+                    style={{ animationDelay: `${800 + index * 100}ms` }}
                   >
-                    <benefit.icon className="h-8 w-8 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform" />
-                    <h3 className="text-lg font-semibold mb-2">{benefit.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{benefit.description}</p>
-                  </div>
+                    <div className={cn("w-16 h-16 rounded-2xl bg-gradient-to-r", benefit.color, "flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform")}>
+                      <benefit.icon className="h-8 w-8 text-white" />
+                    </div>
+                    <Typography.H4 className="mb-3">{benefit.title}</Typography.H4>
+                    <Typography.Body size="sm" className="leading-relaxed">{benefit.description}</Typography.Body>
+                  </Interactive.Card>
                 ))}
-              </div>
+              </Layout.Grid>
 
               {/* Trust Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto animate-fade-in">
+              <Layout.Grid cols="4" gap="lg" className={cn("max-w-4xl mx-auto", animations.fadeIn)} style={{ animationDelay: '1000ms' }}>
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center">
-                    <div className="flex items-center justify-center mb-2">
+                    <div className="flex items-center justify-center mb-3">
                       <stat.icon className="h-5 w-5 text-primary mr-2" />
-                      <span className="text-2xl lg:text-3xl font-bold text-primary">{stat.value}</span>
+                      <span className="text-2xl lg:text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                        {stat.value}
+                      </span>
                     </div>
-                    <span className="text-sm text-muted-foreground">{stat.label}</span>
+                    <Typography.Caption>{stat.label}</Typography.Caption>
                   </div>
                 ))}
-              </div>
+              </Layout.Grid>
             </div>
-          </div>
-        </section>
+          </Layout.Container>
+        </Layout.Section>
 
-        {/* Features Section */}
-        <section className="py-20 bg-muted/30">
-          <div className="container">
+        {/* Enhanced Features Section */}
+        <Layout.Section size="lg" background="muted">
+          <Layout.Container>
             <div className="text-center mb-20">
-              <Badge variant="secondary" className="mb-6 text-sm px-4 py-2">
+              <Interactive.Badge variant="default" className="mb-6 text-sm px-4 py-2">
                 <Zap className="h-4 w-4 mr-2" />
                 Powerful Features
-              </Badge>
-              <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+              </Interactive.Badge>
+              <Typography.H1 className="mb-6">
                 Everything You Need to Master
                 <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block">
                   Your Knowledge
                 </span>
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              </Typography.H1>
+              <Typography.Lead className="max-w-4xl mx-auto">
                 From instant capture to intelligent discovery, Accio provides all the tools 
                 you need to transform scattered information into organized intelligence.
-              </p>
+              </Typography.Lead>
             </div>
 
-            <div className="grid lg:grid-cols-3 gap-8 mb-20">
+            <Layout.Grid cols="3" gap="lg" className="mb-20">
               {features.map((feature, index) => (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-500 group cursor-pointer overflow-hidden">
+                <Interactive.Card 
+                  key={index} 
+                  variant="elevated"
+                  interactive
+                  className={cn("overflow-hidden", animations.fadeIn)}
+                  style={{ animationDelay: `${index * 200}ms` }}
+                >
                   <CardHeader className="pb-4">
-                    <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                    <div className={cn("w-16 h-16 rounded-2xl bg-gradient-to-r", feature.color, "flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300")}>
                       <feature.icon className="h-8 w-8 text-white" />
                     </div>
                     <CardTitle className="text-xl group-hover:text-primary transition-colors">
@@ -174,109 +241,174 @@ const Home: React.FC = () => {
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <CardDescription className="leading-relaxed text-base">
+                    <Typography.Body size="default">
                       {feature.description}
-                    </CardDescription>
+                    </Typography.Body>
                   </CardContent>
-                </Card>
+                </Interactive.Card>
               ))}
-            </div>
+            </Layout.Grid>
 
             {/* Value Propositions */}
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <Layout.Grid cols="2" gap="lg" className="items-center">
               <div className="space-y-8">
                 <div>
-                  <h3 className="text-3xl font-bold mb-6">
+                  <Typography.H2 className="mb-6">
                     Why Choose Accio?
-                  </h3>
-                  <p className="text-lg text-muted-foreground mb-8">
+                  </Typography.H2>
+                  <Typography.Body size="lg" className="mb-8">
                     Join thousands of professionals who've transformed how they manage knowledge.
-                  </p>
+                  </Typography.Body>
                 </div>
                 
                 <div className="space-y-6">
                   {valueProps.map((prop, index) => (
                     <div key={index} className="flex items-start gap-4">
-                      <div className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mt-0.5">
-                        <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400" />
+                      <div className="flex-shrink-0 w-8 h-8 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mt-0.5">
+                        <prop.icon className="h-4 w-4 text-green-600 dark:text-green-400" />
                       </div>
-                      <span className="text-lg font-medium">{prop}</span>
+                      <Typography.Body size="lg" className="font-medium text-foreground">
+                        {prop.text}
+                      </Typography.Body>
                     </div>
                   ))}
                 </div>
               </div>
               
               <div className="relative">
-                <Card className="border-0 shadow-2xl bg-gradient-to-br from-card to-card/50 backdrop-blur">
-                  <CardContent className="p-10">
-                    <div className="text-center space-y-6">
-                      <Badge className="bg-gradient-to-r from-primary to-blue-600 text-white">
-                        <Zap className="h-4 w-4 mr-2" />
-                        Quick Start
-                      </Badge>
-                      <h4 className="text-2xl font-bold">Ready in 30 Seconds</h4>
-                      <p className="text-muted-foreground text-lg leading-relaxed">
-                        No complex setup, no training required. Install our browser extension 
-                        and start capturing knowledge immediately.
-                      </p>
-                      <Button size="lg" className="w-full group" asChild>
-                        <Link to="/register">
-                          Get Started Now
-                          <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
+                <Interactive.Card variant="glass" className="p-10">
+                  <div className="text-center space-y-6">
+                    <Interactive.Badge variant="info">
+                      <Rocket className="h-4 w-4 mr-2" />
+                      Quick Start
+                    </Interactive.Badge>
+                    <Typography.H3>Ready in 30 Seconds</Typography.H3>
+                    <Typography.Body size="lg">
+                      No complex setup, no training required. Install our browser extension 
+                      and start capturing knowledge immediately.
+                    </Typography.Body>
+                    <Button size="lg" className={cn("w-full group", accessibility.focusRing)} asChild>
+                      <Link to="/register">
+                        Get Started Now
+                        <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </Button>
+                  </div>
+                </Interactive.Card>
               </div>
-            </div>
-          </div>
-        </section>
+            </Layout.Grid>
+          </Layout.Container>
+        </Layout.Section>
 
-        {/* Final CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
-          <div className="container text-center">
+        {/* Testimonials Section */}
+        <Layout.Section size="lg">
+          <Layout.Container>
+            <div className="text-center mb-16">
+              <Interactive.Badge variant="success" className="mb-6">
+                <Heart className="h-4 w-4 mr-2" />
+                Loved by Users
+              </Interactive.Badge>
+              <Typography.H2 className="mb-6">What Our Users Say</Typography.H2>
+              <Typography.Lead>
+                See how Accio is transforming knowledge management for professionals worldwide
+              </Typography.Lead>
+            </div>
+
+            <Layout.Grid cols="3" gap="lg">
+              {testimonials.map((testimonial, index) => (
+                <Interactive.Card 
+                  key={index}
+                  variant="elevated"
+                  className={cn("p-6", animations.fadeIn)}
+                  style={{ animationDelay: `${index * 200}ms` }}
+                >
+                  <div className="space-y-4">
+                    <Typography.Body className="text-foreground italic">
+                      "{testimonial.quote}"
+                    </Typography.Body>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-gradient-to-r from-primary to-blue-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                        {testimonial.avatar}
+                      </div>
+                      <div>
+                        <div className="font-semibold text-sm">{testimonial.author}</div>
+                        <Typography.Caption>{testimonial.role}</Typography.Caption>
+                      </div>
+                    </div>
+                  </div>
+                </Interactive.Card>
+              ))}
+            </Layout.Grid>
+          </Layout.Container>
+        </Layout.Section>
+
+        {/* Enhanced Final CTA Section */}
+        <Layout.Section size="lg" background="accent">
+          <Layout.Container className="text-center">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+              <Interactive.Badge variant="info" className="mb-6">
+                <Award className="h-4 w-4 mr-2" />
+                Start Your Journey
+              </Interactive.Badge>
+              
+              <Typography.H1 className="mb-6">
                 Ready to Transform Your Knowledge?
-              </h2>
-              <p className="text-xl text-muted-foreground mb-12 max-w-3xl mx-auto leading-relaxed">
+              </Typography.H1>
+              
+              <Typography.Lead className="mb-12 max-w-3xl mx-auto">
                 Join over 50,000 professionals who've revolutionized how they capture, 
                 organize, and leverage information. Start building your personal intelligence today.
-              </p>
+              </Typography.Lead>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-12">
-                <Button size="lg" className="text-lg px-10 py-6 shadow-xl bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" asChild>
+                <Button 
+                  size="lg" 
+                  className={cn(
+                    "text-lg px-10 py-6 shadow-xl bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90",
+                    animations.hoverGlow,
+                    accessibility.focusRing
+                  )} 
+                  asChild
+                >
                   <Link to="/register">
                     <Sparkles className="mr-3 h-5 w-5" />
                     Start Building for Free
                     <ArrowRight className="ml-3 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="text-lg px-10 py-6 border-2" asChild>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className={cn(
+                    "text-lg px-10 py-6 border-2 backdrop-blur-sm",
+                    animations.hoverLift,
+                    accessibility.focusRing
+                  )} 
+                  asChild
+                >
                   <Link to="/contact">
                     Get in Touch
                   </Link>
                 </Button>
               </div>
               
-              <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-muted-foreground">
+              <div className="flex flex-wrap justify-center items-center gap-8 text-sm">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>No credit card required</span>
+                  <span className="text-muted-foreground">No credit card required</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-blue-500" />
-                  <span>14-day free trial</span>
+                  <span className="text-muted-foreground">14-day free trial</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-purple-500" />
-                  <span>Setup in 30 seconds</span>
+                  <span className="text-muted-foreground">Setup in 30 seconds</span>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </Layout.Container>
+        </Layout.Section>
       </div>
     </>
   );

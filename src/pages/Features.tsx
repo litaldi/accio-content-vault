@@ -23,9 +23,12 @@ import {
   MousePointer,
   Clock,
   Globe,
-  Smartphone
+  Smartphone,
+  Star,
+  Award
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Typography, Layout, Interactive, animations, accessibility } from '@/components/ui/enhanced-design-system';
 
 // Import feature components
 import { AIContentAnalysis } from '@/components/features/AIContentAnalysis';
@@ -62,6 +65,7 @@ const Features: React.FC = () => {
           description: 'Capture webpages, PDFs, videos, and notes instantly from any device with our browser extension and mobile apps.',
           component: QuickNoteCapture,
           badge: 'Most Popular',
+          badgeVariant: 'success' as const,
           benefits: ['Works on any website', 'Mobile & desktop apps', 'Offline sync']
         },
         {
@@ -70,6 +74,7 @@ const Features: React.FC = () => {
           description: 'AI automatically tags and categorizes everything you save, creating perfect organization without any manual work.',
           component: SmartTaggingSystem,
           badge: 'AI-Powered',
+          badgeVariant: 'info' as const,
           benefits: ['Auto-categorization', 'Smart tag suggestions', 'Custom taxonomies']
         },
         {
@@ -78,6 +83,7 @@ const Features: React.FC = () => {
           description: 'Visualize how your ideas connect with interactive knowledge maps that reveal hidden relationships.',
           component: KnowledgeMindMap,
           badge: 'Visual',
+          badgeVariant: 'warning' as const,
           benefits: ['Interactive visualization', 'Discover connections', 'Export & share']
         }
       ]
@@ -95,6 +101,7 @@ const Features: React.FC = () => {
           description: 'Ask questions in plain English and get instant answers from your personal knowledge base with AI chat.',
           component: PersonalKnowledgeAssistant,
           badge: 'Game Changer',
+          badgeVariant: 'success' as const,
           benefits: ['Natural language queries', 'Instant answers', 'Context-aware responses']
         },
         {
@@ -103,6 +110,7 @@ const Features: React.FC = () => {
           description: 'Get intelligent summaries and key insights from any content, turning hours of reading into minutes.',
           component: AIContentSummarizer,
           badge: 'Time Saver',
+          badgeVariant: 'info' as const,
           benefits: ['Auto-summaries', 'Key points extraction', 'Multiple formats']
         },
         {
@@ -111,6 +119,7 @@ const Features: React.FC = () => {
           description: 'AI analyzes your knowledge base to reveal patterns, suggest improvements, and recommend new content.',
           component: AIContentAnalysis,
           badge: 'Smart',
+          badgeVariant: 'warning' as const,
           benefits: ['Pattern recognition', 'Content recommendations', 'Knowledge gaps analysis']
         }
       ]
@@ -128,6 +137,7 @@ const Features: React.FC = () => {
           description: 'Search using natural language and find content by meaning, even when you don\'t remember exact keywords.',
           component: null,
           badge: 'Revolutionary',
+          badgeVariant: 'success' as const,
           benefits: ['Natural language search', 'Semantic understanding', 'Fuzzy matching']
         },
         {
@@ -136,6 +146,7 @@ const Features: React.FC = () => {
           description: 'Use voice commands to find information hands-free, perfect for when you\'re busy or mobile.',
           component: VoiceSearchInterface,
           badge: 'Voice-Enabled',
+          badgeVariant: 'info' as const,
           benefits: ['Voice recognition', 'Hands-free operation', 'Mobile optimized']
         },
         {
@@ -144,6 +155,7 @@ const Features: React.FC = () => {
           description: 'Get personalized content recommendations based on your interests and reading patterns.',
           component: ContentRecommendationEngine,
           badge: 'Personalized',
+          badgeVariant: 'warning' as const,
           benefits: ['Learning recommendations', 'Content suggestions', 'Adaptive algorithms']
         }
       ]
@@ -161,6 +173,7 @@ const Features: React.FC = () => {
           description: 'Distraction-free workspace with pomodoro timer, task management, and progress tracking.',
           component: FocusModeDashboard,
           badge: 'Focus Mode',
+          badgeVariant: 'success' as const,
           benefits: ['Distraction blocking', 'Time tracking', 'Goal setting']
         },
         {
@@ -169,6 +182,7 @@ const Features: React.FC = () => {
           description: 'Schedule reading time, set learning goals, and track your knowledge-building progress.',
           component: ContentScheduler,
           badge: 'Planning',
+          badgeVariant: 'info' as const,
           benefits: ['Learning schedules', 'Goal tracking', 'Progress analytics']
         },
         {
@@ -177,6 +191,7 @@ const Features: React.FC = () => {
           description: 'Smart notifications remind you of important content and suggest optimal learning times.',
           component: SmartNotifications,
           badge: 'Smart',
+          badgeVariant: 'warning' as const,
           benefits: ['Intelligent reminders', 'Learning optimization', 'Custom alerts']
         }
       ]
@@ -194,6 +209,7 @@ const Features: React.FC = () => {
           description: 'Create shared knowledge spaces for your team with real-time collaboration and permission controls.',
           component: CollaborativeWorkspaces,
           badge: 'Team Feature',
+          badgeVariant: 'success' as const,
           benefits: ['Real-time collaboration', 'Permission controls', 'Team analytics']
         }
       ]
@@ -211,6 +227,7 @@ const Features: React.FC = () => {
           description: 'Comprehensive analytics show how you learn, what you focus on, and where to improve.',
           component: ContentInsights,
           badge: 'Analytics',
+          badgeVariant: 'info' as const,
           benefits: ['Learning analytics', 'Progress tracking', 'Improvement insights']
         },
         {
@@ -219,6 +236,7 @@ const Features: React.FC = () => {
           description: 'Monitor reading habits, set goals, and celebrate achievements with detailed progress tracking.',
           component: ReadingProgressTracker,
           badge: 'Personal Growth',
+          badgeVariant: 'warning' as const,
           benefits: ['Reading statistics', 'Goal setting', 'Achievement tracking']
         }
       ]
@@ -235,7 +253,15 @@ const Features: React.FC = () => {
   ];
 
   const FeatureDemo = ({ feature }: { feature: any }) => {
-    if (!feature.component) return <div className="text-center text-muted-foreground">Demo coming soon</div>;
+    if (!feature.component) {
+      return (
+        <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-lg border-2 border-dashed">
+          <Brain className="h-12 w-12 mx-auto mb-4 opacity-50" />
+          <Typography.H4 className="mb-2">Demo Coming Soon</Typography.H4>
+          <Typography.Body>We're preparing an interactive demo for this feature.</Typography.Body>
+        </div>
+      );
+    }
     const Component = feature.component;
     return <Component />;
   };
@@ -248,62 +274,88 @@ const Features: React.FC = () => {
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <section className="py-20 lg:py-32 bg-gradient-to-b from-background to-muted/20">
-          <div className="container text-center">
-            <Badge variant="outline" className="mb-8 animate-fade-in text-sm px-4 py-2">
+        {/* Enhanced Hero Section */}
+        <Layout.Section size="xl" background="accent" className="relative overflow-hidden">
+          {/* Background Elements */}
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background to-blue-500/5" />
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+          
+          <Layout.Container className="text-center relative z-10">
+            <Interactive.Badge variant="info" className={cn("mb-8", animations.fadeIn)}>
               <Sparkles className="h-4 w-4 mr-2" />
               Powerful Features
-            </Badge>
+            </Interactive.Badge>
             
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 animate-fade-in">
+            <Typography.Hero className={cn("mb-8", animations.fadeIn)} style={{ animationDelay: '200ms' }}>
               Everything You Need to
               <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block mt-2">
                 Master Your Knowledge
               </span>
-            </h1>
+            </Typography.Hero>
             
-            <p className="text-xl lg:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in">
+            <Typography.Lead className={cn("mb-12 max-w-4xl mx-auto", animations.fadeIn)} style={{ animationDelay: '400ms' }}>
               From instant capture to intelligent discovery, Accio transforms how you handle information. 
               Discover the features that will revolutionize your knowledge management workflow.
-            </p>
+            </Typography.Lead>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16 animate-fade-in">
-              <Button size="lg" className="text-lg px-10 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" asChild>
+            <div className={cn("flex flex-col sm:flex-row gap-6 justify-center mb-16", animations.fadeIn)} style={{ animationDelay: '600ms' }}>
+              <Button 
+                size="lg" 
+                className={cn(
+                  "text-lg px-10 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90",
+                  animations.hoverGlow,
+                  accessibility.focusRing
+                )} 
+                asChild
+              >
                 <Link to="/register">
                   Start Free Trial
                   <ArrowRight className="ml-3 h-5 w-5" />
                 </Link>
               </Button>
-              <Button variant="outline" size="lg" className="text-lg px-10 py-6 border-2" asChild>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className={cn(
+                  "text-lg px-10 py-6 border-2 backdrop-blur-sm",
+                  animations.hoverLift,
+                  accessibility.focusRing
+                )} 
+                asChild
+              >
                 <Link to="/contact">
                   Schedule Demo
                 </Link>
               </Button>
             </div>
 
-            {/* Quick Feature Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-5xl mx-auto animate-fade-in">
+            {/* Quick Features Grid */}
+            <Layout.Grid cols="6" gap="sm" className={cn("max-w-5xl mx-auto", animations.fadeIn)} style={{ animationDelay: '800ms' }}>
               {quickFeatures.map((feature, index) => (
-                <div key={index} className="text-center p-4 bg-card/50 backdrop-blur rounded-xl border hover:bg-card/80 transition-all">
+                <Interactive.Card 
+                  key={index} 
+                  variant="glass" 
+                  className={cn("text-center p-4", animations.stagger)}
+                  style={{ animationDelay: `${800 + index * 100}ms` }}
+                >
                   <feature.icon className="h-8 w-8 text-primary mx-auto mb-3" />
-                  <h4 className="font-semibold text-sm mb-1">{feature.title}</h4>
-                  <p className="text-xs text-muted-foreground">{feature.desc}</p>
-                </div>
+                  <Typography.H4 className="text-sm mb-1">{feature.title}</Typography.H4>
+                  <Typography.Caption className="text-xs">{feature.desc}</Typography.Caption>
+                </Interactive.Card>
               ))}
-            </div>
-          </div>
-        </section>
+            </Layout.Grid>
+          </Layout.Container>
+        </Layout.Section>
 
-        {/* Features Showcase */}
-        <section className="py-20">
-          <div className="container">
+        {/* Enhanced Features Showcase */}
+        <Layout.Section size="lg">
+          <Layout.Container>
             <Tabs defaultValue="capture-organize" className="w-full">
               <div className="flex flex-col lg:flex-row gap-12">
-                {/* Sidebar Navigation */}
+                {/* Enhanced Sidebar Navigation */}
                 <div className="lg:w-80">
                   <div className="sticky top-24">
-                    <h2 className="text-2xl font-bold mb-8">Feature Categories</h2>
+                    <Typography.H2 className="mb-8">Feature Categories</Typography.H2>
                     <TabsList className="grid w-full grid-cols-1 gap-3 h-auto bg-transparent">
                       {featureCategories.map((category) => {
                         const Icon = category.icon;
@@ -311,15 +363,21 @@ const Features: React.FC = () => {
                           <TabsTrigger
                             key={category.id}
                             value={category.id}
-                            className="w-full justify-start p-6 text-left data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white rounded-xl border-2 data-[state=active]:border-primary/20 hover:bg-muted/50 transition-all"
+                            className={cn(
+                              "w-full justify-start p-6 text-left rounded-xl border-2 transition-all",
+                              "data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600",
+                              "data-[state=active]:text-white data-[state=active]:border-primary/20",
+                              "hover:bg-muted/50 hover:border-primary/10",
+                              accessibility.focusRing
+                            )}
                           >
                             <div className="flex items-start gap-4">
-                              <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${category.color} flex items-center justify-center flex-shrink-0`}>
+                              <div className={cn("w-10 h-10 rounded-lg bg-gradient-to-r", category.color, "flex items-center justify-center flex-shrink-0")}>
                                 <Icon className="h-5 w-5 text-white" />
                               </div>
                               <div>
-                                <div className="font-semibold text-base">{category.title}</div>
-                                <div className="text-sm opacity-80 mt-1">{category.description}</div>
+                                <Typography.H4 className="text-base mb-1">{category.title}</Typography.H4>
+                                <Typography.Caption className="opacity-80">{category.description}</Typography.Caption>
                               </div>
                             </div>
                           </TabsTrigger>
@@ -329,34 +387,41 @@ const Features: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Main Content */}
+                {/* Enhanced Main Content */}
                 <div className="flex-1">
                   {featureCategories.map((category) => (
                     <TabsContent key={category.id} value={category.id} className="mt-0">
                       <div className="space-y-10">
                         <div className="text-center lg:text-left">
-                          <h3 className="text-3xl lg:text-4xl font-bold mb-4">{category.title}</h3>
-                          <p className="text-xl text-muted-foreground">{category.description}</p>
+                          <Typography.H2 className="mb-4">{category.title}</Typography.H2>
+                          <Typography.Lead>{category.description}</Typography.Lead>
                         </div>
 
                         <div className="grid gap-8">
-                          {category.features.map((feature) => (
-                            <Card key={feature.id} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all">
+                          {category.features.map((feature, index) => (
+                            <Interactive.Card 
+                              key={feature.id} 
+                              variant="elevated" 
+                              className={cn("overflow-hidden", animations.fadeIn)}
+                              style={{ animationDelay: `${index * 200}ms` }}
+                            >
                               <CardHeader className="pb-6">
                                 <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                                   <div className="flex-1">
                                     <div className="flex items-center gap-3 mb-3">
-                                      <CardTitle className="text-xl lg:text-2xl">{feature.title}</CardTitle>
-                                      <Badge variant="secondary" className="text-xs">{feature.badge}</Badge>
+                                      <Typography.H3 className="text-xl lg:text-2xl">{feature.title}</Typography.H3>
+                                      <Interactive.Badge variant={feature.badgeVariant} className="text-xs">
+                                        {feature.badge}
+                                      </Interactive.Badge>
                                     </div>
-                                    <p className="text-muted-foreground text-lg leading-relaxed mb-4">{feature.description}</p>
+                                    <Typography.Body size="lg" className="mb-6">{feature.description}</Typography.Body>
                                     
-                                    {/* Benefits */}
+                                    {/* Enhanced Benefits */}
                                     <div className="flex flex-wrap gap-3">
                                       {feature.benefits.map((benefit, i) => (
-                                        <div key={i} className="flex items-center gap-2 text-sm bg-green-50 dark:bg-green-900/20 px-3 py-1 rounded-full">
+                                        <div key={i} className="flex items-center gap-2 text-sm bg-green-50 dark:bg-green-900/20 px-3 py-2 rounded-full border border-green-200 dark:border-green-800">
                                           <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400" />
-                                          <span>{benefit}</span>
+                                          <span className="text-green-800 dark:text-green-300">{benefit}</span>
                                         </div>
                                       ))}
                                     </div>
@@ -365,7 +430,7 @@ const Features: React.FC = () => {
                                   <Button
                                     variant={activeFeature === feature.id ? "default" : "outline"}
                                     onClick={() => setActiveFeature(activeFeature === feature.id ? null : feature.id)}
-                                    className="flex-shrink-0"
+                                    className={cn("flex-shrink-0", accessibility.focusRing)}
                                   >
                                     <Play className="h-4 w-4 mr-2" />
                                     {activeFeature === feature.id ? 'Hide Demo' : 'Try Feature'}
@@ -380,7 +445,7 @@ const Features: React.FC = () => {
                                   </div>
                                 </CardContent>
                               )}
-                            </Card>
+                            </Interactive.Card>
                           ))}
                         </div>
                       </div>
@@ -389,53 +454,76 @@ const Features: React.FC = () => {
                 </div>
               </div>
             </Tabs>
-          </div>
-        </section>
+          </Layout.Container>
+        </Layout.Section>
 
-        {/* CTA Section */}
-        <section className="py-20 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
-          <div className="container text-center">
+        {/* Enhanced CTA Section */}
+        <Layout.Section size="lg" background="accent">
+          <Layout.Container className="text-center">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+              <Interactive.Badge variant="success" className="mb-6">
+                <Award className="h-4 w-4 mr-2" />
+                Ready to Get Started?
+              </Interactive.Badge>
+              
+              <Typography.H1 className="mb-6">
                 Ready to Transform Your Knowledge Management?
-              </h2>
-              <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
+              </Typography.H1>
+              
+              <Typography.Lead className="mb-12">
                 Join over 50,000 users who are already leveraging Accio's powerful features 
                 to organize and amplify their knowledge. Start your free trial today.
-              </p>
+              </Typography.Lead>
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
-                <Button size="lg" className="text-lg px-10 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" asChild>
+                <Button 
+                  size="lg" 
+                  className={cn(
+                    "text-lg px-10 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90",
+                    animations.hoverGlow,
+                    accessibility.focusRing
+                  )} 
+                  asChild
+                >
                   <Link to="/register">
                     <Sparkles className="mr-3 h-5 w-5" />
                     Start Free Trial
                     <ArrowRight className="ml-3 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="text-lg px-10 py-6 border-2" asChild>
+                <Button 
+                  variant="outline" 
+                  size="lg" 
+                  className={cn(
+                    "text-lg px-10 py-6 border-2 backdrop-blur-sm",
+                    animations.hoverLift,
+                    accessibility.focusRing
+                  )} 
+                  asChild
+                >
                   <Link to="/contact">
                     Schedule Demo
                   </Link>
                 </Button>
               </div>
               
-              <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-muted-foreground">
+              <div className="flex flex-wrap justify-center items-center gap-6 text-sm">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>No credit card required</span>
+                  <span className="text-muted-foreground">No credit card required</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-blue-500" />
-                  <span>14-day free trial</span>
+                  <span className="text-muted-foreground">14-day free trial</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-purple-500" />
-                  <span>Cancel anytime</span>
+                  <span className="text-muted-foreground">Cancel anytime</span>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </Layout.Container>
+        </Layout.Section>
       </div>
     </>
   );
