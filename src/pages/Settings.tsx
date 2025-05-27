@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -37,7 +36,7 @@ const Settings = () => {
   
   // Settings state
   const [profile, setProfile] = useState({
-    name: user?.displayName || '',
+    name: user?.name || '',
     email: user?.email || '',
     bio: ''
   });
@@ -118,7 +117,9 @@ const Settings = () => {
         <div className="flex items-center gap-2">
           <Label className="font-medium">{label}</Label>
           {tooltip && (
-            <Info className="h-4 w-4 text-muted-foreground cursor-help" title={tooltip} />
+            <div title={tooltip}>
+              <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+            </div>
           )}
         </div>
         {description && (
