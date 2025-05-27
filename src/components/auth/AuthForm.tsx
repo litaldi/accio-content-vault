@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Mail, Lock } from 'lucide-react';
+import { getAuthErrorMessage } from '@/utils/authUtils';
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -15,7 +16,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, isLoading })
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; password?: string; submit?: string }>({});
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -42,9 +43,11 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, isLoading })
     if (!validateForm()) return;
     
     try {
+      setErrors(prev => ({ ...prev, submit: undefined }));
       await onSubmit(email.trim(), password);
-    } catch (error) {
-      // Error handling is done by parent component
+    } catch (error: any) {
+      const errorMessage = getAuthErrorMessage(error);
+      setErrors(prev => ({ ...prev, submit: errorMessage }));
     }
   };
 
@@ -67,6 +70,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit, isLoading })
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Submit Error */}
+      {errors.submit && (
+        <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+          <p className="text-sm text-destructive" role="alert">
+            {errors.submit}
+          </p>
+        </div>
+      )}
+
       {/* Email Field */}
       <div className="space-y-2">
         <Label htmlFor="email" className="text-sm font-medium">

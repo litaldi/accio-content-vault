@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Home, ArrowLeft, Search } from 'lucide-react';
+import { Home, ArrowLeft, Search, HelpCircle } from 'lucide-react';
 
 const NotFound = () => {
   return (
@@ -54,7 +54,7 @@ const NotFound = () => {
                 
                 <Button variant="outline" className="justify-start" asChild>
                   <Link to="/help">
-                    <Search className="h-4 w-4 mr-2" />
+                    <HelpCircle className="h-4 w-4 mr-2" />
                     Get Help
                   </Link>
                 </Button>
