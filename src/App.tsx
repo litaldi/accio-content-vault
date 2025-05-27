@@ -5,10 +5,10 @@ import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { UnifiedThemeProvider } from '@/contexts/UnifiedThemeContext';
-import { CategorizedMainNavigation } from '@/components/navigation/CategorizedMainNavigation';
+import { ImprovedMainNavigation } from '@/components/navigation/ImprovedMainNavigation';
 import { SkipToContent } from '@/components/common/SkipToContent';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
-import Footer from '@/components/Footer';
+import SimplifiedFooter from '@/components/footer/SimplifiedFooter';
 import Home from '@/pages/Home';
 import Features from '@/pages/Features';
 import Playground from '@/pages/Playground';
@@ -19,6 +19,7 @@ import Analytics from '@/pages/Analytics';
 import Integrations from '@/pages/Integrations';
 import AccountSettings from '@/pages/AccountSettings';
 import Contact from '@/pages/Contact';
+import About from '@/pages/About';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import Privacy from '@/pages/Privacy';
@@ -37,7 +38,7 @@ const App: React.FC = () => {
             <Router>
               <div className="App min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
                 <SkipToContent />
-                <CategorizedMainNavigation />
+                <ImprovedMainNavigation />
                 <ErrorBoundary>
                   <main id="main-content" className="flex-grow" tabIndex={-1}>
                     <Routes>
@@ -53,6 +54,7 @@ const App: React.FC = () => {
                       <Route path="/intelligence" element={<ContentIntelligence />} />
                       <Route path="/account" element={<AccountSettings />} />
                       <Route path="/contact" element={<Contact />} />
+                      <Route path="/about" element={<About />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
                       <Route path="/privacy" element={<Privacy />} />
@@ -61,7 +63,7 @@ const App: React.FC = () => {
                     </Routes>
                   </main>
                 </ErrorBoundary>
-                <Footer />
+                <SimplifiedFooter />
                 <Toaster />
               </div>
             </Router>
