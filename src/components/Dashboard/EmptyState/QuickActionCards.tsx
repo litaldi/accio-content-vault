@@ -12,23 +12,23 @@ const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onAddContent }) => 
   const quickActions = [
     {
       icon: <Link className="h-6 w-6" />,
-      title: "Save a webpage",
-      description: "Paste any URL and we'll capture it instantly",
-      action: "Try with a URL",
+      title: "Save your first discovery",
+      description: "Paste any URL and watch our AI work its magic",
+      action: "Try with any website",
       color: "from-blue-500 to-cyan-500"
     },
     {
       icon: <FileText className="h-6 w-6" />,
-      title: "Upload a document",
-      description: "PDFs, images, and files become searchable",
-      action: "Upload a file",
+      title: "Upload something brilliant",
+      description: "PDFs, images, documents - we make everything searchable",
+      action: "Upload your first file",
       color: "from-green-500 to-emerald-500"
     },
     {
       icon: <Sparkles className="h-6 w-6" />,
-      title: "See the magic",
-      description: "Watch AI organize everything automatically",
-      action: "Start exploring",
+      title: "See the AI magic",
+      description: "Watch intelligent organization happen in real-time",
+      action: "Experience the magic",
       color: "from-purple-500 to-violet-500"
     }
   ];
@@ -37,10 +37,10 @@ const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onAddContent }) => 
     <div className="space-y-8">
       <div className="text-center">
         <h3 className="text-2xl md:text-3xl font-bold mb-4">
-          Choose your first step
+          Choose your first move
         </h3>
         <p className="text-muted-foreground text-lg">
-          Pick any option below to see how Accio transforms your content
+          Any option will show you why thousands of professionals trust Accio with their most important discoveries
         </p>
       </div>
       
@@ -81,7 +81,7 @@ const QuickActionCards: React.FC<QuickActionCardsProps> = ({ onAddContent }) => 
       
       <div className="text-center">
         <p className="text-sm text-muted-foreground italic">
-          💡 Don't worry about organizing — our AI handles that part for you
+          💡 Pro tip: Don't worry about organization — our AI handles that part for you
         </p>
       </div>
     </div>

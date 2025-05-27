@@ -11,59 +11,74 @@ export const copy = {
     intelligence: 'Intelligence'
   },
   headlines: {
-    hero: 'Transform Knowledge into Unstoppable Power',
-    subhero: 'The intelligent platform that captures, organizes, and transforms any content into searchable knowledge. Stop losing valuable insights—start building your personal knowledge sanctuary.'
+    hero: 'Stop Losing Brilliant Ideas in Digital Chaos',
+    subhero: 'Transform scattered bookmarks, articles, and notes into a powerful knowledge system. Our AI organizes everything so you can focus on what matters: using your insights to win.'
   },
   buttons: {
-    getStarted: 'Get Started Free',
-    seeHowItWorks: 'See How It Works',
-    tryDemo: 'Try Demo'
+    getStarted: 'Start Building Your Knowledge Empire',
+    seeHowItWorks: 'See How The Magic Works',
+    tryDemo: 'Try It Instantly',
+    signUp: 'Yes, Build My Knowledge Empire',
+    signIn: 'Welcome Back',
+    continueJourney: 'Continue Your Journey',
+    showMagic: 'Show Me The Magic First'
   },
   trust: {
-    security: 'Enterprise Security',
-    noCredit: 'No credit card required',
-    freeTrial: '14-day free trial',
-    setupTime: '2-minute setup'
+    security: 'Bank-Level Security',
+    noCredit: 'Free forever plan available',
+    freeTrial: 'Start in 30 seconds',
+    setupTime: 'Zero setup required'
   },
   social: {
     userCount: '10,000+',
-    companies: 'Trusted by leading companies',
-    rating: '4.9/5 stars'
+    companies: 'Join professionals building knowledge empires',
+    rating: 'Transform how you work with information'
   },
   onboarding: {
-    welcome: 'Welcome to Accio',
-    getStarted: 'Let\'s get you started on your knowledge management journey'
+    welcome: 'Welcome to Your Knowledge Empire',
+    getStarted: 'Let\'s turn information chaos into your competitive advantage'
   },
   emptyStates: {
     noContent: {
-      title: 'No content yet',
-      description: 'Start by adding your first piece of content to build your knowledge base.',
-      action: 'Add Content'
+      title: 'Your knowledge journey starts here',
+      description: 'Save your first piece of content and watch the magic happen.',
+      action: 'Save Something Brilliant'
     },
     noResults: {
-      title: 'No results found',
-      description: 'Try adjusting your search terms or filters.',
+      title: 'Nothing found this time',
+      description: 'Try different keywords or explore your collections.',
       action: 'Clear Search'
     },
     noCollections: {
-      title: 'No collections',
-      description: 'Create your first collection to organize your content.',
-      action: 'Create Collection'
+      title: 'Ready to get organized?',
+      description: 'Create your first collection to group related content.',
+      action: 'Create Your First Collection'
     },
     loading: {
-      title: 'Loading...',
-      description: 'Please wait while we load your content.',
+      title: 'Working our magic...',
+      description: 'AI is organizing your content perfectly.',
       action: null
     }
   },
   accessibility: {
-    toggleTheme: 'Toggle theme'
+    toggleTheme: 'Switch theme',
+    openMenu: 'Open navigation menu',
+    closeMenu: 'Close navigation menu',
+    skipToContent: 'Skip to main content'
   },
   microcopy: {
-    personalInfo: 'Personal Information',
-    accountSettings: 'Account Settings',
-    preferences: 'Preferences',
-    security: 'Security',
-    notifications: 'Notifications'
+    personalInfo: 'Your Details',
+    accountSettings: 'Account Preferences',
+    preferences: 'How You Like Things',
+    security: 'Keep Things Secure',
+    notifications: 'Stay in the Loop',
+    saved: 'Saved successfully!',
+    error: 'Oops, something went wrong',
+    loading: 'Just a moment...',
+    tryAgain: 'Give it another shot',
+    cancel: 'Never mind',
+    confirm: 'Yes, do it',
+    delete: 'Remove forever',
+    edit: 'Make changes'
   }
 };

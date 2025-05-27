@@ -10,17 +10,17 @@ import {
   Brain,
   Search,
   Bookmark,
-  Zap
+  Zap,
+  CheckCircle
 } from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
   const { user } = useAuth();
 
-  const features = [
-    { icon: Brain, label: 'AI-Powered Organization' },
-    { icon: Search, label: 'Smart Search' },
-    { icon: Bookmark, label: 'Universal Saving' },
-    { icon: Zap, label: 'Instant Access' },
+  const trustIndicators = [
+    'Free forever plan',
+    'No credit card needed', 
+    'Start in 30 seconds'
   ];
 
   return (
@@ -29,43 +29,33 @@ export const HeroSection: React.FC = () => {
         {/* Badge */}
         <Badge variant="secondary" className="mb-6 text-sm">
           <Sparkles className="h-3 w-3 mr-2" />
-          Transform Your Knowledge Workflow
+          Join 10,000+ Knowledge Empire Builders
         </Badge>
 
         {/* Headline */}
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-          Your AI-Powered
-          <span className="text-primary block">Knowledge Engine</span>
+          Never Lose Another
+          <span className="text-primary block">Brilliant Idea</span>
         </h1>
 
         {/* Subheadline */}
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-          Save, organize, and discover insights from any content with the power of artificial intelligence. 
-          Turn information chaos into structured knowledge.
+          Transform scattered bookmarks and forgotten notes into a powerful knowledge system. 
+          Our AI organizes everything so you can focus on using your insights to win.
         </p>
 
-        {/* Feature Icons */}
-        <div className="flex flex-wrap justify-center gap-6 mb-12">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-              <feature.icon className="h-4 w-4 text-primary" />
-              <span>{feature.label}</span>
-            </div>
-          ))}
-        </div>
-
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           {user ? (
             <>
               <Button size="lg" className="text-lg px-8 py-4" asChild>
                 <Link to="/dashboard">
-                  Go to Dashboard
+                  Continue Building Your Empire
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-4" asChild>
-                <Link to="/saved">View Saved Items</Link>
+                <Link to="/saved">View Your Library</Link>
               </Button>
             </>
           ) : (
@@ -73,21 +63,26 @@ export const HeroSection: React.FC = () => {
               <Button size="lg" className="text-lg px-8 py-4" asChild>
                 <Link to="/register">
                   <Zap className="mr-2 h-5 w-5" />
-                  Start Now - Free
+                  Start Building Your Empire
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Link>
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-4" asChild>
-                <Link to="/features">Explore Features</Link>
+                <Link to="/features">Show Me How It Works</Link>
               </Button>
             </>
           )}
         </div>
 
-        {/* Social Proof */}
-        <p className="text-sm text-muted-foreground mt-8">
-          Join 10,000+ professionals building their knowledge empires
-        </p>
+        {/* Trust Indicators */}
+        <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-muted-foreground">
+          {trustIndicators.map((indicator, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-500" />
+              <span>{indicator}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
