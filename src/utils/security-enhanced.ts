@@ -186,17 +186,15 @@ export class CSRFTokenManager {
   }
 }
 
-// Enhanced Rate Limiting
-export class SecurityRateLimiter extends RateLimiter {
+// Enhanced Rate Limiting (standalone implementation)
+export class SecurityRateLimiter {
   private attempts: Map<string, { count: number; timestamps: number[] }> = new Map();
   
   constructor(
-    maxAttempts: number = 5,
-    windowMs: number = 60000,
+    private maxAttempts: number = 5,
+    private windowMs: number = 60000,
     private blockDuration: number = 300000 // 5 minutes
-  ) {
-    super(maxAttempts, windowMs);
-  }
+  ) {}
   
   canAttempt(identifier: string): { allowed: boolean; resetTime?: number; remaining?: number } {
     const now = Date.now();

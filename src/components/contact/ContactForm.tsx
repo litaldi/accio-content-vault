@@ -55,7 +55,7 @@ const ContactForm: React.FC = () => {
     
     // Rate limiting check
     const rateLimitCheck = contactRateLimiter.canAttempt('contact-form');
-    if (!rateLimitCheck) {
+    if (!rateLimitCheck.allowed) {
       showError('Too Many Attempts', 'Please wait before submitting another message.');
       return;
     }
@@ -82,7 +82,7 @@ const ContactForm: React.FC = () => {
         email: formData.email.trim(),
         company: sanitizeInput(formData.company, { maxLength: 100 }),
         category: formData.category,
-        message: sanitizeInput(formData.message, { maxLength: 2000, preserveLineBreaks: true })
+        message: sanitizeInput(formData.message, { maxLength: 2000 })
       };
 
       // Generate CSRF token

@@ -60,7 +60,7 @@ const ChatWidget: React.FC = () => {
 
     // Rate limiting check
     const rateLimitCheck = contactRateLimiter.canAttempt('chat-widget');
-    if (!rateLimitCheck) {
+    if (!rateLimitCheck.allowed) {
       showError('Too Many Messages', 'Please wait before sending another message.');
       return;
     }
@@ -79,7 +79,7 @@ const ChatWidget: React.FC = () => {
         name: sanitizeInput(formData.name, { maxLength: 100 }),
         email: formData.email.trim(),
         category: formData.category,
-        message: sanitizeInput(formData.message, { maxLength: 1000, preserveLineBreaks: true })
+        message: sanitizeInput(formData.message, { maxLength: 1000 })
       };
 
       // Simulate API call
