@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,7 +19,8 @@ import {
   MoreHorizontal,
   Star,
   Archive,
-  Trash2
+  Trash2,
+  ArrowRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

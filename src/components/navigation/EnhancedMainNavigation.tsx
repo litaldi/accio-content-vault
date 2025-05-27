@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -28,7 +27,6 @@ import {
   Moon,
   Menu,
   X,
-  Pricing,
   Zap
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
