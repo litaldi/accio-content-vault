@@ -1,401 +1,486 @@
 
 import React, { useState } from 'react';
-import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Helmet } from 'react-helmet-async';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Settings as SettingsIcon,
-  Bell,
-  Shield,
-  Palette,
-  Globe,
-  Download,
-  Trash2,
-  AlertTriangle,
-  Save,
-  Moon,
-  Sun,
-  Monitor,
-  Mail,
-  Smartphone,
-  Eye,
-  Lock,
-  CreditCard
-} from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useToast } from '@/hooks/use-toast';
+import {
+  User,
+  Bell,
+  Palette,
+  Shield,
+  CreditCard,
+  Accessibility,
+  Brain,
+  Save,
+  Info,
+  Eye,
+  Volume2,
+  Type,
+  Monitor,
+  Smartphone
+} from 'lucide-react';
 
 const Settings = () => {
-  const { toast } = useToast();
+  const { user } = useAuth();
   const { theme, setTheme } = useTheme();
+  const { toast } = useToast();
   
-  const [settings, setSettings] = useState({
-    // Notifications
-    emailNotifications: true,
-    pushNotifications: false,
-    weeklyDigest: true,
-    learningReminders: true,
-    
-    // Privacy
-    profileVisibility: 'private',
-    dataSharing: false,
-    analyticsTracking: true,
-    
-    // Preferences
+  // Settings state
+  const [profile, setProfile] = useState({
+    name: user?.displayName || '',
+    email: user?.email || '',
+    bio: ''
+  });
+  
+  const [preferences, setPreferences] = useState({
     language: 'en',
-    timezone: 'America/Los_Angeles',
+    timezone: 'UTC',
     dateFormat: 'MM/DD/YYYY',
-    autoSave: true,
-    
-    // AI Settings
-    aiSuggestions: true,
-    autoTagging: true,
-    smartCategories: true
+    itemsPerPage: '20'
+  });
+  
+  const [notifications, setNotifications] = useState({
+    email: true,
+    push: false,
+    digest: true,
+    mentions: true
+  });
+  
+  const [accessibility, setAccessibility] = useState({
+    reduceMotion: false,
+    highContrast: false,
+    largeText: false,
+    screenReader: false
+  });
+  
+  const [aiSettings, setAiSettings] = useState({
+    tone: 'professional',
+    summaryLength: 'medium',
+    autoTag: true,
+    smartSuggestions: true
   });
 
-  const handleSettingChange = (key: string, value: any) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
-  };
-
-  const handleSave = () => {
+  const handleSave = (section: string) => {
     toast({
-      title: "Settings saved",
-      description: "Your preferences have been updated successfully.",
+      title: "Settings Updated",
+      description: `Your ${section} settings have been saved successfully.`,
     });
   };
 
-  const handleExportData = () => {
-    toast({
-      title: "Export started",
-      description: "Your data export will be emailed to you shortly.",
-    });
-  };
+  const SettingsSection = ({ 
+    icon: Icon, 
+    title, 
+    description, 
+    children 
+  }: { 
+    icon: any, 
+    title: string, 
+    description: string, 
+    children: React.ReactNode 
+  }) => (
+    <Card className="mb-6">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-3">
+          <Icon className="h-5 w-5 text-primary" />
+          {title}
+        </CardTitle>
+        <p className="text-sm text-muted-foreground">{description}</p>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {children}
+      </CardContent>
+    </Card>
+  );
 
-  const handleDeleteAccount = () => {
-    toast({
-      title: "Account deletion requested",
-      description: "Please check your email to confirm this action.",
-      variant: "destructive",
-    });
-  };
-
-  const settingSections = [
-    {
-      id: 'notifications',
-      title: 'Notifications',
-      description: 'Manage how you receive updates and alerts',
-      icon: Bell,
-      settings: [
-        {
-          key: 'emailNotifications',
-          label: 'Email Notifications',
-          description: 'Receive notifications via email',
-          type: 'switch'
-        },
-        {
-          key: 'pushNotifications',
-          label: 'Push Notifications',
-          description: 'Get browser push notifications',
-          type: 'switch'
-        },
-        {
-          key: 'weeklyDigest',
-          label: 'Weekly Digest',
-          description: 'Summary of your week\'s activity',
-          type: 'switch'
-        },
-        {
-          key: 'learningReminders',
-          label: 'Learning Reminders',
-          description: 'Reminders to review saved content',
-          type: 'switch'
-        }
-      ]
-    },
-    {
-      id: 'appearance',
-      title: 'Appearance',
-      description: 'Customize how Accio looks and feels',
-      icon: Palette,
-      settings: [
-        {
-          key: 'theme',
-          label: 'Theme',
-          description: 'Choose your preferred color scheme',
-          type: 'theme-select'
-        }
-      ]
-    },
-    {
-      id: 'preferences',
-      title: 'Preferences',
-      description: 'Language, timezone, and display options',
-      icon: Globe,
-      settings: [
-        {
-          key: 'language',
-          label: 'Language',
-          description: 'Choose your display language',
-          type: 'select',
-          options: [
-            { value: 'en', label: 'English' },
-            { value: 'es', label: 'Español' },
-            { value: 'fr', label: 'Français' },
-            { value: 'de', label: 'Deutsch' }
-          ]
-        },
-        {
-          key: 'timezone',
-          label: 'Timezone',
-          description: 'Your local timezone',
-          type: 'select',
-          options: [
-            { value: 'America/Los_Angeles', label: 'Pacific Time' },
-            { value: 'America/Denver', label: 'Mountain Time' },
-            { value: 'America/Chicago', label: 'Central Time' },
-            { value: 'America/New_York', label: 'Eastern Time' }
-          ]
-        },
-        {
-          key: 'autoSave',
-          label: 'Auto-save',
-          description: 'Automatically save your work',
-          type: 'switch'
-        }
-      ]
-    },
-    {
-      id: 'privacy',
-      title: 'Privacy & Security',
-      description: 'Control your data and security settings',
-      icon: Shield,
-      settings: [
-        {
-          key: 'profileVisibility',
-          label: 'Profile Visibility',
-          description: 'Who can see your profile',
-          type: 'select',
-          options: [
-            { value: 'public', label: 'Public' },
-            { value: 'private', label: 'Private' },
-            { value: 'friends', label: 'Friends Only' }
-          ]
-        },
-        {
-          key: 'dataSharing',
-          label: 'Data Sharing',
-          description: 'Share anonymous usage data to improve Accio',
-          type: 'switch'
-        },
-        {
-          key: 'analyticsTracking',
-          label: 'Analytics Tracking',
-          description: 'Allow analytics to improve your experience',
-          type: 'switch'
-        }
-      ]
-    },
-    {
-      id: 'ai',
-      title: 'AI & Automation',
-      description: 'Configure AI-powered features',
-      icon: SettingsIcon,
-      settings: [
-        {
-          key: 'aiSuggestions',
-          label: 'AI Suggestions',
-          description: 'Get AI-powered content recommendations',
-          type: 'switch'
-        },
-        {
-          key: 'autoTagging',
-          label: 'Auto-tagging',
-          description: 'Automatically tag saved content',
-          type: 'switch'
-        },
-        {
-          key: 'smartCategories',
-          label: 'Smart Categories',
-          description: 'AI-suggested content categorization',
-          type: 'switch'
-        }
-      ]
-    }
-  ];
+  const SettingItem = ({ 
+    label, 
+    description, 
+    children, 
+    tooltip 
+  }: { 
+    label: string, 
+    description?: string, 
+    children: React.ReactNode,
+    tooltip?: string 
+  }) => (
+    <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
+      <div className="flex-1">
+        <div className="flex items-center gap-2">
+          <Label className="font-medium">{label}</Label>
+          {tooltip && (
+            <Info className="h-4 w-4 text-muted-foreground cursor-help" title={tooltip} />
+          )}
+        </div>
+        {description && (
+          <p className="text-sm text-muted-foreground mt-1">{description}</p>
+        )}
+      </div>
+      <div className="ml-4">
+        {children}
+      </div>
+    </div>
+  );
 
   return (
-    <UnifiedPageLayout
-      title="Settings - Configure Your Experience | Accio"
-      description="Customize your Accio experience with personal preferences, privacy settings, and notification controls."
-    >
-      <div className="container py-8">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Settings</h1>
-            <p className="text-muted-foreground">
-              Customize your Accio experience and manage your account preferences.
-            </p>
-          </div>
-          <Button onClick={handleSave} className="mt-4 lg:mt-0 gap-2">
-            <Save className="h-4 w-4" />
-            Save Changes
-          </Button>
+    <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>Settings - Accio</title>
+        <meta name="description" content="Manage your account settings, preferences, and accessibility options" />
+      </Helmet>
+
+      <div className="container mx-auto px-4 py-8 max-w-5xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold mb-2">Settings</h1>
+          <p className="text-muted-foreground">
+            Manage your account, preferences, and accessibility settings
+          </p>
         </div>
 
-        <div className="grid lg:grid-cols-4 gap-8">
-          {/* Settings Navigation */}
-          <div className="lg:col-span-1">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Settings</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {settingSections.map((section) => (
-                  <Button
-                    key={section.id}
-                    variant="ghost"
-                    className="w-full justify-start gap-3"
-                  >
-                    <section.icon className="h-4 w-4" />
-                    {section.title}
-                  </Button>
-                ))}
-                <Separator className="my-4" />
-                <Button variant="ghost" className="w-full justify-start gap-3 text-muted-foreground">
-                  <CreditCard className="h-4 w-4" />
-                  Billing
-                  <Badge variant="outline" className="ml-auto">Pro</Badge>
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
+        <Tabs defaultValue="profile" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="profile" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              <span className="hidden sm:inline">Profile</span>
+            </TabsTrigger>
+            <TabsTrigger value="preferences" className="flex items-center gap-2">
+              <Monitor className="h-4 w-4" />
+              <span className="hidden sm:inline">Preferences</span>
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="flex items-center gap-2">
+              <Bell className="h-4 w-4" />
+              <span className="hidden sm:inline">Notifications</span>
+            </TabsTrigger>
+            <TabsTrigger value="ai" className="flex items-center gap-2">
+              <Brain className="h-4 w-4" />
+              <span className="hidden sm:inline">AI</span>
+            </TabsTrigger>
+            <TabsTrigger value="accessibility" className="flex items-center gap-2">
+              <Accessibility className="h-4 w-4" />
+              <span className="hidden sm:inline">Access</span>
+            </TabsTrigger>
+            <TabsTrigger value="billing" className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4" />
+              <span className="hidden sm:inline">Billing</span>
+            </TabsTrigger>
+          </TabsList>
 
-          {/* Settings Content */}
-          <div className="lg:col-span-3 space-y-8">
-            {settingSections.map((section) => (
-              <Card key={section.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <section.icon className="h-5 w-5" />
-                    {section.title}
-                  </CardTitle>
-                  <CardDescription>{section.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  {section.settings.map((setting) => (
-                    <div key={setting.key} className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <Label className="text-sm font-medium">{setting.label}</Label>
-                        <p className="text-sm text-muted-foreground">{setting.description}</p>
-                      </div>
-                      <div className="ml-4">
-                        {setting.type === 'switch' && (
-                          <Switch
-                            checked={settings[setting.key as keyof typeof settings] as boolean}
-                            onCheckedChange={(checked) => handleSettingChange(setting.key, checked)}
-                          />
-                        )}
-                        {setting.type === 'select' && setting.options && (
-                          <Select
-                            value={settings[setting.key as keyof typeof settings] as string}
-                            onValueChange={(value) => handleSettingChange(setting.key, value)}
-                          >
-                            <SelectTrigger className="w-48">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {setting.options.map((option) => (
-                                <SelectItem key={option.value} value={option.value}>
-                                  {option.label}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        )}
-                        {setting.type === 'theme-select' && (
-                          <Select value={theme} onValueChange={setTheme}>
-                            <SelectTrigger className="w-48">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="light">
-                                <div className="flex items-center gap-2">
-                                  <Sun className="h-4 w-4" />
-                                  Light
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="dark">
-                                <div className="flex items-center gap-2">
-                                  <Moon className="h-4 w-4" />
-                                  Dark
-                                </div>
-                              </SelectItem>
-                              <SelectItem value="system">
-                                <div className="flex items-center gap-2">
-                                  <Monitor className="h-4 w-4" />
-                                  System
-                                </div>
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        )}
+          <TabsContent value="profile">
+            <SettingsSection
+              icon={User}
+              title="Profile Information"
+              description="Update your personal information and account details"
+            >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Full Name</Label>
+                  <Input
+                    id="name"
+                    value={profile.name}
+                    onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Enter your full name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email Address</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={profile.email}
+                    onChange={(e) => setProfile(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="Enter your email"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bio">Bio</Label>
+                <Input
+                  id="bio"
+                  value={profile.bio}
+                  onChange={(e) => setProfile(prev => ({ ...prev, bio: e.target.value }))}
+                  placeholder="Tell us about yourself"
+                />
+              </div>
+              <Button onClick={() => handleSave('profile')} className="gap-2">
+                <Save className="h-4 w-4" />
+                Save Profile
+              </Button>
+            </SettingsSection>
+          </TabsContent>
+
+          <TabsContent value="preferences">
+            <SettingsSection
+              icon={Palette}
+              title="Appearance & Preferences"
+              description="Customize your interface and general preferences"
+            >
+              <SettingItem 
+                label="Theme" 
+                description="Choose your preferred color scheme"
+              >
+                <Select value={theme} onValueChange={setTheme}>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="light">Light</SelectItem>
+                    <SelectItem value="dark">Dark</SelectItem>
+                    <SelectItem value="system">System</SelectItem>
+                  </SelectContent>
+                </Select>
+              </SettingItem>
+
+              <SettingItem 
+                label="Language" 
+                description="Select your preferred language"
+              >
+                <Select value={preferences.language} onValueChange={(value) => 
+                  setPreferences(prev => ({ ...prev, language: value }))
+                }>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="es">Spanish</SelectItem>
+                    <SelectItem value="fr">French</SelectItem>
+                  </SelectContent>
+                </Select>
+              </SettingItem>
+
+              <SettingItem 
+                label="Timezone" 
+                description="Your local timezone for dates and times"
+              >
+                <Select value={preferences.timezone} onValueChange={(value) => 
+                  setPreferences(prev => ({ ...prev, timezone: value }))
+                }>
+                  <SelectTrigger className="w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="UTC">UTC</SelectItem>
+                    <SelectItem value="EST">Eastern Time</SelectItem>
+                    <SelectItem value="PST">Pacific Time</SelectItem>
+                  </SelectContent>
+                </Select>
+              </SettingItem>
+
+              <Button onClick={() => handleSave('preferences')} className="gap-2">
+                <Save className="h-4 w-4" />
+                Save Preferences
+              </Button>
+            </SettingsSection>
+          </TabsContent>
+
+          <TabsContent value="notifications">
+            <SettingsSection
+              icon={Bell}
+              title="Notification Settings"
+              description="Control how and when you receive notifications"
+            >
+              <SettingItem 
+                label="Email Notifications" 
+                description="Receive updates via email"
+              >
+                <Switch 
+                  checked={notifications.email}
+                  onCheckedChange={(checked) => 
+                    setNotifications(prev => ({ ...prev, email: checked }))
+                  }
+                />
+              </SettingItem>
+
+              <SettingItem 
+                label="Push Notifications" 
+                description="Browser notifications for real-time updates"
+              >
+                <Switch 
+                  checked={notifications.push}
+                  onCheckedChange={(checked) => 
+                    setNotifications(prev => ({ ...prev, push: checked }))
+                  }
+                />
+              </SettingItem>
+
+              <SettingItem 
+                label="Weekly Digest" 
+                description="Summary of your activity and insights"
+              >
+                <Switch 
+                  checked={notifications.digest}
+                  onCheckedChange={(checked) => 
+                    setNotifications(prev => ({ ...prev, digest: checked }))
+                  }
+                />
+              </SettingItem>
+
+              <Button onClick={() => handleSave('notifications')} className="gap-2">
+                <Save className="h-4 w-4" />
+                Save Notifications
+              </Button>
+            </SettingsSection>
+          </TabsContent>
+
+          <TabsContent value="ai">
+            <SettingsSection
+              icon={Brain}
+              title="AI Assistant Settings"
+              description="Customize how AI features work for you"
+            >
+              <SettingItem 
+                label="AI Tone" 
+                description="Choose the communication style for AI responses"
+                tooltip="This affects how the AI assistant communicates with you"
+              >
+                <Select value={aiSettings.tone} onValueChange={(value) => 
+                  setAiSettings(prev => ({ ...prev, tone: value }))
+                }>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="casual">Casual</SelectItem>
+                    <SelectItem value="professional">Professional</SelectItem>
+                    <SelectItem value="friendly">Friendly</SelectItem>
+                  </SelectContent>
+                </Select>
+              </SettingItem>
+
+              <SettingItem 
+                label="Summary Length" 
+                description="Default length for AI-generated summaries"
+              >
+                <Select value={aiSettings.summaryLength} onValueChange={(value) => 
+                  setAiSettings(prev => ({ ...prev, summaryLength: value }))
+                }>
+                  <SelectTrigger className="w-32">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="short">Short</SelectItem>
+                    <SelectItem value="medium">Medium</SelectItem>
+                    <SelectItem value="detailed">Detailed</SelectItem>
+                  </SelectContent>
+                </Select>
+              </SettingItem>
+
+              <SettingItem 
+                label="Auto-tagging" 
+                description="Automatically suggest tags for saved content"
+              >
+                <Switch 
+                  checked={aiSettings.autoTag}
+                  onCheckedChange={(checked) => 
+                    setAiSettings(prev => ({ ...prev, autoTag: checked }))
+                  }
+                />
+              </SettingItem>
+
+              <Button onClick={() => handleSave('AI')} className="gap-2">
+                <Save className="h-4 w-4" />
+                Save AI Settings
+              </Button>
+            </SettingsSection>
+          </TabsContent>
+
+          <TabsContent value="accessibility">
+            <SettingsSection
+              icon={Accessibility}
+              title="Accessibility Options"
+              description="Customize the interface for better accessibility"
+            >
+              <SettingItem 
+                label="Reduce Motion" 
+                description="Minimize animations and transitions"
+                tooltip="Helpful for users sensitive to motion"
+              >
+                <Switch 
+                  checked={accessibility.reduceMotion}
+                  onCheckedChange={(checked) => 
+                    setAccessibility(prev => ({ ...prev, reduceMotion: checked }))
+                  }
+                />
+              </SettingItem>
+
+              <SettingItem 
+                label="High Contrast" 
+                description="Increase contrast for better visibility"
+              >
+                <Switch 
+                  checked={accessibility.highContrast}
+                  onCheckedChange={(checked) => 
+                    setAccessibility(prev => ({ ...prev, highContrast: checked }))
+                  }
+                />
+              </SettingItem>
+
+              <SettingItem 
+                label="Large Text" 
+                description="Increase text size throughout the app"
+              >
+                <Switch 
+                  checked={accessibility.largeText}
+                  onCheckedChange={(checked) => 
+                    setAccessibility(prev => ({ ...prev, largeText: checked }))
+                  }
+                />
+              </SettingItem>
+
+              <Button onClick={() => handleSave('accessibility')} className="gap-2">
+                <Save className="h-4 w-4" />
+                Save Accessibility
+              </Button>
+            </SettingsSection>
+          </TabsContent>
+
+          <TabsContent value="billing">
+            <SettingsSection
+              icon={CreditCard}
+              title="Billing & Subscription"
+              description="Manage your subscription and payment methods"
+            >
+              <div className="flex items-center justify-between p-6 border rounded-lg bg-gradient-to-r from-primary/5 to-background">
+                <div>
+                  <h3 className="font-semibold mb-1">Current Plan</h3>
+                  <p className="text-sm text-muted-foreground mb-2">Pro Plan - $9.99/month</p>
+                  <Badge variant="secondary">Active</Badge>
+                </div>
+                <Button variant="outline">Manage Subscription</Button>
+              </div>
+              
+              <Separator />
+              
+              <div className="space-y-4">
+                <h4 className="font-medium">Payment Methods</h4>
+                <div className="p-4 border rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <CreditCard className="h-5 w-5 text-muted-foreground" />
+                      <div>
+                        <p className="font-medium">•••• •••• •••• 4242</p>
+                        <p className="text-sm text-muted-foreground">Expires 12/2025</p>
                       </div>
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-            ))}
-
-            {/* Account Management */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Lock className="h-5 w-5" />
-                  Account Management
-                </CardTitle>
-                <CardDescription>
-                  Manage your account data and security
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 rounded-lg border">
-                  <div>
-                    <h4 className="font-medium">Export Data</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Download a copy of all your data
-                    </p>
+                    <Button variant="ghost" size="sm">Edit</Button>
                   </div>
-                  <Button variant="outline" onClick={handleExportData} className="gap-2">
-                    <Download className="h-4 w-4" />
-                    Export
-                  </Button>
                 </div>
-
-                <div className="flex items-center justify-between p-4 rounded-lg border border-destructive/20 bg-destructive/5">
-                  <div>
-                    <h4 className="font-medium text-destructive">Delete Account</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Permanently delete your account and all data
-                    </p>
-                  </div>
-                  <Button variant="destructive" onClick={handleDeleteAccount} className="gap-2">
-                    <Trash2 className="h-4 w-4" />
-                    Delete
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
+                <Button variant="outline" size="sm">Add Payment Method</Button>
+              </div>
+            </SettingsSection>
+          </TabsContent>
+        </Tabs>
       </div>
-    </UnifiedPageLayout>
+    </div>
   );
 };
 
