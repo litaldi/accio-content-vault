@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useToast } from '@/hooks/use-toast';
 import { useResponsiveLayout } from '@/hooks/use-responsive-layout';
+import AccessibilityButton from '@/components/accessibility/AccessibilityButton';
 import { 
   Menu, 
   X, 
@@ -24,7 +25,13 @@ import {
   Zap,
   BookOpen,
   User,
-  Bell
+  Bell,
+  MoreHorizontal,
+  HelpCircle,
+  CreditCard,
+  MessageCircle,
+  FileText,
+  Plus
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -78,15 +85,25 @@ const ResponsiveMainNavigation: React.FC = () => {
   const mainNavItems = [
     { to: '/', label: 'Home', icon: Home, description: 'Welcome to Accio' },
     { to: '/features', label: 'Features', icon: Zap, description: 'Explore our capabilities' },
-    { to: '/ai-features', label: 'AI Features', icon: Brain, description: 'AI-powered tools' },
-    { to: '/pricing', label: 'Pricing', icon: Sparkles, description: 'View our plans' }
+    { to: '/ai-features', label: 'AI Features', icon: Brain, description: 'AI-powered tools' }
   ];
 
   const appNavItems = user ? [
     { to: '/dashboard', label: 'Dashboard', icon: BarChart3, description: 'Your command center' },
     { to: '/search', label: 'Search', icon: Search, description: 'Find your content' },
-    { to: '/saved', label: 'Saved', icon: FolderOpen, description: 'Your collections' },
-    { to: '/settings', label: 'Settings', icon: Settings, description: 'Account settings' }
+    { to: '/saved', label: 'Saved', icon: FolderOpen, description: 'Your collections' }
+  ] : [];
+
+  const moreNavItems = [
+    { to: '/pricing', label: 'Pricing', icon: CreditCard, description: 'View our plans' },
+    { to: '/help', label: 'Help Center', icon: HelpCircle, description: 'Get support' },
+    { to: '/contact', label: 'Contact', icon: MessageCircle, description: 'Get in touch' },
+    { to: '/blog', label: 'Blog', icon: FileText, description: 'Latest updates' }
+  ];
+
+  const userNavItems = user ? [
+    { to: '/settings', label: 'Settings', icon: Settings, description: 'Account settings' },
+    { to: '/profile', label: 'Profile', icon: User, description: 'Manage profile' }
   ] : [];
 
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -139,10 +156,50 @@ const ResponsiveMainNavigation: React.FC = () => {
                   <span>{item.label}</span>
                 </Link>
               ))}
+              
+              {/* More dropdown for desktop */}
+              <div className="relative group">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 text-muted-foreground hover:text-foreground hover:bg-accent"
+                >
+                  <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+                  <span>More</span>
+                </Button>
+                
+                <div className="absolute top-full right-0 mt-2 w-48 bg-popover border rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  <div className="p-2 space-y-1">
+                    {moreNavItems.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        className="flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                      >
+                        <item.icon className="h-4 w-4" aria-hidden="true" />
+                        <span>{item.label}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </nav>
 
             {/* Desktop Actions - Hidden on mobile/tablet */}
-            <div className="hidden lg:flex items-center gap-3">
+            <div className="hidden lg:flex items-center gap-2">
+              {/* Quick Capture Button - Repositioned */}
+              {user && (
+                <Button variant="outline" size="sm" asChild className="gap-2">
+                  <Link to="/save">
+                    <Plus className="h-4 w-4" />
+                    <span className="hidden xl:inline">Quick Save</span>
+                  </Link>
+                </Button>
+              )}
+
+              {/* Accessibility Button */}
+              <AccessibilityButton variant="header" />
+
               {/* Theme Toggle */}
               <Button
                 variant="ghost"
@@ -159,23 +216,15 @@ const ResponsiveMainNavigation: React.FC = () => {
               </Button>
 
               {user ? (
-                <>
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link to="/save" className="gap-2">
-                      <BookOpen className="h-4 w-4" />
-                      Save
-                    </Link>
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleSignOut}
-                    className="gap-2"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Sign Out
-                  </Button>
-                </>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="gap-2"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
               ) : (
                 <>
                   <Button variant="ghost" size="sm" asChild>
@@ -196,6 +245,9 @@ const ResponsiveMainNavigation: React.FC = () => {
 
             {/* Mobile Controls */}
             <div className="lg:hidden flex items-center gap-2">
+              {/* Mobile Accessibility Button */}
+              <AccessibilityButton variant="header" />
+
               {/* Mobile Theme Toggle */}
               <Button
                 variant="ghost"
@@ -305,6 +357,72 @@ const ResponsiveMainNavigation: React.FC = () => {
                     </nav>
                   </div>
                 )}
+
+                {/* More Navigation */}
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3 px-2">
+                    More
+                  </h3>
+                  <nav className="space-y-1" role="none">
+                    {moreNavItems.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={closeMobileMenu}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-3 rounded-lg transition-all font-medium",
+                          "hover:bg-accent hover:text-accent-foreground",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
+                          isActiveRoute(item.to) 
+                            ? "bg-primary text-primary-foreground shadow-md" 
+                            : "text-muted-foreground hover:text-foreground"
+                        )}
+                        aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                        role="menuitem"
+                      >
+                        <item.icon className="h-5 w-5" aria-hidden="true" />
+                        <div>
+                          <div className="font-medium">{item.label}</div>
+                          <div className="text-xs opacity-70">{item.description}</div>
+                        </div>
+                      </Link>
+                    ))}
+                  </nav>
+                </div>
+
+                {/* User Navigation (if user is logged in) */}
+                {user && userNavItems.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3 px-2">
+                      Account
+                    </h3>
+                    <nav className="space-y-1" role="none">
+                      {userNavItems.map((item) => (
+                        <Link
+                          key={item.to}
+                          to={item.to}
+                          onClick={closeMobileMenu}
+                          className={cn(
+                            "flex items-center gap-3 px-3 py-3 rounded-lg transition-all font-medium",
+                            "hover:bg-accent hover:text-accent-foreground",
+                            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
+                            isActiveRoute(item.to) 
+                              ? "bg-primary text-primary-foreground shadow-md" 
+                              : "text-muted-foreground hover:text-foreground"
+                          )}
+                          aria-current={isActiveRoute(item.to) ? 'page' : undefined}
+                          role="menuitem"
+                        >
+                          <item.icon className="h-5 w-5" aria-hidden="true" />
+                          <div>
+                            <div className="font-medium">{item.label}</div>
+                            <div className="text-xs opacity-70">{item.description}</div>
+                          </div>
+                        </Link>
+                      ))}
+                    </nav>
+                  </div>
+                )}
               </div>
 
               {/* Mobile Actions */}
@@ -317,8 +435,8 @@ const ResponsiveMainNavigation: React.FC = () => {
                       asChild
                     >
                       <Link to="/save" onClick={closeMobileMenu}>
-                        <BookOpen className="h-5 w-5" />
-                        Save Content
+                        <Plus className="h-5 w-5" />
+                        Quick Save Content
                       </Link>
                     </Button>
                     <Button

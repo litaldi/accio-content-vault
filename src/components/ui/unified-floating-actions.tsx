@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { 
-  Plus, 
   ArrowUp, 
   Search, 
   Sparkles,
@@ -32,7 +31,7 @@ export const UnifiedFloatingActions: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;
-      setShowBackToTop(scrolled > 300);
+      setShowBackToTop(scrolled > 400); // Increased threshold for better UX
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -63,14 +62,6 @@ export const UnifiedFloatingActions: React.FC = () => {
 
   const quickActions: FloatingAction[] = [
     {
-      id: 'save-content',
-      icon: Plus,
-      label: 'Save Content',
-      href: '/save',
-      primary: true,
-      showWhenAuthenticated: true
-    },
-    {
       id: 'search',
       icon: Search,
       label: 'Search',
@@ -89,18 +80,13 @@ export const UnifiedFloatingActions: React.FC = () => {
     !action.showWhenAuthenticated || (action.showWhenAuthenticated && user)
   );
 
-  // Don't render on desktop when no user and no quick actions
-  if (!user && visibleActions.length === 0 && !showBackToTop) {
-    return null;
-  }
-
   return (
     <div 
       className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3"
       data-floating-actions
     >
-      {/* Quick Action Menu - Hidden on large screens if user not authenticated */}
-      {(user || visibleActions.length > 0) && (
+      {/* Quick Action Menu - Hidden on large screens */}
+      {visibleActions.length > 0 && (
         <div className={cn(
           "flex flex-col items-end gap-2 transition-all duration-300",
           "lg:hidden", // Hidden on desktop
@@ -141,7 +127,7 @@ export const UnifiedFloatingActions: React.FC = () => {
       )}
 
       {/* Main Toggle Button - Only show on mobile when there are actions */}
-      {(user || visibleActions.length > 0) && (
+      {visibleActions.length > 0 && (
         <Button
           onClick={() => setIsExpanded(!isExpanded)}
           size="icon"
@@ -161,7 +147,7 @@ export const UnifiedFloatingActions: React.FC = () => {
         </Button>
       )}
 
-      {/* Back to Top Button */}
+      {/* Back to Top Button - Minimalist arrow design */}
       {showBackToTop && (
         <Button
           onClick={scrollToTop}
@@ -169,11 +155,14 @@ export const UnifiedFloatingActions: React.FC = () => {
           variant="outline"
           className={cn(
             "h-12 w-12 rounded-full shadow-lg transition-all duration-300",
-            "bg-background/95 backdrop-blur-sm border",
+            "bg-background/95 backdrop-blur-sm border-2",
             "hover:bg-accent hover:scale-110 active:scale-95",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+            // Ensure sufficient touch target for mobile
+            "min-h-[48px] min-w-[48px]"
           )}
           aria-label="Back to top"
+          title="Back to top"
         >
           <ArrowUp className="h-5 w-5" />
         </Button>

@@ -1,71 +1,38 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface AccessibilityPreferences {
-  reducedMotion: boolean;
-  highContrast: boolean;
-  screenReader: boolean;
-  fontSize: 'normal' | 'large' | 'larger';
-  grayscale: boolean;
-  lineSpacing: 'normal' | 'relaxed' | 'loose';
-  keyboardNavigation: boolean;
-  screenReaderMode: boolean;
-}
+import React, { createContext, useContext, useState, useCallback } from 'react';
 
 interface AccessibilityContextType {
-  preferences: AccessibilityPreferences;
-  updatePreferences: (prefs: Partial<AccessibilityPreferences>) => void;
-  announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
+  announceToScreenReader: (message: string) => void;
+  fontSize: 'normal' | 'large' | 'x-large';
+  setFontSize: (size: 'normal' | 'large' | 'x-large') => void;
+  highContrast: boolean;
+  setHighContrast: (enabled: boolean) => void;
+  reducedMotion: boolean;
+  setReducedMotion: (enabled: boolean) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
-export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [preferences, setPreferences] = useState<AccessibilityPreferences>({
-    reducedMotion: false,
-    highContrast: false,
-    screenReader: false,
-    fontSize: 'normal',
-    grayscale: false,
-    lineSpacing: 'normal',
-    keyboardNavigation: true,
-    screenReaderMode: false,
-  });
+export const useAccessibility = () => {
+  const context = useContext(AccessibilityContext);
+  if (!context) {
+    throw new Error('useAccessibility must be used within an AccessibilityProvider');
+  }
+  return context;
+};
 
-  useEffect(() => {
-    // Check for system preferences
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
-    
-    setPreferences(prev => ({
-      ...prev,
-      reducedMotion: prefersReducedMotion,
-      highContrast: prefersHighContrast,
-    }));
+interface AccessibilityProviderProps {
+  children: React.ReactNode;
+}
 
-    // Load saved preferences
-    const saved = localStorage.getItem('accessibility-preferences');
-    if (saved) {
-      try {
-        const savedPrefs = JSON.parse(saved);
-        setPreferences(prev => ({ ...prev, ...savedPrefs }));
-      } catch (error) {
-        console.warn('Failed to load accessibility preferences:', error);
-      }
-    }
-  }, []);
+export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
+  const [fontSize, setFontSize] = useState<'normal' | 'large' | 'x-large'>('normal');
+  const [highContrast, setHighContrast] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
-  const updatePreferences = (newPrefs: Partial<AccessibilityPreferences>) => {
-    setPreferences(prev => {
-      const updated = { ...prev, ...newPrefs };
-      localStorage.setItem('accessibility-preferences', JSON.stringify(updated));
-      return updated;
-    });
-  };
-
-  const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+  const announceToScreenReader = useCallback((message: string) => {
     const announcement = document.createElement('div');
-    announcement.setAttribute('aria-live', priority);
+    announcement.setAttribute('aria-live', 'polite');
     announcement.setAttribute('aria-atomic', 'true');
     announcement.className = 'sr-only';
     announcement.textContent = message;
@@ -75,19 +42,21 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     setTimeout(() => {
       document.body.removeChild(announcement);
     }, 1000);
+  }, []);
+
+  const value = {
+    announceToScreenReader,
+    fontSize,
+    setFontSize,
+    highContrast,
+    setHighContrast,
+    reducedMotion,
+    setReducedMotion
   };
 
   return (
-    <AccessibilityContext.Provider value={{ preferences, updatePreferences, announceToScreenReader }}>
+    <AccessibilityContext.Provider value={value}>
       {children}
     </AccessibilityContext.Provider>
   );
-};
-
-export const useAccessibility = () => {
-  const context = useContext(AccessibilityContext);
-  if (!context) {
-    throw new Error('useAccessibility must be used within AccessibilityProvider');
-  }
-  return context;
 };
