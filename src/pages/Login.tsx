@@ -9,6 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Brain, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
+import { DemoAccountInfo } from '@/components/auth/DemoAccountInfo';
+import { SocialMediaLinks } from '@/components/social/SocialMediaLinks';
+import { copy } from '@/utils/copy';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -69,6 +72,11 @@ const Login = () => {
     }
   };
 
+  const handleQuickLogin = () => {
+    setEmail(copy.demo.email);
+    setPassword(copy.demo.password);
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -108,6 +116,9 @@ const Login = () => {
             Sign in to your Accio account to continue building your knowledge empire
           </p>
         </div>
+
+        {/* Demo Account Info */}
+        <DemoAccountInfo onQuickLogin={handleQuickLogin} />
 
         {/* Login form */}
         <Card>
@@ -218,6 +229,14 @@ const Login = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Social Media */}
+        <div className="text-center space-y-3">
+          <p className="text-sm text-muted-foreground">Follow us for updates and tips</p>
+          <div className="flex justify-center">
+            <SocialMediaLinks variant="auth" />
+          </div>
+        </div>
 
         {/* Additional help */}
         <div className="text-center text-xs text-muted-foreground">

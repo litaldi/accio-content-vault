@@ -40,7 +40,7 @@ const Index = () => {
     {
       icon: <Zap className="h-6 w-6" />,
       title: "Save From Anywhere, Instantly",
-      description: "Whether you're on your phone, laptop, or tablet - capture brilliant content with one click."
+      description: "Whether you're on your phone, laptop, or tablet, capture brilliant content with one click."
     }
   ];
 
@@ -57,7 +57,7 @@ const Index = () => {
     {
       name: "Sarah Chen",
       role: "Product Manager",
-      content: "I used to lose so many great ideas in bookmarks and notes. Now I actually USE what I save. Game-changer!",
+      content: "I used to lose so many great ideas in bookmarks and notes. Now I actually USE what I save. Game changer!",
       avatar: "SC"
     },
     {
@@ -124,13 +124,6 @@ const Index = () => {
                     </Button>
                   </>
                 )}
-              </div>
-
-              {/* Demo Account Notice */}
-              <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                <p className="text-sm text-blue-700 dark:text-blue-300">
-                  <strong>Try it instantly:</strong> demo@yourapp.com | Demo1234! (No signup required)
-                </p>
               </div>
             </div>
           </div>

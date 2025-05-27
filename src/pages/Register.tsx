@@ -9,7 +9,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { AuthForm } from '@/components/auth/AuthForm';
+import { DemoAccountInfo } from '@/components/auth/DemoAccountInfo';
+import { SocialMediaLinks } from '@/components/social/SocialMediaLinks';
 import { Shield, CheckCircle } from 'lucide-react';
+import { copy } from '@/utils/copy';
 
 const Register = () => {
   const { user, signUp } = useAuth();
@@ -28,7 +31,7 @@ const Register = () => {
 
   const benefits = [
     'Unlimited content saving',
-    'AI-powered organization',
+    'AI powered organization',
     'Smart search & discovery',
     'Export to popular tools',
     'Mobile & web access',
@@ -85,6 +88,9 @@ const Register = () => {
         title="Create your account" 
         subtitle="Start building your knowledge empire today"
       >
+        {/* Demo Account Info */}
+        <DemoAccountInfo />
+
         {/* Benefits */}
         <div className="bg-muted/30 rounded-lg p-6 space-y-4">
           <h3 className="font-semibold text-center">What you'll get:</h3>
@@ -162,6 +168,14 @@ const Register = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Social Media */}
+        <div className="text-center space-y-3">
+          <p className="text-sm text-muted-foreground">Follow us for updates and tips</p>
+          <div className="flex justify-center">
+            <SocialMediaLinks variant="auth" />
+          </div>
+        </div>
 
         {/* Security Notice */}
         <div className="text-center">

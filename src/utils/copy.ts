@@ -24,7 +24,7 @@ export const copy = {
     showMagic: 'Show Me The Magic First'
   },
   trust: {
-    security: 'Bank-Level Security',
+    security: 'Bank Level Security',
     noCredit: 'Free forever plan available',
     freeTrial: 'Start in 30 seconds',
     setupTime: 'Zero setup required'
@@ -80,5 +80,17 @@ export const copy = {
     confirm: 'Yes, do it',
     delete: 'Remove forever',
     edit: 'Make changes'
+  },
+  demo: {
+    title: 'Try Instantly with Demo Account',
+    email: 'demo@yourapp.com',
+    password: 'Demo1234!',
+    description: 'No signup required. Explore all features immediately.'
+  },
+  social: {
+    facebook: 'https://facebook.com/accio',
+    instagram: 'https://instagram.com/accio', 
+    discord: 'https://discord.gg/accio',
+    followUs: 'Follow us for updates and tips'
   }
 };
