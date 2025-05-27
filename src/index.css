@@ -6,17 +6,17 @@
 
 @layer base {
   :root {
-    /* Clean, single-color design system */
+    /* Clean, single-color design system - Solid Purple Primary */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    /* Primary purple as the dominant color */
-    --primary: 250 84% 60%;
+    /* Solid purple as the dominant color */
+    --primary: 250 84% 54%;
     --primary-foreground: 0 0% 98%;
-    /* Neutral grays for everything else */
+    /* Clean neutral grays */
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
     --muted: 240 4.8% 95.9%;
@@ -27,8 +27,8 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 250 84% 60%;
-    --radius: 0.75rem;
+    --ring: 250 84% 54%;
+    --radius: 1rem; /* More rounded for Lemonade aesthetic */
   }
 
   .dark {
@@ -38,7 +38,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 250 84% 60%;
+    --primary: 250 84% 54%;
     --primary-foreground: 240 5.9% 10%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
@@ -50,7 +50,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 250 84% 60%;
+    --ring: 250 84% 54%;
   }
 }
 
@@ -65,6 +65,7 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   /* Clean, minimal focus styles */
@@ -72,7 +73,7 @@
     @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
 
-  /* Enhanced button styles */
+  /* Enhanced button styles - no gradients */
   button, [role="button"] {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
@@ -89,15 +90,36 @@
 
   /* Skip link for accessibility */
   .skip-link {
-    @apply absolute -top-full left-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded-lg;
+    @apply absolute -top-full left-4 z-50 bg-primary text-primary-foreground px-4 py-2 rounded-2xl;
     @apply focus:top-4 transition-all;
+  }
+
+  /* Lemonade-inspired typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  h2 {
+    @apply text-3xl md:text-4xl;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl;
+  }
+
+  p {
+    @apply leading-relaxed;
   }
 }
 
 /* Clean scrollbar styles */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -135,23 +157,20 @@
   }
 }
 
-/* Clean utility classes */
-.text-gradient {
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)) 60%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Clean utility classes - NO GRADIENTS */
+.text-primary {
+  color: hsl(var(--primary));
 }
 
-.bg-gradient-primary {
-  background: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary)) 80%);
+.bg-primary {
+  background-color: hsl(var(--primary));
 }
 
 /* Clean animations */
 @keyframes gentle-fade-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;
@@ -160,5 +179,23 @@
 }
 
 .animate-gentle-fade-in {
-  animation: gentle-fade-in 0.4s ease-out;
+  animation: gentle-fade-in 0.5s ease-out;
+}
+
+/* Lemonade-inspired card styles */
+.card-lemonade {
+  @apply bg-white rounded-2xl border border-gray-100 shadow-sm;
+}
+
+.card-lemonade:hover {
+  @apply shadow-md border-gray-200;
+}
+
+/* Clean button styles */
+.btn-primary {
+  @apply bg-primary text-primary-foreground hover:bg-primary/90 rounded-2xl font-medium;
+}
+
+.btn-secondary {
+  @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 rounded-2xl font-medium;
 }
