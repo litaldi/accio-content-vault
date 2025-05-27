@@ -24,7 +24,8 @@ import {
   MapPin,
   Eye,
   Edit3,
-  Users
+  Users,
+  Calendar
 } from 'lucide-react';
 
 // Import all feature components
@@ -45,6 +46,11 @@ import { AIStudyBuddy } from '@/components/features/AIStudyBuddy';
 import { AIResearchAssistant } from '@/components/features/AIResearchAssistant';
 import { AIHabitTracker } from '@/components/features/AIHabitTracker';
 import { AIGoalTracker } from '@/components/features/AIGoalTracker';
+import { AIContentRecommendations } from '@/components/features/AIContentRecommendations';
+import { AIReadingComprehension } from '@/components/features/AIReadingComprehension';
+import { AIKnowledgeGapAnalyzer } from '@/components/features/AIKnowledgeGapAnalyzer';
+import { AIStudyScheduleOptimizer } from '@/components/features/AIStudyScheduleOptimizer';
+import { AIContentDifficultyAssessor } from '@/components/features/AIContentDifficultyAssessor';
 
 const Features: React.FC = () => {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
@@ -202,6 +208,51 @@ const Features: React.FC = () => {
       category: 'AI',
       component: AIGoalTracker,
       highlights: ['Goal setting', 'Progress tracking', 'AI insights', 'Milestone management']
+    },
+    {
+      id: 'content-recommendations',
+      title: 'AI Content Recommendations',
+      description: 'Discover relevant content with AI-powered recommendations',
+      icon: TrendingUp,
+      category: 'AI',
+      component: AIContentRecommendations,
+      highlights: ['Personalized discovery', 'Relevance scoring', 'Learning path integration']
+    },
+    {
+      id: 'reading-comprehension',
+      title: 'AI Reading Comprehension',
+      description: 'Track and improve your reading comprehension with AI analysis',
+      icon: BookOpen,
+      category: 'AI',
+      component: AIReadingComprehension,
+      highlights: ['Comprehension tracking', 'Focus analysis', 'Improvement insights']
+    },
+    {
+      id: 'knowledge-gap-analyzer',
+      title: 'AI Knowledge Gap Analyzer',
+      description: 'Identify and address knowledge gaps with intelligent analysis',
+      icon: Target,
+      category: 'AI',
+      component: AIKnowledgeGapAnalyzer,
+      highlights: ['Gap detection', 'Learning recommendations', 'Skill mapping']
+    },
+    {
+      id: 'schedule-optimizer',
+      title: 'AI Schedule Optimizer',
+      description: 'Optimize your study schedule for maximum learning efficiency',
+      icon: Calendar,
+      category: 'AI',
+      component: AIStudyScheduleOptimizer,
+      highlights: ['Smart scheduling', 'Energy optimization', 'Retention maximization']
+    },
+    {
+      id: 'difficulty-assessor',
+      title: 'AI Difficulty Assessor',
+      description: 'Assess content difficulty and get personalized recommendations',
+      icon: BarChart3,
+      category: 'AI',
+      component: AIContentDifficultyAssessor,
+      highlights: ['Difficulty scoring', 'Prerequisite analysis', 'Learning readiness']
     }
   ];
 

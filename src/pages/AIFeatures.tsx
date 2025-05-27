@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Typography, Spacing } from '@/components/ui/design-system';
@@ -40,6 +39,11 @@ import { AIStudyBuddy } from '@/components/features/AIStudyBuddy';
 import { AIResearchAssistant } from '@/components/features/AIResearchAssistant';
 import { AIHabitTracker } from '@/components/features/AIHabitTracker';
 import { AIGoalTracker } from '@/components/features/AIGoalTracker';
+import { AIContentRecommendations } from '@/components/features/AIContentRecommendations';
+import { AIReadingComprehension } from '@/components/features/AIReadingComprehension';
+import { AIKnowledgeGapAnalyzer } from '@/components/features/AIKnowledgeGapAnalyzer';
+import { AIStudyScheduleOptimizer } from '@/components/features/AIStudyScheduleOptimizer';
+import { AIContentDifficultyAssessor } from '@/components/features/AIContentDifficultyAssessor';
 
 const AIFeatures: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState<string>('overview');
@@ -163,6 +167,46 @@ const AIFeatures: React.FC = () => {
       description: 'Real-time AI-powered insights about your learning',
       icon: Brain,
       component: AIInsightsWidget,
+      category: 'Intelligence'
+    },
+    {
+      id: 'content-recommendations',
+      title: 'AI Content Recommendations',
+      description: 'Personalized content discovery powered by AI',
+      icon: TrendingUp,
+      component: AIContentRecommendations,
+      category: 'Intelligence'
+    },
+    {
+      id: 'reading-comprehension',
+      title: 'AI Reading Comprehension Tracker',
+      description: 'Monitor and analyze your reading comprehension with AI',
+      icon: BookOpen,
+      component: AIReadingComprehension,
+      category: 'Analytics'
+    },
+    {
+      id: 'knowledge-gap-analyzer',
+      title: 'AI Knowledge Gap Analyzer',
+      description: 'Identify and fill knowledge gaps with AI insights',
+      icon: Target,
+      component: AIKnowledgeGapAnalyzer,
+      category: 'Intelligence'
+    },
+    {
+      id: 'schedule-optimizer',
+      title: 'AI Study Schedule Optimizer',
+      description: 'Optimize your learning schedule with AI recommendations',
+      icon: Target,
+      component: AIStudyScheduleOptimizer,
+      category: 'Productivity'
+    },
+    {
+      id: 'difficulty-assessor',
+      title: 'AI Content Difficulty Assessor',
+      description: 'AI-powered content difficulty analysis and recommendations',
+      icon: BarChart3,
+      component: AIContentDifficultyAssessor,
       category: 'Intelligence'
     }
   ];
