@@ -4,8 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
-import MainNavigationMenu from '@/components/navigation/MainNavigationMenu';
-import GlobalFooter from '@/components/layout/GlobalFooter';
+import EnhancedMainNavigation from '@/components/navigation/EnhancedMainNavigation';
+import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import SavedContent from '@/pages/SavedContent';
@@ -24,7 +24,7 @@ function App() {
         <AuthProvider>
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
-              <MainNavigationMenu />
+              <EnhancedMainNavigation />
               <main className="flex-1">
                 <Routes>
                   <Route path="/" element={<Home />} />
@@ -42,7 +42,7 @@ function App() {
                   <Route path="/register" element={<Home />} />
                 </Routes>
               </main>
-              <GlobalFooter />
+              <EnhancedGlobalFooter />
               <EnhancedQuickCaptureWidget />
               <AIContentAssistant />
             </div>
