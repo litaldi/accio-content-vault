@@ -1,3 +1,4 @@
+
 import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -13,6 +14,8 @@ import Settings from '@/pages/Settings';
 import Profile from '@/pages/Profile';
 import Terms from '@/pages/Terms';
 import Privacy from '@/pages/Privacy';
+import Cookies from '@/pages/Cookies';
+import ResetPassword from '@/pages/ResetPassword';
 
 // Lazy load pages for better performance
 const Index = lazy(() => import('@/pages/Index'));
