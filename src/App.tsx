@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -6,7 +7,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
 import ResponsiveMainNavigation from '@/components/navigation/ResponsiveMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
-import { QuickActionBar } from '@/components/ui/quick-action-bar';
+import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import SavedContent from '@/pages/SavedContent';
@@ -51,7 +52,7 @@ function App() {
                 <EnhancedGlobalFooter />
                 <EnhancedQuickCaptureWidget />
                 <AIContentAssistant />
-                <QuickActionBar variant="floating" />
+                <UnifiedFloatingActions />
               </div>
             </KeyboardShortcutsProvider>
           </ThemeProvider>

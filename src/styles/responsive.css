@@ -19,11 +19,45 @@
     font-size: 16px; /* Prevents zoom on iOS */
     min-height: 44px;
   }
+
+  /* Floating action buttons touch targets */
+  .floating-action {
+    min-height: 48px;
+    min-width: 48px;
+  }
 }
 
 /* Enhanced focus styles for accessibility */
 .focus-enhanced {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
+
+/* Floating actions specific styles */
+.floating-actions-container {
+  /* Ensure proper stacking and visibility */
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 50;
+}
+
+@media (max-width: 640px) {
+  .floating-actions-container {
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
+
+/* Back to top button specific styles */
+.back-to-top {
+  @apply transition-all duration-300 ease-in-out;
+  transform: translateY(0);
+}
+
+.back-to-top.hidden {
+  transform: translateY(100px);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Responsive text scaling */
@@ -86,8 +120,11 @@
 @media (prefers-reduced-motion: reduce) {
   .animate-fade-in,
   .animate-slide-in,
-  .animate-scale-in {
+  .animate-scale-in,
+  .back-to-top,
+  .floating-action {
     animation: none;
+    transition: none;
     opacity: 1;
     transform: none;
   }
@@ -102,11 +139,17 @@
   .high-contrast-text {
     font-weight: 600;
   }
+
+  /* Ensure floating buttons have sufficient contrast */
+  .floating-action {
+    border: 2px solid currentColor;
+  }
 }
 
 /* Print styles */
 @media print {
-  .print-hidden {
+  .print-hidden,
+  .floating-actions-container {
     display: none !important;
   }
   
