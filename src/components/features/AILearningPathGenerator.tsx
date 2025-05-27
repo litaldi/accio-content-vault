@@ -7,14 +7,13 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { 
   Target, 
-  MapPin, 
+  Map, 
+  CheckCircle2, 
+  Circle, 
   Clock,
-  CheckCircle,
-  ArrowRight,
   BookOpen,
-  Brain,
   Sparkles,
-  TrendingUp
+  ArrowRight
 } from 'lucide-react';
 
 interface LearningStep {
@@ -22,29 +21,28 @@ interface LearningStep {
   title: string;
   description: string;
   estimatedTime: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
   completed: boolean;
   resources: string[];
 }
 
 interface LearningPath {
   id: string;
-  title: string;
+  goal: string;
   description: string;
   totalSteps: number;
   completedSteps: number;
   estimatedDuration: string;
-  difficulty: string;
   steps: LearningStep[];
 }
 
 export const AILearningPathGenerator: React.FC = () => {
-  const [learningGoal, setLearningGoal] = useState('');
+  const [goal, setGoal] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedPath, setGeneratedPath] = useState<LearningPath | null>(null);
+  const [learningPath, setLearningPath] = useState<LearningPath | null>(null);
 
-  const generateLearningPath = async () => {
-    if (!learningGoal.trim()) return;
+  const generatePath = async () => {
+    if (!goal.trim()) return;
     
     setIsGenerating(true);
     
@@ -53,80 +51,99 @@ export const AILearningPathGenerator: React.FC = () => {
     
     const mockPath: LearningPath = {
       id: '1',
-      title: `Master ${learningGoal}`,
-      description: `A personalized learning path to help you become proficient in ${learningGoal}`,
-      totalSteps: 5,
+      goal: goal,
+      description: `A comprehensive learning path to master ${goal} with structured progression and practical applications.`,
+      totalSteps: 6,
       completedSteps: 1,
-      estimatedDuration: '6-8 weeks',
-      difficulty: 'Intermediate',
+      estimatedDuration: '4-6 weeks',
       steps: [
         {
           id: '1',
-          title: 'Foundation & Core Concepts',
-          description: `Learn the fundamental principles and basic concepts of ${learningGoal}`,
-          estimatedTime: '1-2 weeks',
-          difficulty: 'Beginner',
+          title: 'Foundation Concepts',
+          description: `Learn the fundamental concepts and principles of ${goal}`,
+          estimatedTime: '1 week',
+          difficulty: 'beginner',
           completed: true,
-          resources: ['Introduction Guide', 'Basic Tutorial', 'Core Concepts Video']
+          resources: ['Articles', 'Video tutorials', 'Documentation']
         },
         {
           id: '2',
-          title: 'Practical Implementation',
-          description: 'Start building real projects and applying what you\'ve learned',
-          estimatedTime: '2 weeks',
-          difficulty: 'Intermediate',
+          title: 'Core Techniques',
+          description: 'Master the essential techniques and methodologies',
+          estimatedTime: '1-2 weeks',
+          difficulty: 'intermediate',
           completed: false,
-          resources: ['Hands-on Projects', 'Code Examples', 'Practice Exercises']
+          resources: ['Hands-on projects', 'Code examples', 'Practice exercises']
         },
         {
           id: '3',
-          title: 'Advanced Techniques',
-          description: 'Explore advanced patterns and best practices',
-          estimatedTime: '1-2 weeks',
-          difficulty: 'Advanced',
+          title: 'Advanced Applications',
+          description: 'Explore advanced use cases and complex implementations',
+          estimatedTime: '1 week',
+          difficulty: 'advanced',
           completed: false,
-          resources: ['Advanced Guide', 'Expert Tips', 'Case Studies']
+          resources: ['Advanced tutorials', 'Case studies', 'Best practices']
         },
         {
           id: '4',
-          title: 'Real-world Applications',
-          description: 'Build complex projects that showcase your skills',
-          estimatedTime: '2 weeks',
-          difficulty: 'Advanced',
+          title: 'Real-world Projects',
+          description: 'Build practical projects to solidify your understanding',
+          estimatedTime: '1-2 weeks',
+          difficulty: 'intermediate',
           completed: false,
-          resources: ['Portfolio Projects', 'Industry Examples', 'Best Practices']
+          resources: ['Project templates', 'Code repositories', 'Community examples']
         },
         {
           id: '5',
-          title: 'Mastery & Optimization',
-          description: 'Perfect your skills and learn optimization techniques',
-          estimatedTime: '1 week',
-          difficulty: 'Advanced',
+          title: 'Optimization & Performance',
+          description: 'Learn optimization techniques and performance best practices',
+          estimatedTime: '3-5 days',
+          difficulty: 'advanced',
           completed: false,
-          resources: ['Performance Guide', 'Optimization Tips', 'Expert Resources']
+          resources: ['Performance guides', 'Optimization tools', 'Benchmarking']
+        },
+        {
+          id: '6',
+          title: 'Mastery & Beyond',
+          description: 'Achieve mastery and explore cutting-edge developments',
+          estimatedTime: 'Ongoing',
+          difficulty: 'advanced',
+          completed: false,
+          resources: ['Research papers', 'Expert interviews', 'Community contributions']
         }
       ]
     };
     
-    setGeneratedPath(mockPath);
+    setLearningPath(mockPath);
     setIsGenerating(false);
   };
 
-  const getDifficultyColor = (difficulty: string) => {
+  const toggleStepCompletion = (stepId: string) => {
+    if (!learningPath) return;
+    
+    setLearningPath(prev => ({
+      ...prev!,
+      steps: prev!.steps.map(step => 
+        step.id === stepId 
+          ? { ...step, completed: !step.completed }
+          : step
+      ),
+      completedSteps: prev!.steps.filter(step => 
+        step.id === stepId ? !step.completed : step.completed
+      ).length
+    }));
+  };
+
+  const getDifficultyColor = (difficulty: LearningStep['difficulty']) => {
     switch (difficulty) {
-      case 'Beginner': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300';
-      case 'Advanced': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+      case 'beginner': return 'bg-green-100 text-green-800';
+      case 'intermediate': return 'bg-yellow-100 text-yellow-800';
+      case 'advanced': return 'bg-red-100 text-red-800';
     }
   };
 
-  const progressPercentage = generatedPath 
-    ? (generatedPath.completedSteps / generatedPath.totalSteps) * 100 
-    : 0;
-
   return (
-    <div className="space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -135,165 +152,114 @@ export const AILearningPathGenerator: React.FC = () => {
             <Badge variant="secondary">Personalized</Badge>
           </CardTitle>
         </CardHeader>
-        
         <CardContent className="space-y-6">
-          {/* Goal Input */}
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium mb-2 block">What would you like to learn?</label>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="e.g., React Development, Machine Learning, Photography..."
-                  value={learningGoal}
-                  onChange={(e) => setLearningGoal(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && generateLearningPath()}
-                  className="flex-1"
-                />
-                <Button 
-                  onClick={generateLearningPath}
-                  disabled={isGenerating || !learningGoal.trim()}
-                  className="gap-2"
-                >
-                  {isGenerating ? (
-                    <>
-                      <div className="w-4 h-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
-                      Generating...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-4 w-4" />
-                      Generate Path
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-
-            {/* Quick suggestions */}
-            <div className="flex flex-wrap gap-2">
-              <span className="text-sm text-muted-foreground">Popular:</span>
-              {['React Development', 'AI & Machine Learning', 'Data Science', 'UI/UX Design'].map((suggestion) => (
-                <Button
-                  key={suggestion}
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setLearningGoal(suggestion)}
-                  className="text-xs h-7"
-                >
-                  {suggestion}
-                </Button>
-              ))}
-            </div>
+          <div className="flex gap-4">
+            <Input
+              value={goal}
+              onChange={(e) => setGoal(e.target.value)}
+              placeholder="What would you like to learn? (e.g., React, Machine Learning, Python)"
+              className="flex-1"
+            />
+            <Button 
+              onClick={generatePath}
+              disabled={!goal.trim() || isGenerating}
+              className="gap-2"
+            >
+              {isGenerating ? (
+                <>
+                  <Sparkles className="h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Map className="h-4 w-4" />
+                  Generate Path
+                </>
+              )}
+            </Button>
           </div>
 
-          {/* Generated Learning Path */}
-          {generatedPath && (
+          {learningPath && (
             <div className="space-y-6">
-              {/* Path Overview */}
-              <Card className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+              <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
                 <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-semibold mb-2">{generatedPath.title}</h3>
-                      <p className="text-muted-foreground mb-4">{generatedPath.description}</p>
-                      <div className="flex flex-wrap gap-4 text-sm">
-                        <div className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          <span>{generatedPath.estimatedDuration}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <TrendingUp className="h-4 w-4" />
-                          <span>{generatedPath.difficulty}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <BookOpen className="h-4 w-4" />
-                          <span>{generatedPath.totalSteps} steps</span>
-                        </div>
-                      </div>
+                  <h3 className="text-xl font-semibold mb-2">{learningPath.goal}</h3>
+                  <p className="text-muted-foreground mb-4">{learningPath.description}</p>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-4 w-4" />
+                      <span className="text-sm">{learningPath.estimatedDuration}</span>
                     </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold text-primary">
-                        {Math.round(progressPercentage)}%
-                      </div>
-                      <div className="text-sm text-muted-foreground">Complete</div>
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="h-4 w-4" />
+                      <span className="text-sm">{learningPath.totalSteps} steps</span>
                     </div>
                   </div>
-                  
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Progress</span>
-                      <span>{generatedPath.completedSteps} of {generatedPath.totalSteps} steps</span>
+                      <span>{learningPath.completedSteps}/{learningPath.totalSteps}</span>
                     </div>
-                    <Progress value={progressPercentage} className="h-2" />
+                    <Progress 
+                      value={(learningPath.completedSteps / learningPath.totalSteps) * 100} 
+                      className="h-2"
+                    />
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Learning Steps */}
               <div className="space-y-4">
-                <h4 className="font-medium flex items-center gap-2">
-                  <MapPin className="h-4 w-4" />
-                  Your Learning Journey
-                </h4>
-                
-                {generatedPath.steps.map((step, index) => (
-                  <Card key={step.id} className={`transition-all ${step.completed ? 'bg-green-50 dark:bg-green-900/20' : ''}`}>
+                {learningPath.steps.map((step, index) => (
+                  <Card 
+                    key={step.id} 
+                    className={`transition-all ${step.completed ? 'bg-green-50 dark:bg-green-900/20' : ''}`}
+                  >
                     <CardContent className="p-4">
                       <div className="flex items-start gap-4">
-                        <div className="flex-shrink-0">
+                        <button
+                          onClick={() => toggleStepCompletion(step.id)}
+                          className="mt-1"
+                        >
                           {step.completed ? (
-                            <CheckCircle className="h-6 w-6 text-green-600" />
+                            <CheckCircle2 className="h-5 w-5 text-green-600" />
                           ) : (
-                            <div className="h-6 w-6 rounded-full border-2 border-muted-foreground/30 flex items-center justify-center">
-                              <span className="text-sm font-medium">{index + 1}</span>
-                            </div>
+                            <Circle className="h-5 w-5 text-muted-foreground" />
                           )}
-                        </div>
+                        </button>
                         
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h5 className="font-medium">{step.title}</h5>
-                            <Badge variant="outline" className={getDifficultyColor(step.difficulty)}>
+                          <div className="flex items-center gap-3 mb-2">
+                            <span className="text-sm font-medium text-muted-foreground">
+                              Step {index + 1}
+                            </span>
+                            <Badge className={getDifficultyColor(step.difficulty)}>
                               {step.difficulty}
                             </Badge>
-                            <Badge variant="secondary" className="text-xs">
+                            <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                              <Clock className="h-3 w-3" />
                               {step.estimatedTime}
-                            </Badge>
+                            </div>
                           </div>
                           
+                          <h4 className="font-medium mb-1">{step.title}</h4>
                           <p className="text-sm text-muted-foreground mb-3">{step.description}</p>
                           
-                          <div className="flex items-center justify-between">
-                            <div className="flex flex-wrap gap-1">
-                              {step.resources.map((resource, idx) => (
-                                <Badge key={idx} variant="outline" className="text-xs">
-                                  {resource}
-                                </Badge>
-                              ))}
-                            </div>
-                            
-                            <Button size="sm" variant={step.completed ? "outline" : "default"}>
-                              {step.completed ? 'Review' : 'Start'}
-                              <ArrowRight className="h-3 w-3 ml-1" />
-                            </Button>
+                          <div className="flex flex-wrap gap-2">
+                            {step.resources.map((resource, idx) => (
+                              <Badge key={idx} variant="outline" className="text-xs">
+                                {resource}
+                              </Badge>
+                            ))}
                           </div>
                         </div>
+                        
+                        {index < learningPath.steps.length - 1 && (
+                          <ArrowRight className="h-4 w-4 text-muted-foreground mt-8" />
+                        )}
                       </div>
                     </CardContent>
                   </Card>
                 ))}
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-2">
-                <Button variant="outline" className="gap-2">
-                  <Brain className="h-4 w-4" />
-                  Customize Path
-                </Button>
-                <Button variant="outline" className="gap-2">
-                  <BookOpen className="h-4 w-4" />
-                  Find Resources
-                </Button>
               </div>
             </div>
           )}

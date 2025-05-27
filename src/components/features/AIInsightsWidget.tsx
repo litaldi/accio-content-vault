@@ -1,179 +1,149 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 import { 
   Brain, 
   TrendingUp, 
-  Eye, 
-  Clock,
+  BookOpen, 
   Target,
-  Lightbulb,
+  Zap,
+  Eye,
   X
 } from 'lucide-react';
 
 interface Insight {
   id: string;
-  type: 'trend' | 'recommendation' | 'achievement' | 'pattern';
+  type: 'pattern' | 'recommendation' | 'trend' | 'goal';
   title: string;
   description: string;
   confidence: number;
   actionable: boolean;
-  timestamp: Date;
 }
 
 export const AIInsightsWidget: React.FC = () => {
   const [insights, setInsights] = useState<Insight[]>([]);
-  const [isVisible, setIsVisible] = useState(true);
-  const [loading, setLoading] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Simulate AI generating insights
-    const generateInsights = () => {
-      const mockInsights: Insight[] = [
-        {
-          id: '1',
-          type: 'trend',
-          title: 'Learning Pattern Detected',
-          description: 'You read 40% more AI-related content this week. Consider exploring machine learning fundamentals.',
-          confidence: 87,
-          actionable: true,
-          timestamp: new Date()
-        },
-        {
-          id: '2',
-          type: 'recommendation',
-          title: 'Knowledge Gap Identified',
-          description: 'You have strong frontend skills but limited backend knowledge. Time to explore APIs?',
-          confidence: 92,
-          actionable: true,
-          timestamp: new Date()
-        },
-        {
-          id: '3',
-          type: 'achievement',
-          title: 'Reading Milestone',
-          description: 'Congratulations! You\'ve maintained a 7-day reading streak.',
-          confidence: 100,
-          actionable: false,
-          timestamp: new Date()
-        }
-      ];
-      
-      setInsights(mockInsights);
-      setLoading(false);
-    };
+    // Simulate AI-generated insights
+    const mockInsights: Insight[] = [
+      {
+        id: '1',
+        type: 'pattern',
+        title: 'Learning Pattern Detected',
+        description: 'You tend to save more technical content on weekdays. Consider scheduling focused learning sessions.',
+        confidence: 85,
+        actionable: true
+      },
+      {
+        id: '2',
+        type: 'recommendation',
+        title: 'Content Gap Identified',
+        description: 'Based on your React interest, you might benefit from exploring TypeScript fundamentals.',
+        confidence: 92,
+        actionable: true
+      },
+      {
+        id: '3',
+        type: 'trend',
+        title: 'Productivity Trend',
+        description: 'Your content consumption has increased 40% this month. Great momentum!',
+        confidence: 100,
+        actionable: false
+      }
+    ];
 
-    const timer = setTimeout(generateInsights, 1500);
+    setInsights(mockInsights);
+    
+    // Show widget after a delay
+    const timer = setTimeout(() => setIsVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
-  const getInsightIcon = (type: string) => {
+  const getInsightIcon = (type: Insight['type']) => {
     switch (type) {
+      case 'pattern': return Brain;
+      case 'recommendation': return Target;
       case 'trend': return TrendingUp;
-      case 'recommendation': return Lightbulb;
-      case 'achievement': return Target;
-      default: return Brain;
+      case 'goal': return BookOpen;
+      default: return Zap;
     }
   };
 
-  const getInsightColor = (type: string) => {
+  const getInsightColor = (type: Insight['type']) => {
     switch (type) {
-      case 'trend': return 'text-blue-600';
-      case 'recommendation': return 'text-purple-600';
-      case 'achievement': return 'text-green-600';
-      default: return 'text-primary';
+      case 'pattern': return 'bg-blue-100 text-blue-800';
+      case 'recommendation': return 'bg-green-100 text-green-800';
+      case 'trend': return 'bg-purple-100 text-purple-800';
+      case 'goal': return 'bg-orange-100 text-orange-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
-  };
-
-  const dismissInsight = (id: string) => {
-    setInsights(prev => prev.filter(insight => insight.id !== id));
   };
 
   if (!isVisible || insights.length === 0) return null;
 
   return (
-    <Card className="fixed bottom-6 left-6 w-80 z-40 shadow-xl">
-      <CardHeader className="pb-3">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Brain className="h-5 w-5 text-primary" />
-            AI Insights
-            <Badge variant="secondary" className="text-xs">
-              {insights.length} new
-            </Badge>
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsVisible(false)}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardHeader>
-      
-      <CardContent className="space-y-3">
-        {loading ? (
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-              <span className="text-sm text-muted-foreground">Analyzing your patterns...</span>
-            </div>
-            <Progress value={75} className="h-2" />
+    <div className="fixed bottom-4 left-4 z-30 max-w-sm">
+      <Card className="shadow-lg border-l-4 border-l-primary">
+        <CardHeader className="pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Brain className="h-4 w-4 text-primary" />
+              AI Insights
+              <Badge variant="secondary" className="text-xs">Live</Badge>
+            </CardTitle>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setIsVisible(false)}
+              className="h-6 w-6 p-0"
+            >
+              <X className="h-3 w-3" />
+            </Button>
           </div>
-        ) : (
-          insights.slice(0, 3).map((insight) => {
+        </CardHeader>
+        <CardContent className="space-y-3">
+          {insights.slice(0, 2).map((insight) => {
             const Icon = getInsightIcon(insight.type);
             return (
-              <div key={insight.id} className="border rounded-lg p-3 space-y-2">
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-2">
-                    <Icon className={`h-4 w-4 ${getInsightColor(insight.type)}`} />
-                    <h4 className="font-medium text-sm">{insight.title}</h4>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => dismissInsight(insight.id)}
-                    className="h-6 w-6 p-0"
+              <div key={insight.id} className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Icon className="h-3 w-3" />
+                  <Badge 
+                    variant="outline" 
+                    className={`text-xs ${getInsightColor(insight.type)}`}
                   >
-                    <X className="h-3 w-3" />
+                    {insight.type}
+                  </Badge>
+                  <span className="text-xs text-muted-foreground">
+                    {insight.confidence}% confidence
+                  </span>
+                </div>
+                <div>
+                  <h4 className="text-sm font-medium">{insight.title}</h4>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {insight.description}
+                  </p>
+                </div>
+                {insight.actionable && (
+                  <Button size="sm" variant="outline" className="w-full text-xs h-7">
+                    <Eye className="h-3 w-3 mr-1" />
+                    View Details
                   </Button>
-                </div>
-                
-                <p className="text-xs text-muted-foreground">{insight.description}</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Eye className="h-3 w-3" />
-                    <span>{insight.confidence}% confidence</span>
-                  </div>
-                  
-                  {insight.actionable && (
-                    <Button size="sm" variant="outline" className="h-6 text-xs px-2">
-                      Take Action
-                    </Button>
-                  )}
-                </div>
+                )}
               </div>
             );
-          })
-        )}
-        
-        <div className="flex gap-2 pt-2">
-          <Button variant="outline" size="sm" className="flex-1 text-xs">
-            <Clock className="h-3 w-3 mr-1" />
-            View All
-          </Button>
-          <Button variant="outline" size="sm" className="flex-1 text-xs">
-            <Brain className="h-3 w-3 mr-1" />
-            Settings
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          })}
+          
+          {insights.length > 2 && (
+            <Button variant="ghost" size="sm" className="w-full text-xs">
+              View {insights.length - 2} more insights
+            </Button>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 };

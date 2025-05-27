@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Typography, Spacing } from '@/components/ui/design-system';
@@ -22,7 +21,8 @@ import {
   BookOpen,
   BellRing,
   MapPin,
-  Eye
+  Eye,
+  Edit3
 } from 'lucide-react';
 
 // Import all feature components
@@ -37,6 +37,7 @@ import { ReadingProgressTracker } from '@/components/features/ReadingProgressTra
 import { AILearningPathGenerator } from '@/components/features/AILearningPathGenerator';
 import { SmartNotifications } from '@/components/features/SmartNotifications';
 import { AIInsightsWidget } from '@/components/features/AIInsightsWidget';
+import { AIWritingAssistant } from '@/components/features/AIWritingAssistant';
 
 const Features: React.FC = () => {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
@@ -131,6 +132,24 @@ const Features: React.FC = () => {
       category: 'Productivity',
       component: SmartNotifications,
       highlights: ['Context-aware', 'Learning reminders', 'Priority-based']
+    },
+    {
+      id: 'writing-assistant',
+      title: 'AI Writing Assistant',
+      description: 'Enhance, summarize, expand, and improve your writing with AI',
+      icon: Edit3,
+      category: 'AI',
+      component: () => React.createElement(require('@/components/features/AIWritingAssistant').AIWritingAssistant),
+      highlights: ['Improve writing', 'Summarize text', 'Expand ideas', 'Simplify content']
+    },
+    {
+      id: 'ai-insights',
+      title: 'AI Insights Widget',
+      description: 'Real-time AI-powered insights about your learning patterns',
+      icon: Brain,
+      category: 'AI',
+      component: () => React.createElement(require('@/components/features/AIInsightsWidget').AIInsightsWidget),
+      highlights: ['Pattern detection', 'Smart recommendations', 'Live insights']
     }
   ];
 
