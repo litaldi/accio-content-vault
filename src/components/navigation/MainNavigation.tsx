@@ -28,7 +28,6 @@ import {
   Settings,
   Brain,
   Menu,
-  X,
   Moon,
   Sun,
   Monitor,

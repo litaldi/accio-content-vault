@@ -1,167 +1,67 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
   id: string;
   email: string;
-  name: string;
-  user_metadata?: {
-    role?: string;
-    [key: string]: any;
-  };
-}
-
-interface AuthResponse {
-  data?: { user: User | null };
-  error?: Error | null;
+  name?: string;
 }
 
 interface AuthContextType {
   user: User | null;
-  isLoading: boolean;
-  loading: boolean; // Alias for compatibility
-  isDemoMode: boolean;
-  signIn: (email: string, password: string) => Promise<AuthResponse>;
-  signUp: (email: string, password: string, metadata?: { name?: string }) => Promise<AuthResponse>;
-  signInWithProvider: (provider: string) => Promise<AuthResponse>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, name?: string) => Promise<void>;
   signOut: () => Promise<void>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isDemoMode] = useState(true); // Default to demo mode
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user session
-    const storedUser = localStorage.getItem('accio_user');
-    if (storedUser) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        localStorage.removeItem('accio_user');
-      }
-    }
-    setIsLoading(false);
+    // Simulate checking for existing session
+    const checkSession = async () => {
+      setLoading(false);
+    };
+    
+    checkSession();
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<AuthResponse> => {
-    setIsLoading(true);
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
     try {
-      // Simulate API call - replace with actual authentication
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        user_metadata: {
-          role: 'user'
-        }
-      };
-      
+      // Mock sign in - replace with actual auth logic
+      const mockUser = { id: '1', email, name: 'Demo User' };
       setUser(mockUser);
-      localStorage.setItem('accio_user', JSON.stringify(mockUser));
-      return { data: { user: mockUser }, error: null };
-    } catch (error) {
-      const authError = new Error('Invalid email or password');
-      return { data: { user: null }, error: authError };
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const signUp = async (email: string, password: string, metadata?: { name?: string }): Promise<AuthResponse> => {
-    setIsLoading(true);
+  const signUp = async (email: string, password: string, name?: string) => {
+    setLoading(true);
     try {
-      // Simulate API call - replace with actual authentication
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email,
-        name: metadata?.name || email.split('@')[0],
-        user_metadata: {
-          role: 'user'
-        }
-      };
-      
+      // Mock sign up - replace with actual auth logic
+      const mockUser = { id: '1', email, name: name || 'Demo User' };
       setUser(mockUser);
-      localStorage.setItem('accio_user', JSON.stringify(mockUser));
-      return { data: { user: mockUser }, error: null };
-    } catch (error) {
-      const authError = new Error('Failed to create account');
-      return { data: { user: null }, error: authError };
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const signInWithProvider = async (provider: string): Promise<AuthResponse> => {
-    setIsLoading(true);
-    try {
-      // Simulate OAuth flow
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const mockUser: User = {
-        id: Date.now().toString(),
-        email: `user@${provider}.com`,
-        name: `${provider} User`,
-        user_metadata: {
-          role: 'user',
-          provider
-        }
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('accio_user', JSON.stringify(mockUser));
-      return { data: { user: mockUser }, error: null };
-    } catch (error) {
-      const authError = new Error(`Failed to sign in with ${provider}`);
-      return { data: { user: null }, error: authError };
-    } finally {
-      setIsLoading(false);
-    }
+  const signOut = async () => {
+    setUser(null);
   };
 
-  const signOut = async (): Promise<void> => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUser(null);
-      localStorage.removeItem('accio_user');
-    } catch (error) {
-      throw new Error('Failed to sign out');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const value: AuthContextType = {
+  const value = {
     user,
-    isLoading,
-    loading: isLoading, // Alias for compatibility
-    isDemoMode,
     signIn,
     signUp,
-    signInWithProvider,
-    signOut
+    signOut,
+    loading,
   };
 
   return (
@@ -169,4 +69,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
-};
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+}
