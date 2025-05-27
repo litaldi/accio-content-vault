@@ -1,168 +1,124 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
+  LayoutDashboard, 
   Plus, 
-  BookOpen, 
   Search, 
-  FolderOpen, 
-  BarChart3, 
+  Filter,
+  BarChart3,
+  Bookmark,
+  Tag,
   Clock,
-  TrendingUp,
-  Star,
-  Zap
+  TrendingUp
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
-const Dashboard: React.FC = () => {
-  const quickActions = [
-    {
-      icon: Plus,
-      title: 'Add Content',
-      description: 'Save a new article, note, or document',
-      action: 'Add Now',
-      href: '#'
-    },
-    {
-      icon: Search,
-      title: 'Search Knowledge',
-      description: 'Find information across your entire library',
-      action: 'Search',
-      href: '/search'
-    },
-    {
-      icon: FolderOpen,
-      title: 'Browse Collections',
-      description: 'Explore your organized content collections',
-      action: 'Browse',
-      href: '/collections'
-    },
-    {
-      icon: BarChart3,
-      title: 'View Analytics',
-      description: 'See insights about your knowledge growth',
-      action: 'Analyze',
-      href: '/analytics'
-    }
+const Dashboard = () => {
+  const recentItems = [
+    { id: '1', title: 'React Performance Optimization', type: 'article', saved: '2 hours ago' },
+    { id: '2', title: 'Design System Ideas', type: 'note', saved: '5 hours ago' },
+    { id: '3', title: 'Meeting Notes - Q1 Planning', type: 'note', saved: '1 day ago' },
   ];
 
   const stats = [
-    { label: 'Total Items', value: '0', icon: BookOpen, trend: '+0%' },
-    { label: 'Collections', value: '0', icon: FolderOpen, trend: '+0%' },
-    { label: 'Recent Activity', value: '0', icon: Clock, trend: '+0%' },
-    { label: 'AI Insights', value: '0', icon: Zap, trend: '+0%' }
+    { label: 'Total Saved', value: '247', icon: Bookmark },
+    { label: 'This Week', value: '12', icon: Clock },
+    { label: 'Collections', value: '8', icon: Tag },
+    { label: 'Trending', value: '5', icon: TrendingUp },
   ];
 
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Dashboard - Accio | Your Knowledge Hub</title>
-        <meta name="description" content="Your personal knowledge management dashboard. Track progress, access content, and discover insights." />
+        <title>Dashboard - Accio</title>
       </Helmet>
-      
-      <div className="container mx-auto px-4 py-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Welcome to Your Knowledge Hub</h1>
-            <p className="text-muted-foreground">
-              Start building your personal knowledge base and let AI help you organize and discover insights.
+
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <LayoutDashboard className="h-8 w-8 text-primary" />
+              Dashboard
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Your knowledge command center
             </p>
           </div>
+          
+          <div className="flex gap-3">
+            <Button variant="outline" className="gap-2">
+              <Search className="h-4 w-4" />
+              Search
+            </Button>
+            <Button className="gap-2">
+              <Plus className="h-4 w-4" />
+              Quick Save
+            </Button>
+          </div>
+        </div>
 
-          {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {stats.map((stat, index) => (
-              <Card key={index}>
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">{stat.label}</CardTitle>
-                  <stat.icon className="h-4 w-4 text-muted-foreground" />
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold">{stat.value}</div>
-                  <div className="text-xs text-muted-foreground flex items-center gap-1">
-                    <TrendingUp className="h-3 w-3" />
-                    {stat.trend} from last month
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          {stats.map((stat, index) => (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+                    <p className="text-2xl font-bold">{stat.value}</p>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  <stat.icon className="h-8 w-8 text-primary/60" />
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
 
-          {/* Quick Actions */}
-          <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-6">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {quickActions.map((action, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow duration-300">
-                  <CardHeader>
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <action.icon className="h-5 w-5 text-primary" />
-                      </div>
-                      <CardTitle className="text-lg">{action.title}</CardTitle>
-                    </div>
-                    <CardDescription>{action.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <Button className="w-full" asChild>
-                      <Link to={action.href}>{action.action}</Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {/* Getting Started */}
+        {/* Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-3">
-                <Star className="h-6 w-6 text-primary" />
-                <CardTitle>Getting Started with Accio</CardTitle>
-              </div>
-              <CardDescription>
-                Follow these steps to make the most of your knowledge management system
-              </CardDescription>
+              <CardTitle>Recent Items</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="mt-1">1</Badge>
-                  <div>
-                    <h4 className="font-medium">Add Your First Content</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Start by adding an article, note, or document to your knowledge base
-                    </p>
+                {recentItems.map((item) => (
+                  <div key={item.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <h4 className="font-medium">{item.title}</h4>
+                      <div className="flex items-center gap-2 mt-1">
+                        <Badge variant="outline" className="text-xs">{item.type}</Badge>
+                        <span className="text-xs text-muted-foreground">{item.saved}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="mt-1">2</Badge>
-                  <div>
-                    <h4 className="font-medium">Organize with Collections</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Group related content into collections for better organization
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Badge variant="outline" className="mt-1">3</Badge>
-                  <div>
-                    <h4 className="font-medium">Discover AI Insights</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Let our AI analyze your content and provide valuable insights
-                    </p>
-                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5" />
+                Quick Stats
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="text-center py-8 text-muted-foreground">
+                  <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>Analytics coming soon!</p>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
