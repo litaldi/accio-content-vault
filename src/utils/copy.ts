@@ -1,4 +1,5 @@
 
+
 export const copy = {
   navigation: {
     home: 'Home',
@@ -11,8 +12,8 @@ export const copy = {
     intelligence: 'Intelligence'
   },
   headlines: {
-    hero: 'Stop Losing Brilliant Ideas in Digital Chaos',
-    subhero: 'Transform scattered bookmarks, articles, and notes into a powerful knowledge system. Our AI organizes everything so you can focus on what matters: using your insights to win.'
+    hero: 'Never Lose Another Brilliant Idea',
+    subhero: 'Transform scattered bookmarks and forgotten notes into a powerful knowledge system. Our AI organizes everything so you can focus on using your insights to win.'
   },
   buttons: {
     getStarted: 'Start Building Your Knowledge Empire',
@@ -32,7 +33,11 @@ export const copy = {
   social: {
     userCount: '10,000+',
     companies: 'Join professionals building knowledge empires',
-    rating: 'Transform how you work with information'
+    rating: 'Transform how you work with information',
+    facebook: 'https://facebook.com/accio',
+    instagram: 'https://instagram.com/accio', 
+    discord: 'https://discord.gg/accio',
+    followUs: 'Follow us for updates and tips'
   },
   onboarding: {
     welcome: 'Welcome to Your Knowledge Empire',
@@ -86,11 +91,6 @@ export const copy = {
     email: 'demo@yourapp.com',
     password: 'Demo1234!',
     description: 'No signup required. Explore all features immediately.'
-  },
-  social: {
-    facebook: 'https://facebook.com/accio',
-    instagram: 'https://instagram.com/accio', 
-    discord: 'https://discord.gg/accio',
-    followUs: 'Follow us for updates and tips'
   }
 };
+
