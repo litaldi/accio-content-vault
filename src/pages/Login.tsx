@@ -11,7 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Brain, Eye, EyeOff, ArrowLeft, Loader2, Mail } from 'lucide-react';
 import { DemoLoginOptions } from '@/components/auth/DemoLoginOptions';
-import { validateEmail, sanitizeInput } from '@/utils/unified-security';
+import { validateEmailEnhanced, sanitizeInput } from '@/utils/unified-security';
 import { authRateLimiter } from '@/utils/unified-security';
 
 const Login = () => {
@@ -38,7 +38,7 @@ const Login = () => {
   const validateForm = () => {
     const newErrors: {email?: string; password?: string} = {};
     
-    const emailValidation = validateEmail(email);
+    const emailValidation = validateEmailEnhanced(email);
     if (!emailValidation.isValid) {
       newErrors.email = emailValidation.message;
     }
@@ -271,6 +271,9 @@ const Login = () => {
               Continue with Google
             </Button>
 
+            {/* Demo Login Options */}
+            <DemoLoginOptions onDemoSelect={handleDemoSelect} />
+
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Don't have an account? </span>
               <Link 
@@ -280,9 +283,6 @@ const Login = () => {
                 Sign up here
               </Link>
             </div>
-
-            {/* Demo Login Options */}
-            <DemoLoginOptions onDemoSelect={handleDemoSelect} />
           </CardContent>
         </Card>
 

@@ -2,11 +2,11 @@
 import React from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
-import { Info, Sparkles } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const DemoBanner: React.FC = () => {
-  const { isDemoMode, user } = useAuth();
+  const { isDemoMode } = useAuth();
 
   if (!isDemoMode) return null;
 

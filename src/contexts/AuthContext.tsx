@@ -215,6 +215,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         provider,
         options: {
           redirectTo: `${window.location.origin}/dashboard`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 
