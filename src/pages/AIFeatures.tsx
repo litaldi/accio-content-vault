@@ -1,0 +1,227 @@
+
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Typography, Spacing } from '@/components/ui/design-system';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Brain, 
+  Sparkles, 
+  MessageCircle, 
+  FileText, 
+  Mic, 
+  Tag, 
+  TrendingUp,
+  BarChart3,
+  Lightbulb,
+  Search,
+  BookOpen,
+  Zap
+} from 'lucide-react';
+import { PersonalKnowledgeAssistant } from '@/components/features/PersonalKnowledgeAssistant';
+import { AIContentSummarizer } from '@/components/features/AIContentSummarizer';
+import { VoiceSearchInterface } from '@/components/features/VoiceSearchInterface';
+import { SmartTaggingSystem } from '@/components/features/SmartTaggingSystem';
+import { AIContentAnalysis } from '@/components/features/AIContentAnalysis';
+import { ReadingProgressTracker } from '@/components/features/ReadingProgressTracker';
+
+const AIFeatures: React.FC = () => {
+  const [activeFeature, setActiveFeature] = useState<string>('overview');
+
+  const features = [
+    {
+      id: 'assistant',
+      title: 'Personal Knowledge Assistant',
+      description: 'AI-powered chat interface for your knowledge base',
+      icon: MessageCircle,
+      component: PersonalKnowledgeAssistant,
+      category: 'Interaction'
+    },
+    {
+      id: 'summarizer',
+      title: 'Content Summarizer',
+      description: 'Intelligent text summarization and key insights',
+      icon: FileText,
+      component: AIContentSummarizer,
+      category: 'Analysis'
+    },
+    {
+      id: 'voice',
+      title: 'Voice Search',
+      description: 'Natural language voice search and commands',
+      icon: Mic,
+      component: VoiceSearchInterface,
+      category: 'Search'
+    },
+    {
+      id: 'tagging',
+      title: 'Smart Tagging',
+      description: 'Automated content categorization and tagging',
+      icon: Tag,
+      component: SmartTaggingSystem,
+      category: 'Organization'
+    },
+    {
+      id: 'analysis',
+      title: 'Content Analysis',
+      description: 'Deep insights into your knowledge patterns',
+      icon: BarChart3,
+      component: AIContentAnalysis,
+      category: 'Analytics'
+    },
+    {
+      id: 'progress',
+      title: 'Reading Progress',
+      description: 'Track and optimize your learning journey',
+      icon: TrendingUp,
+      component: ReadingProgressTracker,
+      category: 'Productivity'
+    }
+  ];
+
+  const categories = ['All', 'Interaction', 'Analysis', 'Search', 'Organization', 'Analytics', 'Productivity'];
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const filteredFeatures = selectedCategory === 'All' 
+    ? features 
+    : features.filter(f => f.category === selectedCategory);
+
+  const renderFeatureComponent = () => {
+    const feature = features.find(f => f.id === activeFeature);
+    if (!feature) return null;
+    
+    const Component = feature.component;
+    return <Component />;
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Helmet>
+        <title>AI Features - Accio</title>
+        <meta name="description" content="Explore powerful AI-driven features for intelligent knowledge management." />
+      </Helmet>
+
+      <Spacing.Section size="lg">
+        <Spacing.Container>
+          <div className="max-w-7xl mx-auto">
+            {/* Header */}
+            <div className="text-center mb-12">
+              <Typography.H1 className="mb-4 flex items-center justify-center gap-3">
+                <Brain className="h-8 w-8 text-primary" />
+                AI-Powered Features
+              </Typography.H1>
+              <Typography.Lead>
+                Discover intelligent tools that transform how you capture, organize, and interact with knowledge
+              </Typography.Lead>
+            </div>
+
+            {activeFeature === 'overview' ? (
+              <>
+                {/* Category Filter */}
+                <div className="flex flex-wrap justify-center gap-2 mb-8">
+                  {categories.map((category) => (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setSelectedCategory(category)}
+                    >
+                      {category}
+                    </Button>
+                  ))}
+                </div>
+
+                {/* Features Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                  {filteredFeatures.map((feature) => {
+                    const Icon = feature.icon;
+                    return (
+                      <Card key={feature.id} className="hover:shadow-lg transition-all duration-300 cursor-pointer group">
+                        <CardHeader>
+                          <div className="flex items-center gap-3 mb-2">
+                            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                              <Icon className="h-5 w-5 text-primary" />
+                            </div>
+                            <Badge variant="secondary">{feature.category}</Badge>
+                          </div>
+                          <CardTitle className="text-lg">{feature.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-muted-foreground mb-4">{feature.description}</p>
+                          <Button 
+                            onClick={() => setActiveFeature(feature.id)}
+                            className="w-full gap-2"
+                          >
+                            <Sparkles className="h-4 w-4" />
+                            Try Feature
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+
+                {/* AI Highlights */}
+                <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+                  <CardContent className="p-8">
+                    <div className="text-center">
+                      <Zap className="h-12 w-12 text-primary mx-auto mb-4" />
+                      <Typography.H3 className="mb-4">Powered by Advanced AI</Typography.H3>
+                      <Typography.P className="text-muted-foreground mb-6">
+                        Our AI features use state-of-the-art machine learning to understand your content, 
+                        learn from your patterns, and provide personalized recommendations.
+                      </Typography.P>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="text-center">
+                          <Lightbulb className="h-8 w-8 text-primary mx-auto mb-2" />
+                          <h4 className="font-medium">Smart Insights</h4>
+                          <p className="text-sm text-muted-foreground">AI analyzes patterns in your knowledge base</p>
+                        </div>
+                        <div className="text-center">
+                          <Search className="h-8 w-8 text-primary mx-auto mb-2" />
+                          <h4 className="font-medium">Natural Language</h4>
+                          <p className="text-sm text-muted-foreground">Search and interact using everyday language</p>
+                        </div>
+                        <div className="text-center">
+                          <BookOpen className="h-8 w-8 text-primary mx-auto mb-2" />
+                          <h4 className="font-medium">Personalized Learning</h4>
+                          <p className="text-sm text-muted-foreground">Recommendations tailored to your interests</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </>
+            ) : (
+              <div>
+                <div className="flex items-center gap-4 mb-6">
+                  <Button variant="outline" onClick={() => setActiveFeature('overview')}>
+                    ← Back to Overview
+                  </Button>
+                  <div className="flex items-center gap-2">
+                    {(() => {
+                      const feature = features.find(f => f.id === activeFeature);
+                      if (!feature) return null;
+                      const Icon = feature.icon;
+                      return (
+                        <>
+                          <Icon className="h-5 w-5 text-primary" />
+                          <Typography.H2>{feature.title}</Typography.H2>
+                          <Badge variant="secondary">{feature.category}</Badge>
+                        </>
+                      );
+                    })()}
+                  </div>
+                </div>
+                {renderFeatureComponent()}
+              </div>
+            )}
+          </div>
+        </Spacing.Container>
+      </Spacing.Section>
+    </div>
+  );
+};
+
+export default AIFeatures;
