@@ -22,7 +22,8 @@ import {
   MapPin,
   Users,
   Edit3,
-  CheckCircle2
+  CheckCircle2,
+  Heart
 } from 'lucide-react';
 import { PersonalKnowledgeAssistant } from '@/components/features/PersonalKnowledgeAssistant';
 import { AIContentSummarizer } from '@/components/features/AIContentSummarizer';
@@ -44,6 +45,11 @@ import { AIReadingComprehension } from '@/components/features/AIReadingComprehen
 import { AIKnowledgeGapAnalyzer } from '@/components/features/AIKnowledgeGapAnalyzer';
 import { AIStudyScheduleOptimizer } from '@/components/features/AIStudyScheduleOptimizer';
 import { AIContentDifficultyAssessor } from '@/components/features/AIContentDifficultyAssessor';
+import { AILearningAnalyticsDashboard } from '@/components/features/AILearningAnalyticsDashboard';
+import { AISmartStudyGroups } from '@/components/features/AISmartStudyGroups';
+import { AIContentCurationEngine } from '@/components/features/AIContentCurationEngine';
+import { AISkillAssessment } from '@/components/features/AISkillAssessment';
+import { AILearningMotivationCoach } from '@/components/features/AILearningMotivationCoach';
 
 const AIFeatures: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState<string>('overview');
@@ -208,6 +214,46 @@ const AIFeatures: React.FC = () => {
       icon: BarChart3,
       component: AIContentDifficultyAssessor,
       category: 'Intelligence'
+    },
+    {
+      id: 'learning-analytics',
+      title: 'AI Learning Analytics Dashboard',
+      description: 'Comprehensive learning performance analytics with AI insights',
+      icon: BarChart3,
+      component: AILearningAnalyticsDashboard,
+      category: 'Analytics'
+    },
+    {
+      id: 'smart-study-groups',
+      title: 'AI Smart Study Groups',
+      description: 'Intelligent study group matching and collaborative learning',
+      icon: Users,
+      component: AISmartStudyGroups,
+      category: 'Social Learning'
+    },
+    {
+      id: 'content-curation',
+      title: 'AI Content Curation Engine',
+      description: 'Intelligent content discovery and quality curation',
+      icon: Sparkles,
+      component: AIContentCurationEngine,
+      category: 'Intelligence'
+    },
+    {
+      id: 'skill-assessment',
+      title: 'AI Skill Assessment',
+      description: 'Comprehensive skill evaluation with personalized feedback',
+      icon: Target,
+      component: AISkillAssessment,
+      category: 'Intelligence'
+    },
+    {
+      id: 'motivation-coach',
+      title: 'AI Learning Motivation Coach',
+      description: 'Personal AI coach for motivation and goal achievement',
+      icon: Heart,
+      component: AILearningMotivationCoach,
+      category: 'Productivity'
     }
   ];
 
