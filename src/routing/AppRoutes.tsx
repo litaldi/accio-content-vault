@@ -5,20 +5,19 @@ import { Status } from '@/components/design-system/DesignSystem';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { Helmet } from 'react-helmet-async';
 
-// Lazy load components for better performance
+// === LAZY LOADED COMPONENTS ===
+// Public Pages
 const EnhancedHome = React.lazy(() => import('@/pages/EnhancedHome'));
-const Index = React.lazy(() => import('@/pages/Index'));
-const ModernIndex = React.lazy(() => import('@/pages/ModernIndex'));
 const Login = React.lazy(() => import('@/pages/Login'));
 const Register = React.lazy(() => import('@/pages/Register'));
 const Help = React.lazy(() => import('@/pages/Help'));
 
-// Protected pages
+// Protected Pages
 const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
 const Profile = React.lazy(() => import('@/pages/Profile'));
 const Settings = React.lazy(() => import('@/pages/Settings'));
 
-// Placeholder components for missing pages
+// === PLACEHOLDER COMPONENTS FOR FUTURE PAGES ===
 const Features = () => (
   <div className="min-h-screen flex items-center justify-center">
     <div className="text-center">
@@ -55,21 +54,28 @@ const Contact = () => (
   </div>
 );
 
-// Error boundary for route-level errors
+// === ERROR BOUNDARY FOR ROUTE-LEVEL ERRORS ===
 const RouteErrorBoundary = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Suspense 
-      fallback={<Status.Loading message="Loading page..." />}
-    >
+    <Suspense fallback={<Status.Loading message="Loading page..." />}>
       {children}
     </Suspense>
   );
 };
 
+/**
+ * AppRoutes - Main routing configuration
+ * 
+ * Route Groups:
+ * 1. Public Routes - Accessible to all users
+ * 2. Authentication Routes - Login/Register flows  
+ * 3. Protected Routes - Require authentication
+ * 4. 404 Handler - Catch-all for unknown routes
+ */
 export const AppRoutes: React.FC = () => {
   return (
     <Routes>
-      {/* Public Routes */}
+      {/* === PUBLIC ROUTES === */}
       <Route 
         path="/" 
         element={
@@ -148,7 +154,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* Authentication Routes */}
+      {/* === AUTHENTICATION ROUTES === */}
       <Route 
         path="/login" 
         element={
@@ -175,7 +181,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* Protected Routes */}
+      {/* === PROTECTED ROUTES === */}
       <Route 
         path="/dashboard" 
         element={
@@ -221,7 +227,7 @@ export const AppRoutes: React.FC = () => {
         } 
       />
 
-      {/* 404 Route */}
+      {/* === 404 CATCH-ALL ROUTE === */}
       <Route 
         path="*" 
         element={

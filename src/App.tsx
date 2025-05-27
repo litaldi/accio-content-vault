@@ -10,6 +10,10 @@ import { useAppSecurity } from '@/hooks/useAppSecurity';
 import { useErrorBoundary } from '@/hooks/useErrorBoundary';
 import '@/styles/enhanced-responsive.css';
 
+/**
+ * AppContent - Main application content with security and error handling
+ * This component handles app-level security checks and error boundaries
+ */
 const AppContent: React.FC = () => {
   useAppSecurity();
   const { ErrorBoundary } = useErrorBoundary();
@@ -31,6 +35,7 @@ const AppContent: React.FC = () => {
         </div>
       </div>
     }>
+      {/* Main Layout wraps all routes with consistent header/footer */}
       <MainLayout>
         <AppRoutes />
       </MainLayout>
@@ -38,6 +43,17 @@ const AppContent: React.FC = () => {
   );
 };
 
+/**
+ * App - Root application component
+ * Provides global context providers and routing setup
+ * 
+ * Router Structure:
+ * - BrowserRouter: Single router instance at app root
+ * - AuthProvider: Authentication context for all routes
+ * - HelmetProvider: SEO/meta tag management
+ * - MainLayout: Consistent navigation and footer
+ * - AppRoutes: All route definitions
+ */
 function App() {
   return (
     <HelmetProvider>
