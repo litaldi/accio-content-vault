@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -29,6 +28,7 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Typography, Layout, Interactive, animations, accessibility } from '@/components/ui/enhanced-design-system';
+import { cn } from '@/lib/utils';
 
 // Import feature components
 import { AIContentAnalysis } from '@/components/features/AIContentAnalysis';

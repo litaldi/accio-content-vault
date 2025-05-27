@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, Brain, Search, Shield, Zap, CheckCircle, Star, Users, Globe, Clock, Sparkles, Play, TrendingUp, BookOpen, Target, Rocket, Award, Heart } from 'lucide-react';
 import { Typography, Layout, Interactive, animations, accessibility } from '@/components/ui/enhanced-design-system';
+import { cn } from '@/lib/utils';
 import { copy } from '@/utils/copy';
 
 const Home: React.FC = () => {
