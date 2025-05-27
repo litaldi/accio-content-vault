@@ -30,11 +30,20 @@ export const Typography = {
       {children}
     </p>
   ),
-  Body: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
-    <p className={cn("leading-7 text-base", className)} {...props}>
-      {children}
-    </p>
-  ),
+  Body: ({ children, className, size, ...props }: HTMLAttributes<HTMLParagraphElement> & { size?: 'xs' | 'sm' | 'base' | 'lg' }) => {
+    const sizeClasses = {
+      xs: 'text-xs',
+      sm: 'text-sm', 
+      base: 'text-base',
+      lg: 'text-lg'
+    };
+    
+    return (
+      <p className={cn("leading-7", size ? sizeClasses[size] : 'text-base', className)} {...props}>
+        {children}
+      </p>
+    );
+  },
   Lead: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
     <p className={cn("text-xl text-muted-foreground", className)} {...props}>
       {children}
@@ -64,11 +73,21 @@ export const Typography = {
 
 // Spacing System
 export const Spacing = {
-  Container: ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => (
-    <div className={cn("container mx-auto px-4 sm:px-6 lg:px-8", className)} {...props}>
-      {children}
-    </div>
-  ),
+  Container: ({ children, className, size = 'default', ...props }: HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'default' | 'lg' | 'xl' | 'full' }) => {
+    const sizeClasses = {
+      sm: 'max-w-3xl',
+      default: 'max-w-7xl',
+      lg: 'max-w-7xl',
+      xl: 'max-w-none',
+      full: 'max-w-none'
+    };
+    
+    return (
+      <div className={cn("container mx-auto px-4 sm:px-6 lg:px-8", sizeClasses[size], className)} {...props}>
+        {children}
+      </div>
+    );
+  },
   Section: ({ children, className, size = 'md', ...props }: HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'md' | 'lg' | 'xl' }) => {
     const sizeClasses = {
       sm: 'py-8',
