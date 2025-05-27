@@ -49,13 +49,16 @@ const UserMenu: React.FC = () => {
     );
   }
 
+  const userName = user.user_metadata?.full_name || user.user_metadata?.name || 'User';
+  const userInitial = userName.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-9 w-9 rounded-full p-0">
           <Avatar className="h-8 w-8">
             <AvatarFallback className="text-xs">
-              {user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+              {userInitial}
             </AvatarFallback>
           </Avatar>
         </Button>
@@ -64,11 +67,11 @@ const UserMenu: React.FC = () => {
         <div className="flex items-center justify-start gap-2 p-2">
           <Avatar className="h-8 w-8">
             <AvatarFallback>
-              {user.name?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
+              {userInitial}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col space-y-1 leading-none">
-            <p className="font-medium text-sm">{user.name || 'User'}</p>
+            <p className="font-medium text-sm">{userName}</p>
             <p className="text-xs text-muted-foreground">{user.email}</p>
           </div>
         </div>

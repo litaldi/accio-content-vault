@@ -8,8 +8,10 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string, fullName?: string) => Promise<void>;
+  isDemoMode: boolean;
+  signIn: (email: string, password: string) => Promise<{ error?: Error }>;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error?: Error }>;
+  signInWithProvider: (provider: 'google' | 'github') => Promise<{ error?: Error }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 }
@@ -32,6 +34,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -43,6 +46,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setSession(session);
         setUser(session?.user ?? null);
         setIsLoading(false);
+
+        // Check if user is in demo mode
+        if (session?.user) {
+          const isDemo = session.user.email?.includes('demo') || 
+                         session.user.user_metadata?.role === 'demo';
+          setIsDemoMode(isDemo);
+        } else {
+          setIsDemoMode(false);
+        }
 
         // Handle auth events
         if (event === 'SIGNED_IN' && session?.user) {
@@ -67,6 +79,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         
         setSession(session);
         setUser(session?.user ?? null);
+        
+        if (session?.user) {
+          const isDemo = session.user.email?.includes('demo') || 
+                         session.user.user_metadata?.role === 'demo';
+          setIsDemoMode(isDemo);
+        }
       } catch (error) {
         console.error('Error getting initial session:', error);
       } finally {
@@ -87,7 +105,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         password,
       });
 
-      if (error) throw error;
+      if (error) return { error };
+      return {};
     } catch (error: any) {
       console.error('Sign in error:', error);
       toast({
@@ -95,7 +114,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         description: error.message || "Failed to sign in. Please try again.",
         variant: "destructive",
       });
-      throw error;
+      return { error };
     } finally {
       setIsLoading(false);
     }
@@ -114,12 +133,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         },
       });
 
-      if (error) throw error;
+      if (error) return { error };
 
       toast({
         title: "Account Created",
         description: "Please check your email to confirm your account.",
       });
+      return {};
     } catch (error: any) {
       console.error('Sign up error:', error);
       toast({
@@ -127,7 +147,32 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         description: error.message || "Failed to create account. Please try again.",
         variant: "destructive",
       });
-      throw error;
+      return { error };
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const signInWithProvider = async (provider: 'google' | 'github') => {
+    try {
+      setIsLoading(true);
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+
+      if (error) return { error };
+      return {};
+    } catch (error: any) {
+      console.error('Provider sign in error:', error);
+      toast({
+        title: "Authentication Error",
+        description: error.message || `Failed to sign in with ${provider}. Please try again.`,
+        variant: "destructive",
+      });
+      return { error };
     } finally {
       setIsLoading(false);
     }
@@ -178,8 +223,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     user,
     session,
     isLoading,
+    isDemoMode,
     signIn,
     signUp,
+    signInWithProvider,
     signOut,
     resetPassword,
   };

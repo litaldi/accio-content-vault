@@ -48,10 +48,10 @@ const Register = () => {
     setSubmitError('');
     
     try {
-      const { error } = await signUp(email, password);
+      const result = await signUp(email, password);
       
-      if (error) {
-        throw error;
+      if (result.error) {
+        throw result.error;
       }
       
       toast({
