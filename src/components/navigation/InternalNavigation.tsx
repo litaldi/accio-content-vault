@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -35,10 +34,16 @@ const InternalNavigation: React.FC = () => {
       description: 'Your command center'
     },
     {
-      label: 'My Profile',
-      href: '/profile',
-      icon: User,
-      description: 'Account settings and info'
+      label: 'Search Content',
+      href: '/search',
+      icon: Search,
+      description: 'Find anything in your library'
+    },
+    {
+      label: 'Quick Capture',
+      href: '/save',
+      icon: Plus,
+      description: 'Save new content instantly'
     },
     {
       label: 'Saved Content',
@@ -53,12 +58,6 @@ const InternalNavigation: React.FC = () => {
       description: 'Organized content groups'
     },
     {
-      label: 'Quick Capture',
-      href: '/save',
-      icon: Plus,
-      description: 'Save new content instantly'
-    },
-    {
       label: 'AI Assistant',
       href: '/ai-features',
       icon: Brain,
@@ -69,6 +68,12 @@ const InternalNavigation: React.FC = () => {
       href: '/activity',
       icon: Activity,
       description: 'Track your learning journey'
+    },
+    {
+      label: 'My Profile',
+      href: '/profile',
+      icon: User,
+      description: 'Account settings and info'
     },
     {
       label: 'Settings',

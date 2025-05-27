@@ -8,6 +8,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import MainNavigation from '@/components/navigation/MainNavigation';
 import MarketingFooter from '@/components/marketing/MarketingFooter';
 import FooterNavigation from '@/components/navigation/FooterNavigation';
+import Search from '@/pages/Search';
 
 // Pages
 import Index from '@/pages/Index';
@@ -47,7 +48,8 @@ function App() {
                           !location.pathname.includes('/save') &&
                           !location.pathname.includes('/collections') &&
                           !location.pathname.includes('/activity') &&
-                          !location.pathname.includes('/settings');
+                          !location.pathname.includes('/settings') &&
+                          !location.pathname.includes('/search');
   
   const shouldShowMobileNav = !location.pathname.includes('/login') && 
                              !location.pathname.includes('/register');
@@ -58,7 +60,8 @@ function App() {
                               location.pathname.includes('/save') ||
                               location.pathname.includes('/collections') ||
                               location.pathname.includes('/activity') ||
-                              location.pathname.includes('/settings');
+                              location.pathname.includes('/settings') ||
+                              location.pathname.includes('/search');
 
   return (
     <HelmetProvider>
@@ -103,6 +106,11 @@ function App() {
                 <Route path="/save" element={
                   <ProtectedRoute>
                     <SaveContent />
+                  </ProtectedRoute>
+                } />
+                <Route path="/search" element={
+                  <ProtectedRoute>
+                    <Search />
                   </ProtectedRoute>
                 } />
                 <Route path="/profile" element={
