@@ -8,7 +8,7 @@ import {
   MicOff, 
   Volume2, 
   VolumeX,
-  Waveform,
+  AudioWaveform,
   Play,
   Pause
 } from 'lucide-react';
@@ -139,7 +139,7 @@ export const VoiceSearchInterface = () => {
             <Card className="bg-muted/20">
               <CardContent className="p-4">
                 <h4 className="font-medium mb-2 flex items-center gap-2">
-                  <Waveform className="h-4 w-4" />
+                  <AudioWaveform className="h-4 w-4" />
                   Voice Transcript
                 </h4>
                 <p className="text-sm italic">"{transcript}"</p>
