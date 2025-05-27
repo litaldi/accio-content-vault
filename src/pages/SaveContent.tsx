@@ -6,61 +6,59 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Globe, FileText, Camera, Link as LinkIcon, Zap, Brain } from 'lucide-react';
+import { Plus, Globe, FileText, Camera, Link as LinkIcon, Zap, Brain, Sparkles } from 'lucide-react';
 
 const SaveContent: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Quick Capture - Save Knowledge Instantly | Accio</title>
-        <meta name="description" content="Capture brilliant ideas instantly. Save articles, notes, and insights with AI-powered organization that makes everything discoverable." />
+        <title>Capture Knowledge Instantly - Never Lose Ideas Again | Accio</title>
+        <meta name="description" content="Capture brilliant ideas instantly. Save articles, notes, and insights with AI-powered organization that makes everything discoverable forever." />
       </Helmet>
       
       <div className="min-h-screen bg-gradient-to-br from-background to-muted/30 py-8">
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-8">
             <Badge variant="outline" className="mb-4">
-              <Zap className="h-3 w-3 mr-1" />
-              Quick Knowledge Capture
+              <Sparkles className="h-3 w-3 mr-1" />
+              Lightning-Fast Knowledge Capture
             </Badge>
             <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              Never Lose Another Brilliant Idea
+              Capture Ideas Before They Disappear
             </h1>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Capture anything instantly. Our AI automatically organizes, tags, and makes 
-              everything searchable so you can focus on creating, not organizing.
+              Save anything in seconds. Our AI instantly organizes, connects, and makes 
+              everything searchable so you can focus on creating, not managing.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            {/* URL Capture */}
             <Card className="hover:shadow-lg transition-shadow border-2 hover:border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <div className="w-8 h-8 bg-blue-500/10 rounded-lg flex items-center justify-center">
                     <Globe className="h-5 w-5 text-blue-500" />
                   </div>
-                  Save Any Web Page
+                  Save Any Web Content
                 </CardTitle>
                 <CardDescription>
-                  Paste any URL and we'll capture the full content, extract key insights, 
-                  and organize it automatically
+                  Paste any URL and watch our AI extract the essence, identify key insights, 
+                  and organize it perfectly in your knowledge base
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Input 
-                  placeholder="https://example.com/amazing-article" 
+                  placeholder="https://amazing-article.com" 
                   type="url"
                   className="w-full"
                 />
-                <Button className="w-full group">
+                <Button className="w-full group bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90">
                   <Brain className="h-4 w-4 mr-2" />
-                  Capture & Analyze with AI
+                  Capture with AI Intelligence
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Manual Entry */}
             <Card className="hover:shadow-lg transition-shadow border-2 hover:border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -70,36 +68,35 @@ const SaveContent: React.FC = () => {
                   Create Knowledge Notes
                 </CardTitle>
                 <CardDescription>
-                  Turn thoughts into organized knowledge. Write notes, ideas, or insights 
-                  that connect with your existing content
+                  Transform thoughts into organized knowledge. Create notes that automatically 
+                  connect with your existing content and surface when needed
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <Input 
-                  placeholder="Give your knowledge a title..." 
+                  placeholder="Give your brilliant idea a title..." 
                   className="w-full"
                 />
                 <Textarea 
-                  placeholder="Share your thoughts, insights, or discoveries..."
+                  placeholder="Capture your thoughts, insights, or breakthrough moments..."
                   className="w-full min-h-[120px]"
                 />
-                <Button className="w-full group">
+                <Button className="w-full group bg-gradient-to-r from-purple-500 to-primary hover:from-purple-500/90 hover:to-primary/90">
                   <Plus className="h-4 w-4 mr-2" />
-                  Add to Knowledge Base
+                  Add to Your Knowledge Empire
                 </Button>
               </CardContent>
             </Card>
           </div>
 
-          {/* Quick Actions */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
             <Card className="text-center hover:shadow-md transition-shadow cursor-pointer group border-2 hover:border-green-500/20">
               <CardContent className="p-6">
                 <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <Camera className="h-6 w-6 text-green-500" />
                 </div>
-                <h3 className="font-medium mb-2">Smart Image Capture</h3>
-                <p className="text-sm text-muted-foreground">Save images with AI-generated descriptions and insights</p>
+                <h3 className="font-medium mb-2">Smart Image Analysis</h3>
+                <p className="text-sm text-muted-foreground">AI extracts insights from images and creates searchable descriptions</p>
               </CardContent>
             </Card>
 
@@ -108,8 +105,8 @@ const SaveContent: React.FC = () => {
                 <div className="w-12 h-12 bg-orange-500/10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <LinkIcon className="h-6 w-6 text-orange-500" />
                 </div>
-                <h3 className="font-medium mb-2">Quick Bookmarks</h3>
-                <p className="text-sm text-muted-foreground">Save important links with context and connections</p>
+                <h3 className="font-medium mb-2">Intelligent Bookmarks</h3>
+                <p className="text-sm text-muted-foreground">Save links with context that connects to your existing knowledge</p>
               </CardContent>
             </Card>
 
@@ -118,19 +115,23 @@ const SaveContent: React.FC = () => {
                 <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform">
                   <Zap className="h-6 w-6 text-blue-500" />
                 </div>
-                <h3 className="font-medium mb-2">Browser Extension</h3>
-                <p className="text-sm text-muted-foreground">One-click saving from anywhere on the web</p>
+                <h3 className="font-medium mb-2">One-Click Extension</h3>
+                <p className="text-sm text-muted-foreground">Save from anywhere on the web with our browser extension</p>
               </CardContent>
             </Card>
           </div>
 
-          <div className="text-center bg-muted/50 rounded-xl p-6">
-            <Brain className="h-8 w-8 text-primary mx-auto mb-3" />
-            <h3 className="font-semibold mb-2">AI-Powered Organization</h3>
-            <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-              Every piece of content you save is automatically processed by our AI to extract insights, 
-              create connections, and make everything instantly discoverable through semantic search.
+          <div className="text-center bg-gradient-to-r from-primary/5 to-purple-500/5 rounded-xl p-8 border">
+            <Brain className="h-12 w-12 text-primary mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-3">AI-Powered Knowledge Intelligence</h3>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
+              Every piece of content you save is instantly analyzed by our AI to extract insights, 
+              create meaningful connections, and make everything discoverable through natural language search.
             </p>
+            <Button variant="outline" className="group">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Learn About Our AI
+            </Button>
           </div>
         </div>
       </div>

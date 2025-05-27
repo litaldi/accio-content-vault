@@ -8,7 +8,7 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
 import StreamlinedMainNavigation from '@/components/navigation/StreamlinedMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
-import { EnhancedFloatingActions } from '@/components/ui/enhanced-floating-actions';
+import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
@@ -48,7 +48,6 @@ function App() {
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
-                      {/* Legacy route redirects */}
                       <Route path="/collections" element={<SavedContent />} />
                       <Route path="/analytics" element={<Dashboard />} />
                       <Route path="/profile" element={<Settings />} />
@@ -57,7 +56,7 @@ function App() {
                   <EnhancedGlobalFooter />
                   <EnhancedQuickCaptureWidget />
                   <AIContentAssistant />
-                  <EnhancedFloatingActions />
+                  <UnifiedFloatingActions />
                 </div>
               </KeyboardShortcutsProvider>
             </AccessibilityProvider>
