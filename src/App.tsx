@@ -8,7 +8,7 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
 import StreamlinedMainNavigation from '@/components/navigation/StreamlinedMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
-import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
+import { EnhancedFloatingActions } from '@/components/ui/enhanced-floating-actions';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
@@ -57,7 +57,7 @@ function App() {
                   <EnhancedGlobalFooter />
                   <EnhancedQuickCaptureWidget />
                   <AIContentAssistant />
-                  <UnifiedFloatingActions />
+                  <EnhancedFloatingActions />
                 </div>
               </KeyboardShortcutsProvider>
             </AccessibilityProvider>
