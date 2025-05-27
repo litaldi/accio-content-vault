@@ -4,7 +4,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Toaster } from '@/components/ui/toaster';
-import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import ProtectedRoute from '@/components/ProtectedRoute';
 import MainNavigation from '@/components/navigation/MainNavigation';
 import MarketingFooter from '@/components/marketing/MarketingFooter';
 import FooterNavigation from '@/components/navigation/FooterNavigation';
