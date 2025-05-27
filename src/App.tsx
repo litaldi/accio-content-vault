@@ -28,6 +28,7 @@ import About from '@/pages/About';
 import Contact from '@/pages/Contact';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
+import NotFound from '@/pages/NotFound';
 import { CleanBottomNavigation } from '@/components/ui/clean-bottom-navigation';
 import EnhancedAccessibilityHelper from '@/components/accessibility/EnhancedAccessibilityHelper';
 
@@ -66,6 +67,12 @@ function App() {
                           <Route path="/collections" element={<SavedContent />} />
                           <Route path="/analytics" element={<Dashboard />} />
                           <Route path="/profile" element={<Settings />} />
+                          {/* Auth aliases */}
+                          <Route path="/signin" element={<Login />} />
+                          <Route path="/signup" element={<Register />} />
+                          <Route path="/auth" element={<Login />} />
+                          {/* 404 catch-all route */}
+                          <Route path="*" element={<NotFound />} />
                         </Routes>
                       </main>
                       <EnhancedGlobalFooter />

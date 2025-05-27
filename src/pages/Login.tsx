@@ -1,59 +1,53 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { Link, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  Brain, 
-  ArrowRight, 
-  Eye, 
-  EyeOff,
-  Mail,
-  Lock,
-  Sparkles,
-  TrendingUp,
-  Users,
-  Shield
-} from 'lucide-react';
+import { AuthLayout } from '@/components/auth/AuthLayout';
+import { AuthForm } from '@/components/auth/AuthForm';
+import { Shield } from 'lucide-react';
 
 const Login = () => {
-  const { signIn } = useAuth();
+  const { user, signIn } = useAuth();
+  const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: true,
-  });
+  const [submitError, setSubmitError] = useState<string>('');
 
-  const stats = [
-    { icon: Users, label: '10,000+ Users', value: 'Trust Accio' },
-    { icon: TrendingUp, label: '2M+ Items', value: 'Saved & Organized' },
-    { icon: Shield, label: '99.9%', value: 'Uptime Guaranteed' },
-  ];
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [user, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (email: string, password: string) => {
     setIsLoading(true);
+    setSubmitError('');
     
     try {
-      await signIn(formData.email, formData.password);
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        throw error;
+      }
+      
       toast({
         title: "Welcome back!",
-        description: "You're now signed in to your Accio account.",
+        description: "You've been successfully signed in.",
       });
+      
+      navigate('/dashboard');
     } catch (error: any) {
+      console.error('Login error:', error);
+      const errorMessage = error.message || "Invalid email or password. Please try again.";
+      setSubmitError(errorMessage);
       toast({
         title: "Sign in failed",
-        description: error.message || "Please check your credentials and try again.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -61,182 +55,78 @@ const Login = () => {
     }
   };
 
-  const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+    <>
       <Helmet>
-        <title>Sign In - Accio</title>
-        <meta name="description" content="Sign in to your Accio account and continue building your knowledge empire." />
+        <title>Sign In - Accio Knowledge Engine</title>
+        <meta name="description" content="Sign in to your Accio account to access your knowledge collection and insights." />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center min-h-[calc(100vh-4rem)]">
-          {/* Left Side - Branding & Stats */}
-          <div className="space-y-8">
-            <div className="text-center lg:text-left">
-              <Link to="/" className="inline-flex items-center gap-3 mb-8 hover:opacity-80 transition-opacity">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center shadow-lg">
-                  <Brain className="h-7 w-7 text-primary-foreground" />
-                </div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                  Accio
-                </span>
-              </Link>
+      <AuthLayout 
+        title="Welcome back" 
+        subtitle="Sign in to continue building your knowledge collection"
+      >
+        <Card className="shadow-lg">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-semibold">Sign in</CardTitle>
+            <CardDescription>
+              Enter your credentials to access your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <AuthForm 
+              mode="login"
+              onSubmit={handleSubmit}
+              isLoading={isLoading}
+            />
 
-              <h1 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight">
-                Welcome Back to Your
-                <span className="text-primary block">Knowledge Empire</span>
-              </h1>
+            {/* Submit Error */}
+            {submitError && (
+              <div className="mt-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
+                <p className="text-sm text-destructive" role="alert">
+                  {submitError}
+                </p>
+              </div>
+            )}
+
+            {/* Footer Links */}
+            <div className="mt-6 space-y-4">
+              <div className="text-center">
+                <Button variant="link" className="text-sm text-muted-foreground hover:text-primary p-0">
+                  Forgot your password?
+                </Button>
+              </div>
               
-              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-                Continue where you left off and discover new insights from your saved content.
-              </p>
-
-              <Badge variant="secondary" className="mb-8">
-                <Sparkles className="h-3 w-3 mr-1" />
-                Your content is waiting for you
-              </Badge>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center p-4 rounded-lg bg-muted/30">
-                  <stat.icon className="h-6 w-6 text-primary mx-auto mb-2" />
-                  <div className="text-sm font-medium">{stat.label}</div>
-                  <div className="text-xs text-muted-foreground">{stat.value}</div>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right Side - Login Form */}
-          <div className="w-full max-w-md mx-auto lg:mx-0">
-            <Card className="shadow-xl border-0 bg-background/95 backdrop-blur-sm">
-              <CardHeader className="text-center pb-6">
-                <CardTitle className="text-2xl">Sign In</CardTitle>
-                <CardDescription>
-                  Access your Accio account
-                </CardDescription>
-              </CardHeader>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">New to Accio?</span>
+                </div>
+              </div>
               
-              <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Email Field */}
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium">
-                      Email Address
-                    </Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        className="pl-10"
-                        required
-                        autoComplete="email"
-                      />
-                    </div>
-                  </div>
+              <Button variant="outline" className="w-full" asChild>
+                <Link to="/register">
+                  Create an account
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
 
-                  {/* Password Field */}
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="password" className="text-sm font-medium">
-                        Password
-                      </Label>
-                      <Link 
-                        to="/forgot-password" 
-                        className="text-xs text-primary hover:underline"
-                      >
-                        Forgot password?
-                      </Link>
-                    </div>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        id="password"
-                        type={showPassword ? 'text' : 'password'}
-                        placeholder="Enter your password"
-                        value={formData.password}
-                        onChange={(e) => handleInputChange('password', e.target.value)}
-                        className="pl-10 pr-10"
-                        required
-                        autoComplete="current-password"
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="absolute right-1 top-1 h-8 w-8"
-                        onClick={() => setShowPassword(!showPassword)}
-                        aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Remember Me */}
-                  <div className="flex items-center space-x-2">
-                    <Checkbox
-                      id="rememberMe"
-                      checked={formData.rememberMe}
-                      onCheckedChange={(checked) => handleInputChange('rememberMe', checked as boolean)}
-                    />
-                    <Label htmlFor="rememberMe" className="text-sm cursor-pointer">
-                      Keep me signed in
-                    </Label>
-                  </div>
-
-                  {/* Submit Button */}
-                  <Button
-                    type="submit"
-                    className="w-full gap-2 h-11"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? (
-                      <>
-                        <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary-foreground border-t-transparent" />
-                        Signing In...
-                      </>
-                    ) : (
-                      <>
-                        Sign In
-                        <ArrowRight className="h-4 w-4" />
-                      </>
-                    )}
-                  </Button>
-                </form>
-
-                {/* Sign Up Link */}
-                <div className="mt-6 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Don't have an account?{' '}
-                    <Link 
-                      to="/register" 
-                      className="text-primary hover:underline font-medium transition-colors"
-                    >
-                      Create one now
-                    </Link>
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
+        {/* Security Notice */}
+        <div className="text-center">
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <Shield className="h-4 w-4" />
+            <span>Your data is secure and encrypted</span>
           </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            This is a demo application. Use any email and password to sign in.
+          </p>
         </div>
-      </div>
-    </div>
+      </AuthLayout>
+    </>
   );
 };
 
