@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { AuthForm } from '@/components/auth/AuthForm';
-import { Shield } from 'lucide-react';
+import { Shield, CheckCircle } from 'lucide-react';
 
 const Register = () => {
   const { user, signUp } = useAuth();
@@ -26,7 +26,15 @@ const Register = () => {
     }
   }, [user, navigate]);
 
-  const handleSubmit = async (email: string, password: string, fullName?: string) => {
+  const benefits = [
+    'Unlimited content saving',
+    'AI-powered organization',
+    'Smart search & discovery',
+    'Export to popular tools',
+    'Mobile & web access',
+  ];
+
+  const handleSubmit = async (email: string, password: string) => {
     if (!acceptTerms) {
       toast({
         title: "Terms required",
@@ -40,18 +48,17 @@ const Register = () => {
     setSubmitError('');
     
     try {
-      const result = await signUp(email, password, fullName);
+      const result = await signUp(email, password);
       
-      if (result?.error) {
+      if (result.error) {
         throw result.error;
       }
       
       toast({
         title: "Welcome to Accio!",
-        description: "Your account has been created successfully. Check your email to verify your account.",
+        description: "Your account has been created successfully.",
       });
       
-      // Redirect to a welcome page or dashboard
       navigate('/dashboard');
     } catch (error: any) {
       console.error('Registration error:', error);
@@ -78,6 +85,19 @@ const Register = () => {
         title="Create your account" 
         subtitle="Start building your knowledge empire today"
       >
+        {/* Benefits */}
+        <div className="bg-muted/30 rounded-lg p-6 space-y-4">
+          <h3 className="font-semibold text-center">What you'll get:</h3>
+          <div className="space-y-2">
+            {benefits.map((benefit, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
+                <span className="text-sm">{benefit}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
         <Card className="shadow-lg">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-semibold">Sign up</CardTitle>

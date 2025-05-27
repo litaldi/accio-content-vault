@@ -1,12 +1,11 @@
 
 import React from 'react';
-import ResponsiveNavigation from './ResponsiveNavigation';
+import { CategorizedMainNavigation } from './CategorizedMainNavigation';
 
 /**
- * Unified main navigation component - uses the responsive navigation
+ * Unified main navigation component that provides consistent navigation
+ * across the entire application
  */
 export const UnifiedMainNavigation: React.FC = () => {
-  return <ResponsiveNavigation />;
+  return <CategorizedMainNavigation />;
 };
-
-export default UnifiedMainNavigation;
