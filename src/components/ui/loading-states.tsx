@@ -1,18 +1,20 @@
 
 import React from 'react';
-import { Loader2, Sparkles } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface LoadingSpinnerProps {
-  size?: 'sm' | 'md' | 'lg';
+interface LoadingStateProps {
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
   text?: string;
+  inline?: boolean;
 }
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  size = 'md', 
+export const LoadingSpinner: React.FC<LoadingStateProps> = ({
   className,
-  text 
+  size = 'md',
+  text,
+  inline = false
 }) => {
   const sizeClasses = {
     sm: 'h-4 w-4',
@@ -20,154 +22,68 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
     lg: 'h-8 w-8'
   };
 
-  return (
-    <div className={cn("flex items-center gap-2", className)}>
-      <Loader2 className={cn("animate-spin text-primary", sizeClasses[size])} />
-      {text && <span className="text-sm text-muted-foreground">{text}</span>}
-    </div>
-  );
-};
-
-interface SkeletonProps {
-  className?: string;
-  variant?: 'text' | 'circular' | 'rectangular';
-}
-
-export const Skeleton: React.FC<SkeletonProps> = ({ 
-  className, 
-  variant = 'rectangular' 
-}) => {
-  const variantClasses = {
-    text: 'h-4 w-full',
-    circular: 'rounded-full',
-    rectangular: 'rounded'
-  };
+  const Component = inline ? 'span' : 'div';
 
   return (
-    <div
+    <Component 
       className={cn(
-        "animate-shimmer bg-gradient-to-r from-muted via-muted/50 to-muted",
-        variantClasses[variant],
+        'flex items-center justify-center',
+        !inline && 'py-8',
         className
       )}
-    />
-  );
-};
-
-interface ContentSkeletonProps {
-  count?: number;
-  showImage?: boolean;
-}
-
-export const ContentSkeleton: React.FC<ContentSkeletonProps> = ({ 
-  count = 3, 
-  showImage = true 
-}) => {
-  return (
-    <div className="space-y-4">
-      {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="border rounded-lg p-6 space-y-4">
-          <div className="flex gap-4">
-            {showImage && (
-              <Skeleton className="w-20 h-20 flex-shrink-0" variant="rectangular" />
-            )}
-            <div className="flex-1 space-y-2">
-              <Skeleton className="h-5 w-3/4" variant="text" />
-              <Skeleton className="h-4 w-1/2" variant="text" />
-              <div className="flex gap-2 mt-3">
-                <Skeleton className="h-6 w-16 rounded-full" />
-                <Skeleton className="h-6 w-20 rounded-full" />
-              </div>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-interface ProgressBarProps {
-  progress: number;
-  className?: string;
-  showLabel?: boolean;
-  variant?: 'default' | 'success' | 'warning' | 'error';
-}
-
-export const ProgressBar: React.FC<ProgressBarProps> = ({
-  progress,
-  className,
-  showLabel = true,
-  variant = 'default'
-}) => {
-  const variantClasses = {
-    default: 'bg-primary',
-    success: 'bg-green-500',
-    warning: 'bg-yellow-500',
-    error: 'bg-red-500'
-  };
-
-  return (
-    <div className={cn("space-y-2", className)}>
-      {showLabel && (
-        <div className="flex justify-between text-sm">
-          <span className="text-muted-foreground">Progress</span>
-          <span className="font-medium">{Math.round(progress)}%</span>
-        </div>
-      )}
-      <div className="w-full bg-muted rounded-full h-2 overflow-hidden">
-        <div
-          className={cn(
-            "h-full transition-all duration-500 ease-out rounded-full",
-            variantClasses[variant]
-          )}
-          style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
+      role="status"
+      aria-live="polite"
+    >
+      <div className="flex items-center gap-3">
+        <Loader2 
+          className={cn('animate-spin text-primary', sizeClasses[size])} 
+          aria-hidden="true"
         />
+        {text && (
+          <span className="text-sm text-muted-foreground font-medium">
+            {text}
+          </span>
+        )}
       </div>
-    </div>
+      <span className="sr-only">
+        {text || 'Loading content, please wait'}
+      </span>
+    </Component>
   );
 };
 
-interface ProcessingIndicatorProps {
-  steps: string[];
-  currentStep: number;
-  className?: string;
-}
+export const LoadingSkeleton: React.FC<{ className?: string; lines?: number }> = ({
+  className,
+  lines = 3
+}) => (
+  <div className={cn('space-y-3', className)} role="status" aria-label="Loading content">
+    {Array.from({ length: lines }).map((_, i) => (
+      <div
+        key={i}
+        className={cn(
+          'h-4 bg-muted rounded animate-pulse',
+          i === lines - 1 && 'w-3/4' // Last line shorter
+        )}
+      />
+    ))}
+    <span className="sr-only">Loading content, please wait</span>
+  </div>
+);
 
-export const ProcessingIndicator: React.FC<ProcessingIndicatorProps> = ({
-  steps,
-  currentStep,
-  className
-}) => {
-  return (
-    <div className={cn("space-y-4", className)}>
-      <div className="text-center">
-        <Sparkles className="h-8 w-8 text-primary mx-auto mb-2 animate-pulse" />
-        <h3 className="font-semibold text-lg">Processing your content...</h3>
-        <p className="text-sm text-muted-foreground">This will only take a moment</p>
-      </div>
-      
-      <div className="space-y-2">
-        {steps.map((step, index) => (
-          <div key={index} className="flex items-center gap-3">
-            <div className={cn(
-              "w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium transition-all duration-300",
-              index < currentStep 
-                ? "bg-green-500 text-white" 
-                : index === currentStep 
-                ? "bg-primary text-primary-foreground animate-pulse" 
-                : "bg-muted text-muted-foreground"
-            )}>
-              {index < currentStep ? '✓' : index + 1}
-            </div>
-            <span className={cn(
-              "text-sm transition-colors duration-300",
-              index <= currentStep ? "text-foreground" : "text-muted-foreground"
-            )}>
-              {step}
-            </span>
-          </div>
-        ))}
+export const LoadingCard: React.FC<{ className?: string }> = ({ className }) => (
+  <div className={cn('p-6 border border-border rounded-xl space-y-4', className)} role="status">
+    <div className="flex items-center space-x-4">
+      <div className="w-12 h-12 bg-muted rounded-full animate-pulse" />
+      <div className="flex-1 space-y-2">
+        <div className="h-4 bg-muted rounded animate-pulse" />
+        <div className="h-3 bg-muted rounded w-3/4 animate-pulse" />
       </div>
     </div>
-  );
-};
+    <div className="space-y-2">
+      <div className="h-3 bg-muted rounded animate-pulse" />
+      <div className="h-3 bg-muted rounded animate-pulse" />
+      <div className="h-3 bg-muted rounded w-1/2 animate-pulse" />
+    </div>
+    <span className="sr-only">Loading card content</span>
+  </div>
+);
