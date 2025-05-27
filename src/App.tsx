@@ -13,6 +13,7 @@ import Features from '@/pages/Features';
 import Search from '@/pages/Search';
 import SaveContent from '@/pages/SaveContent';
 import Settings from '@/pages/Settings';
+import Pricing from '@/pages/Pricing';
 import { EnhancedQuickCaptureWidget } from '@/components/QuickCapture/EnhancedQuickCaptureWidget';
 import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
 import AIFeatures from '@/pages/AIFeatures';
@@ -38,6 +39,7 @@ function App() {
                   <Route path="/search" element={<Search />} />
                   <Route path="/save" element={<SaveContent />} />
                   <Route path="/settings" element={<Settings />} />
+                  <Route path="/pricing" element={<Pricing />} />
                   <Route path="/login" element={<Home />} />
                   <Route path="/register" element={<Home />} />
                 </Routes>

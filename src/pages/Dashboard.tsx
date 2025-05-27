@@ -19,8 +19,12 @@ import {
   Target
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useFeatureGating } from '@/hooks/useFeatureGating';
+import UpgradeNotification from '@/components/pricing/UpgradeNotification';
 
 const Dashboard = () => {
+  const { currentPlan, usageStats, limits, hasReachedLimit, getRemainingUsage } = useFeatureGating();
+
   const recentItems = [
     { 
       id: '1', 
@@ -49,10 +53,38 @@ const Dashboard = () => {
   ];
 
   const stats = [
-    { label: 'Total Saved', value: '247', icon: Bookmark, change: '+12 this week' },
-    { label: 'This Week', value: '12', icon: Clock, change: '+3 from last week' },
-    { label: 'Collections', value: '8', icon: Tag, change: '+2 new' },
-    { label: 'Trending', value: '5', icon: TrendingUp, change: 'Hot topics' },
+    { 
+      label: 'Total Saved', 
+      value: '247', 
+      icon: Bookmark, 
+      change: '+12 this week',
+      usage: usageStats.savesUsed,
+      limit: limits.maxSaves
+    },
+    { 
+      label: 'AI Actions', 
+      value: usageStats.aiActionsUsed.toString(), 
+      icon: Zap, 
+      change: `${getRemainingUsage('aiActionsUsed') || 'Unlimited'} remaining`,
+      usage: usageStats.aiActionsUsed,
+      limit: limits.aiActionsPerMonth
+    },
+    { 
+      label: 'Collections', 
+      value: usageStats.collectionsUsed.toString(), 
+      icon: Tag, 
+      change: `${getRemainingUsage('collectionsUsed') || 'Unlimited'} available`,
+      usage: usageStats.collectionsUsed,
+      limit: limits.maxCollections
+    },
+    { 
+      label: 'Trending', 
+      value: '5', 
+      icon: TrendingUp, 
+      change: 'Hot topics',
+      usage: null,
+      limit: null
+    },
   ];
 
   const quickActions = [
@@ -61,6 +93,11 @@ const Dashboard = () => {
     { label: 'Collections', href: '/collections', icon: Tag, description: 'Organize content' },
     { label: 'Analytics', href: '/analytics', icon: BarChart3, description: 'View insights' },
   ];
+
+  const shouldShowUpgrade = currentPlan === 'free' && (
+    hasReachedLimit('aiActionsUsed') || 
+    (usageStats.aiActionsUsed / limits.aiActionsPerMonth) > 0.8
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -76,6 +113,9 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold flex items-center gap-3">
               <LayoutDashboard className="h-8 w-8 text-primary" />
               Dashboard
+              <Badge variant="outline" className="ml-2">
+                {currentPlan}
+              </Badge>
             </h1>
             <p className="text-muted-foreground mt-2">
               Welcome back! Here's what's happening with your knowledge empire.
@@ -98,24 +138,51 @@ const Dashboard = () => {
           </div>
         </div>
 
+        {/* Upgrade Notification */}
+        {shouldShowUpgrade && (
+          <div className="mb-8">
+            <UpgradeNotification
+              feature="AI actions"
+              currentPlan={currentPlan}
+              usagePercent={Math.round((usageStats.aiActionsUsed / limits.aiActionsPerMonth) * 100)}
+            />
+          </div>
+        )}
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <stat.icon className="h-5 w-5 text-primary" />
-                    <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+          {stats.map((stat, index) => {
+            const usagePercent = stat.usage && stat.limit && stat.limit !== -1 
+              ? (stat.usage / stat.limit) * 100 
+              : null;
+            
+            return (
+              <Card key={index} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <stat.icon className="h-5 w-5 text-primary" />
+                      <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+                    </div>
                   </div>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                  <p className="text-xs text-muted-foreground">{stat.change}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                  <div className="space-y-1">
+                    <p className="text-2xl font-bold">{stat.value}</p>
+                    <p className="text-xs text-muted-foreground">{stat.change}</p>
+                    {usagePercent && (
+                      <div className="w-full bg-secondary rounded-full h-2 mt-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all ${
+                            usagePercent > 80 ? 'bg-red-500' : usagePercent > 60 ? 'bg-yellow-500' : 'bg-primary'
+                          }`}
+                          style={{ width: `${Math.min(usagePercent, 100)}%` }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {/* Quick Actions */}
@@ -227,19 +294,23 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
-                  This Week
+                  Plan Usage
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
                   <div className="text-center">
-                    <div className="text-2xl font-bold">12</div>
-                    <div className="text-sm text-muted-foreground">Items saved</div>
+                    <div className="text-2xl font-bold">{currentPlan}</div>
+                    <div className="text-sm text-muted-foreground">Current Plan</div>
                   </div>
-                  <div className="text-center py-4 text-muted-foreground">
-                    <BarChart3 className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p className="text-sm">Detailed analytics coming soon!</p>
-                  </div>
+                  {currentPlan === 'free' && (
+                    <Button className="w-full gap-2" asChild>
+                      <Link to="/pricing">
+                        <Zap className="h-4 w-4" />
+                        Upgrade Plan
+                      </Link>
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>

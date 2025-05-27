@@ -64,6 +64,7 @@ const EnhancedMainNavigation: React.FC = () => {
   const exploreLinks = [
     { to: '/', label: 'Home', icon: Home, description: 'Welcome to Accio' },
     { to: '/features', label: 'Discover', icon: Compass, description: 'Explore features' },
+    { to: '/pricing', label: 'Pricing', icon: BarChart3, description: 'View plans' },
     { to: '/collections', label: 'Collections', icon: FolderOpen, description: 'Browse collections' }
   ];
 
@@ -280,7 +281,7 @@ const EnhancedMainNavigation: React.FC = () => {
                 <Button size="sm" className="gap-2 shadow-sm" asChild>
                   <Link to="/register">
                     <Sparkles className="h-4 w-4" />
-                    Start Now
+                    Try for Free
                   </Link>
                 </Button>
               </>
@@ -346,7 +347,7 @@ const EnhancedMainNavigation: React.FC = () => {
                     <Button className="w-full justify-start gap-3 shadow-sm" asChild>
                       <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
                         <Sparkles className="h-5 w-5" />
-                        Start Now
+                        Try for Free
                       </Link>
                     </Button>
                   </>
