@@ -108,28 +108,33 @@ export const UnifiedFloatingActions: React.FC = () => {
     }
   ];
 
+  const PrimaryIcon = floatingActions[0].icon;
+
   return (
     <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       {/* Expanded Actions */}
       {isExpanded && (
         <div className="flex flex-col gap-2 animate-fade-in">
-          {floatingActions.slice(1).map((action, index) => (
-            <div key={index} className="group flex items-center gap-3">
-              <div className="hidden group-hover:block bg-popover text-popover-foreground px-3 py-2 rounded-lg shadow-lg text-sm font-medium animate-fade-in whitespace-nowrap">
-                {action.description}
+          {floatingActions.slice(1).map((action, index) => {
+            const ActionIcon = action.icon;
+            return (
+              <div key={index} className="group flex items-center gap-3">
+                <div className="hidden group-hover:block bg-popover text-popover-foreground px-3 py-2 rounded-lg shadow-lg text-sm font-medium animate-fade-in whitespace-nowrap">
+                  {action.description}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={action.action}
+                  className="w-12 h-12 rounded-full shadow-lg bg-background border-2 hover:scale-110 transition-all duration-200"
+                  aria-label={action.label}
+                  title={action.label}
+                >
+                  <ActionIcon className="h-5 w-5" />
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={action.action}
-                className="w-12 h-12 rounded-full shadow-lg bg-background border-2 hover:scale-110 transition-all duration-200"
-                aria-label={action.label}
-                title={action.label}
-              >
-                <action.icon className="h-5 w-5" />
-              </Button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
@@ -162,7 +167,7 @@ export const UnifiedFloatingActions: React.FC = () => {
         aria-label={floatingActions[0].label}
         title={floatingActions[0].description}
       >
-        <floatingActions[0].icon className="h-6 w-6 text-white" />
+        <PrimaryIcon className="h-6 w-6 text-white" />
       </Button>
     </div>
   );
