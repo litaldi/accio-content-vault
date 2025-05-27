@@ -1,189 +1,169 @@
 
-import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTheme } from '@/contexts/ThemeContext';
+import { useToast } from '@/hooks/use-toast';
 import { 
-  Brain, 
-  Sparkles, 
-  MessageCircle, 
-  FileText, 
-  Mic, 
-  Tag, 
-  TrendingUp,
-  BarChart3,
-  Lightbulb,
-  Target,
-  BellRing,
-  Edit3,
-  MapPin,
-  Zap,
-  Search,
-  BookOpen,
-  PlusCircle,
-  Settings,
-  Home,
-  Menu,
-  X,
-  ChevronDown,
-  Eye,
-  Focus,
-  Users,
-  Calendar,
-  Clock,
-  Archive,
-  Share2,
-  Download,
-  Upload,
-  Filter,
-  Layout,
-  Palette,
-  Globe,
-  Shield,
-  Activity,
-  CheckCircle2
+  Menu, 
+  X, 
+  Brain,
+  LogOut,
+  Sun,
+  Moon,
+  Sparkles,
+  ChevronDown
 } from 'lucide-react';
-import ThemeToggle from './ThemeToggle';
-import UserMenu from './UserMenu';
+import { megaMenuData, quickAccessItems } from './MegaMenuData';
+import { cn } from '@/lib/utils';
 
 const MegaMenuNavigation: React.FC = () => {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { toast } = useToast();
   const [isOpen, setIsOpen] = useState(false);
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const isActivePage = (path: string) => location.pathname === path;
-
-  const megaMenuSections = {
-    'AI Features': {
-      description: 'Cutting-edge AI tools for intelligent knowledge management',
-      items: [
-        { title: 'Personal Knowledge Assistant', path: '/ai-features', icon: MessageCircle, description: 'Chat with your knowledge base using natural language' },
-        { title: 'AI Writing Assistant', path: '/ai-features', icon: Edit3, description: 'Enhance, improve, and optimize your writing with AI' },
-        { title: 'AI Research Assistant', path: '/ai-features', icon: Search, description: 'Intelligent research and source discovery' },
-        { title: 'Content Summarizer', path: '/ai-features', icon: FileText, description: 'Generate intelligent summaries and key insights' },
-        { title: 'Voice Search Interface', path: '/ai-features', icon: Mic, description: 'Natural voice commands and search' },
-        { title: 'Smart Tagging System', path: '/ai-features', icon: Tag, description: 'Automatic content categorization and organization' },
-        { title: 'Learning Path Generator', path: '/ai-features', icon: Target, description: 'Personalized AI-generated learning roadmaps' },
-        { title: 'Content Analysis Engine', path: '/ai-features', icon: BarChart3, description: 'Deep insights into knowledge patterns and gaps' },
-        { title: 'Smart Notifications', path: '/ai-features', icon: BellRing, description: 'Intelligent alerts and learning reminders' },
-        { title: 'AI Insights Widget', path: '/ai-features', icon: Brain, description: 'Real-time AI-powered learning insights' },
-        { title: 'Knowledge Graph Visualizer', path: '/ai-features', icon: MapPin, description: 'Interactive visualization of knowledge connections' },
-        { title: 'AI Study Buddy', path: '/ai-features', icon: Users, description: 'Collaborative learning with AI-powered social features' },
-        { title: 'AI Habit Tracker', path: '/ai-features', icon: CheckCircle2, description: 'Smart habit formation with AI recommendations' },
-        { title: 'AI Goal Tracker', path: '/ai-features', icon: Target, description: 'Intelligent goal setting and progress monitoring' },
-        { title: 'Content Recommendations', path: '/ai-features', icon: TrendingUp, description: 'Discover relevant content based on your interests' },
-        { title: 'Reading Progress Tracker', path: '/ai-features', icon: BookOpen, description: 'Monitor and optimize your learning journey' }
-      ]
-    },
-    'Core Features': {
-      description: 'Essential productivity and organization tools',
-      items: [
-        { title: 'Quick Note Capture', path: '/features', icon: PlusCircle, description: 'Instantly capture thoughts and ideas with smart templates' },
-        { title: 'Advanced Search', path: '/search', icon: Search, description: 'Find anything instantly with powerful search filters' },
-        { title: 'Save Content', path: '/save', icon: Download, description: 'Save articles, videos, and web content seamlessly' },
-        { title: 'Content Library', path: '/features', icon: Archive, description: 'Organize and manage your saved content efficiently' },
-        { title: 'Smart Collections', path: '/features', icon: Layout, description: 'Create themed content groups with AI assistance' },
-        { title: 'Reading Mode', path: '/features', icon: Eye, description: 'Distraction-free reading experience' },
-        { title: 'Focus Dashboard', path: '/features', icon: Focus, description: 'Minimize distractions and boost productivity' },
-        { title: 'Collaborative Workspaces', path: '/features', icon: Users, description: 'Share knowledge and collaborate with teams' }
-      ]
-    },
-    'Analytics & Insights': {
-      description: 'Track progress and discover learning patterns',
-      items: [
-        { title: 'Learning Analytics', path: '/features', icon: Activity, description: 'Comprehensive analytics for learning progress' },
-        { title: 'Content Health Monitor', path: '/features', icon: Shield, description: 'Track content quality and freshness' },
-        { title: 'Productivity Insights', path: '/features', icon: Zap, description: 'Optimize your workflow with data-driven insights' },
-        { title: 'Knowledge Gap Analysis', path: '/features', icon: Target, description: 'Identify and fill learning opportunities' },
-        { title: 'Time Tracking', path: '/features', icon: Clock, description: 'Monitor time spent on learning activities' },
-        { title: 'Progress Visualization', path: '/features', icon: BarChart3, description: 'Visual representations of your learning journey' }
-      ]
-    },
-    'Productivity Tools': {
-      description: 'Enhance your workflow and efficiency',
-      items: [
-        { title: 'Content Scheduler', path: '/features', icon: Calendar, description: 'Schedule reading sessions and reviews' },
-        { title: 'Reminder System', path: '/features', icon: BellRing, description: 'Never miss important content or deadlines' },
-        { title: 'Data Export & Import', path: '/features', icon: Upload, description: 'Complete data portability and backup tools' },
-        { title: 'Share & Publish', path: '/features', icon: Share2, description: 'Share your knowledge with others' },
-        { title: 'Advanced Filters', path: '/features', icon: Filter, description: 'Powerful filtering and search capabilities' },
-        { title: 'Themes & Customization', path: '/features', icon: Palette, description: 'Personalize your learning environment' },
-        { title: 'Offline Access', path: '/features', icon: Globe, description: 'Access your content without internet connection' }
-      ]
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "See you next time!",
+      });
+      navigate('/');
+      setIsMobileMenuOpen(false);
+    } catch (error) {
+      toast({
+        title: "Error signing out",
+        description: "Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
-  const handleDropdownToggle = (section: string) => {
-    setActiveDropdown(activeDropdown === section ? null : section);
+  const handleMegaMenuEnter = (section: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setActiveMegaMenu(section);
   };
+
+  const handleMegaMenuLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setActiveMegaMenu(null);
+    }, 150);
+  };
+
+  const isActiveRoute = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
+    return location.pathname.startsWith(path);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const filteredMenuData = user ? megaMenuData : megaMenuData.filter(section => 
+    section.title !== 'Product' && section.title !== 'My Account'
+  );
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 max-w-7xl">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 font-bold text-xl">
-            <div className="p-2 rounded-lg bg-gradient-to-r from-primary to-blue-600">
+          <Link 
+            to="/" 
+            className="flex items-center gap-3 font-bold text-xl hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1"
+            aria-label="Accio homepage"
+          >
+            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
               <Brain className="h-5 w-5 text-white" />
             </div>
-            Accio
+            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Accio
+            </span>
           </Link>
 
           {/* Desktop Mega Menu */}
           <nav className="hidden lg:flex items-center space-x-1">
-            <Link
-              to="/"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActivePage('/') ? 'bg-primary/10 text-primary' : 'hover:bg-accent hover:text-accent-foreground'
-              }`}
-            >
-              Home
-            </Link>
+            {/* Quick Access - Home */}
+            {quickAccessItems.map((item) => (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={cn(
+                  "px-4 py-2 rounded-lg transition-all font-medium text-sm",
+                  "hover:bg-accent/80 hover:text-accent-foreground",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                  isActiveRoute(item.href) 
+                    ? "bg-primary/10 text-primary font-semibold" 
+                    : "text-muted-foreground hover:text-foreground"
+                )}
+                aria-current={isActiveRoute(item.href) ? 'page' : undefined}
+              >
+                <item.icon className="h-4 w-4 inline mr-2" />
+                {item.title}
+              </Link>
+            ))}
 
-            {Object.entries(megaMenuSections).map(([sectionName, section]) => (
-              <div key={sectionName} className="relative group">
+            {/* Mega Menu Sections */}
+            {filteredMenuData.map((section) => (
+              <div
+                key={section.title}
+                className="relative"
+                onMouseEnter={() => handleMegaMenuEnter(section.title)}
+                onMouseLeave={handleMegaMenuLeave}
+              >
                 <button
-                  className="flex items-center gap-1 px-4 py-2 rounded-md text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
-                  onMouseEnter={() => setActiveDropdown(sectionName)}
-                  onMouseLeave={() => setActiveDropdown(null)}
-                >
-                  {sectionName}
-                  <ChevronDown className="h-3 w-3" />
-                  {sectionName === 'AI Features' && (
-                    <Badge variant="secondary" className="ml-1">
-                      <Sparkles className="h-2 w-2 mr-1" />
-                      AI
-                    </Badge>
+                  className={cn(
+                    "flex items-center gap-1 px-4 py-2 rounded-lg text-sm font-medium transition-colors",
+                    "hover:bg-accent/80 hover:text-accent-foreground",
+                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                    activeMegaMenu === section.title ? "bg-accent/80 text-accent-foreground" : "text-muted-foreground"
                   )}
+                  aria-expanded={activeMegaMenu === section.title}
+                  aria-haspopup="true"
+                >
+                  {section.title}
+                  <ChevronDown className="h-3 w-3 transition-transform duration-200" 
+                    style={{ transform: activeMegaMenu === section.title ? 'rotate(180deg)' : 'rotate(0deg)' }} />
                 </button>
 
-                {activeDropdown === sectionName && (
-                  <div
-                    className="absolute top-full left-0 mt-1 w-96 bg-popover border rounded-lg shadow-lg p-6 z-50"
-                    onMouseEnter={() => setActiveDropdown(sectionName)}
-                    onMouseLeave={() => setActiveDropdown(null)}
-                  >
+                {/* Mega Menu Dropdown */}
+                {activeMegaMenu === section.title && (
+                  <div className="absolute top-full left-0 mt-1 w-80 bg-popover border rounded-lg shadow-xl p-6 z-50">
                     <div className="mb-4">
-                      <h3 className="font-semibold text-lg mb-1">{sectionName}</h3>
-                      <p className="text-sm text-muted-foreground">{section.description}</p>
+                      <h3 className="font-semibold text-lg mb-2">{section.title}</h3>
                     </div>
-                    <div className="grid grid-cols-1 gap-2 max-h-80 overflow-y-auto">
+                    <div className="space-y-1">
                       {section.items.map((item) => {
                         const Icon = item.icon;
                         return (
                           <Link
-                            key={item.title}
-                            to={item.path}
-                            className="flex items-start gap-3 p-2 rounded-md hover:bg-accent/50 transition-colors group"
+                            key={item.href}
+                            to={item.href}
+                            className="flex items-start gap-3 p-3 rounded-md hover:bg-accent/50 transition-colors group"
+                            onClick={() => setActiveMegaMenu(null)}
                           >
                             <div className="p-1 rounded bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                              <Icon className="h-3 w-3 text-primary" />
+                              <Icon className="h-4 w-4 text-primary" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <div className="font-medium text-sm">{item.title}</div>
-                              <div className="text-xs text-muted-foreground">{item.description}</div>
+                              <div className="font-medium text-sm mb-1">{item.title}</div>
+                              <div className="text-xs text-muted-foreground leading-relaxed">{item.description}</div>
                             </div>
                           </Link>
                         );
@@ -193,100 +173,189 @@ const MegaMenuNavigation: React.FC = () => {
                 )}
               </div>
             ))}
-
-            <Link
-              to="/settings"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActivePage('/settings') ? 'bg-primary/10 text-primary' : 'hover:bg-accent hover:text-accent-foreground'
-              }`}
-            >
-              Settings
-            </Link>
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden lg:flex items-center space-x-2">
-            <ThemeToggle />
-            <UserMenu />
+          <div className="hidden lg:flex items-center space-x-3">
+            {/* Theme Toggle */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+              className="hover:bg-accent/80"
+            >
+              {theme === 'dark' ? (
+                <Sun className="h-4 w-4" />
+              ) : (
+                <Moon className="h-4 w-4" />
+              )}
+            </Button>
+
+            {user ? (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-2 hover:bg-accent/80"
+                  asChild
+                >
+                  <Link to="/profile">
+                    Profile
+                  </Link>
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSignOut}
+                  className="gap-2 hover:bg-destructive/10 hover:text-destructive"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">Sign In</Link>
+                </Button>
+                <Button size="sm" className="gap-2 shadow-lg bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" asChild>
+                  <Link to="/register">
+                    <Sparkles className="h-4 w-4" />
+                    Start Now
+                  </Link>
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2"
-            onClick={() => setIsOpen(!isOpen)}
-            aria-label="Toggle menu"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="lg:hidden flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={toggleTheme}
+              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+            >
+              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+            </Button>
+
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-expanded={isMobileMenuOpen}
+              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
-        {isOpen && (
-          <div className="lg:hidden border-t py-4 max-h-96 overflow-y-auto">
-            <nav className="space-y-4">
-              <Link
-                to="/"
-                className="block px-4 py-2 text-sm font-medium hover:bg-accent rounded-md"
-                onClick={() => setIsOpen(false)}
-              >
-                Home
-              </Link>
-
-              {Object.entries(megaMenuSections).map(([sectionName, section]) => (
-                <div key={sectionName} className="space-y-2">
-                  <button
-                    className="flex items-center justify-between w-full px-4 py-2 text-sm font-medium hover:bg-accent rounded-md"
-                    onClick={() => handleDropdownToggle(sectionName)}
+        {isMobileMenuOpen && (
+          <div className="lg:hidden border-t bg-background shadow-xl">
+            <div className="px-4 py-6 space-y-6 max-h-96 overflow-y-auto">
+              {/* Quick Access */}
+              <div className="space-y-2">
+                {quickAccessItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={cn(
+                      "flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium",
+                      "hover:bg-accent/80 hover:text-accent-foreground",
+                      "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2",
+                      isActiveRoute(item.href) 
+                        ? "bg-primary/10 text-primary font-semibold" 
+                        : "text-muted-foreground hover:text-foreground"
+                    )}
                   >
-                    <span className="flex items-center gap-2">
-                      {sectionName}
-                      {sectionName === 'AI Features' && (
-                        <Badge variant="secondary" className="text-xs">
-                          <Sparkles className="h-2 w-2 mr-1" />
-                          AI
-                        </Badge>
-                      )}
-                    </span>
-                    <ChevronDown className={`h-4 w-4 transition-transform ${activeDropdown === sectionName ? 'rotate-180' : ''}`} />
-                  </button>
-
-                  {activeDropdown === sectionName && (
-                    <div className="pl-4 space-y-1">
-                      {section.items.map((item) => {
-                        const Icon = item.icon;
-                        return (
-                          <Link
-                            key={item.title}
-                            to={item.path}
-                            className="flex items-center gap-3 px-4 py-2 text-sm hover:bg-accent/50 rounded-md"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            <Icon className="h-4 w-4 text-primary" />
-                            <div>
-                              <div className="font-medium">{item.title}</div>
-                              <div className="text-xs text-muted-foreground">{item.description}</div>
-                            </div>
-                          </Link>
-                        );
-                      })}
+                    <item.icon className="h-5 w-5" />
+                    <div>
+                      <div className="font-medium">{item.title}</div>
+                      <div className="text-xs opacity-70">{item.description}</div>
                     </div>
-                  )}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Mobile Menu Sections */}
+              {filteredMenuData.map((section) => (
+                <div key={section.title} className="space-y-2">
+                  <h3 className="font-semibold text-sm text-muted-foreground px-4 py-2 border-b">
+                    {section.title}
+                  </h3>
+                  <div className="space-y-1">
+                    {section.items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link
+                          key={item.href}
+                          to={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-accent/50 transition-colors"
+                        >
+                          <Icon className="h-5 w-5 text-primary" />
+                          <div>
+                            <div className="font-medium text-sm">{item.title}</div>
+                            <div className="text-xs text-muted-foreground">{item.description}</div>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
                 </div>
               ))}
 
-              <Link
-                to="/settings"
-                className="block px-4 py-2 text-sm font-medium hover:bg-accent rounded-md"
-                onClick={() => setIsOpen(false)}
-              >
-                Settings
-              </Link>
-
-              <div className="flex items-center gap-2 px-4 pt-4 border-t">
-                <ThemeToggle />
-                <UserMenu />
+              {/* Mobile Auth Actions */}
+              <div className="pt-4 border-t space-y-3">
+                {user ? (
+                  <>
+                    <Button
+                      variant="outline"
+                      className="w-full justify-start gap-3"
+                      asChild
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Link to="/profile">
+                        Profile
+                      </Link>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={handleSignOut}
+                      className="w-full justify-start gap-3 text-destructive hover:bg-destructive/10"
+                    >
+                      <LogOut className="h-5 w-5" />
+                      Sign Out
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      asChild
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Link to="/login">Sign In</Link>
+                    </Button>
+                    <Button 
+                      className="w-full gap-2 shadow-lg bg-gradient-to-r from-primary to-blue-600"
+                      asChild
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Link to="/register">
+                        <Sparkles className="h-5 w-5" />
+                        Start Now
+                      </Link>
+                    </Button>
+                  </>
+                )}
               </div>
-            </nav>
+            </div>
           </div>
         )}
       </div>

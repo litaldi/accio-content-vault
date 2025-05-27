@@ -1,93 +1,121 @@
-
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { HelmetProvider } from 'react-helmet-async';
+import React, { useEffect } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
-import StreamlinedMainNavigation from '@/components/navigation/StreamlinedMainNavigation';
-import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
-import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
-import AccessibilityAnnouncer from '@/components/accessibility/AccessibilityAnnouncer';
-import ErrorBoundary from '@/components/ui/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
-import Home from '@/pages/Home';
-import Dashboard from '@/pages/Dashboard';
-import SavedContent from '@/pages/SavedContent';
-import Features from '@/pages/Features';
-import Search from '@/pages/Search';
-import SaveContent from '@/pages/SaveContent';
-import Settings from '@/pages/EnhancedSettings';
-import EnhancedPricing from '@/pages/EnhancedPricing';
+import ProtectedRoute from '@/components/auth/ProtectedRoute';
+import MainNavigation from '@/components/navigation/MainNavigation';
+import MarketingFooter from '@/components/marketing/MarketingFooter';
+import FooterNavigation from '@/components/navigation/FooterNavigation';
+
+// Pages
+import Index from '@/pages/Index';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import Features from '@/pages/Features';
 import AIFeatures from '@/pages/AIFeatures';
+import Pricing from '@/pages/Pricing';
 import Help from '@/pages/Help';
-import About from '@/pages/About';
 import Contact from '@/pages/Contact';
+import Blog from '@/pages/Blog';
+import About from '@/pages/About';
 import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
+import Dashboard from '@/pages/Dashboard';
+import SaveContent from '@/pages/SaveContent';
+import Profile from '@/pages/Profile';
+import Settings from '@/pages/Settings';
 import NotFound from '@/pages/NotFound';
-import { CleanBottomNavigation } from '@/components/ui/clean-bottom-navigation';
-import EnhancedAccessibilityHelper from '@/components/accessibility/EnhancedAccessibilityHelper';
+import Collections from '@/pages/Collections';
+import Tutorials from '@/pages/Tutorials';
+import Activity from '@/pages/Activity';
+import Accessibility from '@/pages/Accessibility';
 
 function App() {
+  const location = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  // Determine if we should show the footer based on the route
+  const shouldShowFooter = !location.pathname.includes('/dashboard');
+  const shouldShowMobileNav = !location.pathname.includes('/login') && 
+                             !location.pathname.includes('/register');
+
   return (
-    <ErrorBoundary>
-      <HelmetProvider>
-        <Router>
-          <AuthProvider>
-            <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-              <AccessibilityProvider>
-                <KeyboardShortcutsProvider>
-                  <AccessibilityAnnouncer>
-                    <div className="min-h-screen bg-background font-sans antialiased flex flex-col w-full">
-                      <EnhancedAccessibility />
-                      <StreamlinedMainNavigation />
-                      <main className="flex-1 relative pb-16 md:pb-0" role="main" id="main-content">
-                        <Routes>
-                          <Route path="/" element={<Home />} />
-                          <Route path="/features" element={<Features />} />
-                          <Route path="/ai-features" element={<AIFeatures />} />
-                          <Route path="/pricing" element={<EnhancedPricing />} />
-                          <Route path="/dashboard" element={<Dashboard />} />
-                          <Route path="/search" element={<Search />} />
-                          <Route path="/saved" element={<SavedContent />} />
-                          <Route path="/save" element={<SaveContent />} />
-                          <Route path="/settings" element={<Settings />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/register" element={<Register />} />
-                          <Route path="/help" element={<Help />} />
-                          <Route path="/about" element={<About />} />
-                          <Route path="/contact" element={<Contact />} />
-                          <Route path="/privacy" element={<Privacy />} />
-                          <Route path="/terms" element={<Terms />} />
-                          {/* Alias routes for consistency */}
-                          <Route path="/collections" element={<SavedContent />} />
-                          <Route path="/analytics" element={<Dashboard />} />
-                          <Route path="/profile" element={<Settings />} />
-                          {/* Auth aliases */}
-                          <Route path="/signin" element={<Login />} />
-                          <Route path="/signup" element={<Register />} />
-                          <Route path="/auth" element={<Login />} />
-                          {/* 404 catch-all route */}
-                          <Route path="*" element={<NotFound />} />
-                        </Routes>
-                      </main>
-                      <EnhancedGlobalFooter />
-                      <CleanBottomNavigation />
-                      <EnhancedAccessibilityHelper />
-                      <Toaster />
-                    </div>
-                  </AccessibilityAnnouncer>
-                </KeyboardShortcutsProvider>
-              </AccessibilityProvider>
-            </ThemeProvider>
-          </AuthProvider>
-        </Router>
-      </HelmetProvider>
-    </ErrorBoundary>
+    <HelmetProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <Helmet titleTemplate="%s | Accio" defaultTitle="Accio - AI-Powered Knowledge Management" />
+          
+          <div className="flex flex-col min-h-screen">
+            <MainNavigation />
+            
+            <main className="flex-1">
+              <Routes>
+                {/* Existing routes */}
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/features" element={<Features />} />
+                <Route path="/ai-features" element={<AIFeatures />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/help" element={<Help />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                
+                {/* New mega menu routes */}
+                <Route path="/collections" element={<Collections />} />
+                <Route path="/tutorials" element={<Tutorials />} />
+                <Route path="/activity" element={<Activity />} />
+                <Route path="/accessibility" element={<Accessibility />} />
+                
+                {/* Protected routes */}
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/saved" element={
+                  <ProtectedRoute>
+                    <SaveContent />
+                  </ProtectedRoute>
+                } />
+                <Route path="/save" element={
+                  <ProtectedRoute>
+                    <SaveContent />
+                  </ProtectedRoute>
+                } />
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } />
+                <Route path="/settings" element={
+                  <ProtectedRoute>
+                    <Settings />
+                  </ProtectedRoute>
+                } />
+                
+                {/* Catch all route */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </main>
+            
+            {shouldShowFooter && <MarketingFooter />}
+            {shouldShowMobileNav && <FooterNavigation />}
+          </div>
+          
+          <Toaster />
+        </AuthProvider>
+      </ThemeProvider>
+    </HelmetProvider>
   );
 }
 
