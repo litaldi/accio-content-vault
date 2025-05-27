@@ -30,6 +30,11 @@ export const Typography = {
       {children}
     </p>
   ),
+  Body: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
+    <p className={cn("leading-7 text-base", className)} {...props}>
+      {children}
+    </p>
+  ),
   Lead: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
     <p className={cn("text-xl text-muted-foreground", className)} {...props}>
       {children}
