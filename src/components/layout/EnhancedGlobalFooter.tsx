@@ -1,280 +1,240 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
 import { 
   Brain,
-  Github,
-  Twitter,
-  Linkedin,
+  Twitter, 
+  Github, 
+  Linkedin, 
   Mail,
   Heart,
-  Accessibility,
-  Type,
-  Eye,
-  Volume2,
-  ArrowUp,
-  ExternalLink
+  Shield,
+  FileText,
+  HelpCircle,
+  Globe,
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 
-const EnhancedGlobalFooter = () => {
-  const [accessibilityExpanded, setAccessibilityExpanded] = useState(false);
-  const [fontSize, setFontSize] = useState('normal');
-  const [highContrast, setHighContrast] = useState(false);
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleFontSizeChange = (size: string) => {
-    setFontSize(size);
-    document.documentElement.style.fontSize = size === 'large' ? '18px' : size === 'small' ? '14px' : '16px';
-  };
-
-  const handleHighContrast = (enabled: boolean) => {
-    setHighContrast(enabled);
-    if (enabled) {
-      document.documentElement.classList.add('high-contrast');
-    } else {
-      document.documentElement.classList.remove('high-contrast');
-    }
-  };
+const EnhancedGlobalFooter: React.FC = () => {
+  const { highContrast } = useAccessibility();
+  const currentYear = new Date().getFullYear();
 
   const footerSections = [
     {
       title: 'Product',
       links: [
-        { label: 'Features', href: '/features' },
-        { label: 'Pricing', href: '/pricing' },
-        { label: 'AI Features', href: '/ai-features' },
-        { label: 'Integrations', href: '/integrations' },
-        { label: 'Roadmap', href: '/roadmap', badge: 'New' }
-      ]
-    },
-    {
-      title: 'Support',
-      links: [
-        { label: 'Help Center', href: '/help' },
-        { label: 'Documentation', href: '/docs' },
-        { label: 'API Reference', href: '/api', external: true },
-        { label: 'Community', href: '/community' },
-        { label: 'Contact Us', href: '/contact' }
+        { name: 'Features', href: '/features' },
+        { name: 'AI Features', href: '/ai-features' },
+        { name: 'Pricing', href: '/pricing' },
+        { name: 'Dashboard', href: '/dashboard' },
       ]
     },
     {
       title: 'Company',
       links: [
-        { label: 'About', href: '/about' },
-        { label: 'Blog', href: '/blog' },
-        { label: 'Careers', href: '/careers', badge: 'Hiring' },
-        { label: 'Press Kit', href: '/press' },
-        { label: 'Partners', href: '/partners' }
+        { name: 'About', href: '/about' },
+        { name: 'Blog', href: '/blog' },
+        { name: 'Careers', href: '/careers' },
+        { name: 'Contact', href: '/contact' }
+      ]
+    },
+    {
+      title: 'Resources',
+      links: [
+        { name: 'Help Center', href: '/help' },
+        { name: 'FAQ', href: '/faq' },
+        { name: 'Documentation', href: '/docs' },
+        { name: 'API', href: '/api' }
       ]
     },
     {
       title: 'Legal',
       links: [
-        { label: 'Privacy Policy', href: '/privacy' },
-        { label: 'Terms of Service', href: '/terms' },
-        { label: 'Cookie Policy', href: '/cookies' },
-        { label: 'Security', href: '/security' },
-        { label: 'GDPR', href: '/gdpr' }
+        { name: 'Privacy Policy', href: '/privacy' },
+        { name: 'Terms of Service', href: '/terms' },
+        { name: 'Security', href: '/security' },
+        { name: 'Accessibility', href: '/accessibility' }
       ]
     }
   ];
 
   const socialLinks = [
-    { icon: Twitter, href: 'https://twitter.com/accio', label: 'Twitter' },
-    { icon: Github, href: 'https://github.com/accio', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com/company/accio', label: 'LinkedIn' },
-    { icon: Mail, href: 'mailto:hello@accio.dev', label: 'Email' }
+    { name: 'Twitter', href: 'https://twitter.com/accio', icon: Twitter },
+    { name: 'GitHub', href: 'https://github.com/accio', icon: Github },
+    { name: 'LinkedIn', href: 'https://linkedin.com/company/accio', icon: Linkedin },
+    { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail }
   ];
 
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    // Newsletter signup logic would go here
+    console.log('Newsletter signup submitted');
+  };
+
   return (
-    <footer className="bg-muted/30 border-t mt-auto">
-      {/* Accessibility Toolbar */}
-      <div className="border-b bg-background/50">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setAccessibilityExpanded(!accessibilityExpanded)}
-              className="gap-2"
-              aria-expanded={accessibilityExpanded}
-              aria-controls="accessibility-tools"
-            >
-              <Accessibility className="h-4 w-4" />
-              Accessibility Tools
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={scrollToTop}
-              className="gap-2"
-              aria-label="Scroll to top"
-            >
-              <ArrowUp className="h-4 w-4" />
-              Back to Top
-            </Button>
-          </div>
-          
-          {accessibilityExpanded && (
-            <div 
-              id="accessibility-tools"
-              className="mt-4 p-4 bg-background rounded-lg border space-y-4"
-            >
-              <h3 className="font-medium mb-3">Accessibility Settings</h3>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Type className="h-4 w-4" />
-                    <Label className="text-sm">Font Size</Label>
-                  </div>
-                  <div className="flex gap-1">
-                    {['small', 'normal', 'large'].map((size) => (
-                      <Button
-                        key={size}
-                        variant={fontSize === size ? 'default' : 'outline'}
-                        size="sm"
-                        onClick={() => handleFontSizeChange(size)}
-                        className="text-xs h-7 w-7 p-0"
-                        aria-label={`Set font size to ${size}`}
-                      >
-                        {size === 'small' ? 'A' : size === 'normal' ? 'A' : 'A'}
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Eye className="h-4 w-4" />
-                    <Label className="text-sm">High Contrast</Label>
-                  </div>
-                  <Switch
-                    checked={highContrast}
-                    onCheckedChange={handleHighContrast}
-                    aria-label="Toggle high contrast mode"
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Volume2 className="h-4 w-4" />
-                    <Label className="text-sm">Reduce Motion</Label>
-                  </div>
-                  <Switch
-                    aria-label="Reduce motion and animations"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
-          {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/80 rounded-lg flex items-center justify-center">
-                <Brain className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold">Accio</span>
-            </Link>
-            
-            <p className="text-muted-foreground mb-6 max-w-sm leading-relaxed">
-              Transform scattered information into organized intelligence. 
-              Your AI-powered knowledge management platform.
-            </p>
-            
-            {/* Social Links */}
-            <div className="flex items-center gap-2">
-              {socialLinks.map((social) => (
-                <Button
-                  key={social.label}
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="hover:bg-primary hover:text-primary-foreground"
+    <footer 
+      className={cn(
+        "bg-muted/30 border-t",
+        highContrast && "border-2 bg-muted/50"
+      )}
+      role="contentinfo"
+      aria-label="Site footer"
+    >
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Newsletter Section */}
+        <div className="py-16">
+          <div className="bg-gradient-to-r from-primary to-blue-600 rounded-3xl p-8 md:p-12 text-center text-white mb-16">
+            <div className="max-w-2xl mx-auto">
+              <Sparkles className="h-8 w-8 mx-auto mb-4" />
+              <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                Stay Ahead of the Knowledge Curve
+              </h3>
+              <p className="text-lg opacity-90 mb-8">
+                Get productivity tips, feature updates, and expert insights delivered to your inbox.
+              </p>
+              <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <Input 
+                  type="email" 
+                  placeholder="Enter your email" 
+                  className="bg-white/10 border-white/20 text-white placeholder:text-white/70 focus:bg-white/20"
+                  required
+                  aria-label="Email address for newsletter"
+                />
+                <Button 
+                  type="submit"
+                  variant="secondary" 
+                  className="shrink-0 hover:bg-white/90"
                 >
-                  <a
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={social.label}
-                  >
-                    <social.icon className="h-4 w-4" />
-                  </a>
+                  Subscribe
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
-              ))}
+              </form>
+              <p className="text-sm opacity-75 mt-4">
+                Join 10,000+ subscribers. Unsubscribe anytime.
+              </p>
             </div>
           </div>
+        </div>
 
-          {/* Footer Links */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <h3 className="font-semibold mb-4">{section.title}</h3>
-              <nav className="space-y-3">
-                {section.links.map((link) => (
-                  <div key={link.label} className="flex items-center gap-2">
-                    {link.external ? (
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-foreground transition-colors text-sm flex items-center gap-1"
-                      >
-                        {link.label}
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    ) : (
+        {/* Main Footer Content */}
+        <div className="pb-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+            {/* Brand Section */}
+            <div className="lg:col-span-2">
+              <Link 
+                to="/" 
+                className="flex items-center space-x-3 mb-6 group"
+                aria-label="Accio - Go to homepage"
+              >
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-105 transition-transform duration-200">
+                  <Brain className="h-6 w-6 text-white" />
+                </div>
+                <span className="font-bold text-2xl bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                  Accio
+                </span>
+              </Link>
+              
+              <p className="text-muted-foreground mb-6 max-w-sm leading-relaxed">
+                Transform scattered information into organized intelligence. 
+                The AI-powered knowledge engine that helps you save, organize, 
+                and rediscover everything that matters.
+              </p>
+              
+              <div className="flex space-x-3">
+                {socialLinks.map((social) => (
+                  <Button
+                    key={social.name}
+                    variant="ghost"
+                    size="icon"
+                    asChild
+                    className={cn(
+                      "h-10 w-10 hover:bg-primary hover:text-primary-foreground transition-all duration-200 hover:scale-110",
+                      highContrast && "border border-border"
+                    )}
+                  >
+                    <a
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Follow us on ${social.name}`}
+                    >
+                      <social.icon className="h-5 w-5" />
+                    </a>
+                  </Button>
+                ))}
+              </div>
+            </div>
+
+            {/* Footer Links */}
+            {footerSections.map((section) => (
+              <div key={section.title} className="space-y-4">
+                <h3 className="font-semibold text-foreground uppercase tracking-wider text-sm">
+                  {section.title}
+                </h3>
+                <ul className="space-y-3" role="list">
+                  {section.links.map((link) => (
+                    <li key={link.name}>
                       <Link
                         to={link.href}
-                        className="text-muted-foreground hover:text-foreground transition-colors text-sm"
+                        className={cn(
+                          "text-muted-foreground hover:text-foreground transition-colors duration-200 text-sm",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded",
+                          highContrast && "hover:bg-accent hover:px-2 hover:py-1"
+                        )}
                       >
-                        {link.label}
+                        {link.name}
                       </Link>
-                    )}
-                    {link.badge && (
-                      <Badge variant="secondary" className="text-xs">
-                        {link.badge}
-                      </Badge>
-                    )}
-                  </div>
-                ))}
-              </nav>
-            </div>
-          ))}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
 
-        {/* Footer Bottom */}
-        <div className="mt-12 pt-8 border-t flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span>© 2024 Accio. All rights reserved.</span>
-            <span className="hidden md:inline">•</span>
-            <span className="flex items-center gap-1">
-              Made with <Heart className="h-4 w-4 text-red-500 fill-current" /> for knowledge workers
-            </span>
+        <Separator className={cn("mb-8", highContrast && "border-2")} />
+
+        {/* Bottom Footer */}
+        <div className="py-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>© {currentYear} Accio. Made with</span>
+            <Heart className="h-4 w-4 text-red-500 fill-current animate-pulse" />
+            <span>for knowledge workers worldwide.</span>
           </div>
           
-          <div className="flex items-center gap-4 text-sm">
-            <Badge variant="outline" className="gap-1">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              All systems operational
-            </Badge>
+          <div className="flex items-center gap-6 text-sm">
             <Link 
-              to="/status" 
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              to="/privacy" 
+              className={cn(
+                "text-muted-foreground hover:text-foreground transition-colors duration-200",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
+              )}
             >
-              Status Page
+              Privacy
+            </Link>
+            <Link 
+              to="/terms" 
+              className={cn(
+                "text-muted-foreground hover:text-foreground transition-colors duration-200",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
+              )}
+            >
+              Terms
+            </Link>
+            <Link 
+              to="/security" 
+              className={cn(
+                "text-muted-foreground hover:text-foreground transition-colors duration-200",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
+              )}
+            >
+              Security
             </Link>
           </div>
         </div>
@@ -282,10 +242,5 @@ const EnhancedGlobalFooter = () => {
     </footer>
   );
 };
-
-// Add Label component if not available
-const Label = ({ children, className }: { children: React.ReactNode, className?: string }) => (
-  <label className={className}>{children}</label>
-);
 
 export default EnhancedGlobalFooter;

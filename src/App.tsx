@@ -9,6 +9,7 @@ import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
 import ResponsiveMainNavigation from '@/components/navigation/ResponsiveMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
 import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
+import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import SavedContent from '@/pages/SavedContent';
@@ -32,8 +33,9 @@ function App() {
             <AccessibilityProvider>
               <KeyboardShortcutsProvider>
                 <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
+                  <EnhancedAccessibility />
                   <ResponsiveMainNavigation />
-                  <main className="flex-1 relative">
+                  <main className="flex-1 relative" role="main">
                     <Routes>
                       <Route path="/" element={<Home />} />
                       <Route path="/dashboard" element={<Dashboard />} />

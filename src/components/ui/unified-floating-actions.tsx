@@ -6,7 +6,8 @@ import {
   Search, 
   Sparkles,
   Menu,
-  X
+  X,
+  Plus
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -31,12 +32,32 @@ export const UnifiedFloatingActions: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;
-      setShowBackToTop(scrolled > 400); // Increased threshold for better UX
+      setShowBackToTop(scrolled > 600); // Increased threshold for better UX
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const throttledHandleScroll = throttle(handleScroll, 100);
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', throttledHandleScroll);
   }, []);
+
+  // Simple throttle function
+  function throttle(func: Function, delay: number) {
+    let timeoutId: NodeJS.Timeout;
+    let lastExecTime = 0;
+    return function (...args: any[]) {
+      const currentTime = Date.now();
+      if (currentTime - lastExecTime > delay) {
+        func(...args);
+        lastExecTime = currentTime;
+      } else {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          func(...args);
+          lastExecTime = Date.now();
+        }, delay - (currentTime - lastExecTime));
+      }
+    };
+  }
 
   // Close expanded menu when clicking outside
   useEffect(() => {
@@ -72,6 +93,13 @@ export const UnifiedFloatingActions: React.FC = () => {
       icon: Sparkles,
       label: 'AI Features',
       href: '/ai-features'
+    },
+    {
+      id: 'quick-save',
+      icon: Plus,
+      label: 'Quick Save',
+      href: '/save',
+      showWhenAuthenticated: true
     }
   ];
 
@@ -84,6 +112,8 @@ export const UnifiedFloatingActions: React.FC = () => {
     <div 
       className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3"
       data-floating-actions
+      role="region"
+      aria-label="Floating action buttons"
     >
       {/* Quick Action Menu - Hidden on large screens */}
       {visibleActions.length > 0 && (
@@ -107,7 +137,8 @@ export const UnifiedFloatingActions: React.FC = () => {
                 variant={action.primary ? "default" : "secondary"}
                 className={cn(
                   "h-12 w-12 rounded-full shadow-lg transition-all duration-200",
-                  "hover:scale-110 active:scale-95"
+                  "hover:scale-110 active:scale-95",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                 )}
                 aria-label={action.label}
               >
@@ -134,7 +165,8 @@ export const UnifiedFloatingActions: React.FC = () => {
           className={cn(
             "h-14 w-14 rounded-full shadow-lg transition-all duration-300 lg:hidden",
             "bg-primary hover:bg-primary/90",
-            "hover:scale-110 active:scale-95"
+            "hover:scale-110 active:scale-95",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
           )}
           aria-label={isExpanded ? "Close quick actions" : "Open quick actions"}
           aria-expanded={isExpanded}
