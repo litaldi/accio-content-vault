@@ -1,176 +1,79 @@
-
-import React, { useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
+import { Suspense, lazy } from 'react';
+import { Toaster } from '@/components/ui/toaster';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
-import { Toaster } from '@/components/ui/toaster';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import MainNavigation from '@/components/navigation/MainNavigation';
-import MarketingFooter from '@/components/marketing/MarketingFooter';
-import FooterNavigation from '@/components/navigation/FooterNavigation';
-import Search from '@/pages/Search';
-
-// Pages
-import Index from '@/pages/Index';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import Features from '@/pages/Features';
-import AIFeatures from '@/pages/AIFeatures';
-import Pricing from '@/pages/Pricing';
-import Help from '@/pages/Help';
-import Contact from '@/pages/Contact';
-import Blog from '@/pages/Blog';
-import About from '@/pages/About';
-import Privacy from '@/pages/Privacy';
-import Terms from '@/pages/Terms';
-import Dashboard from '@/pages/Dashboard';
-import SaveContent from '@/pages/SaveContent';
-import SavedContent from '@/pages/SavedContent';
-import Profile from '@/pages/Profile';
+import LoadingSpinner from '@/components/LoadingSpinner';
+import ErrorBoundary from '@/components/ErrorBoundary';
+import Save from '@/pages/Save';
 import Settings from '@/pages/Settings';
-import NotFound from '@/pages/NotFound';
-import Collections from '@/pages/Collections';
-import Tutorials from '@/pages/Tutorials';
-import Activity from '@/pages/Activity';
-import Accessibility from '@/pages/Accessibility';
+import Profile from '@/pages/Profile';
+import Terms from '@/pages/Terms';
+import Privacy from '@/pages/Privacy';
+import Cookies from '@/pages/Cookies';
+import ResetPassword from '@/pages/ResetPassword';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/Footer';
+
+// Lazy load pages for better performance
+const Index = lazy(() => import('@/pages/Index'));
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
+const Login = lazy(() => import('@/pages/Login'));
+const Register = lazy(() => import('@/pages/Register'));
+const FeatureTest = lazy(() => import('@/pages/FeatureTest'));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      retry: 1,
+    },
+  },
+});
 
 function App() {
-  const location = useLocation();
-
-  // Scroll to top on route change for better UX
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
-
-  // Define route groups for better organization
-  const publicRoutes = ['/', '/features', '/ai-features', '/pricing', '/help', '/contact', '/blog', '/about', '/privacy', '/terms', '/tutorials', '/accessibility'];
-  const authRoutes = ['/login', '/register'];
-  const protectedRoutes = ['/dashboard', '/profile', '/saved', '/save', '/collections', '/activity', '/settings', '/search'];
-
-  const isPublicRoute = publicRoutes.includes(location.pathname);
-  const isAuthRoute = authRoutes.includes(location.pathname);
-  const isProtectedRoute = protectedRoutes.some(route => location.pathname.startsWith(route));
-
-  // Show main navigation on public routes
-  const shouldShowMainNav = isPublicRoute;
-  
-  // Show marketing footer on public routes (not auth or protected routes)
-  const shouldShowMarketingFooter = isPublicRoute;
-  
-  // Show mobile footer navigation (handles its own visibility logic)
-  const shouldShowMobileNav = true;
-
   return (
-    <HelmetProvider>
-      <ThemeProvider>
-        <AuthProvider>
-          <Helmet titleTemplate="%s | Accio" defaultTitle="Accio - AI-Powered Knowledge Management" />
-          
-          {/* Skip link for accessibility */}
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium z-50 transition-all duration-200"
-            onClick={(e) => {
-              e.preventDefault();
-              const mainContent = document.getElementById('main-content');
-              if (mainContent) {
-                mainContent.focus();
-                mainContent.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
-          >
-            Skip to main content
-          </a>
-          
-          <div className="flex flex-col min-h-screen">
-            {shouldShowMainNav && <MainNavigation />}
-            
-            <main 
-              className="flex-1" 
-              role="main" 
-              id="main-content" 
-              tabIndex={-1}
-              aria-label="Main content"
-            >
-              <Routes>
-                {/* Public routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/features" element={<Features />} />
-                <Route path="/ai-features" element={<AIFeatures />} />
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/help" element={<Help />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/privacy" element={<Privacy />} />
-                <Route path="/terms" element={<Terms />} />
-                <Route path="/tutorials" element={<Tutorials />} />
-                <Route path="/accessibility" element={<Accessibility />} />
-                
-                {/* Authentication routes */}
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                
-                {/* Protected routes with internal navigation */}
-                <Route path="/dashboard" element={
-                  <ProtectedRoute>
-                    <Dashboard />
-                  </ProtectedRoute>
-                } />
-                <Route path="/saved" element={
-                  <ProtectedRoute>
-                    <SavedContent />
-                  </ProtectedRoute>
-                } />
-                <Route path="/save" element={
-                  <ProtectedRoute>
-                    <SaveContent />
-                  </ProtectedRoute>
-                } />
-                <Route path="/search" element={
-                  <ProtectedRoute>
-                    <Search />
-                  </ProtectedRoute>
-                } />
-                <Route path="/collections" element={
-                  <ProtectedRoute>
-                    <Collections />
-                  </ProtectedRoute>
-                } />
-                <Route path="/activity" element={
-                  <ProtectedRoute>
-                    <Activity />
-                  </ProtectedRoute>
-                } />
-                <Route path="/profile" element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                } />
-                <Route path="/settings" element={
-                  <ProtectedRoute>
-                    <Settings />
-                  </ProtectedRoute>
-                } />
-                
-                {/* Catch all route - must be last */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </main>
-            
-            {/* Footer sections */}
-            {shouldShowMarketingFooter && <MarketingFooter />}
-            {shouldShowMobileNav && <FooterNavigation />}
-            
-            {/* Add bottom padding for mobile nav when needed */}
-            {isProtectedRoute && <div className="md:hidden h-20" aria-hidden="true" />}
-          </div>
-          
-          <Toaster />
-        </AuthProvider>
-      </ThemeProvider>
-    </HelmetProvider>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider defaultTheme="dark" storageKey="accio-theme">
+            <AuthProvider>
+              <TooltipProvider>
+                <Router>
+                  <div className="min-h-screen bg-background font-sans antialiased">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/test-features" element={<FeatureTest />} />
+                        
+                        {/* Static Routes */}
+                        <Route path="/save" element={<Save />} />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/terms" element={<Terms />} />
+                        <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/cookies" element={<Cookies />} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
+                        
+                        {/* Catch all route */}
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                      </Routes>
+                    </Suspense>
+                  </div>
+                  <Toaster />
+                </Router>
+              </TooltipProvider>
+            </AuthProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </HelmetProvider>
+    </ErrorBoundary>
   );
 }
 
