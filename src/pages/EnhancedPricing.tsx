@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,6 +19,7 @@ import {
 import { Link } from 'react-router-dom';
 import { Typography, Layout, DesignTokens } from '@/components/design-system/EnhancedDesignSystem';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { cn } from '@/lib/utils';
 
 const EnhancedPricing = () => {
   const [isAnnual, setIsAnnual] = useState(false);

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -19,7 +20,7 @@ import Features from '@/pages/Features';
 import Search from '@/pages/Search';
 import SaveContent from '@/pages/SaveContent';
 import Settings from '@/pages/EnhancedSettings';
-import Pricing from '@/pages/EnhancedPricing';
+import EnhancedPricing from '@/pages/EnhancedPricing';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import AIFeatures from '@/pages/AIFeatures';
