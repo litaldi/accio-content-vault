@@ -18,7 +18,12 @@ import {
   Users,
   Bell,
   Map,
-  Eye
+  Eye,
+  Mic,
+  Tag,
+  Network,
+  Calendar,
+  TrendingUp
 } from 'lucide-react';
 
 // Import feature components
@@ -29,6 +34,11 @@ import { LearningPathGenerator } from '@/components/features/LearningPathGenerat
 import { ContentInsights } from '@/components/features/ContentInsights';
 import { PersonalKnowledgeAssistant } from '@/components/features/PersonalKnowledgeAssistant';
 import { ContentHealthMonitor } from '@/components/features/ContentHealthMonitor';
+import { VoiceSearchInterface } from '@/components/features/VoiceSearchInterface';
+import { SmartTaggingSystem } from '@/components/features/SmartTaggingSystem';
+import { KnowledgeMindMap } from '@/components/features/KnowledgeMindMap';
+import { ReadingProgressTracker } from '@/components/features/ReadingProgressTracker';
+import { ContentScheduler } from '@/components/features/ContentScheduler';
 
 const Features: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
@@ -60,6 +70,42 @@ const Features: React.FC = () => {
           description: 'AI-generated personalized learning paths based on your interests',
           component: LearningPathGenerator,
           badge: 'Popular'
+        },
+        {
+          id: 'voice-search',
+          title: 'Voice Search Interface',
+          description: 'Search your knowledge base using natural voice commands',
+          component: VoiceSearchInterface,
+          badge: 'Voice-Enabled'
+        }
+      ]
+    },
+    {
+      id: 'organization',
+      title: 'Smart Organization',
+      description: 'Intelligent tools to organize and structure your knowledge',
+      icon: Tag,
+      features: [
+        {
+          id: 'smart-tagging',
+          title: 'Smart Tagging System',
+          description: 'AI-powered tagging with suggestions and trend analysis',
+          component: SmartTaggingSystem,
+          badge: 'Smart'
+        },
+        {
+          id: 'mind-map',
+          title: 'Knowledge Mind Map',
+          description: 'Visual representation of connections between your content',
+          component: KnowledgeMindMap,
+          badge: 'Visual'
+        },
+        {
+          id: 'health-monitor',
+          title: 'Content Health Monitor',
+          description: 'Monitor the health and quality of your knowledge base',
+          component: ContentHealthMonitor,
+          badge: 'Quality'
         }
       ]
     },
@@ -92,11 +138,11 @@ const Features: React.FC = () => {
           badge: 'Analytics'
         },
         {
-          id: 'health-monitor',
-          title: 'Content Health Monitor',
-          description: 'Monitor the health and quality of your knowledge base',
-          component: ContentHealthMonitor,
-          badge: 'Quality'
+          id: 'reading-tracker',
+          title: 'Reading Progress Tracker',
+          description: 'Track your reading habits, goals, and achievements',
+          component: ReadingProgressTracker,
+          badge: 'Personal'
         }
       ]
     },
@@ -112,6 +158,13 @@ const Features: React.FC = () => {
           description: 'Intelligent reminders and insights about your content',
           component: SmartNotifications,
           badge: 'Smart'
+        },
+        {
+          id: 'scheduler',
+          title: 'Content Scheduler',
+          description: 'Plan and schedule your knowledge work activities',
+          component: ContentScheduler,
+          badge: 'Planning'
         }
       ]
     }
