@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Button } from '@/components/ui/button';
 import CleanHeroSection from '@/components/home/CleanHeroSection';
 import UnifiedFeaturesSection from '@/components/features/UnifiedFeaturesSection';
 
