@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { CategorizedMainNavigation } from './CategorizedMainNavigation';
+import MegaMenuNavigation from './MegaMenuNavigation';
 
 /**
- * Main navigation component with simplified footer, consistent UI, 
- * and prominent accessibility features
+ * Main navigation component - now uses the new mega menu system
+ * This provides a comprehensive, organized navigation experience aligned with the footer structure
  */
 const MainNavigation: React.FC = () => {
-  return <CategorizedMainNavigation />;
+  return <MegaMenuNavigation />;
 };
 
 export default MainNavigation;

@@ -3,7 +3,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { isDemoUser, getDemoUserByEmail } from '@/data/demoData';
 
 interface AuthContextType {
   user: User | null;
@@ -50,7 +49,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // Check if user is in demo mode
         if (session?.user) {
-          const isDemo = isDemoUser(session.user.email || '');
+          const isDemo = session.user.email?.includes('demo') || 
+                         session.user.user_metadata?.role === 'demo';
           setIsDemoMode(isDemo);
         } else {
           setIsDemoMode(false);
@@ -58,18 +58,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // Handle auth events
         if (event === 'SIGNED_IN' && session?.user) {
-          const demoUser = getDemoUserByEmail(session.user.email || '');
-          if (demoUser) {
-            toast({
-              title: "Welcome to Demo Mode!",
-              description: "You're now exploring Accio with sample data.",
-            });
-          } else {
-            toast({
-              title: "Welcome back!",
-              description: "You have been successfully signed in.",
-            });
-          }
+          toast({
+            title: "Welcome back!",
+            description: "You have been successfully signed in.",
+          });
         } else if (event === 'SIGNED_OUT') {
           toast({
             title: "Signed out",
@@ -89,7 +81,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          const isDemo = isDemoUser(session.user.email || '');
+          const isDemo = session.user.email?.includes('demo') || 
+                         session.user.user_metadata?.role === 'demo';
           setIsDemoMode(isDemo);
         }
       } catch (error) {
@@ -107,38 +100,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signIn = async (email: string, password: string) => {
     try {
       setIsLoading(true);
-      
-      // Check if this is a demo user
-      const demoUser = getDemoUserByEmail(email);
-      if (demoUser && password === demoUser.password) {
-        // Create a mock session for demo users
-        const mockUser = {
-          id: `demo-${Date.now()}`,
-          email: email,
-          user_metadata: {
-            full_name: `${demoUser.profile.firstName} ${demoUser.profile.lastName}`,
-            first_name: demoUser.profile.firstName,
-            last_name: demoUser.profile.lastName,
-            avatar_url: demoUser.profile.avatar
-          },
-          created_at: demoUser.profile.joinDate,
-          role: demoUser.role
-        } as any;
-        
-        const mockSession = {
-          user: mockUser,
-          access_token: 'demo-token',
-          expires_at: Date.now() / 1000 + 3600,
-          token_type: 'bearer'
-        } as any;
-        
-        setSession(mockSession);
-        setUser(mockUser);
-        setIsDemoMode(true);
-        
-        return {};
-      }
-
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -220,15 +181,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signOut = async () => {
     try {
       setIsLoading(true);
-      
-      // Handle demo mode sign out
-      if (isDemoMode) {
-        setSession(null);
-        setUser(null);
-        setIsDemoMode(false);
-        return;
-      }
-      
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error: any) {

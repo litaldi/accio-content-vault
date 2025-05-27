@@ -49,17 +49,6 @@ export interface AnalyticsData {
 
 export const demoUsers: DemoUser[] = [
   {
-    email: 'demo@yourapp.com',
-    password: 'Demo1234!',
-    role: 'user',
-    profile: {
-      firstName: 'Demo',
-      lastName: 'User',
-      joinDate: '2024-01-01',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face'
-    }
-  },
-  {
     email: 'admin@demo.com',
     password: 'Admin123!',
     role: 'admin',
@@ -84,26 +73,26 @@ export const demoUsers: DemoUser[] = [
 export const demoCollections: Collection[] = [
   {
     id: '1',
-    name: 'AI & Technology',
-    description: 'Latest developments in artificial intelligence and technology trends',
-    itemCount: 12,
+    name: 'React Development',
+    description: 'Best practices and tutorials for React development',
+    itemCount: 8,
     color: 'bg-blue-500',
     createdDate: '2024-01-10',
     isPrivate: false
   },
   {
     id: '2',
-    name: 'Design & UX',
-    description: 'User experience design principles and creative inspiration',
-    itemCount: 8,
+    name: 'Design Systems',
+    description: 'Articles and resources about design systems and UI/UX',
+    itemCount: 5,
     color: 'bg-purple-500',
     createdDate: '2024-01-15',
     isPrivate: false
   },
   {
     id: '3',
-    name: 'Business Strategy',
-    description: 'Strategic insights and business development resources',
+    name: 'TypeScript Guides',
+    description: 'Comprehensive TypeScript learning materials',
     itemCount: 6,
     color: 'bg-green-500',
     createdDate: '2024-01-20',
@@ -112,9 +101,9 @@ export const demoCollections: Collection[] = [
   {
     id: '4',
     name: 'Personal Research',
-    description: 'Private collection for personal projects and ideas',
-    itemCount: 5,
-    color: 'bg-orange-500',
+    description: 'Private collection for personal projects',
+    itemCount: 3,
+    color: 'bg-red-500',
     createdDate: '2024-01-25',
     isPrivate: true
   }
@@ -123,164 +112,132 @@ export const demoCollections: Collection[] = [
 export const demoSavedItems: SavedItem[] = [
   {
     id: '1',
-    title: 'The Future of AI in Knowledge Management',
-    description: 'Comprehensive analysis of how artificial intelligence is revolutionizing the way we capture, organize, and retrieve information in professional environments.',
-    url: 'https://example.com/ai-knowledge-management',
+    title: 'React Server Components: A Complete Guide',
+    description: 'Learn everything about React Server Components, their benefits, and how to implement them in your applications.',
+    url: 'https://example.com/react-server-components',
     type: 'article',
-    tags: ['AI', 'Knowledge Management', 'Technology', 'Future Trends'],
-    collection: 'AI & Technology',
-    savedDate: '2024-01-25',
+    tags: ['React', 'Server Components', 'Next.js', 'Performance'],
+    collection: 'React Development',
+    savedDate: '2024-01-20',
     readTime: '12 min read',
     favorite: true,
-    readStatus: 'completed',
-    thumbnail: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=300&h=200&fit=crop'
+    readStatus: 'completed'
   },
   {
     id: '2',
-    title: 'Building Effective Design Systems at Scale',
-    description: 'A practical guide to creating and maintaining design systems that can grow with your organization while ensuring consistency and efficiency.',
-    url: 'https://example.com/design-systems-scale',
+    title: 'TypeScript Best Practices for 2024',
+    description: 'Updated best practices for TypeScript development including new features and patterns.',
+    url: 'https://example.com/typescript-2024',
     type: 'article',
-    tags: ['Design Systems', 'UX Design', 'Scalability', 'Team Collaboration'],
-    collection: 'Design & UX',
-    savedDate: '2024-01-24',
-    readTime: '15 min read',
+    tags: ['TypeScript', 'JavaScript', 'Best Practices', 'Development'],
+    collection: 'TypeScript Guides',
+    savedDate: '2024-01-18',
+    readTime: '8 min read',
     favorite: false,
-    readStatus: 'reading',
-    thumbnail: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=300&h=200&fit=crop'
+    readStatus: 'reading'
   },
   {
     id: '3',
-    title: 'Strategic Planning in Uncertain Times',
-    description: 'How successful companies adapt their strategic planning processes to navigate uncertainty and maintain competitive advantage.',
-    url: 'https://example.com/strategic-planning-uncertainty',
+    title: 'Design System Implementation Guide',
+    description: 'A comprehensive guide to building and maintaining design systems at scale.',
+    url: 'https://example.com/design-systems',
     type: 'document',
-    tags: ['Strategy', 'Business Planning', 'Leadership', 'Adaptability'],
-    collection: 'Business Strategy',
-    savedDate: '2024-01-23',
-    readTime: '20 min read',
+    tags: ['Design Systems', 'UI/UX', 'Component Library', 'Figma'],
+    collection: 'Design Systems',
+    savedDate: '2024-01-16',
+    readTime: '15 min read',
     favorite: true,
-    readStatus: 'unread',
-    thumbnail: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=200&fit=crop'
+    readStatus: 'unread'
   },
   {
     id: '4',
-    title: 'Advanced Search Algorithms Explained',
-    description: 'Deep dive into modern search algorithms including semantic search, vector databases, and AI-powered content discovery.',
-    url: 'https://example.com/search-algorithms',
+    title: 'Advanced React Hooks Patterns',
+    description: 'Explore advanced patterns for React Hooks including custom hooks and optimization techniques.',
+    url: 'https://example.com/react-hooks-advanced',
     type: 'video',
-    tags: ['Search', 'Algorithms', 'AI', 'Technology'],
-    collection: 'AI & Technology',
-    savedDate: '2024-01-22',
+    tags: ['React', 'Hooks', 'Advanced', 'Performance'],
+    collection: 'React Development',
+    savedDate: '2024-01-14',
     readTime: '45 min watch',
     favorite: false,
     readStatus: 'unread'
   },
   {
     id: '5',
-    title: 'User Research Best Practices 2024',
-    description: 'Updated methodologies and tools for conducting effective user research that drives product decisions.',
+    title: 'Web Accessibility Guidelines WCAG 2.2',
+    description: 'Complete guide to implementing WCAG 2.2 accessibility guidelines in modern web applications.',
     type: 'pdf',
-    tags: ['User Research', 'UX Design', 'Best Practices', 'Methodology'],
-    collection: 'Design & UX',
-    savedDate: '2024-01-21',
+    tags: ['Accessibility', 'WCAG', 'Web Standards', 'Inclusive Design'],
+    savedDate: '2024-01-12',
     readTime: '25 min read',
     favorite: true,
     readStatus: 'reading'
   },
   {
     id: '6',
-    title: 'Building High-Performance Teams',
-    description: 'Evidence-based strategies for creating and leading teams that consistently deliver exceptional results.',
-    url: 'https://example.com/high-performance-teams',
-    type: 'article',
-    tags: ['Leadership', 'Team Building', 'Performance', 'Management'],
-    collection: 'Business Strategy',
-    savedDate: '2024-01-20',
-    readTime: '18 min read',
+    title: 'CSS Grid Layout Masterclass',
+    description: 'Master CSS Grid with practical examples and real-world layout patterns.',
+    url: 'https://example.com/css-grid-masterclass',
+    type: 'video',
+    tags: ['CSS', 'Grid Layout', 'Responsive Design', 'Frontend'],
+    savedDate: '2024-01-10',
+    readTime: '60 min watch',
     favorite: false,
-    readStatus: 'completed'
+    readStatus: 'unread'
   },
   {
     id: '7',
-    title: 'Responsive Design Patterns for 2024',
-    description: 'Modern approaches to responsive web design that work across all devices and screen sizes.',
-    url: 'https://example.com/responsive-design-2024',
+    title: 'Node.js Performance Optimization',
+    description: 'Techniques and tools for optimizing Node.js application performance.',
+    url: 'https://example.com/nodejs-performance',
     type: 'article',
-    tags: ['Web Design', 'Responsive Design', 'CSS', 'Frontend'],
-    collection: 'Design & UX',
-    savedDate: '2024-01-19',
+    tags: ['Node.js', 'Performance', 'Backend', 'JavaScript'],
+    savedDate: '2024-01-08',
     readTime: '10 min read',
     favorite: false,
-    readStatus: 'unread'
-  },
-  {
-    id: '8',
-    title: 'Machine Learning for Content Classification',
-    description: 'How to implement ML models for automatically categorizing and tagging content in knowledge management systems.',
-    url: 'https://example.com/ml-content-classification',
-    type: 'article',
-    tags: ['Machine Learning', 'Content Classification', 'AI', 'Automation'],
-    collection: 'AI & Technology',
-    savedDate: '2024-01-18',
-    readTime: '22 min read',
-    favorite: true,
     readStatus: 'completed'
   },
   {
-    id: '9',
-    title: 'Innovation in Remote Work Culture',
-    description: 'Personal insights and experiments in building effective remote work practices for creative teams.',
-    type: 'document',
-    tags: ['Remote Work', 'Innovation', 'Culture', 'Personal'],
-    collection: 'Personal Research',
-    savedDate: '2024-01-17',
-    readTime: '30 min read',
-    favorite: false,
-    readStatus: 'reading'
-  },
-  {
-    id: '10',
-    title: 'Data-Driven Decision Making Framework',
-    description: 'A systematic approach to incorporating data analytics into strategic business decisions.',
-    url: 'https://example.com/data-driven-decisions',
-    type: 'document',
-    tags: ['Data Analytics', 'Decision Making', 'Strategy', 'Framework'],
-    collection: 'Business Strategy',
-    savedDate: '2024-01-16',
-    readTime: '16 min read',
+    id: '8',
+    title: 'Figma to Code Workflow',
+    description: 'Streamline your design-to-development workflow with these Figma tips and tools.',
+    url: 'https://example.com/figma-workflow',
+    type: 'article',
+    tags: ['Figma', 'Design', 'Workflow', 'Frontend'],
+    collection: 'Design Systems',
+    savedDate: '2024-01-06',
+    readTime: '7 min read',
     favorite: true,
-    readStatus: 'unread'
+    readStatus: 'completed'
   }
 ];
 
 export const demoAnalytics: AnalyticsData = {
-  totalItems: 31,
-  itemsThisWeek: 7,
-  itemsThisMonth: 18,
-  readingTime: '8.5h',
+  totalItems: 24,
+  itemsThisWeek: 5,
+  itemsThisMonth: 12,
+  readingTime: '4.2h',
   topTags: [
-    { name: 'AI', count: 12 },
-    { name: 'Design', count: 8 },
-    { name: 'Strategy', count: 6 },
-    { name: 'Technology', count: 5 },
-    { name: 'UX Design', count: 4 },
-    { name: 'Leadership', count: 3 }
+    { name: 'React', count: 8 },
+    { name: 'TypeScript', count: 6 },
+    { name: 'Design', count: 5 },
+    { name: 'Performance', count: 4 },
+    { name: 'JavaScript', count: 4 }
   ],
   activityData: [
-    { date: '2024-01-19', items: 2 },
-    { date: '2024-01-20', items: 1 },
-    { date: '2024-01-21', items: 3 },
-    { date: '2024-01-22', items: 1 },
-    { date: '2024-01-23', items: 2 },
-    { date: '2024-01-24', items: 1 },
-    { date: '2024-01-25', items: 2 }
+    { date: '2024-01-01', items: 1 },
+    { date: '2024-01-02', items: 0 },
+    { date: '2024-01-03', items: 2 },
+    { date: '2024-01-04', items: 1 },
+    { date: '2024-01-05', items: 3 },
+    { date: '2024-01-06', items: 1 },
+    { date: '2024-01-07', items: 2 }
   ],
   categoryBreakdown: [
-    { category: 'Articles', count: 18, percentage: 58 },
-    { category: 'Documents', count: 8, percentage: 26 },
-    { category: 'Videos', count: 3, percentage: 10 },
-    { category: 'PDFs', count: 2, percentage: 6 }
+    { category: 'Articles', count: 12, percentage: 50 },
+    { category: 'Videos', count: 6, percentage: 25 },
+    { category: 'Documents', count: 4, percentage: 17 },
+    { category: 'PDFs', count: 2, percentage: 8 }
   ]
 };
 
