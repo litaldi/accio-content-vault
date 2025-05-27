@@ -1,337 +1,232 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { Brain, LogIn, Eye, EyeOff, Sparkles, UserPlus, ArrowRight } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { SocialLoginButtons } from '@/components/auth/SocialLoginButtons';
-import { DemoAccountSection } from '@/components/auth/DemoAccountSection';
+import { Brain, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
 
 const Login = () => {
-  const [activeView, setActiveView] = useState<'welcome' | 'login' | 'signup'>('welcome');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errors, setErrors] = useState<{email?: string; password?: string}>({});
+  
+  const { signIn, user, isLoading } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    console.log('Logging in with:', { email, password });
+  const from = (location.state as any)?.from?.pathname || '/dashboard';
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && !isLoading) {
+      navigate(from, { replace: true });
+    }
+  }, [user, isLoading, navigate, from]);
+
+  const validateForm = () => {
+    const newErrors: {email?: string; password?: string} = {};
     
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Welcome back!",
-        description: "You've been successfully signed in.",
-      });
-    }, 1500);
+    if (!email) {
+      newErrors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (!password) {
+      newErrors.password = 'Password is required';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const resetToWelcome = () => {
-    setActiveView('welcome');
-    setEmail('');
-    setPassword('');
-    setShowPassword(false);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    setErrors({});
+    
+    try {
+      await signIn(email, password);
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      console.error('Login error:', error);
+      // Error is already handled in AuthContext with toast
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  // Welcome/Landing View
-  if (activeView === 'welcome') {
+  if (isLoading) {
     return (
-      <>
-        <Helmet>
-          <title>Welcome to Accio - Transform Knowledge Into Power</title>
-          <meta name="description" content="Join thousands of knowledge builders using Accio to capture, organize, and discover insights. Start your free account today." />
-        </Helmet>
-
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/10 to-background py-12 px-4 sm:px-6 lg:px-8">
-          <div className="w-full max-w-lg space-y-8 animate-fade-in">
-            {/* Brand Header */}
-            <div className="text-center space-y-6">
-              <div className="flex justify-center">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center shadow-xl animate-pulse">
-                  <Brain className="h-8 w-8 text-white" />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                  Welcome to Accio
-                </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed">
-                  Transform scattered information into organized intelligence
-                </p>
-              </div>
-            </div>
-
-            {/* Primary Action Cards */}
-            <div className="space-y-4">
-              {/* Create Account Card */}
-              <Card className="border-2 border-dashed border-primary/30 hover:border-primary/50 transition-all duration-300 cursor-pointer group transform hover:scale-[1.02] hover:shadow-xl" 
-                    onClick={() => setActiveView('signup')}>
-                <CardContent className="p-8">
-                  <div className="text-center space-y-4">
-                    <div className="flex justify-center">
-                      <div className="w-14 h-14 bg-gradient-to-r from-primary to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
-                        <Sparkles className="h-7 w-7 text-white" />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-bold">Start New Account</h3>
-                      <p className="text-muted-foreground text-lg">
-                        Begin your knowledge journey with a free account
-                      </p>
-                    </div>
-                    <Button size="lg" className="w-full group-hover:shadow-lg transition-all">
-                      Start Your Journey
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Existing User Card */}
-              <Card className="hover:shadow-lg transition-all duration-300 cursor-pointer group transform hover:scale-[1.02]" 
-                    onClick={() => setActiveView('login')}>
-                <CardContent className="p-8">
-                  <div className="text-center space-y-4">
-                    <div className="flex justify-center">
-                      <div className="w-14 h-14 bg-muted/50 rounded-xl flex items-center justify-center group-hover:bg-muted/70 transition-colors">
-                        <LogIn className="h-7 w-7 text-muted-foreground" />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <h3 className="text-2xl font-bold">Log In with Existing Account</h3>
-                      <p className="text-muted-foreground text-lg">
-                        Welcome back! Continue building your knowledge empire
-                      </p>
-                    </div>
-                    <Button variant="outline" size="lg" className="w-full border-2 group-hover:border-primary/50 transition-all">
-                      Continue Your Journey
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Trust Indicators */}
-            <div className="text-center space-y-4 pt-4">
-              <div className="flex items-center justify-center gap-8 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  <span>50K+ users trust us</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />
-                  <span>Bank-level security</span>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                No credit card required • Free forever • Ready in 2 minutes
-              </p>
-            </div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-muted-foreground">Loading...</p>
         </div>
-      </>
+      </div>
     );
   }
 
-  // Login/Signup Form View
   return (
-    <>
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-accent/20 flex items-center justify-center p-4">
       <Helmet>
-        <title>{activeView === 'login' ? 'Welcome Back' : 'Start Your Journey'} - Accio</title>
-        <meta name="description" content={activeView === 'login' ? 'Sign in to continue building your knowledge collection with Accio.' : 'Create your free Accio account and transform how you organize information.'} />
+        <title>Sign In - Accio</title>
+        <meta name="description" content="Sign in to your Accio account to access your knowledge management dashboard." />
       </Helmet>
 
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-muted/10 to-background py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-md space-y-6 animate-fade-in">
-          {/* Back Button */}
-          <Button
-            variant="ghost"
-            onClick={resetToWelcome}
-            className="mb-4 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            ← Back to options
-          </Button>
+      <div className="w-full max-w-md space-y-6">
+        {/* Back to home link */}
+        <Link 
+          to="/" 
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors group"
+          aria-label="Back to home page"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to home
+        </Link>
 
-          <Card className="shadow-2xl border-0 bg-card/95 backdrop-blur-sm">
-            <CardHeader className="space-y-4 text-center pb-6">
-              <div className="flex justify-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Brain className="h-6 w-6 text-white" />
-                </div>
-              </div>
-              <div className="space-y-2">
-                <CardTitle className="text-2xl font-bold">
-                  {activeView === 'login' ? 'Welcome back!' : 'Start your journey'}
-                </CardTitle>
-                <CardDescription className="text-base">
-                  {activeView === 'login' 
-                    ? 'Continue building your knowledge collection'
-                    : 'Create your account to organize your knowledge'
-                  }
-                </CardDescription>
-              </div>
-            </CardHeader>
-
-            <CardContent className="space-y-6 pt-0">
-              {/* Demo Account Section - Only for Login */}
-              {activeView === 'login' && (
-                <>
-                  <DemoAccountSection />
-                  <div className="relative">
-                    <Separator />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wide">
-                        Or sign in with email
-                      </span>
-                    </div>
-                  </div>
-                </>
-              )}
-
-              {/* Email/Password Form */}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium">
-                    Email Address
-                  </Label>
-                  <Input 
-                    id="email"
-                    type="email" 
-                    placeholder="you@example.com"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="h-11 text-base"
-                    disabled={isLoading}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-sm font-medium">
-                    Password
-                  </Label>
-                  <div className="relative">
-                    <Input 
-                      id="password"
-                      type={showPassword ? 'text' : 'password'}
-                      placeholder={activeView === 'login' ? 'Enter your password' : 'Create a secure password'}
-                      required
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="h-11 text-base pr-10"
-                      disabled={isLoading}
-                    />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      className="absolute right-0 top-0 h-11 w-11 px-3"
-                      onClick={() => setShowPassword(!showPassword)}
-                      disabled={isLoading}
-                    >
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </Button>
-                  </div>
-                  
-                  {activeView === 'login' && (
-                    <div className="text-right">
-                      <Link 
-                        to="/forgot-password" 
-                        className="text-sm text-primary hover:underline transition-colors"
-                      >
-                        Forgot password?
-                      </Link>
-                    </div>
-                  )}
-                </div>
-
-                <Button 
-                  type="submit" 
-                  className="w-full h-11 text-base font-medium shadow-lg hover:shadow-xl transition-all" 
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    activeView === 'login' ? 'Signing in...' : 'Creating account...'
-                  ) : (
-                    <>
-                      {activeView === 'login' ? (
-                        <>
-                          <LogIn className="h-4 w-4 mr-2" />
-                          Sign In
-                        </>
-                      ) : (
-                        <>
-                          <UserPlus className="h-4 w-4 mr-2" />
-                          Create Account
-                        </>
-                      )}
-                    </>
-                  )}
-                </Button>
-              </form>
-
-              {/* Social Login Section */}
-              <div className="space-y-4">
-                <div className="relative">
-                  <Separator />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="bg-card px-3 text-xs text-muted-foreground uppercase tracking-wide">
-                      Or continue with
-                    </span>
-                  </div>
-                </div>
-
-                <SocialLoginButtons />
-              </div>
-
-              {/* Switch Between Login/Signup */}
-              <div className="text-center pt-2">
-                <p className="text-sm text-muted-foreground">
-                  {activeView === 'login' ? (
-                    <>
-                      New to Accio?{" "}
-                      <button 
-                        onClick={() => setActiveView('signup')}
-                        className="text-primary font-medium hover:underline transition-colors"
-                      >
-                        Create your free account
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      Already have an account?{" "}
-                      <button 
-                        onClick={() => setActiveView('login')}
-                        className="text-primary font-medium hover:underline transition-colors"
-                      >
-                        Sign in instead
-                      </button>
-                    </>
-                  )}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Security Notice */}
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span>Your data is secure and encrypted</span>
-            </div>
+        {/* Logo and branding */}
+        <div className="text-center space-y-2">
+          <div className="mx-auto w-12 h-12 bg-primary rounded-xl flex items-center justify-center mb-4">
+            <Brain className="h-7 w-7 text-primary-foreground" />
           </div>
+          <h1 className="text-2xl font-bold">Welcome back</h1>
+          <p className="text-muted-foreground">
+            Sign in to your Accio account to continue building your knowledge empire
+          </p>
+        </div>
+
+        {/* Login form */}
+        <Card>
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-xl text-center">Sign in</CardTitle>
+            <CardDescription className="text-center">
+              Enter your credentials to access your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  disabled={isSubmitting}
+                  aria-invalid={errors.email ? 'true' : 'false'}
+                  aria-describedby={errors.email ? 'email-error' : undefined}
+                  className={errors.email ? 'border-red-500 focus:border-red-500' : ''}
+                  autoComplete="email"
+                  required
+                />
+                {errors.email && (
+                  <p id="email-error" className="text-sm text-red-600" role="alert">
+                    {errors.email}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <Link
+                    to="/forgot-password"
+                    className="text-xs text-primary hover:underline"
+                    tabIndex={-1}
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    disabled={isSubmitting}
+                    aria-invalid={errors.password ? 'true' : 'false'}
+                    aria-describedby={errors.password ? 'password-error' : undefined}
+                    className={errors.password ? 'border-red-500 focus:border-red-500 pr-10' : 'pr-10'}
+                    autoComplete="current-password"
+                    required
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={isSubmitting}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
+                </div>
+                {errors.password && (
+                  <p id="password-error" className="text-sm text-red-600" role="alert">
+                    {errors.password}
+                  </p>
+                )}
+              </div>
+
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={isSubmitting}
+                loading={isSubmitting}
+                loadingText="Signing in..."
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  'Sign in'
+                )}
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center text-sm">
+              <span className="text-muted-foreground">Don't have an account? </span>
+              <Link 
+                to="/register" 
+                className="text-primary hover:underline font-medium"
+              >
+                Sign up here
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Additional help */}
+        <div className="text-center text-xs text-muted-foreground">
+          <p>
+            Need help? <Link to="/contact" className="text-primary hover:underline">Contact support</Link>
+          </p>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

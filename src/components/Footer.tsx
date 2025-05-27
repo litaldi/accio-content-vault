@@ -1,207 +1,84 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { Brain, Facebook, Instagram, MessageCircle, Mail, Twitter } from 'lucide-react';
-import { copy } from '@/utils/copy';
+import { Brain, Twitter, Facebook, Github } from 'lucide-react';
 
 const Footer = () => {
-  const currentYear = new Date().getFullYear();
-
-  const socialLinks = [
-    {
-      name: 'Facebook',
-      icon: Facebook,
-      href: copy.marketing.social.facebook,
-      hoverColor: 'hover:text-blue-600'
-    },
-    {
-      name: 'Instagram', 
-      icon: Instagram,
-      href: copy.marketing.social.instagram,
-      hoverColor: 'hover:text-pink-600'
-    },
-    {
-      name: 'Discord',
-      icon: MessageCircle,
-      href: copy.marketing.social.discord,
-      hoverColor: 'hover:text-purple-600'
-    },
-    {
-      name: 'Twitter',
-      icon: Twitter,
-      href: 'https://twitter.com/accio',
-      hoverColor: 'hover:text-blue-400'
-    }
-  ];
-
-  const footerLinks = {
-    product: [
-      { name: 'Features', href: '/features' },
-      { name: 'Playground', href: '/playground' },
-      { name: 'Analytics', href: '/analytics' },
-      { name: 'Integrations', href: '/integrations' }
-    ],
-    company: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Contact', href: '/contact' },
-      { name: 'Careers', href: '/careers' },
-      { name: 'Blog', href: '/blog' }
-    ],
-    support: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'Documentation', href: '/docs' },
-      { name: 'API Reference', href: '/api' },
-      { name: 'Community', href: '/community' }
-    ],
-    legal: [
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Cookie Policy', href: '/cookies' },
-      { name: 'Security', href: '/security' }
-    ]
-  };
-
   return (
-    <footer className="bg-background border-t">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
-          {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+    <footer className="bg-muted/30 border-t">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+          <div className="col-span-2">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-md">
                 <Brain className="h-5 w-5 text-white" />
               </div>
               <span className="text-xl font-bold">Accio</span>
-            </Link>
-            <p className="text-muted-foreground mb-6 max-w-sm leading-relaxed">
-              Transform scattered information into organized intelligence. 
-              Build your knowledge empire with AI-powered organization and discovery.
-            </p>
-            
-            {/* Social Media Links */}
-            <div className="space-y-3">
-              <h4 className="font-semibold text-sm">Connect With Us</h4>
-              <div className="flex space-x-4">
-                {socialLinks.map((social) => (
-                  <Button
-                    key={social.name}
-                    variant="ghost"
-                    size="icon"
-                    asChild
-                    className={`transition-colors ${social.hoverColor}`}
-                  >
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Follow us on ${social.name}`}
-                    >
-                      <social.icon className="h-5 w-5" />
-                    </a>
-                  </Button>
-                ))}
-              </div>
             </div>
-          </div>
-
-          {/* Product Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Product</h4>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Support</h4>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.href}
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        <Separator className="mb-8" />
-
-        {/* Bottom Footer */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex flex-col md:flex-row items-center gap-4 text-sm text-muted-foreground">
-            <p>© {currentYear} Accio. All rights reserved.</p>
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                All systems operational
-              </span>
+            <p className="text-muted-foreground mb-4 max-w-xs">
+              Your personal knowledge sanctuary powered by AI. Capture, organize, and rediscover everything that matters.
+            </p>
+            <div className="flex gap-4">
+              <a href="#" className="text-muted-foreground hover:text-foreground">
+                <Twitter className="h-5 w-5" />
+                <span className="sr-only">Twitter</span>
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-foreground">
+                <Facebook className="h-5 w-5" />
+                <span className="sr-only">Facebook</span>
+              </a>
+              <a href="#" className="text-muted-foreground hover:text-foreground">
+                <Github className="h-5 w-5" />
+                <span className="sr-only">GitHub</span>
+              </a>
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/contact">
-                <Mail className="h-4 w-4 mr-2" />
-                Contact Support
-              </Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link to="/register">
-                Start Building
-              </Link>
-            </Button>
+          <div>
+            <h3 className="font-semibold mb-3">Product</h3>
+            <ul className="space-y-2">
+              <li><Link to="/features" className="text-muted-foreground hover:text-foreground">Features</Link></li>
+              <li><Link to="/pricing" className="text-muted-foreground hover:text-foreground">Pricing</Link></li>
+              <li><Link to="/integrations" className="text-muted-foreground hover:text-foreground">Integrations</Link></li>
+              <li><Link to="/changelog" className="text-muted-foreground hover:text-foreground">Changelog</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="font-semibold mb-3">Resources</h3>
+            <ul className="space-y-2">
+              <li><Link to="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
+              <li><Link to="/help" className="text-muted-foreground hover:text-foreground">Help Center</Link></li>
+              <li><Link to="/docs" className="text-muted-foreground hover:text-foreground">Documentation</Link></li>
+              <li><Link to="/api" className="text-muted-foreground hover:text-foreground">API</Link></li>
+            </ul>
+          </div>
+          
+          <div>
+            <h3 className="font-semibold mb-3">Company</h3>
+            <ul className="space-y-2">
+              <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
+              <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link></li>
+              <li><Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy</Link></li>
+              <li><Link to="/terms" className="text-muted-foreground hover:text-foreground">Terms</Link></li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm text-muted-foreground">
+            &copy; 2025 Accio. All rights reserved.
+          </p>
+          <div className="flex gap-4 mt-4 md:mt-0">
+            <Link to="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-sm text-muted-foreground hover:text-foreground">
+              Terms of Service
+            </Link>
+            <Link to="/cookies" className="text-sm text-muted-foreground hover:text-foreground">
+              Cookie Policy
+            </Link>
           </div>
         </div>
       </div>

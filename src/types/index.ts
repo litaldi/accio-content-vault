@@ -1,9 +1,12 @@
-
 export interface User {
   id: string;
   email?: string;
   created_at: string;
   subscription_tier?: "free" | "pro";
+  user_metadata?: {
+    role?: string;
+    [key: string]: any;
+  };
 }
 
 export interface SavedContent {

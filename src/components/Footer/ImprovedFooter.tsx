@@ -1,101 +1,107 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Brain, Twitter, Github, Linkedin, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
-import { Heart, Github, Twitter, Mail } from 'lucide-react';
 
-const ImprovedFooter: React.FC = () => {
-  const { preferences } = useAccessibility();
+const ImprovedFooter = () => {
+  const { highContrast } = useAccessibility();
   const currentYear = new Date().getFullYear();
 
-  const footerLinks = {
-    product: [
-      { name: 'Features', href: '/#features' },
-      { name: 'Pricing', href: '/#pricing' },
-      { name: 'FAQ', href: '/#faq' },
-    ],
-    company: [
-      { name: 'About', href: '/about' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Careers', href: '/careers' },
-    ],
-    support: [
-      { name: 'Help Center', href: '/help' },
-      { name: 'Contact', href: '/contact' },
-      { name: 'Status', href: '/status' },
-    ],
-    legal: [
-      { name: 'Privacy', href: '/privacy' },
-      { name: 'Terms', href: '/terms' },
-      { name: 'Security', href: '/security' },
-    ]
-  };
+  const footerSections = [
+    {
+      title: 'Product',
+      links: [
+        { name: 'Features', href: '/features' },
+        { name: 'Pricing', href: '/pricing' },
+        { name: 'Roadmap', href: '#' },
+        { name: 'API', href: '#' }
+      ]
+    },
+    {
+      title: 'Company',
+      links: [
+        { name: 'About', href: '#' },
+        { name: 'Blog', href: '#' },
+        { name: 'Careers', href: '#' },
+        { name: 'Contact', href: '/contact' }
+      ]
+    },
+    {
+      title: 'Resources',
+      links: [
+        { name: 'Help Center', href: '/help' },
+        { name: 'FAQ', href: '/faq' },
+        { name: 'Documentation', href: '#' },
+        { name: 'Status', href: '#' }
+      ]
+    },
+    {
+      title: 'Legal',
+      links: [
+        { name: 'Privacy Policy', href: '/privacy' },
+        { name: 'Terms of Service', href: '/terms' },
+        { name: 'Cookie Policy', href: '#' },
+        { name: 'Accessibility', href: '/accessibility' }
+      ]
+    }
+  ];
 
   const socialLinks = [
-    { name: 'Twitter', href: 'https://twitter.com', icon: Twitter },
-    { name: 'GitHub', href: 'https://github.com', icon: Github },
-    { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail },
+    { name: 'Twitter', href: '#', icon: Twitter },
+    { name: 'GitHub', href: '#', icon: Github },
+    { name: 'LinkedIn', href: '#', icon: Linkedin },
+    { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail }
   ];
 
   return (
-    <footer 
-      className={cn(
-        "border-t bg-background/95 backdrop-blur",
-        preferences.highContrast && "border-2"
-      )}
-      role="contentinfo"
-      aria-label="Site footer"
-    >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+    <footer className={cn(
+      "bg-muted/30 border-t",
+      highContrast && "border-2"
+    )}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand Section */}
-          <div className="lg:col-span-1">
-            <Link 
-              to="/" 
-              className="flex items-center space-x-2 font-bold text-xl mb-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md"
-            >
-              <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                Accio
-              </span>
+          <div className="lg:col-span-2">
+            <Link to="/" className="flex items-center space-x-2 mb-4">
+              <Brain className="h-8 w-8 text-primary" />
+              <span className="font-bold text-xl">Accio</span>
             </Link>
-            <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
-              Transform scattered bookmarks into an AI-powered knowledge engine. Save anything, find everything.
+            <p className="text-muted-foreground mb-6 max-w-sm">
+              Transform your knowledge into power with AI-driven content organization 
+              and intelligent search capabilities.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
-                <a
+                <Button
                   key={social.name}
-                  href={social.href}
-                  className={cn(
-                    "text-muted-foreground hover:text-foreground transition-colors",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md p-1"
-                  )}
-                  aria-label={`Follow us on ${social.name}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="h-9 w-9 p-0"
+                  aria-label={social.name}
                 >
-                  <social.icon className="h-5 w-5" />
-                </a>
+                  <a href={social.href} target="_blank" rel="noopener noreferrer">
+                    <social.icon className="h-4 w-4" />
+                  </a>
+                </Button>
               ))}
             </div>
           </div>
 
-          {/* Links Sections */}
-          {Object.entries(footerLinks).map(([category, links]) => (
-            <div key={category}>
-              <h3 className="font-semibold text-foreground mb-4 capitalize">
-                {category}
-              </h3>
+          {/* Footer Links */}
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h3 className="font-semibold mb-4">{section.title}</h3>
               <ul className="space-y-3">
-                {links.map((link) => (
+                {section.links.map((link) => (
                   <li key={link.name}>
                     <Link
                       to={link.href}
-                      className={cn(
-                        "text-sm text-muted-foreground hover:text-foreground transition-colors",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md"
-                      )}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                     >
                       {link.name}
                     </Link>
@@ -106,15 +112,18 @@ const ImprovedFooter: React.FC = () => {
           ))}
         </div>
 
-        {/* Bottom Section */}
-        <div className="border-t mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-            <span>© {currentYear} Accio. Made with</span>
-            <Heart className="h-4 w-4 text-red-500" aria-label="love" />
-            <span>for productivity enthusiasts.</span>
-          </div>
-          <div className="mt-4 md:mt-0 text-sm text-muted-foreground">
-            <span>All rights reserved.</span>
+        {/* Bottom Footer */}
+        <div className="py-6 border-t border-border flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-muted-foreground text-sm">
+            © {currentYear} Accio. All rights reserved.
+          </p>
+          <div className="flex items-center space-x-6 mt-4 sm:mt-0">
+            <Link to="/sitemap" className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+              Sitemap
+            </Link>
+            <Link to="/accessibility-test" className="text-muted-foreground hover:text-foreground text-sm transition-colors">
+              Accessibility
+            </Link>
           </div>
         </div>
       </div>

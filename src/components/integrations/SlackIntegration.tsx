@@ -12,7 +12,8 @@ import {
   Settings2,
   Users,
   Hash,
-  Bell
+  Bell,
+  Loader2
 } from 'lucide-react';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
 import { LoadingState } from '@/components/ui/loading-state';
@@ -135,7 +136,10 @@ const SlackIntegration: React.FC = () => {
             className="bg-slack-600 hover:bg-slack-700"
           >
             {isLoading ? (
-              <LoadingState message="Connecting..." size="sm" showSpinner={true} />
+              <>
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                Connecting...
+              </>
             ) : (
               <>
                 <Slack className="h-4 w-4 mr-2" />

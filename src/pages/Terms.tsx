@@ -1,138 +1,276 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileText, Scale, Shield, AlertTriangle, Mail } from 'lucide-react';
 
 const Terms = () => {
+  const lastUpdated = 'January 15, 2025';
+
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Terms of Service - Accio Knowledge Management</title>
-        <meta name="description" content="Review our terms of service for using the Accio knowledge management platform." />
-        <meta name="robots" content="noindex" />
+        <title>Terms of Service - Accio</title>
+        <meta name="description" content="Read Accio's Terms of Service to understand your rights and responsibilities when using our platform." />
       </Helmet>
 
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-12 max-w-4xl">
-          <h1 className="text-4xl font-bold mb-6">Terms of Service</h1>
-          <p className="text-muted-foreground mb-8">Last updated: May 26, 2025</p>
-          
-          <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none">
-            <p>
-              Welcome to Accio! These Terms of Service ("Terms") govern your access to and use of the Accio knowledge management platform, including any content, functionality, and services offered on or through our website and application (collectively, the "Service").
-            </p>
-
-            <p className="mt-4">
-              Please read these Terms carefully before using our Service. By accessing or using the Service, you agree to be bound by these Terms. If you do not agree to these Terms, you must not access or use the Service.
-            </p>
-
-            <Separator className="my-6" />
-            
-            <h2 className="text-2xl font-semibold mt-8 mb-4">1. Acceptance of Terms</h2>
-            <p>
-              By creating an account or using any part of the Service, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you are using the Service on behalf of an organization, you represent and warrant that you have the authority to bind that organization to these Terms.
-            </p>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">2. Changes to Terms</h2>
-            <p>
-              We reserve the right to modify these Terms at any time. We will provide notice of any material changes by posting the updated Terms on this page and updating the "Last updated" date. Your continued use of the Service after any such changes constitutes your acceptance of the new Terms.
-            </p>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">3. Account Registration and Security</h2>
-            <p>
-              To use certain features of the Service, you may need to create an account. You are responsible for:
-            </p>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Providing accurate and complete information during registration</li>
-              <li>Maintaining the security of your account credentials</li>
-              <li>All activities that occur under your account</li>
-              <li>Notifying us immediately of any unauthorized use of your account</li>
-            </ul>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">4. User Content</h2>
-            <p>
-              You retain all ownership rights to the content you save, create, or upload to the Service ("User Content"). By using our Service, you grant us a non-exclusive, worldwide, royalty-free license to use, reproduce, modify, and display your User Content solely for the purpose of providing the Service to you.
-            </p>
-
-            <p className="mt-4">
-              You are solely responsible for your User Content and represent and warrant that:
-            </p>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>You own or have obtained all necessary rights to the User Content</li>
-              <li>Your User Content does not violate any third-party rights, including intellectual property rights and privacy rights</li>
-              <li>Your User Content complies with these Terms and all applicable laws and regulations</li>
-            </ul>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">5. Prohibited Uses</h2>
-            <p>
-              You agree not to use the Service:
-            </p>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>In any way that violates any applicable law or regulation</li>
-              <li>To transmit, or procure the sending of, any advertising or promotional material, including any "junk mail," "chain letter," "spam," or similar solicitation</li>
-              <li>To impersonate or attempt to impersonate Accio, an Accio employee, another user, or any other person or entity</li>
-              <li>To engage in any other conduct that restricts or inhibits anyone's use or enjoyment of the Service, or which may harm Accio or users of the Service</li>
-              <li>To attempt to gain unauthorized access to, interfere with, damage, or disrupt any parts of the Service</li>
-            </ul>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">6. Subscription and Billing</h2>
-            <p>
-              Certain features of the Service may require a subscription. By subscribing to our paid services:
-            </p>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>You agree to pay all fees in accordance with the pricing and payment terms in effect at the time of your subscription</li>
-              <li>You authorize us to charge your designated payment method for these fees</li>
-              <li>You agree that your subscription will automatically renew unless you cancel it prior to the renewal date</li>
-            </ul>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">7. Termination</h2>
-            <p>
-              We may terminate or suspend your account and access to the Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach these Terms.
-            </p>
-
-            <p className="mt-4">
-              Upon termination, your right to use the Service will immediately cease. If your account is terminated for any reason, you may lose all User Content associated with your account.
-            </p>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">8. Limitation of Liability</h2>
-            <p>
-              In no event shall Accio, its officers, directors, employees, or agents be liable for any indirect, incidental, special, consequential, or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from:
-            </p>
-            <ul className="list-disc pl-6 space-y-1">
-              <li>Your access to or use of or inability to access or use the Service</li>
-              <li>Any conduct or content of any third party on the Service</li>
-              <li>Any content obtained from the Service</li>
-              <li>Unauthorized access, use, or alteration of your transmissions or content</li>
-            </ul>
-
-            <Separator className="my-6" />
-
-            <h2 className="text-2xl font-semibold mt-8 mb-4">9. Contact Us</h2>
-            <p>
-              If you have any questions about these Terms, please contact us at:
-            </p>
-            <p className="mt-2">
-              <strong>Email:</strong> legal@accio-app.com<br />
-              <strong>Address:</strong> 123 Knowledge Street, San Francisco, CA 94107
-            </p>
-          </div>
+      <div className="container mx-auto px-4 py-12 max-w-4xl">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <Scale className="h-16 w-16 text-primary mx-auto mb-6" />
+          <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
+          <p className="text-lg text-muted-foreground">
+            Last updated: {lastUpdated}
+          </p>
         </div>
+
+        {/* Introduction */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Agreement to Terms</CardTitle>
+          </CardHeader>
+          <CardContent className="prose prose-gray max-w-none">
+            <p>
+              By accessing and using Accio ("the Service"), you agree to be bound by these Terms of Service ("Terms"). 
+              If you disagree with any part of these terms, then you may not access the Service.
+            </p>
+            <p>
+              These Terms apply to all visitors, users, and others who access or use the Service.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Account Terms */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5 text-primary" />
+              Account Terms
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Account Creation</h3>
+              <p className="text-muted-foreground">
+                You must provide accurate and complete information when creating an account. You are responsible for maintaining the security of your account and password.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Account Responsibility</h3>
+              <p className="text-muted-foreground">
+                You are responsible for all activities that occur under your account. You must immediately notify us of any unauthorized use of your account.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Age Requirement</h3>
+              <p className="text-muted-foreground">
+                You must be at least 13 years old to use this Service. If you are under 18, you must have parental consent.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Acceptable Use */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-primary" />
+              Acceptable Use Policy
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Permitted Use</h3>
+              <p className="text-muted-foreground">
+                You may use Accio for lawful purposes only, to organize and manage your personal or professional knowledge and information.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Prohibited Activities</h3>
+              <p className="text-muted-foreground mb-2">You may not:</p>
+              <ul className="list-disc list-inside text-muted-foreground space-y-1 ml-4">
+                <li>Use the Service for any illegal or unauthorized purpose</li>
+                <li>Upload content that violates intellectual property rights</li>
+                <li>Attempt to gain unauthorized access to our systems</li>
+                <li>Use the Service to spam, harass, or harm others</li>
+                <li>Upload malicious code, viruses, or harmful content</li>
+                <li>Reverse engineer or attempt to extract our source code</li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Content and Data */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Your Content and Data</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Ownership</h3>
+              <p className="text-muted-foreground">
+                You retain ownership of all content and data you upload to Accio. We do not claim ownership of your content.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">License to Use</h3>
+              <p className="text-muted-foreground">
+                By uploading content, you grant us a limited license to store, process, and display your content solely to provide the Service to you.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Data Processing</h3>
+              <p className="text-muted-foreground">
+                We may use AI and machine learning to analyze your content to provide features like organization suggestions and smart search.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Content Responsibility</h3>
+              <p className="text-muted-foreground">
+                You are solely responsible for your content and must ensure you have the right to upload and share it.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Service Availability */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Service Availability</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Service Uptime</h3>
+              <p className="text-muted-foreground">
+                We strive to maintain high service availability but cannot guarantee 100% uptime. We may need to perform maintenance or updates.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Service Modifications</h3>
+              <p className="text-muted-foreground">
+                We reserve the right to modify, suspend, or discontinue any part of the Service with reasonable notice.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Billing and Payments */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Billing and Payments</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Subscription Plans</h3>
+              <p className="text-muted-foreground">
+                Some features require a paid subscription. Billing occurs according to your chosen plan (monthly or annually).
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Payment Terms</h3>
+              <p className="text-muted-foreground">
+                Payments are due in advance. Failure to pay may result in service suspension or termination.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Refunds</h3>
+              <p className="text-muted-foreground">
+                Refunds are handled on a case-by-case basis. Contact our support team for refund requests.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Limitation of Liability */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-primary" />
+              Limitation of Liability
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Service "As Is"</h3>
+              <p className="text-muted-foreground">
+                The Service is provided "as is" without warranties of any kind, either express or implied.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Limitation</h3>
+              <p className="text-muted-foreground">
+                In no event shall Accio be liable for any indirect, incidental, special, consequential, or punitive damages.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Data Backup</h3>
+              <p className="text-muted-foreground">
+                While we implement backup systems, you are responsible for maintaining your own backups of important data.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Termination */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Termination</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Termination by You</h3>
+              <p className="text-muted-foreground">
+                You may terminate your account at any time through your account settings or by contacting us.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Termination by Us</h3>
+              <p className="text-muted-foreground">
+                We may terminate or suspend your account for violations of these Terms or for any other reason with reasonable notice.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-2">Effect of Termination</h3>
+              <p className="text-muted-foreground">
+                Upon termination, your right to use the Service will cease immediately. We will provide you with a reasonable opportunity to export your data.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Changes to Terms */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Changes to Terms</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              We reserve the right to modify these Terms at any time. We will notify users of significant changes via email or through the Service. 
+              Your continued use of the Service after such modifications constitutes acceptance of the updated Terms.
+            </p>
+          </CardContent>
+        </Card>
+
+        {/* Contact */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Mail className="h-5 w-5 text-primary" />
+              Contact Information
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">
+              If you have any questions about these Terms of Service, please contact us:
+            </p>
+            <div className="space-y-2">
+              <p><strong>Email:</strong> legal@accio.app</p>
+              <p><strong>Address:</strong> Accio Legal Team, San Francisco, CA</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </>
+    </div>
   );
 };
 

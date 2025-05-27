@@ -1,5 +1,5 @@
 
-export { default as HeroSection } from './HeroSection';
+export { HeroSection } from './HeroSection';
 export { default as OnboardingSection } from './OnboardingSection';
 export { default as FeaturesSection } from './FeaturesSection';
 export { default as AboutSection } from './AboutSection';

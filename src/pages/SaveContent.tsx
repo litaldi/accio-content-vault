@@ -1,177 +1,186 @@
 
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FormField } from '@/components/auth/FormField';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
 import { 
-  Link2, 
-  Upload, 
+  Plus, 
+  Link as LinkIcon, 
   FileText, 
   Image, 
-  BookmarkPlus,
-  Loader2,
+  Save,
+  ArrowRight,
+  Clock,
+  Tag,
   CheckCircle
 } from 'lucide-react';
-import MainNavigation from '@/components/navigation/MainNavigation';
+import { Link } from 'react-router-dom';
 
-const SaveContent: React.FC = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
+const SaveContent = () => {
   const [url, setUrl] = useState('');
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [tags, setTags] = useState('');
+  const [collection, setCollection] = useState('');
+  const [isSaving, setIsSaving] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
-  const handleUrlSubmit = async (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!url.trim()) return;
-
-    setIsLoading(true);
-    try {
-      // Simulate saving URL content
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      toast({
-        title: "Content saved successfully!",
-        description: "Your URL has been processed and added to your library.",
-      });
-      
-      setUrl('');
-    } catch (error) {
-      toast({
-        title: "Failed to save content",
-        description: "Please try again or check your internet connection.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    setIsSaving(true);
+    
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    setIsSaving(false);
+    setShowSuccess(true);
+    
+    // Reset form
+    setUrl('');
+    setTitle('');
+    setDescription('');
+    setTags('');
+    setCollection('');
+    
+    // Hide success message after 3 seconds
+    setTimeout(() => setShowSuccess(false), 3000);
   };
 
-  const handleFileUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedFiles || selectedFiles.length === 0) return;
+  const quickSaveOptions = [
+    { label: 'Article/Blog Post', icon: FileText, description: 'Save web articles and blog posts' },
+    { label: 'Research Paper', icon: FileText, description: 'Academic papers and studies' },
+    { label: 'Video/Tutorial', icon: FileText, description: 'Educational videos and tutorials' },
+    { label: 'Image/Visual', icon: Image, description: 'Infographics and visual content' },
+  ];
 
-    setIsLoading(true);
-    try {
-      // Simulate file upload processing
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      toast({
-        title: "Files uploaded successfully!",
-        description: `${selectedFiles.length} file(s) have been processed and added to your library.`,
-      });
-      
-      setSelectedFiles(null);
-      const fileInput = document.getElementById('file-upload') as HTMLInputElement;
-      if (fileInput) fileInput.value = '';
-    } catch (error) {
-      toast({
-        title: "Failed to upload files",
-        description: "Please try again or check your file formats.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  if (!user) {
-    return (
-      <>
-        <Helmet>
-          <title>Save Content - Accio</title>
-        </Helmet>
-        <MainNavigation />
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <Card className="max-w-md w-full">
-            <CardHeader className="text-center">
-              <BookmarkPlus className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <CardTitle>Sign In Required</CardTitle>
-              <CardDescription>
-                Please sign in to save content to your knowledge library.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Button asChild className="w-full">
-                <a href="/login">Sign In</a>
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </>
-    );
-  }
+  const recentCollections = [
+    'AI & Machine Learning',
+    'Product Management', 
+    'Design Systems',
+    'Frontend Development'
+  ];
 
   return (
-    <>
-      <Helmet>
-        <title>Save Content - Accio</title>
-        <meta name="description" content="Save articles, documents, images, and more to your personal knowledge library with AI-powered organization." />
-      </Helmet>
+    <AuthenticatedLayout>
+      <div className="min-h-screen bg-background">
+        <Helmet>
+          <title>Save Content - Accio</title>
+          <meta name="description" content="Quickly save and organize your digital content" />
+        </Helmet>
 
-      <MainNavigation />
-      
-      <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-background">
-        <div className="container mx-auto px-4 py-12 max-w-4xl">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold mb-4">Save Content</h1>
-            <p className="text-xl text-muted-foreground">
-              Add articles, documents, images, and more to your knowledge library
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold flex items-center gap-3">
+              <Plus className="h-8 w-8 text-primary" />
+              Save Content
+            </h1>
+            <p className="text-muted-foreground mt-2">
+              Quickly capture and organize valuable content for your knowledge library
             </p>
           </div>
 
-          <Tabs defaultValue="url" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="url" className="flex items-center gap-2">
-                <Link2 className="h-4 w-4" />
-                Save URL
-              </TabsTrigger>
-              <TabsTrigger value="upload" className="flex items-center gap-2">
-                <Upload className="h-4 w-4" />
-                Upload Files
-              </TabsTrigger>
-            </TabsList>
+          {/* Success Message */}
+          {showSuccess && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <div>
+                <p className="font-medium text-green-900">Content saved successfully!</p>
+                <p className="text-sm text-green-700">Your content has been added to your library.</p>
+              </div>
+            </div>
+          )}
 
-            <TabsContent value="url">
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Main Form */}
+            <div className="lg:col-span-2">
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Link2 className="h-5 w-5" />
-                    Save from URL
-                  </CardTitle>
-                  <CardDescription>
-                    Enter a URL to automatically extract and save the content with AI-powered tagging
-                  </CardDescription>
+                  <CardTitle>Add New Content</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleUrlSubmit} className="space-y-4">
-                    <FormField
-                      label="Website URL"
-                      type="url"
-                      placeholder="https://example.com/article"
-                      value={url}
-                      onChange={(e) => setUrl(e.target.value)}
-                      required
-                      helpText="Paste any article, blog post, or webpage URL"
-                    />
-                    
+                  <form onSubmit={handleSave} className="space-y-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="url">URL or Source</Label>
+                      <div className="relative">
+                        <LinkIcon className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          id="url"
+                          type="url"
+                          placeholder="https://example.com/article"
+                          value={url}
+                          onChange={(e) => setUrl(e.target.value)}
+                          className="pl-10"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="title">Title</Label>
+                      <Input
+                        id="title"
+                        placeholder="Give your content a descriptive title"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        required
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="description">Description (Optional)</Label>
+                      <Textarea
+                        id="description"
+                        placeholder="Add notes or a brief description of why this content is valuable..."
+                        value={description}
+                        onChange={(e) => setDescription(e.target.value)}
+                        rows={3}
+                      />
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="tags">Tags</Label>
+                        <Input
+                          id="tags"
+                          placeholder="react, javascript, tutorial"
+                          value={tags}
+                          onChange={(e) => setTags(e.target.value)}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Separate tags with commas
+                        </p>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="collection">Collection</Label>
+                        <Input
+                          id="collection"
+                          placeholder="Select or create a collection"
+                          value={collection}
+                          onChange={(e) => setCollection(e.target.value)}
+                        />
+                      </div>
+                    </div>
+
                     <Button 
                       type="submit" 
-                      className="w-full" 
-                      disabled={isLoading || !url.trim()}
+                      className="w-full gap-2" 
+                      disabled={isSaving}
                     >
-                      {isLoading ? (
+                      {isSaving ? (
                         <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Processing Content...
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                          Saving...
                         </>
                       ) : (
                         <>
-                          <BookmarkPlus className="h-4 w-4 mr-2" />
+                          <Save className="h-4 w-4" />
                           Save Content
                         </>
                       )}
@@ -179,91 +188,90 @@ const SaveContent: React.FC = () => {
                   </form>
                 </CardContent>
               </Card>
-            </TabsContent>
+            </div>
 
-            <TabsContent value="upload">
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Quick Save Options */}
               <Card>
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Upload className="h-5 w-5" />
-                    Upload Files
-                  </CardTitle>
-                  <CardDescription>
-                    Upload documents, images, PDFs, and other files to your knowledge library
-                  </CardDescription>
+                  <CardTitle className="text-lg">Quick Save</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <form onSubmit={handleFileUpload} className="space-y-4">
-                    <div>
-                      <label htmlFor="file-upload" className="block text-sm font-medium mb-2">
-                        Select Files
-                      </label>
-                      <input
-                        id="file-upload"
-                        type="file"
-                        multiple
-                        accept=".pdf,.doc,.docx,.txt,.md,.jpg,.jpeg,.png,.gif,.webp"
-                        onChange={(e) => setSelectedFiles(e.target.files)}
-                        className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-primary-foreground hover:file:bg-primary/90"
-                      />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Supported formats: PDF, DOC, DOCX, TXT, MD, JPG, PNG, GIF, WEBP
-                      </p>
-                    </div>
-                    
-                    {selectedFiles && selectedFiles.length > 0 && (
-                      <div className="space-y-2">
-                        <p className="text-sm font-medium">Selected files:</p>
-                        <div className="space-y-1">
-                          {Array.from(selectedFiles).map((file, index) => (
-                            <div key={index} className="flex items-center gap-2 text-sm">
-                              {file.type.startsWith('image/') ? (
-                                <Image className="h-4 w-4" />
-                              ) : (
-                                <FileText className="h-4 w-4" />
-                              )}
-                              <span>{file.name}</span>
-                              <span className="text-muted-foreground">
-                                ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                              </span>
-                            </div>
-                          ))}
+                  <div className="space-y-3">
+                    {quickSaveOptions.map((option, index) => (
+                      <button
+                        key={index}
+                        className="w-full p-3 text-left border rounded-lg hover:bg-accent transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <option.icon className="h-4 w-4 text-primary" />
+                          <div>
+                            <div className="font-medium text-sm">{option.label}</div>
+                            <div className="text-xs text-muted-foreground">{option.description}</div>
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    
-                    <Button 
-                      type="submit" 
-                      className="w-full" 
-                      disabled={isLoading || !selectedFiles || selectedFiles.length === 0}
-                    >
-                      {isLoading ? (
-                        <>
-                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                          Uploading Files...
-                        </>
-                      ) : (
-                        <>
-                          <Upload className="h-4 w-4 mr-2" />
-                          Upload Files
-                        </>
-                      )}
-                    </Button>
-                  </form>
+                      </button>
+                    ))}
+                  </div>
                 </CardContent>
               </Card>
-            </TabsContent>
-          </Tabs>
 
-          <div className="mt-8 text-center">
-            <div className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              All content is automatically organized with AI-powered tagging
+              {/* Recent Collections */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Recent Collections</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    {recentCollections.map((coll, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCollection(coll)}
+                        className="w-full p-2 text-left text-sm hover:bg-accent rounded transition-colors"
+                      >
+                        {coll}
+                      </button>
+                    ))}
+                  </div>
+                  <Button variant="outline" size="sm" className="w-full mt-3" asChild>
+                    <Link to="/collections">
+                      View All Collections
+                      <ArrowRight className="h-3 w-3 ml-1" />
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
+
+              {/* Tips */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Tips</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex gap-2">
+                      <Tag className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Use descriptive tags</p>
+                        <p className="text-muted-foreground">This helps you find content later</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Clock className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" />
+                      <div>
+                        <p className="font-medium">Save now, organize later</p>
+                        <p className="text-muted-foreground">Don't let great content slip away</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </AuthenticatedLayout>
   );
 };
 

@@ -7,6 +7,8 @@ import { runSiteAudit, logSiteAudit } from './site-audit';
 import { runButtonAuditReport } from './button-audit';
 import { logContrastIssues } from './contrast-checker';
 import { logProductionChecks } from './production-checks';
+import { runFinalQAAudit } from './final-qa-audit';
+import { runAccessibilityValidation } from './accessibility-validator';
 
 export const runFullSiteHealthCheck = () => {
   if (process.env.NODE_ENV === 'development') {
@@ -17,17 +19,29 @@ export const runFullSiteHealthCheck = () => {
     runButtonAuditReport();
     logContrastIssues();
     logProductionChecks();
+    runAccessibilityValidation();
+    const qaReport = runFinalQAAudit();
     
     console.groupEnd();
     
     // Show summary in a nice format
     const audit = runSiteAudit();
-    if (audit.score >= 90) {
-      console.log('🟢 Site Health: Excellent (' + audit.score + '%)');
-    } else if (audit.score >= 70) {
-      console.log('🟡 Site Health: Good (' + audit.score + '%) - Some improvements needed');
+    const combinedScore = Math.round((audit.score + qaReport.score) / 2);
+    
+    if (combinedScore >= 90) {
+      console.log('🟢 Site Health: Excellent (' + combinedScore + '%)');
+    } else if (combinedScore >= 70) {
+      console.log('🟡 Site Health: Good (' + combinedScore + '%) - Some improvements needed');
     } else {
-      console.log('🔴 Site Health: Needs Attention (' + audit.score + '%) - Please review issues');
+      console.log('🔴 Site Health: Needs Attention (' + combinedScore + '%) - Please review issues');
+    }
+    
+    // QA-specific recommendations
+    if (qaReport.summary.critical > 0) {
+      console.warn('⚠️ Critical issues found - address before launch');
+    }
+    if (qaReport.summary.high > 0) {
+      console.warn('🔶 High priority issues should be addressed');
     }
   }
 };

@@ -1,171 +1,118 @@
 
+import React from 'react';
+import { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-// Enhanced Typography System with better accessibility
+// Typography System
 export const Typography = {
-  H1: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h1 
-      className={cn(
-        "text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight",
-        "text-balance", // Better text wrapping
-        className
-      )} 
-      {...props}
-    >
+  H1: ({ children, className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
+    <h1 className={cn("scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl", className)} {...props}>
       {children}
     </h1>
   ),
-  
-  H2: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h2 
-      className={cn(
-        "text-3xl sm:text-4xl font-bold leading-tight tracking-tight",
-        "text-balance",
-        className
-      )} 
-      {...props}
-    >
+  H2: ({ children, className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
+    <h2 className={cn("scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0", className)} {...props}>
       {children}
     </h2>
   ),
-  
-  H3: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3 
-      className={cn(
-        "text-2xl sm:text-3xl font-semibold leading-tight tracking-tight",
-        "text-balance",
-        className
-      )} 
-      {...props}
-    >
+  H3: ({ children, className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
+    <h3 className={cn("scroll-m-20 text-2xl font-semibold tracking-tight", className)} {...props}>
       {children}
     </h3>
   ),
-  
-  H4: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h4 
-      className={cn(
-        "text-xl sm:text-2xl font-semibold leading-tight",
-        className
-      )} 
-      {...props}
-    >
+  H4: ({ children, className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
+    <h4 className={cn("scroll-m-20 text-xl font-semibold tracking-tight", className)} {...props}>
       {children}
     </h4>
   ),
-  
-  Lead: ({ children, className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p 
-      className={cn(
-        "text-lg sm:text-xl leading-relaxed text-muted-foreground",
-        "text-pretty", // Better text flow
-        className
-      )} 
-      {...props}
-    >
+  P: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
+    <p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)} {...props}>
       {children}
     </p>
   ),
-  
-  Body: ({ children, className, size = 'default', ...props }: React.HTMLAttributes<HTMLParagraphElement> & { size?: 'sm' | 'default' | 'lg' }) => (
-    <p 
-      className={cn(
-        "leading-relaxed text-muted-foreground",
-        "text-pretty",
-        size === 'sm' && "text-sm",
-        size === 'default' && "text-base",
-        size === 'lg' && "text-lg",
-        className
-      )} 
-      {...props}
-    >
+  Body: ({ children, className, size, ...props }: HTMLAttributes<HTMLParagraphElement> & { size?: 'xs' | 'sm' | 'base' | 'lg' }) => {
+    const sizeClasses = {
+      xs: 'text-xs',
+      sm: 'text-sm', 
+      base: 'text-base',
+      lg: 'text-lg'
+    };
+    
+    return (
+      <p className={cn("leading-7", size ? sizeClasses[size] : 'text-base', className)} {...props}>
+        {children}
+      </p>
+    );
+  },
+  Lead: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
+    <p className={cn("text-xl text-muted-foreground", className)} {...props}>
       {children}
     </p>
   ),
-  
-  Caption: ({ children, className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
-    <span 
-      className={cn(
-        "text-sm text-muted-foreground leading-relaxed",
-        className
-      )} 
-      {...props}
-    >
-      {children}
-    </span>
-  ),
-};
-
-// Enhanced Spacing System with better responsive behavior
-export const Spacing = {
-  Section: ({ children, className, size = 'default', ...props }: React.HTMLAttributes<HTMLElement> & { size?: 'sm' | 'default' | 'lg' | 'xl' }) => (
-    <section 
-      className={cn(
-        size === 'sm' && "py-8 sm:py-12",
-        size === 'default' && "py-12 sm:py-16 lg:py-20",
-        size === 'lg' && "py-16 sm:py-20 lg:py-32",
-        size === 'xl' && "py-20 sm:py-32 lg:py-40",
-        className
-      )} 
-      {...props}
-    >
-      {children}
-    </section>
-  ),
-  
-  Container: ({ children, className, size = 'default', ...props }: React.HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'default' | 'lg' | 'xl' | 'full' }) => (
-    <div 
-      className={cn(
-        "container mx-auto px-4 sm:px-6 lg:px-8",
-        size === 'sm' && "max-w-2xl",
-        size === 'default' && "max-w-6xl",
-        size === 'lg' && "max-w-7xl",
-        size === 'xl' && "max-w-none",
-        size === 'full' && "max-w-full px-0",
-        className
-      )} 
-      {...props}
-    >
+  Large: ({ children, className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+    <div className={cn("text-lg font-semibold", className)} {...props}>
       {children}
     </div>
   ),
+  Small: ({ children, className, ...props }: HTMLAttributes<HTMLElement>) => (
+    <small className={cn("text-sm font-medium leading-none", className)} {...props}>
+      {children}
+    </small>
+  ),
+  Muted: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
+    <p className={cn("text-sm text-muted-foreground", className)} {...props}>
+      {children}
+    </p>
+  ),
+  Caption: ({ children, className, ...props }: HTMLAttributes<HTMLParagraphElement>) => (
+    <p className={cn("text-xs text-muted-foreground", className)} {...props}>
+      {children}
+    </p>
+  ),
 };
 
-// Enhanced Focus and Interactive Styles with better accessibility
-export const focusStyles = "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background";
-
-export const interactiveStyles = "transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-[1.02]";
-
-// Enhanced Card Variants with better visual hierarchy
-export const cardVariants = {
-  default: "bg-card text-card-foreground border border-border rounded-xl shadow-sm",
-  elevated: "bg-card text-card-foreground border border-border rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300",
-  interactive: "bg-card text-card-foreground border border-border rounded-xl shadow-sm hover:shadow-md hover:border-primary/20 transition-all duration-200 cursor-pointer group",
-  glass: "bg-card/80 backdrop-blur-sm text-card-foreground border border-border/50 rounded-xl shadow-lg",
-};
-
-// Animation Classes
-export const animations = {
-  fadeIn: "animate-fade-in",
-  slideUp: "animate-slide-up",
-  scaleIn: "animate-scale-in",
-  slideInRight: "animate-slide-in-right",
-  bounce: "animate-bounce",
-  pulse: "animate-pulse",
-  // Hover animations
-  hoverLift: "hover:-translate-y-1 hover:shadow-lg transition-all duration-200",
-  hoverScale: "hover:scale-105 transition-transform duration-200",
-  hoverGlow: "hover:shadow-lg hover:shadow-primary/20 transition-all duration-300",
-};
-
-// Responsive breakpoint utilities
-export const responsiveUtils = {
-  hideOnMobile: "hidden sm:block",
-  hideOnDesktop: "block sm:hidden", 
-  mobileOnly: "sm:hidden",
-  tabletUp: "hidden md:block",
-  desktopUp: "hidden lg:block",
-  mobileGrid: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-  responsiveText: "text-sm sm:text-base lg:text-lg",
-  responsivePadding: "px-4 sm:px-6 lg:px-8",
+// Spacing System
+export const Spacing = {
+  Container: ({ children, className, size = 'default', ...props }: HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'default' | 'lg' | 'xl' | 'full' }) => {
+    const sizeClasses = {
+      sm: 'max-w-3xl',
+      default: 'max-w-7xl',
+      lg: 'max-w-7xl',
+      xl: 'max-w-none',
+      full: 'max-w-none'
+    };
+    
+    return (
+      <div className={cn("container mx-auto px-4 sm:px-6 lg:px-8", sizeClasses[size], className)} {...props}>
+        {children}
+      </div>
+    );
+  },
+  Section: ({ children, className, size = 'md', ...props }: HTMLAttributes<HTMLDivElement> & { size?: 'sm' | 'md' | 'lg' | 'xl' }) => {
+    const sizeClasses = {
+      sm: 'py-8',
+      md: 'py-12',
+      lg: 'py-16',
+      xl: 'py-24'
+    };
+    
+    return (
+      <section className={cn(sizeClasses[size], className)} {...props}>
+        {children}
+      </section>
+    );
+  },
+  Stack: ({ children, className, gap = 'md', ...props }: HTMLAttributes<HTMLDivElement> & { gap?: 'sm' | 'md' | 'lg' }) => {
+    const gapClasses = {
+      sm: 'space-y-2',
+      md: 'space-y-4',
+      lg: 'space-y-6'
+    };
+    
+    return (
+      <div className={cn('flex flex-col', gapClasses[gap], className)} {...props}>
+        {children}
+      </div>
+    );
+  },
 };
