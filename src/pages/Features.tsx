@@ -12,23 +12,20 @@ import {
   Share2, 
   BarChart3, 
   Shield,
-  MessageCircle,
   Zap,
   BookOpen,
   Users,
-  Bell,
-  Map,
-  Eye,
-  Mic,
-  Tag,
-  Network,
-  Calendar,
-  TrendingUp,
   PlusCircle,
-  Focus,
-  FileText,
-  Target
+  Target,
+  ArrowRight,
+  CheckCircle,
+  Play,
+  MousePointer,
+  Clock,
+  Globe,
+  Smartphone
 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 // Import feature components
 import { AIContentAnalysis } from '@/components/features/AIContentAnalysis';
@@ -53,160 +50,192 @@ const Features: React.FC = () => {
 
   const featureCategories = [
     {
-      id: 'ai-powered',
-      title: 'AI-Powered Intelligence',
-      description: 'Leverage artificial intelligence to enhance your knowledge management',
-      icon: Brain,
+      id: 'capture-organize',
+      title: 'Capture & Organize',
+      description: 'Save anything, organize effortlessly',
+      icon: PlusCircle,
+      color: 'from-blue-500 to-cyan-500',
       features: [
         {
-          id: 'content-analysis',
-          title: 'AI Content Analysis',
-          description: 'Deep analysis of your knowledge base with AI insights and recommendations',
-          component: AIContentAnalysis,
-          badge: 'AI-Powered'
+          id: 'quick-note-capture',
+          title: 'Save Anything in One Click',
+          description: 'Capture webpages, PDFs, videos, and notes instantly from any device with our browser extension and mobile apps.',
+          component: QuickNoteCapture,
+          badge: 'Most Popular',
+          benefits: ['Works on any website', 'Mobile & desktop apps', 'Offline sync']
         },
         {
-          id: 'knowledge-assistant',
-          title: 'Personal Knowledge Assistant',
-          description: 'Chat with an AI that understands your content and helps you find insights',
-          component: PersonalKnowledgeAssistant,
-          badge: 'New'
+          id: 'smart-tagging',
+          title: 'Never Organize Again',
+          description: 'AI automatically tags and categorizes everything you save, creating perfect organization without any manual work.',
+          component: SmartTaggingSystem,
+          badge: 'AI-Powered',
+          benefits: ['Auto-categorization', 'Smart tag suggestions', 'Custom taxonomies']
         },
         {
-          id: 'content-summarizer',
-          title: 'AI Content Summarizer',
-          description: 'Automatically generate intelligent summaries of any content with key insights',
-          component: AIContentSummarizer,
-          badge: 'Smart'
-        },
-        {
-          id: 'recommendation-engine',
-          title: 'Content Recommendation Engine',
-          description: 'AI-powered recommendations based on your reading patterns and interests',
-          component: ContentRecommendationEngine,
-          badge: 'Personalized'
-        },
-        {
-          id: 'learning-paths',
-          title: 'Learning Path Generator',
-          description: 'AI-generated personalized learning paths based on your interests',
-          component: LearningPathGenerator,
-          badge: 'Popular'
-        },
-        {
-          id: 'voice-search',
-          title: 'Voice Search Interface',
-          description: 'Search your knowledge base using natural voice commands',
-          component: VoiceSearchInterface,
-          badge: 'Voice-Enabled'
+          id: 'mind-map',
+          title: 'See Your Knowledge Connections',
+          description: 'Visualize how your ideas connect with interactive knowledge maps that reveal hidden relationships.',
+          component: KnowledgeMindMap,
+          badge: 'Visual',
+          benefits: ['Interactive visualization', 'Discover connections', 'Export & share']
         }
       ]
     },
     {
-      id: 'capture-organize',
-      title: 'Capture & Organization',
-      description: 'Intelligent tools to capture and organize your knowledge',
-      icon: PlusCircle,
+      id: 'ai-powered',
+      title: 'AI Intelligence',
+      description: 'Let AI supercharge your knowledge',
+      icon: Brain,
+      color: 'from-purple-500 to-pink-500',
       features: [
         {
-          id: 'quick-note-capture',
-          title: 'Quick Note Capture',
-          description: 'Fast note-taking with auto-tagging and voice input capabilities',
-          component: QuickNoteCapture,
-          badge: 'Fast'
+          id: 'knowledge-assistant',
+          title: 'Chat with Your Knowledge',
+          description: 'Ask questions in plain English and get instant answers from your personal knowledge base with AI chat.',
+          component: PersonalKnowledgeAssistant,
+          badge: 'Game Changer',
+          benefits: ['Natural language queries', 'Instant answers', 'Context-aware responses']
         },
         {
-          id: 'smart-tagging',
-          title: 'Smart Tagging System',
-          description: 'AI-powered tagging with suggestions and trend analysis',
-          component: SmartTaggingSystem,
-          badge: 'Smart'
+          id: 'content-summarizer',
+          title: 'Understand Everything Instantly',
+          description: 'Get intelligent summaries and key insights from any content, turning hours of reading into minutes.',
+          component: AIContentSummarizer,
+          badge: 'Time Saver',
+          benefits: ['Auto-summaries', 'Key points extraction', 'Multiple formats']
         },
         {
-          id: 'mind-map',
-          title: 'Knowledge Mind Map',
-          description: 'Visual representation of connections between your content',
-          component: KnowledgeMindMap,
-          badge: 'Visual'
+          id: 'content-analysis',
+          title: 'Discover Hidden Insights',
+          description: 'AI analyzes your knowledge base to reveal patterns, suggest improvements, and recommend new content.',
+          component: AIContentAnalysis,
+          badge: 'Smart',
+          benefits: ['Pattern recognition', 'Content recommendations', 'Knowledge gaps analysis']
+        }
+      ]
+    },
+    {
+      id: 'search-discover',
+      title: 'Search & Discover',
+      description: 'Find anything in seconds',
+      icon: Search,
+      color: 'from-green-500 to-emerald-500',
+      features: [
+        {
+          id: 'semantic-search',
+          title: 'Find by Meaning, Not Just Words',
+          description: 'Search using natural language and find content by meaning, even when you don\'t remember exact keywords.',
+          component: null,
+          badge: 'Revolutionary',
+          benefits: ['Natural language search', 'Semantic understanding', 'Fuzzy matching']
         },
         {
-          id: 'health-monitor',
-          title: 'Content Health Monitor',
-          description: 'Monitor the health and quality of your knowledge base',
-          component: ContentHealthMonitor,
-          badge: 'Quality'
+          id: 'voice-search',
+          title: 'Search with Your Voice',
+          description: 'Use voice commands to find information hands-free, perfect for when you\'re busy or mobile.',
+          component: VoiceSearchInterface,
+          badge: 'Voice-Enabled',
+          benefits: ['Voice recognition', 'Hands-free operation', 'Mobile optimized']
+        },
+        {
+          id: 'recommendation-engine',
+          title: 'Discover What You Need Next',
+          description: 'Get personalized content recommendations based on your interests and reading patterns.',
+          component: ContentRecommendationEngine,
+          badge: 'Personalized',
+          benefits: ['Learning recommendations', 'Content suggestions', 'Adaptive algorithms']
         }
       ]
     },
     {
       id: 'productivity',
       title: 'Productivity & Focus',
-      description: 'Tools to boost productivity and maintain focus',
-      icon: Focus,
+      description: 'Work smarter, not harder',
+      icon: Target,
+      color: 'from-orange-500 to-red-500',
       features: [
         {
           id: 'focus-dashboard',
-          title: 'Focus Mode Dashboard',
-          description: 'Distraction-free workspace with pomodoro timer and task management',
+          title: 'Stay Focused and Productive',
+          description: 'Distraction-free workspace with pomodoro timer, task management, and progress tracking.',
           component: FocusModeDashboard,
-          badge: 'Focus'
+          badge: 'Focus Mode',
+          benefits: ['Distraction blocking', 'Time tracking', 'Goal setting']
         },
         {
           id: 'scheduler',
-          title: 'Content Scheduler',
-          description: 'Plan and schedule your knowledge work activities',
+          title: 'Plan Your Learning Journey',
+          description: 'Schedule reading time, set learning goals, and track your knowledge-building progress.',
           component: ContentScheduler,
-          badge: 'Planning'
+          badge: 'Planning',
+          benefits: ['Learning schedules', 'Goal tracking', 'Progress analytics']
         },
         {
           id: 'notifications',
-          title: 'Smart Notifications',
-          description: 'Intelligent reminders and insights about your content',
+          title: 'Never Miss Important Insights',
+          description: 'Smart notifications remind you of important content and suggest optimal learning times.',
           component: SmartNotifications,
-          badge: 'Smart'
+          badge: 'Smart',
+          benefits: ['Intelligent reminders', 'Learning optimization', 'Custom alerts']
         }
       ]
     },
     {
       id: 'collaboration',
-      title: 'Collaboration & Sharing',
-      description: 'Work together and share knowledge with your team',
+      title: 'Share & Collaborate',
+      description: 'Build knowledge together',
       icon: Users,
+      color: 'from-indigo-500 to-purple-500',
       features: [
         {
           id: 'workspaces',
-          title: 'Collaborative Workspaces',
-          description: 'Create shared spaces for team knowledge management',
+          title: 'Collaborate Seamlessly',
+          description: 'Create shared knowledge spaces for your team with real-time collaboration and permission controls.',
           component: CollaborativeWorkspaces,
-          badge: 'Team'
+          badge: 'Team Feature',
+          benefits: ['Real-time collaboration', 'Permission controls', 'Team analytics']
         }
       ]
     },
     {
       id: 'insights',
-      title: 'Analytics & Insights',
-      description: 'Understand your knowledge patterns and productivity',
+      title: 'Analytics & Growth',
+      description: 'Track your knowledge journey',
       icon: BarChart3,
+      color: 'from-teal-500 to-blue-500',
       features: [
         {
           id: 'content-insights',
-          title: 'Content Insights Dashboard',
-          description: 'Comprehensive analytics about your content and learning patterns',
+          title: 'Understand Your Learning Patterns',
+          description: 'Comprehensive analytics show how you learn, what you focus on, and where to improve.',
           component: ContentInsights,
-          badge: 'Analytics'
+          badge: 'Analytics',
+          benefits: ['Learning analytics', 'Progress tracking', 'Improvement insights']
         },
         {
           id: 'reading-tracker',
-          title: 'Reading Progress Tracker',
-          description: 'Track your reading habits, goals, and achievements',
+          title: 'Track Your Reading Goals',
+          description: 'Monitor reading habits, set goals, and celebrate achievements with detailed progress tracking.',
           component: ReadingProgressTracker,
-          badge: 'Personal'
+          badge: 'Personal Growth',
+          benefits: ['Reading statistics', 'Goal setting', 'Achievement tracking']
         }
       ]
     }
   ];
 
+  const quickFeatures = [
+    { icon: MousePointer, title: "One-Click Save", desc: "Save from any website instantly" },
+    { icon: Brain, title: "AI Organization", desc: "Smart categorization & tagging" },
+    { icon: Search, title: "Natural Search", desc: "Find by meaning, not keywords" },
+    { icon: Clock, title: "Time Tracking", desc: "Monitor learning progress" },
+    { icon: Globe, title: "Works Everywhere", desc: "Web, mobile, and desktop" },
+    { icon: Smartphone, title: "Always Synced", desc: "Access from any device" }
+  ];
+
   const FeatureDemo = ({ feature }: { feature: any }) => {
+    if (!feature.component) return <div className="text-center text-muted-foreground">Demo coming soon</div>;
     const Component = feature.component;
     return <Component />;
   };
@@ -214,47 +243,83 @@ const Features: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Features - Accio Knowledge Management</title>
-        <meta name="description" content="Explore Accio's powerful features for AI-powered knowledge management, collaboration, and productivity." />
+        <title>Features - Transform How You Manage Knowledge | Accio</title>
+        <meta name="description" content="Discover how Accio's AI-powered features help you capture, organize, and rediscover information effortlessly. From instant saving to intelligent search." />
       </Helmet>
 
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-20 px-4 bg-gradient-to-b from-background to-muted/20">
-          <div className="max-w-7xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Powerful Features for
-              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent"> Knowledge Management</span>
+        <section className="py-20 lg:py-32 bg-gradient-to-b from-background to-muted/20">
+          <div className="container text-center">
+            <Badge variant="outline" className="mb-8 animate-fade-in text-sm px-4 py-2">
+              <Sparkles className="h-4 w-4 mr-2" />
+              Powerful Features
+            </Badge>
+            
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 animate-fade-in">
+              Everything You Need to
+              <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent block mt-2">
+                Master Your Knowledge
+              </span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Discover how Accio transforms the way you capture, organize, and leverage knowledge with cutting-edge AI and intuitive collaboration tools.
+            
+            <p className="text-xl lg:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in">
+              From instant capture to intelligent discovery, Accio transforms how you handle information. 
+              Discover the features that will revolutionize your knowledge management workflow.
             </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16 animate-fade-in">
+              <Button size="lg" className="text-lg px-10 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" asChild>
+                <Link to="/register">
+                  Start Free Trial
+                  <ArrowRight className="ml-3 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button variant="outline" size="lg" className="text-lg px-10 py-6 border-2" asChild>
+                <Link to="/contact">
+                  Schedule Demo
+                </Link>
+              </Button>
+            </div>
+
+            {/* Quick Feature Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 max-w-5xl mx-auto animate-fade-in">
+              {quickFeatures.map((feature, index) => (
+                <div key={index} className="text-center p-4 bg-card/50 backdrop-blur rounded-xl border hover:bg-card/80 transition-all">
+                  <feature.icon className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <h4 className="font-semibold text-sm mb-1">{feature.title}</h4>
+                  <p className="text-xs text-muted-foreground">{feature.desc}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* Features Showcase */}
-        <section className="py-16 px-4">
-          <div className="max-w-7xl mx-auto">
-            <Tabs defaultValue="ai-powered" className="w-full">
-              <div className="flex flex-col lg:flex-row gap-8">
+        <section className="py-20">
+          <div className="container">
+            <Tabs defaultValue="capture-organize" className="w-full">
+              <div className="flex flex-col lg:flex-row gap-12">
                 {/* Sidebar Navigation */}
                 <div className="lg:w-80">
                   <div className="sticky top-24">
-                    <h2 className="text-2xl font-bold mb-6">Feature Categories</h2>
-                    <TabsList className="grid w-full grid-cols-1 gap-2 h-auto bg-transparent">
+                    <h2 className="text-2xl font-bold mb-8">Feature Categories</h2>
+                    <TabsList className="grid w-full grid-cols-1 gap-3 h-auto bg-transparent">
                       {featureCategories.map((category) => {
                         const Icon = category.icon;
                         return (
                           <TabsTrigger
                             key={category.id}
                             value={category.id}
-                            className="w-full justify-start p-4 text-left data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                            className="w-full justify-start p-6 text-left data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-blue-600 data-[state=active]:text-white rounded-xl border-2 data-[state=active]:border-primary/20 hover:bg-muted/50 transition-all"
                           >
-                            <div className="flex items-start gap-3">
-                              <Icon className="h-5 w-5 mt-0.5" />
+                            <div className="flex items-start gap-4">
+                              <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${category.color} flex items-center justify-center flex-shrink-0`}>
+                                <Icon className="h-5 w-5 text-white" />
+                              </div>
                               <div>
-                                <div className="font-medium">{category.title}</div>
-                                <div className="text-xs opacity-80">{category.description}</div>
+                                <div className="font-semibold text-base">{category.title}</div>
+                                <div className="text-sm opacity-80 mt-1">{category.description}</div>
                               </div>
                             </div>
                           </TabsTrigger>
@@ -268,36 +333,49 @@ const Features: React.FC = () => {
                 <div className="flex-1">
                   {featureCategories.map((category) => (
                     <TabsContent key={category.id} value={category.id} className="mt-0">
-                      <div className="space-y-8">
-                        <div>
-                          <h3 className="text-3xl font-bold mb-2">{category.title}</h3>
-                          <p className="text-muted-foreground text-lg">{category.description}</p>
+                      <div className="space-y-10">
+                        <div className="text-center lg:text-left">
+                          <h3 className="text-3xl lg:text-4xl font-bold mb-4">{category.title}</h3>
+                          <p className="text-xl text-muted-foreground">{category.description}</p>
                         </div>
 
-                        <div className="grid gap-6">
+                        <div className="grid gap-8">
                           {category.features.map((feature) => (
-                            <Card key={feature.id} className="overflow-hidden">
-                              <CardHeader>
-                                <div className="flex items-center justify-between">
-                                  <div>
-                                    <CardTitle className="flex items-center gap-2">
-                                      {feature.title}
-                                      <Badge variant="secondary">{feature.badge}</Badge>
-                                    </CardTitle>
-                                    <p className="text-muted-foreground mt-1">{feature.description}</p>
+                            <Card key={feature.id} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all">
+                              <CardHeader className="pb-6">
+                                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-3 mb-3">
+                                      <CardTitle className="text-xl lg:text-2xl">{feature.title}</CardTitle>
+                                      <Badge variant="secondary" className="text-xs">{feature.badge}</Badge>
+                                    </div>
+                                    <p className="text-muted-foreground text-lg leading-relaxed mb-4">{feature.description}</p>
+                                    
+                                    {/* Benefits */}
+                                    <div className="flex flex-wrap gap-3">
+                                      {feature.benefits.map((benefit, i) => (
+                                        <div key={i} className="flex items-center gap-2 text-sm bg-green-50 dark:bg-green-900/20 px-3 py-1 rounded-full">
+                                          <CheckCircle className="h-3 w-3 text-green-600 dark:text-green-400" />
+                                          <span>{benefit}</span>
+                                        </div>
+                                      ))}
+                                    </div>
                                   </div>
+                                  
                                   <Button
                                     variant={activeFeature === feature.id ? "default" : "outline"}
                                     onClick={() => setActiveFeature(activeFeature === feature.id ? null : feature.id)}
+                                    className="flex-shrink-0"
                                   >
+                                    <Play className="h-4 w-4 mr-2" />
                                     {activeFeature === feature.id ? 'Hide Demo' : 'Try Feature'}
                                   </Button>
                                 </div>
                               </CardHeader>
                               
                               {activeFeature === feature.id && (
-                                <CardContent className="border-t bg-muted/20">
-                                  <div className="py-4">
+                                <CardContent className="border-t bg-muted/30">
+                                  <div className="py-6">
                                     <FeatureDemo feature={feature} />
                                   </div>
                                 </CardContent>
@@ -315,21 +393,46 @@ const Features: React.FC = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 px-4 bg-gradient-to-r from-primary/10 to-blue-600/10">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">
-              Ready to Transform Your Knowledge Management?
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Join thousands of users who are already leveraging Accio's powerful features to organize and amplify their knowledge.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="text-lg">
-                Start Free Trial
-              </Button>
-              <Button variant="outline" size="lg" className="text-lg">
-                Schedule Demo
-              </Button>
+        <section className="py-20 bg-gradient-to-r from-primary/10 via-primary/5 to-background">
+          <div className="container text-center">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+                Ready to Transform Your Knowledge Management?
+              </h2>
+              <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
+                Join over 50,000 users who are already leveraging Accio's powerful features 
+                to organize and amplify their knowledge. Start your free trial today.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+                <Button size="lg" className="text-lg px-10 py-6 bg-gradient-to-r from-primary to-blue-600 hover:from-primary/90 hover:to-blue-600/90" asChild>
+                  <Link to="/register">
+                    <Sparkles className="mr-3 h-5 w-5" />
+                    Start Free Trial
+                    <ArrowRight className="ml-3 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" className="text-lg px-10 py-6 border-2" asChild>
+                  <Link to="/contact">
+                    Schedule Demo
+                  </Link>
+                </Button>
+              </div>
+              
+              <div className="flex flex-wrap justify-center items-center gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>No credit card required</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-blue-500" />
+                  <span>14-day free trial</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-purple-500" />
+                  <span>Cancel anytime</span>
+                </div>
+              </div>
             </div>
           </div>
         </section>
