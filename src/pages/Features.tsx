@@ -23,7 +23,11 @@ import {
   Tag,
   Network,
   Calendar,
-  TrendingUp
+  TrendingUp,
+  PlusCircle,
+  Focus,
+  FileText,
+  Target
 } from 'lucide-react';
 
 // Import feature components
@@ -39,6 +43,10 @@ import { SmartTaggingSystem } from '@/components/features/SmartTaggingSystem';
 import { KnowledgeMindMap } from '@/components/features/KnowledgeMindMap';
 import { ReadingProgressTracker } from '@/components/features/ReadingProgressTracker';
 import { ContentScheduler } from '@/components/features/ContentScheduler';
+import { AIContentSummarizer } from '@/components/features/AIContentSummarizer';
+import { QuickNoteCapture } from '@/components/features/QuickNoteCapture';
+import { ContentRecommendationEngine } from '@/components/features/ContentRecommendationEngine';
+import { FocusModeDashboard } from '@/components/features/FocusModeDashboard';
 
 const Features: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState<string | null>(null);
@@ -65,6 +73,20 @@ const Features: React.FC = () => {
           badge: 'New'
         },
         {
+          id: 'content-summarizer',
+          title: 'AI Content Summarizer',
+          description: 'Automatically generate intelligent summaries of any content with key insights',
+          component: AIContentSummarizer,
+          badge: 'Smart'
+        },
+        {
+          id: 'recommendation-engine',
+          title: 'Content Recommendation Engine',
+          description: 'AI-powered recommendations based on your reading patterns and interests',
+          component: ContentRecommendationEngine,
+          badge: 'Personalized'
+        },
+        {
           id: 'learning-paths',
           title: 'Learning Path Generator',
           description: 'AI-generated personalized learning paths based on your interests',
@@ -81,11 +103,18 @@ const Features: React.FC = () => {
       ]
     },
     {
-      id: 'organization',
-      title: 'Smart Organization',
-      description: 'Intelligent tools to organize and structure your knowledge',
-      icon: Tag,
+      id: 'capture-organize',
+      title: 'Capture & Organization',
+      description: 'Intelligent tools to capture and organize your knowledge',
+      icon: PlusCircle,
       features: [
+        {
+          id: 'quick-note-capture',
+          title: 'Quick Note Capture',
+          description: 'Fast note-taking with auto-tagging and voice input capabilities',
+          component: QuickNoteCapture,
+          badge: 'Fast'
+        },
         {
           id: 'smart-tagging',
           title: 'Smart Tagging System',
@@ -106,6 +135,35 @@ const Features: React.FC = () => {
           description: 'Monitor the health and quality of your knowledge base',
           component: ContentHealthMonitor,
           badge: 'Quality'
+        }
+      ]
+    },
+    {
+      id: 'productivity',
+      title: 'Productivity & Focus',
+      description: 'Tools to boost productivity and maintain focus',
+      icon: Focus,
+      features: [
+        {
+          id: 'focus-dashboard',
+          title: 'Focus Mode Dashboard',
+          description: 'Distraction-free workspace with pomodoro timer and task management',
+          component: FocusModeDashboard,
+          badge: 'Focus'
+        },
+        {
+          id: 'scheduler',
+          title: 'Content Scheduler',
+          description: 'Plan and schedule your knowledge work activities',
+          component: ContentScheduler,
+          badge: 'Planning'
+        },
+        {
+          id: 'notifications',
+          title: 'Smart Notifications',
+          description: 'Intelligent reminders and insights about your content',
+          component: SmartNotifications,
+          badge: 'Smart'
         }
       ]
     },
@@ -143,28 +201,6 @@ const Features: React.FC = () => {
           description: 'Track your reading habits, goals, and achievements',
           component: ReadingProgressTracker,
           badge: 'Personal'
-        }
-      ]
-    },
-    {
-      id: 'productivity',
-      title: 'Productivity & Automation',
-      description: 'Automate workflows and boost your productivity',
-      icon: Zap,
-      features: [
-        {
-          id: 'notifications',
-          title: 'Smart Notifications',
-          description: 'Intelligent reminders and insights about your content',
-          component: SmartNotifications,
-          badge: 'Smart'
-        },
-        {
-          id: 'scheduler',
-          title: 'Content Scheduler',
-          description: 'Plan and schedule your knowledge work activities',
-          component: ContentScheduler,
-          badge: 'Planning'
         }
       ]
     }
