@@ -1,3 +1,6 @@
+
+import React from 'react';
+
 /**
  * Performance monitoring and web vitals tracking
  */
@@ -25,7 +28,17 @@ class PerformanceMonitor {
     try {
       this.observer = new PerformanceObserver((list) => {
         list.getEntries().forEach((entry) => {
-          this.recordMetric(entry.name, entry.value || 0);
+          // Handle different types of performance entries
+          let value = 0;
+          if ('value' in entry) {
+            value = entry.value as number;
+          } else if ('duration' in entry) {
+            value = entry.duration;
+          } else if ('startTime' in entry) {
+            value = entry.startTime;
+          }
+          
+          this.recordMetric(entry.name, value);
         });
       });
 
@@ -73,9 +86,10 @@ class PerformanceMonitor {
 
     const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
     if (navigation) {
-      this.recordMetric('page-load', navigation.loadEventEnd - navigation.navigationStart);
-      this.recordMetric('dom-content-loaded', navigation.domContentLoadedEventEnd - navigation.navigationStart);
-      this.recordMetric('first-byte', navigation.responseStart - navigation.navigationStart);
+      // Use proper PerformanceNavigationTiming properties
+      this.recordMetric('page-load', navigation.loadEventEnd - navigation.fetchStart);
+      this.recordMetric('dom-content-loaded', navigation.domContentLoadedEventEnd - navigation.fetchStart);
+      this.recordMetric('first-byte', navigation.responseStart - navigation.fetchStart);
     }
   }
 

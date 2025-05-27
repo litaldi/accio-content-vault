@@ -7,6 +7,7 @@ interface AccessibilityContextType {
   setFontSize: (size: 'normal' | 'large' | 'x-large') => void;
   highContrast: boolean;
   setHighContrast: (enabled: boolean) => void;
+  toggleHighContrast: () => void;
   reducedMotion: boolean;
   setReducedMotion: (enabled: boolean) => void;
 }
@@ -30,6 +31,10 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
   const [highContrast, setHighContrast] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
 
+  const toggleHighContrast = useCallback(() => {
+    setHighContrast(prev => !prev);
+  }, []);
+
   const announceToScreenReader = useCallback((message: string) => {
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', 'polite');
@@ -50,6 +55,7 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     setFontSize,
     highContrast,
     setHighContrast,
+    toggleHighContrast,
     reducedMotion,
     setReducedMotion
   };
