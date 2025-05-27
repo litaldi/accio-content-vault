@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { EmptyState } from '@/components/ui/empty-state';
-import { QuickActionBar } from '@/components/ui/quick-action-bar';
 import { 
   Bookmark, 
   Search, 
@@ -341,9 +341,6 @@ const SavedContent = () => {
             )}
           </>
         )}
-
-        {/* Quick Actions for Mobile */}
-        <QuickActionBar variant="inline" className="mt-8 lg:hidden" />
       </div>
     </div>
   );
