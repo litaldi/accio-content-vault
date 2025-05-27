@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
-import Navigation from '@/components/Navigation';
+import MainNavigation from '@/components/navigation/MainNavigation';
 import Home from '@/pages/Home';
 import Features from '@/pages/Features';
 import Search from '@/pages/Search';
@@ -19,7 +19,7 @@ function App() {
       <Router>
         <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
           <div className="min-h-screen bg-background font-sans antialiased">
-            <Navigation />
+            <MainNavigation />
             <main className="relative">
               <Routes>
                 <Route path="/" element={<Home />} />
