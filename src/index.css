@@ -85,17 +85,17 @@
 
   /* Better button and interactive element styles */
   button, [role="button"] {
-    @apply focus-enhanced;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
   /* Enhanced form control styles */
   input, textarea, select {
-    @apply focus-enhanced;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
   /* Improved link styles */
   a {
-    @apply focus-enhanced;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
 
   /* Skip link for screen readers */
