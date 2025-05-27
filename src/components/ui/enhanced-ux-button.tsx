@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -55,8 +54,8 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
       if (onClick) {
         const result = onClick(event);
         
-        // Handle async operations - check if result is a Promise
-        if (result !== undefined && result !== null && typeof result === 'object' && 'then' in result) {
+        // Handle async operations - better Promise detection
+        if (result != null && typeof result === 'object' && 'then' in result) {
           await (result as Promise<any>);
           
           if (showFeedback && successText) {
