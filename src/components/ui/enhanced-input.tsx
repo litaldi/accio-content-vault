@@ -10,7 +10,10 @@ interface EnhancedInputProps extends React.InputHTMLAttributes<HTMLInputElement>
   label?: string;
   error?: string;
   helpText?: string;
+  description?: string;
   icon?: React.ComponentType<{ className?: string }>;
+  leftIcon?: React.ReactNode;
+  rightIcon?: React.ReactNode;
   showPasswordToggle?: boolean;
   containerClassName?: string;
 }
@@ -20,7 +23,10 @@ export const EnhancedInput = forwardRef<HTMLInputElement, EnhancedInputProps>(
     label, 
     error, 
     helpText, 
+    description,
     icon: Icon,
+    leftIcon,
+    rightIcon,
     showPasswordToggle = false,
     containerClassName,
     className, 
@@ -32,8 +38,11 @@ export const EnhancedInput = forwardRef<HTMLInputElement, EnhancedInputProps>(
     const [showPassword, setShowPassword] = React.useState(false);
     const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
     const errorId = error ? `${inputId}-error` : undefined;
-    const helpId = helpText ? `${inputId}-help` : undefined;
+    const helpId = (helpText || description) ? `${inputId}-help` : undefined;
     const inputType = showPasswordToggle ? (showPassword ? 'text' : 'password') : type;
+
+    // Use description as fallback for helpText if helpText is not provided
+    const displayHelpText = helpText || description;
 
     return (
       <div className={cn('space-y-2', containerClassName)}>
@@ -58,8 +67,8 @@ export const EnhancedInput = forwardRef<HTMLInputElement, EnhancedInputProps>(
             type={inputType}
             className={cn(
               'transition-all duration-200',
-              Icon && !label && 'pl-10',
-              showPasswordToggle && 'pr-10',
+              (Icon && !label) || leftIcon ? 'pl-10' : '',
+              showPasswordToggle || rightIcon ? 'pr-10' : '',
               error && 'border-destructive focus-visible:ring-destructive',
               'focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1',
               className
@@ -70,34 +79,40 @@ export const EnhancedInput = forwardRef<HTMLInputElement, EnhancedInputProps>(
             {...props}
           />
           
-          {Icon && !label && (
+          {((Icon && !label) || leftIcon) && (
             <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground pointer-events-none">
-              <Icon className="h-4 w-4" aria-hidden="true" />
+              {leftIcon || (Icon && <Icon className="h-4 w-4" aria-hidden="true" />)}
             </div>
           )}
           
-          {showPasswordToggle && (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="absolute right-1 top-1/2 h-8 w-8 -translate-y-1/2 hover:bg-transparent"
-              onClick={() => setShowPassword(!showPassword)}
-              disabled={props.disabled}
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
-            >
-              {showPassword ? (
-                <EyeOff className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          {(showPasswordToggle || rightIcon) && (
+            <div className="absolute right-1 top-1/2 -translate-y-1/2">
+              {showPasswordToggle ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 hover:bg-transparent"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={props.disabled}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  ) : (
+                    <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                  )}
+                </Button>
               ) : (
-                <Eye className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                rightIcon
               )}
-            </Button>
+            </div>
           )}
         </div>
         
-        {helpText && !error && (
+        {displayHelpText && !error && (
           <p id={helpId} className="text-xs text-muted-foreground leading-relaxed">
-            {helpText}
+            {displayHelpText}
           </p>
         )}
         
