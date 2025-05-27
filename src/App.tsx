@@ -8,7 +8,6 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
 import StreamlinedMainNavigation from '@/components/navigation/StreamlinedMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
-import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 import AccessibilityAnnouncer from '@/components/accessibility/AccessibilityAnnouncer';
 import ErrorBoundary from '@/components/ui/error-boundary';
@@ -27,6 +26,7 @@ import AIFeatures from '@/pages/AIFeatures';
 import { EnhancedQuickCaptureWidget } from '@/components/QuickCapture/EnhancedQuickCaptureWidget';
 import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
 import EnhancedAccessibilityHelper from '@/components/accessibility/EnhancedAccessibilityHelper';
+import { CleanBottomNavigation } from '@/components/ui/clean-bottom-navigation';
 
 function App() {
   return (
@@ -41,7 +41,7 @@ function App() {
                     <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
                       <EnhancedAccessibility />
                       <StreamlinedMainNavigation />
-                      <main className="flex-1 relative" role="main" id="main-content">
+                      <main className="flex-1 relative pb-16 md:pb-0" role="main" id="main-content">
                         <Routes>
                           <Route path="/" element={<Home />} />
                           <Route path="/features" element={<Features />} />
@@ -60,9 +60,9 @@ function App() {
                         </Routes>
                       </main>
                       <EnhancedGlobalFooter />
+                      <CleanBottomNavigation />
                       <EnhancedQuickCaptureWidget />
                       <AIContentAssistant />
-                      <UnifiedFloatingActions />
                       <EnhancedAccessibilityHelper />
                       <Toaster />
                     </div>
