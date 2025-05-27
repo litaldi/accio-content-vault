@@ -10,6 +10,7 @@ import MainNavigation from '@/components/navigation/MainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
 import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
+import ErrorBoundary from '@/components/ui/error-boundary';
 import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import SavedContent from '@/pages/SavedContent';
@@ -26,44 +27,46 @@ import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
 
 function App() {
   return (
-    <HelmetProvider>
-      <Router>
-        <AuthProvider>
-          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-            <AccessibilityProvider>
-              <KeyboardShortcutsProvider>
-                <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
-                  <EnhancedAccessibility />
-                  <MainNavigation />
-                  <main className="flex-1 relative" role="main">
-                    <Routes>
-                      <Route path="/" element={<Home />} />
-                      <Route path="/features" element={<Features />} />
-                      <Route path="/ai-features" element={<AIFeatures />} />
-                      <Route path="/pricing" element={<Pricing />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/search" element={<Search />} />
-                      <Route path="/saved" element={<SavedContent />} />
-                      <Route path="/save" element={<SaveContent />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
-                      <Route path="/collections" element={<SavedContent />} />
-                      <Route path="/analytics" element={<Dashboard />} />
-                      <Route path="/profile" element={<Settings />} />
-                    </Routes>
-                  </main>
-                  <EnhancedGlobalFooter />
-                  <EnhancedQuickCaptureWidget />
-                  <AIContentAssistant />
-                  <UnifiedFloatingActions />
-                </div>
-              </KeyboardShortcutsProvider>
-            </AccessibilityProvider>
-          </ThemeProvider>
-        </AuthProvider>
-      </Router>
-    </HelmetProvider>
+    <ErrorBoundary>
+      <HelmetProvider>
+        <Router>
+          <AuthProvider>
+            <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+              <AccessibilityProvider>
+                <KeyboardShortcutsProvider>
+                  <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
+                    <EnhancedAccessibility />
+                    <MainNavigation />
+                    <main className="flex-1 relative" role="main">
+                      <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/features" element={<Features />} />
+                        <Route path="/ai-features" element={<AIFeatures />} />
+                        <Route path="/pricing" element={<Pricing />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/search" element={<Search />} />
+                        <Route path="/saved" element={<SavedContent />} />
+                        <Route path="/save" element={<SaveContent />} />
+                        <Route path="/settings" element={<Settings />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/collections" element={<SavedContent />} />
+                        <Route path="/analytics" element={<Dashboard />} />
+                        <Route path="/profile" element={<Settings />} />
+                      </Routes>
+                    </main>
+                    <EnhancedGlobalFooter />
+                    <EnhancedQuickCaptureWidget />
+                    <AIContentAssistant />
+                    <UnifiedFloatingActions />
+                  </div>
+                </KeyboardShortcutsProvider>
+              </AccessibilityProvider>
+            </ThemeProvider>
+          </AuthProvider>
+        </Router>
+      </HelmetProvider>
+    </ErrorBoundary>
   );
 }
 

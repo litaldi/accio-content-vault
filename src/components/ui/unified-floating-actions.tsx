@@ -8,7 +8,6 @@ import {
   MessageSquare, 
   Search,
   HelpCircle,
-  Zap,
   Brain
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -48,7 +47,7 @@ const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
     aria-label={label}
     title={label}
   >
-    <Icon className="h-5 w-5" />
+    <Icon className="h-5 w-5" aria-hidden="true" />
   </Button>
 );
 
