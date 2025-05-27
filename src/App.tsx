@@ -23,10 +23,8 @@ import EnhancedPricing from '@/pages/EnhancedPricing';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import AIFeatures from '@/pages/AIFeatures';
-import { EnhancedQuickCaptureWidget } from '@/components/QuickCapture/EnhancedQuickCaptureWidget';
-import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
-import EnhancedAccessibilityHelper from '@/components/accessibility/EnhancedAccessibilityHelper';
 import { CleanBottomNavigation } from '@/components/ui/clean-bottom-navigation';
+import EnhancedAccessibilityHelper from '@/components/accessibility/EnhancedAccessibilityHelper';
 
 function App() {
   return (
@@ -61,8 +59,6 @@ function App() {
                       </main>
                       <EnhancedGlobalFooter />
                       <CleanBottomNavigation />
-                      <EnhancedQuickCaptureWidget />
-                      <AIContentAssistant />
                       <EnhancedAccessibilityHelper />
                       <Toaster />
                     </div>

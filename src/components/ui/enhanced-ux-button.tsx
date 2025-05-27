@@ -39,7 +39,7 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     if (disabled || isLoading) return;
 
-    // Visual and haptic feedback
+    // Visual feedback
     setIsPressed(true);
     
     // Haptic feedback on supported devices
@@ -54,7 +54,7 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
       if (onClick) {
         const result = onClick(event);
         
-        // Handle async operations - check if result is a Promise with proper type guards
+        // Handle async operations
         if (result !== undefined && result !== null && typeof result === 'object' && typeof (result as any).then === 'function') {
           await result;
           
@@ -106,33 +106,30 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
     return props.variant || 'default';
   };
 
-  // Clean, minimal styling for the new design
-  const cleanStyles = intent === 'primary' 
-    ? 'bg-primary hover:bg-primary/90 text-primary-foreground' 
-    : '';
+  // WCAG 2.1 AA compliant styling
+  const accessibilityStyles = cn(
+    // Minimum touch target size (44x44px)
+    'min-h-[44px] min-w-[44px]',
+    // High contrast focus indicators
+    'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
+    // Enhanced transitions that respect reduced motion
+    'transition-all duration-200',
+    // Visual feedback states
+    isPressed && 'scale-95',
+    feedback === 'success' && 'bg-green-600 text-white border-green-600',
+    feedback === 'error' && 'bg-red-600 text-white border-red-600'
+  );
 
   return (
     <Button
       ref={buttonRef}
-      className={cn(
-        // Clean, minimal accessibility
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
-        'min-h-[44px] min-w-[44px]',
-        // Clean transitions
-        'transition-all duration-200',
-        // Visual feedback
-        isPressed && 'scale-95',
-        feedback === 'success' && 'bg-primary text-primary-foreground',
-        feedback === 'error' && 'bg-red-500 text-white',
-        // Clean styling
-        cleanStyles,
-        className
-      )}
+      className={cn(accessibilityStyles, className)}
       variant={getVariant()}
       disabled={disabled || isLoading}
       onClick={handleClick}
       aria-busy={isLoading}
       aria-describedby={tooltipText ? `${props.id || 'button'}-tooltip` : undefined}
+      aria-label={props['aria-label'] || (typeof children === 'string' ? children : undefined)}
       title={tooltipText}
       {...props}
     >
@@ -140,7 +137,7 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
         {getButtonContent()}
       </div>
       
-      {/* Tooltip for additional context */}
+      {/* Screen reader only tooltip */}
       {tooltipText && (
         <span id={`${props.id || 'button'}-tooltip`} className="sr-only">
           {tooltipText}
