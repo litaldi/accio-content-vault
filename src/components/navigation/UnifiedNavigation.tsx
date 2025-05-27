@@ -1,28 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Menu, X, User, LogOut, Settings, Home } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useTheme } from '@/contexts/ThemeContext';
-import { useToast } from '@/hooks/use-toast';
-import { 
-  Menu, 
-  X, 
-  Brain,
-  LogOut,
-  Sun,
-  Moon,
-  User,
-  Settings,
-  Home,
-  Star,
-  BookOpen,
-  MessageCircle,
-  LayoutDashboard,
-  Search,
-  FolderOpen,
-  BarChart3
-} from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,275 +11,220 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
 
-const UnifiedNavigation: React.FC = () => {
-  const { user, signOut } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { toast } = useToast();
+export const UnifiedNavigation: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+  const location = useLocation();
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location.pathname]);
+  const publicNavItems = [
+    { label: 'Features', href: '/features' },
+    { label: 'Pricing', href: '/pricing' },
+    { label: 'About', href: '/about' },
+    { label: 'Contact', href: '/contact' },
+    { label: 'Help', href: '/help' },
+  ];
+
+  const authenticatedNavItems = [
+    { label: 'Dashboard', href: '/dashboard', icon: Home },
+    { label: 'Profile', href: '/profile', icon: User },
+    { label: 'Settings', href: '/settings', icon: Settings },
+  ];
+
+  const isActiveLink = (href: string) => {
+    return location.pathname === href;
+  };
 
   const handleSignOut = async () => {
     try {
       await signOut();
-      toast({
-        title: "Successfully signed out",
-        description: "See you next time!",
-      });
-      navigate('/');
     } catch (error) {
-      toast({
-        title: "Error signing out",
-        description: "Please try again.",
-        variant: "destructive",
-      });
+      console.error('Sign out error:', error);
     }
   };
 
-  const publicNavItems = [
-    { to: '/', label: 'Home', icon: Home },
-    { to: '/features', label: 'Features', icon: Star },
-    { to: '/help', label: 'Help', icon: BookOpen },
-    { to: '/contact', label: 'Contact', icon: MessageCircle },
-  ];
-
-  const authenticatedNavItems = [
-    { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { to: '/search', label: 'Search', icon: Search },
-    { to: '/collections', label: 'Collections', icon: FolderOpen },
-    { to: '/analytics', label: 'Analytics', icon: BarChart3 },
-  ];
-
-  const navItems = user ? authenticatedNavItems : publicNavItems;
-
-  const isActiveRoute = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.startsWith(path);
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="container mx-auto px-4 max-w-7xl" role="navigation" aria-label="Main navigation">
-        <div className="flex h-16 items-center justify-between">
-          <Link 
-            to="/" 
-            className="flex items-center gap-3 font-bold text-xl hover:opacity-80 transition-opacity focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded-lg p-1"
-            aria-label="Accio homepage"
-          >
-            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-              <Brain className="h-5 w-5 text-white" aria-hidden="true" />
+    <nav id="navigation" className="bg-background/95 backdrop-blur-sm border-b sticky top-0 z-50" aria-label="Main navigation">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-lg">A</span>
             </div>
-            <span className="bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Accio
-            </span>
+            <span className="text-xl font-bold">Accio</span>
           </Link>
 
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.to}
-                  to={item.to}
-                  className={`
-                    flex items-center gap-2 px-4 py-2 rounded-lg transition-all font-medium text-sm
-                    hover:bg-accent hover:text-accent-foreground
-                    focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
-                    ${isActiveRoute(item.to) 
-                      ? 'bg-primary text-primary-foreground shadow-sm' 
-                      : 'text-muted-foreground'
-                    }
-                  `}
-                  aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                >
-                  <Icon className="h-4 w-4" aria-hidden="true" />
-                  {item.label}
-                </Link>
-              );
-            })}
-          </div>
-
-          <div className="hidden md:flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-              className="hover:bg-accent"
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Button>
-
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="gap-2">
-                    <User className="h-4 w-4" aria-hidden="true" />
-                    Account
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem asChild>
-                    <Link to="/profile" className="w-full cursor-pointer">
-                      <User className="h-4 w-4 mr-2" aria-hidden="true" />
-                      Profile
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link to="/settings" className="w-full cursor-pointer">
-                      <Settings className="h-4 w-4 mr-2" aria-hidden="true" />
-                      Settings
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
-                    <LogOut className="h-4 w-4 mr-2" aria-hidden="true" />
-                    Sign Out
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/login">Sign In</Link>
-                </Button>
-                <Button size="sm" className="shadow-sm" asChild>
-                  <Link to="/register">Get Started</Link>
-                </Button>
-              </>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            {/* Public Navigation */}
+            {!user && (
+              <div className="flex items-center space-x-6">
+                {publicNavItems.map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={cn(
+                      'text-sm font-medium transition-colors hover:text-primary',
+                      isActiveLink(item.href) 
+                        ? 'text-primary border-b-2 border-primary pb-1' 
+                        : 'text-muted-foreground'
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
             )}
+
+            {/* Authenticated Navigation */}
+            {user && (
+              <div className="flex items-center space-x-6">
+                {authenticatedNavItems.slice(0, 1).map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={cn(
+                      'text-sm font-medium transition-colors hover:text-primary',
+                      isActiveLink(item.href) 
+                        ? 'text-primary border-b-2 border-primary pb-1' 
+                        : 'text-muted-foreground'
+                    )}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+
+            {/* Auth Buttons */}
+            <div className="flex items-center space-x-4">
+              {user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                      <User className="h-4 w-4" />
+                      <span className="hidden lg:inline">
+                        {user.email?.split('@')[0] || 'User'}
+                      </span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-1.5">
+                      <p className="text-sm font-medium">{user.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {user.user_metadata?.is_demo ? 'Demo User' : 'Account'}
+                      </p>
+                    </div>
+                    <DropdownMenuSeparator />
+                    {authenticatedNavItems.slice(1).map((item) => (
+                      <DropdownMenuItem key={item.href} asChild>
+                        <Link to={item.href} className="flex items-center space-x-2">
+                          <item.icon className="h-4 w-4" />
+                          <span>{item.label}</span>
+                        </Link>
+                      </DropdownMenuItem>
+                    ))}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleSignOut} className="flex items-center space-x-2 text-red-600">
+                      <LogOut className="h-4 w-4" />
+                      <span>Sign Out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/login">Sign In</Link>
+                  </Button>
+                  <Button size="sm" asChild>
+                    <Link to="/register">Sign Up</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
           </div>
 
-          <div className="md:hidden flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-            >
-              {theme === 'dark' ? (
-                <Sun className="h-4 w-4" aria-hidden="true" />
-              ) : (
-                <Moon className="h-4 w-4" aria-hidden="true" />
-              )}
-            </Button>
-
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              aria-expanded={isMobileMenuOpen}
-              aria-controls="mobile-menu"
-              aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-            >
-              {isMobileMenuOpen ? (
-                <X className="h-5 w-5" aria-hidden="true" />
-              ) : (
-                <Menu className="h-5 w-5" aria-hidden="true" />
-              )}
-            </Button>
-          </div>
+          {/* Mobile Menu Button */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="md:hidden"
+            onClick={toggleMobileMenu}
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </Button>
         </div>
 
+        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div 
-            id="mobile-menu"
-            className="md:hidden border-t bg-background shadow-lg"
-            role="navigation"
-            aria-label="Mobile navigation"
-          >
-            <div className="px-4 py-6 space-y-4">
-              <nav className="space-y-2" role="none">
-                {navItems.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      className={`
-                        flex items-center gap-3 px-4 py-3 rounded-lg transition-all font-medium
-                        hover:bg-accent hover:text-accent-foreground
-                        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2
-                        ${isActiveRoute(item.to) 
-                          ? 'bg-primary text-primary-foreground shadow-sm' 
-                          : 'text-muted-foreground'
-                        }
-                      `}
-                      aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                    >
-                      <Icon className="h-5 w-5" aria-hidden="true" />
-                      {item.label}
-                    </Link>
-                  );
-                })}
-              </nav>
+          <div className="md:hidden border-t bg-background">
+            <div className="px-4 py-4 space-y-4">
+              {/* Navigation Links */}
+              <div className="space-y-2">
+                {(user ? authenticatedNavItems : publicNavItems).map((item) => (
+                  <Link
+                    key={item.href}
+                    to={item.href}
+                    className={cn(
+                      'block px-3 py-2 rounded-md text-sm font-medium transition-colors',
+                      isActiveLink(item.href)
+                        ? 'bg-primary/10 text-primary'
+                        : 'text-muted-foreground hover:text-primary hover:bg-muted'
+                    )}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
 
-              <div className="pt-4 border-t space-y-3">
+              {/* Auth Section */}
+              <div className="border-t pt-4">
                 {user ? (
-                  <>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start gap-3"
-                      asChild
-                    >
-                      <Link to="/profile">
-                        <User className="h-5 w-5" aria-hidden="true" />
-                        Profile
-                      </Link>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start gap-3"
-                      asChild
-                    >
-                      <Link to="/settings">
-                        <Settings className="h-5 w-5" aria-hidden="true" />
-                        Settings
-                      </Link>
-                    </Button>
-                    <Button
-                      variant="ghost"
+                  <div className="space-y-2">
+                    <div className="px-3 py-2 text-sm">
+                      <p className="font-medium">{user.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {user.user_metadata?.is_demo ? 'Demo User' : 'Account'}
+                      </p>
+                    </div>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
                       onClick={handleSignOut}
-                      className="w-full justify-start gap-3 text-destructive hover:bg-destructive/10"
+                      className="w-full justify-start text-red-600"
                     >
-                      <LogOut className="h-5 w-5" aria-hidden="true" />
+                      <LogOut className="h-4 w-4 mr-2" />
                       Sign Out
                     </Button>
-                  </>
+                  </div>
                 ) : (
-                  <>
-                    <Button 
-                      variant="outline" 
-                      className="w-full"
-                      asChild
-                    >
-                      <Link to="/login">Sign In</Link>
+                  <div className="space-y-2">
+                    <Button variant="ghost" size="sm" asChild className="w-full justify-start">
+                      <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                        Sign In
+                      </Link>
                     </Button>
-                    <Button 
-                      className="w-full shadow-sm"
-                      asChild
-                    >
-                      <Link to="/register">Get Started</Link>
+                    <Button size="sm" asChild className="w-full">
+                      <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                        Sign Up
+                      </Link>
                     </Button>
-                  </>
+                  </div>
                 )}
               </div>
             </div>
           </div>
         )}
-      </nav>
-    </header>
+      </div>
+    </nav>
   );
 };
 

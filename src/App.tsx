@@ -1,63 +1,52 @@
 
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { AuthProvider } from '@/contexts/AuthContext';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from '@/components/ui/toaster';
-import SecureErrorBoundary from '@/components/error/SecureErrorBoundary';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { AppRoutes } from '@/routing/AppRoutes';
-import { AppLayout } from '@/components/layout/AppLayout';
+import { MainLayout } from '@/components/layout/MainLayout';
 import { useAppSecurity } from '@/hooks/useAppSecurity';
+import { useErrorBoundary } from '@/hooks/useErrorBoundary';
+import '@/styles/enhanced-responsive.css';
 
-function App() {
-  const location = useLocation();
-
-  // Scroll to top on route change for better UX
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
-
-  // Initialize security monitoring and validation
+const AppContent: React.FC = () => {
   useAppSecurity();
+  const { ErrorBoundary } = useErrorBoundary();
 
   return (
+    <ErrorBoundary fallback={
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="text-center p-8">
+          <h1 className="text-2xl font-bold mb-4">Something went wrong</h1>
+          <p className="text-muted-foreground mb-4">
+            We're sorry, but something unexpected happened.
+          </p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
+          >
+            Reload Page
+          </button>
+        </div>
+      </div>
+    }>
+      <MainLayout>
+        <AppRoutes />
+      </MainLayout>
+    </ErrorBoundary>
+  );
+};
+
+function App() {
+  return (
     <HelmetProvider>
-      <ThemeProvider>
+      <BrowserRouter>
         <AuthProvider>
-          <SecureErrorBoundary>
-            <Helmet titleTemplate="%s | Accio" defaultTitle="Accio - AI-Powered Knowledge Management">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <meta name="X-Content-Type-Options" content="nosniff" />
-              <meta name="X-Frame-Options" content="DENY" />
-              <meta name="X-XSS-Protection" content="1; mode=block" />
-              <meta name="Referrer-Policy" content="strict-origin-when-cross-origin" />
-            </Helmet>
-            
-            {/* Skip link for accessibility */}
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium z-50 transition-all duration-200"
-              onClick={(e) => {
-                e.preventDefault();
-                const mainContent = document.getElementById('main-content');
-                if (mainContent) {
-                  mainContent.focus();
-                  mainContent.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Skip to main content
-            </a>
-            
-            <AppLayout>
-              <AppRoutes />
-            </AppLayout>
-            
-            <Toaster />
-          </SecureErrorBoundary>
+          <AppContent />
+          <Toaster />
         </AuthProvider>
-      </ThemeProvider>
+      </BrowserRouter>
     </HelmetProvider>
   );
 }
