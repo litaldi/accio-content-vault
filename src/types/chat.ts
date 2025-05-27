@@ -4,6 +4,7 @@ export interface ChatMessage {
   type: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  suggestions?: string[];
 }
 
 export interface AssistantMessage extends ChatMessage {

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
@@ -12,12 +13,11 @@ import {
   Sun,
   Brain
 } from 'lucide-react';
-import { useTheme } from "@/components/ui/theme-provider"
+import { useTheme } from "@/contexts/ThemeContext"
 
 const Navigation: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
-  const { setTheme } = useTheme();
 
   const navItems = [
     { name: 'Home', href: '/', icon: Home },
