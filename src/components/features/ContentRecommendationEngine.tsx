@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -13,7 +12,7 @@ import {
   Eye,
   ArrowRight,
   Filter,
-  Refresh,
+  RefreshCw,
   Target,
   Lightbulb,
   Users
@@ -127,7 +126,7 @@ export const ContentRecommendationEngine = () => {
               <Badge variant="secondary">AI-Powered</Badge>
             </CardTitle>
             <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshing}>
-              <Refresh className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
           </div>
