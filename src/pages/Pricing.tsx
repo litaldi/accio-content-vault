@@ -1,346 +1,342 @@
 
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Typography, Layout, Card } from '@/components/design-system/DesignSystem';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { 
   Check, 
   Star, 
   Zap, 
-  Users, 
-  Building,
-  ArrowRight,
-  Sparkles,
-  Crown,
-  Shield
+  Crown, 
+  Users,
+  Shield,
+  Infinity,
+  Clock
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const Pricing = () => {
+const Pricing: React.FC = () => {
   const [isAnnual, setIsAnnual] = useState(false);
 
   const plans = [
     {
-      id: 'free',
-      name: 'Free',
-      description: 'Perfect for individuals getting started',
+      name: 'Personal',
+      icon: Star,
+      description: 'Perfect for individual knowledge builders',
       monthlyPrice: 0,
       annualPrice: 0,
-      icon: Sparkles,
-      popular: false,
-      audience: 'individuals',
       features: [
-        '100 AI actions per month',
-        'Basic content saving',
-        '3 collections',
+        '1,000 saved items',
+        'Basic AI tagging',
         'Simple search',
-        'Web capture extension',
-        'Mobile app access'
+        'Web and mobile apps',
+        'Basic support'
       ],
-      buttonText: 'Start Free',
-      buttonVariant: 'outline' as const
-    },
-    {
-      id: 'pro',
-      name: 'Pro',
-      description: 'For power users and knowledge workers',
-      monthlyPrice: 9,
-      annualPrice: 89,
-      icon: Zap,
-      popular: true,
-      audience: 'individuals',
-      features: [
-        'Unlimited AI actions',
-        'Unlimited content saves',
-        'Unlimited collections',
-        'AI summarization',
-        'Smart auto-tagging',
-        'Export to Notion/Docs',
-        'Advanced search',
-        'Priority support',
-        'API access'
+      limitations: [
+        'Limited to 1,000 items',
+        'Basic search only',
+        'Community support'
       ],
-      buttonText: 'Start 7-Day Trial',
-      buttonVariant: 'default' as const
-    },
-    {
-      id: 'team',
-      name: 'Team',
-      description: 'For small businesses and teams',
-      monthlyPrice: 29,
-      annualPrice: 290,
-      icon: Users,
+      cta: 'Start Free',
       popular: false,
-      audience: 'business',
-      features: [
-        'Everything in Pro',
-        'Up to 10 team members',
-        'Shared collections',
-        'Team collaboration',
-        'Workspace branding',
-        'Team permissions',
-        'Shared analytics',
-        'Admin dashboard',
-        'Bulk operations'
-      ],
-      buttonText: 'Start Team Trial',
-      buttonVariant: 'outline' as const,
-      additionalInfo: '$3 per additional user'
+      href: '/register'
     },
     {
-      id: 'enterprise',
+      name: 'Professional',
+      icon: Zap,
+      description: 'For serious knowledge workers and creators',
+      monthlyPrice: 12,
+      annualPrice: 120,
+      features: [
+        'Unlimited saved items',
+        'Advanced AI organization',
+        'Semantic search',
+        'Knowledge graph',
+        'Browser extension',
+        'Export capabilities',
+        'Priority support'
+      ],
+      limitations: [],
+      cta: 'Start Free Trial',
+      popular: true,
+      href: '/register'
+    },
+    {
+      name: 'Team',
+      icon: Users,
+      description: 'Collaborate and share knowledge with your team',
+      monthlyPrice: 25,
+      annualPrice: 250,
+      features: [
+        'Everything in Professional',
+        'Team collaboration',
+        'Shared workspaces',
+        'Admin controls',
+        'Advanced analytics',
+        'Custom integrations',
+        'Dedicated support'
+      ],
+      limitations: [],
+      cta: 'Contact Sales',
+      popular: false,
+      href: '/contact'
+    },
+    {
       name: 'Enterprise',
-      description: 'For large organizations',
+      icon: Crown,
+      description: 'Advanced features for large organizations',
       monthlyPrice: null,
       annualPrice: null,
-      icon: Building,
-      popular: false,
-      audience: 'enterprise',
       features: [
         'Everything in Team',
-        'Unlimited team members',
-        'Custom integrations',
-        'Jira & Slack integration',
-        'SOC 2 compliance',
+        'SSO/SAML integration',
+        'Advanced security',
+        'Custom deployment',
+        'Dedicated account manager',
         'SLA guarantee',
-        'Dedicated support',
-        'Custom training',
-        'On-premise deployment'
+        'Custom training'
       ],
-      buttonText: 'Contact Sales',
-      buttonVariant: 'outline' as const
+      limitations: [],
+      cta: 'Contact Sales',
+      popular: false,
+      href: '/contact'
+    }
+  ];
+
+  const faqs = [
+    {
+      question: 'Can I change plans at any time?',
+      answer: 'Yes! You can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.'
+    },
+    {
+      question: 'Is there a free trial?',
+      answer: 'Yes, we offer a 14-day free trial for all paid plans. No credit card required to start.'
+    },
+    {
+      question: 'What happens to my data if I downgrade?',
+      answer: 'Your data is always safe. If you downgrade, you\'ll retain access to all your content, but some advanced features may be limited.'
+    },
+    {
+      question: 'Do you offer refunds?',
+      answer: 'Yes, we offer a 30-day money-back guarantee on all paid plans. Contact our support team for assistance.'
+    },
+    {
+      question: 'Can I export my data?',
+      answer: 'Absolutely! Professional and higher plans include full data export capabilities. You own your data.'
     }
   ];
 
   const getPrice = (plan: typeof plans[0]) => {
     if (plan.monthlyPrice === null) return 'Custom';
     if (plan.monthlyPrice === 0) return 'Free';
-    return isAnnual ? plan.annualPrice : plan.monthlyPrice;
-  };
-
-  const getPeriod = (plan: typeof plans[0]) => {
-    if (plan.monthlyPrice === null || plan.monthlyPrice === 0) return '';
-    return isAnnual ? '/year' : '/month';
+    
+    const price = isAnnual ? plan.annualPrice : plan.monthlyPrice;
+    const period = isAnnual ? '/year' : '/month';
+    
+    return `$${price}${period}`;
   };
 
   const getSavings = (plan: typeof plans[0]) => {
     if (plan.monthlyPrice === null || plan.monthlyPrice === 0) return null;
-    if (isAnnual && plan.monthlyPrice && plan.annualPrice) {
-      const monthlyTotal = plan.monthlyPrice * 12;
-      const savings = monthlyTotal - plan.annualPrice;
-      const percentage = Math.round((savings / monthlyTotal) * 100);
-      return `Save ${percentage}%`;
-    }
-    return null;
+    if (!isAnnual) return null;
+    
+    const monthlyCost = plan.monthlyPrice * 12;
+    const savings = monthlyCost - plan.annualPrice;
+    const percentage = Math.round((savings / monthlyCost) * 100);
+    
+    return `Save ${percentage}%`;
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
         <title>Pricing - Accio</title>
-        <meta name="description" content="Choose the perfect plan for your knowledge management needs. Start free and scale as you grow." />
+        <meta name="description" content="Choose the perfect Accio plan for your knowledge management needs." />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-16 max-w-7xl">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-6">
-            <Star className="h-3 w-3 mr-1" />
-            Transparent Pricing
-          </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Choose Your <span className="text-primary">Perfect Plan</span>
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8">
-            Start free and scale as your knowledge grows. No hidden fees, cancel anytime.
-          </p>
+      {/* Hero Section */}
+      <Layout.Section spacing="xl" background="primary">
+        <Layout.Container size="lg" className="text-center">
+          <Typography.H1 className="mb-4">
+            Simple, transparent pricing
+          </Typography.H1>
+          <Typography.Lead className="mb-8 max-w-3xl mx-auto">
+            Choose the plan that fits your knowledge management needs. 
+            Start free and upgrade as you grow.
+          </Typography.Lead>
 
-          {/* Annual/Monthly Toggle */}
+          {/* Billing Toggle */}
           <div className="flex items-center justify-center gap-4 mb-8">
-            <span className={`text-sm ${!isAnnual ? 'text-foreground' : 'text-muted-foreground'}`}>
+            <Label htmlFor="billing-toggle" className={!isAnnual ? 'font-medium' : ''}>
               Monthly
-            </span>
-            <Switch checked={isAnnual} onCheckedChange={setIsAnnual} />
-            <span className={`text-sm ${isAnnual ? 'text-foreground' : 'text-muted-foreground'}`}>
+            </Label>
+            <Switch
+              id="billing-toggle"
+              checked={isAnnual}
+              onCheckedChange={setIsAnnual}
+            />
+            <Label htmlFor="billing-toggle" className={isAnnual ? 'font-medium' : ''}>
               Annual
-            </span>
+            </Label>
             {isAnnual && (
               <Badge variant="secondary" className="ml-2">
-                Save up to 17%
+                Save up to 20%
               </Badge>
             )}
           </div>
-        </div>
+        </Layout.Container>
+      </Layout.Section>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          {plans.map((plan) => {
-            const savings = getSavings(plan);
-            return (
-              <Card 
-                key={plan.id} 
-                className={`relative ${plan.popular ? 'ring-2 ring-primary scale-105' : ''} hover:shadow-lg transition-all duration-200`}
+      {/* Pricing Cards */}
+      <Layout.Section spacing="xl">
+        <Layout.Container size="lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {plans.map((plan, index) => (
+              <Card.Root 
+                key={index} 
+                className={`relative p-6 ${plan.popular ? 'border-primary shadow-lg scale-105' : ''}`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <Badge className="bg-primary text-primary-foreground">
-                      Most Popular
-                    </Badge>
-                  </div>
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                    Most Popular
+                  </Badge>
                 )}
                 
-                <CardHeader className="text-center pb-6">
-                  <div className={`w-12 h-12 rounded-lg mx-auto mb-4 flex items-center justify-center ${
-                    plan.popular ? 'bg-primary text-primary-foreground' : 'bg-primary/10 text-primary'
-                  }`}>
-                    <plan.icon className="h-6 w-6" />
-                  </div>
-                  
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                  
-                  <div className="mt-4">
-                    <div className="flex items-center justify-center">
-                      {typeof getPrice(plan) === 'string' ? (
-                        <span className="text-3xl font-bold">{getPrice(plan)}</span>
-                      ) : (
-                        <>
-                          <span className="text-sm">$</span>
-                          <span className="text-4xl font-bold">{getPrice(plan)}</span>
-                        </>
+                <Card.Content>
+                  <div className="text-center mb-6">
+                    <div className="p-3 bg-primary/10 rounded-lg w-fit mx-auto mb-4">
+                      <plan.icon className="h-8 w-8 text-primary" />
+                    </div>
+                    <Typography.H3 className="mb-2">{plan.name}</Typography.H3>
+                    <Typography.Body className="text-sm text-muted-foreground mb-4">
+                      {plan.description}
+                    </Typography.Body>
+                    
+                    <div className="mb-2">
+                      <Typography.H2 className="text-3xl font-bold">
+                        {getPrice(plan)}
+                      </Typography.H2>
+                      {getSavings(plan) && (
+                        <Badge variant="secondary" className="mt-1">
+                          {getSavings(plan)}
+                        </Badge>
                       )}
                     </div>
-                    <span className="text-muted-foreground text-sm">{getPeriod(plan)}</span>
-                    {savings && (
-                      <Badge variant="outline" className="mt-2 text-green-600 border-green-200">
-                        {savings}
-                      </Badge>
-                    )}
-                    {plan.additionalInfo && (
-                      <p className="text-xs text-muted-foreground mt-2">{plan.additionalInfo}</p>
-                    )}
                   </div>
-                  
-                  <CardDescription className="mt-4">{plan.description}</CardDescription>
-                </CardHeader>
-                
-                <CardContent className="space-y-6">
-                  <Button 
-                    className="w-full" 
-                    variant={plan.buttonVariant}
-                    size="lg"
-                    asChild
-                  >
-                    <Link to={plan.id === 'enterprise' ? '/contact' : '/register'}>
-                      {plan.buttonText}
-                    </Link>
-                  </Button>
-                  
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <Check className="h-4 w-4 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm leading-relaxed">{feature}</span>
-                      </li>
+
+                  <div className="space-y-3 mb-6">
+                    {plan.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <Check className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                        <Typography.Body className="text-sm">{feature}</Typography.Body>
+                      </div>
                     ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                  </div>
 
-        {/* Feature Comparison Table */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-center mb-8">Compare All Features</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full border border-border rounded-lg overflow-hidden">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="text-left p-4 font-medium">Features</th>
-                  <th className="text-center p-4 font-medium">Free</th>
-                  <th className="text-center p-4 font-medium">Pro</th>
-                  <th className="text-center p-4 font-medium">Team</th>
-                  <th className="text-center p-4 font-medium">Enterprise</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { feature: 'AI Actions per month', free: '100', pro: 'Unlimited', team: 'Unlimited', enterprise: 'Unlimited' },
-                  { feature: 'Content Saves', free: 'Basic', pro: 'Unlimited', team: 'Unlimited', enterprise: 'Unlimited' },
-                  { feature: 'Collections', free: '3', pro: 'Unlimited', team: 'Unlimited', enterprise: 'Unlimited' },
-                  { feature: 'Team Members', free: '1', pro: '1', team: '10', enterprise: 'Unlimited' },
-                  { feature: 'AI Summarization', free: '✗', pro: '✓', team: '✓', enterprise: '✓' },
-                  { feature: 'Export to Notion/Docs', free: '✗', pro: '✓', team: '✓', enterprise: '✓' },
-                  { feature: 'API Access', free: '✗', pro: '✓', team: '✓', enterprise: '✓' },
-                  { feature: 'Priority Support', free: '✗', pro: '✓', team: '✓', enterprise: '✓' },
-                  { feature: 'SOC 2 Compliance', free: '✗', pro: '✗', team: '✗', enterprise: '✓' },
-                ].map((row, index) => (
-                  <tr key={index} className="border-t border-border">
-                    <td className="p-4 font-medium">{row.feature}</td>
-                    <td className="p-4 text-center">{row.free}</td>
-                    <td className="p-4 text-center">{row.pro}</td>
-                    <td className="p-4 text-center">{row.team}</td>
-                    <td className="p-4 text-center">{row.enterprise}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                  <EnhancedButton 
+                    asChild 
+                    className="w-full"
+                    variant={plan.popular ? 'default' : 'outline'}
+                  >
+                    <Link to={plan.href}>{plan.cta}</Link>
+                  </EnhancedButton>
+                </Card.Content>
+              </Card.Root>
+            ))}
           </div>
-        </div>
+        </Layout.Container>
+      </Layout.Section>
 
-        {/* FAQ Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          <div>
-            <h3 className="text-xl font-bold mb-4">Frequently Asked Questions</h3>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-medium mb-2">Can I change plans anytime?</h4>
-                <p className="text-muted-foreground text-sm">Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.</p>
-              </div>
-              <div>
-                <h4 className="font-medium mb-2">Is there a free trial?</h4>
-                <p className="text-muted-foreground text-sm">Yes! Pro and Team plans include a 7-day free trial with full access to all features.</p>
-              </div>
-            </div>
+      {/* Features Comparison */}
+      <Layout.Section spacing="xl" background="muted">
+        <Layout.Container size="lg">
+          <div className="text-center mb-12">
+            <Typography.H2 className="mb-4">All plans include</Typography.H2>
+            <Typography.Lead>
+              Core features available across all pricing tiers
+            </Typography.Lead>
           </div>
-          <div>
-            <h3 className="text-xl font-bold mb-4">Need Help Choosing?</h3>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-medium mb-2">For individuals</h4>
-                <p className="text-muted-foreground text-sm">Start with Free, upgrade to Pro when you need unlimited AI actions and advanced features.</p>
-              </div>
-              <div>
-                <h4 className="font-medium mb-2">For teams</h4>
-                <p className="text-muted-foreground text-sm">Choose Team for collaboration features, or Enterprise for large organizations with compliance needs.</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Trust Indicators */}
-        <div className="text-center bg-muted/30 rounded-lg p-8">
-          <div className="flex items-center justify-center gap-6 mb-4">
-            <div className="flex items-center gap-2">
-              <Shield className="h-5 w-5 text-green-500" />
-              <span className="text-sm font-medium">SOC 2 Compliant</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Crown className="h-5 w-5 text-yellow-500" />
-              <span className="text-sm font-medium">99.9% Uptime SLA</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Check className="h-5 w-5 text-green-500" />
-              <span className="text-sm font-medium">30-Day Money Back</span>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <Card.Root className="p-6 text-center">
+              <Card.Content>
+                <Shield className="h-8 w-8 text-primary mx-auto mb-4" />
+                <Typography.H3 className="mb-2">Security & Privacy</Typography.H3>
+                <Typography.Body className="text-sm text-muted-foreground">
+                  End-to-end encryption, GDPR compliance, and privacy-first design
+                </Typography.Body>
+              </Card.Content>
+            </Card.Root>
+
+            <Card.Root className="p-6 text-center">
+              <Card.Content>
+                <Clock className="h-8 w-8 text-primary mx-auto mb-4" />
+                <Typography.H3 className="mb-2">99.9% Uptime</Typography.H3>
+                <Typography.Body className="text-sm text-muted-foreground">
+                  Reliable service with redundant infrastructure and monitoring
+                </Typography.Body>
+              </Card.Content>
+            </Card.Root>
+
+            <Card.Root className="p-6 text-center">
+              <Card.Content>
+                <Infinity className="h-8 w-8 text-primary mx-auto mb-4" />
+                <Typography.H3 className="mb-2">Regular Updates</Typography.H3>
+                <Typography.Body className="text-sm text-muted-foreground">
+                  Continuous feature improvements and AI model enhancements
+                </Typography.Body>
+              </Card.Content>
+            </Card.Root>
           </div>
-          <p className="text-muted-foreground">
-            Trusted by thousands of professionals and teams worldwide
-          </p>
-        </div>
-      </div>
+        </Layout.Container>
+      </Layout.Section>
+
+      {/* FAQ Section */}
+      <Layout.Section spacing="xl">
+        <Layout.Container size="md">
+          <div className="text-center mb-12">
+            <Typography.H2 className="mb-4">Frequently Asked Questions</Typography.H2>
+            <Typography.Lead>
+              Everything you need to know about our pricing
+            </Typography.Lead>
+          </div>
+
+          <div className="space-y-6">
+            {faqs.map((faq, index) => (
+              <Card.Root key={index}>
+                <Card.Content className="p-6">
+                  <Typography.H3 className="mb-3">{faq.question}</Typography.H3>
+                  <Typography.Body className="text-muted-foreground">
+                    {faq.answer}
+                  </Typography.Body>
+                </Card.Content>
+              </Card.Root>
+            ))}
+          </div>
+        </Layout.Container>
+      </Layout.Section>
+
+      {/* CTA Section */}
+      <Layout.Section spacing="xl" background="primary">
+        <Layout.Container size="md" className="text-center">
+          <Typography.H2 className="mb-4">Ready to get started?</Typography.H2>
+          <Typography.Lead className="mb-8">
+            Join thousands of users who are building their knowledge empire with Accio.
+          </Typography.Lead>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <EnhancedButton size="lg" asChild>
+              <Link to="/register">Start Free Trial</Link>
+            </EnhancedButton>
+            <EnhancedButton variant="outline" size="lg" asChild>
+              <Link to="/contact">Talk to Sales</Link>
+            </EnhancedButton>
+          </div>
+        </Layout.Container>
+      </Layout.Section>
     </div>
   );
 };

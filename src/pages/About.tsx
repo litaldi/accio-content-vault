@@ -1,246 +1,269 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Typography, Layout, Card } from '@/components/design-system/DesignSystem';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
 import { Badge } from '@/components/ui/badge';
 import { 
-  Brain, 
-  Users, 
   Target, 
-  Sparkles,
-  Globe,
-  Shield,
-  Zap,
+  Users, 
+  Lightbulb, 
+  Award, 
   Heart,
-  ArrowRight,
-  CheckCircle
+  Zap,
+  Globe,
+  TrendingUp
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const About = () => {
+const About: React.FC = () => {
   const values = [
     {
-      icon: Brain,
-      title: 'Intelligence',
-      description: 'We believe AI should enhance human intelligence, not replace it.'
-    },
-    {
-      icon: Shield,
-      title: 'Privacy',
-      description: 'Your knowledge is yours. We protect your data with enterprise-grade security.'
-    },
-    {
       icon: Heart,
-      title: 'Simplicity',
-      description: 'Complex problems deserve elegant solutions that anyone can use.'
+      title: 'User-Centric',
+      description: 'Everything we build starts with understanding what our users truly need.'
+    },
+    {
+      icon: Lightbulb,
+      title: 'Innovation',
+      description: 'We constantly push the boundaries of what\'s possible with AI and technology.'
     },
     {
       icon: Globe,
       title: 'Accessibility',
-      description: 'Knowledge organization should be available to everyone, everywhere.'
-    }
-  ];
-
-  const milestones = [
-    {
-      year: '2024',
-      title: 'Accio Founded',
-      description: 'Started with a vision to transform how people organize knowledge'
+      description: 'Knowledge management should be accessible to everyone, everywhere.'
     },
     {
-      year: '2024',
-      title: 'AI Integration',
-      description: 'Launched intelligent content organization and search capabilities'
-    },
-    {
-      year: '2024',
-      title: 'Community Growth',
-      description: 'Reached 10,000+ active users building their knowledge empires'
-    },
-    {
-      year: '2025',
-      title: 'Global Expansion',
-      description: 'Expanding to serve knowledge workers worldwide'
+      icon: Award,
+      title: 'Excellence',
+      description: 'We strive for excellence in every feature, interaction, and experience.'
     }
   ];
 
   const stats = [
-    { number: '10,000+', label: 'Active Users' },
-    { number: '2M+', label: 'Items Saved' },
+    { number: '50K+', label: 'Active Users' },
+    { number: '1M+', label: 'Saved Articles' },
     { number: '99.9%', label: 'Uptime' },
-    { number: '150+', label: 'Countries' }
+    { number: '24/7', label: 'Support' }
+  ];
+
+  const team = [
+    {
+      name: 'Sarah Chen',
+      role: 'CEO & Co-founder',
+      bio: 'Former AI researcher at Stanford, passionate about democratizing knowledge management.',
+      avatar: '👩‍💼'
+    },
+    {
+      name: 'Michael Rodriguez',
+      role: 'CTO & Co-founder',
+      bio: 'Ex-Google engineer with 10+ years in AI and machine learning systems.',
+      avatar: '👨‍💻'
+    },
+    {
+      name: 'Emily Thompson',
+      role: 'Head of Product',
+      bio: 'Product leader focused on creating intuitive experiences for knowledge workers.',
+      avatar: '👩‍🎨'
+    },
+    {
+      name: 'David Park',
+      role: 'Head of Engineering',
+      bio: 'Full-stack architect passionate about building scalable, reliable systems.',
+      avatar: '👨‍🔧'
+    }
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <Helmet>
-        <title>About Us - Accio</title>
-        <meta name="description" content="Learn about Accio's mission to transform how people organize and discover knowledge using AI." />
+        <title>About - Accio</title>
+        <meta name="description" content="Learn about Accio's mission to revolutionize knowledge management with AI." />
       </Helmet>
 
       {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
-        <div className="container mx-auto px-4 text-center max-w-4xl">
-          <Badge variant="secondary" className="mb-6">
-            <Sparkles className="h-3 w-3 mr-1" />
-            About Accio
+      <Layout.Section spacing="xl" background="primary">
+        <Layout.Container size="lg" className="text-center">
+          <Badge variant="outline" className="mb-6">
+            <Target className="h-3 w-3 mr-2" />
+            Our Mission
           </Badge>
-          <h1 className="text-5xl font-bold mb-6">
-            Building the future of
-            <span className="text-primary block">knowledge organization</span>
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-            We're on a mission to help millions of people transform information chaos 
-            into organized intelligence, making knowledge work more effective and enjoyable.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" asChild>
-              <Link to="/register">
-                Start Building Today
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button variant="outline" size="lg" asChild>
-              <Link to="/features">Learn More</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+          
+          <Typography.H1 className="mb-6">
+            Democratizing knowledge management
+            <span className="block bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
+              for everyone
+            </span>
+          </Typography.H1>
+          
+          <Typography.Lead className="mb-8 max-w-3xl mx-auto">
+            We believe that everyone deserves access to powerful tools for organizing and 
+            discovering knowledge. That's why we're building Accio - to make AI-powered 
+            knowledge management accessible to all.
+          </Typography.Lead>
 
-      {/* Stats */}
-      <section className="py-16 border-y bg-muted/20">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <EnhancedButton size="lg" asChild>
+            <Link to="/features">See What We've Built</Link>
+          </EnhancedButton>
+        </Layout.Container>
+      </Layout.Section>
+
+      {/* Stats Section */}
+      <Layout.Section spacing="lg" background="muted">
+        <Layout.Container size="lg">
+          <Layout.Grid columns={4} gap="lg">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl font-bold text-primary mb-2">{stat.number}</div>
-                <div className="text-muted-foreground">{stat.label}</div>
-              </div>
+              <Card.Root key={index} className="text-center p-6">
+                <Card.Content>
+                  <Typography.H2 className="text-3xl font-bold text-primary mb-2">
+                    {stat.number}
+                  </Typography.H2>
+                  <Typography.Body className="text-muted-foreground">
+                    {stat.label}
+                  </Typography.Body>
+                </Card.Content>
+              </Card.Root>
             ))}
-          </div>
-        </div>
-      </section>
+          </Layout.Grid>
+        </Layout.Container>
+      </Layout.Section>
 
-      {/* Mission */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      {/* Story Section */}
+      <Layout.Section spacing="xl">
+        <Layout.Container size="lg">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Our Mission</h2>
-              <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                In a world overflowing with information, we believe that the ability to 
-                organize, find, and connect knowledge is a superpower. Accio exists to 
-                give this superpower to everyone.
-              </p>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold">Eliminate Information Overload</h4>
-                    <p className="text-muted-foreground">Turn chaos into clarity with AI-powered organization</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold">Enhance Human Intelligence</h4>
-                    <p className="text-muted-foreground">Augment your thinking with intelligent tools</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold">Democratize Knowledge Work</h4>
-                    <p className="text-muted-foreground">Make powerful tools accessible to everyone</p>
-                  </div>
-                </div>
+              <Typography.H2 className="mb-6">Our Story</Typography.H2>
+              <div className="space-y-4 text-muted-foreground">
+                <Typography.Body>
+                  Accio was born from a simple frustration: despite having access to more information 
+                  than ever before, we were losing track of valuable knowledge every day. Bookmarks 
+                  became digital graveyards, notes scattered across multiple apps, and brilliant 
+                  insights vanished into the void.
+                </Typography.Body>
+                <Typography.Body>
+                  Our founders, Sarah and Michael, experienced this firsthand during their time in 
+                  academia and big tech. They spent countless hours re-researching topics they knew 
+                  they had seen before, simply because they couldn't find or remember where they 
+                  had saved the information.
+                </Typography.Body>
+                <Typography.Body>
+                  That's when they realized: what if AI could help us not just save information, 
+                  but truly organize and understand it? What if our personal knowledge base could 
+                  grow smarter with every piece of content we add?
+                </Typography.Body>
+                <Typography.Body>
+                  Today, Accio serves over 50,000 knowledge workers, students, and curious minds 
+                  who want to build their own personal intelligence empire.
+                </Typography.Body>
               </div>
             </div>
-            <div className="relative">
-              <div className="w-full h-96 bg-gradient-to-br from-primary/20 to-purple-600/20 rounded-2xl flex items-center justify-center">
-                <Brain className="h-24 w-24 text-primary" />
-              </div>
-            </div>
+            
+            <Card.Root className="p-8">
+              <Card.Content>
+                <div className="text-center">
+                  <Zap className="h-12 w-12 text-primary mx-auto mb-4" />
+                  <Typography.H3 className="mb-4">The Vision</Typography.H3>
+                  <Typography.Body className="text-muted-foreground">
+                    "We envision a world where everyone has a personal AI assistant that helps 
+                    them capture, organize, and discover knowledge effortlessly. Where information 
+                    overload becomes information empowerment."
+                  </Typography.Body>
+                  <div className="mt-6 pt-6 border-t">
+                    <Typography.Caption className="font-medium">Sarah Chen, CEO</Typography.Caption>
+                  </div>
+                </div>
+              </Card.Content>
+            </Card.Root>
           </div>
-        </div>
-      </section>
+        </Layout.Container>
+      </Layout.Section>
 
-      {/* Values */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4 max-w-6xl">
+      {/* Values Section */}
+      <Layout.Section spacing="xl" background="muted">
+        <Layout.Container size="lg">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Our Values</h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              These principles guide everything we do, from product development to customer support.
-            </p>
+            <Typography.H2 className="mb-4">Our Values</Typography.H2>
+            <Typography.Lead>
+              The principles that guide everything we do at Accio
+            </Typography.Lead>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+
+          <Layout.Grid columns={2} gap="lg">
             {values.map((value, index) => (
-              <Card key={index} className="text-center">
-                <CardHeader>
-                  <value.icon className="h-12 w-12 text-primary mx-auto mb-4" />
-                  <CardTitle className="text-lg">{value.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription>{value.description}</CardDescription>
-                </CardContent>
-              </Card>
+              <Card.Root key={index} className="p-6">
+                <Card.Content>
+                  <div className="flex items-start gap-4">
+                    <div className="p-3 bg-primary/10 rounded-lg flex-shrink-0">
+                      <value.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <Typography.H3 className="mb-2">{value.title}</Typography.H3>
+                      <Typography.Body className="text-muted-foreground">
+                        {value.description}
+                      </Typography.Body>
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card.Root>
             ))}
-          </div>
-        </div>
-      </section>
+          </Layout.Grid>
+        </Layout.Container>
+      </Layout.Section>
 
-      {/* Timeline */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-4xl">
+      {/* Team Section */}
+      <Layout.Section spacing="xl">
+        <Layout.Container size="lg">
           <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Our Journey</h2>
-            <p className="text-lg text-muted-foreground">
-              From concept to community - here's how we're building the future of knowledge work.
-            </p>
+            <Typography.H2 className="mb-4">Meet the Team</Typography.H2>
+            <Typography.Lead>
+              The brilliant minds building the future of knowledge management
+            </Typography.Lead>
           </div>
-          <div className="space-y-8">
-            {milestones.map((milestone, index) => (
-              <div key={index} className="flex gap-6 items-start">
-                <div className="flex-shrink-0">
-                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold">
-                    {index + 1}
-                  </div>
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="text-lg font-semibold">{milestone.title}</h3>
-                    <Badge variant="outline">{milestone.year}</Badge>
-                  </div>
-                  <p className="text-muted-foreground">{milestone.description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
-      {/* CTA */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center max-w-4xl">
-          <h2 className="text-3xl font-bold mb-6">Ready to join the knowledge revolution?</h2>
-          <p className="text-xl opacity-90 mb-8">
-            Join thousands of professionals who are already building their knowledge empires with Accio.
-          </p>
+          <Layout.Grid columns={2} gap="lg">
+            {team.map((member, index) => (
+              <Card.Root key={index} className="p-6">
+                <Card.Content>
+                  <div className="flex items-start gap-4">
+                    <div className="text-4xl">{member.avatar}</div>
+                    <div>
+                      <Typography.H3 className="mb-1">{member.name}</Typography.H3>
+                      <Typography.Body className="text-primary font-medium mb-3">
+                        {member.role}
+                      </Typography.Body>
+                      <Typography.Body className="text-muted-foreground text-sm">
+                        {member.bio}
+                      </Typography.Body>
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card.Root>
+            ))}
+          </Layout.Grid>
+        </Layout.Container>
+      </Layout.Section>
+
+      {/* Join Us Section */}
+      <Layout.Section spacing="xl" background="primary">
+        <Layout.Container size="md" className="text-center">
+          <Users className="h-12 w-12 mx-auto mb-6 text-primary-foreground" />
+          <Typography.H2 className="mb-4">Join Our Journey</Typography.H2>
+          <Typography.Lead className="mb-8">
+            We're always looking for passionate people who want to help shape the future 
+            of knowledge management. Whether you're a user, contributor, or potential team member.
+          </Typography.Lead>
+          
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary" asChild>
-              <Link to="/register">
-                Start Free Today
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
+            <EnhancedButton size="lg" asChild>
+              <Link to="/register">Try Accio Free</Link>
+            </EnhancedButton>
+            <EnhancedButton variant="outline" size="lg" asChild>
               <Link to="/contact">Get in Touch</Link>
-            </Button>
+            </EnhancedButton>
           </div>
-        </div>
-      </section>
+        </Layout.Container>
+      </Layout.Section>
     </div>
   );
 };

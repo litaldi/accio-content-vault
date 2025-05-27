@@ -11,48 +11,15 @@ const EnhancedHome = React.lazy(() => import('@/pages/EnhancedHome'));
 const Login = React.lazy(() => import('@/pages/Login'));
 const Register = React.lazy(() => import('@/pages/Register'));
 const Help = React.lazy(() => import('@/pages/Help'));
+const Features = React.lazy(() => import('@/pages/Features'));
+const Contact = React.lazy(() => import('@/pages/Contact'));
+const About = React.lazy(() => import('@/pages/About'));
+const Pricing = React.lazy(() => import('@/pages/Pricing'));
 
 // Protected Pages
 const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
 const Profile = React.lazy(() => import('@/pages/Profile'));
 const Settings = React.lazy(() => import('@/pages/Settings'));
-
-// === PLACEHOLDER COMPONENTS FOR FUTURE PAGES ===
-const Features = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-4">Features</h1>
-      <p className="text-muted-foreground">Coming soon - detailed feature showcase</p>
-    </div>
-  </div>
-);
-
-const Pricing = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-4">Pricing</h1>
-      <p className="text-muted-foreground">Coming soon - transparent pricing plans</p>
-    </div>
-  </div>
-);
-
-const About = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-4">About Accio</h1>
-      <p className="text-muted-foreground">Coming soon - our story and mission</p>
-    </div>
-  </div>
-);
-
-const Contact = () => (
-  <div className="min-h-screen flex items-center justify-center">
-    <div className="text-center">
-      <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-      <p className="text-muted-foreground">Coming soon - get in touch with our team</p>
-    </div>
-  </div>
-);
 
 // === ERROR BOUNDARY FOR ROUTE-LEVEL ERRORS ===
 const RouteErrorBoundary = ({ children }: { children: React.ReactNode }) => {
