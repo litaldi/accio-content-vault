@@ -1,7 +1,8 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { SkipLink } from '@/components/ui/skip-link';
-import HeroSection from '@/components/home/HeroSection';
+import { HeroSection } from '@/components/home/HeroSection';
 import ConsolidatedFeaturesSection from '@/components/features/ConsolidatedFeaturesSection';
 import { Layout } from '@/components/design-system/DesignSystem';
 
