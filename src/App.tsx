@@ -20,9 +20,9 @@ import Settings from '@/pages/EnhancedSettings';
 import Pricing from '@/pages/Pricing';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import AIFeatures from '@/pages/AIFeatures';
 import { EnhancedQuickCaptureWidget } from '@/components/QuickCapture/EnhancedQuickCaptureWidget';
 import { AIContentAssistant } from '@/components/ai/AIContentAssistant';
-import AIFeatures from '@/pages/AIFeatures';
 
 function App() {
   return (
@@ -38,19 +38,20 @@ function App() {
                   <main className="flex-1 relative" role="main">
                     <Routes>
                       <Route path="/" element={<Home />} />
+                      <Route path="/features" element={<Features />} />
+                      <Route path="/ai-features" element={<AIFeatures />} />
+                      <Route path="/pricing" element={<Pricing />} />
                       <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/search" element={<Search />} />
                       <Route path="/saved" element={<SavedContent />} />
+                      <Route path="/save" element={<SaveContent />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      {/* Legacy route redirects */}
                       <Route path="/collections" element={<SavedContent />} />
                       <Route path="/analytics" element={<Dashboard />} />
                       <Route path="/profile" element={<Settings />} />
-                      <Route path="/features" element={<Features />} />
-                      <Route path="/ai-features" element={<AIFeatures />} />
-                      <Route path="/search" element={<Search />} />
-                      <Route path="/save" element={<SaveContent />} />
-                      <Route path="/settings" element={<Settings />} />
-                      <Route path="/pricing" element={<Pricing />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/register" element={<Register />} />
                     </Routes>
                   </main>
                   <EnhancedGlobalFooter />

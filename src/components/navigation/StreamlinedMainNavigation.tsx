@@ -23,12 +23,8 @@ import {
   Moon,
   Zap,
   Plus,
-  MoreHorizontal,
   CreditCard,
-  HelpCircle,
-  MessageCircle,
-  FileText,
-  User
+  HelpCircle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -40,7 +36,6 @@ const StreamlinedMainNavigation: React.FC = () => {
   const { toast } = useToast();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [showMoreDropdown, setShowMoreDropdown] = useState(false);
 
   // Handle scroll for header shadow
   useEffect(() => {
@@ -52,7 +47,6 @@ const StreamlinedMainNavigation: React.FC = () => {
   // Close mobile menu on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
-    setShowMoreDropdown(false);
   }, [location.pathname]);
 
   const handleSignOut = async () => {
@@ -78,24 +72,15 @@ const StreamlinedMainNavigation: React.FC = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Core navigation items
-  const coreNavItems = [
+  // Streamlined navigation items - removed "More" category
+  const navigationItems = [
     { to: '/', label: 'Home', icon: Home, description: 'Welcome home' },
     { to: '/features', label: 'Features', icon: Zap, description: 'Explore capabilities' },
+    { to: '/pricing', label: 'Pricing', icon: CreditCard, description: 'View plans' },
     ...(user ? [
       { to: '/dashboard', label: 'Dashboard', icon: BarChart3, description: 'Your workspace' },
       { to: '/search', label: 'Search', icon: Search, description: 'Find content' },
-      { to: '/saved', label: 'Saved', icon: FolderOpen, description: 'Your collections' }
-    ] : [])
-  ];
-
-  // More dropdown items
-  const moreNavItems = [
-    { to: '/pricing', label: 'Pricing', icon: CreditCard, description: 'View plans' },
-    { to: '/help', label: 'Help', icon: HelpCircle, description: 'Get support' },
-    { to: '/contact', label: 'Contact', icon: MessageCircle, description: 'Get in touch' },
-    { to: '/blog', label: 'Blog', icon: FileText, description: 'Latest updates' },
-    ...(user ? [
+      { to: '/saved', label: 'Saved', icon: FolderOpen, description: 'Your collections' },
       { to: '/settings', label: 'Settings', icon: Settings, description: 'Account settings' }
     ] : [])
   ];
@@ -144,7 +129,7 @@ const StreamlinedMainNavigation: React.FC = () => {
 
             {/* Desktop Navigation */}
             <nav className="hidden lg:flex items-center space-x-1" role="navigation" aria-label="Main navigation">
-              {coreNavItems.map((item) => (
+              {navigationItems.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
@@ -163,47 +148,6 @@ const StreamlinedMainNavigation: React.FC = () => {
                   <span>{item.label}</span>
                 </Link>
               ))}
-              
-              {/* More dropdown */}
-              <div className="relative">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="gap-2 text-muted-foreground hover:text-foreground hover:bg-accent"
-                  onMouseEnter={() => setShowMoreDropdown(true)}
-                  onMouseLeave={() => setShowMoreDropdown(false)}
-                  aria-expanded={showMoreDropdown}
-                  aria-haspopup="true"
-                  aria-label="More navigation options"
-                >
-                  <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
-                  <span>More</span>
-                </Button>
-                
-                {showMoreDropdown && (
-                  <div 
-                    className="absolute top-full right-0 mt-2 w-48 bg-popover border rounded-lg shadow-lg z-50 animate-fade-in"
-                    onMouseEnter={() => setShowMoreDropdown(true)}
-                    onMouseLeave={() => setShowMoreDropdown(false)}
-                    role="menu"
-                    aria-label="More navigation menu"
-                  >
-                    <div className="p-2 space-y-1">
-                      {moreNavItems.map((item) => (
-                        <Link
-                          key={item.to}
-                          to={item.to}
-                          className="flex items-center gap-2 px-3 py-2 rounded-md text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
-                          role="menuitem"
-                        >
-                          <item.icon className="h-4 w-4" aria-hidden="true" />
-                          <span>{item.label}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
             </nav>
 
             {/* Desktop Actions */}
@@ -351,13 +295,13 @@ const StreamlinedMainNavigation: React.FC = () => {
             aria-label="Mobile navigation menu"
           >
             <div className="container mx-auto px-4 py-6 space-y-6">
-              {/* Core Navigation */}
+              {/* Main Navigation */}
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3 px-2">
                   Navigate
                 </h3>
                 <nav className="space-y-1" role="none">
-                  {coreNavItems.map((item) => (
+                  {navigationItems.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
@@ -383,35 +327,22 @@ const StreamlinedMainNavigation: React.FC = () => {
                 </nav>
               </div>
 
-              {/* More Navigation */}
+              {/* Additional Links */}
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-3 px-2">
-                  More
+                  Support
                 </h3>
                 <nav className="space-y-1" role="none">
-                  {moreNavItems.map((item) => (
-                    <Link
-                      key={item.to}
-                      to={item.to}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={cn(
-                        "flex items-center gap-3 px-3 py-3 rounded-lg transition-all font-medium",
-                        "hover:bg-accent hover:text-accent-foreground",
-                        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1",
-                        isActiveRoute(item.to) 
-                          ? "bg-primary text-primary-foreground shadow-md" 
-                          : "text-muted-foreground hover:text-foreground"
-                      )}
-                      aria-current={isActiveRoute(item.to) ? 'page' : undefined}
-                      role="menuitem"
-                    >
-                      <item.icon className="h-5 w-5" aria-hidden="true" />
-                      <div>
-                        <div className="font-medium">{item.label}</div>
-                        <div className="text-xs opacity-70">{item.description}</div>
-                      </div>
-                    </Link>
-                  ))}
+                  <a
+                    href="mailto:support@accio.app"
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg transition-all font-medium text-muted-foreground hover:text-foreground hover:bg-accent"
+                  >
+                    <HelpCircle className="h-5 w-5" aria-hidden="true" />
+                    <div>
+                      <div className="font-medium">Help & Support</div>
+                      <div className="text-xs opacity-70">Get assistance</div>
+                    </div>
+                  </a>
                 </nav>
               </div>
 
