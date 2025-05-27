@@ -41,9 +41,24 @@ function App() {
   }, [location.pathname]);
 
   // Determine if we should show the footer based on the route
-  const shouldShowFooter = !location.pathname.includes('/dashboard');
+  const shouldShowFooter = !location.pathname.includes('/dashboard') && 
+                          !location.pathname.includes('/profile') &&
+                          !location.pathname.includes('/saved') &&
+                          !location.pathname.includes('/save') &&
+                          !location.pathname.includes('/collections') &&
+                          !location.pathname.includes('/activity') &&
+                          !location.pathname.includes('/settings');
+  
   const shouldShowMobileNav = !location.pathname.includes('/login') && 
                              !location.pathname.includes('/register');
+
+  const isAuthenticatedRoute = location.pathname.includes('/dashboard') ||
+                              location.pathname.includes('/profile') ||
+                              location.pathname.includes('/saved') ||
+                              location.pathname.includes('/save') ||
+                              location.pathname.includes('/collections') ||
+                              location.pathname.includes('/activity') ||
+                              location.pathname.includes('/settings');
 
   return (
     <HelmetProvider>
@@ -52,11 +67,11 @@ function App() {
           <Helmet titleTemplate="%s | Accio" defaultTitle="Accio - AI-Powered Knowledge Management" />
           
           <div className="flex flex-col min-h-screen">
-            <MainNavigation />
+            {!isAuthenticatedRoute && <MainNavigation />}
             
             <main className="flex-1">
               <Routes>
-                {/* Existing routes */}
+                {/* Public routes */}
                 <Route path="/" element={<Index />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
@@ -69,14 +84,12 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
-                
-                {/* New mega menu routes */}
                 <Route path="/collections" element={<Collections />} />
                 <Route path="/tutorials" element={<Tutorials />} />
                 <Route path="/activity" element={<Activity />} />
                 <Route path="/accessibility" element={<Accessibility />} />
                 
-                {/* Protected routes */}
+                {/* Protected routes with internal navigation */}
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <Dashboard />

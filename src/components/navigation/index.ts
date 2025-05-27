@@ -13,3 +13,4 @@ export { default as CleanNavigation } from './CleanNavigation';
 export { UnifiedMainNavigation } from './UnifiedMainNavigation';
 export { default as MainNavigation } from './MainNavigation';
 export { default as MegaMenuNavigation } from './MegaMenuNavigation';
+export { default as InternalNavigation } from './InternalNavigation';
