@@ -4,7 +4,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
-import EnhancedMainNavigation from '@/components/navigation/EnhancedMainNavigation';
+import ResponsiveMainNavigation from '@/components/navigation/ResponsiveMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
 import { QuickActionBar } from '@/components/ui/quick-action-bar';
 import Home from '@/pages/Home';
@@ -13,7 +13,7 @@ import SavedContent from '@/pages/SavedContent';
 import Features from '@/pages/Features';
 import Search from '@/pages/Search';
 import SaveContent from '@/pages/SaveContent';
-import Settings from '@/pages/Settings';
+import Settings from '@/pages/EnhancedSettings';
 import Pricing from '@/pages/Pricing';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
@@ -29,8 +29,8 @@ function App() {
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <KeyboardShortcutsProvider>
               <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
-                <EnhancedMainNavigation />
-                <main className="flex-1">
+                <ResponsiveMainNavigation />
+                <main className="flex-1 relative">
                   <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/dashboard" element={<Dashboard />} />
