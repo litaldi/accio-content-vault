@@ -3,7 +3,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { DEMO_CREDENTIALS, createDemoUser, isDemoUser } from '@/data/demoUser';
+import { DEMO_CREDENTIALS, isDemoEmail, getDemoUserRole } from '@/data/demoCredentials';
+import { cleanupAuthState } from '@/utils/authUtils';
 
 interface AuthContextType {
   user: User | null;
@@ -31,6 +32,35 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
+const createDemoUser = (email: string): User => {
+  const role = getDemoUserRole(email);
+  const isAdmin = role === 'admin';
+  
+  return {
+    id: `demo-user-${role}`,
+    email,
+    email_confirmed_at: new Date().toISOString(),
+    phone: '',
+    confirmed_at: new Date().toISOString(),
+    last_sign_in_at: new Date().toISOString(),
+    app_metadata: {
+      provider: 'email',
+      providers: ['email'],
+      role: role || 'user'
+    },
+    user_metadata: {
+      full_name: isAdmin ? 'Admin Demo User' : 'Demo User',
+      name: isAdmin ? 'Admin Demo User' : 'Demo User',
+      role: role || 'user',
+      is_demo: true
+    },
+    aud: 'authenticated',
+    created_at: '2024-01-01T00:00:00.000Z',
+    updated_at: new Date().toISOString(),
+    role: 'authenticated'
+  };
+};
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
@@ -50,8 +80,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // Check if user is in demo mode
         if (session?.user) {
-          const isDemo = isDemoUser(session.user.email) || 
-                         session.user.user_metadata?.role === 'demo';
+          const isDemo = isDemoEmail(session.user.email || '') || 
+                         session.user.user_metadata?.is_demo === true;
           setIsDemoMode(isDemo);
         } else {
           setIsDemoMode(false);
@@ -59,9 +89,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // Handle auth events
         if (event === 'SIGNED_IN' && session?.user) {
+          const isDemo = isDemoEmail(session.user.email || '');
           toast({
-            title: "Welcome back!",
-            description: "You have been successfully signed in.",
+            title: isDemo ? "Demo Mode Active" : "Welcome back!",
+            description: isDemo 
+              ? "You're using a demo account with sample data." 
+              : "You have been successfully signed in.",
           });
         } else if (event === 'SIGNED_OUT') {
           toast({
@@ -82,8 +115,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          const isDemo = isDemoUser(session.user.email) || 
-                         session.user.user_metadata?.role === 'demo';
+          const isDemo = isDemoEmail(session.user.email || '') || 
+                         session.user.user_metadata?.is_demo === true;
           setIsDemoMode(isDemo);
         }
       } catch (error) {
@@ -103,8 +136,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoading(true);
       
       // Handle demo user login
-      if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
-        const demoUser = createDemoUser();
+      const demoCredential = Object.values(DEMO_CREDENTIALS).find(
+        cred => cred.email === email && cred.password === password
+      );
+      
+      if (demoCredential) {
+        const demoUser = createDemoUser(email);
         const mockSession: Session = {
           access_token: 'demo-token',
           refresh_token: 'demo-refresh',
@@ -118,14 +155,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setSession(mockSession);
         setIsDemoMode(true);
         
-        toast({
-          title: "Demo Mode",
-          description: "You're now using the demo account with sample data.",
-        });
-        
         return {};
       }
 
+      // Clean up any existing auth state before signing in
+      cleanupAuthState();
+      
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -135,11 +170,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return {};
     } catch (error: any) {
       console.error('Sign in error:', error);
-      toast({
-        title: "Authentication Error",
-        description: error.message || "Failed to sign in. Please try again.",
-        variant: "destructive",
-      });
       return { error };
     } finally {
       setIsLoading(false);
@@ -168,11 +198,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return {};
     } catch (error: any) {
       console.error('Sign up error:', error);
-      toast({
-        title: "Registration Error",
-        description: error.message || "Failed to create account. Please try again.",
-        variant: "destructive",
-      });
       return { error };
     } finally {
       setIsLoading(false);
@@ -182,6 +207,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signInWithProvider = async (provider: 'google' | 'github') => {
     try {
       setIsLoading(true);
+      
+      // Clean up any existing auth state
+      cleanupAuthState();
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
@@ -193,11 +222,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       return {};
     } catch (error: any) {
       console.error('Provider sign in error:', error);
-      toast({
-        title: "Authentication Error",
-        description: error.message || `Failed to sign in with ${provider}. Please try again.`,
-        variant: "destructive",
-      });
       return { error };
     } finally {
       setIsLoading(false);
@@ -216,15 +240,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         return;
       }
       
+      // Clean up auth state first
+      cleanupAuthState();
+      
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error: any) {
       console.error('Sign out error:', error);
-      toast({
-        title: "Error",
-        description: "Failed to sign out. Please try again.",
-        variant: "destructive",
-      });
       throw error;
     } finally {
       setIsLoading(false);
@@ -245,11 +267,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
     } catch (error: any) {
       console.error('Password reset error:', error);
-      toast({
-        title: "Error",
-        description: error.message || "Failed to send reset email.",
-        variant: "destructive",
-      });
       throw error;
     }
   };

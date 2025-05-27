@@ -6,9 +6,13 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { Brain, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
+import { Brain, Eye, EyeOff, ArrowLeft, Loader2, Mail } from 'lucide-react';
+import { DemoLoginOptions } from '@/components/auth/DemoLoginOptions';
+import { validateEmail, sanitizeInput } from '@/utils/unified-security';
+import { authRateLimiter } from '@/utils/unified-security';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -17,7 +21,7 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{email?: string; password?: string}>({});
   
-  const { signIn, user, isLoading } = useAuth();
+  const { signIn, signInWithProvider, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -34,10 +38,9 @@ const Login = () => {
   const validateForm = () => {
     const newErrors: {email?: string; password?: string} = {};
     
-    if (!email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Please enter a valid email address';
+    const emailValidation = validateEmail(email);
+    if (!emailValidation.isValid) {
+      newErrors.email = emailValidation.message;
     }
     
     if (!password) {
@@ -55,18 +58,61 @@ const Login = () => {
     
     if (!validateForm()) return;
     
+    // Rate limiting check
+    const canAttempt = authRateLimiter.canAttempt(email);
+    if (!canAttempt.allowed) {
+      toast({
+        title: "Too many attempts",
+        description: "Please wait before trying again.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     setIsSubmitting(true);
     setErrors({});
     
     try {
-      await signIn(email, password);
+      const sanitizedEmail = sanitizeInput(email);
+      const result = await signIn(sanitizedEmail, password);
+      
+      if (result.error) {
+        throw result.error;
+      }
+      
       navigate(from, { replace: true });
     } catch (error: any) {
       console.error('Login error:', error);
-      // Error is already handled in AuthContext with toast
+      setErrors({ email: 'Invalid email or password. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsSubmitting(true);
+      const result = await signInWithProvider('google');
+      
+      if (result.error) {
+        throw result.error;
+      }
+    } catch (error: any) {
+      console.error('Google sign in error:', error);
+      toast({
+        title: "Google Sign In Failed",
+        description: error.message || "Unable to sign in with Google. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDemoSelect = (demoEmail: string, demoPassword: string) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    setErrors({});
   };
 
   if (isLoading) {
@@ -117,7 +163,7 @@ const Login = () => {
               Enter your credentials to access your account
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4" noValidate>
               <div className="space-y-2">
                 <Label htmlFor="email">Email address</Label>
@@ -193,8 +239,6 @@ const Login = () => {
                 type="submit" 
                 className="w-full" 
                 disabled={isSubmitting}
-                loading={isSubmitting}
-                loadingText="Signing in..."
               >
                 {isSubmitting ? (
                   <>
@@ -207,6 +251,26 @@ const Login = () => {
               </Button>
             </form>
 
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <Separator className="w-full" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">or continue with</span>
+              </div>
+            </div>
+
+            {/* Google Sign In */}
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={handleGoogleSignIn}
+              disabled={isSubmitting}
+            >
+              <Mail className="mr-2 h-4 w-4" />
+              Continue with Google
+            </Button>
+
             <div className="mt-6 text-center text-sm">
               <span className="text-muted-foreground">Don't have an account? </span>
               <Link 
@@ -216,6 +280,9 @@ const Login = () => {
                 Sign up here
               </Link>
             </div>
+
+            {/* Demo Login Options */}
+            <DemoLoginOptions onDemoSelect={handleDemoSelect} />
           </CardContent>
         </Card>
 
