@@ -41,7 +41,8 @@ import {
   Palette,
   Globe,
   Shield,
-  Activity
+  Activity,
+  CheckCircle2
 } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import UserMenu from './UserMenu';
@@ -56,55 +57,60 @@ const MegaMenuNavigation: React.FC = () => {
 
   const megaMenuSections = {
     'AI Features': {
-      description: 'Intelligent tools powered by advanced AI',
+      description: 'Cutting-edge AI tools for intelligent knowledge management',
       items: [
-        { title: 'Personal Knowledge Assistant', path: '/ai-features', icon: MessageCircle, description: 'Chat with your knowledge base' },
-        { title: 'AI Writing Assistant', path: '/ai-features', icon: Edit3, description: 'Enhance and improve your writing' },
-        { title: 'Content Summarizer', path: '/ai-features', icon: FileText, description: 'Generate intelligent summaries' },
-        { title: 'Voice Search', path: '/ai-features', icon: Mic, description: 'Natural voice commands' },
-        { title: 'Smart Tagging', path: '/ai-features', icon: Tag, description: 'Automatic content categorization' },
-        { title: 'Learning Path Generator', path: '/ai-features', icon: Target, description: 'Personalized learning roadmaps' },
-        { title: 'Content Analysis', path: '/ai-features', icon: BarChart3, description: 'Deep insights and patterns' },
-        { title: 'Smart Notifications', path: '/ai-features', icon: BellRing, description: 'Intelligent alerts and reminders' },
-        { title: 'AI Insights Widget', path: '/ai-features', icon: Brain, description: 'Real-time learning insights' },
-        { title: 'Content Recommendations', path: '/ai-features', icon: TrendingUp, description: 'Discover relevant content' },
-        { title: 'Reading Progress Tracker', path: '/ai-features', icon: BookOpen, description: 'Monitor learning journey' },
-        { title: 'Knowledge Graph', path: '/ai-features', icon: MapPin, description: 'Visualize content connections' }
+        { title: 'Personal Knowledge Assistant', path: '/ai-features', icon: MessageCircle, description: 'Chat with your knowledge base using natural language' },
+        { title: 'AI Writing Assistant', path: '/ai-features', icon: Edit3, description: 'Enhance, improve, and optimize your writing with AI' },
+        { title: 'AI Research Assistant', path: '/ai-features', icon: Search, description: 'Intelligent research and source discovery' },
+        { title: 'Content Summarizer', path: '/ai-features', icon: FileText, description: 'Generate intelligent summaries and key insights' },
+        { title: 'Voice Search Interface', path: '/ai-features', icon: Mic, description: 'Natural voice commands and search' },
+        { title: 'Smart Tagging System', path: '/ai-features', icon: Tag, description: 'Automatic content categorization and organization' },
+        { title: 'Learning Path Generator', path: '/ai-features', icon: Target, description: 'Personalized AI-generated learning roadmaps' },
+        { title: 'Content Analysis Engine', path: '/ai-features', icon: BarChart3, description: 'Deep insights into knowledge patterns and gaps' },
+        { title: 'Smart Notifications', path: '/ai-features', icon: BellRing, description: 'Intelligent alerts and learning reminders' },
+        { title: 'AI Insights Widget', path: '/ai-features', icon: Brain, description: 'Real-time AI-powered learning insights' },
+        { title: 'Knowledge Graph Visualizer', path: '/ai-features', icon: MapPin, description: 'Interactive visualization of knowledge connections' },
+        { title: 'AI Study Buddy', path: '/ai-features', icon: Users, description: 'Collaborative learning with AI-powered social features' },
+        { title: 'AI Habit Tracker', path: '/ai-features', icon: CheckCircle2, description: 'Smart habit formation with AI recommendations' },
+        { title: 'AI Goal Tracker', path: '/ai-features', icon: Target, description: 'Intelligent goal setting and progress monitoring' },
+        { title: 'Content Recommendations', path: '/ai-features', icon: TrendingUp, description: 'Discover relevant content based on your interests' },
+        { title: 'Reading Progress Tracker', path: '/ai-features', icon: BookOpen, description: 'Monitor and optimize your learning journey' }
       ]
     },
     'Core Features': {
       description: 'Essential productivity and organization tools',
       items: [
-        { title: 'Quick Note Capture', path: '/features', icon: PlusCircle, description: 'Instantly capture thoughts and ideas' },
-        { title: 'Advanced Search', path: '/search', icon: Search, description: 'Find anything instantly' },
-        { title: 'Save Content', path: '/save', icon: Download, description: 'Save articles, videos, and more' },
-        { title: 'Content Library', path: '/features', icon: Archive, description: 'Organize your saved content' },
-        { title: 'Collections', path: '/features', icon: Layout, description: 'Create themed content groups' },
-        { title: 'Reading Mode', path: '/features', icon: Eye, description: 'Distraction-free reading' },
-        { title: 'Focus Dashboard', path: '/features', icon: Focus, description: 'Minimize distractions' },
-        { title: 'Collaborative Workspaces', path: '/features', icon: Users, description: 'Share and collaborate' }
+        { title: 'Quick Note Capture', path: '/features', icon: PlusCircle, description: 'Instantly capture thoughts and ideas with smart templates' },
+        { title: 'Advanced Search', path: '/search', icon: Search, description: 'Find anything instantly with powerful search filters' },
+        { title: 'Save Content', path: '/save', icon: Download, description: 'Save articles, videos, and web content seamlessly' },
+        { title: 'Content Library', path: '/features', icon: Archive, description: 'Organize and manage your saved content efficiently' },
+        { title: 'Smart Collections', path: '/features', icon: Layout, description: 'Create themed content groups with AI assistance' },
+        { title: 'Reading Mode', path: '/features', icon: Eye, description: 'Distraction-free reading experience' },
+        { title: 'Focus Dashboard', path: '/features', icon: Focus, description: 'Minimize distractions and boost productivity' },
+        { title: 'Collaborative Workspaces', path: '/features', icon: Users, description: 'Share knowledge and collaborate with teams' }
       ]
     },
     'Analytics & Insights': {
-      description: 'Track progress and discover patterns',
+      description: 'Track progress and discover learning patterns',
       items: [
-        { title: 'Content Analytics', path: '/features', icon: Activity, description: 'Usage patterns and trends' },
-        { title: 'Learning Analytics', path: '/features', icon: BarChart3, description: 'Track learning progress' },
-        { title: 'Content Health Monitor', path: '/features', icon: Shield, description: 'Quality and freshness tracking' },
-        { title: 'Productivity Insights', path: '/features', icon: Zap, description: 'Optimize your workflow' },
-        { title: 'Knowledge Gaps', path: '/features', icon: Target, description: 'Identify learning opportunities' },
-        { title: 'Time Tracking', path: '/features', icon: Clock, description: 'Monitor time spent learning' }
+        { title: 'Learning Analytics', path: '/features', icon: Activity, description: 'Comprehensive analytics for learning progress' },
+        { title: 'Content Health Monitor', path: '/features', icon: Shield, description: 'Track content quality and freshness' },
+        { title: 'Productivity Insights', path: '/features', icon: Zap, description: 'Optimize your workflow with data-driven insights' },
+        { title: 'Knowledge Gap Analysis', path: '/features', icon: Target, description: 'Identify and fill learning opportunities' },
+        { title: 'Time Tracking', path: '/features', icon: Clock, description: 'Monitor time spent on learning activities' },
+        { title: 'Progress Visualization', path: '/features', icon: BarChart3, description: 'Visual representations of your learning journey' }
       ]
     },
     'Productivity Tools': {
       description: 'Enhance your workflow and efficiency',
       items: [
-        { title: 'Content Scheduler', path: '/features', icon: Calendar, description: 'Schedule reading and reviews' },
-        { title: 'Reminder System', path: '/features', icon: BellRing, description: 'Never miss important content' },
-        { title: 'Export & Import', path: '/features', icon: Upload, description: 'Data portability tools' },
-        { title: 'Share & Publish', path: '/features', icon: Share2, description: 'Share your knowledge' },
-        { title: 'Custom Filters', path: '/features', icon: Filter, description: 'Advanced filtering options' },
-        { title: 'Themes & Customization', path: '/features', icon: Palette, description: 'Personalize your experience' }
+        { title: 'Content Scheduler', path: '/features', icon: Calendar, description: 'Schedule reading sessions and reviews' },
+        { title: 'Reminder System', path: '/features', icon: BellRing, description: 'Never miss important content or deadlines' },
+        { title: 'Data Export & Import', path: '/features', icon: Upload, description: 'Complete data portability and backup tools' },
+        { title: 'Share & Publish', path: '/features', icon: Share2, description: 'Share your knowledge with others' },
+        { title: 'Advanced Filters', path: '/features', icon: Filter, description: 'Powerful filtering and search capabilities' },
+        { title: 'Themes & Customization', path: '/features', icon: Palette, description: 'Personalize your learning environment' },
+        { title: 'Offline Access', path: '/features', icon: Globe, description: 'Access your content without internet connection' }
       ]
     }
   };
@@ -163,7 +169,7 @@ const MegaMenuNavigation: React.FC = () => {
                       <h3 className="font-semibold text-lg mb-1">{sectionName}</h3>
                       <p className="text-sm text-muted-foreground">{section.description}</p>
                     </div>
-                    <div className="grid grid-cols-1 gap-2">
+                    <div className="grid grid-cols-1 gap-2 max-h-80 overflow-y-auto">
                       {section.items.map((item) => {
                         const Icon = item.icon;
                         return (

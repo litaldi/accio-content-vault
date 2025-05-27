@@ -13,6 +13,7 @@ import {
   Tag,
   MessageCircle,
   PlusCircle,
+  CheckCircle2,
   Focus,
   TrendingUp,
   Mic,
@@ -41,6 +42,9 @@ import { AIInsightsWidget } from '@/components/features/AIInsightsWidget';
 import { AIWritingAssistant } from '@/components/features/AIWritingAssistant';
 import { AIKnowledgeGraph } from '@/components/features/AIKnowledgeGraph';
 import { AIStudyBuddy } from '@/components/features/AIStudyBuddy';
+import { AIResearchAssistant } from '@/components/features/AIResearchAssistant';
+import { AIHabitTracker } from '@/components/features/AIHabitTracker';
+import { AIGoalTracker } from '@/components/features/AIGoalTracker';
 
 const Features: React.FC = () => {
   const [activeDemo, setActiveDemo] = useState<string | null>(null);
@@ -63,6 +67,15 @@ const Features: React.FC = () => {
       category: 'AI',
       component: PersonalKnowledgeAssistant,
       highlights: ['Natural language', 'Context-aware', 'Smart suggestions']
+    },
+    {
+      id: 'research-assistant',
+      title: 'AI Research Assistant',
+      description: 'Intelligent research and source discovery with AI',
+      icon: Search,
+      category: 'AI',
+      component: AIResearchAssistant,
+      highlights: ['Smart search', 'Source verification', 'Relevance scoring']
     },
     {
       id: 'content-summarizer',
@@ -171,6 +184,24 @@ const Features: React.FC = () => {
       category: 'AI',
       component: AIStudyBuddy,
       highlights: ['Social learning', 'Study sessions', 'Achievement tracking']
+    },
+    {
+      id: 'habit-tracker',
+      title: 'AI Habit Tracker',
+      description: 'Smart habit formation with AI recommendations and insights',
+      icon: CheckCircle2,
+      category: 'AI',
+      component: AIHabitTracker,
+      highlights: ['Habit tracking', 'AI recommendations', 'Progress analytics']
+    },
+    {
+      id: 'goal-tracker',
+      title: 'AI Goal Tracker',
+      description: 'Intelligent goal setting and progress monitoring with AI insights',
+      icon: Target,
+      category: 'AI',
+      component: AIGoalTracker,
+      highlights: ['Goal setting', 'Progress tracking', 'AI insights', 'Milestone management']
     }
   ];
 
@@ -221,7 +252,7 @@ const Features: React.FC = () => {
                 Intelligent Features for Modern Knowledge Workers
               </Typography.H1>
               <Typography.Lead>
-                Discover how AI transforms your workflow with smart capture, analysis, and discovery tools
+                Discover how AI transforms your workflow with {features.length} smart capture, analysis, and discovery tools
               </Typography.Lead>
             </div>
 
@@ -327,27 +358,29 @@ const Features: React.FC = () => {
                 </div>
 
                 {/* Feature Stats */}
-                <div className="mt-12 text-center">
-                  <Typography.H3 className="mb-6">Built for Power Users</Typography.H3>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">{features.length}</div>
-                      <div className="text-sm text-muted-foreground">Total Features</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">{features.filter(f => f.category === 'AI').length}</div>
-                      <div className="text-sm text-muted-foreground">AI-Powered</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">5</div>
-                      <div className="text-sm text-muted-foreground">Categories</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-3xl font-bold text-primary">100%</div>
-                      <div className="text-sm text-muted-foreground">Interactive</div>
+                {!activeDemo && (
+                  <div className="mt-12 text-center">
+                    <Typography.H3 className="mb-6">Built for Power Users</Typography.H3>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-primary">{features.length}</div>
+                        <div className="text-sm text-muted-foreground">Total Features</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-primary">{features.filter(f => f.category === 'AI').length}</div>
+                        <div className="text-sm text-muted-foreground">AI-Powered</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-primary">5</div>
+                        <div className="text-sm text-muted-foreground">Categories</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-3xl font-bold text-primary">100%</div>
+                        <div className="text-sm text-muted-foreground">Interactive</div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                )}
               </>
             )}
           </div>

@@ -22,7 +22,8 @@ import {
   BellRing,
   MapPin,
   Users,
-  Edit3
+  Edit3,
+  CheckCircle2
 } from 'lucide-react';
 import { PersonalKnowledgeAssistant } from '@/components/features/PersonalKnowledgeAssistant';
 import { AIContentSummarizer } from '@/components/features/AIContentSummarizer';
@@ -36,6 +37,9 @@ import { SmartNotifications } from '@/components/features/SmartNotifications';
 import { AIInsightsWidget } from '@/components/features/AIInsightsWidget';
 import { AIKnowledgeGraph } from '@/components/features/AIKnowledgeGraph';
 import { AIStudyBuddy } from '@/components/features/AIStudyBuddy';
+import { AIResearchAssistant } from '@/components/features/AIResearchAssistant';
+import { AIHabitTracker } from '@/components/features/AIHabitTracker';
+import { AIGoalTracker } from '@/components/features/AIGoalTracker';
 
 const AIFeatures: React.FC = () => {
   const [activeFeature, setActiveFeature] = useState<string>('overview');
@@ -56,6 +60,14 @@ const AIFeatures: React.FC = () => {
       icon: Edit3,
       component: AIWritingAssistant,
       category: 'Productivity'
+    },
+    {
+      id: 'research-assistant',
+      title: 'AI Research Assistant',
+      description: 'Intelligent research and source discovery with AI',
+      icon: Search,
+      component: AIResearchAssistant,
+      category: 'Research'
     },
     {
       id: 'learning-paths',
@@ -82,6 +94,22 @@ const AIFeatures: React.FC = () => {
       category: 'Social Learning'
     },
     {
+      id: 'habit-tracker',
+      title: 'AI Habit Tracker',
+      description: 'Smart habit formation with AI recommendations',
+      icon: CheckCircle2,
+      component: AIHabitTracker,
+      category: 'Productivity'
+    },
+    {
+      id: 'goal-tracker',
+      title: 'AI Goal Tracker',
+      description: 'Intelligent goal setting and progress monitoring',
+      icon: Target,
+      component: AIGoalTracker,
+      category: 'Productivity'
+    },
+    {
       id: 'smart-notifications',
       title: 'Smart Notifications',
       description: 'Intelligent alerts and reminders for optimal learning',
@@ -99,7 +127,7 @@ const AIFeatures: React.FC = () => {
     },
     {
       id: 'voice',
-      title: 'Voice Search',
+      title: 'Voice Search Interface',
       description: 'Natural language voice search and commands',
       icon: Mic,
       component: VoiceSearchInterface,
@@ -107,7 +135,7 @@ const AIFeatures: React.FC = () => {
     },
     {
       id: 'tagging',
-      title: 'Smart Tagging',
+      title: 'Smart Tagging System',
       description: 'Automated content categorization and tagging',
       icon: Tag,
       component: SmartTaggingSystem,
@@ -115,7 +143,7 @@ const AIFeatures: React.FC = () => {
     },
     {
       id: 'analysis',
-      title: 'Content Analysis',
+      title: 'Content Analysis Engine',
       description: 'Deep insights into your knowledge patterns',
       icon: BarChart3,
       component: AIContentAnalysis,
@@ -123,7 +151,7 @@ const AIFeatures: React.FC = () => {
     },
     {
       id: 'progress',
-      title: 'Reading Progress',
+      title: 'Reading Progress Tracker',
       description: 'Track and optimize your learning journey',
       icon: TrendingUp,
       component: ReadingProgressTracker,
@@ -139,7 +167,7 @@ const AIFeatures: React.FC = () => {
     }
   ];
 
-  const categories = ['All', 'Interaction', 'Analysis', 'Search', 'Organization', 'Analytics', 'Productivity', 'Learning', 'Visualization', 'Social Learning', 'Intelligence'];
+  const categories = ['All', 'Interaction', 'Analysis', 'Search', 'Organization', 'Analytics', 'Productivity', 'Learning', 'Visualization', 'Social Learning', 'Intelligence', 'Research'];
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const filteredFeatures = selectedCategory === 'All' 
@@ -171,7 +199,7 @@ const AIFeatures: React.FC = () => {
                 AI-Powered Features
               </Typography.H1>
               <Typography.Lead>
-                Discover intelligent tools that transform how you capture, organize, and interact with knowledge
+                Discover {features.length} intelligent tools that transform how you capture, organize, and interact with knowledge
               </Typography.Lead>
             </div>
 
