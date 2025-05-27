@@ -1,4 +1,3 @@
-
 import { Suspense, lazy } from 'react';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -21,8 +20,9 @@ const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const Login = lazy(() => import('@/pages/Login'));
 const Register = lazy(() => import('@/pages/Register'));
 const FeatureTest = lazy(() => import('@/pages/FeatureTest'));
-const Cookies = lazy(() => import('@/pages/Cookies'));
-const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
+const AccessibilitySettings = lazy(() => import('@/pages/AccessibilitySettings'));
+const About = lazy(() => import('@/pages/About'));
+const Contact = lazy(() => import('@/pages/Contact'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +59,9 @@ function App() {
                         <Route path="/privacy" element={<Privacy />} />
                         <Route path="/cookies" element={<Cookies />} />
                         <Route path="/reset-password" element={<ResetPassword />} />
+                        <Route path="/accessibility" element={<AccessibilitySettings />} />
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
                         
                         {/* Catch all route */}
                         <Route path="*" element={<Navigate to="/" replace />} />
