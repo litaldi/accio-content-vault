@@ -28,13 +28,19 @@ class PerformanceMonitor {
     try {
       this.observer = new PerformanceObserver((list) => {
         list.getEntries().forEach((entry) => {
-          // Handle different types of performance entries
+          // Handle different types of performance entries with proper typing
           let value = 0;
-          if ('value' in entry) {
-            value = entry.value as number;
-          } else if ('duration' in entry) {
+          
+          // Check for entries with a value property (like web vitals)
+          if ('value' in entry && typeof (entry as any).value === 'number') {
+            value = (entry as any).value;
+          } 
+          // Check for entries with duration (like measures)
+          else if ('duration' in entry && typeof entry.duration === 'number') {
             value = entry.duration;
-          } else if ('startTime' in entry) {
+          } 
+          // Fallback to startTime for other entry types
+          else if ('startTime' in entry && typeof entry.startTime === 'number') {
             value = entry.startTime;
           }
           
