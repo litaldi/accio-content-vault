@@ -56,8 +56,8 @@ export const EnhancedUXButton: React.FC<EnhancedUXButtonProps> = ({
         const result = onClick(event);
         
         // Handle async operations - check if result is a Promise
-        // First check if result exists and is an object
-        if (result && typeof result === 'object' && result !== null && 'then' in result && typeof result.then === 'function') {
+        // Check if result is defined and is a Promise-like object
+        if (typeof result !== 'undefined' && result !== null && typeof result === 'object' && 'then' in result && typeof result.then === 'function') {
           await result;
           
           if (showFeedback && successText) {
