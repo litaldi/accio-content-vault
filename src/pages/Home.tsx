@@ -3,7 +3,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import CleanHeroSection from '@/components/home/CleanHeroSection';
-import UnifiedFeaturesSection from '@/components/features/UnifiedFeaturesSection';
+import ConsolidatedFeaturesSection from '@/components/features/ConsolidatedFeaturesSection';
 
 const Home: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ const Home: React.FC = () => {
       
       <div className="min-h-screen">
         <CleanHeroSection />
-        <UnifiedFeaturesSection />
+        <ConsolidatedFeaturesSection />
         
         {/* Simple CTA Section */}
         <section className="py-24 bg-gradient-to-r from-primary/10 to-blue-600/10">

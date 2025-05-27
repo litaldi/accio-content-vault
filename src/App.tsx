@@ -6,7 +6,7 @@ import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { KeyboardShortcutsProvider } from '@/hooks/useKeyboardShortcuts';
-import ResponsiveMainNavigation from '@/components/navigation/ResponsiveMainNavigation';
+import StreamlinedMainNavigation from '@/components/navigation/StreamlinedMainNavigation';
 import EnhancedGlobalFooter from '@/components/layout/EnhancedGlobalFooter';
 import { UnifiedFloatingActions } from '@/components/ui/unified-floating-actions';
 import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
@@ -34,7 +34,7 @@ function App() {
               <KeyboardShortcutsProvider>
                 <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
                   <EnhancedAccessibility />
-                  <ResponsiveMainNavigation />
+                  <StreamlinedMainNavigation />
                   <main className="flex-1 relative" role="main">
                     <Routes>
                       <Route path="/" element={<Home />} />

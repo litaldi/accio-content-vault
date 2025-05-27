@@ -1,498 +1,102 @@
-import React, { useState } from 'react';
+
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Typography, Spacing } from '@/components/ui/design-system';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Brain, 
-  Sparkles, 
-  Zap, 
-  Search,
-  FileText,
-  Tag,
-  MessageCircle,
-  PlusCircle,
-  CheckCircle2,
-  Focus,
-  TrendingUp,
-  Mic,
-  BarChart3,
-  Target,
-  BookOpen,
-  BellRing,
-  MapPin,
-  Eye,
-  Edit3,
-  Users,
-  Calendar,
-  Heart
-} from 'lucide-react';
-
-// Import all feature components
-import { QuickNoteCapture } from '@/components/features/QuickNoteCapture';
-import { ContentRecommendationEngine } from '@/components/features/ContentRecommendationEngine';
-import { AIContentSummarizer } from '@/components/features/AIContentSummarizer';
-import { PersonalKnowledgeAssistant } from '@/components/features/PersonalKnowledgeAssistant';
-import { VoiceSearchInterface } from '@/components/features/VoiceSearchInterface';
-import { SmartTaggingSystem } from '@/components/features/SmartTaggingSystem';
-import { AIContentAnalysis } from '@/components/features/AIContentAnalysis';
-import { ReadingProgressTracker } from '@/components/features/ReadingProgressTracker';
-import { AILearningPathGenerator } from '@/components/features/AILearningPathGenerator';
-import { SmartNotifications } from '@/components/features/SmartNotifications';
-import { AIInsightsWidget } from '@/components/features/AIInsightsWidget';
-import { AIWritingAssistant } from '@/components/features/AIWritingAssistant';
-import { AIKnowledgeGraph } from '@/components/features/AIKnowledgeGraph';
-import { AIStudyBuddy } from '@/components/features/AIStudyBuddy';
-import { AIResearchAssistant } from '@/components/features/AIResearchAssistant';
-import { AIHabitTracker } from '@/components/features/AIHabitTracker';
-import { AIGoalTracker } from '@/components/features/AIGoalTracker';
-import { AIContentRecommendations } from '@/components/features/AIContentRecommendations';
-import { AIReadingComprehension } from '@/components/features/AIReadingComprehension';
-import { AIKnowledgeGapAnalyzer } from '@/components/features/AIKnowledgeGapAnalyzer';
-import { AIStudyScheduleOptimizer } from '@/components/features/AIStudyScheduleOptimizer';
-import { AIContentDifficultyAssessor } from '@/components/features/AIContentDifficultyAssessor';
-import { AILearningAnalyticsDashboard } from '@/components/features/AILearningAnalyticsDashboard';
-import { AISmartStudyGroups } from '@/components/features/AISmartStudyGroups';
-import { AIContentCurationEngine } from '@/components/features/AIContentCurationEngine';
-import { AISkillAssessment } from '@/components/features/AISkillAssessment';
-import { AILearningMotivationCoach } from '@/components/features/AILearningMotivationCoach';
+import { Typography, Spacing } from '@/components/ui/design-system';
+import ConsolidatedFeaturesSection from '@/components/features/ConsolidatedFeaturesSection';
+import { Sparkles, ArrowRight } from 'lucide-react';
 
 const Features: React.FC = () => {
-  const [activeDemo, setActiveDemo] = useState<string | null>(null);
-
-  const features = [
-    {
-      id: 'quick-capture',
-      title: 'Quick Note Capture',
-      description: 'Instantly capture thoughts, ideas, and content with smart organization',
-      icon: PlusCircle,
-      category: 'Core',
-      component: QuickNoteCapture,
-      highlights: ['Voice input', 'Auto-tagging', 'Quick templates']
-    },
-    {
-      id: 'ai-assistant',
-      title: 'Personal Knowledge Assistant',
-      description: 'Chat with your knowledge base using natural language queries',
-      icon: MessageCircle,
-      category: 'AI',
-      component: PersonalKnowledgeAssistant,
-      highlights: ['Natural language', 'Context-aware', 'Smart suggestions']
-    },
-    {
-      id: 'research-assistant',
-      title: 'AI Research Assistant',
-      description: 'Intelligent research and source discovery with AI',
-      icon: Search,
-      category: 'AI',
-      component: AIResearchAssistant,
-      highlights: ['Smart search', 'Source verification', 'Relevance scoring']
-    },
-    {
-      id: 'content-summarizer',
-      title: 'AI Content Summarizer',
-      description: 'Generate intelligent summaries and extract key insights',
-      icon: FileText,
-      category: 'AI',
-      component: AIContentSummarizer,
-      highlights: ['Multiple formats', 'Key points', 'Reading time']
-    },
-    {
-      id: 'voice-search',
-      title: 'Voice Search Interface',
-      description: 'Search your content using natural voice commands',
-      icon: Mic,
-      category: 'AI',
-      component: VoiceSearchInterface,
-      highlights: ['Voice recognition', 'Natural queries', 'Hands-free']
-    },
-    {
-      id: 'smart-tagging',
-      title: 'Smart Tagging System',
-      description: 'Automatic content categorization with AI suggestions',
-      icon: Tag,
-      category: 'AI',
-      component: SmartTaggingSystem,
-      highlights: ['Auto-suggestions', 'Trending tags', 'Smart organization']
-    },
-    {
-      id: 'content-analysis',
-      title: 'AI Content Analysis',
-      description: 'Deep insights into your knowledge patterns and gaps',
-      icon: BarChart3,
-      category: 'Analytics',
-      component: AIContentAnalysis,
-      highlights: ['Pattern recognition', 'Knowledge gaps', 'Productivity score']
-    },
-    {
-      id: 'reading-tracker',
-      title: 'Reading Progress Tracker',
-      description: 'Monitor your learning journey with detailed analytics',
-      icon: BookOpen,
-      category: 'Analytics',
-      component: ReadingProgressTracker,
-      highlights: ['Progress tracking', 'Goals', 'Achievements']
-    },
-    {
-      id: 'learning-paths',
-      title: 'AI Learning Path Generator',
-      description: 'Personalized learning roadmaps generated by AI',
-      icon: Target,
-      category: 'AI',
-      component: AILearningPathGenerator,
-      highlights: ['Personalized paths', 'Step-by-step', 'Progress tracking']
-    },
-    {
-      id: 'recommendations',
-      title: 'Content Recommendation Engine',
-      description: 'Discover relevant content based on your interests',
-      icon: TrendingUp,
-      category: 'AI',
-      component: ContentRecommendationEngine,
-      highlights: ['Smart recommendations', 'Learning goals', 'Trending content']
-    },
-    {
-      id: 'smart-notifications',
-      title: 'Smart Notifications',
-      description: 'Intelligent alerts and reminders for optimal learning',
-      icon: BellRing,
-      category: 'Productivity',
-      component: SmartNotifications,
-      highlights: ['Context-aware', 'Learning reminders', 'Priority-based']
-    },
-    {
-      id: 'writing-assistant',
-      title: 'AI Writing Assistant',
-      description: 'Enhance, summarize, expand, and improve your writing with AI',
-      icon: Edit3,
-      category: 'AI',
-      component: AIWritingAssistant,
-      highlights: ['Improve writing', 'Summarize text', 'Expand ideas', 'Simplify content']
-    },
-    {
-      id: 'ai-insights',
-      title: 'AI Insights Widget',
-      description: 'Real-time AI-powered insights about your learning patterns',
-      icon: Brain,
-      category: 'AI',
-      component: AIInsightsWidget,
-      highlights: ['Pattern detection', 'Smart recommendations', 'Live insights']
-    },
-    {
-      id: 'knowledge-graph',
-      title: 'AI Knowledge Graph',
-      description: 'Visualize connections between your knowledge and skills',
-      icon: MapPin,
-      category: 'AI',
-      component: AIKnowledgeGraph,
-      highlights: ['Interactive visualization', 'Knowledge mapping', 'Skill tracking']
-    },
-    {
-      id: 'study-buddy',
-      title: 'AI Study Buddy',
-      description: 'Collaborative learning with AI-powered insights and social features',
-      icon: Users,
-      category: 'AI',
-      component: AIStudyBuddy,
-      highlights: ['Social learning', 'Study sessions', 'Achievement tracking']
-    },
-    {
-      id: 'habit-tracker',
-      title: 'AI Habit Tracker',
-      description: 'Smart habit formation with AI recommendations and insights',
-      icon: CheckCircle2,
-      category: 'AI',
-      component: AIHabitTracker,
-      highlights: ['Habit tracking', 'AI recommendations', 'Progress analytics']
-    },
-    {
-      id: 'goal-tracker',
-      title: 'AI Goal Tracker',
-      description: 'Intelligent goal setting and progress monitoring with AI insights',
-      icon: Target,
-      category: 'AI',
-      component: AIGoalTracker,
-      highlights: ['Goal setting', 'Progress tracking', 'AI insights', 'Milestone management']
-    },
-    {
-      id: 'content-recommendations',
-      title: 'AI Content Recommendations',
-      description: 'Discover relevant content with AI-powered recommendations',
-      icon: TrendingUp,
-      category: 'AI',
-      component: AIContentRecommendations,
-      highlights: ['Personalized discovery', 'Relevance scoring', 'Learning path integration']
-    },
-    {
-      id: 'reading-comprehension',
-      title: 'AI Reading Comprehension',
-      description: 'Track and improve your reading comprehension with AI analysis',
-      icon: BookOpen,
-      category: 'AI',
-      component: AIReadingComprehension,
-      highlights: ['Comprehension tracking', 'Focus analysis', 'Improvement insights']
-    },
-    {
-      id: 'knowledge-gap-analyzer',
-      title: 'AI Knowledge Gap Analyzer',
-      description: 'Identify and address knowledge gaps with intelligent analysis',
-      icon: Target,
-      category: 'AI',
-      component: AIKnowledgeGapAnalyzer,
-      highlights: ['Gap detection', 'Learning recommendations', 'Skill mapping']
-    },
-    {
-      id: 'schedule-optimizer',
-      title: 'AI Schedule Optimizer',
-      description: 'Optimize your study schedule for maximum learning efficiency',
-      icon: Calendar,
-      category: 'AI',
-      component: AIStudyScheduleOptimizer,
-      highlights: ['Smart scheduling', 'Energy optimization', 'Retention maximization']
-    },
-    {
-      id: 'difficulty-assessor',
-      title: 'AI Difficulty Assessor',
-      description: 'Assess content difficulty and get personalized recommendations',
-      icon: BarChart3,
-      category: 'AI',
-      component: AIContentDifficultyAssessor,
-      highlights: ['Difficulty scoring', 'Prerequisite analysis', 'Learning readiness']
-    },
-    {
-      id: 'learning-analytics',
-      title: 'AI Learning Analytics Dashboard',
-      description: 'Comprehensive learning performance analytics with AI insights',
-      icon: BarChart3,
-      category: 'AI',
-      component: AILearningAnalyticsDashboard,
-      highlights: ['Performance tracking', 'Learning patterns', 'AI insights', 'Progress visualization']
-    },
-    {
-      id: 'smart-study-groups',
-      title: 'AI Smart Study Groups',
-      description: 'Intelligent study group matching and collaborative learning',
-      icon: Users,
-      category: 'AI',
-      component: AISmartStudyGroups,
-      highlights: ['Smart matching', 'Collaborative learning', 'Group analytics', 'Social features']
-    },
-    {
-      id: 'content-curation',
-      title: 'AI Content Curation Engine',
-      description: 'Intelligent content discovery and quality curation',
-      icon: Sparkles,
-      category: 'AI',
-      component: AIContentCurationEngine,
-      highlights: ['Quality filtering', 'Relevance scoring', 'Trend detection', 'Personalized curation']
-    },
-    {
-      id: 'skill-assessment',
-      title: 'AI Skill Assessment',
-      description: 'Comprehensive skill evaluation with personalized feedback',
-      icon: Target,
-      category: 'AI',
-      component: AISkillAssessment,
-      highlights: ['Adaptive testing', 'Skill mapping', 'Progress tracking', 'Personalized feedback']
-    },
-    {
-      id: 'motivation-coach',
-      title: 'AI Motivation Coach',
-      description: 'Personal AI coach for motivation and goal achievement',
-      icon: Heart,
-      category: 'AI',
-      component: AILearningMotivationCoach,
-      highlights: ['Motivation tracking', 'Achievement system', 'Personal coaching', 'Goal support']
-    }
-  ];
-
-  const categories = ['All', 'Core', 'AI', 'Analytics', 'Productivity'];
-  const [selectedCategory, setSelectedCategory] = useState('All');
-
-  const filteredFeatures = selectedCategory === 'All' 
-    ? features 
-    : features.filter(f => f.category === selectedCategory);
-
-  const aiFeatures = features.filter(f => f.category === 'AI');
-
-  const renderDemo = () => {
-    const feature = features.find(f => f.id === activeDemo);
-    if (!feature) return null;
-    
-    const Component = feature.component;
-    return (
-      <div className="mt-8">
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <feature.icon className="h-6 w-6 text-primary" />
-            <Typography.H3>{feature.title}</Typography.H3>
-            <Badge variant="secondary">{feature.category}</Badge>
-          </div>
-          <Button variant="outline" onClick={() => setActiveDemo(null)}>
-            Close Demo
-          </Button>
-        </div>
-        <Component />
-      </div>
-    );
-  };
-
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Helmet>
-        <title>Features - Accio</title>
-        <meta name="description" content="Explore powerful features for intelligent knowledge management and AI-driven productivity." />
+        <title>Features - Accio AI Knowledge Management</title>
+        <meta 
+          name="description" 
+          content="Discover all the powerful features that make Accio the ultimate AI-powered knowledge management platform. Quick capture, intelligent search, AI insights, and more." 
+        />
+        <meta name="keywords" content="AI features, knowledge management, quick capture, intelligent search, AI insights" />
       </Helmet>
-
-      <Spacing.Section size="lg">
-        <Spacing.Container>
-          <div className="max-w-7xl mx-auto">
-            {/* Header */}
-            <div className="text-center mb-12">
-              <Typography.H1 className="mb-4">
-                Intelligent Features for Modern Knowledge Workers
+      
+      <div className="min-h-screen">
+        {/* Hero Section */}
+        <Spacing.Section size="xl" className="bg-gradient-to-br from-primary/5 via-background to-blue-500/5 relative overflow-hidden">
+          <div className="absolute inset-0 bg-grid-pattern opacity-5" aria-hidden="true" />
+          
+          <Spacing.Container className="relative">
+            <div className="text-center max-w-4xl mx-auto">
+              <Badge variant="outline" className="mb-8 animate-fade-in">
+                <Sparkles className="h-3 w-3 mr-1" aria-hidden="true" />
+                Complete Feature Overview
+              </Badge>
+              
+              <Typography.H1 className="mb-8 animate-slide-up">
+                Powerful Features for
+                <span className="bg-gradient-to-r from-primary via-purple-500 to-primary bg-clip-text text-transparent block sm:inline">
+                  {" "}Knowledge Excellence
+                </span>
               </Typography.H1>
-              <Typography.Lead>
-                Discover how AI transforms your workflow with {features.length} smart capture, analysis, and discovery tools
+              
+              <Typography.Lead className="mb-12 max-w-3xl mx-auto animate-slide-up">
+                Discover the comprehensive suite of AI-powered tools designed to transform 
+                how you capture, organize, search, and leverage your knowledge. Every feature 
+                works together to create your ultimate knowledge sanctuary.
               </Typography.Lead>
+              
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16 animate-fade-in">
+                <Button 
+                  size="xl" 
+                  className="group shadow-lg hover:shadow-xl transition-all" 
+                  asChild
+                >
+                  <a href="/register">
+                    Start Using Features
+                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  </a>
+                </Button>
+                
+                <Button 
+                  variant="outline" 
+                  size="xl" 
+                  className="group border-2 hover:bg-primary/5" 
+                  asChild
+                >
+                  <a href="/ai-features">
+                    Explore AI Features
+                    <Sparkles className="ml-2 h-5 w-5" />
+                  </a>
+                </Button>
+              </div>
             </div>
+          </Spacing.Container>
+        </Spacing.Section>
 
-            {activeDemo ? (
-              renderDemo()
-            ) : (
-              <>
-                {/* AI Features Highlight */}
-                <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 mb-12">
-                  <CardContent className="p-8">
-                    <div className="text-center">
-                      <Brain className="h-12 w-12 text-primary mx-auto mb-4" />
-                      <Typography.H2 className="mb-4">AI-Powered Intelligence</Typography.H2>
-                      <Typography.P className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                        Experience the next generation of knowledge management with {features.filter(f => f.category === 'AI').length} AI-driven features 
-                        that understand your content, learn from your patterns, and enhance your productivity.
-                      </Typography.P>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-                        <div className="text-center">
-                          <Sparkles className="h-8 w-8 text-primary mx-auto mb-2" />
-                          <h4 className="font-medium">Smart Analysis</h4>
-                          <p className="text-sm text-muted-foreground">AI understands and categorizes your content</p>
-                        </div>
-                        <div className="text-center">
-                          <Search className="h-8 w-8 text-primary mx-auto mb-2" />
-                          <h4 className="font-medium">Natural Language</h4>
-                          <p className="text-sm text-muted-foreground">Search and interact using everyday language</p>
-                        </div>
-                        <div className="text-center">
-                          <TrendingUp className="h-8 w-8 text-primary mx-auto mb-2" />
-                          <h4 className="font-medium">Personalized Learning</h4>
-                          <p className="text-sm text-muted-foreground">Recommendations tailored to your goals</p>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+        {/* Features Section */}
+        <ConsolidatedFeaturesSection />
 
-                {/* Category Filter */}
-                <div className="flex flex-wrap justify-center gap-2 mb-8">
-                  {categories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? 'default' : 'outline'}
-                      size="sm"
-                      onClick={() => setSelectedCategory(category)}
-                    >
-                      {category}
-                      {category !== 'All' && (
-                        <Badge variant="secondary" className="ml-2">
-                          {features.filter(f => f.category === category).length}
-                        </Badge>
-                      )}
-                    </Button>
-                  ))}
-                </div>
-
-                {/* Features Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredFeatures.map((feature) => {
-                    const Icon = feature.icon;
-                    const isAI = feature.category === 'AI';
-                    
-                    return (
-                      <Card key={feature.id} className={`hover:shadow-lg transition-all duration-300 cursor-pointer group ${isAI ? 'ring-1 ring-primary/20' : ''}`}>
-                        <CardHeader>
-                          <div className="flex items-center gap-3 mb-2">
-                            <div className={`p-2 rounded-lg group-hover:scale-110 transition-transform ${isAI ? 'bg-primary/20' : 'bg-muted'}`}>
-                              <Icon className={`h-5 w-5 ${isAI ? 'text-primary' : 'text-muted-foreground'}`} />
-                            </div>
-                            <Badge variant={isAI ? 'default' : 'secondary'}>
-                              {feature.category}
-                              {isAI && <Sparkles className="h-3 w-3 ml-1" />}
-                            </Badge>
-                          </div>
-                          <CardTitle className="text-lg">{feature.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-muted-foreground mb-4">{feature.description}</p>
-                          
-                          <div className="space-y-3">
-                            <div className="flex flex-wrap gap-1">
-                              {feature.highlights.map((highlight, index) => (
-                                <Badge key={index} variant="outline" className="text-xs">
-                                  {highlight}
-                                </Badge>
-                              ))}
-                            </div>
-                            
-                            <Button 
-                              onClick={() => setActiveDemo(feature.id)}
-                              className="w-full gap-2"
-                              variant={isAI ? 'default' : 'outline'}
-                            >
-                              {isAI ? <Zap className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                              Try Interactive Demo
-                            </Button>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    );
-                  })}
-                </div>
-
-                {/* Feature Stats */}
-                {!activeDemo && (
-                  <div className="mt-12 text-center">
-                    <Typography.H3 className="mb-6">Built for Power Users</Typography.H3>
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-primary">{features.length}</div>
-                        <div className="text-sm text-muted-foreground">Total Features</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-primary">{features.filter(f => f.category === 'AI').length}</div>
-                        <div className="text-sm text-muted-foreground">AI-Powered</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-primary">5</div>
-                        <div className="text-sm text-muted-foreground">Categories</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="text-3xl font-bold text-primary">100%</div>
-                        <div className="text-sm text-muted-foreground">Interactive</div>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </>
-            )}
+        {/* CTA Section */}
+        <section className="py-24 bg-gradient-to-r from-primary/10 to-blue-600/10">
+          <div className="container mx-auto px-4 text-center max-w-4xl">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">
+              Experience the Full Power of Accio
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Every feature is designed to work seamlessly together, creating a knowledge 
+              management experience that's both powerful and intuitive.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild className="shadow-lg hover:shadow-xl transition-all">
+                <a href="/register">Start Your Free Trial</a>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <a href="/pricing">View Pricing</a>
+              </Button>
+            </div>
           </div>
-        </Spacing.Container>
-      </Spacing.Section>
-
-      {/* Background AI Components */}
-      <AIInsightsWidget />
-      <SmartNotifications />
-    </div>
+        </section>
+      </div>
+    </>
   );
 };
 
