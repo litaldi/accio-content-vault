@@ -1,94 +1,98 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Typography, Layout } from '@/components/design-system/DesignSystem';
+import { Brain, ArrowRight, Sparkles, Users, Shield, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  ArrowRight, 
-  Sparkles, 
-  Brain,
-  Search,
-  Bookmark,
-  Zap
-} from 'lucide-react';
 
 export const HeroSection: React.FC = () => {
   const { user } = useAuth();
 
-  const features = [
-    { icon: Brain, label: 'AI-Powered Organization' },
-    { icon: Search, label: 'Smart Search' },
-    { icon: Bookmark, label: 'Universal Saving' },
-    { icon: Zap, label: 'Instant Access' },
+  const trustIndicators = [
+    { icon: Users, label: '10,000+ users', color: 'text-blue-500' },
+    { icon: Shield, label: 'Enterprise security', color: 'text-green-500' },
+    { icon: Clock, label: '99.9% uptime', color: 'text-purple-500' }
   ];
 
   return (
-    <section className="relative py-20 overflow-hidden bg-gradient-to-b from-background to-muted/30">
-      <div className="container mx-auto px-4 text-center max-w-5xl">
+    <Layout.Section spacing="xl" background="primary">
+      <Layout.Container size="lg" className="text-center">
         {/* Badge */}
-        <Badge variant="secondary" className="mb-6 text-sm">
-          <Sparkles className="h-3 w-3 mr-2" />
-          Transform Your Knowledge Workflow
-        </Badge>
+        <div className="mb-8 animate-fade-in">
+          <Badge variant="outline" className="border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+            <Sparkles className="h-3 w-3 mr-2" />
+            AI-Powered Knowledge Engine
+          </Badge>
+        </div>
 
-        {/* Headline */}
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-          Your AI-Powered
-          <span className="text-primary block">Knowledge Engine</span>
-        </h1>
+        {/* Main Headline */}
+        <div className="mb-8 animate-fade-in">
+          <Typography.H1 className="bg-gradient-to-br from-foreground via-foreground to-foreground/70 bg-clip-text text-transparent">
+            Transform scattered information into
+            <span className="block bg-gradient-to-r from-primary via-blue-600 to-purple-600 bg-clip-text text-transparent">
+              organized intelligence
+            </span>
+          </Typography.H1>
+        </div>
 
-        {/* Subheadline */}
-        <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-          Save, organize, and discover insights from any content with the power of artificial intelligence. 
-          Turn information chaos into structured knowledge.
-        </p>
+        {/* Subheading */}
+        <div className="mb-12 animate-fade-in">
+          <Typography.Lead className="max-w-4xl mx-auto">
+            Save, organize, and rediscover everything that matters. Accio's AI-powered platform 
+            helps you build a personal knowledge empire that grows smarter with every interaction.
+          </Typography.Lead>
+        </div>
 
-        {/* Feature Icons */}
-        <div className="flex flex-wrap justify-center gap-6 mb-12">
-          {features.map((feature, index) => (
-            <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
-              <feature.icon className="h-4 w-4 text-primary" />
-              <span>{feature.label}</span>
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-fade-in">
+          <EnhancedButton 
+            asChild
+            intent="primary"
+            size="lg"
+            className="text-lg px-8 py-6 shadow-lg hover:shadow-xl transition-all group"
+          >
+            <Link to={user ? "/dashboard" : "/register"}>
+              <Brain className="mr-2 h-5 w-5" />
+              {user ? "Go to Dashboard" : "Start Free Trial"}
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </EnhancedButton>
+          
+          <EnhancedButton 
+            asChild
+            variant="outline"
+            size="lg"
+            className="text-lg px-8 py-6"
+          >
+            <Link to="/features">
+              See How It Works
+            </Link>
+          </EnhancedButton>
+        </div>
+
+        {/* Trust Indicators */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto animate-fade-in">
+          {trustIndicators.map((indicator, index) => (
+            <div key={index} className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+              <indicator.icon className={`h-4 w-4 ${indicator.color}`} aria-hidden="true" />
+              <span>{indicator.label}</span>
             </div>
           ))}
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          {user ? (
-            <>
-              <Button size="lg" className="text-lg px-8 py-4" asChild>
-                <Link to="/dashboard">
-                  Go to Dashboard
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-4" asChild>
-                <Link to="/saved">View Saved Items</Link>
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button size="lg" className="text-lg px-8 py-4" asChild>
-                <Link to="/register">
-                  <Zap className="mr-2 h-5 w-5" />
-                  Start Now - Free
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" className="text-lg px-8 py-4" asChild>
-                <Link to="/features">Explore Features</Link>
-              </Button>
-            </>
-          )}
-        </div>
-
-        {/* Social Proof */}
-        <p className="text-sm text-muted-foreground mt-8">
-          Join 10,000+ professionals building their knowledge empires
-        </p>
-      </div>
-    </section>
+        {/* Demo Account Notice */}
+        {!user && (
+          <div className="mt-12 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800 max-w-2xl mx-auto animate-fade-in">
+            <Typography.Caption className="text-blue-700 dark:text-blue-300">
+              <strong>Try the demo:</strong> Email: demo@yourapp.com | Password: Demo1234!
+            </Typography.Caption>
+          </div>
+        )}
+      </Layout.Container>
+    </Layout.Section>
   );
 };
+
+export default HeroSection;

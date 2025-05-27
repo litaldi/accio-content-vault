@@ -1,92 +1,146 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { AlertCircle } from 'lucide-react';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
-interface FormFieldProps {
-  children: React.ReactNode;
+interface BaseFieldProps {
   label?: string;
+  description?: string;
   error?: string;
   required?: boolean;
-  description?: string;
   className?: string;
   id?: string;
 }
 
-export const FormField: React.FC<FormFieldProps> = ({
-  children,
-  label,
-  error,
-  required,
-  description,
-  className,
-  id
-}) => {
-  const fieldId = id || `field-${Math.random().toString(36).substr(2, 9)}`;
-  const errorId = `${fieldId}-error`;
-  const descriptionId = `${fieldId}-description`;
+interface InputFieldProps extends BaseFieldProps {
+  type?: 'text' | 'email' | 'password' | 'url' | 'tel' | 'number';
+  placeholder?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+}
 
-  return (
-    <div className={cn("space-y-2", className)}>
-      {label && (
-        <label 
-          htmlFor={fieldId}
-          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          {label}
-          {required && (
-            <span className="text-destructive ml-1" aria-label="required">
-              *
-            </span>
-          )}
-        </label>
-      )}
-      
-      <div className="relative">
-        {React.cloneElement(children as React.ReactElement, {
-          id: fieldId,
-          'aria-describedby': cn(
-            error && errorId,
-            description && descriptionId
-          ).trim() || undefined,
-          'aria-invalid': !!error,
-          'aria-required': required,
-          className: cn(
-            (children as React.ReactElement).props.className,
-            error && "border-destructive focus-visible:ring-destructive"
-          )
-        })}
+interface TextareaFieldProps extends BaseFieldProps {
+  placeholder?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+  rows?: number;
+}
+
+export const FormField = {
+  Input: React.forwardRef<HTMLInputElement, InputFieldProps>(({
+    label,
+    description,
+    error,
+    required,
+    className,
+    id,
+    type = 'text',
+    placeholder,
+    value,
+    onChange,
+    ...props
+  }, ref) => {
+    const fieldId = id || `field-${Math.random().toString(36).substr(2, 9)}`;
+
+    return (
+      <div className={cn('space-y-2', className)}>
+        {label && (
+          <Label htmlFor={fieldId} className="text-sm font-medium">
+            {label}
+            {required && <span className="text-destructive ml-1">*</span>}
+          </Label>
+        )}
         
-        {error && (
-          <AlertCircle 
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-destructive"
-            aria-hidden="true"
-          />
+        <Input
+          ref={ref}
+          id={fieldId}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          className={cn(
+            'transition-colors',
+            error && 'border-destructive focus-visible:ring-destructive'
+          )}
+          aria-describedby={
+            description || error ? `${fieldId}-description` : undefined
+          }
+          aria-invalid={!!error}
+          {...props}
+        />
+        
+        {(description || error) && (
+          <div id={`${fieldId}-description`} className="text-sm">
+            {error ? (
+              <span className="text-destructive" role="alert">{error}</span>
+            ) : (
+              <span className="text-muted-foreground">{description}</span>
+            )}
+          </div>
         )}
       </div>
-      
-      {description && (
-        <p 
-          id={descriptionId}
-          className="text-sm text-muted-foreground"
-        >
-          {description}
-        </p>
-      )}
-      
-      {error && (
-        <p 
-          id={errorId}
-          className="text-sm text-destructive flex items-center gap-1"
-          role="alert"
-          aria-live="polite"
-        >
-          <AlertCircle className="h-3 w-3" aria-hidden="true" />
-          {error}
-        </p>
-      )}
-    </div>
-  );
+    );
+  }),
+
+  Textarea: React.forwardRef<HTMLTextAreaElement, TextareaFieldProps>(({
+    label,
+    description,
+    error,
+    required,
+    className,
+    id,
+    placeholder,
+    value,
+    onChange,
+    rows = 4,
+    ...props
+  }, ref) => {
+    const fieldId = id || `field-${Math.random().toString(36).substr(2, 9)}`;
+
+    return (
+      <div className={cn('space-y-2', className)}>
+        {label && (
+          <Label htmlFor={fieldId} className="text-sm font-medium">
+            {label}
+            {required && <span className="text-destructive ml-1">*</span>}
+          </Label>
+        )}
+        
+        <Textarea
+          ref={ref}
+          id={fieldId}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange?.(e.target.value)}
+          rows={rows}
+          className={cn(
+            'transition-colors resize-none',
+            error && 'border-destructive focus-visible:ring-destructive'
+          )}
+          aria-describedby={
+            description || error ? `${fieldId}-description` : undefined
+          }
+          aria-invalid={!!error}
+          {...props}
+        />
+        
+        {(description || error) && (
+          <div id={`${fieldId}-description`} className="text-sm">
+            {error ? (
+              <span className="text-destructive" role="alert">{error}</span>
+            ) : (
+              <span className="text-muted-foreground">{description}</span>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  })
 };
+
+FormField.Input.displayName = 'FormField.Input';
+FormField.Textarea.displayName = 'FormField.Textarea';
 
 export default FormField;

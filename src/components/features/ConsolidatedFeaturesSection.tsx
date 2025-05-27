@@ -1,196 +1,269 @@
 
 import React from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain, Search, Tag, BarChart3, Share2, Zap, Shield, Users, CheckCircle } from 'lucide-react';
+import { Typography, Layout, Card } from '@/components/design-system/DesignSystem';
 import { Badge } from '@/components/ui/badge';
-import { Typography, Spacing } from '@/components/ui/design-system';
-import { 
-  Brain, 
-  Search, 
-  BookOpen, 
-  TrendingUp, 
-  Shield,
-  Zap,
-  Plus,
-  Sparkles,
-  Target,
-  Clock,
-  Users,
-  Globe
-} from 'lucide-react';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { Link } from 'react-router-dom';
 
 const ConsolidatedFeaturesSection: React.FC = () => {
-  const coreFeatures = [
-    {
-      icon: Plus,
-      title: "Quick Capture",
-      description: "Save content instantly from any website, app, or device with our one-click capture tool and browser extension.",
-      category: "Core",
-      color: "from-green-500 to-emerald-600"
-    },
+  const features = [
     {
       icon: Brain,
-      title: "AI-Powered Processing",
-      description: "Transform any content into organized, searchable insights with advanced AI that understands context and meaning.",
-      category: "AI",
-      color: "from-blue-500 to-purple-600"
+      title: "AI-Powered Organization",
+      description: "Automatically categorize and tag your content with advanced AI algorithms that understand context and meaning.",
+      color: "from-blue-500 to-cyan-500"
     },
     {
       icon: Search,
-      title: "Intelligent Search",
+      title: "Smart Search & Discovery",
       description: "Find exactly what you need with semantic search that understands intent, not just keywords.",
-      category: "Core",
+      color: "from-green-500 to-emerald-500"
+    },
+    {
+      icon: Tag,
+      title: "Intelligent Tagging",
+      description: "Smart categorization system that learns from your behavior and suggests relevant tags automatically.",
       color: "from-purple-500 to-pink-500"
     },
     {
-      icon: BookOpen,
-      title: "Smart Organization",
-      description: "Create collections that automatically grow and organize themselves as you add more content.",
-      category: "Core",
+      icon: BarChart3,
+      title: "Analytics & Insights",
+      description: "Track your learning patterns and content engagement with detailed analytics and progress reports.",
       color: "from-orange-500 to-red-500"
+    },
+    {
+      icon: Share2,
+      title: "Seamless Integration",
+      description: "Connect with your favorite tools and platforms to create a unified knowledge ecosystem.",
+      color: "from-indigo-500 to-purple-500"
+    },
+    {
+      icon: Shield,
+      title: "Enterprise Security",
+      description: "Your data is encrypted and securely stored with enterprise-grade security measures.",
+      color: "from-green-600 to-teal-600"
     }
   ];
 
-  const additionalFeatures = [
-    { 
-      icon: Sparkles, 
-      title: "AI Insights", 
-      description: "Get AI-generated summaries and recommendations",
-      category: "AI"
+  const benefits = [
+    "Unlimited content saving and organization",
+    "AI-powered content analysis and insights", 
+    "Advanced semantic search capabilities",
+    "Detailed analytics and learning patterns",
+    "Export to popular productivity tools",
+    "Cross-platform access on all devices"
+  ];
+
+  const testimonials = [
+    {
+      name: "Sarah Chen",
+      role: "Product Manager at TechCorp",
+      content: "Accio has completely transformed how I organize research. The AI tagging is incredibly accurate and saves me hours of manual work every week.",
+      avatar: "SC",
+      rating: 5
     },
-    { 
-      icon: Target, 
-      title: "Smart Tagging", 
-      description: "Automatic categorization and intelligent tagging",
-      category: "AI"
+    {
+      name: "Dr. Michael Rodriguez",
+      role: "Research Scientist",
+      content: "The semantic search is a game-changer for academic research. I can find relevant content even when I don't remember the exact keywords I used.",
+      avatar: "MR", 
+      rating: 5
     },
-    { 
-      icon: TrendingUp, 
-      title: "Analytics", 
-      description: "Track your knowledge growth with detailed insights",
-      category: "Analytics"
-    },
-    { 
-      icon: Shield, 
-      title: "Enterprise Security", 
-      description: "Bank-level encryption and privacy protection",
-      category: "Security"
-    },
-    { 
-      icon: Zap, 
-      title: "Lightning Fast", 
-      description: "Sub-second search across millions of items",
-      category: "Performance"
-    },
-    { 
-      icon: Users, 
-      title: "Team Collaboration", 
-      description: "Share knowledge and collaborate seamlessly",
-      category: "Collaboration"
-    },
-    { 
-      icon: Globe, 
-      title: "Universal Access", 
-      description: "Access your knowledge from any device, anywhere",
-      category: "Core"
-    },
-    { 
-      icon: Clock, 
-      title: "Version History", 
-      description: "Track changes and access previous versions",
-      category: "Core"
+    {
+      name: "Emily Watson",
+      role: "Knowledge Manager",
+      content: "Perfect for managing organizational knowledge. The analytics help us track information usage patterns and identify knowledge gaps.",
+      avatar: "EW",
+      rating: 5
     }
   ];
-
-  const featureCategories = [
-    { name: "Core", color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-200" },
-    { name: "AI", color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-200" },
-    { name: "Analytics", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200" },
-    { name: "Security", color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-200" },
-    { name: "Performance", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-200" },
-    { name: "Collaboration", color: "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-200" }
-  ];
-
-  const getCategoryColor = (category: string) => {
-    return featureCategories.find(cat => cat.name === category)?.color || "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-200";
-  };
 
   return (
-    <Spacing.Section>
-      <Spacing.Container>
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-6">
-            <Sparkles className="h-3 w-3 mr-1" />
-            Complete Feature Suite
-          </Badge>
-          <Typography.H2 className="mb-4">
-            Everything You Need for Knowledge Management
-          </Typography.H2>
-          <Typography.Lead>
-            From AI-powered insights to lightning-fast search, discover all the tools that make Accio your ultimate knowledge companion
-          </Typography.Lead>
-        </div>
-
-        {/* Core Features - Prominent Display */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {coreFeatures.map((feature, index) => (
-            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-4">
-                  <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                    <feature.icon className="h-8 w-8 text-white" />
-                  </div>
-                  <Badge variant="secondary" className={getCategoryColor(feature.category)}>
-                    {feature.category}
-                  </Badge>
-                </div>
-                <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                  {feature.title}
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Typography.Body className="text-muted-foreground leading-relaxed">
-                  {feature.description}
-                </Typography.Body>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Additional Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {additionalFeatures.map((feature, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-all duration-300 group">
-              <CardContent className="p-6">
-                <feature.icon className="h-12 w-12 text-primary mx-auto mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <div className="mb-3">
-                  <Badge variant="outline" className={`${getCategoryColor(feature.category)} text-xs mb-2`}>
-                    {feature.category}
-                  </Badge>
-                </div>
-                <CardTitle className="text-lg mb-3 group-hover:text-primary transition-colors">
-                  {feature.title}
-                </CardTitle>
-                <Typography.Body size="sm" className="text-muted-foreground">
-                  {feature.description}
-                </Typography.Body>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Feature Categories Legend */}
-        <div className="text-center">
-          <Typography.H4 className="mb-6">Feature Categories</Typography.H4>
-          <div className="flex flex-wrap justify-center gap-3">
-            {featureCategories.map((category, index) => (
-              <Badge key={index} variant="secondary" className={category.color}>
-                {category.name}
-              </Badge>
-            ))}
+    <>
+      {/* Features Section */}
+      <Layout.Section spacing="lg" background="muted">
+        <Layout.Container>
+          <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4">
+              <Zap className="h-3 w-3 mr-2" />
+              Powerful Features
+            </Badge>
+            <Typography.H2>
+              Everything you need for modern knowledge management
+            </Typography.H2>
+            <Typography.Lead className="max-w-3xl mx-auto">
+              Discover the intelligent features that make Accio the ultimate platform for capturing, 
+              organizing, and rediscovering your most valuable information.
+            </Typography.Lead>
           </div>
-        </div>
-      </Spacing.Container>
-    </Spacing.Section>
+
+          <Layout.Grid columns={3} gap="lg">
+            {features.map((feature, index) => (
+              <Card.Root key={index} hover className="h-full group">
+                <Card.Header>
+                  <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${feature.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                    <feature.icon className="h-6 w-6 text-white" />
+                  </div>
+                  <Typography.H3 className="group-hover:text-primary transition-colors">
+                    {feature.title}
+                  </Typography.H3>
+                </Card.Header>
+                <Card.Content>
+                  <Typography.Body className="text-muted-foreground">
+                    {feature.description}
+                  </Typography.Body>
+                </Card.Content>
+              </Card.Root>
+            ))}
+          </Layout.Grid>
+        </Layout.Container>
+      </Layout.Section>
+
+      {/* Benefits Section */}
+      <Layout.Section spacing="lg">
+        <Layout.Container>
+          <Layout.Grid columns={2} gap="lg" className="items-center">
+            <div>
+              <Badge variant="outline" className="mb-4">
+                <CheckCircle className="h-3 w-3 mr-2" />
+                Key Benefits
+              </Badge>
+              <Typography.H2 className="mb-6">
+                Why choose Accio for your knowledge management?
+              </Typography.H2>
+              <Typography.Body className="text-muted-foreground mb-8">
+                Accio combines cutting-edge AI technology with intuitive design to create 
+                the ultimate knowledge management experience for modern professionals.
+              </Typography.Body>
+              
+              <div className="space-y-4 mb-8">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <Typography.Body className="mb-0">{benefit}</Typography.Body>
+                  </div>
+                ))}
+              </div>
+
+              <EnhancedButton asChild intent="primary" size="lg">
+                <Link to="/features">
+                  Explore All Features
+                  <Search className="ml-2 h-4 w-4" />
+                </Link>
+              </EnhancedButton>
+            </div>
+            
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent rounded-2xl" />
+              <Card.Root className="relative z-10">
+                <Card.Content className="p-8">
+                  <div className="grid grid-cols-2 gap-6">
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">50K+</div>
+                      <Typography.Caption>Items Organized</Typography.Caption>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">95%</div>
+                      <Typography.Caption>Search Accuracy</Typography.Caption>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">5h</div>
+                      <Typography.Caption>Time Saved Weekly</Typography.Caption>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-3xl font-bold text-primary mb-2">24/7</div>
+                      <Typography.Caption>Global Access</Typography.Caption>
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card.Root>
+            </div>
+          </Layout.Grid>
+        </Layout.Container>
+      </Layout.Section>
+
+      {/* Testimonials Section */}
+      <Layout.Section spacing="lg" background="muted">
+        <Layout.Container>
+          <div className="text-center mb-16">
+            <Badge variant="outline" className="mb-4">
+              <Users className="h-3 w-3 mr-2" />
+              Customer Stories
+            </Badge>
+            <Typography.H2>
+              Trusted by knowledge workers worldwide
+            </Typography.H2>
+            <Typography.Lead className="max-w-3xl mx-auto">
+              See how professionals across industries use Accio to transform their knowledge management 
+              and boost their productivity.
+            </Typography.Lead>
+          </div>
+          
+          <Layout.Grid columns={3} gap="lg">
+            {testimonials.map((testimonial, index) => (
+              <Card.Root key={index}>
+                <Card.Content className="p-6">
+                  <div className="flex items-center gap-1 mb-4">
+                    {[...Array(testimonial.rating)].map((_, i) => (
+                      <span key={i} className="text-yellow-400 text-sm">★</span>
+                    ))}
+                  </div>
+                  <Typography.Body className="text-muted-foreground mb-6">
+                    "{testimonial.content}"
+                  </Typography.Body>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-semibold">
+                      {testimonial.avatar}
+                    </div>
+                    <div>
+                      <div className="font-semibold text-sm">{testimonial.name}</div>
+                      <Typography.Caption>{testimonial.role}</Typography.Caption>
+                    </div>
+                  </div>
+                </Card.Content>
+              </Card.Root>
+            ))}
+          </Layout.Grid>
+        </Layout.Container>
+      </Layout.Section>
+
+      {/* Final CTA */}
+      <Layout.Section spacing="lg">
+        <Layout.Container>
+          <div className="text-center max-w-3xl mx-auto">
+            <Brain className="h-16 w-16 text-primary mx-auto mb-6 animate-pulse" />
+            <Typography.H2 className="mb-6">
+              Ready to transform your knowledge management?
+            </Typography.H2>
+            <Typography.Lead className="mb-8">
+              Join thousands of professionals who have revolutionized their information management. 
+              Start building your knowledge empire today.
+            </Typography.Lead>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <EnhancedButton asChild intent="primary" size="lg" className="group">
+                <Link to="/register">
+                  <Zap className="mr-2 h-5 w-5" />
+                  Start Free Trial
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </EnhancedButton>
+              
+              <EnhancedButton asChild variant="outline" size="lg">
+                <Link to="/contact">
+                  Talk to Sales
+                </Link>
+              </EnhancedButton>
+            </div>
+            
+            <Typography.Caption className="mt-6 text-muted-foreground">
+              No credit card required • 14-day free trial • Cancel anytime
+            </Typography.Caption>
+          </div>
+        </Layout.Container>
+      </Layout.Section>
+    </>
   );
 };
 
