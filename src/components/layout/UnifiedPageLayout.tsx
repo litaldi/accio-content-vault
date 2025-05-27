@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { EnhancedNavigation } from '@/components/navigation/EnhancedNavigation';
+import EnhancedNavigation from '@/components/navigation/EnhancedNavigation';
 import { useAuth } from '@/contexts/AuthContext';
 
 interface UnifiedPageLayoutProps {
