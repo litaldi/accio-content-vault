@@ -82,7 +82,7 @@ const About: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <Layout.Section spacing="xl" background="primary">
+      <Layout.Section spacing="lg" background="primary">
         <Layout.Container size="lg" className="text-center">
           <Badge variant="outline" className="mb-6">
             <Target className="h-3 w-3 mr-2" />
@@ -109,9 +109,9 @@ const About: React.FC = () => {
       </Layout.Section>
 
       {/* Stats Section */}
-      <Layout.Section spacing="lg" background="muted">
+      <Layout.Section spacing="default" background="muted">
         <Layout.Container size="lg">
-          <Layout.Grid columns={4} gap="lg">
+          <Layout.Grid columns={4} gap="default">
             {stats.map((stat, index) => (
               <Card.Root key={index} className="text-center p-6">
                 <Card.Content>
@@ -129,7 +129,7 @@ const About: React.FC = () => {
       </Layout.Section>
 
       {/* Story Section */}
-      <Layout.Section spacing="xl">
+      <Layout.Section spacing="lg">
         <Layout.Container size="lg">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -180,7 +180,7 @@ const About: React.FC = () => {
       </Layout.Section>
 
       {/* Values Section */}
-      <Layout.Section spacing="xl" background="muted">
+      <Layout.Section spacing="lg" background="muted">
         <Layout.Container size="lg">
           <div className="text-center mb-16">
             <Typography.H2 className="mb-4">Our Values</Typography.H2>
@@ -189,7 +189,7 @@ const About: React.FC = () => {
             </Typography.Lead>
           </div>
 
-          <Layout.Grid columns={2} gap="lg">
+          <Layout.Grid columns={2} gap="default">
             {values.map((value, index) => (
               <Card.Root key={index} className="p-6">
                 <Card.Content>
@@ -212,7 +212,7 @@ const About: React.FC = () => {
       </Layout.Section>
 
       {/* Team Section */}
-      <Layout.Section spacing="xl">
+      <Layout.Section spacing="lg">
         <Layout.Container size="lg">
           <div className="text-center mb-16">
             <Typography.H2 className="mb-4">Meet the Team</Typography.H2>
@@ -221,7 +221,7 @@ const About: React.FC = () => {
             </Typography.Lead>
           </div>
 
-          <Layout.Grid columns={2} gap="lg">
+          <Layout.Grid columns={2} gap="default">
             {team.map((member, index) => (
               <Card.Root key={index} className="p-6">
                 <Card.Content>
@@ -245,8 +245,8 @@ const About: React.FC = () => {
       </Layout.Section>
 
       {/* Join Us Section */}
-      <Layout.Section spacing="xl" background="primary">
-        <Layout.Container size="md" className="text-center">
+      <Layout.Section spacing="lg" background="primary">
+        <Layout.Container size="default" className="text-center">
           <Users className="h-12 w-12 mx-auto mb-6 text-primary-foreground" />
           <Typography.H2 className="mb-4">Join Our Journey</Typography.H2>
           <Typography.Lead className="mb-8">

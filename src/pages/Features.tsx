@@ -100,7 +100,7 @@ const Features: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <Layout.Section spacing="xl" background="primary">
+      <Layout.Section spacing="lg" background="primary">
         <Layout.Container size="lg" className="text-center">
           <Badge variant="outline" className="mb-6">
             <Star className="h-3 w-3 mr-2" />
@@ -131,7 +131,7 @@ const Features: React.FC = () => {
       </Layout.Section>
 
       {/* Core Features */}
-      <Layout.Section spacing="xl">
+      <Layout.Section spacing="lg">
         <Layout.Container size="lg">
           <div className="text-center mb-16">
             <Typography.H2 className="mb-4">Core Features</Typography.H2>
@@ -140,7 +140,7 @@ const Features: React.FC = () => {
             </Typography.Lead>
           </div>
 
-          <Layout.Grid columns={2} gap="xl">
+          <Layout.Grid columns={2} gap="lg">
             {coreFeatures.map((feature, index) => (
               <Card.Root key={index} className="p-8 hover:shadow-lg transition-shadow">
                 <Card.Content>
@@ -171,7 +171,7 @@ const Features: React.FC = () => {
       </Layout.Section>
 
       {/* Advanced Features */}
-      <Layout.Section spacing="xl" background="muted">
+      <Layout.Section spacing="lg" background="muted">
         <Layout.Container size="lg">
           <div className="text-center mb-16">
             <Typography.H2 className="mb-4">Advanced Capabilities</Typography.H2>
@@ -180,7 +180,7 @@ const Features: React.FC = () => {
             </Typography.Lead>
           </div>
 
-          <Layout.Grid columns={4} gap="lg">
+          <Layout.Grid columns={4} gap="default">
             {advancedFeatures.map((feature, index) => (
               <Card.Root key={index} className="text-center p-6">
                 <Card.Content>
@@ -199,7 +199,7 @@ const Features: React.FC = () => {
       </Layout.Section>
 
       {/* Use Cases */}
-      <Layout.Section spacing="xl">
+      <Layout.Section spacing="lg">
         <Layout.Container size="lg">
           <div className="text-center mb-16">
             <Typography.H2 className="mb-4">Perfect For</Typography.H2>
@@ -208,7 +208,7 @@ const Features: React.FC = () => {
             </Typography.Lead>
           </div>
 
-          <Layout.Grid columns={2} gap="lg">
+          <Layout.Grid columns={2} gap="default">
             {useCases.map((useCase, index) => (
               <Card.Root key={index} className="p-6">
                 <Card.Content>
@@ -229,8 +229,8 @@ const Features: React.FC = () => {
       </Layout.Section>
 
       {/* CTA Section */}
-      <Layout.Section spacing="xl" background="primary">
-        <Layout.Container size="md" className="text-center">
+      <Layout.Section spacing="lg" background="primary">
+        <Layout.Container size="default" className="text-center">
           <Typography.H2 className="mb-4">Ready to get started?</Typography.H2>
           <Typography.Lead className="mb-8">
             Join thousands of users who have transformed their knowledge management with Accio.

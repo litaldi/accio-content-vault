@@ -158,7 +158,7 @@ const Pricing: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <Layout.Section spacing="xl" background="primary">
+      <Layout.Section spacing="lg" background="primary">
         <Layout.Container size="lg" className="text-center">
           <Typography.H1 className="mb-4">
             Simple, transparent pricing
@@ -191,7 +191,7 @@ const Pricing: React.FC = () => {
       </Layout.Section>
 
       {/* Pricing Cards */}
-      <Layout.Section spacing="xl">
+      <Layout.Section spacing="lg">
         <Layout.Container size="lg">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {plans.map((plan, index) => (
@@ -251,7 +251,7 @@ const Pricing: React.FC = () => {
       </Layout.Section>
 
       {/* Features Comparison */}
-      <Layout.Section spacing="xl" background="muted">
+      <Layout.Section spacing="lg" background="muted">
         <Layout.Container size="lg">
           <div className="text-center mb-12">
             <Typography.H2 className="mb-4">All plans include</Typography.H2>
@@ -295,8 +295,8 @@ const Pricing: React.FC = () => {
       </Layout.Section>
 
       {/* FAQ Section */}
-      <Layout.Section spacing="xl">
-        <Layout.Container size="md">
+      <Layout.Section spacing="lg">
+        <Layout.Container size="default">
           <div className="text-center mb-12">
             <Typography.H2 className="mb-4">Frequently Asked Questions</Typography.H2>
             <Typography.Lead>
@@ -320,8 +320,8 @@ const Pricing: React.FC = () => {
       </Layout.Section>
 
       {/* CTA Section */}
-      <Layout.Section spacing="xl" background="primary">
-        <Layout.Container size="md" className="text-center">
+      <Layout.Section spacing="lg" background="primary">
+        <Layout.Container size="default" className="text-center">
           <Typography.H2 className="mb-4">Ready to get started?</Typography.H2>
           <Typography.Lead className="mb-8">
             Join thousands of users who are building their knowledge empire with Accio.

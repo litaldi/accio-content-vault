@@ -102,7 +102,7 @@ const Contact: React.FC = () => {
       </Helmet>
 
       {/* Hero Section */}
-      <Layout.Section spacing="lg" background="primary">
+      <Layout.Section spacing="default" background="primary">
         <Layout.Container size="lg" className="text-center">
           <Typography.H1 className="mb-4">Get in Touch</Typography.H1>
           <Typography.Lead className="max-w-2xl mx-auto">
@@ -112,7 +112,7 @@ const Contact: React.FC = () => {
         </Layout.Container>
       </Layout.Section>
 
-      <Layout.Section spacing="xl">
+      <Layout.Section spacing="lg">
         <Layout.Container size="lg">
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
@@ -289,8 +289,8 @@ const Contact: React.FC = () => {
       </Layout.Section>
 
       {/* Response Time */}
-      <Layout.Section spacing="lg" background="muted">
-        <Layout.Container size="md" className="text-center">
+      <Layout.Section spacing="default" background="muted">
+        <Layout.Container size="default" className="text-center">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Clock className="h-6 w-6 text-primary" />
             <Typography.H3>Quick Response Times</Typography.H3>
