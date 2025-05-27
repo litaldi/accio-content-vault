@@ -1,182 +1,163 @@
 
-# Accio - AI-Powered Knowledge Management Platform
+# Accio - AI-Powered Knowledge Engine
 
-A modern, dark-mode-only knowledge management platform that helps professionals organize and access information through advanced AI capabilities.
+A modern, responsive web application built with React, TypeScript, and Tailwind CSS that helps users capture, organize, and discover knowledge with the power of AI.
 
-## 🌟 Features
+## ✨ Features
 
-### Core Functionality
-- **AI-Powered Organization**: Automatic content categorization and tagging
-- **Semantic Search**: Find content by describing what you remember
-- **Universal Capture**: Save content from anywhere with browser extensions and mobile apps
-- **Smart Collections**: Dynamic content organization that adapts to your needs
+- **🔐 Authentication System**: Secure login/logout with Supabase integration
+- **📱 Responsive Design**: Mobile-first approach with clean, modern UI
+- **🌙 Dark/Light Mode**: System-aware theme switching
+- **🧠 AI-Powered Organization**: Smart content categorization and tagging
+- **🔍 Smart Search**: Natural language search capabilities
+- **📚 Collections Management**: Organize content into custom collections
+- **📊 Analytics Dashboard**: Track usage and insights
+- **♿ Accessibility**: WCAG 2.1 AA compliant with keyboard navigation
+- **🔒 Security**: Input validation, error boundaries, and secure auth flows
 
-### Advanced Capabilities
-- **Knowledge Analytics**: Insights into learning patterns and information consumption
-- **Team Collaboration**: Share collections and collaborate on knowledge bases
-- **Offline Access**: Access important content without internet connection
-- **Enterprise Security**: Bank-level encryption and compliance standards
-- **API Integration**: Connect with favorite tools and automate workflows
-- **Cross-Platform Sync**: Seamless synchronization across all devices
+## 🚀 Tech Stack
 
-## 🎨 Design System
-
-### Dark Mode Only
-- Fully optimized for dark mode with professional color scheme
-- Consistent visual hierarchy and typography throughout
-- Accessible contrast ratios meeting WCAG 2.1 AA standards
-
-### Responsive Design
-- Mobile-first approach with optimized layouts for all devices
-- Touch-friendly interface with proper target sizes
-- Smooth animations and transitions
-
-### Accessibility
-- Full keyboard navigation support
-- ARIA attributes and semantic HTML structure
-- Screen reader compatibility
-- Focus indicators and skip links
-- High contrast support
-
-## 🚀 Technology Stack
-
-- **Frontend**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS + Custom Design System
-- **UI Components**: Shadcn/ui
-- **State Management**: React Query (TanStack Query)
-- **Authentication**: Supabase Auth
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, Shadcn/UI components
+- **Backend**: Supabase (Authentication, Database, Real-time)
+- **State Management**: React Context, TanStack Query
 - **Routing**: React Router v6
-- **Icons**: Lucide React
-- **Meta Tags**: React Helmet Async
+- **Testing**: Jest, React Testing Library
+- **Build Tool**: Vite
+- **Package Manager**: npm
 
 ## 📁 Project Structure
 
 ```
 src/
-├── components/
-│   ├── navigation/          # Professional navigation system
-│   ├── layout/             # Layout components
-│   ├── ui/                 # Reusable UI components
-│   ├── accessibility/      # Accessibility features
-│   └── theme/              # Dark mode theme provider
-├── pages/                  # Route components
-├── contexts/               # React contexts (Auth, Accessibility)
-├── hooks/                  # Custom React hooks
-├── styles/                 # Global styles and utilities
-└── utils/                  # Utility functions
+├── components/          # Reusable UI components
+│   ├── auth/           # Authentication components
+│   ├── navigation/     # Navigation components
+│   ├── ui/             # Base UI components (shadcn/ui)
+│   └── ...
+├── contexts/           # React contexts (Auth, Theme)
+├── hooks/              # Custom React hooks
+├── pages/              # Page components
+├── lib/                # Utility functions
+├── integrations/       # External service integrations
+└── __tests__/          # Test files
 ```
-
-## 🔧 Key Improvements Made
-
-### 1. User Experience (UX)
-- ✅ Simplified user flows across all pages
-- ✅ Intuitive navigation with clear visual hierarchy
-- ✅ Onboarding cues and helpful tooltips
-- ✅ Professional loading states and feedback
-
-### 2. User Interface (UI)
-- ✅ Unified design system with consistent spacing and typography
-- ✅ Dark-mode-only color scheme with elegant deep backgrounds
-- ✅ Improved visual hierarchy and content grouping
-- ✅ Professional card designs and interactive elements
-
-### 3. Navigation System
-- ✅ Completely rebuilt navigation from scratch
-- ✅ Responsive design with mobile-friendly hamburger menu
-- ✅ Context-aware navigation (different for authenticated users)
-- ✅ Proper ARIA attributes and keyboard navigation
-
-### 4. Accessibility (WCAG 2.1 AA)
-- ✅ Semantic HTML structure throughout
-- ✅ Full keyboard navigation support
-- ✅ Proper focus indicators and skip links
-- ✅ Screen reader compatibility
-- ✅ High contrast support for dark mode
-
-### 5. Responsiveness
-- ✅ Mobile-first responsive design
-- ✅ Optimized for desktop, tablet, and mobile
-- ✅ Touch-friendly interactive elements
-- ✅ Proper spacing and layout on all breakpoints
-
-### 6. Performance & Code Quality
-- ✅ Removed RTL support to reduce complexity
-- ✅ Optimized bundle size with lazy loading
-- ✅ Clean, modular component architecture
-- ✅ Professional loading states and error handling
-
-### 7. Marketing & Engagement
-- ✅ Compelling homepage with clear value proposition
-- ✅ Professional testimonials and trust indicators
-- ✅ Clear call-to-action buttons throughout
-- ✅ Optimized metadata for SEO and social sharing
-
-### 8. Dark Mode Consistency
-- ✅ All components styled for dark mode only
-- ✅ Removed light mode code and unused styles
-- ✅ Consistent theming across all pages and states
-- ✅ Professional dark color palette
 
 ## 🛠️ Development
 
 ### Prerequisites
+
 - Node.js 18+ 
 - npm or yarn
+- Supabase account (for backend features)
 
-### Installation
-```bash
-npm install
-```
+### Setup
 
-### Development Server
-```bash
-npm run dev
-```
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd accio
+   ```
 
-### Build for Production
-```bash
-npm run build
-```
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-### Preview Production Build
-```bash
-npm run preview
-```
+3. **Environment Setup**
+   Create a `.env.local` file:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run test` - Run tests
+- `npm run lint` - Lint code
+- `npm run type-check` - Check TypeScript types
+
+## 🎨 Design System
+
+The app uses a consistent design system with:
+
+- **Typography**: Responsive text scales with semantic sizing
+- **Colors**: Primary/secondary color scheme with dark mode support
+- **Spacing**: Consistent spacing scale using Tailwind CSS
+- **Components**: Reusable components built on shadcn/ui
+- **Icons**: Lucide React icon library
+- **Animations**: Smooth transitions and micro-interactions
+
+## 🔐 Authentication
+
+The app includes a complete authentication system:
+
+- **Email/Password signup and login**
+- **Secure session management**
+- **Protected routes**
+- **User profile management**
+- **Password reset functionality**
+
+## 📱 Responsive Design
+
+- **Mobile-first approach**
+- **Breakpoints**: sm (640px), md (768px), lg (1024px), xl (1280px)
+- **Touch-friendly interface**
+- **Optimized for all screen sizes**
+
+## ♿ Accessibility
+
+- **WCAG 2.1 AA compliance**
+- **Keyboard navigation support**
+- **Screen reader compatibility**
+- **High contrast support**
+- **Focus management**
+- **Semantic HTML structure**
 
 ## 🚀 Deployment
 
-The application is optimized for deployment on modern hosting platforms like:
-- Vercel
-- Netlify
-- AWS Amplify
-- Cloudflare Pages
+The app is optimized for deployment on:
 
-## 📝 Environment Variables
+- **Vercel** (recommended)
+- **Netlify**
+- **Static hosting services**
 
-No environment variables are required for the frontend. All configuration is handled through the Supabase integration if authentication is needed.
+Build the app with `npm run build` and deploy the `dist` folder.
 
-## 🎯 Performance Optimizations
+## 🧪 Testing
 
-- Lazy loading of route components
-- Optimized image loading
-- Efficient CSS-in-JS with Tailwind
-- Minimal JavaScript bundle size
-- Professional caching strategies
+- **Unit tests**: Jest + React Testing Library
+- **Component tests**: Testing user interactions
+- **Accessibility tests**: Automated a11y testing
+- **E2E tests**: Critical user flows
 
-## 🔒 Security
+## 📄 License
 
-- CSP headers ready for production
-- XSS protection through React's built-in sanitization
-- Secure authentication through Supabase
-- No sensitive data in client-side code
+This project is licensed under the MIT License.
 
-## 📱 Browser Support
+## 🤝 Contributing
 
-- Chrome (last 2 versions)
-- Firefox (last 2 versions)
-- Safari (last 2 versions)
-- Edge (last 2 versions)
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if needed
+5. Submit a pull request
+
+## 📞 Support
+
+For support or questions:
+- Check the Help section in the app
+- Contact support through the app
+- Review documentation
 
 ---
 
-Built with ❤️ for professional knowledge management
+Built with ❤️ using modern web technologies.

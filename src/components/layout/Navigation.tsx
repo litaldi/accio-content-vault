@@ -1,13 +1,12 @@
 
 import React from 'react';
-import { UnifiedMainNavigation } from '@/components/navigation/UnifiedMainNavigation';
+import ResponsiveNavigation from '@/components/navigation/ResponsiveNavigation';
 
 /**
- * Navigation component - unified navigation system
- * This component provides a consistent navigation experience across the entire application
+ * Layout navigation component - uses the responsive navigation
  */
 const Navigation: React.FC = () => {
-  return <UnifiedMainNavigation />;
+  return <ResponsiveNavigation />;
 };
 
 export default Navigation;
