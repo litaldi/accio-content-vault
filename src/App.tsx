@@ -23,6 +23,11 @@ import EnhancedPricing from '@/pages/EnhancedPricing';
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
 import AIFeatures from '@/pages/AIFeatures';
+import Help from '@/pages/Help';
+import About from '@/pages/About';
+import Contact from '@/pages/Contact';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
 import { CleanBottomNavigation } from '@/components/ui/clean-bottom-navigation';
 import EnhancedAccessibilityHelper from '@/components/accessibility/EnhancedAccessibilityHelper';
 
@@ -36,7 +41,7 @@ function App() {
               <AccessibilityProvider>
                 <KeyboardShortcutsProvider>
                   <AccessibilityAnnouncer>
-                    <div className="min-h-screen bg-background font-sans antialiased flex flex-col">
+                    <div className="min-h-screen bg-background font-sans antialiased flex flex-col w-full">
                       <EnhancedAccessibility />
                       <StreamlinedMainNavigation />
                       <main className="flex-1 relative pb-16 md:pb-0" role="main" id="main-content">
@@ -52,6 +57,12 @@ function App() {
                           <Route path="/settings" element={<Settings />} />
                           <Route path="/login" element={<Login />} />
                           <Route path="/register" element={<Register />} />
+                          <Route path="/help" element={<Help />} />
+                          <Route path="/about" element={<About />} />
+                          <Route path="/contact" element={<Contact />} />
+                          <Route path="/privacy" element={<Privacy />} />
+                          <Route path="/terms" element={<Terms />} />
+                          {/* Alias routes for consistency */}
                           <Route path="/collections" element={<SavedContent />} />
                           <Route path="/analytics" element={<Dashboard />} />
                           <Route path="/profile" element={<Settings />} />

@@ -1,189 +1,235 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { MessageCircle, Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
+import { 
+  Mail, 
+  MapPin, 
+  Phone, 
+  MessageCircle,
+  Clock,
+  Send,
+  Building,
+  Users,
+  Headphones
+} from 'lucide-react';
 
 const Contact = () => {
+  const contactInfo = [
+    {
+      icon: Mail,
+      title: 'Email Us',
+      info: 'hello@accio.app',
+      description: 'General inquiries and support',
+      href: 'mailto:hello@accio.app'
+    },
+    {
+      icon: Phone,
+      title: 'Call Us',
+      info: '+1 (555) 123-ACCIO',
+      description: 'Phone support during business hours',
+      href: 'tel:+15551232224'
+    },
+    {
+      icon: MapPin,
+      title: 'Visit Us',
+      info: 'San Francisco, CA',
+      description: 'Schedule a meeting at our office',
+      href: '#'
+    },
+    {
+      icon: MessageCircle,
+      title: 'Live Chat',
+      info: 'Available 24/7',
+      description: 'Instant support through our app',
+      href: '#'
+    }
+  ];
+
+  const departments = [
+    {
+      icon: Headphones,
+      title: 'Customer Support',
+      email: 'support@accio.app',
+      description: 'Technical help and account assistance'
+    },
+    {
+      icon: Building,
+      title: 'Sales & Partnerships',
+      email: 'sales@accio.app',
+      description: 'Enterprise solutions and partnerships'
+    },
+    {
+      icon: Users,
+      title: 'Media & Press',
+      email: 'press@accio.app',
+      description: 'Press inquiries and media resources'
+    }
+  ];
+
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Contact Us - Accio Knowledge Management</title>
-        <meta name="description" content="Get in touch with our team for support, questions, or feedback." />
+        <title>Contact Us - Accio</title>
+        <meta name="description" content="Get in touch with the Accio team. Contact us for support, sales, partnerships, or general inquiries." />
       </Helmet>
 
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-12">
-          <div className="text-center mb-10">
-            <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Have questions or feedback? Our team is here to help you get the most out of Accio.
-            </p>
-          </div>
+      <div className="container mx-auto px-4 py-12 max-w-6xl">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+          </p>
+        </div>
 
-          <div className="grid lg:grid-cols-2 gap-10 max-w-5xl mx-auto">
-            {/* Contact Form */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+          {/* Contact Form */}
+          <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageCircle className="h-5 w-5 text-primary" />
-                  Send Us a Message
-                </CardTitle>
+                <CardTitle className="text-2xl">Send us a message</CardTitle>
                 <CardDescription>
-                  Fill out the form below and we'll get back to you shortly.
+                  Fill out the form below and we'll get back to you within 24 hours.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <label htmlFor="firstName" className="text-sm font-medium">
-                        First Name
-                      </label>
-                      <Input id="firstName" placeholder="John" />
+                <form className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="firstName">First Name *</Label>
+                      <Input id="firstName" placeholder="John" required />
                     </div>
-                    <div className="space-y-2">
-                      <label htmlFor="lastName" className="text-sm font-medium">
-                        Last Name
-                      </label>
-                      <Input id="lastName" placeholder="Doe" />
+                    <div>
+                      <Label htmlFor="lastName">Last Name *</Label>
+                      <Input id="lastName" placeholder="Doe" required />
                     </div>
                   </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                      Email
-                    </label>
-                    <Input id="email" type="email" placeholder="john@example.com" />
+                  
+                  <div>
+                    <Label htmlFor="email">Email Address *</Label>
+                    <Input id="email" type="email" placeholder="john@company.com" required />
                   </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="subject" className="text-sm font-medium">
-                      Subject
-                    </label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a subject" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="support">Technical Support</SelectItem>
-                        <SelectItem value="billing">Billing Inquiry</SelectItem>
-                        <SelectItem value="feature">Feature Request</SelectItem>
-                        <SelectItem value="feedback">General Feedback</SelectItem>
-                        <SelectItem value="partnership">Partnership Opportunity</SelectItem>
-                      </SelectContent>
-                    </Select>
+                  
+                  <div>
+                    <Label htmlFor="company">Company</Label>
+                    <Input id="company" placeholder="Your company name" />
                   </div>
-
-                  <div className="space-y-2">
-                    <label htmlFor="message" className="text-sm font-medium">
-                      Message
-                    </label>
+                  
+                  <div>
+                    <Label htmlFor="subject">Subject *</Label>
+                    <Input id="subject" placeholder="How can we help you?" required />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="message">Message *</Label>
                     <Textarea 
                       id="message" 
-                      placeholder="How can we help you?" 
-                      rows={5}
+                      placeholder="Tell us more about your inquiry..."
+                      rows={6}
+                      required 
                     />
                   </div>
-
-                  <Button type="submit" className="w-full">
-                    <Send className="h-4 w-4 mr-2" />
+                  
+                  <Button type="submit" className="w-full" size="lg">
                     Send Message
+                    <Send className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
               </CardContent>
             </Card>
+          </div>
 
-            {/* Contact Information */}
-            <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Get in Touch</h2>
-                <p className="text-muted-foreground mb-8">
-                  We're here to help you with any questions about our platform, 
-                  pricing, or features. Reach out to us through any of these channels.
+          {/* Contact Information */}
+          <div className="space-y-6">
+            {/* Quick Contact */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Contact</CardTitle>
+                <CardDescription>
+                  Get in touch through your preferred method
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {contactInfo.map((contact, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <contact.icon className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-medium">{contact.title}</h4>
+                      <a href={contact.href} className="text-primary hover:underline">
+                        {contact.info}
+                      </a>
+                      <p className="text-sm text-muted-foreground">
+                        {contact.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Departments */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Departments</CardTitle>
+                <CardDescription>
+                  Contact the right team for your specific needs
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {departments.map((dept, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <dept.icon className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+                    <div className="flex-1">
+                      <h4 className="font-medium">{dept.title}</h4>
+                      <a href={`mailto:${dept.email}`} className="text-primary hover:underline">
+                        {dept.email}
+                      </a>
+                      <p className="text-sm text-muted-foreground">
+                        {dept.description}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Business Hours */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                  Business Hours
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span>Monday - Friday</span>
+                    <span>9:00 AM - 6:00 PM PST</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Saturday</span>
+                    <span>10:00 AM - 4:00 PM PST</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Sunday</span>
+                    <span>Closed</span>
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground mt-4">
+                  Emergency support available 24/7 through live chat
                 </p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="mt-1">
-                    <Mail className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Email</h3>
-                    <p className="text-muted-foreground">support@accio-app.com</p>
-                    <p className="text-sm mt-1">We reply within 24 hours</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="mt-1">
-                    <Phone className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Phone</h3>
-                    <p className="text-muted-foreground">+1 (555) 123-4567</p>
-                    <p className="text-sm mt-1">Mon-Fri from 9am to 5pm EST</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="mt-1">
-                    <MapPin className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Office</h3>
-                    <p className="text-muted-foreground">
-                      123 Knowledge Street<br />
-                      San Francisco, CA 94107<br />
-                      United States
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="mt-1">
-                    <Clock className="h-5 w-5 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-medium">Hours</h3>
-                    <p className="text-muted-foreground">
-                      Monday - Friday: 9:00 AM - 5:00 PM<br />
-                      Saturday & Sunday: Closed
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="pt-6 border-t">
-                <h3 className="font-medium mb-2">Connect With Us</h3>
-                <div className="flex gap-3">
-                  <Button variant="outline" size="icon" className="rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951" />
-                    </svg>
-                  </Button>
-                  <Button variant="outline" size="icon" className="rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15" />
-                    </svg>
-                  </Button>
-                  <Button variant="outline" size="icon" className="rounded-full">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
-                      <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
-                    </svg>
-                  </Button>
-                </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
