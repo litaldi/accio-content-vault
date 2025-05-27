@@ -1,159 +1,208 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
+import CleanNavigation from '@/components/navigation/CleanNavigation';
+import Footer from '@/components/Footer';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { useAuth } from '@/contexts/AuthContext';
-import { Brain, Search, Tag, BarChart3, Share2, Zap, ArrowRight, CheckCircle, Users, Shield, Globe } from 'lucide-react';
+import { 
+  Brain, 
+  Zap, 
+  Search, 
+  Shield,
+  ArrowRight,
+  CheckCircle,
+  Star,
+  Users,
+  Bookmark,
+  TrendingUp,
+  Network,
+  Download,
+  BookOpen,
+  Filter
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { QuickCaptureWidget } from '@/components/features/QuickCaptureWidget';
 
 const Index = () => {
-  const { user } = useAuth();
-
   const features = [
     {
-      icon: <Brain className="h-6 w-6" />,
-      title: "Never Lose Important Ideas Again",
-      description: "Our AI instantly organizes everything you save, so brilliant insights don't slip through the cracks."
+      icon: Brain,
+      title: "AI-Powered Organization",
+      description: "Automatically categorize and connect your knowledge with intelligent tagging and smart relationships."
     },
     {
-      icon: <Search className="h-6 w-6" />,
-      title: "Find Anything in Seconds",
-      description: "Stop digging through folders. Our smart search understands what you're looking for, even if you can't remember the exact words."
+      icon: Zap,
+      title: "Lightning Fast Search",
+      description: "Find anything in your knowledge base instantly with semantic search that understands context."
     },
     {
-      icon: <BarChart3 className="h-6 w-6" />,
-      title: "See Your Knowledge Growth",
-      description: "Track how your knowledge expands over time and discover patterns in your learning journey."
+      icon: Shield,
+      title: "Secure & Private",
+      description: "Your data stays private with enterprise-grade security and end-to-end encryption."
     },
     {
-      icon: <Share2 className="h-6 w-6" />,
-      title: "Work With Your Favorite Tools",
-      description: "Export to Notion, Obsidian, or any tool you love. Your knowledge stays flexible and portable."
+      icon: Network,
+      title: "Knowledge Graph",
+      description: "Visualize connections between your ideas and discover insights through interactive graphs."
     },
     {
-      icon: <Tag className="h-6 w-6" />,
-      title: "Zero Manual Organization",
-      description: "Forget about filing systems. Our AI automatically tags and categorizes everything perfectly."
+      icon: BookOpen,
+      title: "Reading Mode",
+      description: "Distraction-free reading experience with customizable fonts, themes, and layouts."
     },
     {
-      icon: <Zap className="h-6 w-6" />,
-      title: "Save From Anywhere, Instantly",
-      description: "Whether you're on your phone, laptop, or tablet, capture brilliant content with one click."
+      icon: Download,
+      title: "Data Portability",
+      description: "Export your data in multiple formats or import from other knowledge management tools."
     }
   ];
 
-  const benefits = [
-    "Save 5+ hours weekly on information management",
-    "Never lose another brilliant idea or important article",
-    "Find any saved content in under 10 seconds",
-    "Build a searchable library of everything that matters",
-    "Stop feeling overwhelmed by information chaos",
-    "Access your knowledge from any device, anywhere"
+  const newFeatures = [
+    {
+      icon: Zap,
+      title: "Quick Capture",
+      description: "Save content instantly from anywhere with our floating capture widget.",
+      badge: "New"
+    },
+    {
+      icon: Filter,
+      title: "Advanced Search",
+      description: "Powerful filtering and search capabilities to find exactly what you need.",
+      badge: "Enhanced"
+    },
+    {
+      icon: Network,
+      title: "Knowledge Graph",
+      description: "Visualize relationships between your content, tags, and collections.",
+      badge: "Beta"
+    }
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah Chen",
-      role: "Product Manager",
-      content: "I used to lose so many great ideas in bookmarks and notes. Now I actually USE what I save. Game changer!",
-      avatar: "SC"
-    },
-    {
-      name: "Mike Rodriguez",
-      role: "Developer",
-      content: "Finally found something that gets better the more I use it. The AI actually understands my content.",
-      avatar: "MR"
-    },
-    {
-      name: "Dr. Emily Watson",
-      role: "Researcher",
-      content: "This is what every researcher needs. I can see exactly how my knowledge is growing and where the gaps are.",
-      avatar: "EW"
-    }
+  const stats = [
+    { value: "50,000+", label: "Active Users" },
+    { value: "1M+", label: "Items Saved" },
+    { value: "99.9%", label: "Uptime" },
+    { value: "5+ hrs", label: "Saved Weekly" }
   ];
 
   return (
-    <>
+    <div className="min-h-screen bg-background">
       <Helmet>
-        <title>Accio - Turn Information Chaos Into Your Competitive Advantage</title>
-        <meta name="description" content="Stop losing brilliant ideas in digital clutter. Accio's AI transforms scattered information into organized, searchable knowledge you'll actually use." />
-        <meta name="keywords" content="knowledge management, AI, productivity, information organization, digital workspace" />
+        <title>Accio - Your AI Knowledge Management Platform</title>
+        <meta name="description" content="Transform scattered information into organized intelligence. Save, organize, and discover insights with AI-powered knowledge management." />
+        <meta name="keywords" content="knowledge management, AI organization, productivity, research, bookmarks" />
+        <link rel="canonical" href="/" />
       </Helmet>
 
-      <div className="min-h-screen bg-background">
+      <CleanNavigation />
+
+      <main>
         {/* Hero Section */}
-        <section className="relative overflow-hidden bg-gradient-to-br from-background via-background to-accent/10">
-          <div className="container mx-auto px-4 py-20 lg:py-32">
-            <div className="text-center max-w-4xl mx-auto">
+        <section className="py-24 lg:py-32">
+          <div className="container">
+            <div className="mx-auto max-w-4xl text-center">
               <Badge variant="secondary" className="mb-6">
-                <Zap className="h-3 w-3 mr-1" />
-                Join 10,000+ Professionals Building Knowledge Empires
+                <Star className="h-3 w-3 mr-1" />
+                Trusted by 50,000+ professionals
               </Badge>
               
-              <h1 className="text-4xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-                Stop Losing Brilliant Ideas in
-                <br />
-                <span className="text-primary">Digital Chaos</span>
+              <h1 className="text-4xl font-bold tracking-tight sm:text-6xl mb-6">
+                Your AI-powered
+                <span className="text-primary block">knowledge engine</span>
               </h1>
               
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Transform scattered bookmarks, articles, and notes into a powerful knowledge system. 
-                Our AI organizes everything so you can focus on what matters: using your insights to win.
+              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+                Stop losing brilliant ideas. Transform scattered information into organized intelligence 
+                and reclaim 5+ hours weekly with AI-powered knowledge management.
               </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {user ? (
-                  <Button size="lg" asChild>
-                    <Link to="/dashboard">
-                      Continue Building Your Library
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                ) : (
-                  <>
-                    <Button size="lg" asChild>
-                      <Link to="/register">
-                        Start Building Your Knowledge Empire
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="lg" asChild>
-                      <Link to="/features">See How It Works</Link>
-                    </Button>
-                  </>
-                )}
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                <Button size="lg" asChild>
+                  <Link to="/register">
+                    Get Started Free
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/features">See Features</Link>
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-2xl mx-auto">
+                {stats.map((stat, index) => (
+                  <div key={index} className="text-center">
+                    <div className="text-2xl font-bold text-primary">{stat.value}</div>
+                    <div className="text-sm text-muted-foreground">{stat.label}</div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Benefits Section */}
-        <section className="py-20 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-                What You'll Achieve With Accio
+        {/* New Features Highlight */}
+        <section className="py-16 bg-gradient-to-br from-primary/5 to-background">
+          <div className="container">
+            <div className="text-center mb-12">
+              <Badge variant="outline" className="mb-4">
+                <Zap className="h-3 w-3 mr-1" />
+                Latest Features
+              </Badge>
+              <h2 className="text-3xl font-bold mb-4">
+                Powerful new tools to supercharge your workflow
               </h2>
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Real benefits that transform how you work with information every single day.
+                We're constantly adding new features to make knowledge management effortless
               </p>
             </div>
-            
+
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              {newFeatures.map((feature, index) => (
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow bg-card/50 backdrop-blur">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <feature.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <Badge variant="secondary">{feature.badge}</Badge>
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-24 bg-muted/30">
+          <div className="container">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">
+                Everything you need to build your knowledge empire
+              </h2>
+              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+                Powerful features designed to amplify your intellectual capabilities
+              </p>
+            </div>
+
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => (
-                <Card key={index} className="h-full hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary">
-                      {feature.icon}
+                <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+                  <CardContent className="p-8">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
+                      <feature.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle className="text-xl">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <CardDescription className="text-base">
+                    <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                    <p className="text-muted-foreground leading-relaxed">
                       {feature.description}
-                    </CardDescription>
+                    </p>
                   </CardContent>
                 </Card>
               ))}
@@ -161,140 +210,123 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Value Props Section */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-                  Finally, A System That Actually Works
-                </h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Tired of bookmarks you never revisit? Notes you can't find? Information scattered 
-                  across a dozen apps? Accio changes everything.
-                </p>
-                
-                <div className="space-y-4">
-                  {benefits.map((benefit, index) => (
-                    <div key={index} className="flex items-start gap-3">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="font-medium">{benefit}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="bg-gradient-to-br from-primary/5 to-accent/5 rounded-2xl p-8">
-                <div className="grid grid-cols-2 gap-6">
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary mb-2">5hrs</div>
-                    <div className="text-sm text-muted-foreground">Saved Per Week</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary mb-2">10sec</div>
-                    <div className="text-sm text-muted-foreground">Average Search Time</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary mb-2">95%</div>
-                    <div className="text-sm text-muted-foreground">Find Success Rate</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-3xl font-bold text-primary mb-2">0min</div>
-                    <div className="text-sm text-muted-foreground">Setup Time</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Social Proof Section */}
-        <section className="py-20 bg-muted/30">
-          <div className="container mx-auto px-4">
+        {/* Social Proof */}
+        <section className="py-24">
+          <div className="container">
             <div className="text-center mb-16">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-4">
-                Join The Knowledge Revolution
+              <h2 className="text-3xl font-bold mb-4">
+                Join thousands of knowledge workers
               </h2>
               <p className="text-xl text-muted-foreground">
-                Professionals worldwide are building competitive advantages with organized knowledge.
+                Professionals from leading companies trust Accio
               </p>
             </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              {testimonials.map((testimonial, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardContent className="pt-6">
-                    <p className="text-muted-foreground mb-4 italic">"{testimonial.content}"</p>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-semibold">
-                        {testimonial.avatar}
-                      </div>
-                      <div>
-                        <div className="font-semibold">{testimonial.name}</div>
-                        <div className="text-sm text-muted-foreground">{testimonial.role}</div>
-                      </div>
+
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <Card className="border-0 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "Accio has transformed how I manage research. What used to take hours now takes minutes."
+                  </p>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-primary" />
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                    <div>
+                      <div className="font-medium">Sarah Chen</div>
+                      <div className="text-sm text-muted-foreground">Research Director</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "The AI organization is incredible. It finds connections I never would have discovered."
+                  </p>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium">Marcus Rodriguez</div>
+                      <div className="text-sm text-muted-foreground">Product Manager</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-0 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-1 mb-4">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <p className="text-muted-foreground mb-4">
+                    "Finally, a knowledge management tool that actually understands how I think and work."
+                  </p>
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+                      <Users className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <div className="font-medium">Emma Thompson</div>
+                      <div className="text-sm text-muted-foreground">Consultant</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </section>
 
-        {/* Final CTA Section */}
-        <section className="py-20">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-                Your Knowledge Empire Starts Today
+        {/* CTA Section */}
+        <section className="py-24 bg-primary/5">
+          <div className="container">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl font-bold mb-4">
+                Ready to transform your productivity?
               </h2>
               <p className="text-xl text-muted-foreground mb-8">
-                Stop letting brilliant ideas slip away. Start building the knowledge system that will 
-                accelerate your success for years to come.
+                Join thousands of professionals who've revolutionized their knowledge management. 
+                Start building your knowledge empire today.
               </p>
-              
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {user ? (
-                  <Button size="lg" asChild>
-                    <Link to="/dashboard">
-                      Continue Your Journey
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                ) : (
-                  <>
-                    <Button size="lg" asChild>
-                      <Link to="/register">
-                        Yes, Build My Knowledge Empire
-                        <ArrowRight className="ml-2 h-4 w-4" />
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="lg" asChild>
-                      <Link to="/features">Show Me The Magic First</Link>
-                    </Button>
-                  </>
-                )}
+                <Button size="lg" asChild>
+                  <Link to="/register">
+                    Start Free Trial
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/features">Learn More</Link>
+                </Button>
               </div>
-              
-              <div className="flex items-center justify-center gap-6 mt-8 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4" />
-                  <span>Free forever plan</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  <span>No credit card needed</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Globe className="h-4 w-4" />
-                  <span>Start in 30 seconds</span>
-                </div>
-              </div>
+              <p className="text-sm text-muted-foreground mt-4">
+                Free forever plan available • No credit card required
+              </p>
             </div>
           </div>
         </section>
-      </div>
-    </>
+      </main>
+
+      <Footer />
+      
+      {/* Quick Capture Widget */}
+      <QuickCaptureWidget />
+    </div>
   );
 };
 

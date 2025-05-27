@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 
@@ -108,9 +108,4 @@ export const useKeyboardShortcuts = () => {
   }, [navigate, toast]);
 
   return { shortcuts };
-};
-
-export const KeyboardShortcutsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  useKeyboardShortcuts();
-  return <>{children}</>;
 };

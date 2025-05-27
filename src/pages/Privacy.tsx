@@ -1,245 +1,121 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Shield, Eye, Lock, Users, FileText, Mail } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
 
 const Privacy = () => {
-  const lastUpdated = 'January 15, 2025';
-
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Helmet>
-        <title>Privacy Policy - Accio</title>
-        <meta name="description" content="Learn how Accio protects your privacy and handles your personal data." />
+        <title>Privacy Policy - Accio Knowledge Management</title>
+        <meta name="description" content="Learn about our privacy policy and how we handle your data." />
+        <meta name="robots" content="noindex" />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <Shield className="h-16 w-16 text-primary mx-auto mb-6" />
-          <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-lg text-muted-foreground">
-            Last updated: {lastUpdated}
-          </p>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-12 max-w-4xl">
+          <h1 className="text-4xl font-bold mb-6">Privacy Policy</h1>
+          <p className="text-muted-foreground mb-8">Last updated: May 26, 2025</p>
+          
+          <div className="prose prose-sm md:prose-base dark:prose-invert max-w-none">
+            <p>
+              At Accio, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our knowledge management platform.
+            </p>
+
+            <Separator className="my-6" />
+            
+            <h2 className="text-2xl font-semibold mt-8 mb-4">1. Information We Collect</h2>
+            <p>We collect information that you provide directly to us when you:</p>
+            <ul className="list-disc pl-6 space-y-1">
+              <li>Create an account</li>
+              <li>Use our services</li>
+              <li>Contact customer support</li>
+              <li>Complete forms or surveys</li>
+              <li>Save content to your knowledge base</li>
+            </ul>
+
+            <h3 className="text-xl font-semibold mt-6 mb-2">Personal Information</h3>
+            <p>
+              This may include your name, email address, profile information, and payment details if you subscribe to our paid services.
+            </p>
+
+            <h3 className="text-xl font-semibold mt-6 mb-2">Content Information</h3>
+            <p>
+              We collect and store the content you save, organize, and manage using our platform, including text, URLs, documents, and any metadata associated with them.
+            </p>
+
+            <h3 className="text-xl font-semibold mt-6 mb-2">Usage Information</h3>
+            <p>
+              We collect information about how you interact with our services, including access times, pages viewed, links clicked, and other actions taken within the application.
+            </p>
+
+            <Separator className="my-6" />
+
+            <h2 className="text-2xl font-semibold mt-8 mb-4">2. How We Use Your Information</h2>
+            <p>We use the information we collect to:</p>
+            <ul className="list-disc pl-6 space-y-1">
+              <li>Provide, maintain, and improve our services</li>
+              <li>Process transactions and manage your account</li>
+              <li>Send you technical notices, updates, security alerts, and support messages</li>
+              <li>Respond to your comments, questions, and customer service requests</li>
+              <li>Monitor and analyze trends, usage, and activities in connection with our services</li>
+              <li>Detect, investigate, and prevent fraudulent transactions and other illegal activities</li>
+              <li>Personalize and improve your experience</li>
+            </ul>
+
+            <Separator className="my-6" />
+
+            <h2 className="text-2xl font-semibold mt-8 mb-4">3. Data Security</h2>
+            <p>
+              We implement appropriate technical and organizational measures to protect the security of your personal information. However, please note that no method of transmission over the Internet or method of electronic storage is 100% secure.
+            </p>
+
+            <Separator className="my-6" />
+
+            <h2 className="text-2xl font-semibold mt-8 mb-4">4. Data Retention</h2>
+            <p>
+              We retain your personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required or permitted by law.
+            </p>
+
+            <Separator className="my-6" />
+
+            <h2 className="text-2xl font-semibold mt-8 mb-4">5. Your Rights</h2>
+            <p>
+              Depending on your location, you may have certain rights regarding your personal information, such as:
+            </p>
+            <ul className="list-disc pl-6 space-y-1">
+              <li>Access to your personal information</li>
+              <li>Correction of inaccurate or incomplete information</li>
+              <li>Deletion of your personal information</li>
+              <li>Restriction of processing of your personal information</li>
+              <li>Data portability</li>
+            </ul>
+
+            <p className="mt-4">
+              To exercise these rights, please contact us using the information provided in the "Contact Us" section below.
+            </p>
+
+            <Separator className="my-6" />
+
+            <h2 className="text-2xl font-semibold mt-8 mb-4">6. Updates to this Privacy Policy</h2>
+            <p>
+              We may update this Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date at the top of this page.
+            </p>
+
+            <Separator className="my-6" />
+
+            <h2 className="text-2xl font-semibold mt-8 mb-4">7. Contact Us</h2>
+            <p>
+              If you have any questions about this Privacy Policy, please contact us at:
+            </p>
+            <p className="mt-2">
+              <strong>Email:</strong> privacy@accio-app.com<br />
+              <strong>Address:</strong> 123 Knowledge Street, San Francisco, CA 94107
+            </p>
+          </div>
         </div>
-
-        {/* Introduction */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Our Commitment to Your Privacy</CardTitle>
-          </CardHeader>
-          <CardContent className="prose prose-gray max-w-none">
-            <p>
-              At Accio, we believe that privacy is a fundamental right. This Privacy Policy explains how we collect, 
-              use, and protect your personal information when you use our knowledge management platform.
-            </p>
-            <p>
-              We are committed to being transparent about our data practices and giving you control over your information.
-            </p>
-          </CardContent>
-        </Card>
-
-        {/* Information We Collect */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Eye className="h-5 w-5 text-primary" />
-              Information We Collect
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Account Information</h3>
-              <p className="text-muted-foreground">
-                When you create an account, we collect your email address, name, and any profile information you choose to provide.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Content Data</h3>
-              <p className="text-muted-foreground">
-                We store the content you save to Accio, including articles, notes, documents, and any metadata you add to organize your knowledge.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Usage Information</h3>
-              <p className="text-muted-foreground">
-                We collect information about how you use our service, including features accessed, search queries, and interaction patterns to improve our AI capabilities.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Technical Data</h3>
-              <p className="text-muted-foreground">
-                We automatically collect certain technical information, including your IP address, browser type, device information, and log data.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* How We Use Information */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5 text-primary" />
-              How We Use Your Information
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Service Provision</h3>
-              <p className="text-muted-foreground">
-                We use your information to provide, maintain, and improve Accio's knowledge management features, including AI-powered organization and search.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Personalization</h3>
-              <p className="text-muted-foreground">
-                We personalize your experience by using your usage patterns to improve content recommendations and search results.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Communication</h3>
-              <p className="text-muted-foreground">
-                We may send you service-related notifications, updates, and promotional messages (which you can opt out of).
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Security and Fraud Prevention</h3>
-              <p className="text-muted-foreground">
-                We use your information to protect our service and users from fraud, abuse, and security threats.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Data Protection */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Lock className="h-5 w-5 text-primary" />
-              How We Protect Your Data
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Encryption</h3>
-              <p className="text-muted-foreground">
-                All data is encrypted in transit using TLS and at rest using AES-256 encryption standards.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Access Controls</h3>
-              <p className="text-muted-foreground">
-                We implement strict access controls and the principle of least privilege for our team members.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Regular Security Audits</h3>
-              <p className="text-muted-foreground">
-                We conduct regular security assessments and penetration testing to identify and address vulnerabilities.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Data Minimization</h3>
-              <p className="text-muted-foreground">
-                We only collect and retain the minimum amount of data necessary to provide our services.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Sharing Information */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5 text-primary" />
-              Information Sharing
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Service Providers</h3>
-              <p className="text-muted-foreground">
-                We may share information with trusted third-party service providers who help us operate our platform, under strict confidentiality agreements.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Legal Requirements</h3>
-              <p className="text-muted-foreground">
-                We may disclose information if required by law or in response to valid legal processes.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Business Transfers</h3>
-              <p className="text-muted-foreground">
-                In the event of a merger, acquisition, or sale of assets, user information may be transferred as part of the transaction.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">What We Don't Share</h3>
-              <p className="text-muted-foreground">
-                We never sell your personal data to third parties or use it for advertising purposes.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Your Rights */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Your Privacy Rights</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Access and Export</h3>
-              <p className="text-muted-foreground">
-                You can access and export your data at any time through your account settings.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Correction and Deletion</h3>
-              <p className="text-muted-foreground">
-                You can update or delete your personal information and content through your account.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Data Portability</h3>
-              <p className="text-muted-foreground">
-                You can request a copy of your data in a machine-readable format.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Account Deletion</h3>
-              <p className="text-muted-foreground">
-                You can delete your account at any time, and we will permanently remove your data within 30 days.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Contact */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Mail className="h-5 w-5 text-primary" />
-              Contact Us
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-4">
-              If you have any questions about this Privacy Policy or our data practices, please contact us:
-            </p>
-            <div className="space-y-2">
-              <p><strong>Email:</strong> privacy@accio.app</p>
-              <p><strong>Address:</strong> Accio Privacy Team, San Francisco, CA</p>
-            </div>
-            <p className="text-sm text-muted-foreground mt-4">
-              We will respond to privacy-related inquiries within 30 days.
-            </p>
-          </CardContent>
-        </Card>
       </div>
-    </div>
+    </>
   );
 };
 

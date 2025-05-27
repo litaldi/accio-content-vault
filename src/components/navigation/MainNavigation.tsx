@@ -1,13 +1,13 @@
 
 import React from 'react';
-import MegaMenuNavigation from './MegaMenuNavigation';
+import { UnifiedMainNavigation } from './UnifiedMainNavigation';
 
 /**
- * Main navigation component - now uses the new mega menu system
- * This provides a comprehensive, organized navigation experience aligned with the footer structure
+ * Main navigation component - alias for the unified navigation system
+ * @deprecated Use UnifiedMainNavigation directly for better clarity
  */
 const MainNavigation: React.FC = () => {
-  return <MegaMenuNavigation />;
+  return <UnifiedMainNavigation />;
 };
 
 export default MainNavigation;

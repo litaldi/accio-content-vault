@@ -12,9 +12,7 @@ import {
   Calendar,
   Award,
   Eye,
-  CheckCircle,
-  BarChart3,
-  Flame
+  CheckCircle
 } from 'lucide-react';
 
 export const ReadingProgressTracker = () => {
@@ -77,23 +75,23 @@ export const ReadingProgressTracker = () => {
   ];
 
   const achievements = [
-    { title: "Speed Reader", description: "Read 5 articles in one day", unlocked: true },
-    { title: "Consistent Learner", description: "7-day reading streak", unlocked: true },
-    { title: "Deep Diver", description: "Spent 2+ hours on complex content", unlocked: false },
-    { title: "Knowledge Explorer", description: "Read across 5 different topics", unlocked: false }
-  ];
-
-  const weeklyData = [
-    { day: 'Mon', articles: 3, time: 45 },
-    { day: 'Tue', articles: 2, time: 30 },
-    { day: 'Wed', articles: 4, time: 65 },
-    { day: 'Thu', articles: 3, time: 40 },
-    { day: 'Fri', articles: 5, time: 80 },
-    { day: 'Sat', articles: 1, time: 15 },
-    { day: 'Sun', articles: 0, time: 0 }
+    { name: "Speed Reader", description: "Read 5 articles in one day", earned: true },
+    { name: "Knowledge Seeker", description: "Maintain 7-day reading streak", earned: true },
+    { name: "Deep Diver", description: "Complete 3 research papers", earned: false },
+    { name: "Consistent Learner", description: "Read for 30 days straight", earned: false }
   ];
 
   const currentData = progressData[selectedPeriod];
+  const progressPercentage = (currentData.timeSpent / currentData.goal) * 100;
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'Easy': return 'bg-green-500';
+      case 'Medium': return 'bg-yellow-500';
+      case 'Hard': return 'bg-red-500';
+      default: return 'bg-gray-500';
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -102,14 +100,15 @@ export const ReadingProgressTracker = () => {
           <CardTitle className="flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-primary" />
             Reading Progress Tracker
-            <Badge variant="secondary">AI-Enhanced</Badge>
+            <Badge variant="secondary">Personal Analytics</Badge>
           </CardTitle>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Period Selector */}
-          <div className="flex gap-2">
-            {(['week', 'month', 'year'] as const).map((period) => (
+          {/* Period Selection */}
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium">Time Period:</span>
+            {(['week', 'month'] as const).map((period) => (
               <Button
                 key={period}
                 variant={selectedPeriod === period ? 'default' : 'outline'}
@@ -117,44 +116,38 @@ export const ReadingProgressTracker = () => {
                 onClick={() => setSelectedPeriod(period)}
                 className="capitalize"
               >
-                This {period}
+                {period}
               </Button>
             ))}
           </div>
 
-          {/* Main Stats */}
+          {/* Overview Stats */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Card>
               <CardContent className="p-4 text-center">
-                <BookOpen className="h-8 w-8 text-primary mx-auto mb-2" />
-                <div className="text-2xl font-bold">{currentData.articlesRead}</div>
-                <div className="text-sm text-muted-foreground">Articles Read</div>
+                <div className="text-2xl font-bold text-primary">{currentData.articlesRead}</div>
+                <p className="text-xs text-muted-foreground">Articles Read</p>
               </CardContent>
             </Card>
             
             <Card>
               <CardContent className="p-4 text-center">
-                <Clock className="h-8 w-8 text-blue-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold">{currentData.timeSpent}m</div>
-                <div className="text-sm text-muted-foreground">Time Spent</div>
+                <div className="text-2xl font-bold text-blue-600">{Math.floor(currentData.timeSpent / 60)}h {currentData.timeSpent % 60}m</div>
+                <p className="text-xs text-muted-foreground">Time Spent</p>
               </CardContent>
             </Card>
             
             <Card>
               <CardContent className="p-4 text-center">
-                <Target className="h-8 w-8 text-green-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold">
-                  {Math.round((currentData.timeSpent / currentData.goal) * 100)}%
-                </div>
-                <div className="text-sm text-muted-foreground">Goal Progress</div>
+                <div className="text-2xl font-bold text-green-600">{currentData.streak}</div>
+                <p className="text-xs text-muted-foreground">Day Streak</p>
               </CardContent>
             </Card>
             
             <Card>
               <CardContent className="p-4 text-center">
-                <Flame className="h-8 w-8 text-orange-500 mx-auto mb-2" />
-                <div className="text-2xl font-bold">{currentData.streak}</div>
-                <div className="text-sm text-muted-foreground">Day Streak</div>
+                <div className="text-2xl font-bold text-purple-600">{Math.round(progressPercentage)}%</div>
+                <p className="text-xs text-muted-foreground">Goal Progress</p>
               </CardContent>
             </Card>
           </div>
@@ -163,55 +156,28 @@ export const ReadingProgressTracker = () => {
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
-                <h4 className="font-medium">Weekly Reading Goal</h4>
+                <h4 className="font-medium flex items-center gap-2">
+                  <Target className="h-4 w-4" />
+                  Reading Goal Progress
+                </h4>
                 <span className="text-sm text-muted-foreground">
                   {currentData.timeSpent} / {currentData.goal} minutes
                 </span>
               </div>
-              <Progress 
-                value={(currentData.timeSpent / currentData.goal) * 100} 
-                className="h-3"
-              />
-              <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                <span>0 min</span>
-                <span>{currentData.goal} min</span>
-              </div>
+              <Progress value={progressPercentage} className="mb-2" />
+              <p className="text-xs text-muted-foreground">
+                {currentData.goal - currentData.timeSpent > 0 
+                  ? `${currentData.goal - currentData.timeSpent} minutes left to reach your goal`
+                  : 'Goal achieved! 🎉'
+                }
+              </p>
             </CardContent>
           </Card>
 
-          {/* Weekly Chart */}
-          <Card>
-            <CardContent className="p-4">
-              <h4 className="font-medium mb-4 flex items-center gap-2">
-                <BarChart3 className="h-4 w-4" />
-                Weekly Activity
-              </h4>
-              <div className="space-y-3">
-                {weeklyData.map((day, index) => (
-                  <div key={day.day} className="flex items-center gap-3">
-                    <div className="w-8 text-xs text-muted-foreground">{day.day}</div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
-                          <div 
-                            className="h-full bg-primary transition-all duration-300"
-                            style={{ width: `${(day.articles / 5) * 100}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-muted-foreground w-8">{day.articles}</span>
-                      </div>
-                    </div>
-                    <div className="text-xs text-muted-foreground w-12">{day.time}m</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Recent Reading */}
+          {/* Recent Reading Activity */}
           <div>
             <h4 className="font-medium mb-3 flex items-center gap-2">
-              <Eye className="h-4 w-4" />
+              <Clock className="h-4 w-4" />
               Recent Reading Activity
             </h4>
             <div className="space-y-3">
@@ -220,35 +186,37 @@ export const ReadingProgressTracker = () => {
                   <CardContent className="p-4">
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
-                        <h5 className="font-medium mb-2">{item.title}</h5>
-                        <div className="flex items-center gap-4 text-sm text-muted-foreground mb-2">
-                          <Badge variant="outline" className="text-xs">{item.type}</Badge>
-                          <span>{item.date}</span>
-                          <span>{item.timeSpent} min</span>
-                          <Badge 
-                            variant="outline" 
-                            className={`text-xs ${
-                              item.difficulty === 'Easy' ? 'border-green-500 text-green-700' :
-                              item.difficulty === 'Medium' ? 'border-yellow-500 text-yellow-700' :
-                              'border-red-500 text-red-700'
-                            }`}
-                          >
-                            {item.difficulty}
+                        <h5 className="font-medium mb-1">{item.title}</h5>
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline" className="text-xs">
+                            {item.type}
                           </Badge>
+                          <div className={`w-2 h-2 rounded-full ${getDifficultyColor(item.difficulty)}`}></div>
+                          <span className="text-xs text-muted-foreground">{item.difficulty}</span>
+                          <span className="text-xs text-muted-foreground">•</span>
+                          <span className="text-xs text-muted-foreground">{item.date}</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 bg-muted rounded-full h-2">
-                            <div 
-                              className="h-full bg-primary rounded-full transition-all duration-300"
-                              style={{ width: `${item.progress}%` }}
-                            />
+                        <div className="flex items-center gap-4">
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between text-xs mb-1">
+                              <span>Progress</span>
+                              <span>{item.progress}%</span>
+                            </div>
+                            <Progress value={item.progress} className="h-2" />
                           </div>
-                          <span className="text-xs text-muted-foreground">{item.progress}%</span>
+                          <div className="text-right">
+                            <div className="text-sm font-medium">{item.timeSpent}m</div>
+                            <div className="text-xs text-muted-foreground">reading time</div>
+                          </div>
                         </div>
                       </div>
-                      {item.progress === 100 && (
-                        <CheckCircle className="h-5 w-5 text-green-500 ml-4" />
-                      )}
+                      <div className="ml-4">
+                        {item.progress === 100 ? (
+                          <CheckCircle className="h-5 w-5 text-green-500" />
+                        ) : (
+                          <Eye className="h-5 w-5 text-muted-foreground" />
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -264,16 +232,20 @@ export const ReadingProgressTracker = () => {
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {achievements.map((achievement, index) => (
-                <Card key={index} className={achievement.unlocked ? 'bg-green-50 dark:bg-green-900/20' : 'opacity-50'}>
+                <Card key={index} className={`${achievement.earned ? 'border-green-500 bg-green-50 dark:bg-green-950' : 'opacity-50'}`}>
                   <CardContent className="p-3">
                     <div className="flex items-center gap-3">
-                      <Award className={`h-6 w-6 ${achievement.unlocked ? 'text-yellow-500' : 'text-muted-foreground'}`} />
-                      <div>
-                        <h5 className="font-medium text-sm">{achievement.title}</h5>
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        achievement.earned ? 'bg-green-500 text-white' : 'bg-gray-200 text-gray-400'
+                      }`}>
+                        <Award className="h-5 w-5" />
+                      </div>
+                      <div className="flex-1">
+                        <h5 className="font-medium text-sm">{achievement.name}</h5>
                         <p className="text-xs text-muted-foreground">{achievement.description}</p>
                       </div>
-                      {achievement.unlocked && (
-                        <CheckCircle className="h-4 w-4 text-green-500 ml-auto" />
+                      {achievement.earned && (
+                        <CheckCircle className="h-5 w-5 text-green-500" />
                       )}
                     </div>
                   </CardContent>
@@ -286,15 +258,11 @@ export const ReadingProgressTracker = () => {
           <div className="flex gap-2">
             <Button variant="outline" size="sm">
               <Calendar className="h-4 w-4 mr-2" />
-              Set Reading Schedule
-            </Button>
-            <Button variant="outline" size="sm">
-              <Target className="h-4 w-4 mr-2" />
-              Update Goals
+              Set Reading Goal
             </Button>
             <Button variant="outline" size="sm">
               <TrendingUp className="h-4 w-4 mr-2" />
-              View Analytics
+              View Detailed Stats
             </Button>
           </div>
         </CardContent>

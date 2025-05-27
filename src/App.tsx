@@ -1,76 +1,74 @@
 
 import React from 'react';
-import { Toaster } from '@/components/ui/toaster';
-import { Toaster as Sonner } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from '@/components/ui/toaster';
 import { AuthProvider } from '@/contexts/AuthContext';
-import ProtectedRoute from '@/components/ProtectedRoute';
-import Layout from '@/components/Layout';
-
-// Pages
-import Index from '@/pages/Index';
-import About from '@/pages/About';
+import { UnifiedThemeProvider } from '@/contexts/UnifiedThemeContext';
+import { CategorizedMainNavigation } from '@/components/navigation/CategorizedMainNavigation';
+import { SkipToContent } from '@/components/common/SkipToContent';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import Footer from '@/components/Footer';
+import Home from '@/pages/Home';
+import Features from '@/pages/Features';
+import Playground from '@/pages/Playground';
+import Dashboard from '@/pages/Dashboard';
+import Search from '@/pages/Search';
+import Collections from '@/pages/Collections';
+import Analytics from '@/pages/Analytics';
+import Integrations from '@/pages/Integrations';
+import AccountSettings from '@/pages/AccountSettings';
 import Contact from '@/pages/Contact';
-import Privacy from '@/pages/Privacy';
-import Terms from '@/pages/Terms';
-import Cookies from '@/pages/Cookies';
-import ResetPassword from '@/pages/ResetPassword';
-import Accessibility from '@/pages/Accessibility';
-import Settings from '@/pages/Settings';
-
-// Auth pages
 import Login from '@/pages/Login';
 import Register from '@/pages/Register';
+import Privacy from '@/pages/Privacy';
+import Terms from '@/pages/Terms';
+import NotFound from '@/pages/NotFound';
+import Save from '@/pages/Save';
+import ContentIntelligence from '@/pages/ContentIntelligence';
+import QueryProvider from '@/providers/QueryProvider';
 
-// Protected pages
-import Dashboard from '@/pages/Dashboard';
-import Features from '@/pages/Features';
-import Pricing from '@/pages/Pricing';
-import Profile from '@/pages/Profile';
-
-const queryClient = new QueryClient();
-
-const App = () => {
+const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <HelmetProvider>
-        <TooltipProvider>
+    <HelmetProvider>
+      <UnifiedThemeProvider defaultTheme="system" storageKey="accio-ui-theme">
+        <QueryProvider>
           <AuthProvider>
-            <div className="min-h-screen bg-background font-sans antialiased">
-              <Routes>
-                <Route path="/" element={<Layout />}>
-                  {/* Public routes */}
-                  <Route index element={<Index />} />
-                  <Route path="about" element={<About />} />
-                  <Route path="contact" element={<Contact />} />
-                  <Route path="features" element={<Features />} />
-                  <Route path="pricing" element={<Pricing />} />
-                  <Route path="privacy" element={<Privacy />} />
-                  <Route path="terms" element={<Terms />} />
-                  <Route path="cookies" element={<Cookies />} />
-                  <Route path="accessibility" element={<Accessibility />} />
-                  
-                  {/* Auth routes */}
-                  <Route path="login" element={<Login />} />
-                  <Route path="register" element={<Register />} />
-                  <Route path="reset-password" element={<ResetPassword />} />
-                  
-                  {/* Protected routes */}
-                  <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-                  <Route path="profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                  <Route path="settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-                </Route>
-              </Routes>
-              <Toaster />
-              <Sonner />
-            </div>
+            <Router>
+              <div className="App min-h-screen flex flex-col bg-background text-foreground transition-colors duration-300">
+                <SkipToContent />
+                <CategorizedMainNavigation />
+                <ErrorBoundary>
+                  <main id="main-content" className="flex-grow" tabIndex={-1}>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/features" element={<Features />} />
+                      <Route path="/playground" element={<Playground />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/search" element={<Search />} />
+                      <Route path="/collections" element={<Collections />} />
+                      <Route path="/analytics" element={<Analytics />} />
+                      <Route path="/integrations" element={<Integrations />} />
+                      <Route path="/save" element={<Save />} />
+                      <Route path="/intelligence" element={<ContentIntelligence />} />
+                      <Route path="/account" element={<AccountSettings />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route path="/privacy" element={<Privacy />} />
+                      <Route path="/terms" element={<Terms />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                </ErrorBoundary>
+                <Footer />
+                <Toaster />
+              </div>
+            </Router>
           </AuthProvider>
-        </TooltipProvider>
-      </HelmetProvider>
-    </QueryClientProvider>
+        </QueryProvider>
+      </UnifiedThemeProvider>
+    </HelmetProvider>
   );
 };
 

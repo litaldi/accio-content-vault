@@ -6,22 +6,22 @@ const MotivationalHeader: React.FC = () => {
   return (
     <div className="text-center space-y-6">
       <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent leading-tight">
-        Your knowledge empire
+        Your knowledge journey
         <br />
         <span className="text-4xl md:text-5xl text-primary relative">
-          starts now
+          starts here
           <Sparkles className="absolute -top-2 -right-8 h-8 w-8 text-primary/70 animate-pulse" />
         </span>
       </h1>
       
       <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-        Every brilliant mind needs a brilliant system. Save anything that sparks your curiosity, 
-        let our AI organize it perfectly, and watch your knowledge compound into unstoppable insights.
+        Transform the web into your personal knowledge library. Save anything that matters, 
+        let AI organize it perfectly, and find exactly what you need in seconds.
       </p>
       
       <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground bg-muted/50 rounded-full px-6 py-3 mx-auto w-fit">
         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-        <span className="font-medium">Ready to transform information chaos • Zero setup required</span>
+        <span className="font-medium">Ready when you are • No setup required</span>
       </div>
     </div>
   );

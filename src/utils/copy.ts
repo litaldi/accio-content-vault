@@ -1,5 +1,4 @@
 
-
 export const copy = {
   navigation: {
     home: 'Home',
@@ -12,85 +11,59 @@ export const copy = {
     intelligence: 'Intelligence'
   },
   headlines: {
-    hero: 'Never Lose Another Brilliant Idea',
-    subhero: 'Transform scattered bookmarks and forgotten notes into a powerful knowledge system. Our AI organizes everything so you can focus on using your insights to win.'
+    hero: 'Transform Knowledge into Unstoppable Power',
+    subhero: 'The intelligent platform that captures, organizes, and transforms any content into searchable knowledge. Stop losing valuable insights—start building your personal knowledge sanctuary.'
   },
   buttons: {
-    getStarted: 'Start Building Your Knowledge Empire',
-    seeHowItWorks: 'See How The Magic Works',
-    tryDemo: 'Try It Instantly',
-    signUp: 'Yes, Build My Knowledge Empire',
-    signIn: 'Welcome Back',
-    continueJourney: 'Continue Your Journey',
-    showMagic: 'Show Me The Magic First'
+    getStarted: 'Get Started Free',
+    seeHowItWorks: 'See How It Works',
+    tryDemo: 'Try Demo'
   },
   trust: {
-    security: 'Bank Level Security',
-    noCredit: 'Free forever plan available',
-    freeTrial: 'Start in 30 seconds',
-    setupTime: 'Zero setup required'
+    security: 'Enterprise Security',
+    noCredit: 'No credit card required',
+    freeTrial: '14-day free trial',
+    setupTime: '2-minute setup'
   },
   social: {
     userCount: '10,000+',
-    companies: 'Join professionals building knowledge empires',
-    rating: 'Transform how you work with information',
-    facebook: 'https://facebook.com/accio',
-    instagram: 'https://instagram.com/accio', 
-    discord: 'https://discord.gg/accio',
-    followUs: 'Follow us for updates and tips'
+    companies: 'Trusted by leading companies',
+    rating: '4.9/5 stars'
   },
   onboarding: {
-    welcome: 'Welcome to Your Knowledge Empire',
-    getStarted: 'Let\'s turn information chaos into your competitive advantage'
+    welcome: 'Welcome to Accio',
+    getStarted: 'Let\'s get you started on your knowledge management journey'
   },
   emptyStates: {
     noContent: {
-      title: 'Your knowledge journey starts here',
-      description: 'Save your first piece of content and watch the magic happen.',
-      action: 'Save Something Brilliant'
+      title: 'No content yet',
+      description: 'Start by adding your first piece of content to build your knowledge base.',
+      action: 'Add Content'
     },
     noResults: {
-      title: 'Nothing found this time',
-      description: 'Try different keywords or explore your collections.',
+      title: 'No results found',
+      description: 'Try adjusting your search terms or filters.',
       action: 'Clear Search'
     },
     noCollections: {
-      title: 'Ready to get organized?',
-      description: 'Create your first collection to group related content.',
-      action: 'Create Your First Collection'
+      title: 'No collections',
+      description: 'Create your first collection to organize your content.',
+      action: 'Create Collection'
     },
     loading: {
-      title: 'Working our magic...',
-      description: 'AI is organizing your content perfectly.',
+      title: 'Loading...',
+      description: 'Please wait while we load your content.',
       action: null
     }
   },
   accessibility: {
-    toggleTheme: 'Switch theme',
-    openMenu: 'Open navigation menu',
-    closeMenu: 'Close navigation menu',
-    skipToContent: 'Skip to main content'
+    toggleTheme: 'Toggle theme'
   },
   microcopy: {
-    personalInfo: 'Your Details',
-    accountSettings: 'Account Preferences',
-    preferences: 'How You Like Things',
-    security: 'Keep Things Secure',
-    notifications: 'Stay in the Loop',
-    saved: 'Saved successfully!',
-    error: 'Oops, something went wrong',
-    loading: 'Just a moment...',
-    tryAgain: 'Give it another shot',
-    cancel: 'Never mind',
-    confirm: 'Yes, do it',
-    delete: 'Remove forever',
-    edit: 'Make changes'
-  },
-  demo: {
-    title: 'Try Instantly with Demo Account',
-    email: 'demo@yourapp.com',
-    password: 'Demo1234!',
-    description: 'No signup required. Explore all features immediately.'
+    personalInfo: 'Personal Information',
+    accountSettings: 'Account Settings',
+    preferences: 'Preferences',
+    security: 'Security',
+    notifications: 'Notifications'
   }
 };
-

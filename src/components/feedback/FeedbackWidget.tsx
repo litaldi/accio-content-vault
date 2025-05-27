@@ -169,7 +169,7 @@ export const FeedbackWidget: React.FC<FeedbackWidgetProps> = ({
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="Your email (optional)"
-                      helpText="We'll only use this to follow up on your feedback"
+                      description="We'll only use this to follow up on your feedback"
                     />
                     
                     <div className="flex gap-2">

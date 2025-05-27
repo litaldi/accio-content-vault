@@ -1,183 +1,291 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { 
   Bell, 
   BellRing, 
   Clock, 
-  Target, 
-  TrendingUp,
-  Lightbulb,
-  X
+  TrendingUp, 
+  Users, 
+  BookOpen,
+  Zap,
+  Settings,
+  Check,
+  X,
+  Calendar
 } from 'lucide-react';
 
-interface Notification {
-  id: string;
-  type: 'reminder' | 'insight' | 'achievement' | 'suggestion';
-  title: string;
-  message: string;
-  timestamp: Date;
-  priority: 'low' | 'medium' | 'high';
-  action?: string;
-}
+export const SmartNotifications = () => {
+  const [notifications, setNotifications] = useState([
+    {
+      id: '1',
+      type: 'reminder',
+      title: 'Review saved articles',
+      message: 'You have 12 unread articles from this week',
+      time: '2 hours ago',
+      isRead: false,
+      priority: 'medium',
+      actionable: true
+    },
+    {
+      id: '2',
+      type: 'insight',
+      title: 'Knowledge gap detected',
+      message: 'Consider adding more content about "Data Science" to complete your learning path',
+      time: '1 day ago',
+      isRead: false,
+      priority: 'high',
+      actionable: true
+    },
+    {
+      id: '3',
+      type: 'collaboration',
+      title: 'New team workspace',
+      message: 'Sarah invited you to join "Q4 Planning" workspace',
+      time: '2 days ago',
+      isRead: true,
+      priority: 'low',
+      actionable: true
+    },
+    {
+      id: '4',
+      type: 'achievement',
+      title: 'Milestone reached!',
+      message: 'You\'ve saved 100 pieces of content this month',
+      time: '3 days ago',
+      isRead: true,
+      priority: 'low',
+      actionable: false
+    }
+  ]);
 
-export const SmartNotifications: React.FC = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [settings, setSettings] = useState({
-    learningReminders: true,
-    insightAlerts: true,
-    achievements: true,
-    contentSuggestions: true
+    smartReminders: true,
+    learningInsights: true,
+    collaborationUpdates: true,
+    achievementAlerts: false,
+    emailDigest: true,
+    pushNotifications: true
   });
 
-  useEffect(() => {
-    // Simulate smart notifications
-    const mockNotifications: Notification[] = [
-      {
-        id: '1',
-        type: 'reminder',
-        title: 'Learning Time',
-        message: 'You saved 3 AI articles yesterday. Perfect time to review them!',
-        timestamp: new Date(),
-        priority: 'medium'
-      },
-      {
-        id: '2',
-        type: 'insight',
-        title: 'Knowledge Pattern Detected',
-        message: 'You\'re building expertise in React patterns. Consider exploring advanced hooks.',
-        timestamp: new Date(Date.now() - 3600000),
-        priority: 'high'
-      },
-      {
-        id: '3',
-        type: 'achievement',
-        title: 'Milestone Reached!',
-        message: 'You\'ve saved 50 pieces of content this month. Great progress!',
-        timestamp: new Date(Date.now() - 7200000),
-        priority: 'low'
-      }
-    ];
-
-    setNotifications(mockNotifications);
-  }, []);
+  const markAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === id ? { ...notif, isRead: true } : notif
+      )
+    );
+  };
 
   const dismissNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications(prev => prev.filter(notif => notif.id !== id));
   };
 
-  const getIcon = (type: Notification['type']) => {
+  const getNotificationIcon = (type: string) => {
     switch (type) {
-      case 'reminder': return Clock;
-      case 'insight': return Lightbulb;
-      case 'achievement': return Target;
-      case 'suggestion': return TrendingUp;
-      default: return Bell;
+      case 'reminder': return <Clock className="h-4 w-4" />;
+      case 'insight': return <TrendingUp className="h-4 w-4" />;
+      case 'collaboration': return <Users className="h-4 w-4" />;
+      case 'achievement': return <Zap className="h-4 w-4" />;
+      default: return <Bell className="h-4 w-4" />;
     }
   };
 
-  const getPriorityColor = (priority: Notification['priority']) => {
+  const getPriorityColor = (priority: string) => {
     switch (priority) {
-      case 'high': return 'text-red-600';
-      case 'medium': return 'text-yellow-600';
-      case 'low': return 'text-green-600';
-      default: return 'text-muted-foreground';
+      case 'high': return 'border-l-red-500';
+      case 'medium': return 'border-l-yellow-500';
+      case 'low': return 'border-l-green-500';
+      default: return 'border-l-gray-500';
     }
   };
+
+  const unreadCount = notifications.filter(n => !n.isRead).length;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BellRing className="h-5 w-5 text-primary" />
-            Smart Notifications
-            <Badge variant="secondary">AI-Powered</Badge>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Settings */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-muted rounded-lg">
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Learning Reminders</span>
-              <Switch 
-                checked={settings.learningReminders}
-                onCheckedChange={(checked) => setSettings(prev => ({...prev, learningReminders: checked}))}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Insight Alerts</span>
-              <Switch 
-                checked={settings.insightAlerts}
-                onCheckedChange={(checked) => setSettings(prev => ({...prev, insightAlerts: checked}))}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Achievements</span>
-              <Switch 
-                checked={settings.achievements}
-                onCheckedChange={(checked) => setSettings(prev => ({...prev, achievements: checked}))}
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm">Content Suggestions</span>
-              <Switch 
-                checked={settings.contentSuggestions}
-                onCheckedChange={(checked) => setSettings(prev => ({...prev, contentSuggestions: checked}))}
-              />
-            </div>
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2">
+              <BellRing className="h-5 w-5 text-primary" />
+              Smart Notifications
+              {unreadCount > 0 && (
+                <Badge variant="destructive" className="ml-2">
+                  {unreadCount}
+                </Badge>
+              )}
+            </CardTitle>
+            <Button variant="outline" size="sm">
+              <Settings className="h-4 w-4 mr-2" />
+              Settings
+            </Button>
           </div>
-
-          {/* Notifications List */}
+        </CardHeader>
+        
+        <CardContent>
           <div className="space-y-4">
             {notifications.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <Bell className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p>No new notifications</p>
+                <p>No notifications yet</p>
+                <p className="text-sm">We'll notify you about important updates</p>
               </div>
             ) : (
-              notifications.map((notification) => {
-                const Icon = getIcon(notification.type);
-                return (
-                  <Card key={notification.id} className="relative">
-                    <CardContent className="p-4">
-                      <div className="flex items-start gap-3">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                          <Icon className="h-4 w-4 text-primary" />
+              notifications.map((notification) => (
+                <Card 
+                  key={notification.id} 
+                  className={`border-l-4 ${getPriorityColor(notification.priority)} ${
+                    !notification.isRead ? 'bg-muted/30' : ''
+                  }`}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-start gap-3 flex-1">
+                        <div className="mt-1">
+                          {getNotificationIcon(notification.type)}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <h4 className="font-medium">{notification.title}</h4>
-                            <Badge 
-                              variant="outline" 
-                              className={getPriorityColor(notification.priority)}
-                            >
-                              {notification.priority}
-                            </Badge>
+                            {!notification.isRead && (
+                              <div className="w-2 h-2 bg-primary rounded-full" />
+                            )}
                           </div>
                           <p className="text-sm text-muted-foreground mb-2">
                             {notification.message}
                           </p>
-                          <span className="text-xs text-muted-foreground">
-                            {notification.timestamp.toLocaleTimeString()}
-                          </span>
+                          <div className="flex items-center gap-4">
+                            <span className="text-xs text-muted-foreground">
+                              {notification.time}
+                            </span>
+                            <Badge variant="outline" className="text-xs">
+                              {notification.type}
+                            </Badge>
+                          </div>
                         </div>
-                        <Button
-                          variant="ghost"
+                      </div>
+                      
+                      <div className="flex items-center gap-1 ml-2">
+                        {notification.actionable && (
+                          <Button variant="ghost" size="sm">
+                            <BookOpen className="h-3 w-3" />
+                          </Button>
+                        )}
+                        {!notification.isRead && (
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => markAsRead(notification.id)}
+                          >
+                            <Check className="h-3 w-3" />
+                          </Button>
+                        )}
+                        <Button 
+                          variant="ghost" 
                           size="sm"
                           onClick={() => dismissNotification(notification.id)}
                         >
-                          <X className="h-4 w-4" />
+                          <X className="h-3 w-3" />
                         </Button>
                       </div>
-                    </CardContent>
-                  </Card>
-                );
-              })
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
             )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Notification Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            Notification Preferences
+          </CardTitle>
+        </CardHeader>
+        
+        <CardContent className="space-y-4">
+          <div className="grid gap-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="font-medium">Smart Reminders</Label>
+                <p className="text-sm text-muted-foreground">
+                  Get reminded to review and organize your content
+                </p>
+              </div>
+              <Switch 
+                checked={settings.smartReminders}
+                onCheckedChange={(checked) => 
+                  setSettings(prev => ({ ...prev, smartReminders: checked }))
+                }
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="font-medium">Learning Insights</Label>
+                <p className="text-sm text-muted-foreground">
+                  AI-powered suggestions to improve your knowledge base
+                </p>
+              </div>
+              <Switch 
+                checked={settings.learningInsights}
+                onCheckedChange={(checked) => 
+                  setSettings(prev => ({ ...prev, learningInsights: checked }))
+                }
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="font-medium">Collaboration Updates</Label>
+                <p className="text-sm text-muted-foreground">
+                  Notifications about team activities and shared content
+                </p>
+              </div>
+              <Switch 
+                checked={settings.collaborationUpdates}
+                onCheckedChange={(checked) => 
+                  setSettings(prev => ({ ...prev, collaborationUpdates: checked }))
+                }
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="font-medium">Achievement Alerts</Label>
+                <p className="text-sm text-muted-foreground">
+                  Celebrate milestones and learning achievements
+                </p>
+              </div>
+              <Switch 
+                checked={settings.achievementAlerts}
+                onCheckedChange={(checked) => 
+                  setSettings(prev => ({ ...prev, achievementAlerts: checked }))
+                }
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div>
+                <Label className="font-medium">Weekly Email Digest</Label>
+                <p className="text-sm text-muted-foreground">
+                  Summary of your week's knowledge activities
+                </p>
+              </div>
+              <Switch 
+                checked={settings.emailDigest}
+                onCheckedChange={(checked) => 
+                  setSettings(prev => ({ ...prev, emailDigest: checked }))
+                }
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

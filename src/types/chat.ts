@@ -1,17 +1,17 @@
 
-export interface ChatMessage {
+export interface BaseMessage {
   id: string;
-  type: 'user' | 'assistant';
   content: string;
   timestamp: Date;
-  suggestions?: string[];
 }
 
-export interface AssistantMessage extends ChatMessage {
+export interface UserMessage extends BaseMessage {
+  type: 'user';
+}
+
+export interface AssistantMessage extends BaseMessage {
   type: 'assistant';
   suggestions?: string[];
 }
 
-export interface UserMessage extends ChatMessage {
-  type: 'user';
-}
+export type ChatMessage = UserMessage | AssistantMessage;

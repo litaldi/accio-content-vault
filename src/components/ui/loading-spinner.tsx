@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface LoadingSpinnerProps {
@@ -9,30 +8,33 @@ interface LoadingSpinnerProps {
   text?: string;
 }
 
-export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  size = 'md',
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
+  size = 'md', 
   className,
   text = 'Loading...'
 }) => {
   const sizeClasses = {
     sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8'
+    md: 'h-8 w-8',
+    lg: 'h-12 w-12'
   };
 
   return (
-    <div 
-      className={cn("flex items-center justify-center gap-2", className)}
-      role="status"
-      aria-live="polite"
-      aria-label={text}
-    >
-      <Loader2 
-        className={cn("animate-spin", sizeClasses[size])} 
-        aria-hidden="true"
-      />
-      <span className="text-sm text-muted-foreground">{text}</span>
-      <span className="sr-only">{text}</span>
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="flex flex-col items-center space-y-4">
+        <div
+          className={cn(
+            'animate-spin rounded-full border-2 border-muted border-t-primary',
+            sizeClasses[size],
+            className
+          )}
+          role="status"
+          aria-label="Loading"
+        />
+        <p className="text-muted-foreground text-sm font-medium" aria-live="polite">
+          {text}
+        </p>
+      </div>
     </div>
   );
 };

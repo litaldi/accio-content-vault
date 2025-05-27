@@ -1,36 +1,40 @@
 
 import React from 'react';
 import NavigationLink from '@/components/common/NavigationLink';
+import { cn } from '@/lib/utils';
 
-interface DesktopNavigationProps {
-  user: any;
+interface NavigationItem {
+  name: string;
+  href: string;
 }
 
-export const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ user }) => {
+interface DesktopNavigationProps {
+  items: NavigationItem[];
+}
+
+const DesktopNavigation: React.FC<DesktopNavigationProps> = ({ items }) => {
   return (
-    <nav className="hidden md:flex items-center space-x-6" role="navigation">
-      <NavigationLink to="/features" className="text-sm font-medium">
-        Features
-      </NavigationLink>
-      <NavigationLink to="/ai-features" className="text-sm font-medium">
-        AI Features
-      </NavigationLink>
-      <NavigationLink to="/pricing" className="text-sm font-medium">
-        Pricing
-      </NavigationLink>
-      {user && (
-        <>
-          <NavigationLink to="/dashboard" className="text-sm font-medium">
-            Dashboard
-          </NavigationLink>
-          <NavigationLink to="/saved" className="text-sm font-medium">
-            Saved
-          </NavigationLink>
-        </>
-      )}
-      <NavigationLink to="/help" className="text-sm font-medium">
-        Help
-      </NavigationLink>
-    </nav>
+    <div className="hidden md:flex items-center space-x-8">
+      {items.map((item) => (
+        <NavigationLink
+          key={item.href}
+          to={item.href}
+          className={cn(
+            "relative px-3 py-2 text-sm font-medium transition-colors duration-200",
+            "hover:text-primary focus-visible:outline-none focus-visible:ring-2",
+            "focus-visible:ring-primary focus-visible:ring-offset-2 rounded-md",
+            "after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full",
+            "after:scale-x-0 after:bg-primary after:transition-transform after:duration-200",
+            "hover:after:scale-x-100"
+          )}
+          activeClassName="text-primary after:scale-x-100"
+          aria-label={`Go to ${item.name}`}
+        >
+          {item.name}
+        </NavigationLink>
+      ))}
+    </div>
   );
 };
+
+export default DesktopNavigation;

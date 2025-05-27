@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { EnhancedInput } from '@/components/ui/enhanced-input';
 import { sanitizeInput } from '@/utils/unified-security';
@@ -146,7 +147,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
         onBlur={handleBlur}
         placeholder={placeholder}
         error={isTouched && error ? error : undefined}
-        helpText={!error && description ? description : undefined}
+        description={!error && description ? description : undefined}
         rightIcon={rightIcon()}
         className={className}
         maxLength={maxLength}

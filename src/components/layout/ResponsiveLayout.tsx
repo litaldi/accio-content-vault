@@ -1,105 +1,100 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { useResponsiveLayout } from '@/hooks/use-responsive-layout';
 
 interface ResponsiveLayoutProps {
   children: React.ReactNode;
   className?: string;
-  sidebar?: React.ReactNode;
-  header?: React.ReactNode;
-  footer?: React.ReactNode;
-  sidebarWidth?: 'sm' | 'md' | 'lg';
-  collapsibleSidebar?: boolean;
+  maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
+  padding?: 'none' | 'sm' | 'md' | 'lg';
 }
 
-const sidebarWidthClasses = {
-  sm: 'w-64',
-  md: 'w-72',
-  lg: 'w-80'
-};
-
-/**
- * Main responsive layout component that handles different screen sizes
- * and provides consistent spacing and structure
- */
 export const ResponsiveLayout: React.FC<ResponsiveLayoutProps> = ({
   children,
-  className = '',
-  sidebar,
-  header,
-  footer,
-  sidebarWidth = 'md',
-  collapsibleSidebar = true
+  className,
+  maxWidth = 'lg',
+  padding = 'md'
 }) => {
-  const { isMobile, isTablet } = useResponsiveLayout();
-  const [sidebarOpen, setSidebarOpen] = React.useState(!isMobile);
+  const maxWidthClasses = {
+    sm: 'max-w-2xl',
+    md: 'max-w-4xl',
+    lg: 'max-w-6xl',
+    xl: 'max-w-7xl',
+    '2xl': 'max-w-screen-2xl',
+    full: 'max-w-full'
+  };
 
-  // Close sidebar on mobile by default
-  React.useEffect(() => {
-    if (isMobile) {
-      setSidebarOpen(false);
-    } else {
-      setSidebarOpen(true);
-    }
-  }, [isMobile]);
+  const paddingClasses = {
+    none: '',
+    sm: 'px-4 sm:px-6',
+    md: 'px-4 sm:px-6 lg:px-8',
+    lg: 'px-4 sm:px-6 lg:px-8 xl:px-12'
+  };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      {header && (
-        <div className="sticky top-0 z-50">
-          {header}
-        </div>
-      )}
-
-      {/* Main Layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        {sidebar && (
-          <>
-            {/* Desktop Sidebar */}
-            <aside className={cn(
-              "hidden lg:flex lg:flex-col border-r bg-muted/20 transition-all duration-300",
-              sidebarWidthClasses[sidebarWidth],
-              !sidebarOpen && collapsibleSidebar && "lg:w-16"
-            )}>
-              {sidebar}
-            </aside>
-
-            {/* Mobile Sidebar Overlay */}
-            {sidebarOpen && (isMobile || isTablet) && (
-              <>
-                <div 
-                  className="fixed inset-0 z-40 bg-black/50 lg:hidden"
-                  onClick={() => setSidebarOpen(false)}
-                  aria-hidden="true"
-                />
-                <aside className="fixed left-0 top-0 z-50 h-full w-72 bg-background border-r shadow-xl lg:hidden overflow-y-auto">
-                  {sidebar}
-                </aside>
-              </>
-            )}
-          </>
-        )}
-
-        {/* Main Content */}
-        <main className={cn(
-          "flex-1 overflow-y-auto",
-          className
-        )}>
-          {children}
-        </main>
-      </div>
-
-      {/* Footer */}
-      {footer && (
-        <div className="border-t bg-muted/20">
-          {footer}
-        </div>
-      )}
+    <div className={cn(
+      'container mx-auto',
+      maxWidthClasses[maxWidth],
+      paddingClasses[padding],
+      className
+    )}>
+      {children}
     </div>
   );
 };
 
-export default ResponsiveLayout;
+// Section wrapper for consistent spacing
+export const ResponsiveSection: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
+}> = ({ children, className, size = 'md' }) => {
+  const sizeClasses = {
+    sm: 'py-8 sm:py-12',
+    md: 'py-12 sm:py-16',
+    lg: 'py-16 sm:py-20 lg:py-24',
+    xl: 'py-20 sm:py-24 lg:py-32'
+  };
+
+  return (
+    <section className={cn(sizeClasses[size], className)}>
+      {children}
+    </section>
+  );
+};
+
+// Grid component for responsive layouts
+export const ResponsiveGrid: React.FC<{
+  children: React.ReactNode;
+  className?: string;
+  cols?: {
+    default?: number;
+    sm?: number;
+    md?: number;
+    lg?: number;
+    xl?: number;
+  };
+  gap?: 'sm' | 'md' | 'lg';
+}> = ({ children, className, cols = { default: 1, sm: 2, lg: 3 }, gap = 'md' }) => {
+  const gapClasses = {
+    sm: 'gap-4',
+    md: 'gap-6',
+    lg: 'gap-8'
+  };
+
+  const gridCols = cn(
+    'grid',
+    cols.default && `grid-cols-${cols.default}`,
+    cols.sm && `sm:grid-cols-${cols.sm}`,
+    cols.md && `md:grid-cols-${cols.md}`,
+    cols.lg && `lg:grid-cols-${cols.lg}`,
+    cols.xl && `xl:grid-cols-${cols.xl}`,
+    gapClasses[gap]
+  );
+
+  return (
+    <div className={cn(gridCols, className)}>
+      {children}
+    </div>
+  );
+};
