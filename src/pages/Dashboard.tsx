@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,7 +23,22 @@ import { useFeatureGating } from '@/hooks/useFeatureGating';
 import UpgradeNotification from '@/components/pricing/UpgradeNotification';
 
 const Dashboard = () => {
-  const { currentPlan = 'free', usageStats = {}, limits = {}, hasReachedLimit = () => false, getRemainingUsage = () => null } = useFeatureGating?.() || {};
+  const featureGating = useFeatureGating?.() || {};
+  const { 
+    currentPlan = 'free', 
+    usageStats = {
+      savesUsed: 0,
+      aiActionsUsed: 0,
+      collectionsUsed: 0
+    }, 
+    limits = {
+      maxSaves: 100,
+      aiActionsPerMonth: 50,
+      maxCollections: 10
+    }, 
+    hasReachedLimit = () => false, 
+    getRemainingUsage = () => null 
+  } = featureGating;
 
   const recentItems = [
     { 
