@@ -1,4 +1,5 @@
 
+
 export const copy = {
   headlines: {
     hero: "Transform Information Into Personal Intelligence",
@@ -53,6 +54,7 @@ export const copy = {
     toggleTheme: "Toggle theme"
   },
   microcopy: {
+    personalInfo: "Personal Information",
     settings: {
       profile: "Profile Settings",
       preferences: "Preferences",
@@ -60,3 +62,4 @@ export const copy = {
     }
   }
 };
+
