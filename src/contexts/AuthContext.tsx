@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { DEMO_CREDENTIALS, createDemoUser, isDemoUser } from '@/data/demoUser';
 
 interface AuthContextType {
   user: User | null;
@@ -49,7 +50,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
         // Check if user is in demo mode
         if (session?.user) {
-          const isDemo = session.user.email?.includes('demo') || 
+          const isDemo = isDemoUser(session.user.email) || 
                          session.user.user_metadata?.role === 'demo';
           setIsDemoMode(isDemo);
         } else {
@@ -81,7 +82,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(session?.user ?? null);
         
         if (session?.user) {
-          const isDemo = session.user.email?.includes('demo') || 
+          const isDemo = isDemoUser(session.user.email) || 
                          session.user.user_metadata?.role === 'demo';
           setIsDemoMode(isDemo);
         }
@@ -100,6 +101,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signIn = async (email: string, password: string) => {
     try {
       setIsLoading(true);
+      
+      // Handle demo user login
+      if (email === DEMO_CREDENTIALS.email && password === DEMO_CREDENTIALS.password) {
+        const demoUser = createDemoUser();
+        const mockSession: Session = {
+          access_token: 'demo-token',
+          refresh_token: 'demo-refresh',
+          expires_in: 3600,
+          token_type: 'bearer',
+          user: demoUser,
+          expires_at: Math.floor(Date.now() / 1000) + 3600
+        };
+        
+        setUser(demoUser);
+        setSession(mockSession);
+        setIsDemoMode(true);
+        
+        toast({
+          title: "Demo Mode",
+          description: "You're now using the demo account with sample data.",
+        });
+        
+        return {};
+      }
+
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -181,6 +207,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const signOut = async () => {
     try {
       setIsLoading(true);
+      
+      // Handle demo user logout
+      if (isDemoMode) {
+        setUser(null);
+        setSession(null);
+        setIsDemoMode(false);
+        return;
+      }
+      
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
     } catch (error: any) {
