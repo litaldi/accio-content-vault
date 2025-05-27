@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
@@ -25,6 +26,7 @@ import Privacy from '@/pages/Privacy';
 import Terms from '@/pages/Terms';
 import Dashboard from '@/pages/Dashboard';
 import SaveContent from '@/pages/SaveContent';
+import SavedContent from '@/pages/SavedContent';
 import Profile from '@/pages/Profile';
 import Settings from '@/pages/Settings';
 import NotFound from '@/pages/NotFound';
@@ -87,9 +89,7 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/terms" element={<Terms />} />
-                <Route path="/collections" element={<Collections />} />
                 <Route path="/tutorials" element={<Tutorials />} />
-                <Route path="/activity" element={<Activity />} />
                 <Route path="/accessibility" element={<Accessibility />} />
                 
                 {/* Protected routes with internal navigation */}
@@ -100,7 +100,7 @@ function App() {
                 } />
                 <Route path="/saved" element={
                   <ProtectedRoute>
-                    <SaveContent />
+                    <SavedContent />
                   </ProtectedRoute>
                 } />
                 <Route path="/save" element={
@@ -111,6 +111,16 @@ function App() {
                 <Route path="/search" element={
                   <ProtectedRoute>
                     <Search />
+                  </ProtectedRoute>
+                } />
+                <Route path="/collections" element={
+                  <ProtectedRoute>
+                    <Collections />
+                  </ProtectedRoute>
+                } />
+                <Route path="/activity" element={
+                  <ProtectedRoute>
+                    <Activity />
                   </ProtectedRoute>
                 } />
                 <Route path="/profile" element={

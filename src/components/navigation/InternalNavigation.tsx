@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -56,12 +57,6 @@ const InternalNavigation: React.FC = () => {
       href: '/collections',
       icon: FolderOpen,
       description: 'Organized content groups'
-    },
-    {
-      label: 'AI Assistant',
-      href: '/ai-features',
-      icon: Brain,
-      description: 'Intelligent knowledge tools'
     },
     {
       label: 'Activity Log',

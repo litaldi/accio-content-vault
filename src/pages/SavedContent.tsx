@@ -1,276 +1,144 @@
 
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
+import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/ui/empty-state';
 import { 
-  Bookmark, 
-  Search, 
+  Bookmark,
+  Search,
   Filter,
-  Grid,
-  List,
-  Plus,
-  Tag,
   Clock,
+  Tag,
+  FileText,
+  Video,
+  Image,
   ExternalLink,
-  MoreHorizontal,
+  MoreVertical,
   Star,
-  Archive,
-  Trash2,
-  ArrowRight
+  Archive
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 const SavedContent = () => {
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
+
+  const filters = [
+    { id: 'all', label: 'All Content', count: 47 },
+    { id: 'articles', label: 'Articles', count: 23 },
+    { id: 'videos', label: 'Videos', count: 12 },
+    { id: 'images', label: 'Images', count: 8 },
+    { id: 'favorites', label: 'Favorites', count: 4 }
+  ];
 
   const savedItems = [
     {
       id: '1',
-      title: 'React Performance Optimization Guide',
-      type: 'article',
+      title: 'React Performance Optimization Techniques',
       url: 'https://example.com/react-performance',
-      description: 'A comprehensive guide to optimizing React applications for better performance and user experience.',
-      tags: ['React', 'Performance', 'JavaScript'],
-      savedAt: '2 hours ago',
-      readTime: '8 min read',
-      thumbnail: null,
-      isStarred: true,
+      type: 'article',
+      excerpt: 'Learn how to optimize your React applications for better performance with advanced techniques...',
+      tags: ['React', 'Performance', 'Frontend'],
+      savedDate: '2 days ago',
+      readTime: '8 min',
+      isFavorite: true
     },
     {
       id: '2',
-      title: 'Design System Best Practices',
-      type: 'note',
-      url: null,
-      description: 'Key principles for building scalable design systems that work across teams and products.',
-      tags: ['Design', 'Systems', 'UI/UX'],
-      savedAt: '5 hours ago',
-      readTime: '3 min read',
-      thumbnail: null,
-      isStarred: false,
+      title: 'Advanced TypeScript Patterns',
+      url: 'https://example.com/typescript-patterns',
+      type: 'video',
+      excerpt: 'Deep dive into advanced TypeScript patterns and best practices for large applications...',
+      tags: ['TypeScript', 'Programming', 'Tutorial'],
+      savedDate: '1 week ago',
+      readTime: '45 min',
+      isFavorite: false
     },
     {
       id: '3',
-      title: 'Machine Learning Fundamentals',
+      title: 'Design System Guidelines',
+      url: 'https://example.com/design-systems',
       type: 'pdf',
-      url: 'https://example.com/ml-fundamentals.pdf',
-      description: 'Complete introduction to machine learning concepts, algorithms, and practical applications.',
-      tags: ['ML', 'AI', 'Data Science'],
-      savedAt: '1 day ago',
-      readTime: '25 min read',
-      thumbnail: null,
-      isStarred: false,
-    },
+      excerpt: 'Comprehensive guide to building scalable design systems for modern applications...',
+      tags: ['Design', 'Systems', 'UI/UX'],
+      savedDate: '3 days ago',
+      readTime: '15 min',
+      isFavorite: false
+    }
   ];
-
-  const filters = [
-    { id: 'all', label: 'All Items', count: savedItems.length },
-    { id: 'articles', label: 'Articles', count: savedItems.filter(item => item.type === 'article').length },
-    { id: 'notes', label: 'Notes', count: savedItems.filter(item => item.type === 'note').length },
-    { id: 'pdfs', label: 'PDFs', count: savedItems.filter(item => item.type === 'pdf').length },
-    { id: 'starred', label: 'Starred', count: savedItems.filter(item => item.isStarred).length },
-  ];
-
-  const filteredItems = savedItems.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         item.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
-    const matchesFilter = selectedFilter === 'all' ||
-                         (selectedFilter === 'starred' && item.isStarred) ||
-                         item.type === selectedFilter;
-    
-    return matchesSearch && matchesFilter;
-  });
 
   const getTypeIcon = (type: string) => {
     switch (type) {
-      case 'article':
-        return '📰';
-      case 'note':
-        return '📝';
-      case 'pdf':
-        return '📄';
-      default:
-        return '📎';
+      case 'video': return Video;
+      case 'image': return Image;
+      default: return FileText;
     }
   };
 
-  const ItemCard = ({ item }: { item: typeof savedItems[0] }) => (
-    <Card className="group hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
-      <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-lg" role="img" aria-label={`${item.type} type`}>
-              {getTypeIcon(item.type)}
-            </span>
-            <Badge variant="outline" className="text-xs">
-              {item.type}
-            </Badge>
-            {item.isStarred && (
-              <Star className="h-4 w-4 text-yellow-500 fill-current" aria-label="Starred item" />
-            )}
-          </div>
-          <Button variant="ghost" size="icon" className="opacity-0 group-hover:opacity-100 transition-opacity">
-            <MoreHorizontal className="h-4 w-4" />
-            <span className="sr-only">More options</span>
-          </Button>
-        </div>
-        <CardTitle className="text-lg line-clamp-2 leading-tight">
-          {item.title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground text-sm mb-4 line-clamp-2 leading-relaxed">
-          {item.description}
-        </p>
-        
-        <div className="flex flex-wrap gap-1 mb-4">
-          {item.tags.map((tag, index) => (
-            <Badge key={index} variant="secondary" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        
-        <div className="flex items-center justify-between text-xs text-muted-foreground mb-4">
-          <div className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
-            <span>{item.savedAt}</span>
-          </div>
-          <span>{item.readTime}</span>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <Button size="sm" className="flex-1">
-            Open
-          </Button>
-          {item.url && (
-            <Button variant="outline" size="icon">
-              <ExternalLink className="h-3 w-3" />
-              <span className="sr-only">Open original link</span>
-            </Button>
-          )}
-        </div>
-      </CardContent>
-    </Card>
-  );
-
-  const ItemRow = ({ item }: { item: typeof savedItems[0] }) => (
-    <Card className="hover:shadow-sm transition-shadow">
-      <CardContent className="p-4">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="text-lg" role="img" aria-label={`${item.type} type`}>
-              {getTypeIcon(item.type)}
-            </span>
-            {item.isStarred && (
-              <Star className="h-4 w-4 text-yellow-500 fill-current" aria-label="Starred item" />
-            )}
-          </div>
-          
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-medium line-clamp-1">{item.title}</h3>
-              <Badge variant="outline" className="text-xs">
-                {item.type}
-              </Badge>
-            </div>
-            <p className="text-muted-foreground text-sm line-clamp-1 mb-2">
-              {item.description}
-            </p>
-            <div className="flex flex-wrap gap-1">
-              {item.tags.slice(0, 3).map((tag, index) => (
-                <Badge key={index} variant="secondary" className="text-xs">
-                  {tag}
-                </Badge>
-              ))}
-              {item.tags.length > 3 && (
-                <Badge variant="secondary" className="text-xs">
-                  +{item.tags.length - 3}
-                </Badge>
-              )}
-            </div>
-          </div>
-          
-          <div className="text-xs text-muted-foreground text-right">
-            <div>{item.savedAt}</div>
-            <div>{item.readTime}</div>
-          </div>
-          
-          <Button size="sm">
-            Open
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  const filteredItems = savedItems.filter(item => {
+    if (selectedFilter === 'all') return true;
+    if (selectedFilter === 'favorites') return item.isFavorite;
+    return item.type === selectedFilter.slice(0, -1); // Remove 's' from plural
+  });
 
   return (
-    <div className="min-h-screen bg-background">
-      <Helmet>
-        <title>Saved Content - Accio</title>
-        <meta name="description" content="Browse and manage your saved content in your knowledge library" />
-      </Helmet>
+    <AuthenticatedLayout>
+      <div className="min-h-screen bg-background">
+        <Helmet>
+          <title>Saved Content - Accio</title>
+          <meta name="description" content="Browse and manage your saved content collection" />
+        </Helmet>
 
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-3">
-              <Bookmark className="h-8 w-8 text-primary" />
-              Saved Content
-            </h1>
-            <p className="text-muted-foreground mt-2">
-              Your personal knowledge library of saved articles, notes, and resources
-            </p>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <Button variant="outline" size="sm" asChild>
-              <Link to="/search" className="gap-2">
-                <Search className="h-4 w-4" />
-                Search
-              </Link>
-            </Button>
-            <Button size="sm" className="gap-2" asChild>
-              <Link to="/save">
-                <Plus className="h-4 w-4" />
-                Add Content
-              </Link>
+        <div className="container mx-auto px-4 py-8 max-w-6xl">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl font-bold flex items-center gap-3">
+                <Bookmark className="h-8 w-8 text-primary" />
+                Saved Content
+              </h1>
+              <p className="text-muted-foreground mt-2">
+                Your personal knowledge collection
+              </p>
+            </div>
+            
+            <Button className="gap-2" asChild>
+              <a href="/save">
+                <Bookmark className="h-4 w-4" />
+                Save New Content
+              </a>
             </Button>
           </div>
-        </div>
 
-        {/* Filters and Search */}
-        <div className="flex flex-col lg:flex-row gap-4 mb-8">
-          <div className="flex-1">
-            <div className="relative">
-              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          {/* Search and Filters */}
+          <div className="space-y-4 mb-6">
+            <div className="flex gap-2">
               <Input
                 placeholder="Search your saved content..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-                aria-label="Search saved content"
+                className="flex-1"
               />
+              <Button variant="outline" className="gap-2">
+                <Search className="h-4 w-4" />
+                Search
+              </Button>
+              <Button variant="outline" className="gap-2">
+                <Filter className="h-4 w-4" />
+                Filter
+              </Button>
             </div>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <div className="flex items-center bg-muted rounded-lg p-1">
+
+            <div className="flex flex-wrap gap-2">
               {filters.map((filter) => (
                 <Button
                   key={filter.id}
-                  variant={selectedFilter === filter.id ? 'default' : 'ghost'}
+                  variant={selectedFilter === filter.id ? "default" : "outline"}
                   size="sm"
                   onClick={() => setSelectedFilter(filter.id)}
-                  className="gap-1"
+                  className="gap-2"
                 >
                   {filter.label}
                   <Badge variant="secondary" className="text-xs">
@@ -279,70 +147,85 @@ const SavedContent = () => {
                 </Button>
               ))}
             </div>
-            
-            <div className="flex items-center bg-muted rounded-lg p-1">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                size="icon"
-                onClick={() => setViewMode('grid')}
-                aria-label="Grid view"
-              >
-                <Grid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'ghost'}
-                size="icon"
-                onClick={() => setViewMode('list')}
-                aria-label="List view"
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
-        </div>
 
-        {/* Content */}
-        {filteredItems.length === 0 ? (
-          <EmptyState
-            icon={searchQuery ? Search : Bookmark}
-            title={searchQuery ? 'No matching content found' : 'No saved content yet'}
-            description={
-              searchQuery 
-                ? 'Try adjusting your search terms or filters to find what you\'re looking for.'
-                : 'Start building your knowledge library by saving articles, notes, and resources you want to remember.'
-            }
-            actionLabel="Add Your First Item"
-            actionHref="/save"
-          />
-        ) : (
-          <>
-            {viewMode === 'grid' ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredItems.map((item) => (
-                  <ItemCard key={item.id} item={item} />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {filteredItems.map((item) => (
-                  <ItemRow key={item.id} item={item} />
-                ))}
-              </div>
-            )}
-            
-            {/* Load More */}
-            {filteredItems.length >= 10 && (
-              <div className="mt-12 text-center">
-                <Button variant="outline" className="gap-2">
-                  Load More Content
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
-          </>
-        )}
+          {/* Content Grid */}
+          <div className="grid gap-4">
+            {filteredItems.map((item) => {
+              const TypeIcon = getTypeIcon(item.type);
+              
+              return (
+                <Card key={item.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex items-start gap-4 flex-1 min-w-0">
+                        <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center flex-shrink-0">
+                          <TypeIcon className="h-6 w-6 text-accent-foreground" />
+                        </div>
+                        
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="font-semibold text-lg line-clamp-1 hover:text-primary cursor-pointer">
+                              {item.title}
+                            </h3>
+                            {item.isFavorite && (
+                              <Star className="h-4 w-4 text-yellow-500 fill-current" />
+                            )}
+                          </div>
+                          
+                          <p className="text-muted-foreground mb-3 line-clamp-2">
+                            {item.excerpt}
+                          </p>
+                          
+                          <div className="flex items-center justify-between">
+                            <div className="flex flex-wrap gap-1">
+                              {item.tags.map((tag, tagIndex) => (
+                                <Badge key={tagIndex} variant="secondary" className="text-xs">
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                            
+                            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Clock className="h-3 w-3" />
+                                {item.readTime}
+                              </span>
+                              <span>Saved {item.savedDate}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="icon" asChild>
+                          <a href={item.url} target="_blank" rel="noopener noreferrer">
+                            <ExternalLink className="h-4 w-4" />
+                          </a>
+                        </Button>
+                        <Button variant="ghost" size="icon">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+
+          {filteredItems.length === 0 && (
+            <div className="text-center py-12">
+              <Archive className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+              <h3 className="text-lg font-semibold mb-2">No content found</h3>
+              <p className="text-muted-foreground">
+                Try adjusting your search or filters, or save some new content to get started.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </AuthenticatedLayout>
   );
 };
 
