@@ -3,83 +3,92 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Shield, Lock, Eye, UserCheck } from 'lucide-react';
+import { Shield } from 'lucide-react';
 
 const PrivacyPolicy = () => {
-  const lastUpdated = 'January 1, 2024';
-
   const sections = [
     {
       title: 'Information We Collect',
-      icon: Eye,
-      content: [
-        {
-          subtitle: 'Information You Provide',
-          text: 'We collect information you provide directly, such as account information, content you save, and communications with our support team.'
-        },
-        {
-          subtitle: 'Automatically Collected Information',
-          text: 'We automatically collect certain information about your device and usage patterns, including IP address, browser type, and interaction with our services.'
-        },
-        {
-          subtitle: 'Content and Usage Data',
-          text: 'We collect the content you save, organize, and search to provide our AI-powered features and improve your experience.'
-        }
-      ]
+      content: `We collect information you provide directly to us, such as when you create an account, save content, or contact us for support. This includes your email address, content you save, and usage preferences.
+
+We also automatically collect certain information about your device and usage patterns, including IP address, browser type, and how you interact with our service. This helps us improve the platform and provide better AI recommendations.`
     },
     {
       title: 'How We Use Your Information',
-      icon: UserCheck,
-      content: [
-        {
-          subtitle: 'Service Provision',
-          text: 'We use your information to provide, maintain, and improve our knowledge management services, including AI-powered organization and search.'
-        },
-        {
-          subtitle: 'Communication',
-          text: 'We may use your information to send you service-related communications, updates, and promotional messages (which you can opt out of).'
-        },
-        {
-          subtitle: 'Analytics and Improvement',
-          text: 'We analyze usage patterns to improve our services, develop new features, and enhance user experience.'
-        }
-      ]
-    },
-    {
-      title: 'Information Sharing',
-      icon: Shield,
-      content: [
-        {
-          subtitle: 'Service Providers',
-          text: 'We may share information with trusted service providers who assist us in operating our services, subject to confidentiality agreements.'
-        },
-        {
-          subtitle: 'Legal Requirements',
-          text: 'We may disclose information if required by law, legal process, or to protect the rights, property, or safety of Accio, our users, or others.'
-        },
-        {
-          subtitle: 'Business Transfers',
-          text: 'In the event of a merger, acquisition, or sale of assets, user information may be transferred as part of the transaction.'
-        }
-      ]
+      content: `We use your information to provide, maintain, and improve our services, including:
+      
+• Organizing and categorizing your saved content using AI
+• Providing personalized search results and recommendations
+• Sending you service updates and support communications
+• Analyzing usage patterns to improve our algorithms
+• Ensuring security and preventing fraud
+
+We never use your personal content to train our AI models or share it with third parties for advertising purposes.`
     },
     {
       title: 'Data Security',
-      icon: Lock,
-      content: [
-        {
-          subtitle: 'Encryption',
-          text: 'All data is encrypted in transit using TLS and at rest using industry-standard AES-256 encryption.'
-        },
-        {
-          subtitle: 'Access Controls',
-          text: 'We implement strict access controls and authentication measures to protect your data from unauthorized access.'
-        },
-        {
-          subtitle: 'Regular Audits',
-          text: 'We conduct regular security audits and assessments to identify and address potential vulnerabilities.'
-        }
-      ]
+      content: `We implement enterprise-grade security measures to protect your data:
+
+• End-to-end encryption for all content in transit and at rest
+• SOC 2 Type II compliance and regular security audits
+• Multi-factor authentication and access controls
+• Regular security training for all team members
+• Incident response procedures and monitoring
+
+Your data is stored in secure, geographically distributed data centers with redundant backups.`
+    },
+    {
+      title: 'Data Sharing and Disclosure',
+      content: `We do not sell, trade, or rent your personal information to third parties. We may share your information only in these limited circumstances:
+
+• With your explicit consent
+• To comply with legal obligations or court orders
+• To protect our rights, privacy, safety, or property
+• In connection with a business transaction (merger, acquisition, etc.)
+• With service providers who assist in operating our platform (under strict confidentiality agreements)`
+    },
+    {
+      title: 'Your Rights and Choices',
+      content: `You have several rights regarding your personal information:
+
+• Access: Request a copy of your personal data
+• Correction: Update or correct inaccurate information
+• Deletion: Request deletion of your account and data
+• Portability: Export your data in standard formats
+• Withdrawal: Withdraw consent for data processing
+
+To exercise these rights, contact us at privacy@accio.app. We will respond within 30 days.`
+    },
+    {
+      title: 'International Data Transfers',
+      content: `Accio operates globally, and your information may be transferred to and processed in countries other than your own. We ensure appropriate safeguards are in place for international transfers, including:
+
+• Standard contractual clauses approved by relevant authorities
+• Adequacy decisions by data protection authorities
+• Other lawful transfer mechanisms as required
+
+We maintain the same level of protection regardless of where your data is processed.`
+    },
+    {
+      title: 'Data Retention',
+      content: `We retain your information for as long as necessary to provide our services and fulfill legal obligations:
+
+• Account information: Until you delete your account
+• Saved content: Until you delete it or your account
+• Usage data: Typically 2-3 years for analytics purposes
+• Support communications: Up to 7 years for record-keeping
+
+When you delete your account, we remove your personal data within 30 days, except where retention is required by law.`
+    },
+    {
+      title: 'Cookies and Tracking',
+      content: `We use cookies and similar technologies to enhance your experience:
+
+• Essential cookies: Required for basic platform functionality
+• Analytics cookies: Help us understand usage patterns
+• Preference cookies: Remember your settings and preferences
+
+You can control cookie settings through your browser, though disabling certain cookies may affect platform functionality.`
     }
   ];
 
@@ -87,162 +96,73 @@ const PrivacyPolicy = () => {
     <>
       <Helmet>
         <title>Privacy Policy - How We Protect Your Data | Accio</title>
-        <meta name="description" content="Learn how Accio protects your privacy and data. Our comprehensive privacy policy explains data collection, usage, sharing, and security practices." />
+        <meta name="description" content="Learn how Accio protects your privacy and data with enterprise-grade security, transparent practices, and your rights as a user." />
       </Helmet>
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center mb-12">
-              <Badge variant="secondary" className="mb-6">
-                <Shield className="h-3 w-3 mr-1" />
-                Privacy Policy
-              </Badge>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                Your Privacy Matters
-              </h1>
-              <p className="text-xl text-muted-foreground mb-4 leading-relaxed">
-                We're committed to protecting your privacy and being transparent about how we collect, 
-                use, and protect your information.
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Last updated: {lastUpdated}
-              </p>
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <Badge variant="secondary" className="mb-6">
+              <Shield className="h-3 w-3 mr-1" />
+              Privacy Policy
+            </Badge>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Your Privacy Matters
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+              We're committed to protecting your privacy and being transparent about how we collect, 
+              use, and safeguard your information.
+            </p>
+            <div className="text-sm text-muted-foreground">
+              Last updated: January 1, 2025
             </div>
           </div>
         </section>
 
-        {/* Introduction */}
+        {/* Content */}
         <section className="py-16">
           <div className="container mx-auto px-4 max-w-4xl">
-            <Card className="p-8 border-0 shadow-lg mb-12">
-              <h2 className="text-2xl font-bold mb-4">Introduction</h2>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                This Privacy Policy describes how Accio ("we," "our," or "us") collects, uses, and protects 
-                your information when you use our knowledge management platform and related services.
-              </p>
-              <p className="text-muted-foreground leading-relaxed mb-4">
-                By using our services, you agree to the collection and use of information in accordance 
-                with this policy. We will not use or share your information except as described in this 
-                Privacy Policy.
-              </p>
-              <p className="text-muted-foreground leading-relaxed">
-                We are committed to protecting your privacy and ensuring you have a positive experience 
-                on our platform while benefiting from our knowledge management tools.
-              </p>
-            </Card>
+            <div className="prose prose-gray dark:prose-invert max-w-none">
+              <div className="mb-12 p-6 bg-muted/20 rounded-lg">
+                <h2 className="text-xl font-semibold mb-4">Overview</h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  Accio ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy 
+                  explains how we collect, use, disclose, and safeguard your information when you use our 
+                  AI-powered knowledge management platform. By using Accio, you agree to the practices 
+                  described in this policy.
+                </p>
+              </div>
 
-            {/* Main Sections */}
-            <div className="space-y-8">
-              {sections.map((section, index) => (
-                <Card key={index} className="p-8">
-                  <CardHeader className="pb-6">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <section.icon className="h-5 w-5 text-primary" />
-                      </div>
+              <div className="space-y-8">
+                {sections.map((section, index) => (
+                  <Card key={index}>
+                    <CardHeader>
                       <CardTitle className="text-xl">{section.title}</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    {section.content.map((item, itemIndex) => (
-                      <div key={itemIndex}>
-                        <h4 className="font-semibold mb-2">{item.subtitle}</h4>
-                        <p className="text-muted-foreground leading-relaxed">{item.text}</p>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="whitespace-pre-line text-muted-foreground leading-relaxed">
+                        {section.content}
                       </div>
-                    ))}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
 
-            {/* Additional Sections */}
-            <div className="mt-12 space-y-8">
-              <Card className="p-8">
-                <CardTitle className="text-xl mb-6">Your Rights and Choices</CardTitle>
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-semibold mb-2">Access and Portability</h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      You have the right to access your personal information and export your data in a 
-                      portable format at any time through your account settings.
-                    </p>
+              <Card className="mt-12">
+                <CardHeader>
+                  <CardTitle className="text-xl">Contact Us</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    If you have questions about this Privacy Policy or our data practices, please contact us:
+                  </p>
+                  <div className="space-y-2 text-muted-foreground">
+                    <div><strong>Email:</strong> privacy@accio.app</div>
+                    <div><strong>Address:</strong> Accio Inc., 123 Innovation Drive, San Francisco, CA 94105</div>
+                    <div><strong>Data Protection Officer:</strong> dpo@accio.app</div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Correction and Deletion</h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      You can update, correct, or delete your personal information through your account 
-                      settings or by contacting our support team.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold mb-2">Communication Preferences</h4>
-                    <p className="text-muted-foreground leading-relaxed">
-                      You can opt out of promotional communications at any time by following the unsubscribe 
-                      links in our emails or updating your preferences in your account.
-                    </p>
-                  </div>
-                </div>
-              </Card>
-
-              <Card className="p-8">
-                <CardTitle className="text-xl mb-6">Data Retention</CardTitle>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We retain your information for as long as your account is active or as needed to provide 
-                  you services. If you wish to cancel your account or request that we no longer use your 
-                  information, please contact us.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  We will retain and use your information as necessary to comply with our legal obligations, 
-                  resolve disputes, and enforce our agreements.
-                </p>
-              </Card>
-
-              <Card className="p-8">
-                <CardTitle className="text-xl mb-6">International Data Transfers</CardTitle>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  Your information may be transferred to and maintained on computers located outside of your 
-                  state, province, country, or other governmental jurisdiction where data protection laws may 
-                  differ from those of your jurisdiction.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  We will take all steps reasonably necessary to ensure that your data is treated securely 
-                  and in accordance with this Privacy Policy.
-                </p>
-              </Card>
-
-              <Card className="p-8">
-                <CardTitle className="text-xl mb-6">Children's Privacy</CardTitle>
-                <p className="text-muted-foreground leading-relaxed">
-                  Our services are not intended for children under 13 years of age. We do not knowingly 
-                  collect personally identifiable information from children under 13. If you are a parent 
-                  or guardian and believe your child has provided us with personal information, please contact us.
-                </p>
-              </Card>
-
-              <Card className="p-8">
-                <CardTitle className="text-xl mb-6">Changes to This Privacy Policy</CardTitle>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  We may update our Privacy Policy from time to time. We will notify you of any changes by 
-                  posting the new Privacy Policy on this page and updating the "Last updated" date.
-                </p>
-                <p className="text-muted-foreground leading-relaxed">
-                  You are advised to review this Privacy Policy periodically for any changes. Changes to 
-                  this Privacy Policy are effective when they are posted on this page.
-                </p>
-              </Card>
-
-              <Card className="p-8 bg-primary/5 border-primary/20">
-                <CardTitle className="text-xl mb-6">Contact Us</CardTitle>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  If you have any questions about this Privacy Policy, please contact us:
-                </p>
-                <div className="space-y-2 text-muted-foreground">
-                  <p>Email: privacy@accio.app</p>
-                  <p>Address: 123 Innovation Drive, Suite 400, San Francisco, CA 94105</p>
-                  <p>Phone: +1 (555) 123-4567</p>
-                </div>
+                </CardContent>
               </Card>
             </div>
           </div>
