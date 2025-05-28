@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { FocusTrap } from '@/components/ui/enhanced-focus';
 import { ProgressIndicator } from '@/components/ui/microinteractions';
-import { Brain, Mail, Lock, User, Eye, EyeOff, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
+import { Brain, Mail, Lock, User, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Register = () => {
@@ -22,9 +22,6 @@ const Register = () => {
     lastName: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [step, setStep] = useState(1);
   const [completionPercentage, setCompletionPercentage] = useState(0);
 
   // Calculate form completion
@@ -104,10 +101,8 @@ const Register = () => {
     if (Object.keys(errors).length > 0) return;
 
     try {
-      await signUp(formData.email, formData.password, {
-        firstName: formData.firstName,
-        lastName: formData.lastName
-      });
+      // Call signUp with email and password only
+      await signUp(formData.email, formData.password);
     } catch (error) {
       console.error('Registration error:', error);
     }

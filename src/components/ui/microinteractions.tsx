@@ -4,15 +4,15 @@ import { Button, ButtonProps } from '@/components/ui/button';
 import { Check, Heart, Bookmark, Archive, Tag, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface MicroInteractionButtonProps extends ButtonProps {
-  type: 'save' | 'like' | 'bookmark' | 'archive' | 'tag';
+interface MicroInteractionButtonProps extends Omit<ButtonProps, 'type'> {
+  actionType: 'save' | 'like' | 'bookmark' | 'archive' | 'tag';
   isActive?: boolean;
   onToggle?: (active: boolean) => void;
   showFeedback?: boolean;
 }
 
 export const MicroInteractionButton: React.FC<MicroInteractionButtonProps> = ({
-  type,
+  actionType,
   isActive = false,
   onToggle,
   showFeedback = true,
@@ -61,7 +61,7 @@ export const MicroInteractionButton: React.FC<MicroInteractionButtonProps> = ({
     }
   };
 
-  const { icon: Icon, activeColor, inactiveColor, feedback: feedbackText, animation } = config[type];
+  const { icon: Icon, activeColor, inactiveColor, feedback: feedbackText, animation } = config[actionType];
 
   const handleClick = () => {
     const newActive = !isActive;
