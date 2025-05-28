@@ -80,7 +80,7 @@ export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
     setIsLoading(true);
     try {
       if (activeTab === 'signup') {
-        await signUp(values.email, values.password);
+        await signUp(values.name || 'User', values.email, values.password);
       } else {
         await signIn(values.email, values.password);
       }

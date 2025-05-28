@@ -127,7 +127,7 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
       const sanitizedName = values.name ? sanitizeInput(values.name, { maxLength: 100 }) : undefined;
       
       if (activeTab === 'signup') {
-        const { error } = await signUp(sanitizedEmail, values.password);
+        const { error } = await signUp(sanitizedName || 'User', sanitizedEmail, values.password);
         if (error) throw error;
         
         toast({
