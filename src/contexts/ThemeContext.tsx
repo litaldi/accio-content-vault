@@ -1,32 +1,31 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 type Theme = 'dark' | 'light' | 'system';
 
-interface ThemeProviderState {
+type ThemeProviderProps = {
+  children: React.ReactNode;
+  defaultTheme?: Theme;
+  storageKey?: string;
+};
+
+type ThemeProviderState = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
-  toggleTheme: () => void;
-}
+};
 
 const initialState: ThemeProviderState = {
   theme: 'system',
   setTheme: () => null,
-  toggleTheme: () => null,
 };
 
 const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
-interface ThemeProviderProps {
-  children: React.ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-}
-
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
-  storageKey = 'accio-theme',
+  storageKey = 'ui-theme',
+  ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
@@ -34,6 +33,7 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement;
+
     root.classList.remove('light', 'dark');
 
     if (theme === 'system') {
@@ -41,6 +41,7 @@ export function ThemeProvider({
         .matches
         ? 'dark'
         : 'light';
+
       root.classList.add(systemTheme);
       return;
     }
@@ -48,21 +49,16 @@ export function ThemeProvider({
     root.classList.add(theme);
   }, [theme]);
 
-  const toggleTheme = () => {
-    setTheme(current => current === 'light' ? 'dark' : 'light');
-  };
-
   const value = {
     theme,
     setTheme: (theme: Theme) => {
       localStorage.setItem(storageKey, theme);
       setTheme(theme);
     },
-    toggleTheme,
   };
 
   return (
-    <ThemeProviderContext.Provider value={value}>
+    <ThemeProviderContext.Provider {...props} value={value}>
       {children}
     </ThemeProviderContext.Provider>
   );

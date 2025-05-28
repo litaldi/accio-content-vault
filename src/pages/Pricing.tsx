@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Check, X, Star, DollarSign } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Check, Star, Zap, Users, Shield } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Pricing = () => {
@@ -19,13 +19,13 @@ const Pricing = () => {
         'Basic AI organization',
         'Standard search',
         'Mobile apps',
-        'Email support'
+        'Browser extension',
+        'Community support'
       ],
       limitations: [
-        'Advanced AI features',
-        'Team collaboration',
-        'API access',
-        'Priority support'
+        'Limited storage',
+        'Basic categorization',
+        'No team features'
       ],
       cta: 'Get Started Free',
       popular: false
@@ -34,20 +34,18 @@ const Pricing = () => {
       name: 'Pro',
       price: '$12',
       period: 'per month',
-      description: 'For professionals who need more power',
+      description: 'Advanced features for power users',
       features: [
         'Unlimited saved items',
         'Advanced AI organization',
         'Semantic search',
-        'Browser extension',
         'Offline access',
+        'Custom tags & categories',
+        'Export capabilities',
         'Priority support',
-        'Export capabilities'
+        'API access'
       ],
-      limitations: [
-        'Team features',
-        'Admin controls'
-      ],
+      limitations: [],
       cta: 'Start Pro Trial',
       popular: true
     },
@@ -55,19 +53,19 @@ const Pricing = () => {
       name: 'Team',
       price: '$25',
       period: 'per user/month',
-      description: 'For teams that share knowledge',
+      description: 'Collaboration features for teams',
       features: [
         'Everything in Pro',
         'Team collaboration',
         'Shared collections',
+        'Advanced permissions',
+        'Team analytics',
+        'SSO integration',
         'Admin dashboard',
-        'User management',
-        'API access',
-        'Custom integrations',
         'Dedicated support'
       ],
       limitations: [],
-      cta: 'Contact Sales',
+      cta: 'Start Team Trial',
       popular: false
     }
   ];
@@ -83,11 +81,11 @@ const Pricing = () => {
     },
     {
       question: 'What payment methods do you accept?',
-      answer: 'We accept all major credit cards, PayPal, and bank transfers for annual plans.'
+      answer: 'We accept all major credit cards, PayPal, and offer annual billing discounts.'
     },
     {
-      question: 'Do you offer discounts for students or nonprofits?',
-      answer: 'Yes, we offer 50% discounts for students and qualified nonprofit organizations.'
+      question: 'Do you offer refunds?',
+      answer: 'Yes, we offer a 30-day money-back guarantee for all paid plans.'
     }
   ];
 
@@ -95,22 +93,22 @@ const Pricing = () => {
     <>
       <Helmet>
         <title>Pricing - Choose Your Plan | Accio</title>
-        <meta name="description" content="Choose the perfect Accio plan for your knowledge management needs. Start free or unlock advanced AI features with our Pro and Team plans." />
+        <meta name="description" content="Choose the perfect Accio plan for your knowledge management needs. From free individual plans to enterprise team solutions." />
       </Helmet>
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
-          <div className="container mx-auto px-4 max-w-6xl text-center">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
             <Badge variant="secondary" className="mb-6">
-              <DollarSign className="h-3 w-3 mr-1" />
-              Simple Pricing
+              <Zap className="h-3 w-3 mr-1" />
+              Pricing Plans
             </Badge>
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Choose Your Knowledge Management Plan
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Simple, Transparent Pricing
             </h1>
             <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              Start free and scale as you grow. All plans include our core AI features with no setup fees or hidden costs.
+              Choose the perfect plan for your knowledge management needs. Start free and upgrade as you grow.
             </p>
           </div>
         </section>
@@ -130,13 +128,13 @@ const Pricing = () => {
                     </div>
                   )}
                   
-                  <CardHeader className="text-center pb-8">
+                  <CardHeader className="text-center pb-6">
                     <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                    <div className="flex items-baseline justify-center gap-2 mb-4">
+                    <div className="mt-4">
                       <span className="text-4xl font-bold">{plan.price}</span>
                       <span className="text-muted-foreground">/{plan.period}</span>
                     </div>
-                    <CardDescription>{plan.description}</CardDescription>
+                    <CardDescription className="mt-2">{plan.description}</CardDescription>
                   </CardHeader>
                   
                   <CardContent className="space-y-6">
@@ -145,35 +143,19 @@ const Pricing = () => {
                       variant={plan.popular ? 'default' : 'outline'}
                       asChild
                     >
-                      <Link to={plan.name === 'Free' ? '/register' : '/contact'}>
-                        {plan.cta}
-                      </Link>
+                      <Link to="/register">{plan.cta}</Link>
                     </Button>
                     
-                    <div className="space-y-3">
-                      <h4 className="font-medium">Included:</h4>
+                    <div>
+                      <h4 className="font-semibold mb-3">What's included:</h4>
                       <ul className="space-y-2">
                         {plan.features.map((feature, featureIndex) => (
                           <li key={featureIndex} className="flex items-center text-sm">
-                            <Check className="h-4 w-4 text-green-500 mr-3 flex-shrink-0" />
+                            <Check className="h-4 w-4 text-primary mr-2 flex-shrink-0" />
                             {feature}
                           </li>
                         ))}
                       </ul>
-                      
-                      {plan.limitations.length > 0 && (
-                        <>
-                          <h4 className="font-medium text-muted-foreground pt-4">Not included:</h4>
-                          <ul className="space-y-2">
-                            {plan.limitations.map((limitation, limitationIndex) => (
-                              <li key={limitationIndex} className="flex items-center text-sm text-muted-foreground">
-                                <X className="h-4 w-4 mr-3 flex-shrink-0" />
-                                {limitation}
-                              </li>
-                            ))}
-                          </ul>
-                        </>
-                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -183,60 +165,62 @@ const Pricing = () => {
         </section>
 
         {/* Features Comparison */}
-        <section className="py-24 bg-muted/20">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-16">
+        <section className="py-16 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">All Plans Include</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Core features that make Accio the smartest choice for knowledge management.
+              <p className="text-lg text-muted-foreground">
+                Core features available across all subscription tiers.
               </p>
             </div>
             
             <div className="grid md:grid-cols-3 gap-8">
-              <Card className="text-center p-8">
-                <div className="text-4xl mb-4">🔒</div>
-                <CardTitle className="text-xl mb-4">Enterprise Security</CardTitle>
-                <CardDescription>
-                  End-to-end encryption, SOC 2 compliance, and enterprise-grade security for all your data.
-                </CardDescription>
+              <Card className="text-center p-6">
+                <Shield className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="font-semibold mb-2">Enterprise Security</h3>
+                <p className="text-sm text-muted-foreground">
+                  Bank-level encryption and SOC 2 compliance for all users.
+                </p>
               </Card>
               
-              <Card className="text-center p-8">
-                <div className="text-4xl mb-4">🌍</div>
-                <CardTitle className="text-xl mb-4">Global Sync</CardTitle>
-                <CardDescription>
-                  Access your knowledge base from anywhere with real-time synchronization across all devices.
-                </CardDescription>
+              <Card className="text-center p-6">
+                <Zap className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="font-semibold mb-2">AI-Powered</h3>
+                <p className="text-sm text-muted-foreground">
+                  Advanced machine learning for content organization.
+                </p>
               </Card>
               
-              <Card className="text-center p-8">
-                <div className="text-4xl mb-4">📈</div>
-                <CardTitle className="text-xl mb-4">Analytics</CardTitle>
-                <CardDescription>
-                  Gain insights into your knowledge patterns and discover optimization opportunities.
-                </CardDescription>
+              <Card className="text-center p-6">
+                <Users className="h-12 w-12 text-primary mx-auto mb-4" />
+                <h3 className="font-semibold mb-2">Cross-Platform</h3>
+                <p className="text-sm text-muted-foreground">
+                  Access your knowledge from any device, anywhere.
+                </p>
               </Card>
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="py-24">
+        <section className="py-16">
           <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
               <p className="text-lg text-muted-foreground">
-                Everything you need to know about our pricing and plans.
+                Get answers to common questions about our pricing and plans.
               </p>
             </div>
             
-            <div className="space-y-8">
+            <div className="space-y-6">
               {faqs.map((faq, index) => (
-                <Card key={index} className="p-6">
-                  <CardTitle className="text-lg mb-3">{faq.question}</CardTitle>
-                  <CardDescription className="text-base leading-relaxed">
-                    {faq.answer}
-                  </CardDescription>
+                <Card key={index}>
+                  <CardHeader>
+                    <CardTitle className="text-lg">{faq.question}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-muted-foreground">{faq.answer}</p>
+                  </CardContent>
                 </Card>
               ))}
             </div>
@@ -248,11 +232,11 @@ const Pricing = () => {
           <div className="container mx-auto px-4 max-w-4xl text-center">
             <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
             <p className="text-xl mb-8 opacity-90">
-              Join thousands of professionals who trust Accio with their knowledge management needs.
+              Join thousands of professionals who have transformed their knowledge management with Accio.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button variant="secondary" size="lg" asChild>
-                <Link to="/register">Start Free Today</Link>
+                <Link to="/register">Start Free Trial</Link>
               </Button>
               <Button variant="outline" size="lg" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
                 <Link to="/contact">Contact Sales</Link>

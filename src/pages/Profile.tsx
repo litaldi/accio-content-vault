@@ -1,323 +1,324 @@
+
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import AuthenticatedLayout from '@/components/layout/AuthenticatedLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  User,
-  Mail,
-  MapPin,
-  Calendar,
-  Edit3,
-  Camera,
-  Award,
-  Target,
-  TrendingUp,
-  BookOpen,
-  Zap,
-  Save,
-  X
-} from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { User, Mail, Shield, Bell, Download, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const Profile = () => {
   const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: 'Alex Johnson',
-    email: 'alex.johnson@example.com',
-    bio: 'Passionate learner and knowledge curator. I love exploring new technologies and sharing insights with the community.',
-    location: 'San Francisco, CA',
-    website: 'https://alexjohnson.dev',
-    joinDate: '2024-01-15'
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    bio: 'Knowledge management enthusiast and productivity expert.',
+    company: 'Tech Corp Inc.',
+    role: 'Senior Product Manager'
   });
 
-  const stats = [
-    { label: 'Items Saved', value: '1,247', icon: BookOpen },
-    { label: 'Collections', value: '23', icon: Target },
-    { label: 'Learning Streak', value: '45 days', icon: Zap },
-    { label: 'Knowledge Score', value: '87%', icon: TrendingUp }
-  ];
-
-  const achievements = [
-    { title: 'Early Adopter', description: 'Joined Accio in its first month', icon: Award, earned: true },
-    { title: 'Knowledge Curator', description: 'Saved 1000+ items', icon: BookOpen, earned: true },
-    { title: 'Consistent Learner', description: '30-day learning streak', icon: Target, earned: true },
-    { title: 'Collection Master', description: 'Created 20+ collections', icon: Zap, earned: false }
-  ];
-
-  const recentActivity = [
-    { action: 'Saved', item: 'Advanced React Patterns', time: '2 hours ago' },
-    { action: 'Created', item: 'Frontend Architecture collection', time: '1 day ago' },
-    { action: 'Completed', item: 'JavaScript Fundamentals learning path', time: '3 days ago' },
-    { action: 'Shared', item: 'AI Tools for Developers', time: '1 week ago' }
-  ];
-
-  const handleSave = () => {
-    // Here you would typically save to backend
-    setIsEditing(false);
-    toast({
-      title: "Profile updated",
-      description: "Your profile has been successfully updated.",
-    });
+  const handleProfileUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      toast({
+        title: "Profile updated",
+        description: "Your profile has been successfully updated.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleCancel = () => {
-    setIsEditing(false);
-    // Reset form data to original values
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setProfileData(prev => ({ ...prev, [name]: value }));
   };
 
   return (
-    <AuthenticatedLayout>
-      <div className="min-h-screen bg-background">
-        <Helmet>
-          <title>Profile - Manage Your Account | Accio</title>
-          <meta name="description" content="View and edit your profile information, track your learning achievements, and manage your account settings." />
-        </Helmet>
+    <>
+      <Helmet>
+        <title>Profile - Manage Your Account | Accio</title>
+        <meta name="description" content="Manage your Accio profile, account settings, and preferences. Update your information and configure your knowledge management experience." />
+      </Helmet>
 
-        <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
           {/* Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Profile</h1>
-              <p className="text-muted-foreground">
-                Manage your account information and track your learning journey.
-              </p>
-            </div>
-            <Button 
-              onClick={() => setIsEditing(!isEditing)}
-              variant={isEditing ? "outline" : "default"}
-              className="mt-4 lg:mt-0 gap-2"
-            >
-              {isEditing ? (
-                <>
-                  <X className="h-4 w-4" />
-                  Cancel
-                </>
-              ) : (
-                <>
-                  <Edit3 className="h-4 w-4" />
-                  Edit Profile
-                </>
-              )}
-            </Button>
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">Profile Settings</h1>
+            <p className="text-muted-foreground">
+              Manage your account information and preferences.
+            </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Profile Info */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Basic Info */}
+          <Tabs defaultValue="profile" className="space-y-6">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="profile">Profile</TabsTrigger>
+              <TabsTrigger value="account">Account</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
+              <TabsTrigger value="data">Data & Privacy</TabsTrigger>
+            </TabsList>
+
+            {/* Profile Tab */}
+            <TabsContent value="profile">
               <Card>
                 <CardHeader>
-                  <CardTitle>Profile Information</CardTitle>
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-20 w-20">
+                      <AvatarFallback className="text-lg">
+                        {profileData.name.split(' ').map(n => n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <CardTitle>Profile Information</CardTitle>
+                      <CardDescription>
+                        Update your personal information and bio.
+                      </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <form onSubmit={handleProfileUpdate} className="space-y-6">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="name">Full Name</Label>
+                        <Input
+                          id="name"
+                          name="name"
+                          value={profileData.name}
+                          onChange={handleInputChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="email">Email</Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={profileData.email}
+                          onChange={handleInputChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="company">Company</Label>
+                        <Input
+                          id="company"
+                          name="company"
+                          value={profileData.company}
+                          onChange={handleInputChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="role">Role</Label>
+                        <Input
+                          id="role"
+                          name="role"
+                          value={profileData.role}
+                          onChange={handleInputChange}
+                          disabled={isLoading}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="bio">Bio</Label>
+                      <Textarea
+                        id="bio"
+                        name="bio"
+                        value={profileData.bio}
+                        onChange={handleInputChange}
+                        disabled={isLoading}
+                        rows={4}
+                        placeholder="Tell us a bit about yourself..."
+                      />
+                    </div>
+
+                    <Button type="submit" disabled={isLoading}>
+                      {isLoading ? 'Updating...' : 'Update Profile'}
+                    </Button>
+                  </form>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* Account Tab */}
+            <TabsContent value="account">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Shield className="h-5 w-5" />
+                      Account Security
+                    </CardTitle>
+                    <CardDescription>
+                      Manage your password and security settings.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Password</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Last changed 3 months ago
+                        </p>
+                      </div>
+                      <Button variant="outline">Change Password</Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Two-Factor Authentication</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Add an extra layer of security
+                        </p>
+                      </div>
+                      <Badge variant="outline">Not Enabled</Badge>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Subscription</CardTitle>
+                    <CardDescription>
+                      Manage your current plan and billing information.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Current Plan</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Pro Plan - $12/month
+                        </p>
+                      </div>
+                      <Button variant="outline">Manage Billing</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+
+            {/* Notifications Tab */}
+            <TabsContent value="notifications">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="h-5 w-5" />
+                    Notification Preferences
+                  </CardTitle>
                   <CardDescription>
-                    Update your personal information and bio
+                    Configure how and when you receive notifications.
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  {/* Avatar Section */}
-                  <div className="flex items-center gap-6">
-                    <div className="relative">
-                      <Avatar className="w-24 h-24">
-                        <AvatarImage src="/placeholder-avatar.jpg" alt="Profile picture" />
-                        <AvatarFallback className="text-lg">
-                          {profileData.name.split(' ').map(n => n[0]).join('')}
-                        </AvatarFallback>
-                      </Avatar>
-                      {isEditing && (
-                        <Button
-                          size="icon"
-                          variant="outline"
-                          className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full"
-                        >
-                          <Camera className="h-4 w-4" />
-                        </Button>
-                      )}
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold">{profileData.name}</h3>
-                      <p className="text-muted-foreground">Member since {new Date(profileData.joinDate).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-                    </div>
-                  </div>
-
-                  {/* Form Fields */}
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="name">Full Name</Label>
-                      <Input
-                        id="name"
-                        value={profileData.name}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, name: e.target.value }))}
-                        disabled={!isEditing}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={profileData.email}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
-                        disabled={!isEditing}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="location">Location</Label>
-                      <Input
-                        id="location"
-                        value={profileData.location}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, location: e.target.value }))}
-                        disabled={!isEditing}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="website">Website</Label>
-                      <Input
-                        id="website"
-                        value={profileData.website}
-                        onChange={(e) => setProfileData(prev => ({ ...prev, website: e.target.value }))}
-                        disabled={!isEditing}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="bio">Bio</Label>
-                    <Textarea
-                      id="bio"
-                      value={profileData.bio}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, bio: e.target.value }))}
-                      disabled={!isEditing}
-                      rows={4}
-                      placeholder="Tell us about yourself..."
-                    />
-                  </div>
-
-                  {isEditing && (
-                    <div className="flex gap-3 pt-4">
-                      <Button onClick={handleSave} className="gap-2">
-                        <Save className="h-4 w-4" />
-                        Save Changes
-                      </Button>
-                      <Button variant="outline" onClick={handleCancel}>
-                        Cancel
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Recent Activity */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Recent Activity</CardTitle>
-                  <CardDescription>
-                    Your latest actions and achievements
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
                   <div className="space-y-4">
-                    {recentActivity.map((activity, index) => (
-                      <div key={index} className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                        <div className="w-2 h-2 bg-primary rounded-full"></div>
-                        <div className="flex-1">
-                          <p className="text-sm">
-                            <span className="font-medium">{activity.action}</span> {activity.item}
-                          </p>
-                          <p className="text-xs text-muted-foreground">{activity.time}</p>
-                        </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Email Notifications</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Receive updates about your account and activity
+                        </p>
                       </div>
-                    ))}
+                      <input type="checkbox" defaultChecked className="toggle" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Weekly Digest</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Summary of your knowledge activity
+                        </p>
+                      </div>
+                      <input type="checkbox" defaultChecked className="toggle" />
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">AI Insights</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Get notified about AI-discovered patterns
+                        </p>
+                      </div>
+                      <input type="checkbox" className="toggle" />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
-            </div>
+            </TabsContent>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Stats */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Your Stats</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {stats.map((stat, index) => (
-                      <div key={index} className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
-                            <stat.icon className="h-4 w-4 text-primary" />
-                          </div>
-                          <span className="text-sm">{stat.label}</span>
-                        </div>
-                        <span className="font-semibold">{stat.value}</span>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+            {/* Data & Privacy Tab */}
+            <TabsContent value="data">
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Download className="h-5 w-5" />
+                      Data Export
+                    </CardTitle>
+                    <CardDescription>
+                      Download all your data in a portable format.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      Export all your saved content, tags, and metadata. This may take a few minutes to prepare.
+                    </p>
+                    <Button variant="outline">
+                      <Download className="h-4 w-4 mr-2" />
+                      Export Data
+                    </Button>
+                  </CardContent>
+                </Card>
 
-              {/* Achievements */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Achievements</CardTitle>
-                  <CardDescription>
-                    Your learning milestones
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {achievements.map((achievement, index) => (
-                      <div key={index} className={`flex items-start gap-3 p-3 rounded-lg ${achievement.earned ? 'bg-primary/5' : 'opacity-50'}`}>
-                        <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${achievement.earned ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
-                          <achievement.icon className="h-4 w-4" />
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-medium text-sm">{achievement.title}</h4>
-                          <p className="text-xs text-muted-foreground">{achievement.description}</p>
-                        </div>
-                        {achievement.earned && (
-                          <Badge variant="secondary" className="text-xs">Earned</Badge>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <User className="h-4 w-4" />
-                    Account Settings
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <Mail className="h-4 w-4" />
-                    Email Preferences
-                  </Button>
-                  <Button variant="outline" className="w-full justify-start gap-2">
-                    <BookOpen className="h-4 w-4" />
-                    Learning Goals
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+                <Card className="border-destructive">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-destructive">
+                      <Trash2 className="h-5 w-5" />
+                      Delete Account
+                    </CardTitle>
+                    <CardDescription>
+                      Permanently delete your account and all associated data.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      This action cannot be undone. All your content, settings, and account data will be permanently deleted.
+                    </p>
+                    <Button variant="destructive">
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Account
+                    </Button>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
-      </div>
-    </AuthenticatedLayout>
+      </main>
+    </>
   );
 };
 
