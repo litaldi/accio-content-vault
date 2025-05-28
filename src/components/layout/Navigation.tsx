@@ -1,9 +1,13 @@
 
 import React from 'react';
-import UnifiedNavigation from '@/components/navigation/UnifiedNavigation';
+import UnifiedMegaMenu from '@/components/navigation/UnifiedMegaMenu';
 
+/**
+ * Layout Navigation Component
+ * Uses the unified mega menu for consistent navigation
+ */
 const Navigation: React.FC = () => {
-  return <UnifiedNavigation />;
+  return <UnifiedMegaMenu />;
 };
 
 export default Navigation;
