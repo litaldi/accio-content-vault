@@ -194,7 +194,7 @@ const Register = () => {
                       <Checkbox
                         id="terms"
                         checked={agreeToTerms}
-                        onCheckedChange={setAgreeToTerms}
+                        onCheckedChange={(checked) => setAgreeToTerms(checked === true)}
                         disabled={isLoading}
                       />
                       <Label htmlFor="terms" className="text-sm leading-relaxed">
