@@ -1,102 +1,82 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { Brain, ArrowRight, Mail, Twitter, Linkedin, Github, Heart } from 'lucide-react';
+import { Brain, Twitter, Linkedin, Github, Mail } from 'lucide-react';
 
-const GlobalFooter: React.FC = () => {
-  const footerLinks = {
-    product: [
-      { label: 'Features', href: '/features' },
-      { label: 'How It Works', href: '/how-it-works' },
-      { label: 'Pricing', href: '/pricing' },
-      { label: 'Dashboard', href: '/dashboard' }
-    ],
-    company: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Contact', href: '/contact' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Help & Support', href: '/faq' }
-    ],
-    resources: [
-      { label: 'Getting Started', href: '/how-it-works' },
-      { label: 'FAQ', href: '/faq' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Contact Support', href: '/contact' }
-    ],
-    legal: [
-      { label: 'Privacy Policy', href: '/privacy-policy' },
-      { label: 'Terms of Service', href: '/terms-of-service' },
-      { label: 'Security', href: '/about' },
-      { label: 'Accessibility', href: '/faq' }
-    ]
-  };
-
-  const socialLinks = [
-    { icon: Twitter, href: 'https://twitter.com/accio', label: 'Twitter', ariaLabel: 'Follow us on Twitter' },
-    { icon: Linkedin, href: 'https://linkedin.com/company/accio', label: 'LinkedIn', ariaLabel: 'Connect on LinkedIn' },
-    { icon: Github, href: 'https://github.com/accio', label: 'GitHub', ariaLabel: 'View our GitHub' }
+const GlobalFooter = () => {
+  const footerSections = [
+    {
+      title: 'Product',
+      links: [
+        { name: 'Features', href: '/features' },
+        { name: 'How It Works', href: '/how-it-works' },
+        { name: 'Pricing', href: '/pricing' },
+        { name: 'FAQ', href: '/faq' }
+      ]
+    },
+    {
+      title: 'Company',
+      links: [
+        { name: 'About', href: '/about' },
+        { name: 'Blog', href: '/blog' },
+        { name: 'Contact', href: '/contact' },
+        { name: 'Careers', href: '/careers' }
+      ]
+    },
+    {
+      title: 'Resources',
+      links: [
+        { name: 'Help Center', href: '/help' },
+        { name: 'API Docs', href: '/api-docs' },
+        { name: 'Integrations', href: '/integrations' },
+        { name: 'Community', href: '/community' }
+      ]
+    },
+    {
+      title: 'Legal',
+      links: [
+        { name: 'Privacy Policy', href: '/privacy-policy' },
+        { name: 'Terms of Service', href: '/terms-of-service' },
+        { name: 'Cookie Policy', href: '/cookie-policy' },
+        { name: 'Security', href: '/security' }
+      ]
+    }
   ];
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Newsletter signup submitted');
-  };
+  const socialLinks = [
+    { name: 'Twitter', href: 'https://twitter.com/accio', icon: Twitter },
+    { name: 'LinkedIn', href: 'https://linkedin.com/company/accio', icon: Linkedin },
+    { name: 'GitHub', href: 'https://github.com/accio', icon: Github },
+    { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail }
+  ];
 
   return (
-    <footer className="bg-muted/30 border-t mt-auto" role="contentinfo">
-      {/* Newsletter Section */}
-      <div className="container mx-auto px-4 py-16 max-w-7xl">
-        <div className="bg-primary rounded-3xl p-8 md:p-12 text-center text-primary-foreground mb-16">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            Stay ahead of the knowledge curve
-          </h3>
-          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Get productivity tips, feature updates, and expert insights delivered to your inbox.
-          </p>
-          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <Input 
-              type="email" 
-              placeholder="Enter your email" 
-              className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/70"
-              required
-              aria-label="Email address for newsletter"
-            />
-            <Button type="submit" variant="secondary" className="shrink-0">
-              Subscribe
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </form>
-          <p className="text-sm opacity-75 mt-4">
-            Join 5,000+ subscribers. Unsubscribe anytime.
-          </p>
-        </div>
-
-        {/* Main Footer Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand Column */}
-          <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="inline-flex items-center gap-2 mb-4 hover:opacity-80 transition-opacity">
+    <footer className="bg-background border-t">
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="flex items-center gap-2 mb-4">
               <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                 <Brain className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="text-xl font-bold">Accio</span>
             </Link>
-            <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-              Transform information chaos into organized intelligence. 
-              The AI-powered knowledge engine for modern professionals.
+            <p className="text-muted-foreground mb-6 leading-relaxed">
+              Transform scattered information into organized intelligence with AI-powered knowledge management.
             </p>
-            <div className="flex gap-3">
+            
+            {/* Social Links */}
+            <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}
                   href={social.href}
-                  aria-label={social.ariaLabel}
-                  className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="w-9 h-9 bg-muted rounded-lg flex items-center justify-center hover:bg-muted/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  aria-label={social.name}
                 >
                   <social.icon className="h-4 w-4" />
                 </a>
@@ -104,99 +84,60 @@ const GlobalFooter: React.FC = () => {
             </div>
           </div>
 
-          {/* Product Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Product</h4>
-            <nav>
+          {/* Footer Links */}
+          {footerSections.map((section, index) => (
+            <div key={index}>
+              <h3 className="font-semibold mb-4">{section.title}</h3>
               <ul className="space-y-3">
-                {footerLinks.product.map((link, index) => (
-                  <li key={index}>
-                    <Link 
+                {section.links.map((link, linkIndex) => (
+                  <li key={linkIndex}>
+                    <Link
                       to={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
+                      className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:underline"
                     >
-                      {link.label}
+                      {link.name}
                     </Link>
                   </li>
                 ))}
               </ul>
-            </nav>
-          </div>
+            </div>
+          ))}
+        </div>
 
-          {/* Company Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Company</h4>
-            <nav>
-              <ul className="space-y-3">
-                {footerLinks.company.map((link, index) => (
-                  <li key={index}>
-                    <Link 
-                      to={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Resources Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Resources</h4>
-            <nav>
-              <ul className="space-y-3">
-                {footerLinks.resources.map((link, index) => (
-                  <li key={index}>
-                    <Link 
-                      to={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
-          {/* Legal Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
-            <nav>
-              <ul className="space-y-3">
-                {footerLinks.legal.map((link, index) => (
-                  <li key={index}>
-                    <Link 
-                      to={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+        {/* Newsletter Signup */}
+        <div className="border-t pt-8 mb-8">
+          <div className="max-w-md">
+            <h3 className="font-semibold mb-2">Stay Updated</h3>
+            <p className="text-muted-foreground text-sm mb-4">
+              Get the latest updates on new features and knowledge management tips.
+            </p>
+            <div className="flex gap-2">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-3 py-2 text-sm bg-background border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              />
+              <button className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                Subscribe
+              </button>
+            </div>
           </div>
         </div>
-        
-        <Separator className="mb-8" />
-        
-        {/* Bottom Footer */}
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm text-muted-foreground">
-            &copy; 2025 Accio. All rights reserved. Made with <Heart className="inline h-3 w-3 text-red-500" /> for knowledge workers.
+
+        {/* Bottom Bar */}
+        <div className="border-t pt-8 flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-muted-foreground text-sm mb-4 sm:mb-0">
+            © {new Date().getFullYear()} Accio Inc. All rights reserved.
           </p>
-          <div className="flex gap-4 mt-4 md:mt-0">
-            <Link to="/privacy-policy" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded">
-              Privacy Policy
+          <div className="flex items-center space-x-6 text-sm text-muted-foreground">
+            <Link to="/privacy-policy" className="hover:text-foreground transition-colors">
+              Privacy
             </Link>
-            <Link to="/terms-of-service" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded">
-              Terms of Service
+            <Link to="/terms-of-service" className="hover:text-foreground transition-colors">
+              Terms
             </Link>
-            <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded">
-              Contact
+            <Link to="/contact" className="hover:text-foreground transition-colors">
+              Support
             </Link>
           </div>
         </div>

@@ -1,34 +1,27 @@
+
 import { 
   Home, 
-  Sparkles, 
-  Brain, 
-  DollarSign, 
-  BookOpen, 
-  GraduationCap, 
-  HelpCircle, 
-  Mail, 
   Info, 
-  Shield, 
-  FileText, 
-  Eye, 
-  LayoutDashboard, 
-  Search, 
-  Bookmark, 
-  FolderOpen, 
-  Activity, 
-  User, 
+  Zap, 
+  Cogs, 
+  BookOpen, 
+  DollarSign, 
+  HelpCircle, 
+  Mail,
+  User,
   Settings,
-  PlusCircle,
-  MessageCircle,
-  FileCheck,
-  Zap
+  BarChart3,
+  FileText,
+  Users,
+  Shield,
+  LogOut
 } from 'lucide-react';
 
 export interface NavigationItem {
   title: string;
   href: string;
   description: string;
-  icon: React.ComponentType<{ className?: string }>;
+  icon: any;
   isNew?: boolean;
   isPopular?: boolean;
 }
@@ -38,184 +31,152 @@ export interface NavigationSection {
   items: NavigationItem[];
 }
 
-// Public navigation for non-authenticated users
 export const publicNavigation: NavigationSection[] = [
   {
-    title: "Product",
+    title: 'Product',
     items: [
       {
-        title: "Features",
-        href: "/features",
-        description: "Discover all the powerful features",
-        icon: Sparkles,
+        title: 'Features',
+        href: '/features',
+        description: 'Discover AI-powered knowledge management tools',
+        icon: Zap,
         isPopular: true
       },
       {
-        title: "How It Works",
-        href: "/how-it-works",
-        description: "Learn how Accio transforms your workflow",
-        icon: Brain,
-        isNew: true
+        title: 'How It Works',
+        href: '/how-it-works',
+        description: 'Learn how Accio transforms your workflow',
+        icon: Cogs
       },
       {
-        title: "Pricing",
-        href: "/pricing",
-        description: "Simple, transparent pricing",
+        title: 'Pricing',
+        href: '/pricing',
+        description: 'Simple, transparent pricing for everyone',
         icon: DollarSign
       }
     ]
   },
   {
-    title: "Learn",
+    title: 'Resources',
     items: [
       {
-        title: "Blog",
-        href: "/blog",
-        description: "Latest insights and tips",
+        title: 'Blog',
+        href: '/blog',
+        description: 'Insights, tips, and knowledge management best practices',
         icon: BookOpen
       },
       {
-        title: "FAQ",
-        href: "/faq",
-        description: "Frequently asked questions",
+        title: 'FAQ',
+        href: '/faq',
+        description: 'Frequently asked questions and answers',
         icon: HelpCircle
       },
       {
-        title: "Contact",
-        href: "/contact",
-        description: "Get in touch with us",
-        icon: Mail
+        title: 'About',
+        href: '/about',
+        description: 'Our mission, team, and company story',
+        icon: Info
       }
     ]
   },
   {
-    title: "Company",
+    title: 'Support',
     items: [
       {
-        title: "About",
-        href: "/about",
-        description: "Learn about our mission",
-        icon: Info
+        title: 'Contact',
+        href: '/contact',
+        description: 'Get in touch with our team',
+        icon: Mail
       },
       {
-        title: "Blog",
-        href: "/blog",
-        description: "Knowledge management insights",
-        icon: BookOpen
-      }
-    ]
-  },
-  {
-    title: "Legal",
-    items: [
-      {
-        title: "Privacy Policy",
-        href: "/privacy-policy",
-        description: "How we protect your data",
+        title: 'Privacy Policy',
+        href: '/privacy-policy',
+        description: 'How we protect and handle your data',
         icon: Shield
       },
       {
-        title: "Terms of Service",
-        href: "/terms-of-service",
-        description: "Terms and conditions",
+        title: 'Terms of Service',
+        href: '/terms-of-service',
+        description: 'Legal terms and conditions',
         icon: FileText
       }
     ]
   }
 ];
 
-// Authenticated user navigation
 export const authenticatedNavigation: NavigationSection[] = [
   {
-    title: "Workspace",
+    title: 'Dashboard',
     items: [
       {
-        title: "Dashboard",
-        href: "/dashboard",
-        description: "Your personalized command center",
-        icon: LayoutDashboard,
+        title: 'Overview',
+        href: '/dashboard',
+        description: 'Your knowledge management dashboard',
+        icon: Home,
         isPopular: true
       },
       {
-        title: "Search",
-        href: "/search",
-        description: "Find your content instantly",
-        icon: Search
+        title: 'Analytics',
+        href: '/analytics',
+        description: 'Insights into your knowledge patterns',
+        icon: BarChart3
       },
       {
-        title: "Quick Capture",
-        href: "/save",
-        description: "Save content from anywhere",
-        icon: PlusCircle,
-        isNew: true
+        title: 'Collections',
+        href: '/collections',
+        description: 'Organize your saved content',
+        icon: BookOpen
       }
     ]
   },
   {
-    title: "Organization",
+    title: 'Account',
     items: [
       {
-        title: "Saved Content",
-        href: "/saved",
-        description: "Access your saved items",
-        icon: Bookmark
-      },
-      {
-        title: "Collections",
-        href: "/collections",
-        description: "Organize into themed collections",
-        icon: FolderOpen
-      },
-      {
-        title: "Activity",
-        href: "/activity",
-        description: "Track your learning journey",
-        icon: Activity
-      }
-    ]
-  },
-  {
-    title: "Account",
-    items: [
-      {
-        title: "Profile",
-        href: "/profile",
-        description: "Manage your account",
+        title: 'Profile',
+        href: '/profile',
+        description: 'Manage your account and preferences',
         icon: User
       },
       {
-        title: "Settings",
-        href: "/settings",
-        description: "Customize your experience",
+        title: 'Settings',
+        href: '/settings',
+        description: 'Configure your Accio experience',
         icon: Settings
+      },
+      {
+        title: 'Team',
+        href: '/team',
+        description: 'Collaborate with your team members',
+        icon: Users
       }
     ]
   },
   {
-    title: "Resources",
+    title: 'Support',
     items: [
       {
-        title: "Help Center",
-        href: "/help",
-        description: "Find answers and get support",
+        title: 'Help Center',
+        href: '/help',
+        description: 'Get help and find tutorials',
         icon: HelpCircle
       },
       {
-        title: "AI Features",
-        href: "/ai-features",
-        description: "Explore AI capabilities",
-        icon: Brain
+        title: 'Contact Support',
+        href: '/contact',
+        description: 'Reach out to our support team',
+        icon: Mail
       }
     ]
   }
 ];
 
-// Quick access items (always visible)
+// Quick access items for mobile menu
 export const quickAccessItems = [
   {
-    title: "Home",
-    href: "/",
-    description: "Return to homepage",
-    icon: Home
+    title: 'Sign Out',
+    href: '/logout',
+    icon: LogOut,
+    action: 'logout'
   }
 ];
