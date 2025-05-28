@@ -21,7 +21,7 @@ const Features: React.FC = () => {
       
       <div className="min-h-screen">
         {/* Hero Section */}
-        <Spacing.Section size="xl" className="bg-gradient-to-br from-primary/5 via-background to-blue-500/5 relative overflow-hidden">
+        <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/5 via-background to-blue-500/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-5" aria-hidden="true" />
           
           <Spacing.Container className="relative">
@@ -46,7 +46,7 @@ const Features: React.FC = () => {
               
               <div className="flex flex-col sm:flex-row gap-6 justify-center mb-16 animate-fade-in">
                 <Button 
-                  size="xl" 
+                  size="lg" 
                   className="group shadow-lg hover:shadow-xl transition-all" 
                   asChild
                 >
@@ -58,7 +58,7 @@ const Features: React.FC = () => {
                 
                 <Button 
                   variant="outline" 
-                  size="xl" 
+                  size="lg" 
                   className="group border-2 hover:bg-primary/5" 
                   asChild
                 >
@@ -77,7 +77,7 @@ const Features: React.FC = () => {
 
         {/* CTA Section */}
         <section className="py-24 bg-gradient-to-r from-primary/10 to-blue-600/10">
-          <div className="container mx-auto px-4 text-center max-w-4xl">
+          <Spacing.Container className="text-center max-w-4xl mx-auto">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">
               Experience the Full Power of Accio
             </h2>
@@ -93,7 +93,7 @@ const Features: React.FC = () => {
                 <a href="/pricing">View Pricing</a>
               </Button>
             </div>
-          </div>
+          </Spacing.Container>
         </section>
       </div>
     </>

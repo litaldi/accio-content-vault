@@ -1,95 +1,48 @@
 
-import React from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertTriangle, RotateCcw } from 'lucide-react';
 
-interface ErrorBoundaryState {
+interface Props {
+  children: ReactNode;
+}
+
+interface State {
   hasError: boolean;
-  error?: Error;
-  errorInfo?: React.ErrorInfo;
+  error: Error | null;
 }
 
-interface ErrorBoundaryProps {
-  children: React.ReactNode;
-  fallback?: React.ComponentType<{error?: Error; retry: () => void}>;
-}
-
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
+class ErrorBoundary extends Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return {
-      hasError: true,
-      error,
-    };
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('Error Boundary caught an error:', error, errorInfo);
-    this.setState({
-      error,
-      errorInfo,
-    });
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('ErrorBoundary caught an error:', error, errorInfo);
   }
 
-  handleRetry = () => {
-    this.setState({ hasError: false, error: undefined, errorInfo: undefined });
+  handleReset = () => {
+    this.setState({ hasError: false, error: null });
   };
 
   render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        const FallbackComponent = this.props.fallback;
-        return <FallbackComponent error={this.state.error} retry={this.handleRetry} />;
-      }
-
       return (
-        <div className="min-h-screen flex items-center justify-center p-4 bg-background">
-          <Card className="w-full max-w-md">
-            <CardHeader className="text-center">
-              <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
-                <AlertTriangle className="h-6 w-6 text-red-600 dark:text-red-400" />
-              </div>
-              <CardTitle className="text-xl">Something went wrong</CardTitle>
-              <CardDescription>
-                We encountered an unexpected error. This has been logged and our team will investigate.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {process.env.NODE_ENV === 'development' && this.state.error && (
-                <div className="p-3 bg-muted rounded-md text-sm font-mono text-muted-foreground overflow-auto max-h-32">
-                  <strong>Error:</strong> {this.state.error.message}
-                  {this.state.error.stack && (
-                    <details className="mt-2">
-                      <summary className="cursor-pointer">Stack trace</summary>
-                      <pre className="mt-1 text-xs whitespace-pre-wrap">
-                        {this.state.error.stack}
-                      </pre>
-                    </details>
-                  )}
-                </div>
-              )}
-              
-              <div className="flex flex-col sm:flex-row gap-2">
-                <Button onClick={this.handleRetry} className="flex-1" variant="default">
-                  <RefreshCw className="mr-2 h-4 w-4" />
-                  Try Again
-                </Button>
-                <Button 
-                  onClick={() => window.location.href = '/'} 
-                  className="flex-1" 
-                  variant="outline"
-                >
-                  <Home className="mr-2 h-4 w-4" />
-                  Go Home
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
+        <div className="min-h-screen flex items-center justify-center bg-background p-4">
+          <div className="text-center space-y-4">
+            <AlertTriangle className="h-12 w-12 text-destructive mx-auto" />
+            <h2 className="text-xl font-semibold">Something went wrong</h2>
+            <p className="text-muted-foreground">Please try refreshing the page</p>
+            <Button onClick={this.handleReset}>
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Try Again
+            </Button>
+          </div>
         </div>
       );
     }
