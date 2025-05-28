@@ -1,255 +1,188 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { 
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
-import { HelpCircle, Search, MessageCircle, Mail } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { HelpCircle, MessageCircle, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const FAQ = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-
-  const faqCategories = [
+  const faqs = [
     {
-      title: 'Getting Started',
-      faqs: [
-        {
-          question: 'How do I get started with Accio?',
-          answer: 'Getting started is simple! Sign up for a free account, and you can immediately begin saving content. Our onboarding guide will walk you through the key features, and you can start experiencing AI-powered organization right away.'
-        },
-        {
-          question: 'Do I need to install anything?',
-          answer: 'Accio works entirely in your browser, so no installation is required. However, we highly recommend installing our browser extension for quick content capture, and our mobile apps are available for iOS and Android.'
-        },
-        {
-          question: 'How long does it take to see AI organization in action?',
-          answer: 'You\'ll see AI organization working immediately! As you save more content, the AI learns your preferences and becomes even more accurate at categorizing and tagging your information.'
-        }
-      ]
+      question: 'What is Accio and how does it work?',
+      answer: 'Accio is an AI-powered knowledge management platform that helps you organize, search, and discover information effortlessly. It uses advanced machine learning to automatically categorize your content, understand context, and provide intelligent search capabilities.'
     },
     {
-      title: 'Features & Functionality',
-      faqs: [
-        {
-          question: 'How does the AI organization actually work?',
-          answer: 'Our AI analyzes the content you save, understanding context, topics, and relationships. It automatically creates categories, adds relevant tags, and learns from your manual corrections to improve over time. The more you use it, the smarter it becomes.'
-        },
-        {
-          question: 'Can I search for content using natural language?',
-          answer: 'Absolutely! Our semantic search allows you to search using natural language. For example, you can search "articles about productivity tips I saved last month" and get relevant results even if those exact words aren\'t in the content.'
-        },
-        {
-          question: 'What types of content can I save?',
-          answer: 'You can save web pages, articles, PDFs, images, notes, links, documents, and more. Our AI can process and organize virtually any type of digital content you throw at it.'
-        },
-        {
-          question: 'How does team collaboration work?',
-          answer: 'Team features allow you to create shared collections, assign permissions, and collaborate on knowledge bases. Team members can contribute content, add comments, and benefit from collective AI learning.'
-        }
-      ]
+      question: 'How does the AI organization feature work?',
+      answer: 'Our AI analyzes the content you save and automatically categorizes it based on topics, themes, and context. It learns from your usage patterns to become more accurate over time, ensuring your knowledge base stays organized without manual effort.'
     },
     {
-      title: 'Privacy & Security',
-      faqs: [
-        {
-          question: 'Is my data secure?',
-          answer: 'Yes! We use enterprise-grade security including end-to-end encryption, SOC 2 Type II compliance, and regular security audits. Your data is encrypted both in transit and at rest.'
-        },
-        {
-          question: 'Do you use my content to train AI models?',
-          answer: 'No, we never use your personal content to train our AI models. Your content remains private and is only used to improve your personal experience within Accio.'
-        },
-        {
-          question: 'Can I export my data?',
-          answer: 'Yes! You can export all your data at any time in standard formats (JSON, CSV, etc.). We believe in data portability and never want to lock you in.'
-        },
-        {
-          question: 'Where is my data stored?',
-          answer: 'Your data is stored in secure, geographically distributed data centers with redundant backups. We comply with GDPR, CCPA, and other privacy regulations.'
-        }
-      ]
+      question: 'Is my data secure with Accio?',
+      answer: 'Yes, security is our top priority. We use bank-level encryption, are SOC 2 compliant, and follow GDPR guidelines. Your data is encrypted both in transit and at rest, and we never share your information with third parties.'
     },
     {
-      title: 'Pricing & Plans',
-      faqs: [
-        {
-          question: 'Is there a free plan?',
-          answer: 'Yes! Our free plan includes up to 1,000 saved items, basic AI organization, standard search, and mobile apps. It\'s perfect for individuals getting started.'
-        },
-        {
-          question: 'Can I change plans anytime?',
-          answer: 'Absolutely! You can upgrade or downgrade your plan at any time. Changes take effect immediately, and we\'ll prorate any billing adjustments.'
-        },
-        {
-          question: 'Do you offer refunds?',
-          answer: 'We offer a 30-day money-back guarantee for all paid plans. If you\'re not satisfied, contact our support team for a full refund.'
-        },
-        {
-          question: 'Are there discounts for students or nonprofits?',
-          answer: 'Yes! We offer 50% discounts for students with valid .edu email addresses and qualified nonprofit organizations. Contact our support team to apply.'
-        }
-      ]
+      question: 'Can I use Accio offline?',
+      answer: 'Yes, our mobile and desktop apps support offline access to your saved content. Any changes made offline will automatically sync when you reconnect to the internet.'
     },
     {
-      title: 'Technical Support',
-      faqs: [
-        {
-          question: 'What browsers are supported?',
-          answer: 'Accio works on all modern browsers including Chrome, Firefox, Safari, and Edge. Our browser extension is available for Chrome, Firefox, Safari, and Edge.'
-        },
-        {
-          question: 'Is there an API available?',
-          answer: 'Yes! Pro and Team plans include API access. Our REST API allows you to integrate Accio with your existing tools and build custom workflows.'
-        },
-        {
-          question: 'Can I use Accio offline?',
-          answer: 'Yes! Pro and Team plans include offline access. You can view and search your saved content even without an internet connection. New content will sync when you\'re back online.'
-        },
-        {
-          question: 'How do I contact support?',
-          answer: 'You can reach our support team via email at support@accio.app, through our in-app chat, or by visiting our help center. Pro and Team users get priority support.'
-        }
-      ]
+      question: 'What file types does Accio support?',
+      answer: 'Accio supports a wide range of file types including documents (PDF, DOC, TXT), images (JPG, PNG, GIF), web pages, notes, and links. We\'re continuously adding support for more file types.'
+    },
+    {
+      question: 'How does the semantic search work?',
+      answer: 'Semantic search allows you to find content by describing what you\'re looking for in natural language, rather than just exact keyword matches. For example, you can search "articles about productivity tips" and find relevant content even if those exact words aren\'t in the title.'
+    },
+    {
+      question: 'Can I collaborate with team members?',
+      answer: 'Yes, our Pro and Enterprise plans include team collaboration features. You can share knowledge bases, set permissions, and work together on organizing information.'
+    },
+    {
+      question: 'What integrations are available?',
+      answer: 'Accio integrates with popular browsers (Chrome, Firefox, Safari), productivity apps (Slack, Notion), and offers a comprehensive API for custom integrations. We also support Zapier for connecting with hundreds of other tools.'
+    },
+    {
+      question: 'How much does Accio cost?',
+      answer: 'We offer a free plan for individuals, a Pro plan at $9/month for power users, and Enterprise plans starting at $29/month for teams. All plans include a 14-day free trial with full access to features.'
+    },
+    {
+      question: 'Can I import my existing data?',
+      answer: 'Yes, we provide import tools for popular platforms like Evernote, Notion, and OneNote. You can also bulk import files and documents. Our support team can help with large migrations.'
+    },
+    {
+      question: 'Is there a mobile app?',
+      answer: 'Yes, we have mobile apps for both iOS and Android that sync seamlessly with your web account. You can save content, search, and access your knowledge base from anywhere.'
+    },
+    {
+      question: 'What happens if I cancel my subscription?',
+      answer: 'You can export all your data at any time. If you cancel, you\'ll retain access to your account until the end of your billing period, and your data will be available for download for 90 days after cancellation.'
     }
   ];
 
-  const filteredFAQs = faqCategories.map(category => ({
-    ...category,
-    faqs: category.faqs.filter(faq =>
-      faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.answer.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  })).filter(category => category.faqs.length > 0);
+  const categories = [
+    {
+      title: 'Getting Started',
+      description: 'Learn the basics of using Accio',
+      icon: BookOpen,
+      items: ['Setting up your account', 'First content save', 'Browser extension setup', 'Mobile app tutorial']
+    },
+    {
+      title: 'Features & Usage',
+      description: 'Make the most of Accio\'s features',
+      icon: HelpCircle,
+      items: ['AI organization', 'Search techniques', 'Tagging system', 'Collaboration tools']
+    },
+    {
+      title: 'Account & Billing',
+      description: 'Manage your subscription and account',
+      icon: MessageCircle,
+      items: ['Billing questions', 'Plan upgrades', 'Account settings', 'Data export']
+    }
+  ];
 
   return (
     <>
       <Helmet>
-        <title>FAQ - Frequently Asked Questions | Accio</title>
-        <meta name="description" content="Find answers to common questions about Accio's AI-powered knowledge management platform, features, pricing, security, and more." />
+        <title>FAQ - Accio</title>
+        <meta name="description" content="Find answers to frequently asked questions about Accio's AI-powered knowledge management platform." />
       </Helmet>
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="secondary" className="mb-6">
-              <HelpCircle className="h-3 w-3 mr-1" />
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Frequently Asked Questions
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              How Can We Help?
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              Find answers to common questions about Accio's features, pricing, security, and more. 
-              Can't find what you're looking for? We're here to help!
+            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+              Find answers to common questions about Accio's features, pricing, and usage.
             </p>
+          </div>
+        </section>
+
+        {/* Quick Help Categories */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Quick Help</h2>
+              <p className="text-lg text-muted-foreground">
+                Browse by category or search through all questions below
+              </p>
+            </div>
             
-            {/* Search */}
-            <div className="relative max-w-md mx-auto">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                placeholder="Search FAQ..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
+            <div className="grid md:grid-cols-3 gap-6 mb-16">
+              {categories.map((category, index) => (
+                <Card key={index} className="p-6 hover:shadow-lg transition-shadow">
+                  <CardHeader className="text-center pb-4">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <category.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">{category.title}</CardTitle>
+                    <CardDescription>{category.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {category.items.map((item, itemIndex) => (
+                        <li key={itemIndex} className="text-sm text-muted-foreground">
+                          • {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* FAQ Content */}
-        <section className="py-16">
+        {/* FAQ Accordion */}
+        <section className="py-16 bg-muted/20">
           <div className="container mx-auto px-4 max-w-4xl">
-            {filteredFAQs.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-muted-foreground mb-4">No FAQs match your search.</p>
-                <Button variant="outline" onClick={() => setSearchQuery('')}>
-                  Clear Search
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-12">
-                {filteredFAQs.map((category, categoryIndex) => (
-                  <div key={categoryIndex}>
-                    <h2 className="text-2xl font-bold mb-6">{category.title}</h2>
-                    <Accordion type="single" collapsible className="w-full">
-                      {category.faqs.map((faq, faqIndex) => (
-                        <AccordionItem key={faqIndex} value={`item-${categoryIndex}-${faqIndex}`}>
-                          <AccordionTrigger className="text-left">
-                            {faq.question}
-                          </AccordionTrigger>
-                          <AccordionContent className="text-muted-foreground leading-relaxed">
-                            {faq.answer}
-                          </AccordionContent>
-                        </AccordionItem>
-                      ))}
-                    </Accordion>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">All Questions</h2>
+              <p className="text-lg text-muted-foreground">
+                Everything you need to know about Accio
+              </p>
+            </div>
+            
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((faq, index) => (
+                <AccordionItem
+                  key={index}
+                  value={`item-${index}`}
+                  className="bg-background border rounded-lg px-6"
+                >
+                  <AccordionTrigger className="text-left hover:no-underline py-6">
+                    <span className="font-medium">{faq.question}</span>
+                  </AccordionTrigger>
+                  <AccordionContent className="pb-6 text-muted-foreground leading-relaxed">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
           </div>
         </section>
 
         {/* Contact Support */}
-        <section className="py-16 bg-muted/20">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Still Need Help?</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Our support team is here to help you get the most out of Accio.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              <Card className="text-center p-6">
-                <CardHeader>
-                  <MessageCircle className="h-12 w-12 text-primary mx-auto mb-4" />
-                  <CardTitle>Live Chat</CardTitle>
-                  <CardDescription>
-                    Get instant help from our support team
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Start Chat</Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="text-center p-6">
-                <CardHeader>
-                  <Mail className="h-12 w-12 text-primary mx-auto mb-4" />
-                  <CardTitle>Email Support</CardTitle>
-                  <CardDescription>
-                    Detailed help via email within 24 hours
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full" asChild>
-                    <Link to="/contact">Send Email</Link>
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="text-center p-6">
-                <CardHeader>
-                  <HelpCircle className="h-12 w-12 text-primary mx-auto mb-4" />
-                  <CardTitle>Help Center</CardTitle>
-                  <CardDescription>
-                    Comprehensive guides and tutorials
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button variant="outline" className="w-full">Visit Help Center</Button>
-                </CardContent>
-              </Card>
+        <section className="py-24">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-6">Still Have Questions?</h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Can't find what you're looking for? Our support team is here to help.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild>
+                <Link to="/contact">Contact Support</Link>
+              </Button>
+              <Button variant="outline" size="lg" asChild>
+                <Link to="/help">Browse Help Center</Link>
+              </Button>
             </div>
           </div>
         </section>

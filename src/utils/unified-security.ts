@@ -1,55 +1,47 @@
 
-// Re-export all security utilities from the enhanced security validation
-export { 
-  validateEmailSecure as validateEmailEnhanced,
-  validatePasswordSecure as validatePassword,
-  sanitizeInput,
-  sanitizeHtml,
-  sanitizeForDatabase,
-  validateUrlSecure as validateUrl,
-  authRateLimiter,
-  apiRateLimiter,
-  contactRateLimiter,
-  CSRFTokenManager as CSRFManager,
-  SecurityRateLimiter as UnifiedRateLimiter,
-  logSecurityEvent,
-  getSecurityHeaders
-} from './security-validation-enhanced';
+interface SanitizeOptions {
+  maxLength?: number;
+  allowHtml?: boolean;
+  stripWhitespace?: boolean;
+}
 
-// Additional utilities for backward compatibility
-export { 
-  validateInput,
-  RateLimiter
-} from './security';
-
-/**
- * Simple email validation for backward compatibility
- */
-export const isValidEmail = (email: string): boolean => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(email) && email.length <= 254 && email.length >= 5;
+export const sanitizeInput = (input: string, options: SanitizeOptions = {}): string => {
+  const {
+    maxLength = 1000,
+    allowHtml = false,
+    stripWhitespace = true
+  } = options;
+  
+  let sanitized = input;
+  
+  // Strip whitespace if requested
+  if (stripWhitespace) {
+    sanitized = sanitized.trim();
+  }
+  
+  // Remove HTML if not allowed
+  if (!allowHtml) {
+    sanitized = sanitized.replace(/<[^>]*>/g, '');
+  }
+  
+  // Truncate to max length
+  if (sanitized.length > maxLength) {
+    sanitized = sanitized.substring(0, maxLength);
+  }
+  
+  return sanitized;
 };
 
-/**
- * URL validation with security checks
- */
-export const isValidSecureUrl = (url: string): boolean => {
-  try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'https:' || urlObj.protocol === 'http:';
-  } catch {
-    return false;
-  }
+export const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 };
 
-/**
- * Generate secure random token
- */
-export const generateSecureToken = (length: number = 32): string => {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let result = '';
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
+export const validateCsrfToken = (token: string): boolean => {
+  // Basic CSRF token validation
+  return token && token.length >= 32;
 };

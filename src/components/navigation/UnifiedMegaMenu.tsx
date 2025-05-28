@@ -6,15 +6,16 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Menu, X, ChevronDown } from 'lucide-react';
 import { publicNavigation, authenticatedNavigation } from '@/data/navigation';
+import { useAuth } from '@/contexts/AuthContext';
 
 const UnifiedMegaMenu = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [openDesktopMenu, setOpenDesktopMenu] = useState<string | null>(null);
   const location = useLocation();
   const menuRef = useRef<HTMLDivElement>(null);
+  const { user } = useAuth();
   
-  // For demo purposes, assuming user is not authenticated
-  const isAuthenticated = false;
+  const isAuthenticated = !!user;
   const navigation = isAuthenticated ? authenticatedNavigation : publicNavigation;
 
   // Close menu when clicking outside
@@ -123,7 +124,7 @@ const UnifiedMegaMenu = () => {
         {/* Auth Buttons & Mobile Menu */}
         <div className="flex items-center gap-2">
           {!isAuthenticated ? (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/login">Sign In</Link>
               </Button>
@@ -132,128 +133,67 @@ const UnifiedMegaMenu = () => {
               </Button>
             </div>
           ) : (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-2">
               <Button variant="ghost" size="sm" asChild>
                 <Link to="/dashboard">Dashboard</Link>
               </Button>
-              <Button variant="outline" size="sm">
-                Sign Out
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/profile">Profile</Link>
               </Button>
             </div>
           )}
 
-          {/* Mobile Menu */}
+          {/* Mobile Menu Button */}
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="md:hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                aria-label="Open mobile menu"
-              >
+              <Button variant="ghost" size="sm" className="md:hidden">
                 <Menu className="h-5 w-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80 p-0">
-              <div className="flex flex-col h-full">
-                {/* Mobile Header */}
-                <div className="flex items-center justify-between p-4 border-b">
-                  <Link 
-                    to="/" 
-                    className="flex items-center gap-2"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                      <Brain className="h-5 w-5 text-primary-foreground" />
+            <SheetContent side="right" className="w-80">
+              <div className="flex flex-col gap-6 mt-6">
+                {navigation.map((section) => (
+                  <div key={section.title}>
+                    <h3 className="font-semibold mb-3">{section.title}</h3>
+                    <div className="space-y-2">
+                      {section.items.map((item) => (
+                        <Link
+                          key={item.href}
+                          to={item.href}
+                          className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors"
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          <item.icon className="h-4 w-4" />
+                          <span className="text-sm">{item.title}</span>
+                          {item.isNew && (
+                            <Badge variant="secondary" className="text-xs">New</Badge>
+                          )}
+                        </Link>
+                      ))}
                     </div>
-                    <span className="text-xl font-bold">Accio</span>
-                  </Link>
-                </div>
-
-                {/* Mobile Navigation */}
-                <div className="flex-1 overflow-y-auto p-4">
-                  <div className="space-y-6">
-                    {navigation.map((section) => (
-                      <div key={section.title}>
-                        <h2 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-3">
-                          {section.title}
-                        </h2>
-                        <div className="space-y-1">
-                          {section.items.map((item) => (
-                            <Link
-                              key={item.href}
-                              to={item.href}
-                              className="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
-                              onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                              <item.icon className="h-5 w-5 text-muted-foreground" />
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="font-medium">{item.title}</span>
-                                  {item.isNew && (
-                                    <Badge variant="secondary" className="text-xs">
-                                      New
-                                    </Badge>
-                                  )}
-                                  {item.isPopular && (
-                                    <Badge variant="outline" className="text-xs">
-                                      Popular
-                                    </Badge>
-                                  )}
-                                </div>
-                                <p className="text-sm text-muted-foreground mt-1">
-                                  {item.description}
-                                </p>
-                              </div>
-                            </Link>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
                   </div>
-                </div>
+                ))}
 
                 {/* Mobile Auth Buttons */}
-                <div className="border-t p-4">
+                <div className="border-t pt-4 space-y-2">
                   {!isAuthenticated ? (
-                    <div className="space-y-2">
-                      <Button 
-                        variant="outline" 
-                        className="w-full" 
-                        asChild
-                      >
-                        <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                          Sign In
-                        </Link>
+                    <>
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link to="/login">Sign In</Link>
                       </Button>
-                      <Button 
-                        className="w-full" 
-                        asChild
-                      >
-                        <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                          Get Started
-                        </Link>
+                      <Button className="w-full" asChild>
+                        <Link to="/register">Get Started</Link>
                       </Button>
-                    </div>
+                    </>
                   ) : (
-                    <div className="space-y-2">
-                      <Button 
-                        variant="outline" 
-                        className="w-full" 
-                        asChild
-                      >
-                        <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>
-                          Dashboard
-                        </Link>
+                    <>
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link to="/dashboard">Dashboard</Link>
                       </Button>
-                      <Button 
-                        variant="ghost" 
-                        className="w-full"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        Sign Out
+                      <Button variant="outline" className="w-full" asChild>
+                        <Link to="/profile">Profile</Link>
                       </Button>
-                    </div>
+                    </>
                   )}
                 </div>
               </div>

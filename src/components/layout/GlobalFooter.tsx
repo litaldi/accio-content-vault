@@ -1,17 +1,23 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Brain, Twitter, Linkedin, Github, Mail } from 'lucide-react';
+import { Brain, Twitter, Github, Linkedin, Mail } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 
 const GlobalFooter = () => {
+  const { highContrast } = useAccessibility();
+  const currentYear = new Date().getFullYear();
+
   const footerSections = [
     {
       title: 'Product',
       links: [
         { name: 'Features', href: '/features' },
-        { name: 'How It Works', href: '/how-it-works' },
         { name: 'Pricing', href: '/pricing' },
-        { name: 'FAQ', href: '/faq' }
+        { name: 'How It Works', href: '/how-it-works' },
+        { name: 'Help', href: '/help' }
       ]
     },
     {
@@ -20,16 +26,16 @@ const GlobalFooter = () => {
         { name: 'About', href: '/about' },
         { name: 'Blog', href: '/blog' },
         { name: 'Contact', href: '/contact' },
-        { name: 'Careers', href: '/careers' }
+        { name: 'Careers', href: '#' }
       ]
     },
     {
       title: 'Resources',
       links: [
         { name: 'Help Center', href: '/help' },
-        { name: 'API Docs', href: '/api-docs' },
-        { name: 'Integrations', href: '/integrations' },
-        { name: 'Community', href: '/community' }
+        { name: 'FAQ', href: '/faq' },
+        { name: 'Documentation', href: '#' },
+        { name: 'Status', href: '#' }
       ]
     },
     {
@@ -37,63 +43,65 @@ const GlobalFooter = () => {
       links: [
         { name: 'Privacy Policy', href: '/privacy-policy' },
         { name: 'Terms of Service', href: '/terms-of-service' },
-        { name: 'Cookie Policy', href: '/cookie-policy' },
-        { name: 'Security', href: '/security' }
+        { name: 'Cookie Policy', href: '#' },
+        { name: 'Accessibility', href: '#' }
       ]
     }
   ];
 
   const socialLinks = [
-    { name: 'Twitter', href: 'https://twitter.com/accio', icon: Twitter },
-    { name: 'LinkedIn', href: 'https://linkedin.com/company/accio', icon: Linkedin },
-    { name: 'GitHub', href: 'https://github.com/accio', icon: Github },
+    { name: 'Twitter', href: '#', icon: Twitter },
+    { name: 'GitHub', href: '#', icon: Github },
+    { name: 'LinkedIn', href: '#', icon: Linkedin },
     { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail }
   ];
 
   return (
-    <footer className="bg-background border-t">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+    <footer className={cn(
+      "bg-muted/30 border-t",
+      highContrast && "border-2"
+    )}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
+        <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <Brain className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold">Accio</span>
+            <Link to="/" className="flex items-center space-x-2 mb-4">
+              <Brain className="h-8 w-8 text-primary" />
+              <span className="font-bold text-xl">Accio</span>
             </Link>
-            <p className="text-muted-foreground mb-6 leading-relaxed">
-              Transform scattered information into organized intelligence with AI-powered knowledge management.
+            <p className="text-muted-foreground mb-6 max-w-sm">
+              Transform your knowledge into power with AI-driven content organization 
+              and intelligent search capabilities.
             </p>
-            
-            {/* Social Links */}
             <div className="flex space-x-4">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-9 h-9 bg-muted rounded-lg flex items-center justify-center hover:bg-muted/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+              {socialLinks.map((social) => (
+                <Button
+                  key={social.name}
+                  variant="ghost"
+                  size="sm"
+                  asChild
+                  className="h-9 w-9 p-0"
                   aria-label={social.name}
                 >
-                  <social.icon className="h-4 w-4" />
-                </a>
+                  <a href={social.href} target="_blank" rel="noopener noreferrer">
+                    <social.icon className="h-4 w-4" />
+                  </a>
+                </Button>
               ))}
             </div>
           </div>
 
           {/* Footer Links */}
-          {footerSections.map((section, index) => (
-            <div key={index}>
+          {footerSections.map((section) => (
+            <div key={section.title}>
               <h3 className="font-semibold mb-4">{section.title}</h3>
               <ul className="space-y-3">
-                {section.links.map((link, linkIndex) => (
-                  <li key={linkIndex}>
+                {section.links.map((link) => (
+                  <li key={link.name}>
                     <Link
                       to={link.href}
-                      className="text-muted-foreground hover:text-foreground transition-colors focus:outline-none focus:underline"
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm"
                     >
                       {link.name}
                     </Link>
@@ -104,40 +112,17 @@ const GlobalFooter = () => {
           ))}
         </div>
 
-        {/* Newsletter Signup */}
-        <div className="border-t pt-8 mb-8">
-          <div className="max-w-md">
-            <h3 className="font-semibold mb-2">Stay Updated</h3>
-            <p className="text-muted-foreground text-sm mb-4">
-              Get the latest updates on new features and knowledge management tips.
-            </p>
-            <div className="flex gap-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-3 py-2 text-sm bg-background border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              />
-              <button className="px-4 py-2 bg-primary text-primary-foreground text-sm font-medium rounded-md hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                Subscribe
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Bar */}
-        <div className="border-t pt-8 flex flex-col sm:flex-row justify-between items-center">
-          <p className="text-muted-foreground text-sm mb-4 sm:mb-0">
-            © {new Date().getFullYear()} Accio Inc. All rights reserved.
+        {/* Bottom Footer */}
+        <div className="py-6 border-t border-border flex flex-col sm:flex-row justify-between items-center">
+          <p className="text-muted-foreground text-sm">
+            © {currentYear} Accio. All rights reserved.
           </p>
-          <div className="flex items-center space-x-6 text-sm text-muted-foreground">
-            <Link to="/privacy-policy" className="hover:text-foreground transition-colors">
+          <div className="flex items-center space-x-6 mt-4 sm:mt-0">
+            <Link to="/privacy-policy" className="text-muted-foreground hover:text-foreground text-sm transition-colors">
               Privacy
             </Link>
-            <Link to="/terms-of-service" className="hover:text-foreground transition-colors">
+            <Link to="/terms-of-service" className="text-muted-foreground hover:text-foreground text-sm transition-colors">
               Terms
-            </Link>
-            <Link to="/contact" className="hover:text-foreground transition-colors">
-              Support
             </Link>
           </div>
         </div>
