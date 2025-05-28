@@ -1,9 +1,8 @@
-
 import { 
   Home, 
   Info, 
   Zap, 
-  Cogs, 
+  Cog, 
   BookOpen, 
   DollarSign, 
   HelpCircle, 
@@ -46,7 +45,7 @@ export const publicNavigation: NavigationSection[] = [
         title: 'How It Works',
         href: '/how-it-works',
         description: 'Learn how Accio transforms your workflow',
-        icon: Cogs
+        icon: Cog
       },
       {
         title: 'Pricing',
