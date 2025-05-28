@@ -1,32 +1,62 @@
 
-export const validateEmail = (email: string): boolean => {
+export const validateEmail = (email: string): { isValid: boolean; message: string } => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  const isValid = emailRegex.test(email);
+  return {
+    isValid,
+    message: isValid ? 'Valid email' : 'Please enter a valid email address'
+  };
 };
 
-export const validatePassword = (password: string): { isValid: boolean; errors: string[] } => {
+export const validatePassword = (password: string): { isValid: boolean; errors: string[]; message: string; strength: number } => {
   const errors: string[] = [];
+  let strength = 0;
   
   if (password.length < 8) {
     errors.push('Password must be at least 8 characters long');
+  } else {
+    strength += 20;
   }
   
   if (!/[A-Z]/.test(password)) {
     errors.push('Password must contain at least one uppercase letter');
+  } else {
+    strength += 20;
   }
   
   if (!/[a-z]/.test(password)) {
     errors.push('Password must contain at least one lowercase letter');
+  } else {
+    strength += 20;
   }
   
   if (!/[0-9]/.test(password)) {
     errors.push('Password must contain at least one number');
+  } else {
+    strength += 20;
+  }
+  
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    errors.push('Password must contain at least one special character');
+  } else {
+    strength += 20;
   }
   
   return {
     isValid: errors.length === 0,
-    errors
+    errors,
+    message: errors.length === 0 ? 'Password is strong' : errors.join(', '),
+    strength
   };
+};
+
+export const generateCSRFToken = (): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < 32; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
 };
 
 interface RateLimitResult {
