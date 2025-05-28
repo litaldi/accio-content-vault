@@ -1,179 +1,281 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Link, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import { EnhancedInput } from '@/components/ui/enhanced-input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { FocusTrap } from '@/components/ui/enhanced-focus';
+import { ProgressIndicator } from '@/components/ui/microinteractions';
+import { Brain, Mail, Lock, User, Eye, EyeOff, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
-import { AuthLayout } from '@/components/auth/AuthLayout';
-import { AuthForm } from '@/components/auth/AuthForm';
-import { Shield, CheckCircle } from 'lucide-react';
 
 const Register = () => {
-  const { user, signUp } = useAuth();
-  const navigate = useNavigate();
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [submitError, setSubmitError] = useState<string>('');
-  const [acceptTerms, setAcceptTerms] = useState(false);
+  const { signUp, isLoading } = useAuth();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    firstName: '',
+    lastName: ''
+  });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [step, setStep] = useState(1);
+  const [completionPercentage, setCompletionPercentage] = useState(0);
 
-  // Redirect if already logged in
-  useEffect(() => {
-    if (user) {
-      navigate('/dashboard');
+  // Calculate form completion
+  React.useEffect(() => {
+    const fields = Object.values(formData);
+    const filledFields = fields.filter(field => field.trim() !== '').length;
+    const percentage = (filledFields / fields.length) * 100;
+    setCompletionPercentage(percentage);
+  }, [formData]);
+
+  const validateField = (name: string, value: string) => {
+    const newErrors = { ...errors };
+
+    switch (name) {
+      case 'email':
+        if (!value) {
+          newErrors.email = 'Email is required';
+        } else if (!/\S+@\S+\.\S+/.test(value)) {
+          newErrors.email = 'Please enter a valid email address';
+        } else {
+          delete newErrors.email;
+        }
+        break;
+      case 'password':
+        if (!value) {
+          newErrors.password = 'Password is required';
+        } else if (value.length < 8) {
+          newErrors.password = 'Password must be at least 8 characters';
+        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
+          newErrors.password = 'Password must contain uppercase, lowercase, and number';
+        } else {
+          delete newErrors.password;
+        }
+        break;
+      case 'confirmPassword':
+        if (!value) {
+          newErrors.confirmPassword = 'Please confirm your password';
+        } else if (value !== formData.password) {
+          newErrors.confirmPassword = 'Passwords do not match';
+        } else {
+          delete newErrors.confirmPassword;
+        }
+        break;
+      case 'firstName':
+        if (!value.trim()) {
+          newErrors.firstName = 'First name is required';
+        } else {
+          delete newErrors.firstName;
+        }
+        break;
+      case 'lastName':
+        if (!value.trim()) {
+          newErrors.lastName = 'Last name is required';
+        } else {
+          delete newErrors.lastName;
+        }
+        break;
     }
-  }, [user, navigate]);
 
-  const benefits = [
-    'Unlimited content saving',
-    'AI-powered organization',
-    'Smart search & discovery',
-    'Export to popular tools',
-    'Mobile & web access',
-  ];
+    setErrors(newErrors);
+  };
 
-  const handleSubmit = async (email: string, password: string) => {
-    if (!acceptTerms) {
-      toast({
-        title: "Terms required",
-        description: "Please accept the terms and conditions to continue.",
-        variant: "destructive",
-      });
-      return;
-    }
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    validateField(name, value);
+  };
 
-    setIsLoading(true);
-    setSubmitError('');
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     
+    // Validate all fields
+    Object.entries(formData).forEach(([name, value]) => {
+      validateField(name, value);
+    });
+
+    if (Object.keys(errors).length > 0) return;
+
     try {
-      const result = await signUp(email, password);
-      
-      if (result.error) {
-        throw result.error;
-      }
-      
-      toast({
-        title: "Welcome to Accio!",
-        description: "Your account has been created successfully.",
+      await signUp(formData.email, formData.password, {
+        firstName: formData.firstName,
+        lastName: formData.lastName
       });
-      
-      navigate('/dashboard');
-    } catch (error: any) {
+    } catch (error) {
       console.error('Registration error:', error);
-      const errorMessage = error.message || "Failed to create account. Please try again.";
-      setSubmitError(errorMessage);
-      toast({
-        title: "Registration failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
     }
   };
+
+  const isFormValid = Object.keys(errors).length === 0 && 
+    Object.values(formData).every(value => value.trim() !== '');
 
   return (
     <>
       <Helmet>
-        <title>Create Account - Accio Knowledge Engine</title>
-        <meta name="description" content="Create your Accio account and start building your knowledge collection today." />
+        <title>Create Account - Accio</title>
+        <meta name="description" content="Join Accio and start building your AI-powered knowledge empire today." />
       </Helmet>
 
-      <AuthLayout 
-        title="Create your account" 
-        subtitle="Start building your knowledge empire today"
-      >
-        {/* Benefits */}
-        <div className="bg-muted/30 rounded-lg p-6 space-y-4">
-          <h3 className="font-semibold text-center">What you'll get:</h3>
-          <div className="space-y-2">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
-                <span className="text-sm">{benefit}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <Card className="shadow-lg">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-semibold">Sign up</CardTitle>
-            <CardDescription>
-              Create your account to get started
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <AuthForm 
-              mode="register"
-              onSubmit={handleSubmit}
-              isLoading={isLoading}
-            />
-
-            {/* Terms and Conditions */}
-            <div className="mt-6 flex items-start space-x-2">
-              <Checkbox
-                id="acceptTerms"
-                checked={acceptTerms}
-                onCheckedChange={(checked) => setAcceptTerms(checked as boolean)}
-                className="mt-1"
-              />
-              <div className="text-sm">
-                <label htmlFor="acceptTerms" className="cursor-pointer">
-                  I agree to the{' '}
-                  <Link to="/terms" className="text-primary hover:underline">
-                    Terms of Service
-                  </Link>{' '}
-                  and{' '}
-                  <Link to="/privacy" className="text-primary hover:underline">
-                    Privacy Policy
-                  </Link>
-                </label>
-              </div>
-            </div>
-
-            {/* Submit Error */}
-            {submitError && (
-              <div className="mt-4 p-3 rounded-lg bg-destructive/10 border border-destructive/20">
-                <p className="text-sm text-destructive" role="alert">
-                  {submitError}
-                </p>
-              </div>
-            )}
-
-            {/* Footer Links */}
-            <div className="mt-6 space-y-4">
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Already have an account?</span>
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <FocusTrap autoFocus>
+          <Card className="w-full max-w-md shadow-xl border-0 bg-card/50 backdrop-blur">
+            <CardHeader className="text-center pb-6">
+              <div className="flex justify-center mb-4">
+                <div className="p-3 bg-primary/10 rounded-full">
+                  <Brain className="h-8 w-8 text-primary" />
                 </div>
               </div>
               
-              <Button variant="outline" className="w-full" asChild>
-                <Link to="/login">
-                  Sign in instead
-                </Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+              <CardTitle className="text-2xl font-bold">
+                Join Accio
+              </CardTitle>
+              
+              <CardDescription className="text-base">
+                Start building your AI-powered knowledge empire
+              </CardDescription>
 
-        {/* Security Notice */}
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <Shield className="h-4 w-4" />
-            <span>Your data is secure and encrypted</span>
-          </div>
-          <p className="text-xs text-muted-foreground mt-2">
-            This is a demo application. Use any email and password to sign up.
-          </p>
-        </div>
-      </AuthLayout>
+              <Badge variant="secondary" className="mx-auto mt-3">
+                <Sparkles className="h-3 w-3 mr-1" />
+                Free Account
+              </Badge>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {/* Progress Indicator */}
+              {completionPercentage > 0 && (
+                <div className="space-y-2">
+                  <ProgressIndicator 
+                    progress={completionPercentage} 
+                    showText={false}
+                    size="sm"
+                  />
+                  <p className="text-xs text-muted-foreground text-center">
+                    {completionPercentage === 100 ? 'Ready to create account!' : 'Complete your profile'}
+                  </p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {/* Name Fields */}
+                <div className="grid grid-cols-2 gap-3">
+                  <EnhancedInput
+                    label="First Name"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleInputChange}
+                    error={errors.firstName}
+                    icon={User}
+                    required
+                    autoComplete="given-name"
+                  />
+                  
+                  <EnhancedInput
+                    label="Last Name"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleInputChange}
+                    error={errors.lastName}
+                    required
+                    autoComplete="family-name"
+                  />
+                </div>
+
+                {/* Email */}
+                <EnhancedInput
+                  label="Email Address"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  error={errors.email}
+                  icon={Mail}
+                  required
+                  autoComplete="email"
+                  description="We'll send you a confirmation email"
+                />
+
+                {/* Password */}
+                <EnhancedInput
+                  label="Password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  error={errors.password}
+                  icon={Lock}
+                  showPasswordToggle
+                  required
+                  autoComplete="new-password"
+                  description="8+ characters with uppercase, lowercase, and number"
+                />
+
+                {/* Confirm Password */}
+                <EnhancedInput
+                  label="Confirm Password"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  error={errors.confirmPassword}
+                  icon={Lock}
+                  showPasswordToggle
+                  required
+                  autoComplete="new-password"
+                />
+
+                {/* Submit Button */}
+                <Button
+                  type="submit"
+                  className="w-full h-12 text-base font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                  disabled={!isFormValid || isLoading}
+                  loading={isLoading}
+                  loadingText="Creating Account..."
+                >
+                  {isFormValid ? (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Create Account
+                    </>
+                  ) : (
+                    <>
+                      <AlertCircle className="h-4 w-4 mr-2" />
+                      Complete Form
+                    </>
+                  )}
+                </Button>
+              </form>
+
+              {/* Demo Notice */}
+              <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
+                <AlertCircle className="h-4 w-4 text-blue-600" />
+                <AlertDescription className="text-blue-700 dark:text-blue-300">
+                  <strong>Try the demo:</strong> Email: demo@yourapp.com | Password: Demo1234!
+                </AlertDescription>
+              </Alert>
+
+              {/* Sign In Link */}
+              <div className="text-center pt-4 border-t">
+                <p className="text-sm text-muted-foreground">
+                  Already have an account?{' '}
+                  <Link 
+                    to="/login" 
+                    className="font-medium text-primary hover:text-primary/80 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded"
+                  >
+                    Sign in
+                  </Link>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </FocusTrap>
+      </div>
     </>
   );
 };

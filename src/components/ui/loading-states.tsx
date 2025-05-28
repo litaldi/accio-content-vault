@@ -1,20 +1,16 @@
 
 import React from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, FileText, Search, Folder } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-interface LoadingStateProps {
-  className?: string;
+interface LoadingSpinnerProps {
   size?: 'sm' | 'md' | 'lg';
-  text?: string;
-  inline?: boolean;
+  className?: string;
 }
 
-export const LoadingSpinner: React.FC<LoadingStateProps> = ({
-  className,
-  size = 'md',
-  text,
-  inline = false
+export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
+  size = 'md', 
+  className 
 }) => {
   const sizeClasses = {
     sm: 'h-4 w-4',
@@ -22,68 +18,64 @@ export const LoadingSpinner: React.FC<LoadingStateProps> = ({
     lg: 'h-8 w-8'
   };
 
-  const Component = inline ? 'span' : 'div';
-
   return (
-    <Component 
+    <Loader2 
       className={cn(
-        'flex items-center justify-center',
-        !inline && 'py-8',
+        'animate-spin text-primary',
+        sizeClasses[size],
         className
-      )}
-      role="status"
-      aria-live="polite"
-    >
-      <div className="flex items-center gap-3">
-        <Loader2 
-          className={cn('animate-spin text-primary', sizeClasses[size])} 
-          aria-hidden="true"
-        />
-        {text && (
-          <span className="text-sm text-muted-foreground font-medium">
-            {text}
-          </span>
-        )}
-      </div>
-      <span className="sr-only">
-        {text || 'Loading content, please wait'}
-      </span>
-    </Component>
+      )} 
+      aria-hidden="true"
+    />
   );
 };
 
-export const LoadingSkeleton: React.FC<{ className?: string; lines?: number }> = ({
-  className,
-  lines = 3
-}) => (
-  <div className={cn('space-y-3', className)} role="status" aria-label="Loading content">
-    {Array.from({ length: lines }).map((_, i) => (
-      <div
-        key={i}
-        className={cn(
-          'h-4 bg-muted rounded animate-pulse',
-          i === lines - 1 && 'w-3/4' // Last line shorter
-        )}
-      />
-    ))}
-    <span className="sr-only">Loading content, please wait</span>
-  </div>
-);
+interface ContentLoadingProps {
+  type: 'search' | 'content' | 'collections';
+  message?: string;
+}
 
-export const LoadingCard: React.FC<{ className?: string }> = ({ className }) => (
-  <div className={cn('p-6 border border-border rounded-xl space-y-4', className)} role="status">
-    <div className="flex items-center space-x-4">
-      <div className="w-12 h-12 bg-muted rounded-full animate-pulse" />
-      <div className="flex-1 space-y-2">
-        <div className="h-4 bg-muted rounded animate-pulse" />
-        <div className="h-3 bg-muted rounded w-3/4 animate-pulse" />
+export const ContentLoading: React.FC<ContentLoadingProps> = ({ 
+  type, 
+  message 
+}) => {
+  const config = {
+    search: {
+      icon: Search,
+      defaultMessage: 'Searching your knowledge base...'
+    },
+    content: {
+      icon: FileText,
+      defaultMessage: 'Loading your content...'
+    },
+    collections: {
+      icon: Folder,
+      defaultMessage: 'Loading collections...'
+    }
+  };
+
+  const { icon: Icon, defaultMessage } = config[type];
+
+  return (
+    <div className="flex flex-col items-center justify-center py-12 space-y-4">
+      <div className="relative">
+        <Icon className="h-8 w-8 text-muted-foreground" />
+        <LoadingSpinner size="sm" className="absolute -top-1 -right-1" />
       </div>
+      <p className="text-sm text-muted-foreground animate-pulse">
+        {message || defaultMessage}
+      </p>
     </div>
-    <div className="space-y-2">
-      <div className="h-3 bg-muted rounded animate-pulse" />
-      <div className="h-3 bg-muted rounded animate-pulse" />
-      <div className="h-3 bg-muted rounded w-1/2 animate-pulse" />
+  );
+};
+
+export const SkeletonCard: React.FC = () => (
+  <div className="p-4 border rounded-lg space-y-3 animate-pulse">
+    <div className="h-4 bg-muted rounded w-3/4"></div>
+    <div className="h-3 bg-muted rounded w-1/2"></div>
+    <div className="flex space-x-2">
+      <div className="h-5 bg-muted rounded-full w-16"></div>
+      <div className="h-5 bg-muted rounded-full w-12"></div>
     </div>
-    <span className="sr-only">Loading card content</span>
   </div>
 );
