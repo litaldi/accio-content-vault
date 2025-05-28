@@ -1,4 +1,3 @@
-
 import { 
   Home, 
   Sparkles, 
@@ -52,9 +51,9 @@ export const publicNavigation: NavigationSection[] = [
         isPopular: true
       },
       {
-        title: "AI Features",
-        href: "/ai-features",
-        description: "AI-powered knowledge management",
+        title: "How It Works",
+        href: "/how-it-works",
+        description: "Learn how Accio transforms your workflow",
         icon: Brain,
         isNew: true
       },
@@ -76,16 +75,16 @@ export const publicNavigation: NavigationSection[] = [
         icon: BookOpen
       },
       {
-        title: "Tutorials",
-        href: "/tutorials",
-        description: "Learn how to use Accio effectively",
-        icon: GraduationCap
+        title: "FAQ",
+        href: "/faq",
+        description: "Frequently asked questions",
+        icon: HelpCircle
       },
       {
-        title: "Help Center",
-        href: "/help",
-        description: "Find answers and get support",
-        icon: HelpCircle
+        title: "Contact",
+        href: "/contact",
+        description: "Get in touch with us",
+        icon: Mail
       }
     ]
   },
@@ -99,16 +98,10 @@ export const publicNavigation: NavigationSection[] = [
         icon: Info
       },
       {
-        title: "Contact",
-        href: "/contact",
-        description: "Get in touch with us",
-        icon: Mail
-      },
-      {
-        title: "Accessibility",
-        href: "/accessibility",
-        description: "Our commitment to accessibility",
-        icon: Eye
+        title: "Blog",
+        href: "/blog",
+        description: "Knowledge management insights",
+        icon: BookOpen
       }
     ]
   },
@@ -117,13 +110,13 @@ export const publicNavigation: NavigationSection[] = [
     items: [
       {
         title: "Privacy Policy",
-        href: "/privacy",
+        href: "/privacy-policy",
         description: "How we protect your data",
         icon: Shield
       },
       {
         title: "Terms of Service",
-        href: "/terms",
+        href: "/terms-of-service",
         description: "Terms and conditions",
         icon: FileText
       }

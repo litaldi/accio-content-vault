@@ -20,7 +20,6 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { publicNavigation, authenticatedNavigation, quickAccessItems } from '@/data/navigation';
-import { FocusManager } from '@/utils/accessibility-enhanced';
 
 export const UnifiedMegaMenu: React.FC = () => {
   const { user, signOut } = useAuth();
@@ -105,14 +104,6 @@ export const UnifiedMegaMenu: React.FC = () => {
     }
     return location.pathname.startsWith(href);
   };
-
-  // Focus trap for mobile menu
-  useEffect(() => {
-    if (isMobileMenuOpen && menuRef.current) {
-      const releaseFocus = FocusManager.trapFocus(menuRef.current);
-      return releaseFocus;
-    }
-  }, [isMobileMenuOpen]);
 
   return (
     <header 

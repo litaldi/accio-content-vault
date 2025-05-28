@@ -1,91 +1,69 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Home, ArrowLeft, Search, HelpCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const NotFound = () => {
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Helmet>
         <title>Page Not Found - Accio</title>
-        <meta name="description" content="The page you're looking for doesn't exist." />
+        <meta name="description" content="The page you're looking for doesn't exist. Return to Accio's homepage or explore our features." />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-16 max-w-2xl">
-        <div className="text-center space-y-8">
-          {/* Error Code */}
-          <div className="space-y-4">
-            <h1 className="text-9xl font-bold text-primary/20">404</h1>
-            <h2 className="text-3xl font-bold">Page Not Found</h2>
-            <p className="text-lg text-muted-foreground">
-              Sorry, we couldn't find the page you're looking for.
-            </p>
-          </div>
-
-          {/* Suggestions Card */}
-          <Card className="text-left">
+      <main className="min-h-screen bg-background flex items-center justify-center p-4">
+        <div className="max-w-2xl mx-auto text-center">
+          <div className="text-8xl font-bold text-primary/20 mb-8">404</div>
+          
+          <Card className="border-0 shadow-xl">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Search className="h-5 w-5 text-primary" />
-                What you can do:
-              </CardTitle>
-              <CardDescription>
-                Here are some helpful options to get you back on track
+              <CardTitle className="text-3xl mb-4">Page Not Found</CardTitle>
+              <CardDescription className="text-lg">
+                The page you're looking for doesn't exist or has been moved.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid gap-3">
-                <Button variant="outline" className="justify-start" asChild>
+            <CardContent className="space-y-6">
+              <p className="text-muted-foreground">
+                Don't worry! Here are some helpful links to get you back on track:
+              </p>
+              
+              <div className="grid sm:grid-cols-2 gap-4">
+                <Button asChild variant="default" size="lg">
                   <Link to="/">
                     <Home className="h-4 w-4 mr-2" />
-                    Go to Homepage
+                    Go Home
                   </Link>
                 </Button>
                 
-                <Button variant="outline" className="justify-start" asChild>
+                <Button asChild variant="outline" size="lg">
                   <Link to="/features">
                     <Search className="h-4 w-4 mr-2" />
                     Explore Features
                   </Link>
                 </Button>
                 
-                <Button variant="outline" className="justify-start" asChild>
-                  <Link to="/help">
+                <Button asChild variant="outline" size="lg">
+                  <Link to="/faq">
                     <HelpCircle className="h-4 w-4 mr-2" />
                     Get Help
                   </Link>
                 </Button>
                 
-                <Button variant="outline" className="justify-start" asChild>
+                <Button asChild variant="outline" size="lg">
                   <Link to="/contact">
-                    <Search className="h-4 w-4 mr-2" />
-                    Contact Support
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Contact Us
                   </Link>
                 </Button>
               </div>
             </CardContent>
           </Card>
-
-          {/* Navigation */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button onClick={() => window.history.back()} variant="outline">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Go Back
-            </Button>
-            
-            <Button asChild>
-              <Link to="/">
-                <Home className="h-4 w-4 mr-2" />
-                Take Me Home
-              </Link>
-            </Button>
-          </div>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 };
 

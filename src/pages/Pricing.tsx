@@ -2,9 +2,10 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Check, Sparkles, Crown, Zap } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Check, Star, Zap, Building2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Pricing = () => {
   const plans = [
@@ -12,216 +13,305 @@ const Pricing = () => {
       name: 'Free',
       price: '$0',
       period: 'forever',
-      description: 'Perfect for getting started with knowledge management',
-      icon: Sparkles,
+      description: 'Perfect for getting started with personal knowledge management.',
       features: [
-        '100 content items',
-        'Basic AI search',
-        'Simple collections',
-        'Mobile access',
+        'Up to 1,000 saved items',
+        'Basic AI organization',
+        'Simple search',
+        'Mobile app access',
+        'Browser extension',
         'Email support'
       ],
-      buttonText: 'Get Started Free',
-      popular: false
+      limitations: [
+        'Limited search filters',
+        'Basic collections only',
+        'No team features'
+      ],
+      cta: 'Get Started Free',
+      popular: false,
+      ctaVariant: 'outline' as const
     },
     {
       name: 'Pro',
-      price: '$19',
+      price: '$12',
       period: 'per month',
-      description: 'For power users who need advanced features',
-      icon: Zap,
+      description: 'Advanced features for power users and professionals.',
       features: [
-        'Unlimited content items',
-        'Advanced AI search & insights',
-        'Smart auto-categorization',
+        'Unlimited saved items',
+        'Advanced AI organization',
+        'Semantic search',
+        'Smart collections',
+        'Advanced filters',
         'Offline access',
-        'Priority support',
         'API access',
-        'Advanced analytics'
+        'Priority support'
       ],
-      buttonText: 'Start Pro Trial',
-      popular: true
+      limitations: [],
+      cta: 'Start Pro Trial',
+      popular: true,
+      ctaVariant: 'default' as const
     },
     {
       name: 'Team',
-      price: '$49',
-      period: 'per month',
-      description: 'Built for teams and organizations',
-      icon: Crown,
+      price: '$25',
+      period: 'per user/month',
+      description: 'Collaboration tools and advanced features for teams.',
       features: [
         'Everything in Pro',
         'Team collaboration',
         'Shared collections',
-        'Admin controls',
-        'SSO integration',
-        'Custom workflows',
-        'Dedicated support'
+        'Admin dashboard',
+        'User management',
+        'Team analytics',
+        'Custom integrations',
+        '24/7 support'
       ],
-      buttonText: 'Contact Sales',
-      popular: false
+      limitations: [],
+      cta: 'Start Team Trial',
+      popular: false,
+      ctaVariant: 'outline' as const
+    },
+    {
+      name: 'Enterprise',
+      price: 'Custom',
+      period: 'pricing',
+      description: 'Enterprise-grade security and custom solutions.',
+      features: [
+        'Everything in Team',
+        'SSO integration',
+        'Advanced security',
+        'Custom deployment',
+        'Dedicated support',
+        'Training sessions',
+        'Custom features',
+        'SLA guarantee'
+      ],
+      limitations: [],
+      cta: 'Contact Sales',
+      popular: false,
+      ctaVariant: 'outline' as const
     }
   ];
 
   const faqs = [
     {
-      question: 'Can I change my plan anytime?',
-      answer: 'Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately.'
-    },
-    {
-      question: 'Is there a free trial for paid plans?',
-      answer: 'Yes, all paid plans come with a 14-day free trial. No credit card required.'
+      question: 'Can I change plans anytime?',
+      answer: 'Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we\'ll prorate any billing adjustments.'
     },
     {
       question: 'What happens to my data if I cancel?',
-      answer: 'You can export all your data anytime. We keep your data for 30 days after cancellation.'
+      answer: 'Your data remains accessible for 30 days after cancellation. You can export all your content during this period.'
     },
     {
       question: 'Do you offer educational discounts?',
-      answer: 'Yes, we offer 50% discounts for students and educational institutions.'
+      answer: 'Yes, we provide 50% discounts for students and educators. Contact us with your educational email for verification.'
+    },
+    {
+      question: 'Is my data secure?',
+      answer: 'Absolutely. We use enterprise-grade encryption, regular security audits, and comply with SOC 2 and GDPR standards.'
+    },
+    {
+      question: 'Can I try Pro features for free?',
+      answer: 'Yes, all new users get a 14-day free trial of Pro features. No credit card required to start.'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Helmet>
-        <title>Pricing - Accio</title>
-        <meta name="description" content="Choose the perfect Accio plan for your knowledge management needs. Start free and scale as you grow." />
+        <title>Pricing - Choose Your Perfect Plan | Accio</title>
+        <meta name="description" content="Flexible pricing plans for individuals, teams, and enterprises. Start free and scale as you grow with Accio's knowledge management platform." />
       </Helmet>
 
-      {/* Hero Section */}
-      <section className="py-20 bg-gradient-to-b from-background to-muted/30">
-        <div className="container mx-auto px-4 text-center max-w-4xl">
-          <Badge variant="secondary" className="mb-6">
-            <Sparkles className="h-3 w-3 mr-1" />
-            Simple, Transparent Pricing
-          </Badge>
-          <h1 className="text-5xl font-bold mb-6">
-            Choose the perfect plan for
-            <span className="text-primary block">your knowledge empire</span>
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8">
-            Start free and scale as your knowledge grows. All plans include our core AI-powered features.
-          </p>
-        </div>
-      </section>
+      <main className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
+          <div className="container mx-auto px-4 max-w-6xl text-center">
+            <Badge variant="secondary" className="mb-6">
+              <Zap className="h-3 w-3 mr-1" />
+              Simple Pricing
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Choose Your Perfect Plan
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+              Start free and scale as you grow. All plans include core AI features, 
+              with advanced capabilities available as you need them.
+            </p>
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <span className="text-muted-foreground">Monthly</span>
+              <div className="relative">
+                <input type="checkbox" className="sr-only" />
+                <div className="w-12 h-6 bg-muted rounded-full shadow-inner"></div>
+                <div className="absolute w-4 h-4 bg-primary rounded-full shadow top-1 left-1 transition"></div>
+              </div>
+              <span className="text-foreground font-medium">
+                Annual 
+                <Badge variant="secondary" className="ml-2">Save 20%</Badge>
+              </span>
+            </div>
+          </div>
+        </section>
 
-      {/* Pricing Cards */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-6xl">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {plans.map((plan, index) => {
-              const Icon = plan.icon;
-              return (
-                <Card 
-                  key={index} 
-                  className={`relative ${plan.popular ? 'border-primary shadow-lg scale-105' : ''}`}
-                >
+        {/* Pricing Cards */}
+        <section className="py-16 -mt-12">
+          <div className="container mx-auto px-4 max-w-7xl">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {plans.map((plan, index) => (
+                <Card key={index} className={`relative ${plan.popular ? 'border-primary shadow-xl scale-105' : 'border-border'}`}>
                   {plan.popular && (
-                    <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                      Most Popular
-                    </Badge>
-                  )}
-                  <CardHeader className="text-center">
-                    <Icon className={`h-12 w-12 mx-auto mb-4 ${plan.popular ? 'text-primary' : 'text-muted-foreground'}`} />
-                    <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                    <div className="text-3xl font-bold">
-                      {plan.price}
-                      <span className="text-base font-normal text-muted-foreground">/{plan.period}</span>
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-primary text-primary-foreground">
+                        <Star className="h-3 w-3 mr-1" />
+                        Most Popular
+                      </Badge>
                     </div>
-                    <CardDescription>{plan.description}</CardDescription>
+                  )}
+                  
+                  <CardHeader className="text-center pb-4">
+                    <CardTitle className="text-xl">{plan.name}</CardTitle>
+                    <div className="mb-2">
+                      <span className="text-4xl font-bold">{plan.price}</span>
+                      {plan.period !== 'pricing' && (
+                        <span className="text-muted-foreground ml-1">/{plan.period}</span>
+                      )}
+                    </div>
+                    <CardDescription className="text-sm">{plan.description}</CardDescription>
                   </CardHeader>
+                  
                   <CardContent className="space-y-6">
                     <ul className="space-y-3">
-                      {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-3">
-                          <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                          <span className="text-sm">{feature}</span>
+                      {plan.features.map((feature, featureIndex) => (
+                        <li key={featureIndex} className="flex items-start text-sm">
+                          <Check className="h-4 w-4 text-green-500 mr-3 mt-0.5 shrink-0" />
+                          <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
+                    
+                    {plan.limitations.length > 0 && (
+                      <div className="pt-4 border-t">
+                        <p className="text-xs text-muted-foreground mb-2">Limitations:</p>
+                        <ul className="space-y-1">
+                          {plan.limitations.map((limitation, limitIndex) => (
+                            <li key={limitIndex} className="text-xs text-muted-foreground">
+                              • {limitation}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
                     <Button 
                       className="w-full" 
-                      variant={plan.popular ? 'default' : 'outline'}
+                      variant={plan.ctaVariant}
                       size="lg"
+                      asChild
                     >
-                      {plan.buttonText}
+                      <Link to={plan.name === 'Enterprise' ? '/contact' : '/register'}>
+                        {plan.cta}
+                      </Link>
                     </Button>
                   </CardContent>
                 </Card>
-              );
-            })}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Features Comparison */}
-      <section className="py-20 bg-muted/30">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">All plans include</h2>
-            <p className="text-lg text-muted-foreground">
-              Core features that make Accio powerful for everyone
+        {/* Features Comparison */}
+        <section className="py-24 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Why Choose Accio?</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Built for the modern knowledge worker with enterprise-grade security and reliability.
+              </p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-8">
+              <Card className="text-center p-8 border-0 shadow-lg">
+                <div className="w-12 h-12 bg-green-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Check className="h-6 w-6 text-green-500" />
+                </div>
+                <CardTitle className="text-xl mb-4">14-Day Free Trial</CardTitle>
+                <CardDescription>
+                  Try all Pro features risk-free. No credit card required to get started.
+                </CardDescription>
+              </Card>
+              
+              <Card className="text-center p-8 border-0 shadow-lg">
+                <div className="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Building2 className="h-6 w-6 text-blue-500" />
+                </div>
+                <CardTitle className="text-xl mb-4">Enterprise Ready</CardTitle>
+                <CardDescription>
+                  SOC 2 compliant with enterprise-grade security, SSO, and dedicated support.
+                </CardDescription>
+              </Card>
+              
+              <Card className="text-center p-8 border-0 shadow-lg">
+                <div className="w-12 h-12 bg-purple-500/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <Zap className="h-6 w-6 text-purple-500" />
+                </div>
+                <CardTitle className="text-xl mb-4">Always Improving</CardTitle>
+                <CardDescription>
+                  Regular updates with new AI features and capabilities. Your investment grows over time.
+                </CardDescription>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section className="py-24">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
+              <p className="text-lg text-muted-foreground">
+                Have questions? We have answers. Contact us if you need more help.
+              </p>
+            </div>
+            
+            <div className="space-y-6">
+              {faqs.map((faq, index) => (
+                <Card key={index} className="p-6">
+                  <h3 className="font-semibold mb-3">{faq.question}</h3>
+                  <p className="text-muted-foreground leading-relaxed">{faq.answer}</p>
+                </Card>
+              ))}
+            </div>
+            
+            <div className="text-center mt-12">
+              <p className="text-muted-foreground mb-4">
+                Still have questions? We're here to help.
+              </p>
+              <Button variant="outline" asChild>
+                <Link to="/contact">Contact Support</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-24 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Knowledge Management?</h2>
+            <p className="text-xl mb-8 opacity-90">
+              Join thousands of professionals who have revolutionized their information workflow.
             </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button variant="secondary" size="lg" asChild>
+                <Link to="/register">Start Free Trial</Link>
+              </Button>
+              <Button variant="outline" size="lg" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
+                <Link to="/contact">Talk to Sales</Link>
+              </Button>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              'AI-powered search',
-              'Content capture',
-              'Smart categorization',
-              'Cross-platform sync',
-              'Dark mode',
-              'Data export',
-              'Regular updates',
-              'Community support',
-              'Mobile apps'
-            ].map((feature, index) => (
-              <div key={index} className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-green-500" />
-                <span>{feature}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4 max-w-4xl">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Frequently Asked Questions</h2>
-            <p className="text-lg text-muted-foreground">
-              Everything you need to know about our pricing
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {faqs.map((faq, index) => (
-              <div key={index} className="space-y-2">
-                <h3 className="font-semibold">{faq.question}</h3>
-                <p className="text-muted-foreground">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center max-w-4xl">
-          <h2 className="text-3xl font-bold mb-6">Ready to build your knowledge empire?</h2>
-          <p className="text-xl opacity-90 mb-8">
-            Join thousands of professionals who trust Accio with their most important information.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="secondary">
-              Start Free Trial
-            </Button>
-            <Button size="lg" variant="outline" className="border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-              Contact Sales
-            </Button>
-          </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </main>
+    </>
   );
 };
 

@@ -1,297 +1,265 @@
 
 import React from 'react';
-import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { 
-  Calendar,
-  Clock,
-  ArrowRight,
-  Search,
-  Brain,
-  Zap,
-  Users,
-  BookOpen,
-  TrendingUp,
-  Target
-} from 'lucide-react';
+import { Clock, User, ArrowRight, Search, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Blog = () => {
   const featuredPost = {
-    title: "The Future of Knowledge Management: How AI is Transforming Information Organization",
-    excerpt: "Discover how artificial intelligence is revolutionizing the way we capture, organize, and retrieve information in the modern workplace.",
-    author: "Sarah Chen",
-    date: "2024-01-15",
-    readTime: "8 min read",
-    image: "/api/placeholder/600/300",
-    category: "AI & Technology",
-    tags: ["AI", "Knowledge Management", "Productivity"]
+    title: 'The Future of Knowledge Management: How AI is Transforming Information Discovery',
+    excerpt: 'Explore how artificial intelligence is revolutionizing the way we organize, search, and discover information in our digital age.',
+    author: 'Dr. Sarah Chen',
+    date: '2024-01-15',
+    readTime: '8 min read',
+    category: 'AI & Technology',
+    image: '🤖'
   };
 
   const blogPosts = [
     {
-      title: "10 Productivity Hacks for Knowledge Workers",
-      excerpt: "Simple strategies to boost your productivity and manage information overload in today's fast-paced work environment.",
-      author: "Marcus Johnson",
-      date: "2024-01-12",
-      readTime: "5 min read",
-      category: "Productivity",
-      tags: ["Productivity", "Tips", "Workflow"]
+      title: '10 Productivity Hacks for Knowledge Workers',
+      excerpt: 'Discover proven strategies to optimize your information workflow and boost productivity.',
+      author: 'Alex Rodriguez',
+      date: '2024-01-12',
+      readTime: '5 min read',
+      category: 'Productivity',
+      image: '⚡'
     },
     {
-      title: "Building a Personal Knowledge Base: A Complete Guide",
-      excerpt: "Learn how to create and maintain a personal knowledge base that grows with you throughout your career.",
-      author: "Emily Rodriguez",
-      date: "2024-01-10",
-      readTime: "12 min read",
-      category: "Guides",
-      tags: ["Knowledge Base", "Organization", "Career"]
+      title: 'Building a Personal Learning System That Actually Works',
+      excerpt: 'Learn how to create a sustainable system for continuous learning and knowledge retention.',
+      author: 'Maria Johnson',
+      date: '2024-01-10',
+      readTime: '7 min read',
+      category: 'Learning',
+      image: '📚'
     },
     {
-      title: "The Science Behind Effective Note-Taking",
-      excerpt: "Explore the research-backed methods for taking notes that actually help you learn and remember information.",
-      author: "Dr. Alan Foster",
-      date: "2024-01-08",
-      readTime: "7 min read",
-      category: "Research",
-      tags: ["Note-taking", "Learning", "Science"]
+      title: 'The Psychology of Information Overload',
+      excerpt: 'Understanding how our brains process information and strategies to manage cognitive load.',
+      author: 'Dr. Michael Park',
+      date: '2024-01-08',
+      readTime: '6 min read',
+      category: 'Psychology',
+      image: '🧠'
     },
     {
-      title: "How Teams Can Share Knowledge More Effectively",
-      excerpt: "Discover strategies for creating a culture of knowledge sharing that drives innovation and collaboration.",
-      author: "Lisa Park",
-      date: "2024-01-05",
-      readTime: "6 min read",
-      category: "Collaboration",
-      tags: ["Team", "Collaboration", "Culture"]
+      title: 'Semantic Search vs Traditional Search: A Deep Dive',
+      excerpt: 'Compare the benefits and limitations of semantic search technology in knowledge management.',
+      author: 'Emily Zhang',
+      date: '2024-01-05',
+      readTime: '9 min read',
+      category: 'Technology',
+      image: '🔍'
     },
     {
-      title: "Digital Minimalism for Information Management",
-      excerpt: "Learn how to apply digital minimalism principles to reduce information overload and focus on what matters.",
-      author: "James Wright",
-      date: "2024-01-03",
-      readTime: "9 min read",
-      category: "Lifestyle",
-      tags: ["Minimalism", "Focus", "Digital Wellness"]
+      title: 'Creating Effective Knowledge Sharing Cultures in Remote Teams',
+      excerpt: 'Best practices for building knowledge sharing habits in distributed organizations.',
+      author: 'James Wilson',
+      date: '2024-01-03',
+      readTime: '6 min read',
+      category: 'Team Management',
+      image: '👥'
     },
     {
-      title: "The Evolution of Search: From Keywords to Context",
-      excerpt: "Understanding how modern search technology is moving beyond keywords to understand context and intent.",
-      author: "Priya Sharma",
-      date: "2024-01-01",
-      readTime: "11 min read",
-      category: "Technology",
-      tags: ["Search", "Technology", "Innovation"]
+      title: 'The Science of Note-Taking: What Research Tells Us',
+      excerpt: 'Evidence-based approaches to note-taking that improve comprehension and retention.',
+      author: 'Dr. Lisa Brown',
+      date: '2024-01-01',
+      readTime: '8 min read',
+      category: 'Research',
+      image: '📝'
     }
   ];
 
   const categories = [
-    { name: "AI & Technology", icon: Brain, count: 12 },
-    { name: "Productivity", icon: Zap, count: 18 },
-    { name: "Collaboration", icon: Users, count: 8 },
-    { name: "Guides", icon: BookOpen, count: 15 },
-    { name: "Research", icon: TrendingUp, count: 6 },
-    { name: "Tips", icon: Target, count: 22 }
+    'All Posts', 'AI & Technology', 'Productivity', 'Learning', 'Psychology', 'Team Management', 'Research'
   ];
 
   return (
-    <UnifiedPageLayout
-      title="Blog - Knowledge Management Insights | Accio"
-      description="Stay updated with the latest insights, tips, and trends in knowledge management, productivity, and AI-powered organization."
-    >
-      {/* Hero Section */}
-      <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-background">
-        <div className="container text-center">
-          <Badge variant="outline" className="mb-6">
-            <BookOpen className="h-3 w-3 mr-1" />
-            Knowledge Hub
-          </Badge>
-          <h1 className="text-4xl lg:text-5xl font-bold mb-6">
-            Insights for the Modern
-            <span className="text-primary block">Knowledge Worker</span>
-          </h1>
-          <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Expert insights, practical tips, and the latest trends in knowledge management, 
-            productivity, and AI-powered organization.
-          </p>
-          
-          {/* Search Bar */}
-          <div className="max-w-md mx-auto relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search articles..."
-              className="pl-10 h-12"
-            />
-          </div>
-        </div>
-      </section>
+    <>
+      <Helmet>
+        <title>Blog - Knowledge Management Insights | Accio</title>
+        <meta name="description" content="Discover expert insights on knowledge management, AI, productivity, and learning strategies from the Accio team and guest contributors." />
+      </Helmet>
 
-      {/* Featured Post */}
-      <section className="py-16">
-        <div className="container">
-          <h2 className="text-2xl font-bold mb-8">Featured Article</h2>
-          <Card className="border-0 shadow-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
-            <div className="md:flex">
-              <div className="md:w-1/2">
-                <div className="h-64 md:h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                  <Brain className="h-24 w-24 text-primary/40" />
-                </div>
+      <main className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-12">
+              <Badge variant="secondary" className="mb-6">
+                <BookOpen className="h-3 w-3 mr-1" />
+                Accio Blog
+              </Badge>
+              <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+                Knowledge Management Insights
+              </h1>
+              <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+                Expert perspectives on AI, productivity, learning strategies, and the future of knowledge work.
+              </p>
+              
+              {/* Search Bar */}
+              <div className="max-w-md mx-auto relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input 
+                  placeholder="Search articles..." 
+                  className="pl-10 pr-4 py-3 text-base"
+                />
               </div>
-              <div className="md:w-1/2 p-8">
-                <div className="flex items-center gap-2 mb-4">
-                  <Badge variant="secondary">{featuredPost.category}</Badge>
-                  {featuredPost.tags.map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                <h3 className="text-2xl font-bold mb-4 hover:text-primary transition-colors">
-                  {featuredPost.title}
-                </h3>
-                <p className="text-muted-foreground mb-6 leading-relaxed">
-                  {featuredPost.excerpt}
-                </p>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>By {featuredPost.author}</span>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3" />
-                      {featuredPost.date}
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {featuredPost.readTime}
-                    </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Categories */}
+        <section className="py-8 border-b">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="flex flex-wrap gap-2 justify-center">
+              {categories.map((category, index) => (
+                <Button
+                  key={index}
+                  variant={index === 0 ? "default" : "outline"}
+                  size="sm"
+                  className="text-sm"
+                >
+                  {category}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Post */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold">Featured Article</h2>
+            </div>
+            
+            <Card className="overflow-hidden border-0 shadow-xl">
+              <div className="grid lg:grid-cols-2 gap-0">
+                <div className="p-8 lg:p-12 flex flex-col justify-center">
+                  <Badge variant="secondary" className="w-fit mb-4">
+                    {featuredPost.category}
+                  </Badge>
+                  <h3 className="text-2xl lg:text-3xl font-bold mb-4 leading-tight">
+                    {featuredPost.title}
+                  </h3>
+                  <p className="text-muted-foreground mb-6 leading-relaxed">
+                    {featuredPost.excerpt}
+                  </p>
+                  <div className="flex items-center text-sm text-muted-foreground mb-6">
+                    <User className="h-4 w-4 mr-2" />
+                    <span>{featuredPost.author}</span>
+                    <span className="mx-2">•</span>
+                    <Clock className="h-4 w-4 mr-2" />
+                    <span>{featuredPost.readTime}</span>
+                    <span className="mx-2">•</span>
+                    <span>{featuredPost.date}</span>
                   </div>
-                  <Button variant="ghost" className="gap-2">
-                    Read More
-                    <ArrowRight className="h-4 w-4" />
+                  <Button asChild>
+                    <Link to="#" className="w-fit">
+                      Read Article
+                      <ArrowRight className="h-4 w-4 ml-2" />
+                    </Link>
                   </Button>
                 </div>
-              </div>
-            </div>
-          </Card>
-        </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-16 bg-muted/30">
-        <div className="container">
-          <div className="grid lg:grid-cols-4 gap-8">
-            {/* Categories Sidebar */}
-            <div className="lg:col-span-1">
-              <div className="sticky top-24">
-                <h3 className="font-semibold mb-6">Categories</h3>
-                <div className="space-y-2">
-                  {categories.map((category) => (
-                    <Button
-                      key={category.name}
-                      variant="ghost"
-                      className="w-full justify-between hover:bg-accent/80"
-                    >
-                      <div className="flex items-center gap-2">
-                        <category.icon className="h-4 w-4" />
-                        {category.name}
-                      </div>
-                      <Badge variant="secondary" className="text-xs">
-                        {category.count}
-                      </Badge>
-                    </Button>
-                  ))}
+                <div className="bg-gradient-to-br from-primary/10 to-blue-600/10 flex items-center justify-center p-16">
+                  <div className="text-8xl">{featuredPost.image}</div>
                 </div>
               </div>
+            </Card>
+          </div>
+        </section>
+
+        {/* Blog Posts Grid */}
+        <section className="py-16 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="mb-12">
+              <h2 className="text-2xl font-bold mb-4">Latest Articles</h2>
+              <p className="text-muted-foreground">
+                Stay up to date with the latest insights and best practices in knowledge management.
+              </p>
             </div>
-
-            {/* Blog Posts */}
-            <div className="lg:col-span-3">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-2xl font-bold">Latest Articles</h2>
-                <Button variant="outline">
-                  View All Posts
-                </Button>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {blogPosts.map((post, index) => (
-                  <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-all cursor-pointer group">
-                    <CardHeader>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary" className="text-xs">
-                          {post.category}
-                        </Badge>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {blogPosts.map((post, index) => (
+                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="aspect-video bg-gradient-to-br from-primary/10 to-blue-600/10 flex items-center justify-center">
+                    <div className="text-4xl">{post.image}</div>
+                  </div>
+                  <CardHeader>
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="outline" className="text-xs">
+                        {post.category}
+                      </Badge>
+                      <div className="flex items-center text-xs text-muted-foreground">
+                        <Clock className="h-3 w-3 mr-1" />
+                        {post.readTime}
                       </div>
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors line-clamp-2">
-                        {post.title}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <CardDescription className="mb-4 leading-relaxed line-clamp-3">
-                        {post.excerpt}
-                      </CardDescription>
-                      
-                      <div className="flex flex-wrap gap-1 mb-4">
-                        {post.tags.map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
+                    </div>
+                    <CardTitle className="text-lg leading-tight">
+                      {post.title}
+                    </CardTitle>
+                    <CardDescription className="line-clamp-2">
+                      {post.excerpt}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-sm text-muted-foreground">
+                        <User className="h-3 w-3 mr-1" />
+                        <span>{post.author}</span>
                       </div>
-                      
-                      <div className="flex items-center justify-between text-xs text-muted-foreground">
-                        <span>By {post.author}</span>
-                        <div className="flex items-center gap-2">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-3 w-3" />
-                            {post.date}
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Clock className="h-3 w-3" />
-                            {post.readTime}
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-
-              {/* Load More */}
-              <div className="text-center mt-12">
-                <Button size="lg" variant="outline">
-                  Load More Articles
-                </Button>
-              </div>
+                      <span className="text-sm text-muted-foreground">{post.date}</span>
+                    </div>
+                    <Button variant="ghost" className="w-full mt-4" asChild>
+                      <Link to="#">
+                        Read More
+                        <ArrowRight className="h-4 w-4 ml-2" />
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            <div className="text-center mt-12">
+              <Button variant="outline" size="lg">
+                Load More Articles
+              </Button>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Newsletter CTA */}
-      <section className="py-16">
-        <div className="container">
-          <Card className="border-0 bg-gradient-to-r from-primary/10 to-transparent">
-            <CardContent className="p-12 text-center">
-              <h2 className="text-3xl font-bold mb-4">Stay in the Loop</h2>
-              <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-                Get the latest insights on knowledge management, productivity tips, and AI updates 
-                delivered straight to your inbox.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md mx-auto">
-                <Input placeholder="Enter your email" className="flex-1" />
-                <Button>Subscribe</Button>
-              </div>
-              <p className="text-sm text-muted-foreground mt-4">
-                No spam, unsubscribe at any time.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-      </section>
-    </UnifiedPageLayout>
+        {/* Newsletter Section */}
+        <section className="py-24 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-6">Stay in the Loop</h2>
+            <p className="text-xl mb-8 opacity-90">
+              Get our latest articles and insights delivered directly to your inbox.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <Input 
+                type="email" 
+                placeholder="Enter your email" 
+                className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/70"
+              />
+              <Button variant="secondary" className="shrink-0">
+                Subscribe
+              </Button>
+            </div>
+            <p className="text-sm opacity-75 mt-4">
+              Join 10,000+ subscribers. Unsubscribe anytime.
+            </p>
+          </div>
+        </section>
+      </main>
+    </>
   );
 };
 

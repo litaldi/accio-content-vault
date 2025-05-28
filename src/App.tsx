@@ -1,62 +1,72 @@
 
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
+import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Toaster } from '@/components/ui/toaster';
-import SecureErrorBoundary from '@/components/error/SecureErrorBoundary';
-import { AppRoutes } from '@/routing/AppRoutes';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { useAppSecurity } from '@/hooks/useAppSecurity';
+import UnifiedMegaMenu from '@/components/navigation/UnifiedMegaMenu';
+import GlobalFooter from '@/components/layout/GlobalFooter';
+
+// Pages
+import Home from '@/pages/Home';
+import About from '@/pages/About';
+import Features from '@/pages/Features';
+import HowItWorks from '@/pages/HowItWorks';
+import Blog from '@/pages/Blog';
+import Pricing from '@/pages/Pricing';
+import FAQ from '@/pages/FAQ';
+import Contact from '@/pages/Contact';
+import Login from '@/pages/Login';
+import Register from '@/pages/Register';
+import PrivacyPolicy from '@/pages/PrivacyPolicy';
+import TermsOfService from '@/pages/TermsOfService';
+import NotFound from '@/pages/NotFound';
 
 function App() {
-  const location = useLocation();
-
-  // Scroll to top on route change for better UX
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
-
-  // Initialize security monitoring and validation
-  useAppSecurity();
-
   return (
     <HelmetProvider>
       <ThemeProvider>
-        <AuthProvider>
-          <SecureErrorBoundary>
-            <Helmet titleTemplate="%s | Accio" defaultTitle="Accio - AI-Powered Knowledge Management">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-              <meta name="X-Content-Type-Options" content="nosniff" />
-              <meta name="X-Frame-Options" content="DENY" />
-              <meta name="X-XSS-Protection" content="1; mode=block" />
-              <meta name="Referrer-Policy" content="strict-origin-when-cross-origin" />
-            </Helmet>
-            
-            {/* Skip link for accessibility */}
-            <a
-              href="#main-content"
-              className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-primary-foreground px-4 py-2 rounded-md font-medium z-50 transition-all duration-200"
-              onClick={(e) => {
-                e.preventDefault();
-                const mainContent = document.getElementById('main-content');
-                if (mainContent) {
-                  mainContent.focus();
-                  mainContent.scrollIntoView({ behavior: 'smooth' });
-                }
-              }}
-            >
-              Skip to main content
-            </a>
-            
-            <AppLayout>
-              <AppRoutes />
-            </AppLayout>
-            
-            <Toaster />
-          </SecureErrorBoundary>
-        </AuthProvider>
+        <AccessibilityProvider>
+          <AuthProvider>
+            <Router>
+              <div className="min-h-screen flex flex-col bg-background text-foreground">
+                <Helmet>
+                  <html lang="en" />
+                  <meta charSet="utf-8" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1" />
+                  <meta name="theme-color" content="#000000" />
+                  <meta name="description" content="Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform." />
+                  <link rel="canonical" href="https://accio.app" />
+                </Helmet>
+
+                <UnifiedMegaMenu />
+                
+                <main className="flex-1">
+                  <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/features" element={<Features />} />
+                    <Route path="/how-it-works" element={<HowItWorks />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                    <Route path="/terms-of-service" element={<TermsOfService />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+
+                <GlobalFooter />
+                <Toaster />
+              </div>
+            </Router>
+          </AuthProvider>
+        </AccessibilityProvider>
       </ThemeProvider>
     </HelmetProvider>
   );

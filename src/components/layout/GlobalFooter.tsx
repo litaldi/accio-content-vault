@@ -2,160 +2,201 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Github, 
-  Twitter, 
-  Mail, 
-  Heart,
-  Shield,
-  FileText,
-  HelpCircle,
-  Globe,
-  Brain
-} from 'lucide-react';
+import { Brain, ArrowRight, Mail, Twitter, Linkedin, Github, Heart } from 'lucide-react';
 
 const GlobalFooter: React.FC = () => {
-  const currentYear = new Date().getFullYear();
-
-  const footerSections = [
-    {
-      title: 'Product',
-      links: [
-        { name: 'Features', href: '/features' },
-        { name: 'Dashboard', href: '/dashboard' },
-        { name: 'Analytics', href: '/analytics' },
-        { name: 'Collections', href: '/collections' },
-      ]
-    },
-    {
-      title: 'Resources',
-      links: [
-        { name: 'Help Center', href: '/help', icon: HelpCircle },
-        { name: 'Blog', href: '/blog' },
-        { name: 'Contact', href: '/contact', icon: Mail },
-        { name: 'About', href: '/about', icon: Globe },
-      ]
-    },
-    {
-      title: 'Legal',
-      links: [
-        { name: 'Privacy Policy', href: '/privacy', icon: Shield },
-        { name: 'Terms of Service', href: '/terms', icon: FileText },
-        { name: 'Cookie Policy', href: '/cookies' },
-        { name: 'Security', href: '/security' },
-      ]
-    }
-  ];
+  const footerLinks = {
+    product: [
+      { label: 'Features', href: '/features' },
+      { label: 'How It Works', href: '/how-it-works' },
+      { label: 'Pricing', href: '/pricing' },
+      { label: 'Dashboard', href: '/dashboard' }
+    ],
+    company: [
+      { label: 'About Us', href: '/about' },
+      { label: 'Contact', href: '/contact' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Help & Support', href: '/faq' }
+    ],
+    resources: [
+      { label: 'Getting Started', href: '/how-it-works' },
+      { label: 'FAQ', href: '/faq' },
+      { label: 'Blog', href: '/blog' },
+      { label: 'Contact Support', href: '/contact' }
+    ],
+    legal: [
+      { label: 'Privacy Policy', href: '/privacy-policy' },
+      { label: 'Terms of Service', href: '/terms-of-service' },
+      { label: 'Security', href: '/about' },
+      { label: 'Accessibility', href: '/faq' }
+    ]
+  };
 
   const socialLinks = [
-    { name: 'GitHub', href: 'https://github.com/accio', icon: Github },
-    { name: 'Twitter', href: 'https://twitter.com/accio', icon: Twitter },
-    { name: 'Email', href: 'mailto:hello@accio.app', icon: Mail },
+    { icon: Twitter, href: 'https://twitter.com/accio', label: 'Twitter', ariaLabel: 'Follow us on Twitter' },
+    { icon: Linkedin, href: 'https://linkedin.com/company/accio', label: 'LinkedIn', ariaLabel: 'Connect on LinkedIn' },
+    { icon: Github, href: 'https://github.com/accio', label: 'GitHub', ariaLabel: 'View our GitHub' }
   ];
 
-  return (
-    <footer className="bg-background border-t" role="contentinfo">
-      <div className="container mx-auto px-4 max-w-7xl">
-        {/* Main Footer Content */}
-        <div className="py-12 lg:py-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
-            {/* Brand Section */}
-            <div className="lg:col-span-2 space-y-4">
-              <Link 
-                to="/" 
-                className="flex items-center gap-3 group transition-all duration-200"
-                aria-label="Accio - Go to homepage"
-              >
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
-                  <Brain className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-                  Accio
-                </span>
-              </Link>
-              
-              <p className="text-muted-foreground text-sm leading-relaxed max-w-sm">
-                Transform scattered information into organized intelligence. 
-                The AI-powered knowledge engine that helps you save, organize, 
-                and rediscover everything that matters.
-              </p>
-              
-              {/* Social Links */}
-              <div className="flex items-center gap-2">
-                {socialLinks.map((social) => (
-                  <Button
-                    key={social.name}
-                    variant="ghost"
-                    size="icon"
-                    asChild
-                    className="h-8 w-8 hover:bg-accent/50 transition-all duration-200 hover:scale-110"
-                  >
-                    <a
-                      href={social.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`Follow us on ${social.name}`}
-                    >
-                      <social.icon className="h-4 w-4" />
-                    </a>
-                  </Button>
-                ))}
-              </div>
-            </div>
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Newsletter signup submitted');
+  };
 
-            {/* Footer Links */}
-            {footerSections.map((section) => (
-              <div key={section.title} className="space-y-3">
-                <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">
-                  {section.title}
-                </h3>
-                <ul className="space-y-2" role="list">
-                  {section.links.map((link) => (
-                    <li key={link.name}>
-                      <Link
-                        to={link.href}
-                        className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
-                      >
-                        {link.icon && <link.icon className="h-3 w-3" />}
-                        {link.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+  return (
+    <footer className="bg-muted/30 border-t mt-auto" role="contentinfo">
+      {/* Newsletter Section */}
+      <div className="container mx-auto px-4 py-16 max-w-7xl">
+        <div className="bg-primary rounded-3xl p-8 md:p-12 text-center text-primary-foreground mb-16">
+          <h3 className="text-2xl md:text-3xl font-bold mb-4">
+            Stay ahead of the knowledge curve
+          </h3>
+          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+            Get productivity tips, feature updates, and expert insights delivered to your inbox.
+          </p>
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+            <Input 
+              type="email" 
+              placeholder="Enter your email" 
+              className="bg-primary-foreground/10 border-primary-foreground/20 text-primary-foreground placeholder:text-primary-foreground/70"
+              required
+              aria-label="Email address for newsletter"
+            />
+            <Button type="submit" variant="secondary" className="shrink-0">
+              Subscribe
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </form>
+          <p className="text-sm opacity-75 mt-4">
+            Join 5,000+ subscribers. Unsubscribe anytime.
+          </p>
         </div>
 
-        <Separator />
-
-        {/* Bottom Bar */}
-        <div className="py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <span>© {currentYear} Accio. Made with</span>
-            <Heart className="h-3 w-3 text-red-500 fill-current" />
-            <span>for knowledge workers worldwide.</span>
+        {/* Main Footer Links */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
+          {/* Brand Column */}
+          <div className="col-span-2 md:col-span-1">
+            <Link to="/" className="inline-flex items-center gap-2 mb-4 hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                <Brain className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <span className="text-xl font-bold">Accio</span>
+            </Link>
+            <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
+              Transform information chaos into organized intelligence. 
+              The AI-powered knowledge engine for modern professionals.
+            </p>
+            <div className="flex gap-3">
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.href}
+                  aria-label={social.ariaLabel}
+                  className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <social.icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
           </div>
-          
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <Link 
-              to="/privacy" 
-              className="hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
-            >
-              Privacy
+
+          {/* Product Links */}
+          <div>
+            <h4 className="font-semibold mb-4">Product</h4>
+            <nav>
+              <ul className="space-y-3">
+                {footerLinks.product.map((link, index) => (
+                  <li key={index}>
+                    <Link 
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          {/* Company Links */}
+          <div>
+            <h4 className="font-semibold mb-4">Company</h4>
+            <nav>
+              <ul className="space-y-3">
+                {footerLinks.company.map((link, index) => (
+                  <li key={index}>
+                    <Link 
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          {/* Resources Links */}
+          <div>
+            <h4 className="font-semibold mb-4">Resources</h4>
+            <nav>
+              <ul className="space-y-3">
+                {footerLinks.resources.map((link, index) => (
+                  <li key={index}>
+                    <Link 
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+
+          {/* Legal Links */}
+          <div>
+            <h4 className="font-semibold mb-4">Legal</h4>
+            <nav>
+              <ul className="space-y-3">
+                {footerLinks.legal.map((link, index) => (
+                  <li key={index}>
+                    <Link 
+                      to={link.href}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </div>
+        
+        <Separator className="mb-8" />
+        
+        {/* Bottom Footer */}
+        <div className="flex flex-col md:flex-row justify-between items-center">
+          <p className="text-sm text-muted-foreground">
+            &copy; 2025 Accio. All rights reserved. Made with <Heart className="inline h-3 w-3 text-red-500" /> for knowledge workers.
+          </p>
+          <div className="flex gap-4 mt-4 md:mt-0">
+            <Link to="/privacy-policy" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded">
+              Privacy Policy
             </Link>
-            <Link 
-              to="/terms" 
-              className="hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
-            >
-              Terms
+            <Link to="/terms-of-service" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded">
+              Terms of Service
             </Link>
-            <Link 
-              to="/security" 
-              className="hover:text-foreground transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
-            >
-              Security
+            <Link to="/contact" className="text-sm text-muted-foreground hover:text-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-1 rounded">
+              Contact
             </Link>
           </div>
         </div>

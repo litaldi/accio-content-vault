@@ -1,235 +1,292 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  Mail, 
-  MapPin, 
-  Phone, 
-  MessageCircle,
-  Clock,
-  Send,
-  Building,
-  Users,
-  Headphones
-} from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Mail, MessageCircle, Phone, MapPin, Clock, Send } from 'lucide-react';
 
 const Contact = () => {
-  const contactInfo = [
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    subject: '',
+    message: '',
+    inquiryType: ''
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (value: string) => {
+    setFormData(prev => ({ ...prev, inquiryType: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Form submitted:', formData);
+    // Handle form submission here
+  };
+
+  const contactMethods = [
     {
       icon: Mail,
       title: 'Email Us',
-      info: 'hello@accio.app',
-      description: 'General inquiries and support',
-      href: 'mailto:hello@accio.app'
-    },
-    {
-      icon: Phone,
-      title: 'Call Us',
-      info: '+1 (555) 123-ACCIO',
-      description: 'Phone support during business hours',
-      href: 'tel:+15551232224'
-    },
-    {
-      icon: MapPin,
-      title: 'Visit Us',
-      info: 'San Francisco, CA',
-      description: 'Schedule a meeting at our office',
-      href: '#'
+      description: 'Get in touch via email for general inquiries',
+      contact: 'hello@accio.app',
+      action: 'Send Email'
     },
     {
       icon: MessageCircle,
       title: 'Live Chat',
-      info: 'Available 24/7',
-      description: 'Instant support through our app',
-      href: '#'
+      description: 'Chat with our support team in real-time',
+      contact: 'Available 9 AM - 6 PM PST',
+      action: 'Start Chat'
+    },
+    {
+      icon: Phone,
+      title: 'Phone Support',
+      description: 'Enterprise customers can call for priority support',
+      contact: '+1 (555) 123-4567',
+      action: 'Call Now'
     }
   ];
 
-  const departments = [
+  const offices = [
     {
-      icon: Headphones,
-      title: 'Customer Support',
-      email: 'support@accio.app',
-      description: 'Technical help and account assistance'
+      city: 'San Francisco',
+      address: '123 Innovation Drive, Suite 400',
+      timezone: 'PST (UTC-8)',
+      hours: '9:00 AM - 6:00 PM'
     },
     {
-      icon: Building,
-      title: 'Sales & Partnerships',
-      email: 'sales@accio.app',
-      description: 'Enterprise solutions and partnerships'
+      city: 'New York',
+      address: '456 Technology Lane, Floor 12',
+      timezone: 'EST (UTC-5)',
+      hours: '9:00 AM - 6:00 PM'
     },
     {
-      icon: Users,
-      title: 'Media & Press',
-      email: 'press@accio.app',
-      description: 'Press inquiries and media resources'
+      city: 'London',
+      address: '789 Knowledge Street, Building B',
+      timezone: 'GMT (UTC+0)',
+      hours: '9:00 AM - 5:00 PM'
     }
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <>
       <Helmet>
-        <title>Contact Us - Accio</title>
-        <meta name="description" content="Get in touch with the Accio team. Contact us for support, sales, partnerships, or general inquiries." />
+        <title>Contact Us - Get in Touch | Accio</title>
+        <meta name="description" content="Get in touch with the Accio team. Contact us for support, sales inquiries, partnerships, or general questions about our knowledge management platform." />
       </Helmet>
 
-      <div className="container mx-auto px-4 py-12 max-w-6xl">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-          </p>
-        </div>
+      <main className="min-h-screen bg-background">
+        {/* Hero Section */}
+        <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
+          <div className="container mx-auto px-4 max-w-6xl text-center">
+            <Badge variant="secondary" className="mb-6">
+              <MessageCircle className="h-3 w-3 mr-1" />
+              Contact Us
+            </Badge>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
+              Let's Start a Conversation
+            </h1>
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
+              Have questions about Accio? Need help getting started? Want to explore enterprise solutions? 
+              We're here to help you succeed.
+            </p>
+          </div>
+        </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Contact Form */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-2xl">Send us a message</CardTitle>
-                <CardDescription>
-                  Fill out the form below and we'll get back to you within 24 hours.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="firstName">First Name *</Label>
-                      <Input id="firstName" placeholder="John" required />
-                    </div>
-                    <div>
-                      <Label htmlFor="lastName">Last Name *</Label>
-                      <Input id="lastName" placeholder="Doe" required />
-                    </div>
+        {/* Contact Methods */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="grid md:grid-cols-3 gap-8 mb-16">
+              {contactMethods.map((method, index) => (
+                <Card key={index} className="text-center p-8 hover:shadow-lg transition-shadow">
+                  <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <method.icon className="h-6 w-6 text-primary" />
                   </div>
-                  
+                  <CardTitle className="mb-3">{method.title}</CardTitle>
+                  <CardDescription className="mb-4">{method.description}</CardDescription>
+                  <p className="font-medium text-foreground mb-4">{method.contact}</p>
+                  <Button variant="outline" className="w-full">
+                    {method.action}
+                  </Button>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Contact Form */}
+        <section className="py-16 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">Send Us a Message</h2>
+              <p className="text-lg text-muted-foreground">
+                Fill out the form below and we'll get back to you within 24 hours.
+              </p>
+            </div>
+
+            <Card className="p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input id="email" type="email" placeholder="john@company.com" required />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="company">Company</Label>
-                    <Input id="company" placeholder="Your company name" />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="subject">Subject *</Label>
-                    <Input id="subject" placeholder="How can we help you?" required />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="message">Message *</Label>
-                    <Textarea 
-                      id="message" 
-                      placeholder="Tell us more about your inquiry..."
-                      rows={6}
-                      required 
+                    <label htmlFor="name" className="block text-sm font-medium mb-2">
+                      Full Name *
+                    </label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Enter your full name"
+                      required
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full" size="lg">
-                    Send Message
-                    <Send className="ml-2 h-4 w-4" />
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Contact Information */}
-          <div className="space-y-6">
-            {/* Quick Contact */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Quick Contact</CardTitle>
-                <CardDescription>
-                  Get in touch through your preferred method
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {contactInfo.map((contact, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <contact.icon className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <h4 className="font-medium">{contact.title}</h4>
-                      <a href={contact.href} className="text-primary hover:underline">
-                        {contact.info}
-                      </a>
-                      <p className="text-sm text-muted-foreground">
-                        {contact.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Departments */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Departments</CardTitle>
-                <CardDescription>
-                  Contact the right team for your specific needs
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {departments.map((dept, index) => (
-                  <div key={index} className="flex items-start gap-3">
-                    <dept.icon className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-                    <div className="flex-1">
-                      <h4 className="font-medium">{dept.title}</h4>
-                      <a href={`mailto:${dept.email}`} className="text-primary hover:underline">
-                        {dept.email}
-                      </a>
-                      <p className="text-sm text-muted-foreground">
-                        {dept.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-
-            {/* Business Hours */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-primary" />
-                  Business Hours
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>Monday - Friday</span>
-                    <span>9:00 AM - 6:00 PM PST</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Saturday</span>
-                    <span>10:00 AM - 4:00 PM PST</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Sunday</span>
-                    <span>Closed</span>
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium mb-2">
+                      Email Address *
+                    </label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="Enter your email"
+                      required
+                    />
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-4">
-                  Emergency support available 24/7 through live chat
-                </p>
-              </CardContent>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="company" className="block text-sm font-medium mb-2">
+                      Company
+                    </label>
+                    <Input
+                      id="company"
+                      name="company"
+                      value={formData.company}
+                      onChange={handleInputChange}
+                      placeholder="Your company name"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="inquiryType" className="block text-sm font-medium mb-2">
+                      Inquiry Type *
+                    </label>
+                    <Select onValueChange={handleSelectChange} required>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select inquiry type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="general">General Question</SelectItem>
+                        <SelectItem value="support">Technical Support</SelectItem>
+                        <SelectItem value="sales">Sales Inquiry</SelectItem>
+                        <SelectItem value="partnership">Partnership</SelectItem>
+                        <SelectItem value="press">Press/Media</SelectItem>
+                        <SelectItem value="enterprise">Enterprise Solutions</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium mb-2">
+                    Subject *
+                  </label>
+                  <Input
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    placeholder="Brief subject line"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium mb-2">
+                    Message *
+                  </label>
+                  <Textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Tell us more about your inquiry..."
+                    rows={6}
+                    required
+                  />
+                </div>
+
+                <Button type="submit" size="lg" className="w-full">
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Message
+                </Button>
+              </form>
             </Card>
           </div>
-        </div>
-      </div>
-    </div>
+        </section>
+
+        {/* Office Locations */}
+        <section className="py-24">
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Our Offices</h2>
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                We have teams around the world ready to help you succeed with Accio.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {offices.map((office, index) => (
+                <Card key={index} className="p-6">
+                  <CardHeader className="pb-4">
+                    <div className="flex items-center gap-3 mb-2">
+                      <MapPin className="h-5 w-5 text-primary" />
+                      <CardTitle className="text-xl">{office.city}</CardTitle>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <p className="text-muted-foreground">{office.address}</p>
+                    <div className="flex items-center gap-2 text-sm">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <span>{office.hours}</span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{office.timezone}</p>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ Link */}
+        <section className="py-16 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-2xl font-bold mb-4">Looking for Quick Answers?</h2>
+            <p className="text-lg mb-6 opacity-90">
+              Check out our FAQ section for instant answers to common questions.
+            </p>
+            <Button variant="secondary" size="lg" asChild>
+              <a href="/faq">Browse FAQ</a>
+            </Button>
+          </div>
+        </section>
+      </main>
+    </>
   );
 };
 
