@@ -443,5 +443,3 @@ if (process.env.NODE_ENV === 'development') {
     setTimeout(runA11yCheck, 2000);
   }
 }
-
-export { FocusManager, ContrastChecker, AccessibilityChecker };

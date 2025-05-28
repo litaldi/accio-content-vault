@@ -131,10 +131,8 @@ const Register = () => {
                 </div>
               </div>
               
-              <CardTitle asChild>
-                <h1 className="text-2xl font-bold">
-                  Join Accio
-                </h1>
+              <CardTitle className="text-2xl font-bold">
+                Join Accio
               </CardTitle>
               
               <CardDescription className="text-base">
