@@ -11,6 +11,7 @@ import { FocusTrap } from '@/components/ui/enhanced-focus';
 import { ProgressIndicator } from '@/components/ui/microinteractions';
 import { Brain, Mail, Lock, User, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { validateUserInput } from '@/utils/enhanced-security-utils';
 
 const Register = () => {
   const { signUp, isLoading } = useAuth();
@@ -37,25 +38,23 @@ const Register = () => {
 
     switch (name) {
       case 'email':
-        if (!value) {
-          newErrors.email = 'Email is required';
-        } else if (!/\S+@\S+\.\S+/.test(value)) {
-          newErrors.email = 'Please enter a valid email address';
+        const emailValidation = validateUserInput(value, 'email', { required: true });
+        if (!emailValidation.isValid) {
+          newErrors.email = emailValidation.errors[0];
         } else {
           delete newErrors.email;
         }
         break;
+        
       case 'password':
-        if (!value) {
-          newErrors.password = 'Password is required';
-        } else if (value.length < 8) {
-          newErrors.password = 'Password must be at least 8 characters';
-        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(value)) {
-          newErrors.password = 'Password must contain uppercase, lowercase, and number';
+        const passwordValidation = validateUserInput(value, 'password', { required: true, minLength: 8 });
+        if (!passwordValidation.isValid) {
+          newErrors.password = passwordValidation.errors[0];
         } else {
           delete newErrors.password;
         }
         break;
+        
       case 'confirmPassword':
         if (!value) {
           newErrors.confirmPassword = 'Please confirm your password';
@@ -65,16 +64,20 @@ const Register = () => {
           delete newErrors.confirmPassword;
         }
         break;
+        
       case 'firstName':
-        if (!value.trim()) {
-          newErrors.firstName = 'First name is required';
+        const firstNameValidation = validateUserInput(value, 'name', { required: true, minLength: 1, maxLength: 50 });
+        if (!firstNameValidation.isValid) {
+          newErrors.firstName = firstNameValidation.errors[0];
         } else {
           delete newErrors.firstName;
         }
         break;
+        
       case 'lastName':
-        if (!value.trim()) {
-          newErrors.lastName = 'Last name is required';
+        const lastNameValidation = validateUserInput(value, 'name', { required: true, minLength: 1, maxLength: 50 });
+        if (!lastNameValidation.isValid) {
+          newErrors.lastName = lastNameValidation.errors[0];
         } else {
           delete newErrors.lastName;
         }
@@ -118,18 +121,20 @@ const Register = () => {
         <meta name="description" content="Join Accio and start building your AI-powered knowledge empire today." />
       </Helmet>
 
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <main className="min-h-screen flex items-center justify-center bg-background p-4">
         <FocusTrap autoFocus>
           <Card className="w-full max-w-md shadow-xl border-0 bg-card/50 backdrop-blur">
             <CardHeader className="text-center pb-6">
               <div className="flex justify-center mb-4">
                 <div className="p-3 bg-primary/10 rounded-full">
-                  <Brain className="h-8 w-8 text-primary" />
+                  <Brain className="h-8 w-8 text-primary" aria-hidden="true" />
                 </div>
               </div>
               
-              <CardTitle className="text-2xl font-bold">
-                Join Accio
+              <CardTitle asChild>
+                <h1 className="text-2xl font-bold">
+                  Join Accio
+                </h1>
               </CardTitle>
               
               <CardDescription className="text-base">
@@ -137,7 +142,7 @@ const Register = () => {
               </CardDescription>
 
               <Badge variant="secondary" className="mx-auto mt-3">
-                <Sparkles className="h-3 w-3 mr-1" />
+                <Sparkles className="h-3 w-3 mr-1" aria-hidden="true" />
                 Free Account
               </Badge>
             </CardHeader>
@@ -157,73 +162,77 @@ const Register = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-4">
-                {/* Name Fields */}
-                <div className="grid grid-cols-2 gap-3">
-                  <EnhancedInput
-                    label="First Name"
-                    name="firstName"
-                    value={formData.firstName}
-                    onChange={handleInputChange}
-                    error={errors.firstName}
-                    icon={User}
-                    required
-                    autoComplete="given-name"
-                  />
+              <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+                <fieldset className="space-y-4">
+                  <legend className="sr-only">Account Information</legend>
                   
+                  {/* Name Fields */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <EnhancedInput
+                      label="First Name"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      error={errors.firstName}
+                      icon={User}
+                      required
+                      autoComplete="given-name"
+                    />
+                    
+                    <EnhancedInput
+                      label="Last Name"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      error={errors.lastName}
+                      required
+                      autoComplete="family-name"
+                    />
+                  </div>
+
+                  {/* Email */}
                   <EnhancedInput
-                    label="Last Name"
-                    name="lastName"
-                    value={formData.lastName}
+                    label="Email Address"
+                    name="email"
+                    type="email"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    error={errors.lastName}
+                    error={errors.email}
+                    icon={Mail}
                     required
-                    autoComplete="family-name"
+                    autoComplete="email"
+                    description="We'll send you a confirmation email"
                   />
-                </div>
 
-                {/* Email */}
-                <EnhancedInput
-                  label="Email Address"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  error={errors.email}
-                  icon={Mail}
-                  required
-                  autoComplete="email"
-                  description="We'll send you a confirmation email"
-                />
+                  {/* Password */}
+                  <EnhancedInput
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    error={errors.password}
+                    icon={Lock}
+                    showPasswordToggle
+                    required
+                    autoComplete="new-password"
+                    description="8+ characters with uppercase, lowercase, and number"
+                  />
 
-                {/* Password */}
-                <EnhancedInput
-                  label="Password"
-                  name="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  error={errors.password}
-                  icon={Lock}
-                  showPasswordToggle
-                  required
-                  autoComplete="new-password"
-                  description="8+ characters with uppercase, lowercase, and number"
-                />
-
-                {/* Confirm Password */}
-                <EnhancedInput
-                  label="Confirm Password"
-                  name="confirmPassword"
-                  type="password"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  error={errors.confirmPassword}
-                  icon={Lock}
-                  showPasswordToggle
-                  required
-                  autoComplete="new-password"
-                />
+                  {/* Confirm Password */}
+                  <EnhancedInput
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    error={errors.confirmPassword}
+                    icon={Lock}
+                    showPasswordToggle
+                    required
+                    autoComplete="new-password"
+                  />
+                </fieldset>
 
                 {/* Submit Button */}
                 <Button
@@ -235,12 +244,12 @@ const Register = () => {
                 >
                   {isFormValid ? (
                     <>
-                      <CheckCircle className="h-4 w-4 mr-2" />
+                      <CheckCircle className="h-4 w-4 mr-2" aria-hidden="true" />
                       Create Account
                     </>
                   ) : (
                     <>
-                      <AlertCircle className="h-4 w-4 mr-2" />
+                      <AlertCircle className="h-4 w-4 mr-2" aria-hidden="true" />
                       Complete Form
                     </>
                   )}
@@ -249,7 +258,7 @@ const Register = () => {
 
               {/* Demo Notice */}
               <Alert className="border-blue-200 bg-blue-50 dark:bg-blue-950/20 dark:border-blue-800">
-                <AlertCircle className="h-4 w-4 text-blue-600" />
+                <AlertCircle className="h-4 w-4 text-blue-600" aria-hidden="true" />
                 <AlertDescription className="text-blue-700 dark:text-blue-300">
                   <strong>Try the demo:</strong> Email: demo@yourapp.com | Password: Demo1234!
                 </AlertDescription>
@@ -270,7 +279,7 @@ const Register = () => {
             </CardContent>
           </Card>
         </FocusTrap>
-      </div>
+      </main>
     </>
   );
 };
