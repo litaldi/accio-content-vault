@@ -64,9 +64,9 @@ export const EnhancedAccessibilityHelper: React.FC<AccessibilityHelperProps> = (
     return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, announceToScreenReader]);
 
-  const handleFontSizeChange = (size: 'normal' | 'large' | 'x-large') => {
+  const handleFontSizeChange = (size: 'small' | 'medium' | 'large') => {
     setFontSize(size);
-    announceToScreenReader(`Font size changed to ${size.replace('-', ' ')}`);
+    announceToScreenReader(`Font size changed to ${size}`);
   };
 
   const handleContrastToggle = () => {
@@ -133,7 +133,7 @@ export const EnhancedAccessibilityHelper: React.FC<AccessibilityHelperProps> = (
                   <label className="text-sm font-medium">Text Size</label>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
-                  {(['normal', 'large', 'x-large'] as const).map((size) => (
+                  {(['small', 'medium', 'large'] as const).map((size) => (
                     <Button
                       key={size}
                       variant={fontSize === size ? 'default' : 'outline'}
@@ -142,7 +142,7 @@ export const EnhancedAccessibilityHelper: React.FC<AccessibilityHelperProps> = (
                       className="text-xs"
                       aria-pressed={fontSize === size}
                     >
-                      {size === 'normal' ? 'Normal' : size === 'large' ? 'Large' : 'X-Large'}
+                      {size === 'small' ? 'Small' : size === 'medium' ? 'Medium' : 'Large'}
                     </Button>
                   ))}
                 </div>

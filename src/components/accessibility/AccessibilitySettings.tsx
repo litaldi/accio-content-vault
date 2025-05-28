@@ -19,7 +19,7 @@ export const AccessibilitySettings: React.FC = () => {
   } = useAccessibility();
 
   const resetToDefaults = () => {
-    setFontSize('normal');
+    setFontSize('medium');
     setHighContrast(false);
     setReducedMotion(false);
   };
@@ -58,7 +58,7 @@ export const AccessibilitySettings: React.FC = () => {
             <Label htmlFor="font-size">Font Size</Label>
             <Select
               value={fontSize}
-              onValueChange={(value: 'normal' | 'large' | 'x-large') =>
+              onValueChange={(value: 'small' | 'medium' | 'large') =>
                 setFontSize(value)
               }
             >
@@ -66,9 +66,9 @@ export const AccessibilitySettings: React.FC = () => {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="small">Small</SelectItem>
+                <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="large">Large</SelectItem>
-                <SelectItem value="x-large">X-Large</SelectItem>
               </SelectContent>
             </Select>
           </div>

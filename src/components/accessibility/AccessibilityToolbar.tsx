@@ -22,7 +22,7 @@ const AccessibilityToolbar: React.FC = () => {
     announceToScreenReader
   } = useAccessibility();
 
-  const handleFontSizeChange = (size: 'normal' | 'large' | 'x-large') => {
+  const handleFontSizeChange = (size: 'small' | 'medium' | 'large') => {
     setFontSize(size);
     announceToScreenReader(`Font size changed to ${size}`);
   };
@@ -40,7 +40,7 @@ const AccessibilityToolbar: React.FC = () => {
   };
 
   const resetSettings = () => {
-    setFontSize('normal');
+    setFontSize('medium');
     setHighContrast(false);
     setReducedMotion(false);
     announceToScreenReader('Accessibility settings reset to default');
@@ -56,31 +56,31 @@ const AccessibilityToolbar: React.FC = () => {
         </h3>
         <div className="grid grid-cols-3 gap-2">
           <Button
-            variant={fontSize === 'normal' ? 'default' : 'outline'}
+            variant={fontSize === 'small' ? 'default' : 'outline'}
             size="sm"
-            onClick={() => handleFontSizeChange('normal')}
+            onClick={() => handleFontSizeChange('small')}
             className="text-xs"
-            aria-pressed={fontSize === 'normal'}
+            aria-pressed={fontSize === 'small'}
           >
-            Normal
+            Small
+          </Button>
+          <Button
+            variant={fontSize === 'medium' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => handleFontSizeChange('medium')}
+            className="text-sm"
+            aria-pressed={fontSize === 'medium'}
+          >
+            Medium
           </Button>
           <Button
             variant={fontSize === 'large' ? 'default' : 'outline'}
             size="sm"
             onClick={() => handleFontSizeChange('large')}
-            className="text-sm"
+            className="text-base"
             aria-pressed={fontSize === 'large'}
           >
             Large
-          </Button>
-          <Button
-            variant={fontSize === 'x-large' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => handleFontSizeChange('x-large')}
-            className="text-base"
-            aria-pressed={fontSize === 'x-large'}
-          >
-            X-Large
           </Button>
         </div>
       </div>
