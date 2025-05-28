@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
@@ -31,42 +31,40 @@ function App() {
       <ThemeProvider>
         <AccessibilityProvider>
           <AuthProvider>
-            <Router>
-              <div className="min-h-screen flex flex-col bg-background text-foreground">
-                <Helmet>
-                  <html lang="en" />
-                  <meta charSet="utf-8" />
-                  <meta name="viewport" content="width=device-width, initial-scale=1" />
-                  <meta name="theme-color" content="#000000" />
-                  <meta name="description" content="Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform." />
-                  <link rel="canonical" href="https://accio.app" />
-                </Helmet>
+            <div className="min-h-screen flex flex-col bg-background text-foreground">
+              <Helmet>
+                <html lang="en" />
+                <meta charSet="utf-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1" />
+                <meta name="theme-color" content="#000000" />
+                <meta name="description" content="Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform." />
+                <link rel="canonical" href="https://accio.app" />
+              </Helmet>
 
-                <UnifiedMegaMenu />
-                
-                <main className="flex-1">
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/features" element={<Features />} />
-                    <Route path="/how-it-works" element={<HowItWorks />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/pricing" element={<Pricing />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                    <Route path="/terms-of-service" element={<TermsOfService />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
+              <UnifiedMegaMenu />
+              
+              <main className="flex-1">
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/features" element={<Features />} />
+                  <Route path="/how-it-works" element={<HowItWorks />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms-of-service" element={<TermsOfService />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
 
-                <GlobalFooter />
-                <Toaster />
-              </div>
-            </Router>
+              <GlobalFooter />
+              <Toaster />
+            </div>
           </AuthProvider>
         </AccessibilityProvider>
       </ThemeProvider>
