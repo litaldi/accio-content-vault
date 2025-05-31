@@ -5,6 +5,10 @@ interface User {
   id: string;
   email: string;
   name?: string;
+  user_metadata?: {
+    full_name?: string;
+    name?: string;
+  };
 }
 
 interface AuthContextType {
@@ -13,7 +17,13 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<{ error?: Error }>;
+  signUp: (name: string, email: string, password: string) => Promise<{ error?: Error }>;
+  signOut: () => Promise<void>;
+  signInWithProvider: (provider: string) => Promise<{ error?: Error }>;
+  resetPassword: (email: string) => Promise<{ error?: Error }>;
   isAuthenticated: boolean;
+  isDemoMode?: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -48,7 +58,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const mockUser: User = {
         id: 'demo-user-123',
         email,
-        name: email.split('@')[0]
+        name: email.split('@')[0],
+        user_metadata: {
+          full_name: email.split('@')[0],
+          name: email.split('@')[0]
+        }
       };
       
       setUser(mockUser);
@@ -69,7 +83,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const mockUser: User = {
         id: 'demo-user-' + Date.now(),
         email,
-        name: name || email.split('@')[0]
+        name: name || email.split('@')[0],
+        user_metadata: {
+          full_name: name || email.split('@')[0],
+          name: name || email.split('@')[0]
+        }
       };
       
       setUser(mockUser);
@@ -86,13 +104,74 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.removeItem('accio_user');
   };
 
+  const signIn = async (email: string, password: string) => {
+    try {
+      await login(email, password);
+      return {};
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const signUp = async (name: string, email: string, password: string) => {
+    try {
+      await register(email, password, name);
+      return {};
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const signOut = async () => {
+    await logout();
+  };
+
+  const signInWithProvider = async (provider: string) => {
+    try {
+      // Simulate provider sign in
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const mockUser: User = {
+        id: 'demo-user-' + Date.now(),
+        email: `user@${provider}.com`,
+        name: `${provider} User`,
+        user_metadata: {
+          full_name: `${provider} User`,
+          name: `${provider} User`
+        }
+      };
+      
+      setUser(mockUser);
+      localStorage.setItem('accio_user', JSON.stringify(mockUser));
+      return {};
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
+  const resetPassword = async (email: string) => {
+    try {
+      // Simulate password reset
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      return {};
+    } catch (error) {
+      return { error: error as Error };
+    }
+  };
+
   const value: AuthContextType = {
     user,
     isLoading,
     login,
     register,
     logout,
-    isAuthenticated: !!user
+    signIn,
+    signUp,
+    signOut,
+    signInWithProvider,
+    resetPassword,
+    isAuthenticated: !!user,
+    isDemoMode: true
   };
 
   return (

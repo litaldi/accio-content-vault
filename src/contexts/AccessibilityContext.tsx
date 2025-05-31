@@ -4,10 +4,12 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 interface AccessibilityContextType {
   highContrast: boolean;
   reducedMotion: boolean;
-  fontSize: 'normal' | 'large' | 'extra-large';
+  fontSize: 'small' | 'medium' | 'large';
   toggleHighContrast: () => void;
   toggleReducedMotion: () => void;
-  setFontSize: (size: 'normal' | 'large' | 'extra-large') => void;
+  setFontSize: (size: 'small' | 'medium' | 'large') => void;
+  setHighContrast: (value: boolean) => void;
+  setReducedMotion: (value: boolean) => void;
   announceToScreenReader: (message: string) => void;
 }
 
@@ -18,24 +20,42 @@ interface AccessibilityProviderProps {
 }
 
 export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
-  const [highContrast, setHighContrast] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(
+  const [highContrast, setHighContrastState] = useState(false);
+  const [reducedMotion, setReducedMotionState] = useState(
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
-  const [fontSize, setFontSize] = useState<'normal' | 'large' | 'extra-large'>('normal');
+  const [fontSize, setFontSizeState] = useState<'small' | 'medium' | 'large'>('medium');
 
   const toggleHighContrast = () => {
-    setHighContrast(prev => !prev);
+    setHighContrastState(prev => !prev);
     document.documentElement.classList.toggle('high-contrast');
   };
 
+  const setHighContrast = (value: boolean) => {
+    setHighContrastState(value);
+    if (value) {
+      document.documentElement.classList.add('high-contrast');
+    } else {
+      document.documentElement.classList.remove('high-contrast');
+    }
+  };
+
   const toggleReducedMotion = () => {
-    setReducedMotion(prev => !prev);
+    setReducedMotionState(prev => !prev);
     document.documentElement.classList.toggle('reduce-motion');
   };
 
-  const handleSetFontSize = (size: 'normal' | 'large' | 'extra-large') => {
-    setFontSize(size);
+  const setReducedMotion = (value: boolean) => {
+    setReducedMotionState(value);
+    if (value) {
+      document.documentElement.classList.add('reduce-motion');
+    } else {
+      document.documentElement.classList.remove('reduce-motion');
+    }
+  };
+
+  const setFontSize = (size: 'small' | 'medium' | 'large') => {
+    setFontSizeState(size);
     document.documentElement.className = document.documentElement.className
       .replace(/font-size-\w+/g, '');
     document.documentElement.classList.add(`font-size-${size}`);
@@ -60,7 +80,9 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
     fontSize,
     toggleHighContrast,
     toggleReducedMotion,
-    setFontSize: handleSetFontSize,
+    setFontSize,
+    setHighContrast,
+    setReducedMotion,
     announceToScreenReader
   };
 
