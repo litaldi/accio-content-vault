@@ -1,114 +1,174 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Brain, Search, Zap, ArrowRight, Play, CheckCircle } from 'lucide-react';
+import { 
+  Upload, Brain, Search, Download, ArrowRight, 
+  CheckCircle, PlayCircle, FileText, Smartphone, Globe 
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const HowItWorks = () => {
   const steps = [
     {
-      icon: Zap,
-      title: 'Capture Everything',
-      description: 'Save content from any source with our browser extension, mobile apps, or direct input.',
+      step: 1,
+      icon: Upload,
+      title: 'Capture Content',
+      description: 'Add information from any source - documents, web pages, notes, or direct input.',
       details: [
-        'One-click web page saving',
+        'Browser extension for one-click saving',
         'Mobile app for on-the-go capture',
-        'Email forwarding integration',
-        'API for custom workflows'
-      ]
+        'Drag & drop file uploads',
+        'Direct text input and note-taking'
+      ],
+      time: '< 30 seconds'
     },
     {
+      step: 2,
       icon: Brain,
-      title: 'AI Organization',
-      description: 'Our AI automatically categorizes, tags, and organizes your content using advanced machine learning.',
+      title: 'AI Processing',
+      description: 'Our AI automatically analyzes, categorizes, and enriches your content with metadata.',
       details: [
-        'Smart content categorization',
-        'Automatic tagging and metadata',
-        'Context-aware organization',
-        'Learns from your preferences'
-      ]
+        'Intelligent content analysis',
+        'Automatic tagging and categorization',
+        'Key concept extraction',
+        'Relationship mapping between content'
+      ],
+      time: '2-5 seconds'
     },
     {
+      step: 3,
       icon: Search,
-      title: 'Discover & Connect',
-      description: 'Find exactly what you need with semantic search and discover hidden connections in your knowledge.',
+      title: 'Smart Discovery',
+      description: 'Find exactly what you need using natural language search and AI recommendations.',
       details: [
-        'Natural language search',
-        'Content recommendations',
-        'Related item suggestions',
-        'Knowledge graph visualization'
-      ]
+        'Semantic search capabilities',
+        'Natural language queries',
+        'Contextual recommendations',
+        'Visual knowledge maps'
+      ],
+      time: 'Instant'
+    },
+    {
+      step: 4,
+      icon: Download,
+      title: 'Apply Knowledge',
+      description: 'Use insights, share with teams, and integrate into your workflow seamlessly.',
+      details: [
+        'Export in multiple formats',
+        'Team collaboration features',
+        'API integrations',
+        'Custom workflow automation'
+      ],
+      time: 'As needed'
+    }
+  ];
+
+  const useCases = [
+    {
+      title: 'Research & Development',
+      description: 'Organize research papers, findings, and insights for faster innovation.',
+      icon: FileText,
+      benefits: ['Faster literature reviews', 'Better idea connections', 'Reduced duplicate work']
+    },
+    {
+      title: 'Content Creation',
+      description: 'Manage inspiration, references, and drafts in one intelligent system.',
+      icon: Globe,
+      benefits: ['Streamlined content planning', 'Easy reference management', 'Inspiration on demand']
+    },
+    {
+      title: 'Personal Learning',
+      description: 'Build your personal knowledge base and accelerate learning.',
+      icon: Smartphone,
+      benefits: ['Better retention', 'Connected learning', 'Progress tracking']
     }
   ];
 
   return (
     <>
       <Helmet>
-        <title>How It Works - AI-Powered Knowledge Management | Accio</title>
-        <meta name="description" content="Learn how Accio transforms your scattered information into organized intelligence with our AI-powered knowledge management system." />
+        <title>How It Works - Accio AI Knowledge Management</title>
+        <meta name="description" content="Learn how Accio's AI-powered knowledge management platform works in 4 simple steps. From content capture to intelligent discovery." />
       </Helmet>
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
         <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="secondary" className="mb-6">
-              <Brain className="h-3 w-3 mr-1" />
-              How It Works
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              From Chaos to Clarity in Three Simple Steps
+          <div className="container mx-auto px-4 max-w-6xl text-center">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+              How Accio{' '}
+              <span className="text-primary">Transforms</span>{' '}
+              Your Knowledge
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              Discover how Accio transforms scattered information into organized intelligence, 
-              making your knowledge work for you instead of against you.
+            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
+              From scattered information to organized intelligence in 4 simple steps. 
+              See how our AI-powered platform makes knowledge management effortless.
             </p>
-            <Button size="lg" asChild>
-              <Link to="/register">
-                Get Started Free
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </Link>
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" asChild>
+                <Link to="/register">Start Your Journey</Link>
+              </Button>
+              <Button variant="outline" size="lg">
+                <PlayCircle className="h-4 w-4 mr-2" />
+                Watch Demo
+              </Button>
+            </div>
           </div>
         </section>
 
-        {/* Steps Section */}
+        {/* How It Works Steps */}
         <section className="py-24">
           <div className="container mx-auto px-4 max-w-6xl">
-            <div className="space-y-24">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">4 Simple Steps to Success</h2>
+              <p className="text-lg text-muted-foreground">
+                Transform chaos into clarity with our intelligent workflow
+              </p>
+            </div>
+
+            <div className="space-y-16">
               {steps.map((step, index) => (
-                <div key={index} className={`grid lg:grid-cols-2 gap-12 items-center ${index % 2 === 1 ? 'lg:flex-row-reverse' : ''}`}>
-                  <div className={index % 2 === 1 ? 'lg:order-2' : ''}>
-                    <div className="flex items-center gap-4 mb-6">
-                      <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-lg">
-                        {index + 1}
+                <div key={index} className="relative">
+                  {/* Connection Line */}
+                  {index < steps.length - 1 && (
+                    <div className="hidden lg:block absolute left-1/2 -bottom-8 w-px h-16 bg-border" />
+                  )}
+                  
+                  <div className={`grid lg:grid-cols-2 gap-12 items-center ${
+                    index % 2 === 1 ? 'lg:grid-flow-col-dense' : ''
+                  }`}>
+                    {/* Content */}
+                    <div className={index % 2 === 1 ? 'lg:col-start-2' : ''}>
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-lg">
+                          {step.step}
+                        </div>
+                        <Badge variant="outline" className="text-sm">
+                          {step.time}
+                        </Badge>
                       </div>
-                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <step.icon className="h-6 w-6 text-primary" />
-                      </div>
+                      
+                      <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
+                      <p className="text-lg text-muted-foreground mb-6">{step.description}</p>
+                      
+                      <ul className="space-y-3">
+                        {step.details.map((detail, detailIndex) => (
+                          <li key={detailIndex} className="flex items-start gap-2">
+                            <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                            <span className="text-muted-foreground">{detail}</span>
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                    <h3 className="text-3xl font-bold mb-4">{step.title}</h3>
-                    <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
-                      {step.description}
-                    </p>
-                    <ul className="space-y-3">
-                      {step.details.map((detail, detailIndex) => (
-                        <li key={detailIndex} className="flex items-center">
-                          <CheckCircle className="h-5 w-5 text-primary mr-3 flex-shrink-0" />
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div className={`bg-gradient-to-br from-primary/5 to-blue-600/5 rounded-2xl p-8 text-center ${index % 2 === 1 ? 'lg:order-1' : ''}`}>
-                    <step.icon className="h-32 w-32 text-primary mx-auto mb-6" />
-                    <div className="bg-background/50 rounded-lg p-4">
-                      <p className="text-sm text-muted-foreground">
-                        Interactive demo for {step.title}
-                      </p>
+
+                    {/* Visual */}
+                    <div className={`${index % 2 === 1 ? 'lg:col-start-1' : ''} flex justify-center`}>
+                      <div className="w-64 h-64 bg-gradient-to-br from-primary/10 to-blue-600/10 rounded-2xl flex items-center justify-center">
+                        <step.icon className="h-24 w-24 text-primary" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -117,43 +177,63 @@ const HowItWorks = () => {
           </div>
         </section>
 
-        {/* Demo Section */}
+        {/* Use Cases */}
         <section className="py-24 bg-muted/20">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h2 className="text-3xl font-bold mb-6">See It In Action</h2>
-            <p className="text-lg text-muted-foreground mb-8">
-              Watch how Accio transforms your workflow in under 2 minutes.
-            </p>
-            
-            <div className="bg-background rounded-2xl p-8 shadow-lg">
-              <div className="aspect-video bg-gradient-to-br from-primary/10 to-blue-600/10 rounded-lg flex items-center justify-center mb-6">
-                <div className="text-center">
-                  <Play className="h-16 w-16 text-primary mx-auto mb-4" />
-                  <p className="text-muted-foreground">Interactive demo video</p>
-                </div>
-              </div>
-              <Button size="lg" asChild>
-                <Link to="/register">Try It Yourself</Link>
-              </Button>
+          <div className="container mx-auto px-4 max-w-6xl">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold mb-4">Perfect for Every Use Case</h2>
+              <p className="text-lg text-muted-foreground">
+                See how professionals across industries use Accio
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8">
+              {useCases.map((useCase, index) => (
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardHeader className="text-center">
+                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                      <useCase.icon className="h-6 w-6 text-primary" />
+                    </div>
+                    <CardTitle className="text-xl">{useCase.title}</CardTitle>
+                    <CardDescription className="text-base">
+                      {useCase.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-2">
+                      {useCase.benefits.map((benefit, benefitIndex) => (
+                        <li key={benefitIndex} className="flex items-center text-sm">
+                          <ArrowRight className="h-4 w-4 text-primary mr-2 flex-shrink-0" />
+                          {benefit}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-24 bg-primary text-primary-foreground">
+        {/* Getting Started */}
+        <section className="py-24">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Knowledge Management?</h2>
-            <p className="text-xl mb-8 opacity-90">
-              Join thousands of professionals who have already discovered the power of AI-driven organization.
+            <h2 className="text-3xl font-bold mb-6">Ready to Get Started?</h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Join thousands of professionals who have transformed their knowledge management with Accio. 
+              Start your free trial today and experience the difference.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" asChild>
-                <Link to="/register">Get Started Free</Link>
+              <Button size="lg" asChild>
+                <Link to="/register">Start Free Trial</Link>
               </Button>
-              <Button variant="outline" size="lg" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
-                <Link to="/features">Explore Features</Link>
+              <Button variant="outline" size="lg" asChild>
+                <Link to="/contact">Schedule Demo</Link>
               </Button>
             </div>
+            <p className="text-sm text-muted-foreground mt-4">
+              No credit card required • Setup in 2 minutes • Cancel anytime
+            </p>
           </div>
         </section>
       </main>

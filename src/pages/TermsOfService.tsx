@@ -2,154 +2,277 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { FileText, Scale, Shield, AlertTriangle } from 'lucide-react';
+import { FileText, Users, Shield, AlertTriangle, CreditCard, Ban } from 'lucide-react';
 
 const TermsOfService = () => {
+  const lastUpdated = '2024-01-15';
+
   const sections = [
     {
+      icon: Users,
       title: 'Acceptance of Terms',
-      content: 'By accessing and using Accio, you accept and agree to be bound by the terms and provision of this agreement. These Terms of Service constitute a legally binding agreement between you and Accio Inc.'
+      content: `By accessing and using Accio, you accept and agree to be bound by the terms and provision of this agreement.
+
+These Terms of Service govern your use of the Accio platform, including all content, services, and features available through our website and mobile applications.
+
+If you do not agree to abide by the above, please do not use this service.`
     },
     {
-      title: 'Description of Service',
-      content: 'Accio is an AI-powered knowledge management platform that helps users organize, discover, and leverage their information. We provide tools for content capture, automatic organization, semantic search, and collaboration features.'
+      icon: FileText,
+      title: 'Use License',
+      content: `Permission is granted to temporarily access and use Accio for personal and commercial purposes under the following conditions:
+
+• You must not modify or copy the materials
+• You must not use the materials for any commercial purpose without our written consent
+• You must not attempt to reverse engineer any software contained on Accio
+• You must not remove any copyright or other proprietary notations from the materials
+
+This license shall automatically terminate if you violate any of these restrictions and may be terminated by us at any time.`
     },
     {
-      title: 'User Account and Responsibilities',
-      content: 'You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account. You must provide accurate information during registration and keep your account information updated.'
+      icon: Shield,
+      title: 'User Accounts',
+      content: `When you create an account with us, you must provide information that is accurate, complete, and current at all times.
+
+You are responsible for:
+• Safeguarding the password and all activities under your account
+• Maintaining the security of your account credentials
+• Immediately notifying us of any unauthorized use of your account
+• Ensuring that your use of the service complies with all applicable laws
+
+We reserve the right to refuse service, terminate accounts, or remove content at our sole discretion.`
     },
     {
-      title: 'Acceptable Use Policy',
-      content: 'You agree not to use Accio for any unlawful purposes or to violate any applicable laws or regulations. Prohibited activities include but are not limited to: harassment, spam, intellectual property infringement, or attempting to gain unauthorized access to our systems.'
+      icon: CreditCard,
+      title: 'Payment Terms',
+      content: `Some features of Accio require payment of fees. You agree to pay all applicable fees for your chosen plan.
+
+• Fees are non-refundable except as required by law or as specifically permitted in our refund policy
+• We reserve the right to change our fees at any time with 30 days notice
+• Your continued use of paid services after fee changes constitutes acceptance of the new fees
+• Failed payments may result in suspension or termination of your account
+
+All payments are processed securely through trusted third-party payment processors.`
     },
     {
-      title: 'Intellectual Property Rights',
-      content: 'You retain ownership of all content you upload to Accio. You grant us a limited license to process and organize your content to provide our services. Our AI technology, software, and platform remain our intellectual property.'
+      icon: Ban,
+      title: 'Prohibited Uses',
+      content: `You may not use Accio for any unlawful purpose or to solicit others to perform unlawful acts. You may not:
+
+• Violate any international, federal, provincial, or state regulations, rules, or laws
+• Transmit or upload any material that contains viruses, trojan horses, or other harmful code
+• Infringe upon or violate our intellectual property rights or the intellectual property rights of others
+• Harass, abuse, insult, harm, defame, slander, disparage, intimidate, or discriminate
+• Submit false or misleading information
+• Upload or transmit content that is illegal, harmful, threatening, abusive, or objectionable`
     },
     {
-      title: 'Privacy and Data Protection',
-      content: 'Your privacy is important to us. Our Privacy Policy, which is incorporated into these terms by reference, explains how we collect, use, and protect your information. We implement industry-standard security measures to protect your data.'
-    },
-    {
-      title: 'Service Availability',
-      content: 'While we strive for 99.9% uptime, we cannot guarantee that Accio will be available at all times. We may need to perform maintenance or updates that temporarily affect service availability. We will provide advance notice when possible.'
-    },
-    {
-      title: 'Limitation of Liability',
-      content: 'To the maximum extent permitted by law, Accio Inc. shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or business opportunities.'
+      icon: AlertTriangle,
+      title: 'Disclaimer',
+      content: `The information on Accio is provided on an "as is" basis. To the fullest extent permitted by law, we exclude:
+
+• All representations and warranties relating to this website and its contents
+• All liability for any direct, indirect, or consequential loss or damage incurred by any user
+
+We do not warrant that:
+• The service will be constantly available or uninterrupted
+• The information will be accurate or reliable
+• The quality of any products or services purchased will meet your expectations`
     }
   ];
 
   return (
     <>
       <Helmet>
-        <title>Terms of Service - Legal Terms & Conditions | Accio</title>
-        <meta name="description" content="Read Accio's Terms of Service covering user rights, responsibilities, and legal terms for using our AI-powered knowledge management platform." />
+        <title>Terms of Service - Accio</title>
+        <meta name="description" content="Read Accio's Terms of Service to understand your rights and responsibilities when using our AI-powered knowledge management platform." />
       </Helmet>
 
       <main className="min-h-screen bg-background">
-        {/* Hero Section */}
+        {/* Header */}
         <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <Badge variant="secondary" className="mb-6">
-              <FileText className="h-3 w-3 mr-1" />
-              Terms of Service
-            </Badge>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              Terms of Service
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
-              These terms govern your use of Accio and outline the rights and responsibilities 
-              of both users and our company.
-            </p>
-            <p className="text-sm text-muted-foreground">
-              Last updated: January 1, 2024
-            </p>
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center mb-12">
+              <FileText className="h-16 w-16 text-primary mx-auto mb-6" />
+              <h1 className="text-4xl md:text-6xl font-bold mb-6">
+                Terms of Service
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                Please read these terms carefully before using our service. 
+                These terms govern your relationship with Accio.
+              </p>
+              <p className="text-sm text-muted-foreground mt-4">
+                Last updated: {new Date(lastUpdated).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Main Content */}
+        {/* Introduction */}
         <section className="py-16">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <Card className="border-0 shadow-lg mb-12">
+              <CardHeader>
+                <CardTitle className="text-2xl">Agreement Overview</CardTitle>
+              </CardHeader>
+              <CardContent className="prose prose-gray max-w-none">
+                <p className="text-muted-foreground leading-relaxed">
+                  Welcome to Accio! These Terms of Service ("Terms") govern your use of our 
+                  AI-powered knowledge management platform operated by Accio Inc. ("us", "we", or "our").
+                </p>
+                <p className="text-muted-foreground leading-relaxed">
+                  Our service allows you to organize, search, and manage your knowledge using 
+                  artificial intelligence. By using our service, you agree to be bound by these Terms. 
+                  If you disagree with any part of these terms, then you may not access the service.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Terms Sections */}
+        <section className="py-16 bg-muted/20">
           <div className="container mx-auto px-4 max-w-4xl">
             <div className="space-y-8">
               {sections.map((section, index) => (
-                <Card key={index}>
+                <Card key={index} className="border-0 shadow-lg">
                   <CardHeader>
-                    <CardTitle className="text-xl">{section.title}</CardTitle>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <section.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <CardTitle className="text-xl">{section.title}</CardTitle>
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{section.content}</p>
+                    <div className="prose prose-gray max-w-none">
+                      <div className="text-muted-foreground whitespace-pre-line leading-relaxed">
+                        {section.content}
+                      </div>
+                    </div>
                   </CardContent>
                 </Card>
               ))}
             </div>
+          </div>
+        </section>
 
-            {/* Additional Important Sections */}
-            <div className="mt-12 space-y-8">
-              <Card className="border-amber-200 bg-amber-50 dark:bg-amber-950 dark:border-amber-800">
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <AlertTriangle className="h-5 w-5 text-amber-600" />
-                    <CardTitle className="text-xl">Termination</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
+        {/* Intellectual Property */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl">Intellectual Property Rights</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="prose prose-gray max-w-none">
                   <p className="text-muted-foreground leading-relaxed">
-                    Either party may terminate this agreement at any time. Upon termination, your access to Accio will cease, 
-                    and you will have 30 days to export your data. We reserve the right to suspend or terminate accounts 
-                    that violate these terms without prior notice.
+                    The service and its original content, features, and functionality are and will 
+                    remain the exclusive property of Accio Inc. and its licensors. The service is 
+                    protected by copyright, trademark, and other laws. Our trademarks and trade dress 
+                    may not be used in connection with any product or service without our prior written consent.
                   </p>
-                </CardContent>
-              </Card>
+                  <p className="text-muted-foreground leading-relaxed mt-4">
+                    You retain ownership of any content you upload to our service. By uploading content, 
+                    you grant us a non-exclusive, worldwide, royalty-free license to use, reproduce, 
+                    and display such content solely for the purpose of providing our service to you.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <Scale className="h-5 w-5 text-primary" />
-                    <CardTitle className="text-xl">Governing Law</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
+        {/* Privacy */}
+        <section className="py-16 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl">Privacy Policy</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="prose prose-gray max-w-none">
                   <p className="text-muted-foreground leading-relaxed">
-                    These terms are governed by the laws of the State of California, United States, without regard to 
-                    conflict of law principles. Any disputes arising from these terms will be resolved through binding 
-                    arbitration in San Francisco, California.
+                    Your privacy is important to us. Our Privacy Policy explains how we collect, 
+                    use, and protect your information when you use our service. By using our service, 
+                    you agree to the collection and use of information in accordance with our Privacy Policy.
                   </p>
-                </CardContent>
-              </Card>
+                  <p className="text-muted-foreground leading-relaxed mt-4">
+                    We do not use your personal content to train our AI models. Your data remains 
+                    private and is processed solely to provide you with our service features.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center gap-3">
-                    <Shield className="h-5 w-5 text-primary" />
-                    <CardTitle className="text-xl">Changes to Terms</CardTitle>
-                  </div>
-                </CardHeader>
-                <CardContent>
+        {/* Termination */}
+        <section className="py-16">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl">Termination</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="prose prose-gray max-w-none">
                   <p className="text-muted-foreground leading-relaxed">
-                    We may modify these terms from time to time. We will notify users of significant changes via email 
-                    or through our platform. Continued use of Accio after changes are posted constitutes acceptance 
-                    of the new terms.
+                    We may terminate or suspend your account immediately, without prior notice or 
+                    liability, for any reason whatsoever, including without limitation if you breach the Terms.
                   </p>
-                </CardContent>
-              </Card>
+                  <p className="text-muted-foreground leading-relaxed mt-4">
+                    You may terminate your account at any time by contacting us. Upon termination, 
+                    your right to use the service will cease immediately. You will have 30 days to 
+                    export your data before it is permanently deleted from our systems.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-xl">Contact Information</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    If you have questions about these Terms of Service, please contact us:
+        {/* Changes to Terms */}
+        <section className="py-16 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <Card className="border-0 shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl">Changes to Terms</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="prose prose-gray max-w-none">
+                  <p className="text-muted-foreground leading-relaxed">
+                    We reserve the right, at our sole discretion, to modify or replace these Terms 
+                    at any time. If a revision is material, we will try to provide at least 30 days 
+                    notice prior to any new terms taking effect.
                   </p>
-                  <div className="space-y-2 text-muted-foreground">
-                    <p>Email: legal@accio.app</p>
-                    <p>Address: 123 Innovation Drive, San Francisco, CA 94105</p>
-                    <p>Phone: +1 (555) 123-4567</p>
-                  </div>
-                </CardContent>
-              </Card>
+                  <p className="text-muted-foreground leading-relaxed mt-4">
+                    By continuing to access or use our service after those revisions become effective, 
+                    you agree to be bound by the revised terms.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Contact Information */}
+        <section className="py-16 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-6">Questions About These Terms?</h2>
+            <p className="text-xl mb-8 opacity-90">
+              If you have any questions about these Terms of Service, please contact us.
+            </p>
+            <div className="space-y-4">
+              <p className="opacity-90">
+                <strong>Email:</strong> legal@accio.app
+              </p>
+              <p className="opacity-90">
+                <strong>Address:</strong> 123 Innovation St, San Francisco, CA 94105
+              </p>
             </div>
           </div>
         </section>

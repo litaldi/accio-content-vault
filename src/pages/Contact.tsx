@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Mail, Phone, MapPin, Clock, MessageCircle, HelpCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Mail, Phone, MapPin, Clock, MessageCircle, Users, Building } from 'lucide-react';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -25,17 +25,16 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
+    // Simulate form submission
     try {
-      // Simulate form submission
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
       
       toast({
         title: "Message sent successfully!",
         description: "We'll get back to you within 24 hours.",
       });
       
-      // Reset form
       setFormData({
         name: '',
         email: '',
@@ -48,7 +47,7 @@ const Contact = () => {
       toast({
         title: "Error sending message",
         description: "Please try again or contact us directly.",
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -59,69 +58,103 @@ const Contact = () => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const contactInfo = [
+  const contactMethods = [
     {
       icon: Mail,
-      title: 'Email Us',
-      description: 'hello@accio.app',
-      details: 'We respond within 24 hours'
-    },
-    {
-      icon: MessageCircle,
-      title: 'Live Chat',
-      description: 'Available 9am-6pm EST',
-      details: 'Monday through Friday'
+      title: 'Email',
+      description: 'Send us an email and we\'ll respond within 24 hours',
+      value: 'hello@accio.app',
+      action: 'mailto:hello@accio.app'
     },
     {
       icon: Phone,
-      title: 'Call Us',
-      description: '+1 (555) 123-4567',
-      details: 'Business hours only'
+      title: 'Phone',
+      description: 'Call us during business hours for immediate assistance',
+      value: '+1 (555) 123-4567',
+      action: 'tel:+15551234567'
     },
     {
       icon: MapPin,
-      title: 'Visit Us',
-      description: 'San Francisco, CA',
-      details: 'By appointment only'
+      title: 'Office',
+      description: 'Visit our headquarters in San Francisco',
+      value: '123 Innovation St, San Francisco, CA 94105',
+      action: '#'
+    },
+    {
+      icon: Clock,
+      title: 'Business Hours',
+      description: 'Monday to Friday, 9 AM to 6 PM PST',
+      value: 'Mon-Fri: 9 AM - 6 PM PST',
+      action: '#'
+    }
+  ];
+
+  const contactTypes = [
+    {
+      icon: MessageCircle,
+      title: 'General Inquiry',
+      description: 'Questions about features, pricing, or getting started'
+    },
+    {
+      icon: Users,
+      title: 'Sales',
+      description: 'Interested in team or enterprise plans'
+    },
+    {
+      icon: Building,
+      title: 'Partnership',
+      description: 'Explore integration or partnership opportunities'
     }
   ];
 
   return (
     <>
       <Helmet>
-        <title>Contact Us - Accio</title>
-        <meta name="description" content="Get in touch with the Accio team. We're here to help with questions, support, or partnership opportunities." />
+        <title>Contact Us - Get in Touch with Accio</title>
+        <meta name="description" content="Contact Accio for support, sales inquiries, or partnership opportunities. We're here to help you with your knowledge management needs." />
       </Helmet>
 
       <main className="min-h-screen bg-background">
-        {/* Hero Section */}
+        {/* Header */}
         <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
           <div className="container mx-auto px-4 max-w-4xl text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Get in Touch
+              Get in{' '}
+              <span className="text-primary">Touch</span>
             </h1>
-            <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
-              Have questions about Accio? Want to explore partnership opportunities? 
-              We'd love to hear from you.
+            <p className="text-xl text-muted-foreground mb-8">
+              Have questions? We'd love to hear from you. Send us a message and 
+              we'll respond as soon as possible.
             </p>
           </div>
         </section>
 
         {/* Contact Methods */}
-        <section className="py-16">
+        <section className="py-16 bg-muted/20">
           <div className="container mx-auto px-4 max-w-6xl">
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-              {contactInfo.map((info, index) => (
-                <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {contactMethods.map((method, index) => (
+                <Card key={index} className="border-0 shadow-lg text-center hover:shadow-xl transition-all duration-300">
                   <CardHeader>
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <info.icon className="h-6 w-6 text-primary" />
+                      <method.icon className="h-6 w-6 text-primary" />
                     </div>
-                    <CardTitle className="text-lg">{info.title}</CardTitle>
+                    <CardTitle className="text-lg">{method.title}</CardTitle>
+                    <CardDescription className="text-sm">
+                      {method.description}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <p className="font-medium mb-2">{info.description}</p>
-                    <p className="text-sm text-muted-foreground">{info.details}</p>
+                    {method.action.startsWith('#') ? (
+                      <p className="text-sm font-medium">{method.value}</p>
+                    ) : (
+                      <a 
+                        href={method.action}
+                        className="text-sm font-medium text-primary hover:underline"
+                      >
+                        {method.value}
+                      </a>
+                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -130,177 +163,157 @@ const Contact = () => {
         </section>
 
         {/* Contact Form */}
-        <section className="py-16 bg-muted/20">
+        <section className="py-24">
           <div className="container mx-auto px-4 max-w-4xl">
-            <div className="grid lg:grid-cols-2 gap-12 items-start">
-              <div>
-                <h2 className="text-3xl font-bold mb-6">Send Us a Message</h2>
-                <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                  Fill out the form and we'll get back to you as soon as possible. 
-                  For urgent matters, please use our live chat or call us directly.
-                </p>
-                
-                <div className="space-y-6">
-                  <div className="flex items-start gap-3">
-                    <Clock className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <h3 className="font-medium mb-1">Response Time</h3>
-                      <p className="text-sm text-muted-foreground">
-                        We typically respond to all inquiries within 24 hours during business days.
-                      </p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start gap-3">
-                    <HelpCircle className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <h3 className="font-medium mb-1">Need Immediate Help?</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Check our FAQ page or use the live chat for instant assistance.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+            <div className="grid lg:grid-cols-3 gap-12">
+              {/* Contact Types */}
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold mb-6">What can we help you with?</h2>
+                {contactTypes.map((type, index) => (
+                  <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <CardHeader className="pb-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                          <type.icon className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                          <CardTitle className="text-lg">{type.title}</CardTitle>
+                          <CardDescription className="text-sm">
+                            {type.description}
+                          </CardDescription>
+                        </div>
+                      </div>
+                    </CardHeader>
+                  </Card>
+                ))}
               </div>
 
-              <Card className="p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="name">Name *</Label>
-                      <Input
-                        id="name"
-                        value={formData.name}
-                        onChange={(e) => handleInputChange('name', e.target.value)}
-                        required
+              {/* Form */}
+              <div className="lg:col-span-2">
+                <Card className="border-0 shadow-xl">
+                  <CardHeader>
+                    <CardTitle className="text-2xl">Send us a message</CardTitle>
+                    <CardDescription>
+                      Fill out the form below and we'll get back to you as soon as possible.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Name *</Label>
+                          <Input
+                            id="name"
+                            value={formData.name}
+                            onChange={(e) => handleInputChange('name', e.target.value)}
+                            placeholder="Your full name"
+                            required
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => handleInputChange('email', e.target.value)}
+                            placeholder="your@email.com"
+                            required
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="company">Company</Label>
+                          <Input
+                            id="company"
+                            value={formData.company}
+                            onChange={(e) => handleInputChange('company', e.target.value)}
+                            placeholder="Your company name"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="type">Inquiry Type</Label>
+                          <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
+                            <SelectTrigger>
+                              <SelectValue placeholder="Select inquiry type" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="general">General Inquiry</SelectItem>
+                              <SelectItem value="sales">Sales</SelectItem>
+                              <SelectItem value="support">Technical Support</SelectItem>
+                              <SelectItem value="partnership">Partnership</SelectItem>
+                              <SelectItem value="press">Press & Media</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="subject">Subject *</Label>
+                        <Input
+                          id="subject"
+                          value={formData.subject}
+                          onChange={(e) => handleInputChange('subject', e.target.value)}
+                          placeholder="Brief description of your inquiry"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Message *</Label>
+                        <Textarea
+                          id="message"
+                          value={formData.message}
+                          onChange={(e) => handleInputChange('message', e.target.value)}
+                          placeholder="Tell us more about your inquiry..."
+                          className="min-h-[120px]"
+                          required
+                        />
+                      </div>
+
+                      <Button 
+                        type="submit" 
+                        size="lg" 
+                        className="w-full"
                         disabled={isSubmitting}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => handleInputChange('email', e.target.value)}
-                        required
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                  </div>
+                      >
+                        {isSubmitting ? 'Sending...' : 'Send Message'}
+                      </Button>
 
-                  <div>
-                    <Label htmlFor="company">Company</Label>
-                    <Input
-                      id="company"
-                      value={formData.company}
-                      onChange={(e) => handleInputChange('company', e.target.value)}
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="type">Inquiry Type</Label>
-                    <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select inquiry type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="general">General Question</SelectItem>
-                        <SelectItem value="support">Technical Support</SelectItem>
-                        <SelectItem value="sales">Sales Inquiry</SelectItem>
-                        <SelectItem value="partnership">Partnership</SelectItem>
-                        <SelectItem value="feedback">Feedback</SelectItem>
-                        <SelectItem value="other">Other</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="subject">Subject *</Label>
-                    <Input
-                      id="subject"
-                      value={formData.subject}
-                      onChange={(e) => handleInputChange('subject', e.target.value)}
-                      required
-                      disabled={isSubmitting}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="message">Message *</Label>
-                    <Textarea
-                      id="message"
-                      rows={6}
-                      value={formData.message}
-                      onChange={(e) => handleInputChange('message', e.target.value)}
-                      required
-                      disabled={isSubmitting}
-                      placeholder="Tell us how we can help..."
-                    />
-                  </div>
-
-                  <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {isSubmitting ? 'Sending...' : 'Send Message'}
-                  </Button>
-                </form>
-              </Card>
+                      <p className="text-xs text-muted-foreground text-center">
+                        By submitting this form, you agree to our privacy policy and 
+                        consent to receive communications from Accio.
+                      </p>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Enterprise Section */}
-        <section className="py-24">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Enterprise Solutions</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                Looking for custom solutions for your organization? Let's discuss your needs.
-              </p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-8">
-              <Card className="p-6 text-center">
-                <CardHeader>
-                  <CardTitle className="text-xl">Custom Deployment</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    On-premise or private cloud deployment options with full customization.
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    Learn More
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="p-6 text-center">
-                <CardHeader>
-                  <CardTitle className="text-xl">API Integration</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Seamlessly integrate Accio's AI capabilities into your existing systems.
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    View API Docs
-                  </Button>
-                </CardContent>
-              </Card>
-              
-              <Card className="p-6 text-center">
-                <CardHeader>
-                  <CardTitle className="text-xl">Enterprise Support</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Dedicated support team with SLA guarantees and priority assistance.
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    Contact Sales
-                  </Button>
-                </CardContent>
-              </Card>
+        {/* Alternative Contact */}
+        <section className="py-24 bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h2 className="text-3xl font-bold mb-6">Need immediate assistance?</h2>
+            <p className="text-xl mb-8 opacity-90">
+              For urgent matters or if you prefer to speak directly with our team.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button variant="secondary" size="lg" asChild>
+                <a href="mailto:hello@accio.app">
+                  <Mail className="h-4 w-4 mr-2" />
+                  Email Us Directly
+                </a>
+              </Button>
+              <Button variant="outline" size="lg" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
+                <a href="tel:+15551234567">
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Now
+                </a>
+              </Button>
             </div>
           </div>
         </section>

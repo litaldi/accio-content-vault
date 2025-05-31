@@ -2,61 +2,79 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface AccessibilityContextType {
-  reducedMotion: boolean;
-  setReducedMotion: (value: boolean) => void;
   highContrast: boolean;
-  setHighContrast: (value: boolean) => void;
+  reducedMotion: boolean;
+  fontSize: 'normal' | 'large' | 'extra-large';
   toggleHighContrast: () => void;
-  fontSize: 'small' | 'medium' | 'large';
-  setFontSize: (size: 'small' | 'medium' | 'large') => void;
+  toggleReducedMotion: () => void;
+  setFontSize: (size: 'normal' | 'large' | 'extra-large') => void;
   announceToScreenReader: (message: string) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
-export const useAccessibility = () => {
-  const context = useContext(AccessibilityContext);
-  if (!context) {
-    throw new Error('useAccessibility must be used within an AccessibilityProvider');
-  }
-  return context;
-};
+interface AccessibilityProviderProps {
+  children: ReactNode;
+}
 
-export const AccessibilityProvider = ({ children }: { children: ReactNode }) => {
-  const [reducedMotion, setReducedMotion] = useState(false);
+export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
   const [highContrast, setHighContrast] = useState(false);
-  const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium');
+  const [reducedMotion, setReducedMotion] = useState(
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+  const [fontSize, setFontSize] = useState<'normal' | 'large' | 'extra-large'>('normal');
 
   const toggleHighContrast = () => {
-    setHighContrast(!highContrast);
+    setHighContrast(prev => !prev);
+    document.documentElement.classList.toggle('high-contrast');
+  };
+
+  const toggleReducedMotion = () => {
+    setReducedMotion(prev => !prev);
+    document.documentElement.classList.toggle('reduce-motion');
+  };
+
+  const handleSetFontSize = (size: 'normal' | 'large' | 'extra-large') => {
+    setFontSize(size);
+    document.documentElement.className = document.documentElement.className
+      .replace(/font-size-\w+/g, '');
+    document.documentElement.classList.add(`font-size-${size}`);
   };
 
   const announceToScreenReader = (message: string) => {
-    // Create a live region for screen reader announcements
-    const announcer = document.getElementById('accessibility-announcer');
-    if (announcer) {
-      announcer.textContent = message;
-      // Clear after a delay to allow for re-announcements of the same message
-      setTimeout(() => {
-        announcer.textContent = '';
-      }, 1000);
-    }
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    
+    document.body.appendChild(announcement);
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
+  };
+
+  const value: AccessibilityContextType = {
+    highContrast,
+    reducedMotion,
+    fontSize,
+    toggleHighContrast,
+    toggleReducedMotion,
+    setFontSize: handleSetFontSize,
+    announceToScreenReader
   };
 
   return (
-    <AccessibilityContext.Provider
-      value={{
-        reducedMotion,
-        setReducedMotion,
-        highContrast,
-        setHighContrast,
-        toggleHighContrast,
-        fontSize,
-        setFontSize,
-        announceToScreenReader,
-      }}
-    >
+    <AccessibilityContext.Provider value={value}>
       {children}
     </AccessibilityContext.Provider>
   );
+};
+
+export const useAccessibility = (): AccessibilityContextType => {
+  const context = useContext(AccessibilityContext);
+  if (context === undefined) {
+    throw new Error('useAccessibility must be used within an AccessibilityProvider');
+  }
+  return context;
 };

@@ -1,322 +1,158 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, Mail, Shield, Bell, Download, Trash2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthContext';
+import { User, Settings, LogOut, Shield, BarChart3, Bell } from 'lucide-react';
+import { Link, Navigate } from 'react-router-dom';
 
 const Profile = () => {
-  const { toast } = useToast();
-  const [isLoading, setIsLoading] = useState(false);
-  const [profileData, setProfileData] = useState({
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    bio: 'Knowledge management enthusiast and productivity expert.',
-    company: 'Tech Corp Inc.',
-    role: 'Senior Product Manager'
-  });
+  const { user, logout, isAuthenticated } = useAuth();
 
-  const handleProfileUpdate = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been successfully updated.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update profile. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  const handleLogout = async () => {
+    await logout();
+  };
+
+  const profileSections = [
+    {
+      icon: User,
+      title: 'Account Information',
+      description: 'Manage your personal information and account settings',
+      action: 'Edit Profile'
+    },
+    {
+      icon: Shield,
+      title: 'Security',
+      description: 'Update your password and security preferences',
+      action: 'Security Settings'
+    },
+    {
+      icon: Bell,
+      title: 'Notifications',
+      description: 'Control how you receive updates and notifications',
+      action: 'Notification Settings'
+    },
+    {
+      icon: BarChart3,
+      title: 'Usage Statistics',
+      description: 'View your knowledge management metrics and insights',
+      action: 'View Stats'
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setProfileData(prev => ({ ...prev, [name]: value }));
-  };
+  ];
 
   return (
     <>
       <Helmet>
-        <title>Profile - Manage Your Account | Accio</title>
-        <meta name="description" content="Manage your Accio profile, account settings, and preferences. Update your information and configure your knowledge management experience." />
+        <title>Profile - Accio</title>
+        <meta name="description" content="Manage your Accio account settings, preferences, and view your knowledge management statistics." />
       </Helmet>
 
       <main className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
-          {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">Profile Settings</h1>
-            <p className="text-muted-foreground">
-              Manage your account information and preferences.
-            </p>
+        {/* Header */}
+        <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center">
+              <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
+                <User className="h-12 w-12 text-primary-foreground" />
+              </div>
+              <h1 className="text-4xl font-bold mb-2">
+                Welcome back, {user?.name || 'User'}!
+              </h1>
+              <p className="text-lg text-muted-foreground mb-4">
+                {user?.email}
+              </p>
+              <p className="text-muted-foreground">
+                Manage your account settings and preferences
+              </p>
+            </div>
           </div>
+        </section>
 
-          <Tabs defaultValue="profile" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="profile">Profile</TabsTrigger>
-              <TabsTrigger value="account">Account</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              <TabsTrigger value="data">Data & Privacy</TabsTrigger>
-            </TabsList>
+        {/* Profile Sections */}
+        <section className="py-24">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="grid md:grid-cols-2 gap-6">
+              {profileSections.map((section, index) => (
+                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardHeader>
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+                        <section.icon className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle className="text-xl">{section.title}</CardTitle>
+                        <CardDescription>{section.description}</CardDescription>
+                      </div>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Button variant="outline" className="w-full">
+                      {section.action}
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
 
-            {/* Profile Tab */}
-            <TabsContent value="profile">
-              <Card>
+        {/* Quick Stats */}
+        <section className="py-16 bg-muted/20">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <h2 className="text-2xl font-bold mb-8 text-center">Your Knowledge Stats</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              <Card className="border-0 shadow-lg text-center">
                 <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-20 w-20">
-                      <AvatarFallback className="text-lg">
-                        {profileData.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <CardTitle>Profile Information</CardTitle>
-                      <CardDescription>
-                        Update your personal information and bio.
-                      </CardDescription>
-                    </div>
-                  </div>
+                  <CardTitle className="text-3xl font-bold text-primary">247</CardTitle>
+                  <CardDescription>Documents Organized</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <form onSubmit={handleProfileUpdate} className="space-y-6">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="name">Full Name</Label>
-                        <Input
-                          id="name"
-                          name="name"
-                          value={profileData.name}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          value={profileData.email}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="company">Company</Label>
-                        <Input
-                          id="company"
-                          name="company"
-                          value={profileData.company}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="role">Role</Label>
-                        <Input
-                          id="role"
-                          name="role"
-                          value={profileData.role}
-                          onChange={handleInputChange}
-                          disabled={isLoading}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="bio">Bio</Label>
-                      <Textarea
-                        id="bio"
-                        name="bio"
-                        value={profileData.bio}
-                        onChange={handleInputChange}
-                        disabled={isLoading}
-                        rows={4}
-                        placeholder="Tell us a bit about yourself..."
-                      />
-                    </div>
-
-                    <Button type="submit" disabled={isLoading}>
-                      {isLoading ? 'Updating...' : 'Update Profile'}
-                    </Button>
-                  </form>
-                </CardContent>
               </Card>
-            </TabsContent>
-
-            {/* Account Tab */}
-            <TabsContent value="account">
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Shield className="h-5 w-5" />
-                      Account Security
-                    </CardTitle>
-                    <CardDescription>
-                      Manage your password and security settings.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Password</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Last changed 3 months ago
-                        </p>
-                      </div>
-                      <Button variant="outline">Change Password</Button>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Two-Factor Authentication</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Add an extra layer of security
-                        </p>
-                      </div>
-                      <Badge variant="outline">Not Enabled</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Subscription</CardTitle>
-                    <CardDescription>
-                      Manage your current plan and billing information.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Current Plan</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Pro Plan - $12/month
-                        </p>
-                      </div>
-                      <Button variant="outline">Manage Billing</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </TabsContent>
-
-            {/* Notifications Tab */}
-            <TabsContent value="notifications">
-              <Card>
+              <Card className="border-0 shadow-lg text-center">
                 <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Bell className="h-5 w-5" />
-                    Notification Preferences
-                  </CardTitle>
-                  <CardDescription>
-                    Configure how and when you receive notifications.
-                  </CardDescription>
+                  <CardTitle className="text-3xl font-bold text-primary">52</CardTitle>
+                  <CardDescription>Collections Created</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Email Notifications</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Receive updates about your account and activity
-                        </p>
-                      </div>
-                      <input type="checkbox" defaultChecked className="toggle" />
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">Weekly Digest</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Summary of your knowledge activity
-                        </p>
-                      </div>
-                      <input type="checkbox" defaultChecked className="toggle" />
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-medium">AI Insights</h4>
-                        <p className="text-sm text-muted-foreground">
-                          Get notified about AI-discovered patterns
-                        </p>
-                      </div>
-                      <input type="checkbox" className="toggle" />
-                    </div>
-                  </div>
-                </CardContent>
               </Card>
-            </TabsContent>
+              <Card className="border-0 shadow-lg text-center">
+                <CardHeader>
+                  <CardTitle className="text-3xl font-bold text-primary">1,432</CardTitle>
+                  <CardDescription>Searches Performed</CardDescription>
+                </CardHeader>
+              </Card>
+            </div>
+          </div>
+        </section>
 
-            {/* Data & Privacy Tab */}
-            <TabsContent value="data">
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Download className="h-5 w-5" />
-                      Data Export
-                    </CardTitle>
-                    <CardDescription>
-                      Download all your data in a portable format.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Export all your saved content, tags, and metadata. This may take a few minutes to prepare.
-                    </p>
-                    <Button variant="outline">
-                      <Download className="h-4 w-4 mr-2" />
-                      Export Data
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                <Card className="border-destructive">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-destructive">
-                      <Trash2 className="h-5 w-5" />
-                      Delete Account
-                    </CardTitle>
-                    <CardDescription>
-                      Permanently delete your account and all associated data.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      This action cannot be undone. All your content, settings, and account data will be permanently deleted.
-                    </p>
-                    <Button variant="destructive">
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete Account
-                    </Button>
-                  </CardContent>
-                </Card>
+        {/* Account Actions */}
+        <section className="py-24">
+          <div className="container mx-auto px-4 max-w-4xl">
+            <div className="text-center space-y-6">
+              <h2 className="text-2xl font-bold">Account Actions</h2>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/">
+                    <Settings className="h-4 w-4 mr-2" />
+                    Dashboard
+                  </Link>
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  size="lg"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
               </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
