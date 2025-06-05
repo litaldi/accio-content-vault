@@ -76,6 +76,20 @@ const Home = () => {
                 Accio's AI-powered platform automatically organizes your scattered information, 
                 making it instantly searchable and actionable. Never lose important knowledge again.
               </p>
+              
+              {/* Enhanced Search Demo */}
+              <div className="max-w-md mx-auto" data-tour="search-demo">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl" />
+                  <div className="relative bg-background/95 backdrop-blur-sm border border-primary/20 rounded-lg p-4">
+                    <div className="flex items-center gap-3 text-muted-foreground">
+                      <Search className="h-5 w-5" />
+                      <span className="text-lg">Try: "productivity tips for remote work"</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
                 <Button size="lg" className="text-lg px-8 py-6" asChild>
                   <Link to="/register">Get Started Free</Link>
@@ -91,7 +105,7 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Features Section */}
+        {/* Features Section with Demo Elements */}
         <section className="py-24 bg-muted/20">
           <div className="container mx-auto px-4 max-w-6xl">
             <div className="text-center mb-16">
@@ -103,7 +117,7 @@ const Home = () => {
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
               {features.map((feature, index) => (
-                <Card key={index} className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow">
+                <Card key={index} className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow" data-tour={index === 0 ? "ai-organization" : undefined}>
                   <CardHeader>
                     <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
                       <feature.icon className="h-6 w-6 text-primary" />
@@ -112,6 +126,13 @@ const Home = () => {
                   </CardHeader>
                   <CardContent>
                     <p className="text-muted-foreground">{feature.description}</p>
+                    {index === 0 && (
+                      <div className="mt-4 flex flex-wrap gap-1" data-tour="ai-tags">
+                        <Badge variant="secondary" className="text-xs">AI</Badge>
+                        <Badge variant="secondary" className="text-xs">Smart</Badge>
+                        <Badge variant="secondary" className="text-xs">Auto</Badge>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               ))}
@@ -150,6 +171,50 @@ const Home = () => {
                   </CardContent>
                 </Card>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Actions Demo */}
+        <section className="py-16 bg-muted/10">
+          <div className="container mx-auto px-4 max-w-4xl text-center">
+            <h3 className="text-2xl font-bold mb-6">Quick Actions</h3>
+            <div className="grid md:grid-cols-3 gap-4">
+              <Card className="p-4 hover:shadow-lg transition-shadow" data-tour="save-button">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <BookOpen className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium">Save Content</p>
+                    <p className="text-sm text-muted-foreground">One-click capture</p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className="p-4 hover:shadow-lg transition-shadow">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Search className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium">Smart Search</p>
+                    <p className="text-sm text-muted-foreground">⌘K to search</p>
+                  </div>
+                </div>
+              </Card>
+              
+              <Card className="p-4 hover:shadow-lg transition-shadow">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                    <Brain className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium">AI Organize</p>
+                    <p className="text-sm text-muted-foreground">Auto-categorize</p>
+                  </div>
+                </div>
+              </Card>
             </div>
           </div>
         </section>
