@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Search, Zap, Shield, Users, Star } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Brain, Search, Zap, Shield, Users, Star, BookOpen } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
