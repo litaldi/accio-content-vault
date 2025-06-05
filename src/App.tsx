@@ -8,6 +8,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { Toaster } from '@/components/ui/toaster';
 import UnifiedMegaMenu from '@/components/navigation/UnifiedMegaMenu';
 import GlobalFooter from '@/components/layout/GlobalFooter';
+import SkipToContent from '@/components/accessibility/SkipToContent';
 
 // Pages
 import Home from '@/pages/Home';
@@ -41,9 +42,10 @@ function App() {
                 <link rel="canonical" href="https://accio.app" />
               </Helmet>
 
+              <SkipToContent />
               <UnifiedMegaMenu />
               
-              <main className="flex-1">
+              <main className="flex-1" id="main-content" tabIndex={-1}>
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />

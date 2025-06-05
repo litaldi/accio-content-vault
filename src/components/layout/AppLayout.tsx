@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import MainNavigation from '@/components/navigation/MainNavigation';
 import MarketingFooter from '@/components/marketing/MarketingFooter';
 import FooterNavigation from '@/components/navigation/FooterNavigation';
+import SkipToContent from '@/components/accessibility/SkipToContent';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -32,6 +33,7 @@ export const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
   return (
     <div className="flex flex-col min-h-screen">
+      <SkipToContent />
       {shouldShowMainNav && <MainNavigation />}
       
       <main 
