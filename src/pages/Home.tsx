@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { EnhancedButton } from '@/components/ui/enhanced-button';
+import { EnhancedCard, EnhancedCardContent, EnhancedCardDescription, EnhancedCardHeader, EnhancedCardTitle } from '@/components/ui/enhanced-card';
 import { Badge } from '@/components/ui/badge';
-import { Brain, Search, Zap, Shield, Users, Star, BookOpen } from 'lucide-react';
+import { Brain, Search, Zap, Shield, Users, Star, BookOpen, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
@@ -64,179 +65,238 @@ const Home = () => {
 
       <main className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="relative py-24 overflow-hidden">
+        <section className="relative section-spacing overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-blue-600/5" />
           <div className="relative container mx-auto px-4 max-w-6xl">
-            <div className="text-center space-y-8">
-              <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+            <div className="text-center space-12">
+              <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-8">
                 Transform Knowledge Into{' '}
                 <span className="text-primary">Intelligence</span>
               </h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-12">
                 Accio's AI-powered platform automatically organizes your scattered information, 
                 making it instantly searchable and actionable. Never lose important knowledge again.
               </p>
               
               {/* Enhanced Search Demo */}
-              <div className="max-w-md mx-auto" data-tour="search-demo">
+              <div className="max-w-md mx-auto mb-12" data-tour="search-demo">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl" />
-                  <div className="relative bg-background/95 backdrop-blur-sm border border-primary/20 rounded-lg p-4">
-                    <div className="flex items-center gap-3 text-muted-foreground">
-                      <Search className="h-5 w-5" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-xl blur-xl" />
+                  <div className="relative bg-background/95 backdrop-blur-sm border border-primary/20 rounded-xl p-6">
+                    <div className="flex items-center gap-4 text-muted-foreground">
+                      <Search className="h-6 w-6" />
                       <span className="text-lg">Try: "productivity tips for remote work"</span>
                     </div>
                   </div>
                 </div>
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-                <Button size="lg" className="text-lg px-8 py-6" asChild>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+                <EnhancedButton 
+                  size="lg" 
+                  emphasis="high"
+                  showArrow
+                  asChild
+                >
                   <Link to="/register">Get Started Free</Link>
-                </Button>
-                <Button variant="outline" size="lg" className="text-lg px-8 py-6" asChild>
+                </EnhancedButton>
+                <EnhancedButton 
+                  variant="secondary" 
+                  size="lg"
+                  emphasis="medium"
+                  asChild
+                >
                   <Link to="/features">Explore Features</Link>
-                </Button>
+                </EnhancedButton>
               </div>
-              <div className="pt-4 text-sm text-muted-foreground">
-                ✨ No credit card required • 🚀 Setup in 2 minutes • 🔒 Enterprise-grade security
+              
+              <div className="text-sm text-muted-foreground space-y-3">
+                <div className="flex flex-wrap justify-center gap-6">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-success" />
+                    <span>No credit card required</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-warning" />
+                    <span>Setup in 2 minutes</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Brain className="h-4 w-4 text-primary" />
+                    <span>Enterprise-grade security</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Features Section with Demo Elements */}
-        <section className="py-24 bg-muted/20">
+        {/* Features Section */}
+        <section className="section-spacing bg-muted/20">
           <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Why Choose Accio?</h2>
+            <div className="text-center mb-16 space-6">
+              <h2 className="text-3xl font-bold mb-6">Why Choose Accio?</h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Built for modern professionals who need to manage information efficiently
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid-features">
               {features.map((feature, index) => (
-                <Card key={index} className="text-center border-0 shadow-lg hover:shadow-xl transition-shadow" data-tour={index === 0 ? "ai-organization" : undefined}>
-                  <CardHeader>
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                      <feature.icon className="h-6 w-6 text-primary" />
+                <EnhancedCard 
+                  key={index} 
+                  variant="interactive"
+                  padding="lg"
+                  spacing="relaxed"
+                  className="text-center"
+                  data-tour={index === 0 ? "ai-organization" : undefined}
+                >
+                  <EnhancedCardHeader>
+                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                      <feature.icon className="h-8 w-8 text-primary" />
                     </div>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    <EnhancedCardTitle className="text-xl">{feature.title}</EnhancedCardTitle>
+                  </EnhancedCardHeader>
+                  <EnhancedCardContent>
+                    <EnhancedCardDescription>{feature.description}</EnhancedCardDescription>
                     {index === 0 && (
-                      <div className="mt-4 flex flex-wrap gap-1" data-tour="ai-tags">
+                      <div className="flex flex-wrap gap-2 justify-center mt-6" data-tour="ai-tags">
                         <Badge variant="secondary" className="text-xs">AI</Badge>
                         <Badge variant="secondary" className="text-xs">Smart</Badge>
                         <Badge variant="secondary" className="text-xs">Auto</Badge>
                       </div>
                     )}
-                  </CardContent>
-                </Card>
+                  </EnhancedCardContent>
+                </EnhancedCard>
               ))}
             </div>
           </div>
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-24">
+        <section className="section-spacing">
           <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Trusted by Professionals</h2>
+            <div className="text-center mb-16 space-6">
+              <h2 className="text-3xl font-bold mb-6">Trusted by Professionals</h2>
               <p className="text-lg text-muted-foreground">
                 See what our users are saying about Accio
               </p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid-features">
               {testimonials.map((testimonial, index) => (
-                <Card key={index} className="border-0 shadow-lg">
-                  <CardHeader>
-                    <div className="flex items-center gap-1 mb-2">
+                <EnhancedCard 
+                  key={index} 
+                  variant="elevated"
+                  padding="lg"
+                  spacing="relaxed"
+                >
+                  <EnhancedCardHeader>
+                    <div className="flex items-center gap-1 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="h-5 w-5 fill-warning text-warning" />
                       ))}
                     </div>
-                    <CardDescription className="text-base leading-relaxed">
+                    <EnhancedCardDescription className="text-base leading-relaxed">
                       "{testimonial.content}"
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-sm">
-                      <div className="font-medium">{testimonial.name}</div>
+                    </EnhancedCardDescription>
+                  </EnhancedCardHeader>
+                  <EnhancedCardContent>
+                    <div className="text-sm space-y-1">
+                      <div className="font-semibold text-foreground">{testimonial.name}</div>
                       <div className="text-muted-foreground">{testimonial.role}</div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </EnhancedCardContent>
+                </EnhancedCard>
               ))}
             </div>
           </div>
         </section>
 
         {/* Quick Actions Demo */}
-        <section className="py-16 bg-muted/10">
+        <section className="section-spacing-sm bg-muted/10">
           <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h3 className="text-2xl font-bold mb-6">Quick Actions</h3>
-            <div className="grid md:grid-cols-3 gap-4">
-              <Card className="p-4 hover:shadow-lg transition-shadow" data-tour="save-button">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <BookOpen className="h-5 w-5 text-primary" />
+            <h3 className="text-2xl font-bold mb-8">Quick Actions</h3>
+            <div className="grid-features max-w-3xl mx-auto">
+              <EnhancedCard 
+                variant="interactive" 
+                padding="lg"
+                data-tour="save-button"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                    <BookOpen className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <p className="font-medium">Save Content</p>
+                    <p className="font-semibold text-foreground">Save Content</p>
                     <p className="text-sm text-muted-foreground">One-click capture</p>
                   </div>
                 </div>
-              </Card>
+              </EnhancedCard>
               
-              <Card className="p-4 hover:shadow-lg transition-shadow">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Search className="h-5 w-5 text-primary" />
+              <EnhancedCard variant="interactive" padding="lg">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                    <Search className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <p className="font-medium">Smart Search</p>
+                    <p className="font-semibold text-foreground">Smart Search</p>
                     <p className="text-sm text-muted-foreground">⌘K to search</p>
                   </div>
                 </div>
-              </Card>
+              </EnhancedCard>
               
-              <Card className="p-4 hover:shadow-lg transition-shadow">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                    <Brain className="h-5 w-5 text-primary" />
+              <EnhancedCard variant="interactive" padding="lg">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center">
+                    <Brain className="h-6 w-6 text-primary" />
                   </div>
                   <div className="text-left">
-                    <p className="font-medium">AI Organize</p>
+                    <p className="font-semibold text-foreground">AI Organize</p>
                     <p className="text-sm text-muted-foreground">Auto-categorize</p>
                   </div>
                 </div>
-              </Card>
+              </EnhancedCard>
             </div>
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-primary text-primary-foreground">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
+        <section className="section-spacing bg-primary text-primary-foreground">
+          <div className="container mx-auto px-4 max-w-4xl text-center space-8">
             <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Knowledge?</h2>
             <p className="text-xl mb-8 opacity-90">
               Join thousands of professionals who have revolutionized their information management with Accio.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="text-lg px-8 py-6" asChild>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <EnhancedButton 
+                variant="secondary" 
+                size="lg"
+                emphasis="high"
+                showArrow
+                asChild
+              >
                 <Link to="/register">Start Free Trial</Link>
-              </Button>
-              <Button variant="outline" size="lg" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary text-lg px-8 py-6" asChild>
+              </EnhancedButton>
+              <EnhancedButton 
+                variant="outline" 
+                size="lg"
+                className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary"
+                asChild
+              >
                 <Link to="/contact">Contact Sales</Link>
-              </Button>
+              </EnhancedButton>
             </div>
           </div>
         </section>
       </main>
+
+      {/* Floating Action Button for Mobile */}
+      <EnhancedButton
+        size="fab"
+        className="lg:hidden"
+        aria-label="Quick capture"
+        leftIcon={<BookOpen className="h-6 w-6" />}
+      />
     </>
   );
 };
