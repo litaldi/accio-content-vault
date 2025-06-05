@@ -1,4 +1,3 @@
-
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
@@ -65,7 +64,7 @@ const EnhancedCard = React.forwardRef<HTMLDivElement, EnhancedCardProps>(
         onKeyDown={onClick ? (e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
-            onClick();
+            onClick(e as any);
           }
         } : undefined}
         {...props}
