@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '../utils/test-utils';
 import { axe } from 'jest-axe';
-import SkipToContent from '@/components/SkipToContent';
+import SkipToContent from '@/components/accessibility/SkipToContent';
 import { useToast } from '@/hooks/use-toast';
 
 // Mock the useToast hook

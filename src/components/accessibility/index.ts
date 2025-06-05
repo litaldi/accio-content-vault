@@ -2,5 +2,5 @@
 export { default as SkipToContent } from './SkipToContent';
 export { AccessibilityAnnouncer } from './AccessibilityAnnouncer';
 export { AccessibilitySettings } from './AccessibilitySettings';
-export { AccessibilityToolbar } from './AccessibilityToolbar';
-export { FocusManager } from './FocusManager';
+export { default as AccessibilityToolbar } from './AccessibilityToolbar';
+export { default as FocusManager } from './FocusManager';
