@@ -1,71 +1,95 @@
 
-import React, { useEffect, useRef, ReactNode } from 'react';
-import { trapFocus, getFocusableElements } from '@/utils/accessibility';
+import React, { useEffect, useRef, useCallback } from 'react';
 
 interface FocusManagerProps {
-  children: ReactNode;
-  enabled?: boolean;
+  children: React.ReactNode;
+  trapFocus?: boolean;
   restoreFocus?: boolean;
   autoFocus?: boolean;
-  className?: string;
 }
 
 const FocusManager: React.FC<FocusManagerProps> = ({
   children,
-  enabled = true,
+  trapFocus = false,
   restoreFocus = true,
-  autoFocus = true,
-  className
+  autoFocus = false
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const previouslyFocusedElement = useRef<HTMLElement | null>(null);
 
-  useEffect(() => {
-    if (!enabled || !containerRef.current) return;
+  const getFocusableElements = useCallback(() => {
+    if (!containerRef.current) return [];
+    
+    const focusableSelectors = [
+      'button:not([disabled])',
+      '[href]',
+      'input:not([disabled])',
+      'select:not([disabled])',
+      'textarea:not([disabled])',
+      '[tabindex]:not([tabindex="-1"])',
+      '[contenteditable="true"]'
+    ];
+    
+    const focusableElements = containerRef.current.querySelectorAll(
+      focusableSelectors.join(', ')
+    ) as NodeListOf<HTMLElement>;
+    
+    return Array.from(focusableElements).filter(element => {
+      return element.offsetParent !== null && !element.hasAttribute('disabled');
+    });
+  }, []);
 
-    // Store the previously focused element
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
+    if (!trapFocus || event.key !== 'Tab') return;
+
+    const focusableElements = getFocusableElements();
+    if (focusableElements.length === 0) return;
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey) {
+      if (document.activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      }
+    } else {
+      if (document.activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
+      }
+    }
+  }, [trapFocus, getFocusableElements]);
+
+  useEffect(() => {
     if (restoreFocus) {
       previouslyFocusedElement.current = document.activeElement as HTMLElement;
     }
 
-    // Auto-focus the first focusable element
     if (autoFocus) {
-      const focusableElements = getFocusableElements(containerRef.current);
-      const firstElement = focusableElements[0];
-      if (firstElement) {
-        firstElement.focus();
+      const focusableElements = getFocusableElements();
+      if (focusableElements.length > 0) {
+        focusableElements[0].focus();
       }
     }
 
-    // Set up focus trap
-    const cleanup = trapFocus(containerRef.current);
+    if (trapFocus) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
 
     return () => {
-      cleanup();
-      
-      // Restore focus to previously focused element
+      if (trapFocus) {
+        document.removeEventListener('keydown', handleKeyDown);
+      }
+
       if (restoreFocus && previouslyFocusedElement.current) {
-        try {
-          previouslyFocusedElement.current.focus();
-        } catch (error) {
-          // Element might no longer be in the DOM
-          console.warn('Could not restore focus to previous element:', error);
-        }
+        previouslyFocusedElement.current.focus();
       }
     };
-  }, [enabled, restoreFocus, autoFocus]);
-
-  if (!enabled) {
-    return <>{children}</>;
-  }
+  }, [trapFocus, restoreFocus, autoFocus, handleKeyDown, getFocusableElements]);
 
   return (
-    <div
-      ref={containerRef}
-      className={className}
-      role="region"
-      aria-label="Focus managed content"
-    >
+    <div ref={containerRef} className="focus-manager">
       {children}
     </div>
   );

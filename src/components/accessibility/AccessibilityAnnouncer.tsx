@@ -1,45 +1,77 @@
 
-import React, { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
+import React, { createContext, useContext, useCallback, useRef } from 'react';
 
-interface AccessibilityAnnouncerProps {
+interface AccessibilityAnnouncerContextType {
+  announce: (message: string, priority?: 'polite' | 'assertive') => void;
+  announceNavigation: (page: string) => void;
+  announceAction: (action: string, result?: string) => void;
+}
+
+const AccessibilityAnnouncerContext = createContext<AccessibilityAnnouncerContextType | undefined>(undefined);
+
+export const useAccessibilityAnnouncer = () => {
+  const context = useContext(AccessibilityAnnouncerContext);
+  if (!context) {
+    throw new Error('useAccessibilityAnnouncer must be used within an AccessibilityAnnouncerProvider');
+  }
+  return context;
+};
+
+interface AccessibilityAnnouncerProviderProps {
   children: React.ReactNode;
 }
 
-export const AccessibilityAnnouncer: React.FC<AccessibilityAnnouncerProps> = ({ children }) => {
-  const location = useLocation();
-  const { announceToScreenReader } = useAccessibility();
+export const AccessibilityAnnouncerProvider: React.FC<AccessibilityAnnouncerProviderProps> = ({ children }) => {
+  const politeRef = useRef<HTMLDivElement>(null);
+  const assertiveRef = useRef<HTMLDivElement>(null);
 
-  // Announce route changes
-  useEffect(() => {
-    const pageTitle = document.title;
-    announceToScreenReader(`Navigated to ${pageTitle}`);
-  }, [location.pathname, announceToScreenReader]);
+  const announce = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
+    const targetRef = priority === 'assertive' ? assertiveRef : politeRef;
+    
+    if (targetRef.current) {
+      // Clear and then set the message to ensure it's announced
+      targetRef.current.textContent = '';
+      setTimeout(() => {
+        if (targetRef.current) {
+          targetRef.current.textContent = message;
+        }
+      }, 100);
+    }
+  }, []);
+
+  const announceNavigation = useCallback((page: string) => {
+    announce(`Navigated to ${page}`, 'polite');
+  }, [announce]);
+
+  const announceAction = useCallback((action: string, result?: string) => {
+    const message = result ? `${action}. ${result}` : action;
+    announce(message, 'polite');
+  }, [announce]);
+
+  const value = {
+    announce,
+    announceNavigation,
+    announceAction
+  };
 
   return (
-    <>
+    <AccessibilityAnnouncerContext.Provider value={value}>
       {children}
-      
-      {/* Live region for announcements */}
+      {/* Screen reader announcement regions */}
       <div
-        id="accessibility-announcer"
+        ref={politeRef}
         aria-live="polite"
         aria-atomic="true"
         className="sr-only"
-        role="status"
       />
-      
-      {/* Alert region for urgent announcements */}
       <div
-        id="accessibility-alerts"
+        ref={assertiveRef}
         aria-live="assertive"
         aria-atomic="true"
         className="sr-only"
-        role="alert"
       />
-    </>
+    </AccessibilityAnnouncerContext.Provider>
   );
 };
 
-export default AccessibilityAnnouncer;
+export const AccessibilityAnnouncer = AccessibilityAnnouncerProvider;

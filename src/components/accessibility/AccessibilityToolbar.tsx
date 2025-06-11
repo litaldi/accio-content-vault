@@ -1,141 +1,159 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
-import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { 
+  Accessibility, 
   Type, 
   Eye, 
-  RotateCcw,
-  Zap,
-  ZapOff
+  MousePointer, 
+  Palette, 
+  Volume2,
+  Settings,
+  X
 } from 'lucide-react';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 
 const AccessibilityToolbar: React.FC = () => {
-  const {
-    fontSize,
-    setFontSize,
-    highContrast,
-    setHighContrast,
+  const [isOpen, setIsOpen] = useState(false);
+  const { 
+    fontSize, 
+    setFontSize, 
+    highContrast, 
+    toggleHighContrast,
     reducedMotion,
-    setReducedMotion,
-    announceToScreenReader
+    toggleReducedMotion
   } = useAccessibility();
 
-  const handleFontSizeChange = (size: 'small' | 'medium' | 'large') => {
-    setFontSize(size);
-    announceToScreenReader(`Font size changed to ${size}`);
-  };
+  const fontSizeOptions = [
+    { value: 'small', label: 'Small', size: 'text-sm' },
+    { value: 'medium', label: 'Medium', size: 'text-base' },
+    { value: 'large', label: 'Large', size: 'text-lg' },
+    { value: 'extra-large', label: 'Extra Large', size: 'text-xl' }
+  ] as const;
 
-  const handleHighContrastToggle = () => {
-    const newValue = !highContrast;
-    setHighContrast(newValue);
-    announceToScreenReader(`High contrast ${newValue ? 'enabled' : 'disabled'}`);
-  };
-
-  const handleReducedMotionToggle = () => {
-    const newValue = !reducedMotion;
-    setReducedMotion(newValue);
-    announceToScreenReader(`Reduced motion ${newValue ? 'enabled' : 'disabled'}`);
-  };
-
-  const resetSettings = () => {
-    setFontSize('medium');
-    setHighContrast(false);
-    setReducedMotion(false);
-    announceToScreenReader('Accessibility settings reset to default');
-  };
+  if (!isOpen) {
+    return (
+      <Button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-4 right-4 z-50 rounded-full w-12 h-12 shadow-lg"
+        aria-label="Open accessibility options"
+      >
+        <Accessibility className="h-5 w-5" />
+      </Button>
+    );
+  }
 
   return (
-    <div className="space-y-6" role="group" aria-label="Accessibility controls">
-      {/* Font Size Controls */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-medium flex items-center gap-2">
-          <Type className="h-4 w-4" />
-          Font Size
-        </h3>
-        <div className="grid grid-cols-3 gap-2">
+    <Card className="fixed bottom-4 right-4 z-50 w-80 shadow-xl">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Accessibility className="h-5 w-5 text-primary" />
+            <h3 className="font-semibold">Accessibility Options</h3>
+          </div>
           <Button
-            variant={fontSize === 'small' ? 'default' : 'outline'}
+            variant="ghost"
             size="sm"
-            onClick={() => handleFontSizeChange('small')}
-            className="text-xs"
-            aria-pressed={fontSize === 'small'}
+            onClick={() => setIsOpen(false)}
+            aria-label="Close accessibility options"
           >
-            Small
-          </Button>
-          <Button
-            variant={fontSize === 'medium' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => handleFontSizeChange('medium')}
-            className="text-sm"
-            aria-pressed={fontSize === 'medium'}
-          >
-            Medium
-          </Button>
-          <Button
-            variant={fontSize === 'large' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => handleFontSizeChange('large')}
-            className="text-base"
-            aria-pressed={fontSize === 'large'}
-          >
-            Large
+            <X className="h-4 w-4" />
           </Button>
         </div>
-      </div>
 
-      <Separator />
+        <div className="space-y-4">
+          {/* Font Size */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Type className="h-4 w-4 text-muted-foreground" />
+              <label className="text-sm font-medium">Font Size</label>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {fontSizeOptions.map((option) => (
+                <Button
+                  key={option.value}
+                  variant={fontSize === option.value ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setFontSize(option.value)}
+                  className="justify-start"
+                >
+                  <span className={option.size}>{option.label}</span>
+                </Button>
+              ))}
+            </div>
+          </div>
 
-      {/* High Contrast Toggle */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-medium flex items-center gap-2">
-          <Eye className="h-4 w-4" />
-          Visual
-        </h3>
-        <Button
-          variant={highContrast ? 'default' : 'outline'}
-          size="sm"
-          onClick={handleHighContrastToggle}
-          className="w-full justify-start gap-2"
-          aria-pressed={highContrast}
-        >
-          High Contrast
-        </Button>
-      </div>
+          {/* High Contrast */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Palette className="h-4 w-4 text-muted-foreground" />
+              <label className="text-sm font-medium">Visual</label>
+            </div>
+            <div className="space-y-2">
+              <Button
+                variant={highContrast ? "default" : "outline"}
+                size="sm"
+                onClick={toggleHighContrast}
+                className="w-full justify-start"
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                High Contrast
+                {highContrast && <Badge variant="secondary" className="ml-auto">On</Badge>}
+              </Button>
+              <Button
+                variant={reducedMotion ? "default" : "outline"}
+                size="sm"
+                onClick={toggleReducedMotion}
+                className="w-full justify-start"
+              >
+                <MousePointer className="h-4 w-4 mr-2" />
+                Reduce Motion
+                {reducedMotion && <Badge variant="secondary" className="ml-auto">On</Badge>}
+              </Button>
+            </div>
+          </div>
 
-      <Separator />
-
-      {/* Motion Controls */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-medium flex items-center gap-2">
-          {reducedMotion ? <ZapOff className="h-4 w-4" /> : <Zap className="h-4 w-4" />}
-          Motion
-        </h3>
-        <Button
-          variant={reducedMotion ? 'default' : 'outline'}
-          size="sm"
-          onClick={handleReducedMotionToggle}
-          className="w-full justify-start gap-2"
-          aria-pressed={reducedMotion}
-        >
-          Reduce Motion
-        </Button>
-      </div>
-
-      <Separator />
-
-      {/* Reset Button */}
-      <Button
-        variant="ghost"
-        size="sm"
-        onClick={resetSettings}
-        className="w-full justify-start gap-2 hover:bg-muted"
-      >
-        <RotateCcw className="h-4 w-4" />
-        Reset to Default
-      </Button>
-    </div>
+          {/* Quick Actions */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Settings className="h-4 w-4 text-muted-foreground" />
+              <label className="text-sm font-medium">Quick Actions</label>
+            </div>
+            <div className="space-y-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const mainContent = document.getElementById('main-content');
+                  if (mainContent) {
+                    mainContent.scrollIntoView({ behavior: 'smooth' });
+                    mainContent.focus();
+                  }
+                }}
+                className="w-full justify-start"
+              >
+                Skip to Main Content
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  // Reset all accessibility settings
+                  setFontSize('medium');
+                  if (highContrast) toggleHighContrast();
+                  if (reducedMotion) toggleReducedMotion();
+                }}
+                className="w-full justify-start"
+              >
+                Reset Settings
+              </Button>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

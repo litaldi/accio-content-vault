@@ -5,13 +5,17 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '@/contexts/ThemeContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { AccessibilityAnnouncer } from '@/components/accessibility/AccessibilityAnnouncer';
 import { Toaster } from '@/components/ui/toaster';
 import UnifiedMegaMenu from '@/components/navigation/UnifiedMegaMenu';
 import GlobalFooter from '@/components/layout/GlobalFooter';
 import SkipToContent from '@/components/accessibility/SkipToContent';
+import AccessibilityToolbar from '@/components/accessibility/AccessibilityToolbar';
+import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
 
 // Pages
 import Home from '@/pages/Home';
+import Index from '@/pages/Index';
 import About from '@/pages/About';
 import Features from '@/pages/Features';
 import HowItWorks from '@/pages/HowItWorks';
@@ -31,43 +35,48 @@ function App() {
     <HelmetProvider>
       <ThemeProvider>
         <AccessibilityProvider>
-          <AuthProvider>
-            <div className="min-h-screen flex flex-col bg-background text-foreground">
-              <Helmet>
-                <html lang="en" />
-                <meta charSet="utf-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1" />
-                <meta name="theme-color" content="#000000" />
-                <meta name="description" content="Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform." />
-                <link rel="canonical" href="https://accio.app" />
-              </Helmet>
+          <AccessibilityAnnouncer>
+            <AuthProvider>
+              <div className="min-h-screen flex flex-col bg-background text-foreground">
+                <Helmet>
+                  <html lang="en" />
+                  <meta charSet="utf-8" />
+                  <meta name="viewport" content="width=device-width, initial-scale=1" />
+                  <meta name="theme-color" content="#000000" />
+                  <meta name="description" content="Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform." />
+                  <link rel="canonical" href="https://accio.app" />
+                </Helmet>
 
-              <SkipToContent />
-              <UnifiedMegaMenu />
-              
-              <main className="flex-1" id="main-content" tabIndex={-1}>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/features" element={<Features />} />
-                  <Route path="/how-it-works" element={<HowItWorks />} />
-                  <Route path="/blog" element={<Blog />} />
-                  <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/faq" element={<FAQ />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                  <Route path="/terms-of-service" element={<TermsOfService />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
+                <SkipToContent />
+                <UnifiedMegaMenu />
+                
+                <main className="flex-1" id="main-content" tabIndex={-1}>
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/home" element={<Home />} />
+                    <Route path="/about" element={<About />} />
+                    <Route path="/features" element={<Features />} />
+                    <Route path="/how-it-works" element={<HowItWorks />} />
+                    <Route path="/blog" element={<Blog />} />
+                    <Route path="/pricing" element={<Pricing />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/contact" element={<Contact />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                    <Route path="/terms-of-service" element={<TermsOfService />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
 
-              <GlobalFooter />
-              <Toaster />
-            </div>
-          </AuthProvider>
+                <GlobalFooter />
+                <Toaster />
+                <AccessibilityToolbar />
+                <EnhancedAccessibility />
+              </div>
+            </AuthProvider>
+          </AccessibilityAnnouncer>
         </AccessibilityProvider>
       </ThemeProvider>
     </HelmetProvider>
