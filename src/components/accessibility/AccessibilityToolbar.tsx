@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -29,8 +28,7 @@ const AccessibilityToolbar: React.FC = () => {
   const fontSizeOptions = [
     { value: 'small', label: 'Small', size: 'text-sm' },
     { value: 'medium', label: 'Medium', size: 'text-base' },
-    { value: 'large', label: 'Large', size: 'text-lg' },
-    { value: 'extra-large', label: 'Extra Large', size: 'text-xl' }
+    { value: 'large', label: 'Large', size: 'text-lg' }
   ] as const;
 
   if (!isOpen) {
