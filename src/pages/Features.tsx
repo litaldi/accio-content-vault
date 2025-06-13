@@ -1,175 +1,161 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Typography, Spacing, Grid } from '@/components/ui/design-system';
 import { 
-  Brain, Search, FolderOpen, BarChart3, Smartphone, 
-  Cloud, Shield, Zap, Users, Globe, Bot, FileText,
-  Download, Share2, Lock, Wifi, Target, Clock
+  Brain, 
+  Search, 
+  BookOpen, 
+  Smartphone, 
+  Globe, 
+  Shield, 
+  Users, 
+  Zap,
+  Target,
+  BarChart3,
+  Cloud,
+  Eye,
+  Headphones,
+  Wifi
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const Features = () => {
-  const coreFeatures = [
+const Features: React.FC = () => {
+  const primaryFeatures = [
     {
       icon: Brain,
-      title: 'AI-Powered Organization',
-      description: 'Automatically categorize and tag your content with advanced machine learning algorithms.',
-      benefits: ['Smart content analysis', 'Automatic tagging', 'Context understanding'],
-      isPopular: true
+      title: 'AI-Powered Intelligence',
+      description: 'Advanced machine learning automatically understands, categorizes, and connects your content for deeper insights.',
+      features: ['Smart auto-tagging', 'Content categorization', 'Relationship mapping', 'Context understanding'],
+      badge: 'Core Feature'
     },
     {
       icon: Search,
       title: 'Semantic Search',
-      description: 'Find content by describing what you remember, not just exact keywords.',
-      benefits: ['Natural language queries', 'Context-aware results', 'Instant discovery'],
-      isNew: false
+      description: 'Find anything by describing what you remember, not just keywords. Our AI understands meaning and context.',
+      features: ['Natural language queries', 'Context-aware results', 'Smart suggestions', 'Instant results'],
+      badge: 'Most Popular'
     },
     {
-      icon: FolderOpen,
-      title: 'Smart Collections',
-      description: 'Dynamic content organization that adapts to your workflow and preferences.',
-      benefits: ['Auto-organizing folders', 'Custom taxonomies', 'Flexible structures'],
-      isNew: false
-    },
-    {
-      icon: BarChart3,
-      title: 'Knowledge Analytics',
-      description: 'Insights into your learning patterns and information consumption habits.',
-      benefits: ['Usage patterns', 'Knowledge gaps', 'Learning insights'],
-      isNew: true
+      icon: BookOpen,
+      title: 'Immersive Reading',
+      description: 'Distraction-free reading mode with customizable settings, progress tracking, and intelligent highlights.',
+      features: ['Focus mode', 'Reading analytics', 'Progress tracking', 'Customizable display'],
+      badge: 'New'
     }
   ];
 
-  const advancedFeatures = [
-    {
-      icon: Smartphone,
-      title: 'Cross-Platform Sync',
-      description: 'Access your knowledge base from any device, anywhere',
-      category: 'Accessibility'
-    },
-    {
-      icon: Cloud,
-      title: 'Cloud Storage',
-      description: 'Secure cloud backup with unlimited storage capacity',
-      category: 'Storage'
-    },
-    {
-      icon: Shield,
-      title: 'Enterprise Security',
-      description: 'Bank-level encryption and compliance standards',
-      category: 'Security'
-    },
-    {
-      icon: Users,
-      title: 'Team Collaboration',
-      description: 'Share collections and collaborate on knowledge bases',
-      category: 'Collaboration'
-    },
-    {
-      icon: Bot,
-      title: 'AI Assistant',
-      description: 'Chat with your knowledge base using natural language',
-      category: 'AI'
-    },
-    {
-      icon: Download,
-      title: 'Offline Access',
-      description: 'Access important content without internet connection',
-      category: 'Accessibility'
-    }
+  const productivityFeatures = [
+    { icon: Target, title: 'Smart Goals', description: 'Set and track reading and learning goals with AI-powered insights.' },
+    { icon: BarChart3, title: 'Analytics Dashboard', description: 'Detailed insights into your reading habits and knowledge growth.' },
+    { icon: Zap, title: 'Quick Capture', description: 'Save content from anywhere with our browser extension and mobile apps.' },
+    { icon: Cloud, title: 'Universal Sync', description: 'Access your knowledge library across all devices with real-time sync.' }
   ];
 
-  const integrations = [
-    {
-      name: 'Browser Extension',
-      description: 'Save content from any website with one click',
-      icon: Globe
-    },
-    {
-      name: 'Mobile App',
-      description: 'Capture and access knowledge on the go',
-      icon: Smartphone
-    },
-    {
-      name: 'API Access',
-      description: 'Integrate with your favorite tools and workflows',
-      icon: Share2
-    },
-    {
-      name: 'File Import',
-      description: 'Import from PDFs, documents, and other formats',
-      icon: FileText
-    }
+  const collaborationFeatures = [
+    { icon: Users, title: 'Team Workspaces', description: 'Share collections and collaborate on knowledge bases with your team.' },
+    { icon: Globe, title: 'Public Collections', description: 'Discover and contribute to community-curated knowledge collections.' },
+    { icon: Shield, title: 'Privacy Controls', description: 'Granular privacy settings to control what you share and with whom.' },
+    { icon: Eye, title: 'Access Management', description: 'Manage permissions and access levels for different team members.' }
   ];
+
+  const technicalFeatures = [
+    { icon: Wifi, title: 'Offline Access', description: 'Download content for offline reading and automatic sync when back online.' },
+    { icon: Smartphone, title: 'Cross-Platform', description: 'Native apps for iOS, Android, and desktop with seamless sync.' },
+    { icon: Headphones, title: 'Accessibility First', description: 'Full screen reader support, keyboard navigation, and customizable display.' },
+    { icon: Shield, title: 'Enterprise Security', description: 'SOC 2 compliance, end-to-end encryption, and enterprise SSO support.' }
+  ];
+
+  const FeatureGrid = ({ title, features, className = "" }: any) => (
+    <div className={className}>
+      <Typography.H3 className="mb-6 text-center">{title}</Typography.H3>
+      <Grid.Responsive cols={{ sm: 1, md: 2, lg: 4 }}>
+        {features.map((feature: any, index: number) => (
+          <Card key={index} className="h-full hover:shadow-md transition-shadow">
+            <CardContent className="p-6 text-center">
+              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
+                <feature.icon className="h-6 w-6 text-primary" />
+              </div>
+              <Typography.H4 className="mb-2 text-base">{feature.title}</Typography.H4>
+              <Typography.Body size="sm" className="text-muted-foreground">
+                {feature.description}
+              </Typography.Body>
+            </CardContent>
+          </Card>
+        ))}
+      </Grid.Responsive>
+    </div>
+  );
 
   return (
     <>
       <Helmet>
-        <title>Features - Accio AI Knowledge Management</title>
-        <meta name="description" content="Discover Accio's powerful AI-driven features for knowledge management, semantic search, smart organization, and team collaboration." />
+        <title>Features - Accio | AI-Powered Knowledge Management</title>
+        <meta name="description" content="Discover all the powerful features that make Accio the ultimate knowledge management platform. AI-powered organization, semantic search, and more." />
+        <meta name="keywords" content="knowledge management features, AI organization, semantic search, reading mode, team collaboration" />
       </Helmet>
 
-      <main className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
-          <div className="container mx-auto px-4 max-w-6xl text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Powerful Features for{' '}
-              <span className="text-primary">Smart Knowledge</span>
-            </h1>
-            <p className="text-xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-              Discover how Accio's advanced AI and intuitive design can transform 
-              the way you capture, organize, and leverage information.
-            </p>
-            <Button size="lg" asChild>
-              <Link to="/register">Try All Features Free</Link>
-            </Button>
-          </div>
-        </section>
+        <Spacing.Section size="xl" className="bg-gradient-to-br from-primary/5 to-background">
+          <Spacing.Container>
+            <div className="text-center max-w-4xl mx-auto">
+              <Badge variant="outline" className="mb-6">
+                Complete Feature Overview
+              </Badge>
+              <Typography.H1 className="mb-6">
+                Everything you need to master your knowledge
+              </Typography.H1>
+              <Typography.Lead className="mb-8">
+                From AI-powered organization to immersive reading experiences, discover how Accio transforms 
+                the way you capture, organize, and leverage information.
+              </Typography.Lead>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button size="lg" asChild>
+                  <Link to="/register">Start Your Journey</Link>
+                </Button>
+                <Button variant="outline" size="lg" asChild>
+                  <Link to="/pricing">View Pricing</Link>
+                </Button>
+              </div>
+            </div>
+          </Spacing.Container>
+        </Spacing.Section>
 
-        {/* Core Features */}
-        <section className="py-24">
-          <div className="container mx-auto px-4 max-w-6xl">
+        {/* Primary Features */}
+        <Spacing.Section size="xl">
+          <Spacing.Container>
             <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Core Features</h2>
-              <p className="text-lg text-muted-foreground">
-                The foundation of intelligent knowledge management
-              </p>
+              <Typography.H2 className="mb-4">Core Capabilities</Typography.H2>
+              <Typography.Lead>The foundation of your knowledge management system</Typography.Lead>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-8">
-              {coreFeatures.map((feature, index) => (
-                <Card key={index} className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  {feature.isPopular && (
-                    <Badge className="absolute top-4 right-4 bg-primary">
-                      Most Popular
+            <div className="grid lg:grid-cols-3 gap-8">
+              {primaryFeatures.map((feature, index) => (
+                <Card key={index} className="relative overflow-hidden">
+                  {feature.badge && (
+                    <Badge className="absolute top-4 right-4 z-10">
+                      {feature.badge}
                     </Badge>
                   )}
-                  {feature.isNew && (
-                    <Badge variant="secondary" className="absolute top-4 right-4">
-                      New
-                    </Badge>
-                  )}
-                  
                   <CardHeader className="pb-4">
-                    <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                      <feature.icon className="h-6 w-6 text-primary" />
+                    <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/80 rounded-xl flex items-center justify-center mb-4">
+                      <feature.icon className="h-8 w-8 text-white" />
                     </div>
                     <CardTitle className="text-xl">{feature.title}</CardTitle>
-                    <CardDescription className="text-base">
-                      {feature.description}
-                    </CardDescription>
                   </CardHeader>
-                  
                   <CardContent>
+                    <Typography.Body className="mb-6 text-muted-foreground">
+                      {feature.description}
+                    </Typography.Body>
                     <ul className="space-y-2">
-                      {feature.benefits.map((benefit, benefitIndex) => (
-                        <li key={benefitIndex} className="flex items-center text-sm">
-                          <Zap className="h-4 w-4 text-primary mr-2 flex-shrink-0" />
-                          {benefit}
+                      {feature.features.map((item: string, i: number) => (
+                        <li key={i} className="flex items-center gap-2 text-sm">
+                          <div className="w-1.5 h-1.5 bg-primary rounded-full" />
+                          <span>{item}</span>
                         </li>
                       ))}
                     </ul>
@@ -177,86 +163,53 @@ const Features = () => {
                 </Card>
               ))}
             </div>
-          </div>
-        </section>
+          </Spacing.Container>
+        </Spacing.Section>
 
-        {/* Advanced Features Grid */}
-        <section className="py-24 bg-muted/20">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Advanced Capabilities</h2>
-              <p className="text-lg text-muted-foreground">
-                Professional tools for power users and teams
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {advancedFeatures.map((feature, index) => (
-                <Card key={index} className="group hover:shadow-lg transition-all duration-300 border-0">
-                  <CardHeader className="text-center">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-3 group-hover:bg-primary/20 transition-colors">
-                      <feature.icon className="h-5 w-5 text-primary" />
-                    </div>
-                    <Badge variant="outline" className="text-xs mb-2 w-fit mx-auto">
-                      {feature.category}
-                    </Badge>
-                    <CardTitle className="text-lg">{feature.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center">
-                    <p className="text-muted-foreground text-sm">{feature.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Integrations */}
-        <section className="py-24">
-          <div className="container mx-auto px-4 max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 className="text-3xl font-bold mb-4">Seamless Integrations</h2>
-              <p className="text-lg text-muted-foreground">
-                Connect Accio to your existing workflow and tools
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {integrations.map((integration, index) => (
-                <Card key={index} className="text-center border-0 bg-gradient-to-br from-background to-muted/30 hover:shadow-lg transition-all duration-300">
-                  <CardHeader className="pb-2">
-                    <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
-                      <integration.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <CardTitle className="text-lg">{integration.name}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-sm">{integration.description}</p>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Feature Categories */}
+        <Spacing.Section size="lg" className="bg-muted/20">
+          <Spacing.Container>
+            <Spacing.Stack gap="8">
+              <FeatureGrid 
+                title="Productivity & Learning" 
+                features={productivityFeatures}
+              />
+              <FeatureGrid 
+                title="Collaboration & Sharing" 
+                features={collaborationFeatures}
+                className="pt-12 border-t"
+              />
+              <FeatureGrid 
+                title="Technical & Security" 
+                features={technicalFeatures}
+                className="pt-12 border-t"
+              />
+            </Spacing.Stack>
+          </Spacing.Container>
+        </Spacing.Section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-primary text-primary-foreground">
-          <div className="container mx-auto px-4 max-w-4xl text-center">
-            <h2 className="text-3xl font-bold mb-6">Experience the Full Power of Accio</h2>
-            <p className="text-xl mb-8 opacity-90">
-              Start your free trial today and discover how AI can revolutionize your knowledge management.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" asChild>
-                <Link to="/register">Start Free Trial</Link>
-              </Button>
-              <Button variant="outline" size="lg" className="bg-transparent border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary" asChild>
-                <Link to="/pricing">View Pricing</Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-      </main>
+        <Spacing.Section size="lg">
+          <Spacing.Container>
+            <Card className="bg-gradient-to-r from-primary/10 to-purple-500/10 border-0">
+              <CardContent className="p-12 text-center">
+                <Typography.H2 className="mb-4">Ready to transform your knowledge?</Typography.H2>
+                <Typography.Lead className="mb-8 max-w-2xl mx-auto">
+                  Join thousands of professionals who've revolutionized their information management with Accio.
+                </Typography.Lead>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Button size="lg" asChild>
+                    <Link to="/register">Get Started Free</Link>
+                  </Button>
+                  <Button variant="outline" size="lg" asChild>
+                    <Link to="/contact">Talk to Sales</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </Spacing.Container>
+        </Spacing.Section>
+      </div>
     </>
   );
 };
