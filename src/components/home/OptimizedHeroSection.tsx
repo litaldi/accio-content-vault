@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
@@ -7,7 +8,7 @@ import { OptimizedCard } from '@/components/ui/optimized-card';
 const OptimizedHeroSection: React.FC = () => {
   return (
     <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/10 to-background">
-      <Spacing.Container size="default">
+      <Spacing.Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Left Column: Hero Text and Call-to-Action */}
           <div className="space-y-6">

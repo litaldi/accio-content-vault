@@ -28,8 +28,7 @@ const OfflineSync: React.FC = () => {
       setIsOnline(true);
       toast({
         title: "Back online",
-        description: "Your content will sync automatically.",
-        duration: 3000,
+        description: "Your content will sync automatically."
       });
     };
 
@@ -38,7 +37,6 @@ const OfflineSync: React.FC = () => {
       toast({
         title: "You're offline",
         description: "Don't worry, your saved content is still available.",
-        duration: 3000,
         variant: "destructive"
       });
     };
@@ -88,8 +86,7 @@ const OfflineSync: React.FC = () => {
     setIsSyncing(false);
     toast({
       title: "Sync complete",
-      description: "All your content is up to date.",
-      duration: 3000,
+      description: "All your content is up to date."
     });
   };
 
