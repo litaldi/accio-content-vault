@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { HeroSection } from '@/components/home/HeroSection';
+import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
 import ConsolidatedFeaturesSection from '@/components/features/ConsolidatedFeaturesSection';
 import { ImprovedSkipLinks } from '@/components/accessibility/ImprovedSkipLinks';
 
@@ -23,7 +23,7 @@ const EnhancedHome = () => {
       <ImprovedSkipLinks />
       
       <main id="main-content" tabIndex={-1} role="main" aria-label="Main content">
-        <HeroSection />
+        <EnhancedHeroSection />
         <ConsolidatedFeaturesSection />
       </main>
     </div>

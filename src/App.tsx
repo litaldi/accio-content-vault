@@ -1,85 +1,51 @@
-
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
+import { Toaster } from 'react-hot-toast';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { AuthProvider } from './contexts/AuthContext';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import Profile from './pages/Profile';
+import Settings from './pages/Settings';
+import NotFound from './pages/NotFound';
+import Save from './pages/Save';
+import Features from './pages/Features';
+import EnhancedHome from './pages/EnhancedHome';
+import EnhancedDashboard from './pages/EnhancedDashboard';
+import { EnhancedErrorBoundary } from '@/components/ui/enhanced-error-boundary';
+import { AccessibilityAnnouncerProvider } from '@/components/accessibility/AccessibilityAnnouncer';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { AccessibilityAnnouncer } from '@/components/accessibility/AccessibilityAnnouncer';
-import { Toaster } from '@/components/ui/toaster';
-import UnifiedMegaMenu from '@/components/navigation/UnifiedMegaMenu';
-import GlobalFooter from '@/components/layout/GlobalFooter';
-import SkipToContent from '@/components/accessibility/SkipToContent';
-import AccessibilityToolbar from '@/components/accessibility/AccessibilityToolbar';
-import EnhancedAccessibility from '@/components/accessibility/EnhancedAccessibility';
-
-// Pages
-import Home from '@/pages/Home';
-import Index from '@/pages/Index';
-import About from '@/pages/About';
-import Features from '@/pages/Features';
-import HowItWorks from '@/pages/HowItWorks';
-import Blog from '@/pages/Blog';
-import Pricing from '@/pages/Pricing';
-import FAQ from '@/pages/FAQ';
-import Contact from '@/pages/Contact';
-import Login from '@/pages/Login';
-import Register from '@/pages/Register';
-import PrivacyPolicy from '@/pages/PrivacyPolicy';
-import TermsOfService from '@/pages/TermsOfService';
-import Profile from '@/pages/Profile';
-import NotFound from '@/pages/NotFound';
 
 function App() {
   return (
-    <HelmetProvider>
-      <ThemeProvider>
-        <AccessibilityProvider>
-          <AccessibilityAnnouncer>
-            <AuthProvider>
-              <div className="min-h-screen flex flex-col bg-background text-foreground">
-                <Helmet>
-                  <html lang="en" />
-                  <meta charSet="utf-8" />
-                  <meta name="viewport" content="width=device-width, initial-scale=1" />
-                  <meta name="theme-color" content="#000000" />
-                  <meta name="description" content="Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform." />
-                  <link rel="canonical" href="https://accio.app" />
-                </Helmet>
-
-                <SkipToContent />
-                <UnifiedMegaMenu />
-                
-                <main className="flex-1" id="main-content" tabIndex={-1}>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/features" element={<Features />} />
-                    <Route path="/how-it-works" element={<HowItWorks />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/pricing" element={<Pricing />} />
-                    <Route path="/faq" element={<FAQ />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                    <Route path="/terms-of-service" element={<TermsOfService />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-
-                <GlobalFooter />
-                <Toaster />
-                <AccessibilityToolbar />
-                <EnhancedAccessibility />
-              </div>
-            </AuthProvider>
-          </AccessibilityAnnouncer>
-        </AccessibilityProvider>
-      </ThemeProvider>
-    </HelmetProvider>
+    <EnhancedErrorBoundary>
+      <AccessibilityProvider>
+        <AccessibilityAnnouncerProvider>
+          <HelmetProvider>
+            <QueryClientProvider client={new QueryClient()}>
+              <AuthProvider>
+                <BrowserRouter>
+                  <div className="min-h-screen bg-background font-sans antialiased">
+                    <Toaster />
+                    <Routes>
+                      <Route path="/" element={<EnhancedHome />} />
+                      <Route path="/home" element={<Home />} />
+                      <Route path="/dashboard" element={<EnhancedDashboard />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/save" element={<Save />} />
+                      <Route path="/features" element={<Features />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </div>
+                </BrowserRouter>
+              </AuthProvider>
+            </QueryClientProvider>
+          </HelmetProvider>
+        </AccessibilityAnnouncerProvider>
+      </AccessibilityProvider>
+    </EnhancedErrorBoundary>
   );
 }
 

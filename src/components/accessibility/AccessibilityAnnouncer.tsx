@@ -1,10 +1,11 @@
 
-import React, { createContext, useContext, useCallback, useRef } from 'react';
+import React, { createContext, useContext, useCallback } from 'react';
 
 interface AccessibilityAnnouncerContextType {
-  announce: (message: string, priority?: 'polite' | 'assertive') => void;
-  announceNavigation: (page: string) => void;
-  announceAction: (action: string, result?: string) => void;
+  announceNavigation: (message: string) => void;
+  announceAction: (message: string) => void;
+  announceError: (message: string) => void;
+  announceSuccess: (message: string) => void;
 }
 
 const AccessibilityAnnouncerContext = createContext<AccessibilityAnnouncerContextType | undefined>(undefined);
@@ -12,7 +13,7 @@ const AccessibilityAnnouncerContext = createContext<AccessibilityAnnouncerContex
 export const useAccessibilityAnnouncer = () => {
   const context = useContext(AccessibilityAnnouncerContext);
   if (!context) {
-    throw new Error('useAccessibilityAnnouncer must be used within an AccessibilityAnnouncerProvider');
+    throw new Error('useAccessibilityAnnouncer must be used within AccessibilityAnnouncerProvider');
   }
   return context;
 };
@@ -22,56 +23,48 @@ interface AccessibilityAnnouncerProviderProps {
 }
 
 export const AccessibilityAnnouncerProvider: React.FC<AccessibilityAnnouncerProviderProps> = ({ children }) => {
-  const politeRef = useRef<HTMLDivElement>(null);
-  const assertiveRef = useRef<HTMLDivElement>(null);
-
-  const announce = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
-    const targetRef = priority === 'assertive' ? assertiveRef : politeRef;
+  const createAnnouncement = useCallback((message: string, priority: 'polite' | 'assertive' = 'polite') => {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', priority);
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
     
-    if (targetRef.current) {
-      // Clear and then set the message to ensure it's announced
-      targetRef.current.textContent = '';
-      setTimeout(() => {
-        if (targetRef.current) {
-          targetRef.current.textContent = message;
-        }
-      }, 100);
-    }
+    document.body.appendChild(announcement);
+    
+    setTimeout(() => {
+      if (document.body.contains(announcement)) {
+        document.body.removeChild(announcement);
+      }
+    }, 1000);
   }, []);
 
-  const announceNavigation = useCallback((page: string) => {
-    announce(`Navigated to ${page}`, 'polite');
-  }, [announce]);
+  const announceNavigation = useCallback((message: string) => {
+    createAnnouncement(`Navigated to ${message}`, 'polite');
+  }, [createAnnouncement]);
 
-  const announceAction = useCallback((action: string, result?: string) => {
-    const message = result ? `${action}. ${result}` : action;
-    announce(message, 'polite');
-  }, [announce]);
+  const announceAction = useCallback((message: string) => {
+    createAnnouncement(message, 'polite');
+  }, [createAnnouncement]);
+
+  const announceError = useCallback((message: string) => {
+    createAnnouncement(`Error: ${message}`, 'assertive');
+  }, [createAnnouncement]);
+
+  const announceSuccess = useCallback((message: string) => {
+    createAnnouncement(`Success: ${message}`, 'polite');
+  }, [createAnnouncement]);
 
   const value = {
-    announce,
     announceNavigation,
-    announceAction
+    announceAction,
+    announceError,
+    announceSuccess
   };
 
   return (
     <AccessibilityAnnouncerContext.Provider value={value}>
       {children}
-      {/* Screen reader announcement regions */}
-      <div
-        ref={politeRef}
-        aria-live="polite"
-        aria-atomic="true"
-        className="sr-only"
-      />
-      <div
-        ref={assertiveRef}
-        aria-live="assertive"
-        aria-atomic="true"
-        className="sr-only"
-      />
     </AccessibilityAnnouncerContext.Provider>
   );
 };
-
-export const AccessibilityAnnouncer = AccessibilityAnnouncerProvider;

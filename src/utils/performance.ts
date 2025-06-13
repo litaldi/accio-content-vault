@@ -30,7 +30,7 @@ export function throttle<T extends (...args: any[]) => any>(
   };
 }
 
-export function measurePerformance<T>(
+export function measurePerform<T>(
   label: string,
   fn: () => T
 ): T {
