@@ -10,13 +10,26 @@ const mockUseToast = useToast as jest.MockedFunction<typeof useToast>;
 
 describe('useArchiveService', () => {
   const mockToast = jest.fn();
+  const mockDismiss = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
+    
+    // Create proper mock for Sonner toast
+    Object.assign(mockToast, {
+      success: jest.fn(),
+      error: jest.fn(),
+      warning: jest.fn(),
+      info: jest.fn(),
+      loading: jest.fn(),
+      dismiss: mockDismiss,
+      promise: jest.fn(),
+      custom: jest.fn()
+    });
+    
     mockUseToast.mockReturnValue({ 
-      toast: mockToast,
-      dismiss: jest.fn(),
-      toasts: []
+      toast: mockToast as any,
+      dismiss: mockDismiss,
     });
     
     // Clear localStorage
