@@ -3,204 +3,203 @@
 
 A comprehensive, secure, and accessible knowledge management platform built with React, TypeScript, and modern web technologies.
 
+## 🚀 Quick Start
+
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Run tests
+npm run test
+
+# Build for production
+npm run build
+```
+
+## 🏗️ Architecture
+
+### Core Technologies
+- **React 18** - Modern React with concurrent features
+- **TypeScript** - Type-safe development
+- **Vite** - Lightning-fast build tool
+- **Tailwind CSS** - Utility-first styling
+- **Shadcn/UI** - High-quality component library
+- **Supabase** - Backend as a Service
+
+### Project Structure
+```
+src/
+├── components/          # Reusable UI components
+│   ├── auth/           # Authentication components
+│   ├── forms/          # Form components
+│   ├── layout/         # Layout components
+│   ├── navigation/     # Navigation components
+│   └── ui/             # Base UI components
+├── contexts/           # React contexts
+├── hooks/              # Custom React hooks
+├── pages/              # Page components
+├── services/           # API services
+├── utils/              # Utility functions
+└── types/              # TypeScript type definitions
+```
+
 ## 🛡️ Security Features
 
 ### Comprehensive Security Implementation
-
-- **Input Validation & Sanitization**: All user inputs are validated and sanitized to prevent XSS, SQL injection, and other attacks
-- **CSRF Protection**: Token-based CSRF protection on all forms and sensitive operations
-- **Rate Limiting**: Intelligent rate limiting to prevent brute force attacks and abuse
-- **Content Security Policy**: Strict CSP headers to prevent code injection
-- **Secure Authentication**: Protected routes with proper session management
-- **Error Boundaries**: Comprehensive error handling with security event logging
+- **Input Validation & Sanitization** - All user inputs are validated and sanitized
+- **CSRF Protection** - Token-based CSRF protection
+- **Rate Limiting** - Intelligent rate limiting to prevent abuse
+- **Content Security Policy** - Strict CSP headers
+- **Secure Authentication** - Protected routes with session management
+- **Error Boundaries** - Comprehensive error handling
 
 ### Security Utilities
-
-The platform includes a robust security layer with:
-
-- **Core Security Functions**: Input sanitization, validation, and escape utilities
-- **File Upload Security**: Secure file validation with type and size restrictions
-- **Rate Limiting**: Configurable rate limiters for different use cases
-- **Security Headers**: Automatic security header configuration
-- **CSRF Management**: Token generation and validation system
-
 ```typescript
 import { validateEmail, sanitizeInput, CSRFManager } from '@/utils/security';
 
-// Email validation with security checks
+// Email validation
 const result = validateEmail(userEmail);
-if (!result.isValid) {
-  // Handle invalid email
-}
 
 // Input sanitization
 const cleanInput = sanitizeInput(userInput, {
   maxLength: 1000,
-  allowHtml: false,
-  stripWhitespace: true
+  allowHtml: false
 });
 
 // CSRF protection
 const token = CSRFManager.generate();
 ```
 
-## 🧪 Testing & Quality Assurance
+## 🌐 Accessibility (WCAG 2.1 AA)
 
-### Test Coverage
-
-- **Unit Tests**: Comprehensive test suite for all security utilities
-- **Component Tests**: Error boundary and UI component testing
-- **Integration Tests**: End-to-end authentication and security flows
-- **Security Tests**: Validation of input sanitization and attack prevention
-
-### Error Handling
-
-- **Global Error Boundary**: Catches and handles all unexpected errors
-- **Async Error Boundary**: Specialized handling for async operations
-- **Graceful Degradation**: Fallback UI for error states
-- **Security Event Logging**: Comprehensive logging for security monitoring
-
-### Code Quality
-
-- **TypeScript**: Full type safety with strict configuration
-- **ESLint & Prettier**: Code formatting and quality enforcement
-- **Security Linting**: Automated security vulnerability detection
-- **Performance Monitoring**: Client-side performance tracking
-
-## 🌐 Accessibility (WCAG 2.1 AA Compliant)
-
-### Comprehensive Accessibility Features
-
-- **Screen Reader Support**: Full ARIA implementation and semantic HTML
-- **Keyboard Navigation**: Complete keyboard accessibility for all interactions
-- **Voice Search**: Built-in voice recognition for search functionality
-- **High Contrast Mode**: Toggle for users with visual impairments
-- **Reduced Motion**: Respects user motion preferences
-- **Font Size Controls**: Customizable text scaling
-- **Focus Management**: Proper focus handling and skip links
+### Accessibility Features
+- **Screen Reader Support** - Full ARIA implementation
+- **Keyboard Navigation** - Complete keyboard accessibility
+- **High Contrast Mode** - Toggle for visual impairments
+- **Voice Search** - Built-in voice recognition
+- **Focus Management** - Proper focus handling
+- **Semantic HTML** - Meaningful markup structure
 
 ```typescript
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 
-const { announceToScreenReader, toggleHighContrast, setFontSize } = useAccessibility();
+const { announceToScreenReader, toggleHighContrast } = useAccessibility();
 ```
 
-## 🔧 Architecture & Best Practices
+## 🧪 Testing & Quality
 
-### Security-First Design
+### Test Coverage
+- **Unit Tests** - Component and utility testing
+- **Integration Tests** - End-to-end user flows
+- **Accessibility Tests** - WCAG compliance validation
+- **Security Tests** - Input validation and attack prevention
 
-- **Principle of Least Privilege**: Minimal permissions and access control
-- **Defense in Depth**: Multiple layers of security controls
-- **Secure by Default**: Safe defaults for all configurations
-- **Input Validation**: Client and server-side validation
-- **Output Encoding**: Proper encoding for all user-generated content
+### Code Quality
+- **TypeScript** - Full type safety
+- **ESLint & Prettier** - Code formatting and quality
+- **Performance Monitoring** - Client-side performance tracking
 
-### Performance & Scalability
+## 📱 Features
 
-- **React 18**: Latest React features with concurrent rendering
-- **Vite**: Fast build tool with HMR for development
-- **Code Splitting**: Lazy loading for optimal performance
-- **Error Boundaries**: Graceful error handling without app crashes
-- **Memory Management**: Proper cleanup and resource management
+### Core Functionality
+- **AI-Powered Search** - Natural language queries with semantic understanding
+- **Smart Organization** - Automatic categorization and tagging
+- **Content Management** - Save and organize web content
+- **User Authentication** - Secure login with Google OAuth
+- **Responsive Design** - Mobile-first approach
 
-### Development Workflow
+### Advanced Features
+- **Voice Search** - Speech-to-text search functionality
+- **Dark/Light Mode** - Theme switching with system preference detection
+- **Offline Support** - Progressive Web App capabilities
+- **Real-time Updates** - Live data synchronization
 
+## 🔧 Development
+
+### Available Scripts
 ```bash
-# Development
-npm run dev
-
-# Testing
-npm run test
-npm run test:coverage
-
-# Security checks
-npm run security:check
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run test         # Run test suite
+npm run test:coverage # Run tests with coverage
+npm run lint         # Lint codebase
+npm run type-check   # TypeScript type checking
 ```
 
-## 📋 Security Checklist
-
-### Pre-Deployment Security Review
-
-- [ ] All user inputs validated and sanitized
-- [ ] CSRF protection on all forms
-- [ ] Rate limiting configured
-- [ ] Security headers implemented
-- [ ] Authentication flows tested
-- [ ] Error handling verified
-- [ ] Accessibility compliance validated
-- [ ] Performance optimized
-- [ ] Security tests passing
-
-### Production Security
-
-- [ ] HTTPS enforced
-- [ ] Security headers configured at server level
-- [ ] Rate limiting at infrastructure level
-- [ ] Monitoring and alerting configured
-- [ ] Backup and recovery procedures
-- [ ] Incident response plan
-- [ ] Regular security updates
-- [ ] Penetration testing completed
+### Environment Variables
+```bash
+VITE_SUPABASE_URL=your-supabase-url
+VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
 
 ## 🚀 Deployment
 
-### Hosting Configuration
+### Hosting Platforms
+The application can be deployed to:
+- **Vercel** - Recommended for React apps
+- **Netlify** - Easy static site deployment
+- **Supabase** - Full-stack deployment
 
-The application can be deployed to any modern hosting platform with proper security header configuration:
-
-**Netlify** (_headers file):
+### Security Headers
+Configure proper security headers:
 ```
-/*
-  X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
-  X-XSS-Protection: 1; mode=block
-  Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:
-```
-
-**Vercel** (vercel.json):
-```json
-{
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" }
-      ]
-    }
-  ]
-}
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+X-XSS-Protection: 1; mode=block
+Referrer-Policy: strict-origin-when-cross-origin
 ```
 
-## 📖 Documentation
+## 📖 Component Library
 
-### Additional Resources
+### Form Components
+- `SecureInput` - Security-focused input component
+- `DynamicForm` - Configurable form builder
+- `AuthModal` - Authentication modal with sign-in/up
 
-- [Security Implementation Guide](./SECURITY.md)
-- [Accessibility Guidelines](./docs/accessibility.md)
-- [API Documentation](./docs/api.md)
-- [Testing Guide](./docs/testing.md)
-- [Deployment Guide](./docs/deployment.md)
+### Layout Components
+- `AppLayout` - Main application layout
+- `AppHeader` - Navigation header
+- `SearchBar` - Unified search interface
+
+### UI Components
+- Built on Shadcn/UI for consistency
+- Fully accessible and customizable
+- Dark/light mode support
 
 ## 🤝 Contributing
 
-1. **Security**: All contributions must pass security review
-2. **Testing**: Maintain test coverage above 80%
-3. **Accessibility**: Ensure WCAG 2.1 AA compliance
-4. **Performance**: Monitor and optimize for performance
-5. **Documentation**: Update documentation for all changes
+1. **Security First** - All contributions must pass security review
+2. **Accessibility** - Ensure WCAG 2.1 AA compliance
+3. **Testing** - Maintain test coverage above 80%
+4. **Performance** - Monitor and optimize performance
+5. **Documentation** - Update docs for all changes
 
-## 📞 Support & Security
+## 📝 Best Practices
 
-For security-related issues or vulnerabilities, please contact our security team through the appropriate channels outlined in our Security Policy.
+### Code Organization
+- **Small Components** - Keep components focused and under 100 lines
+- **Type Safety** - Use TypeScript for all new code
+- **Error Handling** - Implement proper error boundaries
+- **Performance** - Use React.memo and useMemo where appropriate
+
+### Security Guidelines
+- **Input Validation** - Validate all user inputs
+- **Sanitization** - Sanitize data before processing
+- **Rate Limiting** - Implement rate limiting for APIs
+- **Authentication** - Secure authentication flows
+
+## 📞 Support
+
+For questions, issues, or contributions:
+- Check the documentation
+- Review existing issues
+- Create detailed bug reports
+- Follow security disclosure guidelines
 
 ---
 
-Built with ❤️ using React, TypeScript, and modern security best practices.
+Built with ❤️ using modern web technologies and best practices for security, accessibility, and performance.

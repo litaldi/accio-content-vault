@@ -1,28 +1,16 @@
 
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { sanitizeInput, validateEmail } from '@/utils/security';
 import { CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { FormField } from './FormField';
+import { FormFieldConfig } from './types';
+import { sanitizeInput, validateEmail } from '@/utils/security';
 import { cn } from '@/lib/utils';
 
-interface FormFieldConfig {
-  name: string;
-  label: string;
-  type: 'text' | 'email' | 'password' | 'textarea';
-  required?: boolean;
-  validation?: (value: string) => { isValid: boolean; message: string };
-  placeholder?: string;
-  description?: string;
-}
-
-interface EnhancedFormProps {
+interface DynamicFormProps {
   title: string;
   description?: string;
   fields: FormFieldConfig[];
@@ -31,7 +19,7 @@ interface EnhancedFormProps {
   className?: string;
 }
 
-export const EnhancedForm: React.FC<EnhancedFormProps> = ({
+export const DynamicForm: React.FC<DynamicFormProps> = ({
   title,
   description,
   fields,
@@ -83,12 +71,10 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
     const sanitizedValue = sanitizeInput(value);
     setFormData(prev => ({ ...prev, [fieldName]: sanitizedValue }));
     
-    // Clear error for this field if it exists
     if (errors[fieldName]) {
       setErrors(prev => ({ ...prev, [fieldName]: '' }));
     }
 
-    // Clear submit error on any change
     if (submitError) {
       setSubmitError('');
     }
@@ -105,24 +91,12 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
     try {
       await onSubmit(formData);
       setIsSubmitted(true);
-      
-      // Reset form after success
       setFormData(fields.reduce((acc, field) => ({ ...acc, [field.name]: '' }), {}));
     } catch (error: any) {
       setSubmitError(error.message || 'An error occurred while submitting the form');
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const getFieldValidationState = (fieldName: string) => {
-    const value = formData[fieldName];
-    const field = fields.find(f => f.name === fieldName);
-    
-    if (!field || !value.trim()) return null;
-    
-    const result = validateField(field, value);
-    return result.isValid ? 'valid' : 'invalid';
   };
 
   const getFormProgress = () => {
@@ -157,7 +131,6 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
         <CardTitle>{title}</CardTitle>
         {description && <CardDescription>{description}</CardDescription>}
         
-        {/* Progress indicator */}
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
             <span>Completion</span>
@@ -176,64 +149,16 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {fields.map((field) => {
-            const validationState = getFieldValidationState(field.name);
-            
-            return (
-              <div key={field.name} className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor={field.name}>
-                    {field.label}
-                    {field.required && <span className="text-destructive">*</span>}
-                  </Label>
-                  {validationState === 'valid' && (
-                    <Badge variant="outline" className="h-5 px-1.5 text-green-600 border-green-200">
-                      <CheckCircle className="h-3 w-3" />
-                    </Badge>
-                  )}
-                </div>
-
-                {field.type === 'textarea' ? (
-                  <Textarea
-                    id={field.name}
-                    placeholder={field.placeholder}
-                    value={formData[field.name]}
-                    onChange={(e) => updateField(field.name, e.target.value)}
-                    className={cn(
-                      errors[field.name] && "border-destructive",
-                      validationState === 'valid' && "border-green-300"
-                    )}
-                    disabled={isSubmitting}
-                    rows={3}
-                  />
-                ) : (
-                  <Input
-                    id={field.name}
-                    type={field.type}
-                    placeholder={field.placeholder}
-                    value={formData[field.name]}
-                    onChange={(e) => updateField(field.name, e.target.value)}
-                    className={cn(
-                      errors[field.name] && "border-destructive",
-                      validationState === 'valid' && "border-green-300"
-                    )}
-                    disabled={isSubmitting}
-                  />
-                )}
-
-                {field.description && (
-                  <p className="text-xs text-muted-foreground">{field.description}</p>
-                )}
-
-                {errors[field.name] && (
-                  <p className="text-sm text-destructive flex items-center gap-1">
-                    <AlertCircle className="h-3 w-3" />
-                    {errors[field.name]}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+          {fields.map((field) => (
+            <FormField
+              key={field.name}
+              field={field}
+              value={formData[field.name]}
+              error={errors[field.name]}
+              onChange={(value) => updateField(field.name, value)}
+              disabled={isSubmitting}
+            />
+          ))}
 
           <Button type="submit" className="w-full" disabled={isSubmitting}>
             {isSubmitting ? (
@@ -251,4 +176,4 @@ export const EnhancedForm: React.FC<EnhancedFormProps> = ({
   );
 };
 
-export default EnhancedForm;
+export default DynamicForm;
