@@ -28,8 +28,15 @@ const createCompatibleToast = () => {
     return sonnerToast(props);
   };
 
-  // Add Sonner methods to the compat function
-  Object.assign(compatToast, sonnerToast);
+  // Properly assign all Sonner methods to the compat function
+  compatToast.success = sonnerToast.success;
+  compatToast.error = sonnerToast.error;
+  compatToast.warning = sonnerToast.warning;
+  compatToast.info = sonnerToast.info;
+  compatToast.loading = sonnerToast.loading;
+  compatToast.dismiss = sonnerToast.dismiss;
+  compatToast.promise = sonnerToast.promise;
+  compatToast.custom = sonnerToast.custom;
   
   return compatToast;
 };

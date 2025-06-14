@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Clock, ArrowRight, Command, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -10,19 +9,27 @@ import { useSearchAutocomplete } from '@/hooks/useSearchAutocomplete';
 interface SearchAutocompleteProps {
   placeholder?: string;
   onSearch?: (query: string) => void;
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
   className?: string;
 }
 
 export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
   placeholder = "Search your knowledge...",
   onSearch,
+  searchQuery: externalQuery,
+  onSearchChange,
   className
 }) => {
-  const [query, setQuery] = useState('');
+  const [internalQuery, setInternalQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
+  
+  // Use external query if provided, otherwise use internal state
+  const query = externalQuery !== undefined ? externalQuery : internalQuery;
+  const setQuery = onSearchChange || setInternalQuery;
   
   const { addRecentSearch, generateSuggestions, clearRecentSearches } = useSearchAutocomplete();
   const suggestions = generateSuggestions(query);
@@ -51,7 +58,12 @@ export const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({
     if (!searchQuery.trim()) return;
     
     addRecentSearch(searchQuery);
-    setQuery('');
+    
+    // Clear query if using internal state
+    if (externalQuery === undefined) {
+      setQuery('');
+    }
+    
     setIsOpen(false);
     setSelectedIndex(-1);
     onSearch?.(searchQuery);
