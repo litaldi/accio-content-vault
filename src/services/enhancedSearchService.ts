@@ -1,6 +1,7 @@
 
 import { SavedContent } from '@/types';
-import { naturalLanguageService } from './naturalLanguageService';
+import { QueryAnalyzer } from './queryAnalyzer';
+import { SearchFilters } from './searchFilters';
 
 interface SearchResult {
   content: SavedContent;
@@ -10,15 +11,9 @@ interface SearchResult {
   highlightedDescription: string;
 }
 
-interface QueryAnalysis {
-  intent: 'search' | 'question' | 'filter' | 'temporal' | 'categorical';
-  keywords: string[];
-  timeframe?: string;
-  contentType?: string;
-  sentiment?: string;
-  confidence: number;
-}
-
+/**
+ * Enhanced search service with AI-powered semantic understanding
+ */
 export class EnhancedSearchService {
   private static instance: EnhancedSearchService;
 
@@ -30,111 +25,34 @@ export class EnhancedSearchService {
   }
 
   /**
-   * Analyze natural language query and extract structured search parameters
-   */
-  analyzeQuery(query: string): QueryAnalysis {
-    const lowerQuery = query.toLowerCase().trim();
-    
-    // Detect question patterns
-    const questionWords = ['what', 'how', 'when', 'where', 'why', 'which', 'who'];
-    const isQuestion = questionWords.some(word => lowerQuery.startsWith(word)) || lowerQuery.includes('?');
-    
-    // Detect temporal patterns
-    const timePatterns = {
-      'today': /\b(today|this\s+day)\b/,
-      'yesterday': /\b(yesterday|last\s+day)\b/,
-      'week': /\b(this\s+week|last\s+week|past\s+week)\b/,
-      'month': /\b(this\s+month|last\s+month|past\s+month)\b/,
-      'year': /\b(this\s+year|last\s+year|past\s+year)\b/,
-      'recent': /\b(recent|recently|latest|new)\b/
-    };
-    
-    let timeframe: string | undefined;
-    for (const [period, pattern] of Object.entries(timePatterns)) {
-      if (pattern.test(lowerQuery)) {
-        timeframe = period;
-        break;
-      }
-    }
-    
-    // Detect content type patterns
-    const contentTypePatterns = {
-      'article': /\b(article|blog|post|news)\b/,
-      'video': /\b(video|watch|youtube|tutorial)\b/,
-      'document': /\b(document|pdf|file|doc)\b/,
-      'image': /\b(image|photo|picture|screenshot)\b/,
-      'note': /\b(note|notes|annotation)\b/
-    };
-    
-    let contentType: string | undefined;
-    for (const [type, pattern] of Object.entries(contentTypePatterns)) {
-      if (pattern.test(lowerQuery)) {
-        contentType = type;
-        break;
-      }
-    }
-    
-    // Extract keywords (remove stop words and query structure words)
-    const stopWords = new Set([
-      'what', 'how', 'when', 'where', 'why', 'which', 'who', 'the', 'a', 'an', 
-      'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
-      'show', 'me', 'find', 'search', 'get', 'give', 'tell', 'about', 'did', 'i',
-      'my', 'have', 'do', 'does', 'can', 'could', 'would', 'should', 'all'
-    ]);
-    
-    const keywords = lowerQuery
-      .replace(/[^\w\s]/g, ' ')
-      .split(/\s+/)
-      .filter(word => word.length > 2 && !stopWords.has(word))
-      .slice(0, 10); // Limit to prevent over-filtering
-    
-    // Determine intent
-    let intent: QueryAnalysis['intent'] = 'search';
-    if (isQuestion) {
-      intent = 'question';
-    } else if (timeframe) {
-      intent = 'temporal';
-    } else if (contentType) {
-      intent = 'categorical';
-    } else if (lowerQuery.includes('filter') || lowerQuery.includes('show only')) {
-      intent = 'filter';
-    }
-    
-    // Calculate confidence based on how many patterns we detected
-    const confidence = Math.min(1.0, 
-      (keywords.length > 0 ? 0.3 : 0) +
-      (timeframe ? 0.2 : 0) +
-      (contentType ? 0.2 : 0) +
-      (intent !== 'search' ? 0.3 : 0.1)
-    );
-    
-    return {
-      intent,
-      keywords,
-      timeframe,
-      contentType,
-      sentiment: this.detectSentiment(query),
-      confidence
-    };
-  }
-
-  /**
    * Perform enhanced semantic search with natural language understanding
    */
   async performSearch(query: string, content: SavedContent[]): Promise<SearchResult[]> {
-    const analysis = this.analyzeQuery(query);
+    const analysis = QueryAnalyzer.analyzeQuery(query);
     const results: SearchResult[] = [];
     
-    for (const item of content) {
-      const score = this.calculateEnhancedScore(item, analysis, query);
+    // Apply filters first
+    let filteredContent = content;
+    
+    if (analysis.timeframe) {
+      filteredContent = SearchFilters.applyTimeframeFilter(filteredContent, analysis.timeframe);
+    }
+    
+    if (analysis.contentType) {
+      filteredContent = SearchFilters.filterByContentType(filteredContent, analysis.contentType);
+    }
+    
+    // Score remaining content
+    for (const item of filteredContent) {
+      const score = this.calculateRelevanceScore(item, analysis);
       
       if (score.relevance > 0) {
         results.push({
           content: item,
           relevanceScore: score.relevance,
           matchReason: score.reason,
-          highlightedTitle: this.highlightMatches(item.title, analysis.keywords),
-          highlightedDescription: this.highlightMatches(item.description, analysis.keywords)
+          highlightedTitle: SearchFilters.highlightMatches(item.title, analysis.keywords),
+          highlightedDescription: SearchFilters.highlightMatches(item.description, analysis.keywords)
         });
       }
     }
@@ -142,12 +60,12 @@ export class EnhancedSearchService {
     return results.sort((a, b) => b.relevanceScore - a.relevanceScore);
   }
 
-  private calculateEnhancedScore(item: SavedContent, analysis: QueryAnalysis, originalQuery: string) {
+  private calculateRelevanceScore(item: SavedContent, analysis: any) {
     let score = 0;
     const reasons: string[] = [];
     
     // Keyword matching with different weights
-    analysis.keywords.forEach(keyword => {
+    analysis.keywords.forEach((keyword: string) => {
       const keywordRegex = new RegExp(keyword, 'gi');
       
       if (keywordRegex.test(item.title)) {
@@ -171,56 +89,8 @@ export class EnhancedSearchService {
       }
     });
     
-    // Temporal filtering
-    if (analysis.timeframe) {
-      const itemDate = new Date(item.created_at);
-      const now = new Date();
-      let isInTimeframe = false;
-      
-      switch (analysis.timeframe) {
-        case 'today':
-          isInTimeframe = itemDate.toDateString() === now.toDateString();
-          break;
-        case 'yesterday':
-          const yesterday = new Date(now);
-          yesterday.setDate(yesterday.getDate() - 1);
-          isInTimeframe = itemDate.toDateString() === yesterday.toDateString();
-          break;
-        case 'week':
-          const weekAgo = new Date(now);
-          weekAgo.setDate(weekAgo.getDate() - 7);
-          isInTimeframe = itemDate >= weekAgo;
-          break;
-        case 'month':
-          const monthAgo = new Date(now);
-          monthAgo.setMonth(monthAgo.getMonth() - 1);
-          isInTimeframe = itemDate >= monthAgo;
-          break;
-        case 'recent':
-          const recentThreshold = new Date(now);
-          recentThreshold.setDate(recentThreshold.getDate() - 14);
-          isInTimeframe = itemDate >= recentThreshold;
-          break;
-      }
-      
-      if (isInTimeframe) {
-        score += 20;
-        reasons.push(`From ${analysis.timeframe}`);
-      } else if (analysis.intent === 'temporal') {
-        // If it's a time-based query but doesn't match, heavily penalize
-        score = Math.max(0, score - 30);
-      }
-    }
-    
-    // Content type matching
-    if (analysis.contentType && item.file_type === analysis.contentType) {
-      score += 15;
-      reasons.push(`Matches content type: ${analysis.contentType}`);
-    }
-    
     // Intent-based scoring
     if (analysis.intent === 'question') {
-      // For questions, prioritize content that might have answers
       if (item.description.length > 100) {
         score += 10;
         reasons.push('Detailed content for question');
@@ -234,31 +104,6 @@ export class EnhancedSearchService {
       relevance: Math.min(100, score),
       reason: reasons.length > 0 ? reasons.join(', ') : 'General content match'
     };
-  }
-
-  private highlightMatches(text: string, keywords: string[]): string {
-    if (!keywords.length) return text;
-    
-    let highlighted = text;
-    keywords.forEach(keyword => {
-      const regex = new RegExp(`(${keyword})`, 'gi');
-      highlighted = highlighted.replace(regex, '<mark class="bg-yellow-200 dark:bg-yellow-800">$1</mark>');
-    });
-    
-    return highlighted;
-  }
-
-  private detectSentiment(text: string): string {
-    const positiveWords = ['good', 'great', 'excellent', 'amazing', 'helpful', 'useful', 'love', 'like', 'best'];
-    const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'dislike', 'useless', 'boring', 'worst'];
-    
-    const words = text.toLowerCase().split(/\s+/);
-    const positiveCount = words.filter(word => positiveWords.includes(word)).length;
-    const negativeCount = words.filter(word => negativeWords.includes(word)).length;
-    
-    if (positiveCount > negativeCount) return 'positive';
-    if (negativeCount > positiveCount) return 'negative';
-    return 'neutral';
   }
 
   /**

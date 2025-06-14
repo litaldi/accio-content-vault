@@ -188,12 +188,9 @@ export const UnifiedSearchBar: React.FC<UnifiedSearchBarProps> = ({
           <SearchSuggestions
             suggestions={suggestions}
             selectedIndex={selectedIndex}
-            onSuggestionClick={handleSearch}
-            onSuggestionHover={setSelectedIndex}
-            onClearRecentSearches={() => {
-              clearRecentSearches();
-              setIsOpen(false);
-            }}
+            onSuggestionClick={(suggestion) => handleSearch(suggestion.query)}
+            onClearRecentSearches={clearRecentSearches}
+            className="z-20"
           />
         </>
       )}

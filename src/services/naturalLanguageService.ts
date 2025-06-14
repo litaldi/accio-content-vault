@@ -1,14 +1,18 @@
 
 import { SavedContent } from '@/types';
 
-interface NLSearchResult {
-  content: SavedContent;
-  relevanceScore: number;
-  matchReason: string;
+interface QueryIntent {
+  type: 'search' | 'filter' | 'question' | 'command';
+  confidence: number;
+  entities: Array<{
+    type: 'timeframe' | 'content_type' | 'tag' | 'keyword';
+    value: string;
+    confidence: number;
+  }>;
 }
 
 /**
- * Service for processing natural language queries and extracting semantic meaning
+ * Natural Language Processing service for understanding user queries
  */
 export class NaturalLanguageService {
   private static instance: NaturalLanguageService;
@@ -21,177 +25,160 @@ export class NaturalLanguageService {
   }
 
   /**
-   * Process natural language query and convert to search parameters
+   * Parse natural language query and extract intent and entities
    */
-  processQuery(query: string): {
-    keywords: string[];
-    intent: string;
-    timeFilter?: string;
-    contentType?: string;
-    sentiment?: string;
-  } {
-    const lowerQuery = query.toLowerCase();
+  parseQuery(query: string): QueryIntent {
+    const lowerQuery = query.toLowerCase().trim();
     
-    // Extract keywords (remove common words)
-    const stopWords = ['what', 'how', 'when', 'where', 'why', 'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'show', 'me', 'find', 'search'];
-    const keywords = lowerQuery
-      .split(/\s+/)
-      .filter(word => word.length > 2 && !stopWords.includes(word));
-
-    // Detect intent
-    let intent = 'search';
-    if (lowerQuery.includes('recent') || lowerQuery.includes('latest') || lowerQuery.includes('new')) {
-      intent = 'recent';
-    } else if (lowerQuery.includes('old') || lowerQuery.includes('archive')) {
-      intent = 'archive';
-    } else if (lowerQuery.includes('learn') || lowerQuery.includes('study')) {
-      intent = 'learning';
+    // Detect question patterns
+    const questionWords = ['what', 'how', 'when', 'where', 'why', 'which', 'who'];
+    const isQuestion = questionWords.some(word => lowerQuery.startsWith(word)) || lowerQuery.includes('?');
+    
+    // Detect command patterns
+    const commandWords = ['show', 'find', 'get', 'search', 'list', 'display'];
+    const isCommand = commandWords.some(word => lowerQuery.startsWith(word));
+    
+    // Extract entities
+    const entities = this.extractEntities(lowerQuery);
+    
+    // Determine intent type
+    let type: QueryIntent['type'] = 'search';
+    let confidence = 0.7;
+    
+    if (isQuestion) {
+      type = 'question';
+      confidence = 0.8;
+    } else if (isCommand) {
+      type = 'command';
+      confidence = 0.8;
+    } else if (entities.some(e => e.type === 'timeframe')) {
+      type = 'filter';
+      confidence = 0.75;
     }
-
-    // Detect time filters
-    let timeFilter;
-    if (lowerQuery.includes('today')) timeFilter = 'today';
-    else if (lowerQuery.includes('week')) timeFilter = 'week';
-    else if (lowerQuery.includes('month')) timeFilter = 'month';
-
-    // Detect content type
-    let contentType;
-    if (lowerQuery.includes('article') || lowerQuery.includes('blog')) contentType = 'article';
-    else if (lowerQuery.includes('video')) contentType = 'video';
-    else if (lowerQuery.includes('image') || lowerQuery.includes('photo')) contentType = 'image';
-    else if (lowerQuery.includes('note')) contentType = 'note';
-
+    
     return {
-      keywords,
-      intent,
-      timeFilter,
-      contentType,
-      sentiment: this.detectSentiment(query)
+      type,
+      confidence,
+      entities
     };
   }
 
   /**
-   * Perform semantic search on content
+   * Extract entities from query text
    */
-  semanticSearch(query: string, content: SavedContent[]): NLSearchResult[] {
-    const processed = this.processQuery(query);
-    const results: NLSearchResult[] = [];
-
-    content.forEach(item => {
-      let score = 0;
-      const reasons: string[] = [];
-
-      // Keyword matching in title (high weight)
-      processed.keywords.forEach(keyword => {
-        if (item.title.toLowerCase().includes(keyword)) {
-          score += 30;
-          reasons.push(`Title contains "${keyword}"`);
-        }
-        if (item.description.toLowerCase().includes(keyword)) {
-          score += 20;
-          reasons.push(`Description contains "${keyword}"`);
-        }
-        if (item.tags.some(tag => tag.name.toLowerCase().includes(keyword))) {
-          score += 25;
-          reasons.push(`Tagged with "${keyword}"`);
-        }
-      });
-
-      // Time-based filtering
-      if (processed.timeFilter) {
-        const itemDate = new Date(item.created_at);
-        const now = new Date();
-        let timeMatch = false;
-
-        switch (processed.timeFilter) {
-          case 'today':
-            timeMatch = itemDate.toDateString() === now.toDateString();
-            break;
-          case 'week':
-            timeMatch = (now.getTime() - itemDate.getTime()) <= 7 * 24 * 60 * 60 * 1000;
-            break;
-          case 'month':
-            timeMatch = (now.getTime() - itemDate.getTime()) <= 30 * 24 * 60 * 60 * 1000;
-            break;
-        }
-
-        if (timeMatch) {
-          score += 15;
-          reasons.push(`Matches time filter: ${processed.timeFilter}`);
-        }
-      }
-
-      // Content type matching
-      if (processed.contentType && item.file_type === processed.contentType) {
-        score += 10;
-        reasons.push(`Matches content type: ${processed.contentType}`);
-      }
-
-      // Intent-based scoring
-      if (processed.intent === 'learning' && 
-          item.tags.some(tag => ['learning', 'tutorial', 'course', 'education'].includes(tag.name.toLowerCase()))) {
-        score += 20;
-        reasons.push('Learning-related content');
-      }
-
-      if (score > 0) {
-        results.push({
-          content: item,
-          relevanceScore: Math.min(score, 100),
-          matchReason: reasons.join(', ')
+  private extractEntities(query: string): QueryIntent['entities'] {
+    const entities: QueryIntent['entities'] = [];
+    
+    // Time-based entities
+    const timePatterns = [
+      { pattern: /\b(today|this\s+day)\b/, value: 'today' },
+      { pattern: /\b(yesterday|last\s+day)\b/, value: 'yesterday' },
+      { pattern: /\b(this\s+week|last\s+week|past\s+week)\b/, value: 'week' },
+      { pattern: /\b(this\s+month|last\s+month|past\s+month)\b/, value: 'month' },
+      { pattern: /\b(this\s+year|last\s+year|past\s+year)\b/, value: 'year' },
+      { pattern: /\b(recent|recently|latest)\b/, value: 'recent' }
+    ];
+    
+    timePatterns.forEach(({ pattern, value }) => {
+      if (pattern.test(query)) {
+        entities.push({
+          type: 'timeframe',
+          value,
+          confidence: 0.9
         });
       }
     });
-
-    return results.sort((a, b) => b.relevanceScore - a.relevanceScore);
-  }
-
-  private detectSentiment(text: string): string {
-    const positiveWords = ['good', 'great', 'excellent', 'amazing', 'helpful', 'useful', 'love', 'like'];
-    const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'dislike', 'useless', 'boring'];
     
-    const words = text.toLowerCase().split(/\s+/);
-    const positiveCount = words.filter(word => positiveWords.includes(word)).length;
-    const negativeCount = words.filter(word => negativeWords.includes(word)).length;
+    // Content type entities
+    const contentTypePatterns = [
+      { pattern: /\b(article|articles|blog|post|posts)\b/, value: 'article' },
+      { pattern: /\b(video|videos|youtube)\b/, value: 'video' },
+      { pattern: /\b(document|documents|pdf|file|files)\b/, value: 'document' },
+      { pattern: /\b(note|notes)\b/, value: 'note' },
+      { pattern: /\b(image|images|photo|photos|picture|pictures)\b/, value: 'image' }
+    ];
     
-    if (positiveCount > negativeCount) return 'positive';
-    if (negativeCount > positiveCount) return 'negative';
-    return 'neutral';
+    contentTypePatterns.forEach(({ pattern, value }) => {
+      if (pattern.test(query)) {
+        entities.push({
+          type: 'content_type',
+          value,
+          confidence: 0.85
+        });
+      }
+    });
+    
+    // Extract potential keywords (words longer than 3 chars, excluding common words)
+    const stopWords = new Set([
+      'what', 'how', 'when', 'where', 'why', 'which', 'who', 'the', 'and', 'for',
+      'with', 'from', 'about', 'show', 'find', 'get', 'search', 'list', 'display'
+    ]);
+    
+    const words = query.split(/\s+/).filter(word => 
+      word.length > 3 && 
+      !stopWords.has(word) &&
+      !/^\d+$/.test(word) // Exclude pure numbers
+    );
+    
+    words.forEach(word => {
+      entities.push({
+        type: 'keyword',
+        value: word,
+        confidence: 0.6
+      });
+    });
+    
+    return entities;
   }
 
   /**
-   * Generate suggested questions based on content
+   * Generate contextual suggestions based on query
    */
-  generateSuggestedQueries(content: SavedContent[]): string[] {
-    const commonTags = this.getCommonTags(content);
-    const suggestions = [
-      'Show me recent learning materials',
-      'What did I save about productivity?',
-      'Find articles from this week',
-      'Show me all programming resources'
-    ];
-
-    // Add tag-based suggestions
+  generateSuggestions(partialQuery: string, userContent: SavedContent[]): string[] {
+    const suggestions: string[] = [];
+    const query = partialQuery.toLowerCase();
+    
+    // Time-based suggestions
+    if (query.includes('today') || query.includes('recent')) {
+      suggestions.push('What did I save today?', 'Recent articles', 'Today\'s notes');
+    }
+    
+    // Content type suggestions
+    if (query.includes('video')) {
+      suggestions.push('Show me all videos', 'Recent video tutorials', 'YouTube content');
+    }
+    
+    if (query.includes('article')) {
+      suggestions.push('Find articles about', 'Recent article posts', 'Blog articles');
+    }
+    
+    // Tag-based suggestions from user content
+    const commonTags = this.getCommonTags(userContent);
     commonTags.slice(0, 3).forEach(tag => {
-      suggestions.push(`What do I have about ${tag}?`);
+      if (tag.toLowerCase().includes(query) || query.includes(tag.toLowerCase())) {
+        suggestions.push(`Show me ${tag} content`, `Recent ${tag} items`);
+      }
     });
-
-    return suggestions;
+    
+    return suggestions.slice(0, 5);
   }
 
+  /**
+   * Get most common tags from user content
+   */
   private getCommonTags(content: SavedContent[]): string[] {
-    const tagCount: { [key: string]: number } = {};
+    const tagCounts: { [key: string]: number } = {};
     
     content.forEach(item => {
       item.tags.forEach(tag => {
-        tagCount[tag.name] = (tagCount[tag.name] || 0) + 1;
+        tagCounts[tag.name] = (tagCounts[tag.name] || 0) + 1;
       });
     });
-
-    return Object.entries(tagCount)
+    
+    return Object.entries(tagCounts)
       .sort(([, a], [, b]) => b - a)
-      .slice(0, 5)
-      .map(([tag]) => tag);
+      .map(([tag]) => tag)
+      .slice(0, 10);
   }
 }
 

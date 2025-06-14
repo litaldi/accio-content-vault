@@ -1,136 +1,188 @@
 
 # Accio - AI-Powered Knowledge Engine
 
-Transform scattered information into organized intelligence with Accio's comprehensive knowledge management platform.
+Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform. Save, organize, and rediscover everything that matters with intelligent automation and semantic search.
 
 ## 🌟 Features
 
 ### Core Knowledge Management
-- **Smart Content Capture**: Save articles, videos, documents, and more from anywhere
-- **AI-Powered Organization**: Automatic categorization and intelligent tagging
-- **Semantic Search**: Find content using natural language, not just keywords
-- **Visual Knowledge Graph**: Discover connections between your saved content
+- **Smart Content Saving**: Save URLs, documents, and notes with automatic metadata extraction
+- **AI-Powered Tagging**: Automatic content categorization and tag suggestions
+- **Intelligent Organization**: AI learns your patterns and organizes content automatically
 
-### Advanced Search & Discovery
-- **Unified Search Bar**: Single interface for all your content with voice search support
-- **Smart Filters**: Filter by content type, date, tags, and custom criteria  
-- **Search Suggestions**: Intelligent autocomplete with recent searches and popular queries
-- **Advanced Search Sidebar**: Comprehensive filtering and sorting options
+### AI-Enhanced Search & Discovery
+- **Semantic Search**: Natural language queries that understand intent and context
+- **Voice Search**: Hands-free content discovery with speech recognition
+- **Smart Recommendations**: Personalized content suggestions based on your interests
+- **Enhanced Filtering**: Time-based, content-type, and tag-based filtering
 
-### Reading & Analytics
-- **Distraction-Free Reading Mode**: Clean, focused reading experience
-- **Reading Analytics**: Track your reading habits, goals, and progress
-- **Content Recommendations**: AI-suggested content based on your interests
-- **Reading Time Estimation**: Know how long content will take to read
-
-### Productivity & Organization
-- **Smart Collections**: Organize content into themed collections
-- **Offline Sync**: Access your content even without internet connection
-- **Quick Actions**: Fast content capture and organization tools
-- **Progress Tracking**: Monitor your learning journey and achievements
+### Advanced AI Features
+- **Auto-Generated Summaries**: AI creates concise summaries of your content
+- **Content Analysis**: Deep insights into your knowledge patterns and gaps
+- **Natural Language Processing**: Understands questions and provides relevant answers
+- **Smart Suggestions**: Context-aware query completions and recommendations
 
 ### User Experience
-- **Responsive Design**: Works perfectly on desktop, tablet, and mobile
-- **Dark/Light Mode**: Comfortable reading in any lighting condition  
-- **Accessibility First**: WCAG 2.1 AA compliant with screen reader support
-- **Voice Search**: Search your content using voice commands
-- **Keyboard Shortcuts**: Power user features for faster navigation
+- **Distraction-Free Reading**: Immersive reading mode with customizable settings
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Dark/Light Themes**: Adaptive theming with user preferences
+- **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
 
-## 🚀 Technology Stack
+### Personalization & Analytics
+- **Dashboard Customization**: Personalize your workspace and preferences
+- **Reading Analytics**: Track reading time and content engagement
+- **Achievement System**: Gamified experience with progress tracking
+- **Usage Insights**: Understand your knowledge consumption patterns
 
-- **Frontend**: React 18, TypeScript, Tailwind CSS
-- **UI Components**: Shadcn/ui with Radix UI primitives
-- **State Management**: React Query for server state
-- **Icons**: Lucide React icon library
-- **Charts**: Recharts for analytics visualization
-- **Voice**: Web Speech API for voice search
-- **Accessibility**: ARIA compliant with focus management
+## 🚀 Getting Started
 
-## 🎯 Key Benefits
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn package manager
 
-- **Never Lose Information**: Centralized storage for all your knowledge
-- **Save Time**: AI-powered organization reduces manual sorting
-- **Discover Insights**: Find hidden connections in your content
-- **Stay Organized**: Smart categorization keeps everything tidy
-- **Work Offline**: Access your content anywhere, anytime
-- **Track Progress**: Monitor your learning and reading habits
-
-## 🔧 Getting Started
+### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/accio.git
+   git clone <repository-url>
    cd accio
    ```
 
 2. **Install dependencies**
    ```bash
    npm install
+   # or
+   yarn install
    ```
 
-3. **Start development server**
+3. **Start the development server**
    ```bash
    npm run dev
+   # or
+   yarn dev
    ```
 
 4. **Open your browser**
-   Navigate to `http://localhost:5173`
+   Navigate to `http://localhost:5173` to see the application
 
-## 📱 Usage
+### Environment Setup
 
-### Saving Content
-- Use the "+" button to manually add content
-- Save articles, videos, documents, and links
-- AI automatically categorizes and tags your content
+For full functionality, you may need to configure:
+- **Supabase**: Backend database and authentication
+- **OpenAI API**: For AI-powered features and summaries
+- **Voice Recognition**: Browser-based speech recognition (no setup required)
 
-### Searching
-- Use the unified search bar with natural language
-- Try voice search by clicking the microphone icon
-- Apply filters using the search sidebar
-- Use keyboard shortcut `Cmd/Ctrl + K` for quick search
+## 🏗️ Architecture
 
-### Reading
-- Click any content item to open reading mode
-- Track your reading progress and analytics
-- Bookmark important sections
-- Share content with others
+### Frontend Stack
+- **React 18**: Modern React with hooks and concurrent features
+- **TypeScript**: Type-safe development with excellent IDE support
+- **Tailwind CSS**: Utility-first styling with custom design system
+- **Shadcn/UI**: High-quality, accessible component library
+- **Vite**: Fast development and optimized production builds
 
-### Organization
-- Create collections for themed content
-- Use smart tags for easy categorization
-- Set reading goals and track progress
-- Review analytics to optimize your learning
+### AI & Intelligence
+- **Natural Language Processing**: Query understanding and intent recognition
+- **Semantic Search**: Content matching based on meaning, not just keywords
+- **Machine Learning**: Pattern recognition for content categorization
+- **Voice Recognition**: Browser Web Speech API integration
 
-## 🎨 Design Principles
+### State Management
+- **React Context**: Authentication and global state management
+- **Custom Hooks**: Reusable logic for search, content, and AI features
+- **Local Storage**: User preferences and offline capability
 
-- **Simplicity**: Clean, intuitive interface that gets out of your way
-- **Speed**: Fast search and navigation for productive workflows  
-- **Intelligence**: AI assistance without being overwhelming
-- **Accessibility**: Inclusive design that works for everyone
-- **Responsiveness**: Seamless experience across all devices
+### Performance & Quality
+- **Code Splitting**: Optimized bundle loading
+- **Error Boundaries**: Graceful error handling and recovery
+- **Accessibility**: WCAG 2.1 AA compliance
+- **Testing**: Comprehensive unit and integration tests
 
-## 🔒 Privacy & Security
+## 📁 Project Structure
 
-- **Local-First**: Your data stays on your device when possible
-- **Secure Storage**: Enterprise-grade encryption for cloud data
-- **Privacy Controls**: Full control over data sharing and sync
-- **GDPR Compliant**: Respects your privacy rights and preferences
+```
+src/
+├── components/           # Reusable UI components
+│   ├── summaries/       # AI summary components
+│   ├── search/          # Search and discovery features
+│   ├── reading/         # Reading experience components
+│   └── dashboard/       # Dashboard and personalization
+├── services/            # Business logic and AI services
+│   ├── aiTaggingService.ts
+│   ├── summaryService.ts
+│   ├── enhancedSearchService.ts
+│   └── naturalLanguageService.ts
+├── hooks/               # Custom React hooks
+├── types/               # TypeScript type definitions
+├── pages/               # Main application pages
+└── utils/               # Utility functions and helpers
+```
+
+## 🔧 Key Services
+
+### AI Services
+- **AI Tagging Service**: Automatic content categorization
+- **Summary Service**: Content summarization with confidence scoring
+- **Enhanced Search Service**: Semantic search with NLP
+- **Natural Language Service**: Query parsing and intent recognition
+
+### Search & Discovery
+- **Voice Search Service**: Speech recognition integration
+- **Smart Recommendation Service**: Personalized content suggestions
+- **Search Filters**: Advanced filtering and sorting capabilities
+
+### User Experience
+- **Content Save Service**: Streamlined content saving workflow
+- **Dashboard Personalization**: Customizable user preferences
+- **Error Boundary**: Graceful error handling
+
+## 🎯 Usage Examples
+
+### Smart Search Queries
+```
+"What did I save about AI this week?"
+"Show me recent programming tutorials"
+"Find articles about productivity"
+"What learning resources do I have?"
+```
+
+### Voice Commands
+- Click the microphone icon or use keyboard shortcut
+- Speak naturally: "Find my notes about machine learning"
+- Voice transcription converts speech to searchable text
+
+### Content Organization
+- Save any URL with automatic metadata extraction
+- AI suggests relevant tags and categories
+- Content is automatically organized by topic and date
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our contributing guidelines for details on:
+- Code style and standards
+- Testing requirements
+- Pull request process
+- Issue reporting
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgments
 
-- Built with [Lovable](https://lovable.dev) - AI-powered web development platform
-- UI components from [Shadcn/ui](https://ui.shadcn.com)
-- Icons from [Lucide](https://lucide.dev)
-- Charts powered by [Recharts](https://recharts.org)
+- **Lovable.dev**: For the incredible development platform that made this possible
+- **Shadcn/UI**: For the beautiful and accessible component library
+- **OpenAI**: For AI capabilities that power intelligent features
+- **Supabase**: For backend infrastructure and real-time capabilities
+
+## 📞 Support
+
+Need help? 
+- 📧 Contact support
+- 📖 Check the documentation
+- 💬 Join our community discussions
+- 🐛 Report issues on GitHub
 
 ---
 
-**Accio** - Your AI-Powered Knowledge Companion 🧙‍♂️✨
+Built with ❤️ using Lovable.dev - Empowering creators to build the future of knowledge management.

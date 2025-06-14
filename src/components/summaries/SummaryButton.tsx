@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Sparkles, Loader } from 'lucide-react';
+import { Brain, Loader2 } from 'lucide-react';
 import { SummaryService } from '@/services/summaryService';
 import { useToast } from '@/hooks/use-toast';
 
@@ -9,59 +9,55 @@ interface SummaryButtonProps {
   contentId: string;
   contentText: string;
   onSummaryGenerated?: () => void;
-  size?: 'sm' | 'default' | 'lg';
   variant?: 'default' | 'outline' | 'ghost';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 export const SummaryButton: React.FC<SummaryButtonProps> = ({
   contentId,
   contentText,
   onSummaryGenerated,
-  size = 'sm',
   variant = 'outline',
+  size = 'sm'
 }) => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasSummary, setHasSummary] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    checkExistingSummary();
-  }, [contentId]);
-
-  const checkExistingSummary = async () => {
-    try {
+    const checkSummary = async () => {
       const exists = await SummaryService.hasSummary(contentId);
       setHasSummary(exists);
-    } catch (error) {
-      console.error('Error checking summary:', error);
-    }
-  };
+    };
+    checkSummary();
+  }, [contentId]);
 
-  const handleGenerateSummary = async () => {
+  const handleGenerate = async () => {
     if (!contentText.trim()) {
       toast({
-        title: 'No content to summarize',
-        description: 'This item does not have enough text content to generate a summary.',
-        variant: 'destructive',
+        title: "No content to summarize",
+        description: "This item does not have enough text content to generate a summary.",
+        variant: "destructive",
       });
       return;
     }
 
-    setIsGenerating(true);
     try {
-      await SummaryService.generateSummary(contentId, contentText, 'medium');
+      setIsGenerating(true);
+      await SummaryService.generateSummary(contentId, contentText);
       setHasSummary(true);
       onSummaryGenerated?.();
+      
       toast({
-        title: 'Summary generated',
-        description: 'AI has created a summary of your content.',
+        title: "Summary generated",
+        description: "AI has created a summary of your content.",
       });
     } catch (error) {
       console.error('Error generating summary:', error);
       toast({
-        title: 'Error',
-        description: 'Failed to generate summary. Please try again.',
-        variant: 'destructive',
+        title: "Error",
+        description: "Failed to generate summary. Please try again.",
+        variant: "destructive",
       });
     } finally {
       setIsGenerating(false);
@@ -70,18 +66,22 @@ export const SummaryButton: React.FC<SummaryButtonProps> = ({
 
   return (
     <Button
-      size={size}
       variant={variant}
-      onClick={handleGenerateSummary}
+      size={size}
+      onClick={handleGenerate}
       disabled={isGenerating}
-      className="gap-2"
     >
       {isGenerating ? (
-        <Loader className="h-4 w-4 animate-spin" />
+        <>
+          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+          Generating...
+        </>
       ) : (
-        <Sparkles className="h-4 w-4" />
+        <>
+          <Brain className="h-4 w-4 mr-2" />
+          {hasSummary ? 'Regenerate Summary' : 'Generate Summary'}
+        </>
       )}
-      {isGenerating ? 'Generating...' : hasSummary ? 'Regenerate Summary' : 'Generate Summary'}
     </Button>
   );
 };
