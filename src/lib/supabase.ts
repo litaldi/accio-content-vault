@@ -22,12 +22,6 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
   },
 });
 
-// Helper function to check if Supabase is properly configured
-export const isSupabaseConfigured = () => {
-  return supabaseUrl !== 'https://demo-project.supabase.co' && 
-         supabaseAnonKey !== 'demo-anon-key';
-};
-
 // Security helper to validate Supabase responses
 export const validateSupabaseResponse = <T>(response: { data: T | null; error: any }) => {
   if (response.error) {
