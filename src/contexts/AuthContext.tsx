@@ -1,35 +1,16 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  email: string;
-  name?: string;
-  user_metadata?: {
-    full_name?: string;
-    name?: string;
-    [key: string]: any;
-  };
-}
-
-interface AuthResult {
-  error?: Error;
-}
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
 interface AuthContextType {
   user: User | null;
-  isLoading: boolean;
+  session: Session | null;
   loading: boolean;
-  isAuthenticated: boolean;
-  isDemoMode: boolean;
-  signIn: (email: string, password: string) => Promise<AuthResult | void>;
-  signUp: (email: string, password: string, metadata?: any) => Promise<AuthResult | void>;
+  signUp: (email: string, password: string) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name?: string) => Promise<void>;
-  logout: () => Promise<void>;
-  signInWithProvider: (provider: string) => Promise<AuthResult>;
-  resetPassword: (email: string) => Promise<void>;
+  signInWithProvider: (provider: 'google') => Promise<{ error: any }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -42,155 +23,79 @@ export const useAuth = () => {
   return context;
 };
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing session
-    const savedUser = localStorage.getItem('accio_user');
-    if (savedUser) {
-      try {
-        setUser(JSON.parse(savedUser));
-      } catch (error) {
-        localStorage.removeItem('accio_user');
+    // Set up auth state listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+        setLoading(false);
       }
-    }
-    setIsLoading(false);
+    );
+
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<AuthResult | void> => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const userData: User = {
-        id: '1',
-        email,
-        name: email.split('@')[0],
-        user_metadata: {
-          full_name: email.split('@')[0],
-          name: email.split('@')[0]
-        }
-      };
-      
-      setUser(userData);
-      localStorage.setItem('accio_user', JSON.stringify(userData));
-      return {};
-    } catch (error) {
-      return { error: new Error('Invalid credentials') };
-    } finally {
-      setIsLoading(false);
-    }
+  const signUp = async (email: string, password: string) => {
+    const redirectUrl = `${window.location.origin}/`;
+    
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl
+      }
+    });
+    return { error };
   };
 
-  const signUp = async (email: string, password: string, metadata?: any): Promise<AuthResult | void> => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const userData: User = {
-        id: '1',
-        email,
-        name: metadata?.name || email.split('@')[0],
-        user_metadata: {
-          full_name: metadata?.name || email.split('@')[0],
-          name: metadata?.name || email.split('@')[0]
-        }
-      };
-      
-      setUser(userData);
-      localStorage.setItem('accio_user', JSON.stringify(userData));
-      return {};
-    } catch (error) {
-      return { error: new Error('Failed to create account') };
-    } finally {
-      setIsLoading(false);
-    }
+  const signIn = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    });
+    return { error };
   };
 
   const signOut = async () => {
-    setIsLoading(true);
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUser(null);
-      localStorage.removeItem('accio_user');
-    } catch (error) {
-      throw new Error('Failed to sign out');
-    } finally {
-      setIsLoading(false);
-    }
+    await supabase.auth.signOut();
   };
 
-  const login = async (email: string, password: string) => {
-    const result = await signIn(email, password);
-    if (result && result.error) {
-      throw result.error;
-    }
-  };
-
-  const register = async (email: string, password: string, name?: string) => {
-    const result = await signUp(email, password, { name });
-    if (result && result.error) {
-      throw result.error;
-    }
-  };
-
-  const logout = async () => {
-    await signOut();
-  };
-
-  const signInWithProvider = async (provider: string): Promise<AuthResult> => {
-    try {
-      // Simulate OAuth flow
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const userData: User = {
-        id: '1',
-        email: 'user@google.com',
-        name: 'Google User',
-        user_metadata: {
-          full_name: 'Google User',
-          name: 'Google User'
-        }
-      };
-      
-      setUser(userData);
-      localStorage.setItem('accio_user', JSON.stringify(userData));
-      return {};
-    } catch (error) {
-      return { error: new Error(`${provider} sign in failed`) };
-    }
-  };
-
-  const resetPassword = async (email: string) => {
-    // Simulate password reset
-    await new Promise(resolve => setTimeout(resolve, 1000));
+  const signInWithProvider = async (provider: 'google') => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider,
+      options: {
+        redirectTo: `${window.location.origin}/`
+      }
+    });
+    return { error };
   };
 
   const value = {
     user,
-    isLoading,
-    loading: isLoading,
-    isAuthenticated: !!user,
-    isDemoMode: true, // For demo purposes
-    signIn,
+    session,
+    loading,
     signUp,
+    signIn,
     signOut,
-    login,
-    register,
-    logout,
-    signInWithProvider,
-    resetPassword
+    signInWithProvider
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

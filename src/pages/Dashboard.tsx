@@ -1,151 +1,119 @@
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { SearchExperience } from '@/components/search/SearchExperience';
-import { QuickActions } from '@/components/dashboard/QuickActions';
-import { RecentContent } from '@/components/dashboard/RecentContent';
-import { ContentStats } from '@/components/dashboard/ContentStats';
-import { KnowledgeInsights } from '@/components/dashboard/KnowledgeInsights';
-import { SaveContentMain } from '@/components/SaveContent/SaveContentMain';
-import { Plus, Brain, TrendingUp, BookOpen } from 'lucide-react';
-import { Tag } from '@/types';
+import { BookOpen, Search, Plus, BarChart3 } from 'lucide-react';
+import { ResponsiveContainer } from '@/components/ui/responsive-container';
+import { ResponsiveGrid } from '@/components/ui/responsive-grid';
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
-  const [activeView, setActiveView] = useState<'overview' | 'add-content'>('overview');
-  const [searchQuery, setSearchQuery] = useState('');
 
-  const handleSaveContent = (url: string, tags: Tag[]) => {
-    console.log('Saving content:', { url, tags });
-    // Implementation would go here
-    setActiveView('overview');
-  };
-
-  const handleFileUploadComplete = (fileDetails: any) => {
-    console.log('File uploaded:', fileDetails);
-    setActiveView('overview');
-  };
-
-  if (activeView === 'add-content') {
-    return (
-      <>
-        <Helmet>
-          <title>Add Content - Accio Dashboard</title>
-        </Helmet>
-        <div className="min-h-screen bg-background">
-          <div className="container mx-auto px-4 py-8">
-            <div className="mb-6">
-              <Button 
-                variant="outline" 
-                onClick={() => setActiveView('overview')}
-                className="mb-4"
-              >
-                ← Back to Dashboard
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <SaveContentMain
-                activeTab="url"
-                setActiveTab={() => {}}
-                handleSaveContent={handleSaveContent}
-                handleFileUploadComplete={handleFileUploadComplete}
-              />
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Brain className="h-5 w-5" />
-                      AI Tips
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3 text-sm">
-                      <p>• Add tags to help organize your content</p>
-                      <p>• URL content is automatically summarized</p>
-                      <p>• Files are processed for text extraction</p>
-                      <p>• AI categorizes content intelligently</p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
+  const stats = [
+    { title: 'Total Content', value: '0', icon: BookOpen },
+    { title: 'Recent Searches', value: '0', icon: Search },
+    { title: 'Tags Created', value: '0', icon: BarChart3 },
+    { title: 'This Week', value: '0', icon: Plus },
+  ];
 
   return (
     <>
       <Helmet>
         <title>Dashboard - Accio</title>
-        <meta name="description" content="Your AI-powered knowledge management dashboard" />
+        <meta name="description" content="Your personal knowledge management dashboard" />
       </Helmet>
 
       <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-8">
-          {/* Welcome Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold mb-2">
-              Welcome back, {user?.email?.split('@')[0] || 'User'}! 👋
-            </h1>
-            <p className="text-muted-foreground">
-              Your knowledge sanctuary awaits. What would you like to explore today?
-            </p>
-          </div>
-
-          {/* Search Experience */}
-          <div className="mb-8">
-            <SearchExperience
-              variant="dashboard"
-              searchQuery={searchQuery}
-              onSearchChange={setSearchQuery}
-              showTips={true}
-            />
-          </div>
-
-          {/* Quick Actions */}
-          <div className="mb-8">
-            <QuickActions onAddContent={() => setActiveView('add-content')} />
-          </div>
-
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Column - Stats and Recent */}
-            <div className="lg:col-span-2 space-y-6">
-              <ContentStats />
-              <RecentContent />
+        <ResponsiveContainer maxWidth="xl" padding="lg">
+          <div className="space-y-8">
+            {/* Header */}
+            <div className="space-y-2">
+              <h1 className="text-3xl font-bold">Dashboard</h1>
+              <p className="text-muted-foreground">
+                Welcome back, {user?.email}! Here's your knowledge overview.
+              </p>
             </div>
 
-            {/* Right Column - Insights */}
-            <div className="space-y-6">
-              <KnowledgeInsights />
-              
-              {/* Quick Add Widget */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
+            {/* Stats Grid */}
+            <ResponsiveGrid cols={{ default: 1, sm: 2, lg: 4 }}>
+              {stats.map((stat) => (
+                <Card key={stat.title}>
+                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                    <CardTitle className="text-sm font-medium">
+                      {stat.title}
+                    </CardTitle>
+                    <stat.icon className="h-4 w-4 text-muted-foreground" />
+                  </CardHeader>
+                  <CardContent>
+                    <div className="text-2xl font-bold">{stat.value}</div>
+                  </CardContent>
+                </Card>
+              ))}
+            </ResponsiveGrid>
+
+            {/* Quick Actions */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+                <CardDescription>
+                  Get started with your knowledge management journey
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                  <Button className="h-auto p-4 flex flex-col items-start gap-2">
                     <Plus className="h-5 w-5" />
-                    Quick Add
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <Button 
-                    className="w-full" 
-                    onClick={() => setActiveView('add-content')}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Content
+                    <div>
+                      <div className="font-medium">Add Content</div>
+                      <div className="text-sm text-muted-foreground">
+                        Upload files or save URLs
+                      </div>
+                    </div>
                   </Button>
-                </CardContent>
-              </Card>
-            </div>
+                  
+                  <Button variant="outline" className="h-auto p-4 flex flex-col items-start gap-2">
+                    <Search className="h-5 w-5" />
+                    <div>
+                      <div className="font-medium">Search Knowledge</div>
+                      <div className="text-sm text-muted-foreground">
+                        Find what you need quickly
+                      </div>
+                    </div>
+                  </Button>
+                  
+                  <Button variant="outline" className="h-auto p-4 flex flex-col items-start gap-2">
+                    <BarChart3 className="h-5 w-5" />
+                    <div>
+                      <div className="font-medium">View Analytics</div>
+                      <div className="text-sm text-muted-foreground">
+                        Track your progress
+                      </div>
+                    </div>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Recent Activity */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+                <CardDescription>
+                  Your latest knowledge management activities
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-8 text-muted-foreground">
+                  <BookOpen className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                  <p>No recent activity yet.</p>
+                  <p className="text-sm">Start by adding some content to your knowledge base!</p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
-        </div>
+        </ResponsiveContainer>
       </div>
     </>
   );

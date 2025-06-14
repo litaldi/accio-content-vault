@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { SignUpForm } from '@/components/auth/forms/SignUpForm';
+import { SecureLoginForm } from '@/components/auth/SecureLoginForm';
 import { Brain } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -17,18 +17,10 @@ const Register: React.FC = () => {
     }
   }, [user, navigate]);
 
-  const handleSuccess = () => {
-    navigate('/dashboard');
-  };
-
-  const handleError = (error: string) => {
-    console.error('Registration error:', error);
-  };
-
   return (
     <>
       <Helmet>
-        <title>Sign Up - Accio</title>
+        <title>Create Account - Accio</title>
         <meta name="description" content="Create your Accio account and start building your knowledge vault" />
       </Helmet>
 
@@ -46,18 +38,15 @@ const Register: React.FC = () => {
                 Accio
               </span>
             </Link>
-            <p className="mt-4 text-muted-foreground">
-              Join thousands building their knowledge vault
-            </p>
           </div>
 
-          <SignUpForm onSuccess={handleSuccess} onError={handleError} />
+          <SecureLoginForm />
 
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary hover:underline font-medium">
-                Sign in
+              <Link to="/login" className="text-primary hover:underline">
+                Sign In
               </Link>
             </p>
           </div>

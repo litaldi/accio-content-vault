@@ -5,14 +5,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
-import { SecureAuthProvider } from '@/contexts/SecureAuthContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { EnhancedAccessibility } from '@/components/accessibility/EnhancedAccessibility';
 import { AccessibilityToolbar } from '@/components/accessibility/AccessibilityToolbar';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { SecurityHeaders } from '@/components/security/SecurityHeaders';
 import { useAppSecurity } from '@/hooks/useAppSecurity';
-import { securityMonitor } from '@/utils/securityMonitor';
+import { MainNavigation } from '@/components/navigation/MainNavigation';
 import SecureProtectedRoute from '@/components/security/SecureProtectedRoute';
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -32,28 +32,26 @@ const queryClient = new QueryClient({
 function AppContent() {
   useAppSecurity();
   
-  useEffect(() => {
-    // Initialize security monitoring
-    securityMonitor.initialize();
-  }, []);
-  
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <SecurityHeaders />
-      <Routes>
-        <Route path="/" element={<Index />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/features" element={<Features />} />
-        <Route 
-          path="/dashboard" 
-          element={
-            <SecureProtectedRoute>
-              <Dashboard />
-            </SecureProtectedRoute>
-          } 
-        />
-      </Routes>
+      <MainNavigation />
+      <main role="main">
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/features" element={<Features />} />
+          <Route 
+            path="/dashboard" 
+            element={
+              <SecureProtectedRoute>
+                <Dashboard />
+              </SecureProtectedRoute>
+            } 
+          />
+        </Routes>
+      </main>
       <AccessibilityToolbar />
     </div>
   );
@@ -65,7 +63,7 @@ function App() {
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <SecureAuthProvider>
+            <AuthProvider>
               <AccessibilityProvider>
                 <EnhancedAccessibility>
                   <TooltipProvider>
@@ -74,7 +72,7 @@ function App() {
                   </TooltipProvider>
                 </EnhancedAccessibility>
               </AccessibilityProvider>
-            </SecureAuthProvider>
+            </AuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </HelmetProvider>

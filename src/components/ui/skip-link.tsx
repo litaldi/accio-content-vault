@@ -17,11 +17,12 @@ export const SkipLink: React.FC<SkipLinkProps> = ({
     <a
       href={href}
       className={cn(
-        "sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4",
-        "bg-primary text-primary-foreground px-4 py-2 rounded-md",
-        "font-medium text-sm z-[100]",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground focus-visible:ring-offset-2",
-        "transition-all duration-200",
+        "skip-link",
+        "absolute -top-40 left-6 z-50",
+        "bg-primary text-primary-foreground",
+        "px-4 py-3 rounded-md font-medium",
+        "focus:top-6 transition-all duration-200",
+        "focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
         className
       )}
     >
