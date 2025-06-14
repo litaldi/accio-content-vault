@@ -1,5 +1,6 @@
 
 @import url('./styles/accessibility.css');
+@import url('./styles/modern-design-system.css');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,9 +60,10 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
-  /* Enhanced focus visibility for better accessibility */
+  /* Enhanced focus visibility */
   *:focus-visible {
     @apply outline-2 outline-primary outline-offset-2;
   }
@@ -104,60 +106,29 @@
     top: 0;
   }
 
-  /* Loading animation */
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-    to {
-      transform: rotate(360deg);
-    }
+  /* Enhanced typography */
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
   }
 
-  .animate-spin {
-    animation: spin 1s linear infinite;
+  p {
+    text-wrap: pretty;
   }
 
   /* High contrast mode support */
-  .high-contrast {
-    filter: contrast(1.5) brightness(1.1);
-  }
-
-  .high-contrast * {
-    border-color: currentColor !important;
-  }
-
-  .high-contrast button,
-  .high-contrast input,
-  .high-contrast select,
-  .high-contrast textarea {
-    border: 2px solid currentColor !important;
-  }
-
-  /* Reduced motion support */
-  .reduce-motion *,
-  .reduce-motion *::before,
-  .reduce-motion *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  /* Font size utilities */
-  .font-size-small {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
-
-  .font-size-medium {
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-
-  .font-size-large {
-    font-size: 1.25rem;
-    line-height: 1.875rem;
+  @media (prefers-contrast: high) {
+    .modern-card {
+      border-width: 2px !important;
+    }
+    
+    .modern-nav-item {
+      border: 1px solid transparent !important;
+    }
+    
+    .modern-nav-item:hover,
+    .modern-nav-item-active {
+      border-color: currentColor !important;
+    }
   }
 
   /* Print styles */
@@ -172,76 +143,57 @@
       box-shadow: none !important;
       text-shadow: none !important;
     }
-    
-    a,
-    a:visited {
-      text-decoration: underline;
-    }
   }
 
-  /* Screen reader only content */
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* Error and success state indicators */
-  .error-state {
-    border-color: hsl(var(--destructive)) !important;
-    color: hsl(var(--destructive)) !important;
-  }
-
-  .success-state {
-    border-color: hsl(142 76% 36%) !important;
-    color: hsl(142 76% 36%) !important;
-  }
-
-  /* Ensure minimum touch target sizes on mobile */
+  /* Touch device optimizations */
   @media (pointer: coarse) {
-    button,
-    input[type="button"],
-    input[type="submit"],
-    input[type="reset"],
-    a[role="button"],
-    [role="button"] {
-      min-height: 44px;
-      min-width: 44px;
+    .modern-nav-item,
+    .btn-modern-primary,
+    .btn-modern-secondary {
+      min-height: 44px !important;
+      min-width: 44px !important;
       touch-action: manipulation;
     }
   }
 }
 
-/* Custom scrollbar for better UX */
+/* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground));
+  background: rgba(156, 163, 175, 0.5);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--primary));
-}
-
-/* Dark mode scrollbar */
-.dark ::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+  background: rgba(107, 114, 128, 0.7);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground));
+  background: rgba(75, 85, 99, 0.5);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+/* Loading animation improvements */
+@keyframes loading-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.loading-pulse {
+  animation: loading-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
