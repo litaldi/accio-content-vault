@@ -104,16 +104,12 @@ const Profile: React.FC = () => {
                 <p className="text-sm">{user.email}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Account Created</label>
-                <p className="text-sm">
-                  {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}
-                </p>
+                <label className="text-sm font-medium text-muted-foreground">Account Status</label>
+                <p className="text-sm">Active Member</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-muted-foreground">Last Sign In</label>
-                <p className="text-sm">
-                  {user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleDateString() : 'Unknown'}
-                </p>
+                <label className="text-sm font-medium text-muted-foreground">Account Type</label>
+                <p className="text-sm">Demo Account</p>
               </div>
             </CardContent>
           </Card>
