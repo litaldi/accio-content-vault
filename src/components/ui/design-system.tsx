@@ -41,20 +41,15 @@ export const Typography = {
   )
 };
 
-// Layout Components
-export const Layout = {
-  Section: ({ children, className, spacing = 'md', background, ...props }: React.HTMLProps<HTMLElement> & { 
-    spacing?: 'sm' | 'md' | 'lg' | 'xl'; 
-    background?: 'default' | 'muted' | 'primary' 
-  }) => (
+// Spacing Components
+export const Spacing = {
+  Section: ({ children, className, size = 'md', ...props }: React.HTMLProps<HTMLElement> & { size?: 'sm' | 'md' | 'lg' | 'xl' }) => (
     <section 
       className={cn(
         'section-spacing',
-        spacing === 'sm' && 'section-spacing-sm',
-        spacing === 'lg' && 'section-spacing-lg',
-        spacing === 'xl' && 'section-spacing-xl',
-        background === 'muted' && 'bg-muted/20',
-        background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
+        size === 'sm' && 'section-spacing-sm',
+        size === 'lg' && 'section-spacing-lg',
+        size === 'xl' && 'section-spacing-xl',
         className
       )} 
       {...props}
@@ -72,41 +67,6 @@ export const Layout = {
       )} 
       {...props}
     >
-      {children}
-    </div>
-  ),
-  Grid: ({ children, className, columns = 1, gap = 'md', ...props }: React.HTMLProps<HTMLDivElement> & { 
-    columns?: 1 | 2 | 3 | 4; 
-    gap?: 'sm' | 'md' | 'lg' 
-  }) => (
-    <div 
-      className={cn(
-        'grid',
-        columns === 1 && 'grid-cols-1',
-        columns === 2 && 'grid-cols-1 md:grid-cols-2',
-        columns === 3 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-        columns === 4 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
-        gap === 'sm' && 'gap-4',
-        gap === 'md' && 'gap-6',
-        gap === 'lg' && 'gap-8',
-        className
-      )} 
-      {...props}
-    >
-      {children}
-    </div>
-  )
-};
-
-// Card Components
-export const Card = {
-  Root: ({ children, className, ...props }: React.HTMLProps<HTMLDivElement>) => (
-    <div className={cn('clean-card', className)} {...props}>
-      {children}
-    </div>
-  ),
-  Content: ({ children, className, ...props }: React.HTMLProps<HTMLDivElement>) => (
-    <div className={cn('p-6', className)} {...props}>
       {children}
     </div>
   )
