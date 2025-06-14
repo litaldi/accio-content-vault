@@ -1,120 +1,50 @@
 
-/**
- * Global error handling utilities
- */
+import { logSecurityEvent } from './security';
 
-import React from 'react';
-
-export interface ErrorInfo {
-  message: string;
-  stack?: string;
-  timestamp: number;
-  url: string;
-  userAgent: string;
-  userId?: string;
-}
-
-class ErrorHandler {
-  private errors: ErrorInfo[] = [];
-  private maxErrors = 50;
-
-  logError(error: Error | ErrorEvent, userId?: string): void {
-    const errorInfo: ErrorInfo = {
-      message: error.message || 'Unknown error',
-      stack: 'stack' in error ? error.stack : undefined,
-      timestamp: Date.now(),
-      url: window.location.href,
-      userAgent: navigator.userAgent,
-      userId
-    };
-
-    this.errors.push(errorInfo);
-    
-    // Keep only recent errors
-    if (this.errors.length > this.maxErrors) {
-      this.errors = this.errors.slice(-this.maxErrors);
-    }
-
-    // Log to console in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error logged:', errorInfo);
-    }
-
-    // Here you could send to an error tracking service
-    // this.sendToErrorService(errorInfo);
-  }
-
-  getErrors(): ErrorInfo[] {
-    return [...this.errors];
-  }
-
-  clearErrors(): void {
-    this.errors = [];
-  }
-
-  private sendToErrorService(errorInfo: ErrorInfo): void {
-    // Implementation for sending to error tracking service
-    // e.g., Sentry, LogRocket, etc.
-  }
-}
-
-export const errorHandler = new ErrorHandler();
-
-// Export the logError function for external use
-export const logError = (error: Error | ErrorEvent, context?: any) => {
-  errorHandler.logError(error, context?.userId);
-};
-
-export const setupGlobalErrorHandlers = (): void => {
+export const setupGlobalErrorHandlers = () => {
   // Handle unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {
-    errorHandler.logError(new Error(event.reason));
+    console.error('Unhandled promise rejection:', event.reason);
+    
+    logSecurityEvent('unhandled_promise_rejection', {
+      error: event.reason?.toString(),
+      stack: event.reason?.stack,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Prevent the default browser behavior
     event.preventDefault();
   });
 
-  // Handle JavaScript errors
+  // Handle uncaught errors
   window.addEventListener('error', (event) => {
-    errorHandler.logError(event.error || new Error(event.message));
+    console.error('Uncaught error:', event.error);
+    
+    logSecurityEvent('uncaught_error', {
+      message: event.message,
+      filename: event.filename,
+      lineno: event.lineno,
+      colno: event.colno,
+      error: event.error?.toString(),
+      stack: event.error?.stack,
+      timestamp: new Date().toISOString()
+    });
   });
 
-  // Handle React errors (if not caught by error boundary)
-  const originalConsoleError = console.error;
-  console.error = (...args) => {
-    if (args[0] && typeof args[0] === 'string' && args[0].includes('React')) {
-      errorHandler.logError(new Error(args.join(' ')));
-    }
-    originalConsoleError.apply(console, args);
-  };
-};
-
-// Error boundary helper for React components
-export const createErrorBoundary = (fallbackComponent: React.ComponentType<{ error: Error }>) => {
-  return class ErrorBoundary extends React.Component<
-    { children: React.ReactNode },
-    { hasError: boolean; error?: Error }
-  > {
-    constructor(props: { children: React.ReactNode }) {
-      super(props);
-      this.state = { hasError: false };
-    }
-
-    static getDerivedStateFromError(error: Error) {
-      return { hasError: true, error };
-    }
-
-    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-      logError(error, { 
-        type: 'react-error-boundary',
-        componentStack: errorInfo.componentStack 
-      });
-    }
-
-    render() {
-      if (this.state.hasError && this.state.error) {
-        return React.createElement(fallbackComponent, { error: this.state.error });
+  // Handle console errors for development
+  if (process.env.NODE_ENV === 'development') {
+    const originalConsoleError = console.error;
+    console.error = (...args) => {
+      // Call original console.error
+      originalConsoleError.apply(console, args);
+      
+      // Log security event for React errors
+      if (args[0]?.toString().includes('React') || args[0]?.toString().includes('Warning')) {
+        logSecurityEvent('react_error', {
+          message: args.join(' '),
+          timestamp: new Date().toISOString()
+        });
       }
-
-      return this.props.children;
-    }
-  };
+    };
+  }
 };

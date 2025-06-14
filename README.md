@@ -1,289 +1,199 @@
 
 # Accio - AI-Powered Knowledge Management Platform
 
-Accio is a modern, AI-powered knowledge management platform that helps you capture, organize, and discover information with intelligent features.
+A modern, secure knowledge management application built with React, TypeScript, and Supabase. Accio helps users capture, organize, and discover insights from their digital content with AI-powered features.
 
 ## 🚀 Features
 
 ### Core Functionality
-- **Content Capture**: Save URLs, upload files (PDFs, images, documents)
-- **AI-Powered Organization**: Automatic tagging and categorization
-- **Intelligent Search**: Semantic search with natural language queries
-- **Real-time Analytics**: Track learning patterns and knowledge growth
-- **Voice Search**: Hands-free content discovery
-- **Smart Recommendations**: AI-suggested content based on your interests
+- **Content Management**: Save and organize articles, notes, files, and web content
+- **AI-Powered Search**: Natural language search with semantic understanding
+- **Smart Tagging**: Automatic content categorization and tagging
+- **Content Summaries**: AI-generated summaries for quick understanding
+- **Secure Authentication**: Email/password and OAuth authentication with Supabase
 
-### Dashboard & Analytics
-- **Personal Dashboard**: Comprehensive overview of your knowledge base
-- **Content Statistics**: Track your learning progress and habits
-- **Knowledge Insights**: AI-powered analysis of your content patterns
-- **Quick Actions**: Fast access to frequently used features
-- **Recent Content**: Easy access to recently added items
+### Security & Privacy
+- **Enhanced Security Headers**: CSP, HSTS, and comprehensive security policies
+- **Row-Level Security (RLS)**: Database-level access control
+- **Input Validation**: Comprehensive sanitization and validation
+- **Rate Limiting**: Protection against abuse and spam
+- **Security Monitoring**: Real-time threat detection and logging
+- **CSRF Protection**: Token-based request validation
 
-### Security & Accessibility
-- **OWASP Compliance**: Following security best practices
-- **Rate Limiting**: Protection against abuse
-- **Input Sanitization**: XSS and injection protection
-- **CSRF Protection**: Secure form submissions
-- **WCAG 2.1 AA Compliance**: Full accessibility support
+### Accessibility & UX
+- **WCAG 2.1 Compliant**: Full accessibility support
+- **Responsive Design**: Mobile-first, works on all devices
 - **High Contrast Mode**: Enhanced visibility options
-- **Keyboard Navigation**: Complete keyboard accessibility
-- **Voice Features**: Voice search and commands
+- **Reduced Motion**: Accessibility preferences
+- **Keyboard Navigation**: Full keyboard support
+- **Screen Reader Friendly**: Proper ARIA labels and announcements
 
-### User Experience
-- **Responsive Design**: Mobile-first approach
-- **Dark/Light Mode**: Theme preferences
-- **Progressive Web App**: Offline capabilities
-- **Real-time Updates**: Live notifications and updates
-- **Intuitive Interface**: Clean, modern design
+### Performance
+- **Lazy Loading**: Code splitting for optimal performance
+- **Optimized Queries**: Efficient database queries with caching
+- **Error Boundaries**: Graceful error handling
+- **Progressive Enhancement**: Works without JavaScript
 
-## 🛠 Tech Stack
+## 🏗️ Tech Stack
 
-### Frontend
-- **React 18**: Latest React with concurrent features
-- **TypeScript**: Type-safe development
-- **Vite**: Fast development and building
-- **Tailwind CSS**: Utility-first styling
-- **Shadcn/UI**: High-quality component library
-- **React Router**: Client-side routing
-- **React Query**: Data fetching and caching
-- **React Helmet**: SEO and meta management
+- **Frontend**: React 18, TypeScript, Vite
+- **Styling**: Tailwind CSS, shadcn/ui components
+- **Backend**: Supabase (PostgreSQL, Auth, Storage)
+- **State Management**: React Query for server state
+- **Routing**: React Router v6
+- **Security**: Helmet, DOMPurify, comprehensive validation
+- **Testing**: React Testing Library, Jest
 
-### Backend Integration
-- **Supabase**: Authentication, database, and real-time features
-- **Edge Functions**: Serverless backend logic
-- **Row Level Security**: Database security
-- **Real-time Subscriptions**: Live data updates
-
-### Development Tools
-- **ESLint**: Code linting
-- **Prettier**: Code formatting
-- **Jest**: Unit testing
-- **React Testing Library**: Component testing
-- **TypeScript**: Static type checking
-
-## 📁 Project Structure
-
-```
-src/
-├── components/           # Reusable UI components
-│   ├── ui/              # Base UI components (shadcn)
-│   ├── auth/            # Authentication components
-│   ├── dashboard/       # Dashboard-specific components
-│   ├── search/          # Search functionality
-│   ├── accessibility/   # Accessibility features
-│   ├── navigation/      # Navigation components
-│   └── features/        # Feature-specific components
-├── contexts/            # React contexts
-│   ├── AuthContext.tsx  # Authentication state
-│   └── AccessibilityContext.tsx # Accessibility preferences
-├── hooks/               # Custom React hooks
-│   ├── useAuth.ts       # Authentication hooks
-│   ├── useLogin.ts      # Login functionality
-│   └── useAppSecurity.ts # Security monitoring
-├── pages/               # Page components
-│   ├── Index.tsx        # Landing page
-│   ├── Dashboard.tsx    # User dashboard
-│   ├── Login.tsx        # Authentication
-│   ├── Register.tsx     # User registration
-│   └── Features.tsx     # Features showcase
-├── utils/               # Utility functions
-│   ├── security/        # Security utilities
-│   └── errorHandling.ts # Error management
-├── types/               # TypeScript type definitions
-└── __tests__/          # Test files
-```
-
-## 🚦 Getting Started
+## 🛠️ Installation & Setup
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-- Supabase account (for backend features)
+- Node.js 18+ and npm
+- Supabase account
 
-### Installation
-
-1. **Clone the repository**
+### Environment Setup
+1. Clone the repository:
    ```bash
    git clone <repository-url>
    cd accio
    ```
 
-2. **Install dependencies**
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. **Environment Setup**
-   - Copy `.env.example` to `.env.local`
-   - Add your Supabase credentials:
-     ```
-     VITE_SUPABASE_URL=your_supabase_url
-     VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-     ```
+3. Set up Supabase:
+   - Create a new project at [supabase.com](https://supabase.com)
+   - Run the SQL migrations in the `supabase/migrations` folder
+   - Configure authentication providers as needed
 
-4. **Database Setup**
-   - Run the SQL migrations in your Supabase dashboard
-   - Enable Row Level Security on all tables
-   - Set up authentication providers as needed
-
-5. **Start development server**
+4. Start the development server:
    ```bash
    npm run dev
    ```
 
-6. **Build for production**
-   ```bash
-   npm run build
-   ```
-
-### Testing
-
-```bash
-# Run unit tests
-npm test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Run tests in watch mode
-npm run test:watch
-```
+### Database Schema
+The application includes comprehensive database schemas for:
+- User profiles and authentication
+- Content storage and management
+- Security audit logging
+- Tag management and analytics
+- Search history and preferences
 
 ## 🔒 Security Features
 
 ### Authentication & Authorization
-- Supabase Auth integration
+- Secure user registration and login
+- OAuth integration (Google, GitHub)
 - JWT token management
-- Session persistence
-- Role-based access control
-
-### Input Validation & Sanitization
-- XSS prevention
-- SQL injection protection
-- Content Security Policy
-- Input length validation
-- HTML sanitization
-
-### Rate Limiting & Monitoring
-- Request rate limiting
-- Suspicious activity detection
-- Security event logging
-- CSRF token validation
+- Session security and timeout
 
 ### Data Protection
-- Encrypted data transmission
-- Secure headers configuration
-- Privacy-compliant data handling
-- Audit trail logging
+- End-to-end input validation
+- SQL injection prevention
+- XSS protection with DOMPurify
+- CSRF token validation
+- File upload security
 
-## ♿ Accessibility Features
+### Monitoring & Compliance
+- Real-time security event logging
+- Suspicious activity detection
+- Performance monitoring
+- GDPR compliance features
 
-### WCAG 2.1 AA Compliance
-- Semantic HTML structure
-- ARIA labels and descriptions
+## 🎨 UI/UX Features
+
+### Design System
+- Consistent component library with shadcn/ui
+- Dark/light theme support
+- Responsive breakpoints
+- Typography scale and spacing system
+
+### Accessibility
+- ARIA labels and roles
 - Keyboard navigation support
 - Screen reader compatibility
+- Color contrast compliance
+- Focus management
 
-### User Customization
-- Adjustable font sizes
-- High contrast mode
-- Reduced motion preferences
-- Focus indicators
+## 📱 Responsive Design
 
-### Assistive Technology
-- Voice search capabilities
-- Keyboard shortcuts
-- Skip navigation links
-- Screen reader announcements
+The application is fully responsive with:
+- Mobile-first design approach
+- Tablet and desktop optimizations
+- Touch-friendly interactions
+- Adaptive navigation patterns
 
-## 🎨 Design System
+## 🧪 Testing
 
-### Components
-- Consistent component library
-- Reusable design tokens
-- Responsive breakpoints
-- Theme customization
+Run the test suite:
+```bash
+npm test
+```
 
-### Typography
-- Hierarchical text styles
-- Readable font choices
-- Proper contrast ratios
-- Scalable font sizes
-
-### Colors & Themes
-- Dark and light modes
-- High contrast options
-- Color-blind friendly palette
-- Semantic color usage
-
-## 📱 Progressive Web App
-
-### Features
-- Offline functionality
-- Push notifications
-- App-like experience
-- Fast loading times
-
-### Performance
-- Code splitting
-- Lazy loading
-- Image optimization
-- Bundle size optimization
-
-## 🧪 Testing Strategy
-
-### Unit Tests
-- Component testing
-- Utility function testing
-- Hook testing
-- Security function validation
-
-### Integration Tests
-- Authentication flows
-- API interactions
-- Form submissions
-- Navigation testing
-
-### Accessibility Tests
-- Keyboard navigation
-- Screen reader compatibility
-- Color contrast validation
-- ARIA compliance
+For coverage reports:
+```bash
+npm run test:coverage
+```
 
 ## 🚀 Deployment
 
-### Environment Configuration
-- Production environment variables
-- Security headers configuration
-- Performance monitoring
-- Error tracking setup
+### Building for Production
+```bash
+npm run build
+```
 
-### Build Optimization
-- Bundle analysis
-- Tree shaking
-- Code minification
-- Asset optimization
+### Deployment Options
+- **Vercel**: Automatic deployments from Git
+- **Netlify**: Static site hosting with forms
+- **Custom Server**: Build and serve with any static host
 
-### Monitoring & Analytics
+### Environment Variables
+Configure the following in your deployment environment:
+- `VITE_SUPABASE_URL`: Your Supabase project URL
+- `VITE_SUPABASE_ANON_KEY`: Your Supabase anon key
+
+## 🔧 Configuration
+
+### Security Headers
+The application includes comprehensive security headers:
+- Content Security Policy (CSP)
+- HTTP Strict Transport Security (HSTS)
+- X-Frame-Options
+- X-Content-Type-Options
+
+### Performance Optimization
+- Code splitting with React.lazy()
+- Image optimization
+- Bundle analysis and optimization
+- Caching strategies
+
+## 📊 Monitoring & Analytics
+
+### Security Monitoring
+- Real-time threat detection
+- Audit logging
 - Performance monitoring
-- Error tracking
-- User analytics
-- Security monitoring
+- Error tracking and reporting
+
+### User Analytics
+- Search behavior tracking
+- Content engagement metrics
+- Feature usage analytics
 
 ## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
 ### Development Guidelines
 - Follow TypeScript best practices
 - Write tests for new features
-- Maintain accessibility standards
-- Follow security guidelines
-
-### Code Quality
-- ESLint configuration
-- Prettier formatting
-- Type safety requirements
-- Component documentation
+- Ensure accessibility compliance
+- Update documentation as needed
 
 ## 📄 License
 
@@ -291,17 +201,28 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🆘 Support
 
-### Documentation
-- Component library documentation
-- API reference
-- Security guidelines
-- Accessibility standards
+For support, please:
+1. Check the documentation
+2. Search existing issues
+3. Create a new issue with detailed information
+4. Contact support at support@accio.dev
 
-### Community
-- GitHub Discussions
-- Issue reporting
-- Feature requests
-- Security reporting
+## 🗺️ Roadmap
+
+### Upcoming Features
+- [ ] Advanced AI content analysis
+- [ ] Team collaboration features
+- [ ] API integrations
+- [ ] Mobile application
+- [ ] Advanced search filters
+- [ ] Content versioning
+- [ ] Export/import functionality
+
+### Performance Improvements
+- [ ] Enhanced caching strategies
+- [ ] Database query optimization
+- [ ] CDN integration
+- [ ] Progressive Web App features
 
 ---
 

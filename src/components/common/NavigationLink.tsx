@@ -8,32 +8,46 @@ interface NavigationLinkProps {
   children: React.ReactNode;
   className?: string;
   activeClassName?: string;
-  exact?: boolean;
   onClick?: () => void;
+  external?: boolean;
 }
 
 const NavigationLink: React.FC<NavigationLinkProps> = ({
   to,
   children,
-  className,
-  activeClassName = 'active',
-  exact = false,
-  onClick
+  className = '',
+  activeClassName = '',
+  onClick,
+  external = false
 }) => {
   const location = useLocation();
-  
-  const isActive = exact 
-    ? location.pathname === to
-    : location.pathname.startsWith(to);
+  const isActive = location.pathname === to;
+
+  const baseClassName = cn(
+    'transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md',
+    className,
+    isActive && activeClassName
+  );
+
+  if (external) {
+    return (
+      <a
+        href={to}
+        className={baseClassName}
+        onClick={onClick}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {children}
+      </a>
+    );
+  }
 
   return (
     <Link
       to={to}
+      className={baseClassName}
       onClick={onClick}
-      className={cn(
-        className,
-        isActive && activeClassName
-      )}
       aria-current={isActive ? 'page' : undefined}
     >
       {children}

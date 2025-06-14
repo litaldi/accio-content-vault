@@ -1,11 +1,10 @@
 
 import { logSecurityEvent } from './logging';
 
-// Enhanced security monitoring
 export class SecurityMonitor {
   private static instance: SecurityMonitor;
   private suspiciousActivityCount = 0;
-  private lastReset = Date.now();
+  private readonly maxSuspiciousActivity = 10;
 
   static getInstance(): SecurityMonitor {
     if (!SecurityMonitor.instance) {
@@ -14,44 +13,64 @@ export class SecurityMonitor {
     return SecurityMonitor.instance;
   }
 
-  reportSuspiciousActivity(activity: string, details: any = {}) {
+  reportSuspiciousActivity(type: string, details: any = {}) {
     this.suspiciousActivityCount++;
     
-    console.warn(`Security Alert: ${activity}`, details);
-    
-    // Log to security audit if available
-    this.logSecurityEvent('suspicious_activity', {
-      activity,
+    logSecurityEvent('suspicious_activity', {
+      type,
       details,
       count: this.suspiciousActivityCount,
       timestamp: new Date().toISOString()
     });
 
-    // Reset counter every hour
-    const now = Date.now();
-    if (now - this.lastReset > 3600000) {
-      this.suspiciousActivityCount = 0;
-      this.lastReset = now;
-    }
-
-    // Take action if too many suspicious activities
-    if (this.suspiciousActivityCount > 10) {
-      this.handleHighRiskActivity();
+    // If too many suspicious activities, could implement additional measures
+    if (this.suspiciousActivityCount >= this.maxSuspiciousActivity) {
+      logSecurityEvent('high_suspicious_activity', {
+        count: this.suspiciousActivityCount,
+        type: 'threshold_exceeded'
+      });
     }
   }
 
-  private handleHighRiskActivity() {
-    this.logSecurityEvent('high_risk_activity_detected', {
-      count: this.suspiciousActivityCount,
-      timestamp: new Date().toISOString()
+  monitorPerformance() {
+    // Monitor for performance issues that might indicate attacks
+    const observer = new PerformanceObserver((list) => {
+      const entries = list.getEntries();
+      entries.forEach((entry) => {
+        if (entry.duration > 5000) { // 5 seconds
+          this.reportSuspiciousActivity('performance_degradation', {
+            name: entry.name,
+            duration: entry.duration,
+            type: entry.entryType
+          });
+        }
+      });
     });
 
-    // Could implement additional security measures here
-    console.error('High risk security activity detected');
+    observer.observe({ entryTypes: ['measure', 'navigation'] });
   }
 
-  private logSecurityEvent(eventType: string, details: any) {
-    // This would integrate with the database audit log
-    console.log(`Security Event: ${eventType}`, details);
+  startMonitoring() {
+    this.monitorPerformance();
+    
+    // Monitor for rapid API calls (potential DoS)
+    let apiCallCount = 0;
+    const originalFetch = window.fetch;
+    
+    window.fetch = async (...args) => {
+      apiCallCount++;
+      
+      // Reset counter every minute
+      setTimeout(() => { apiCallCount--; }, 60000);
+      
+      if (apiCallCount > 100) { // More than 100 calls per minute
+        this.reportSuspiciousActivity('rapid_api_calls', {
+          count: apiCallCount,
+          url: args[0]?.toString()
+        });
+      }
+      
+      return originalFetch.apply(window, args);
+    };
   }
 }

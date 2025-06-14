@@ -8,7 +8,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from "@/contexts/AuthContext";
 import { AccessibilityProvider } from "@/contexts/AccessibilityContext";
-import { SecureAuthProvider } from "@/contexts/SecureAuthContext";
 import { EnhancedSecurityHeaders } from "@/components/security/EnhancedSecurityHeaders";
 import { useAppSecurity } from "@/hooks/useAppSecurity";
 import Index from "./pages/Index";
@@ -40,6 +39,17 @@ const SecurityWrapper = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const LoadingSpinner = () => (
+  <div 
+    className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900"
+    role="status"
+    aria-label="Loading application"
+  >
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white" aria-hidden="true"></div>
+    <span className="sr-only">Loading...</span>
+  </div>
+);
+
 function App() {
   return (
     <HelmetProvider>
@@ -48,30 +58,24 @@ function App() {
         <TooltipProvider>
           <AccessibilityProvider>
             <AuthProvider>
-              <SecureAuthProvider>
-                <SecurityWrapper>
-                  <BrowserRouter>
-                    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900">
-                      <Suspense fallback={
-                        <div className="min-h-screen flex items-center justify-center">
-                          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                        </div>
-                      }>
-                        <Routes>
-                          <Route path="/" element={<Index />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/register" element={<Register />} />
-                          <Route path="/dashboard" element={<Dashboard />} />
-                          <Route path="/profile" element={<Profile />} />
-                          <Route path="/settings" element={<EnhancedSettings />} />
-                        </Routes>
-                      </Suspense>
-                    </div>
-                    <Toaster />
-                    <Sonner />
-                  </BrowserRouter>
-                </SecurityWrapper>
-              </SecureAuthProvider>
+              <SecurityWrapper>
+                <BrowserRouter>
+                  <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-indigo-900">
+                    <Suspense fallback={<LoadingSpinner />}>
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/settings" element={<EnhancedSettings />} />
+                      </Routes>
+                    </Suspense>
+                  </div>
+                  <Toaster />
+                  <Sonner />
+                </BrowserRouter>
+              </SecurityWrapper>
             </AuthProvider>
           </AccessibilityProvider>
         </TooltipProvider>
