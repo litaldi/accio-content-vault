@@ -2,8 +2,8 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useAuth } from '@/contexts/AuthContext';
-import { MainNavigation } from '@/components/navigation/MainNavigation';
-import { CleanHeroSection } from '@/components/home/CleanHeroSection';
+import MainNavigation from '@/components/navigation/MainNavigation';
+import CleanHeroSection from '@/components/home/CleanHeroSection';
 import { DemoBanner } from '@/components/demo/DemoBanner';
 
 const Index: React.FC = () => {

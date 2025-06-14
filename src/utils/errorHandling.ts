@@ -1,3 +1,4 @@
+
 /**
  * Global error handling utilities
  */
@@ -58,6 +59,11 @@ class ErrorHandler {
 }
 
 export const errorHandler = new ErrorHandler();
+
+// Export the logError function for external use
+export const logError = (error: Error | ErrorEvent, context?: any) => {
+  errorHandler.logError(error, context?.userId);
+};
 
 export const setupGlobalErrorHandlers = (): void => {
   // Handle unhandled promise rejections

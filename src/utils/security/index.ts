@@ -33,3 +33,9 @@ export const createSecureHeaders = () => ({
   'X-XSS-Protection': '1; mode=block',
   'Referrer-Policy': 'strict-origin-when-cross-origin',
 });
+
+// Security event logging
+export const logSecurityEvent = (event: string, details?: any) => {
+  console.warn(`Security Event: ${event}`, details);
+  // In production, this would send to a security monitoring service
+};
