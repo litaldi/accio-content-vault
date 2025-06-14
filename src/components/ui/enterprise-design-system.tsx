@@ -37,6 +37,15 @@ export const EnterpriseTypography = {
 };
 
 // Enterprise Spacing
+
+interface SectionProps extends React.HTMLProps<HTMLElement> {
+  size?: string;
+  background?: string;
+}
+interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
+  size?: string;
+}
+
 export const EnterpriseSpacing = {
   Section: ({
     children,
@@ -44,10 +53,7 @@ export const EnterpriseSpacing = {
     size = 'md',
     background = 'default',
     ...props
-  }: React.HTMLProps<HTMLElement> & {
-    size?: string;
-    background?: string;
-  }) => (
+  }: SectionProps) => (
     <section
       className={cn(
         'section-spacing',
@@ -68,7 +74,7 @@ export const EnterpriseSpacing = {
     className,
     size = 'default',
     ...props
-  }: React.HTMLProps<HTMLDivElement> & { size?: string }) => (
+  }: ContainerProps) => (
     <div className={cn(
       'container-spacing',
       size === 'sm' && 'container-spacing-sm',

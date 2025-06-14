@@ -55,6 +55,21 @@ export const Typography = {
 };
 
 // Layout Components
+
+interface SectionProps extends React.HTMLProps<HTMLElement> {
+  spacing?: string;
+  background?: string;
+}
+
+interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
+  size?: string;
+}
+
+interface GridProps extends React.HTMLProps<HTMLDivElement> {
+  columns?: string | number;
+  gap?: string;
+}
+
 export const Layout = {
   Section: ({
     children,
@@ -62,10 +77,7 @@ export const Layout = {
     spacing = 'md',
     background = 'default',
     ...props
-  }: React.HTMLProps<HTMLElement> & {
-    spacing?: string;
-    background?: string;
-  }) => (
+  }: SectionProps) => (
     <section
       className={cn(
         'section-spacing',
@@ -86,7 +98,7 @@ export const Layout = {
     className,
     size = 'default',
     ...props
-  }: React.HTMLProps<HTMLDivElement> & { size?: string }) => (
+  }: ContainerProps) => (
     <div
       className={cn(
         'container-spacing',
@@ -105,10 +117,7 @@ export const Layout = {
     columns = 1,
     gap = 'md',
     ...props
-  }: React.HTMLProps<HTMLDivElement> & {
-    columns?: string | number;
-    gap?: string;
-  }) => (
+  }: GridProps) => (
     <div
       className={cn(
         'grid',

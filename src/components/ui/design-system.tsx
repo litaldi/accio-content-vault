@@ -54,6 +54,20 @@ export const Typography = {
 };
 
 // Spacing Components
+
+interface SectionProps extends React.HTMLProps<HTMLElement> {
+  size?: string;
+  background?: string;
+}
+
+interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
+  size?: string;
+}
+
+interface StackProps extends React.HTMLProps<HTMLDivElement> {
+  gap?: string;
+}
+
 export const Spacing = {
   Section: ({
     children,
@@ -61,10 +75,7 @@ export const Spacing = {
     size = 'md',
     background = 'default',
     ...props
-  }: React.HTMLProps<HTMLElement> & {
-    size?: string;
-    background?: string;
-  }) => (
+  }: SectionProps) => (
     <section
       className={cn(
         'section-spacing',
@@ -85,7 +96,7 @@ export const Spacing = {
     className,
     size = 'default',
     ...props
-  }: React.HTMLProps<HTMLDivElement> & { size?: string }) => (
+  }: ContainerProps) => (
     <div
       className={cn(
         'container-spacing',
@@ -103,7 +114,7 @@ export const Spacing = {
     className,
     gap = 'md',
     ...props
-  }: React.HTMLProps<HTMLDivElement> & { gap?: string }) => (
+  }: StackProps) => (
     <div
       className={cn(
         'flex flex-col',
