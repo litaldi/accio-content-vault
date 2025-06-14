@@ -1,3 +1,6 @@
 
+export { ModernLayout } from './ModernLayout';
+export { ModernHeader } from './ModernHeader';
+export { ModernFooter } from './ModernFooter';
 export { UnifiedLayout } from './UnifiedLayout';
-export { default as ImprovedFooter } from './ImprovedFooter';
+export { AccessibleLayout } from './AccessibleLayout';

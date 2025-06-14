@@ -114,47 +114,6 @@
   p {
     text-wrap: pretty;
   }
-
-  /* High contrast mode support */
-  @media (prefers-contrast: high) {
-    .modern-card {
-      border-width: 2px !important;
-    }
-    
-    .modern-nav-item {
-      border: 1px solid transparent !important;
-    }
-    
-    .modern-nav-item:hover,
-    .modern-nav-item-active {
-      border-color: currentColor !important;
-    }
-  }
-
-  /* Print styles */
-  @media print {
-    .no-print {
-      display: none !important;
-    }
-    
-    * {
-      background: transparent !important;
-      color: black !important;
-      box-shadow: none !important;
-      text-shadow: none !important;
-    }
-  }
-
-  /* Touch device optimizations */
-  @media (pointer: coarse) {
-    .modern-nav-item,
-    .btn-modern-primary,
-    .btn-modern-secondary {
-      min-height: 44px !important;
-      min-width: 44px !important;
-      touch-action: manipulation;
-    }
-  }
 }
 
 /* Custom scrollbar */
