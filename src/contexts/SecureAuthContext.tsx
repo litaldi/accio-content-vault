@@ -1,30 +1,22 @@
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase';
-import { User, Session, AuthError } from '@supabase/supabase-js';
-import { cleanupAuthState } from '@/utils/authUtils';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 import { logSecurityEvent } from '@/utils/security';
-
-interface AuthResult {
-  error?: AuthError | Error | null;
-  user?: User | null;
-}
 
 interface SecureAuthContextType {
   user: User | null;
   session: Session | null;
-  isLoading: boolean;
   loading: boolean;
+  isLoading: boolean;
   isAuthenticated: boolean;
   isDemoMode: boolean;
-  signIn: (email: string, password: string) => Promise<AuthResult>;
-  signUp: (email: string, password: string, metadata?: any) => Promise<AuthResult>;
+  signUp: (email: string, password: string, options?: { name?: string }) => Promise<{ error: any }>;
+  signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string, name?: string) => Promise<void>;
-  logout: () => Promise<void>;
-  signInWithProvider: (provider: string) => Promise<AuthResult>;
+  signInWithProvider: (provider: 'google') => Promise<{ error: any }>;
   resetPassword: (email: string) => Promise<void>;
+  securityLog: (event: string, details?: any) => void;
 }
 
 const SecureAuthContext = createContext<SecureAuthContextType | undefined>(undefined);
@@ -37,181 +29,164 @@ export const useSecureAuth = () => {
   return context;
 };
 
-interface SecureAuthProviderProps {
-  children: React.ReactNode;
-}
-
-export const SecureAuthProvider: React.FC<SecureAuthProviderProps> = ({ children }) => {
+export const SecureAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Set up auth state listener FIRST
+    // Enhanced auth state listener with security logging
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
-        
-        // Log security events
-        logSecurityEvent(`Auth state changed: ${event}`, {
-          userId: session?.user?.id,
-          timestamp: new Date().toISOString()
-        });
+        setLoading(false);
 
-        // Defer any additional data fetching to prevent deadlocks
+        // Log auth events for security monitoring
         if (event === 'SIGNED_IN' && session?.user) {
-          setTimeout(() => {
-            // Any additional user data fetching can go here
-          }, 0);
+          logSecurityEvent('user_signed_in', {
+            userId: session.user.id,
+            email: session.user.email,
+            provider: session.user.app_metadata?.provider || 'email'
+          });
+        } else if (event === 'SIGNED_OUT') {
+          logSecurityEvent('user_signed_out', {
+            timestamp: new Date().toISOString()
+          });
+        } else if (event === 'TOKEN_REFRESHED') {
+          logSecurityEvent('token_refreshed', {
+            userId: session?.user?.id
+          });
         }
       }
     );
 
-    // THEN check for existing session
+    // Get initial session with security logging
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
-      setIsLoading(false);
+      setLoading(false);
+      
+      if (session?.user) {
+        logSecurityEvent('session_restored', {
+          userId: session.user.id
+        });
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
 
-  const signIn = async (email: string, password: string): Promise<AuthResult> => {
-    try {
-      // Clean up existing state
-      cleanupAuthState();
-      
-      // Attempt global sign out first
-      try {
-        await supabase.auth.signOut({ scope: 'global' });
-      } catch (err) {
-        // Continue even if this fails
-      }
-
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password
-      });
-
-      if (error) {
-        logSecurityEvent('Failed sign in attempt', {
-          email: email.trim().toLowerCase(),
-          error: error.message,
-          timestamp: new Date().toISOString()
-        });
-        return { error };
-      }
-
-      logSecurityEvent('Successful sign in', {
-        userId: data.user?.id,
-        email: data.user?.email,
-        timestamp: new Date().toISOString()
-      });
-
-      return { user: data.user };
-    } catch (error) {
-      return { error: error as Error };
-    }
+  const securityLog = (event: string, details: any = {}) => {
+    logSecurityEvent(event, {
+      ...details,
+      userId: user?.id,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent
+    });
   };
 
-  const signUp = async (email: string, password: string, metadata?: any): Promise<AuthResult> => {
+  const signUp = async (email: string, password: string, options?: { name?: string }) => {
+    const redirectUrl = `${window.location.origin}/`;
+    
     try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { data, error } = await supabase.auth.signUp({
-        email: email.trim().toLowerCase(),
+      const { error } = await supabase.auth.signUp({
+        email,
         password,
         options: {
           emailRedirectTo: redirectUrl,
-          data: metadata
+          data: options ? { full_name: options.name } : undefined
         }
       });
 
       if (error) {
-        logSecurityEvent('Failed sign up attempt', {
-          email: email.trim().toLowerCase(),
+        securityLog('signup_failed', {
+          email,
           error: error.message,
-          timestamp: new Date().toISOString()
+          attempt_timestamp: new Date().toISOString()
         });
-        return { error };
+      } else {
+        securityLog('signup_attempted', {
+          email,
+          has_name: !!options?.name
+        });
       }
 
-      logSecurityEvent('Successful sign up', {
-        userId: data.user?.id,
-        email: data.user?.email,
-        timestamp: new Date().toISOString()
+      return { error };
+    } catch (error) {
+      securityLog('signup_error', {
+        email,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      return { error };
+    }
+  };
+
+  const signIn = async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
       });
 
-      return { user: data.user };
+      if (error) {
+        securityLog('signin_failed', {
+          email,
+          error: error.message,
+          attempt_timestamp: new Date().toISOString()
+        });
+      }
+
+      return { error };
     } catch (error) {
-      return { error: error as Error };
+      securityLog('signin_error', {
+        email,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      return { error };
     }
   };
 
   const signOut = async () => {
     try {
-      // Clean up auth state
-      cleanupAuthState();
-      
-      // Attempt global sign out
-      await supabase.auth.signOut({ scope: 'global' });
-      
-      logSecurityEvent('User signed out', {
-        userId: user?.id,
-        timestamp: new Date().toISOString()
+      securityLog('signout_initiated', {
+        userId: user?.id
       });
-
-      // Force page reload for clean state
-      window.location.href = '/';
+      await supabase.auth.signOut();
     } catch (error) {
-      console.error('Sign out error:', error);
-      // Force cleanup even if sign out fails
-      cleanupAuthState();
-      window.location.href = '/';
+      securityLog('signout_error', {
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   };
 
-  const login = async (email: string, password: string) => {
-    const result = await signIn(email, password);
-    if (result.error) {
-      throw result.error;
-    }
-  };
-
-  const register = async (email: string, password: string, name?: string) => {
-    const result = await signUp(email, password, { name });
-    if (result.error) {
-      throw result.error;
-    }
-  };
-
-  const logout = async () => {
-    await signOut();
-  };
-
-  const signInWithProvider = async (provider: string): Promise<AuthResult> => {
+  const signInWithProvider = async (provider: 'google') => {
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: provider as any,
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
         options: {
           redirectTo: `${window.location.origin}/`
         }
       });
 
       if (error) {
-        logSecurityEvent('Failed OAuth sign in', {
+        securityLog('oauth_signin_failed', {
           provider,
-          error: error.message,
-          timestamp: new Date().toISOString()
+          error: error.message
         });
-        return { error };
+      } else {
+        securityLog('oauth_signin_attempted', {
+          provider
+        });
       }
 
-      return {};
+      return { error };
     } catch (error) {
-      return { error: error as Error };
+      securityLog('oauth_signin_error', {
+        provider,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+      return { error };
     }
   };
 
@@ -221,20 +196,17 @@ export const SecureAuthProvider: React.FC<SecureAuthProviderProps> = ({ children
         redirectTo: `${window.location.origin}/reset-password`
       });
 
-      if (error) {
-        logSecurityEvent('Failed password reset request', {
-          email: email.trim().toLowerCase(),
-          error: error.message,
-          timestamp: new Date().toISOString()
-        });
-        throw error;
-      }
-
-      logSecurityEvent('Password reset requested', {
-        email: email.trim().toLowerCase(),
-        timestamp: new Date().toISOString()
+      securityLog('password_reset_requested', {
+        email,
+        success: !error
       });
+
+      if (error) throw error;
     } catch (error) {
+      securityLog('password_reset_error', {
+        email,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
       throw error;
     }
   };
@@ -242,19 +214,21 @@ export const SecureAuthProvider: React.FC<SecureAuthProviderProps> = ({ children
   const value = {
     user,
     session,
-    isLoading,
-    loading: isLoading,
+    loading,
+    isLoading: loading,
     isAuthenticated: !!user,
     isDemoMode: false,
-    signIn,
     signUp,
+    signIn,
     signOut,
-    login,
-    register,
-    logout,
     signInWithProvider,
-    resetPassword
+    resetPassword,
+    securityLog
   };
 
-  return <SecureAuthContext.Provider value={value}>{children}</SecureAuthContext.Provider>;
+  return (
+    <SecureAuthContext.Provider value={value}>
+      {children}
+    </SecureAuthContext.Provider>
+  );
 };

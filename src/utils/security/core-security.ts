@@ -1,8 +1,8 @@
-
 // Core Security Functions - Essential validation and protection utilities
 import DOMPurify from 'dompurify';
+import { enhancedRateLimiters } from './enhanced-validation';
 
-// Rate limiting implementation
+// Rate limiting implementation (keeping existing for backward compatibility)
 export class UnifiedRateLimiter {
   private attempts: Map<string, { count: number; resetTime: number }> = new Map();
 
@@ -26,50 +26,101 @@ export class UnifiedRateLimiter {
   }
 }
 
-// CSRF Protection
+// Enhanced CSRF Protection with stronger tokens
 export class CSRFManager {
-  private static tokens: Set<string> = new Set();
+  private static tokens: Map<string, { token: string; created: number; used: boolean }> = new Map();
+  private static readonly TOKEN_LIFETIME = 3600000; // 1 hour
 
-  static generate(): string {
+  static generate(operation?: string): string {
     const token = crypto.randomUUID();
-    this.tokens.add(token);
-    // Clean up old tokens after 1 hour
-    setTimeout(() => this.tokens.delete(token), 3600000);
+    const key = operation ? `${operation}-${token}` : token;
+    
+    this.tokens.set(key, {
+      token,
+      created: Date.now(),
+      used: false
+    });
+    
+    // Clean up old tokens
+    this.cleanup();
+    
     return token;
   }
 
-  static validate(token: string): boolean {
-    return this.tokens.has(token);
+  static validate(token: string, operation?: string): boolean {
+    const key = operation ? `${operation}-${token}` : token;
+    const tokenData = this.tokens.get(key);
+    
+    if (!tokenData) return false;
+    if (tokenData.used) return false;
+    if (Date.now() - tokenData.created > this.TOKEN_LIFETIME) {
+      this.tokens.delete(key);
+      return false;
+    }
+    
+    return true;
   }
 
-  static consume(token: string): boolean {
-    if (this.tokens.has(token)) {
-      this.tokens.delete(token);
+  static consume(token: string, operation?: string): boolean {
+    const key = operation ? `${operation}-${token}` : token;
+    const tokenData = this.tokens.get(key);
+    
+    if (this.validate(token, operation)) {
+      tokenData!.used = true;
+      // Remove token after use for one-time validation
+      setTimeout(() => this.tokens.delete(key), 5000);
       return true;
     }
     return false;
   }
 
-  static getToken(): string {
-    return this.generate();
+  static getToken(operation?: string): string {
+    return this.generate(operation);
+  }
+
+  private static cleanup(): void {
+    const now = Date.now();
+    for (const [key, data] of this.tokens.entries()) {
+      if (now - data.created > this.TOKEN_LIFETIME || data.used) {
+        this.tokens.delete(key);
+      }
+    }
   }
 }
 
-// Input sanitization with options
+// Enhanced input sanitization with security logging
 interface SanitizeOptions {
   maxLength?: number;
   allowHtml?: boolean;
   stripScripts?: boolean;
+  logSuspicious?: boolean;
 }
 
 export const sanitizeInput = (input: string, options: SanitizeOptions = {}): string => {
   const {
     maxLength = 1000,
     allowHtml = false,
-    stripScripts = true
+    stripScripts = true,
+    logSuspicious = true
   } = options;
 
   let sanitized = input.trim();
+  let suspicious = false;
+
+  // Detect suspicious patterns
+  const suspiciousPatterns = [
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    /javascript:/gi,
+    /data:text\/html/gi,
+    /vbscript:/gi,
+    /on\w+\s*=/gi
+  ];
+
+  suspiciousPatterns.forEach(pattern => {
+    if (pattern.test(sanitized)) {
+      suspicious = true;
+    }
+  });
 
   // Length validation
   if (sanitized.length > maxLength) {
@@ -84,8 +135,17 @@ export const sanitizeInput = (input: string, options: SanitizeOptions = {}): str
       .replace(/on\w+=/gi, '');
   } else if (stripScripts) {
     sanitized = DOMPurify.sanitize(sanitized, {
-      FORBID_TAGS: ['script', 'object', 'embed', 'iframe'],
-      FORBID_ATTR: ['onerror', 'onload', 'onclick']
+      FORBID_TAGS: ['script', 'object', 'embed', 'iframe', 'link', 'style'],
+      FORBID_ATTR: ['onerror', 'onload', 'onclick', 'onmouseover', 'style']
+    });
+  }
+
+  // Log suspicious activity
+  if (suspicious && logSuspicious) {
+    console.warn('[SECURITY] Suspicious input detected and sanitized:', {
+      original: input.substring(0, 100),
+      sanitized: sanitized.substring(0, 100),
+      timestamp: new Date().toISOString()
     });
   }
 
@@ -127,7 +187,7 @@ export const validateEmail = (email: string): ValidationResult => {
   return { isValid: true, message: 'Valid email' };
 };
 
-// Password validation with strength scoring
+// Enhanced password validation with security scoring
 export const validatePassword = (password: string): ValidationResult => {
   if (!password || password.length === 0) {
     return { isValid: false, message: 'Password is required', strength: 0 };
@@ -159,6 +219,12 @@ export const validatePassword = (password: string): ValidationResult => {
   // Penalty for repeated characters
   const repeatedPattern = /(.)\1{2,}/.test(password);
   if (repeatedPattern) strength -= 20;
+  
+  // Check against common passwords
+  const commonPasswords = ['password', '123456', 'qwerty', 'admin', 'letmein'];
+  if (commonPasswords.some(common => password.toLowerCase().includes(common))) {
+    strength -= 30;
+  }
   
   if (!hasLower || !hasUpper || !hasNumber || !hasSpecial) {
     return { 
@@ -192,6 +258,12 @@ export const validateUrl = (url: string): ValidationResult => {
       return { isValid: false, message: 'URL is too long' };
     }
     
+    // Enhanced security checks
+    const suspiciousDomains = ['bit.ly', 't.co', 'tinyurl.com'];
+    if (suspiciousDomains.some(domain => urlObj.hostname.includes(domain))) {
+      return { isValid: false, message: 'Shortened URLs are not allowed for security reasons' };
+    }
+    
     return { isValid: true, message: 'Valid URL' };
   } catch (error) {
     return { isValid: false, message: 'Invalid URL format' };
@@ -206,4 +278,71 @@ export const isValidSecureUrl = (url: string): boolean => {
   } catch {
     return false;
   }
+};
+
+// Enhanced security check for runtime environment
+export const performSecurityHealthCheck = (): {
+  score: number;
+  issues: string[];
+  recommendations: string[];
+  passed: boolean;
+} => {
+  const issues: string[] = [];
+  const recommendations: string[] = [];
+  let score = 100;
+
+  // HTTPS check
+  if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+    issues.push('Site not using HTTPS');
+    recommendations.push('Enable HTTPS for secure communication');
+    score -= 30;
+  }
+
+  // CSP check
+  const hasCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+  if (!hasCSP) {
+    issues.push('Content Security Policy not detected');
+    recommendations.push('Implement Content Security Policy headers');
+    score -= 20;
+  }
+
+  // Local storage security
+  try {
+    const storageTest = localStorage.getItem('test');
+    const localStorageSize = new Blob(Object.values(localStorage)).size;
+    if (localStorageSize > 5 * 1024 * 1024) { // 5MB
+      issues.push('Excessive localStorage usage detected');
+      recommendations.push('Review and clean up localStorage data');
+      score -= 15;
+    }
+  } catch (error) {
+    // localStorage disabled - actually good for security
+    score += 5;
+  }
+
+  // Mixed content check
+  if (window.location.protocol === 'https:') {
+    const images = Array.from(document.images);
+    const hasInsecureImages = images.some(img => img.src.startsWith('http:'));
+    if (hasInsecureImages) {
+      issues.push('Mixed content detected (insecure images)');
+      recommendations.push('Use HTTPS for all resources');
+      score -= 10;
+    }
+  }
+
+  // Rate limiter status
+  const rateLimiterKeys = Object.keys(enhancedRateLimiters);
+  if (rateLimiterKeys.length === 0) {
+    issues.push('Rate limiting not properly configured');
+    recommendations.push('Implement rate limiting for all user actions');
+    score -= 25;
+  }
+
+  return {
+    score: Math.max(0, score),
+    issues,
+    recommendations,
+    passed: score >= 70
+  };
 };
