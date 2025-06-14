@@ -66,9 +66,15 @@ export const EnterpriseSpacing = {
   Container: ({
     children,
     className,
+    size = 'default',
     ...props
   }: React.HTMLProps<HTMLDivElement> & { size?: string }) => (
-    <div className={cn('container-spacing', className)} {...props}>
+    <div className={cn(
+      'container-spacing',
+      size === 'sm' && 'container-spacing-sm',
+      size === 'lg' && 'container-spacing-lg',
+      className
+    )} {...props}>
       {children}
     </div>
   )
