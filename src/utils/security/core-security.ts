@@ -1,11 +1,6 @@
 
 import validator from 'validator';
 import passwordValidator from 'password-validator';
-import createDOMPurify from 'dompurify';
-import { JSDOM } from 'jsdom';
-
-const window = new JSDOM('').window;
-const DOMPurify = createDOMPurify(window);
 
 interface ValidationResult {
   isValid: boolean;
@@ -23,7 +18,10 @@ export const sanitizeInput = (input: string, options: SanitizeOptions = {}): str
   let sanitized = input.trim();
 
   if (!options.allowHtml) {
-    sanitized = DOMPurify.sanitize(sanitized, { USE_PROFILES: { html: true } });
+    // Simple HTML sanitization without DOMPurify for client-side
+    sanitized = sanitized
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+      .replace(/<[^>]*>/g, '');
   }
 
   sanitized = sanitized.replace(/javascript:/gi, '');
@@ -86,7 +84,15 @@ export const validatePassword = (password: string): ValidationResult => {
     return { isValid: false, message: messages.join(', ') };
   }
 
-  const strength = schema.strength(password);
+  // Calculate simple strength score (0-100)
+  let strength = 0;
+  if (password.length >= 8) strength += 20;
+  if (password.length >= 12) strength += 10;
+  if (/[A-Z]/.test(password)) strength += 20;
+  if (/[a-z]/.test(password)) strength += 20;
+  if (/[0-9]/.test(password)) strength += 15;
+  if (/[^A-Za-z0-9]/.test(password)) strength += 15;
+
   return { isValid: true, strength };
 };
 
@@ -125,21 +131,23 @@ export const isValidSecureUrl = (url: string): boolean => {
 
 export class UnifiedRateLimiter {
   private attempts: Map<string, number[]> = new Map();
+  private windowMs: number;
 
-  constructor(private maxAttempts: number) {}
+  constructor(private maxAttempts: number, windowMs: number = 60000) {
+    this.windowMs = windowMs;
+  }
 
   canAttempt(identifier: string): { allowed: boolean; resetTime?: number } {
     const now = Date.now();
-    const windowMs = 60000; // 1 minute window
     const userAttempts = this.attempts.get(identifier) || [];
     
     // Remove old attempts outside the window
-    const recentAttempts = userAttempts.filter(time => now - time < windowMs);
+    const recentAttempts = userAttempts.filter(time => now - time < this.windowMs);
     
     if (recentAttempts.length >= this.maxAttempts) {
       return { 
         allowed: false, 
-        resetTime: Math.min(...recentAttempts) + windowMs 
+        resetTime: Math.min(...recentAttempts) + this.windowMs 
       };
     }
     
