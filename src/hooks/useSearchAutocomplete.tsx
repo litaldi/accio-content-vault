@@ -59,7 +59,7 @@ export const useSearchAutocomplete = () => {
       });
     }
 
-    // Add trending suggestions (changed from 'popular' to 'trending')
+    // Add trending suggestions
     const trendingSuggestions = [
       'React patterns',
       'TypeScript guide',
