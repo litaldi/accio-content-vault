@@ -6,9 +6,12 @@ interface AccessibilityContextType {
   setFontSize: (size: 'small' | 'medium' | 'large') => void;
   highContrast: boolean;
   setHighContrast: (enabled: boolean) => void;
+  toggleHighContrast: () => void;
   reducedMotion: boolean;
   setReducedMotion: (enabled: boolean) => void;
+  toggleReducedMotion: () => void;
   announceMessage: (message: string) => void;
+  announceToScreenReader: (message: string) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -45,15 +48,30 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     }, 1000);
   };
 
+  const announceToScreenReader = (message: string) => {
+    announceMessage(message);
+  };
+
+  const toggleHighContrast = () => {
+    setHighContrast(!highContrast);
+  };
+
+  const toggleReducedMotion = () => {
+    setReducedMotion(!reducedMotion);
+  };
+
   return (
     <AccessibilityContext.Provider value={{
       fontSize,
       setFontSize,
       highContrast,
       setHighContrast,
+      toggleHighContrast,
       reducedMotion,
       setReducedMotion,
-      announceMessage
+      toggleReducedMotion,
+      announceMessage,
+      announceToScreenReader
     }}>
       {children}
     </AccessibilityContext.Provider>

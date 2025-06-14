@@ -5,7 +5,8 @@ class VoiceSearchService {
 
   constructor() {
     if (this.isSupported()) {
-      this.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      const SpeechRecognitionConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
+      this.recognition = new SpeechRecognitionConstructor();
       this.setupRecognition();
     }
   }
@@ -70,14 +71,10 @@ class VoiceSearchService {
     if (!this.recognition) return;
     this.recognition.onerror = callback;
   }
+
+  getIsListening() {
+    return this.isListening;
+  }
 }
 
 export const voiceSearchService = new VoiceSearchService();
-
-// Global type definitions for older browsers
-declare global {
-  interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
-  }
-}
