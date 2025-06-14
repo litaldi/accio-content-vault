@@ -4,52 +4,42 @@ import { cn } from '@/lib/utils';
 
 interface ResponsiveContainerProps {
   children: React.ReactNode;
-  className?: string;
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full';
   padding?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
-  as?: keyof JSX.IntrinsicElements;
+  className?: string;
 }
 
 const maxWidthClasses = {
   sm: 'max-w-sm',
-  md: 'max-w-md',
-  lg: 'max-w-lg',
-  xl: 'max-w-xl',
-  '2xl': 'max-w-2xl',
+  md: 'max-w-md', 
+  lg: 'max-w-4xl',
+  xl: 'max-w-6xl',
+  '2xl': 'max-w-7xl',
   full: 'max-w-full'
 };
 
 const paddingClasses = {
   none: '',
-  sm: 'px-4 sm:px-6',
-  md: 'px-4 sm:px-6 lg:px-8',
-  lg: 'px-4 sm:px-6 lg:px-8 xl:px-12',
-  xl: 'px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16'
+  sm: 'px-4 py-2',
+  md: 'px-6 py-4',
+  lg: 'px-8 py-6',
+  xl: 'px-12 py-8'
 };
 
-/**
- * Responsive container component that provides consistent spacing
- * and maximum widths across different screen sizes
- */
 export const ResponsiveContainer: React.FC<ResponsiveContainerProps> = ({
   children,
-  className = '',
   maxWidth = 'xl',
-  padding = 'md',
-  as: Component = 'div'
+  padding = 'lg',
+  className
 }) => {
   return (
-    <Component 
-      className={cn(
-        'mx-auto w-full',
-        maxWidthClasses[maxWidth],
-        paddingClasses[padding],
-        className
-      )}
-    >
+    <div className={cn(
+      'mx-auto w-full',
+      maxWidthClasses[maxWidth],
+      paddingClasses[padding],
+      className
+    )}>
       {children}
-    </Component>
+    </div>
   );
 };
-
-export default ResponsiveContainer;

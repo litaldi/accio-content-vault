@@ -1,14 +1,14 @@
 
 import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useSecureAuth } from '@/contexts/SecureAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { SecureLoginForm } from '@/components/auth/SecureLoginForm';
 import { Brain } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Login: React.FC = () => {
-  const { user } = useSecureAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,8 +20,8 @@ const Login: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>Secure Sign In - Accio</title>
-        <meta name="description" content="Securely sign in to your Accio account to access your knowledge vault" />
+        <title>Sign In - Accio</title>
+        <meta name="description" content="Sign in to your Accio account" />
       </Helmet>
 
       <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-blue-500/5 flex items-center justify-center p-4">
@@ -44,9 +44,9 @@ const Login: React.FC = () => {
 
           <div className="text-center">
             <p className="text-sm text-muted-foreground">
-              Need help?{' '}
-              <Link to="/help" className="text-primary hover:underline">
-                Contact Support
+              Don't have an account?{' '}
+              <Link to="/register" className="text-primary hover:underline">
+                Sign Up
               </Link>
             </p>
           </div>

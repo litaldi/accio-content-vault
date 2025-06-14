@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 
 interface ResponsiveGridProps {
   children: React.ReactNode;
-  className?: string;
   cols?: {
     default?: number;
     sm?: number;
@@ -13,9 +12,10 @@ interface ResponsiveGridProps {
     xl?: number;
   };
   gap?: 'sm' | 'md' | 'lg' | 'xl';
+  className?: string;
 }
 
-const getGridCols = (cols: ResponsiveGridProps['cols']) => {
+const getGridClasses = (cols: ResponsiveGridProps['cols']) => {
   const classes = [];
   
   if (cols?.default) classes.push(`grid-cols-${cols.default}`);
@@ -28,26 +28,22 @@ const getGridCols = (cols: ResponsiveGridProps['cols']) => {
 };
 
 const gapClasses = {
-  sm: 'gap-2 sm:gap-3',
-  md: 'gap-3 sm:gap-4 md:gap-6',
-  lg: 'gap-4 sm:gap-6 md:gap-8',
-  xl: 'gap-6 sm:gap-8 md:gap-10 lg:gap-12'
+  sm: 'gap-2',
+  md: 'gap-4',
+  lg: 'gap-6',
+  xl: 'gap-8'
 };
 
-/**
- * Responsive grid component that adapts to different screen sizes
- * with fluid column layouts and consistent spacing
- */
 export const ResponsiveGrid: React.FC<ResponsiveGridProps> = ({
   children,
-  className = '',
-  cols = { default: 1, sm: 2, md: 3, lg: 4 },
-  gap = 'md'
+  cols = { default: 1 },
+  gap = 'md',
+  className
 }) => {
   return (
     <div className={cn(
-      'grid w-full',
-      getGridCols(cols),
+      'grid',
+      getGridClasses(cols),
       gapClasses[gap],
       className
     )}>
@@ -55,5 +51,3 @@ export const ResponsiveGrid: React.FC<ResponsiveGridProps> = ({
     </div>
   );
 };
-
-export default ResponsiveGrid;

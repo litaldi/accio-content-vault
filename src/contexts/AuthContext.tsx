@@ -7,10 +7,14 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
+  isLoading: boolean; // Alias for loading
+  isAuthenticated: boolean;
+  isDemoMode: boolean;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
   signInWithProvider: (provider: 'google') => Promise<{ error: any }>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -83,14 +87,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
+  const resetPassword = async (email: string) => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`
+    });
+    if (error) throw error;
+  };
+
   const value = {
     user,
     session,
     loading,
+    isLoading: loading, // Alias for compatibility
+    isAuthenticated: !!user,
+    isDemoMode: false, // Add this property
     signUp,
     signIn,
     signOut,
-    signInWithProvider
+    signInWithProvider,
+    resetPassword
   };
 
   return (

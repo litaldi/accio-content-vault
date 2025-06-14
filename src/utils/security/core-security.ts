@@ -42,6 +42,14 @@ export class CSRFManager {
     return this.tokens.has(token);
   }
 
+  static consume(token: string): boolean {
+    if (this.tokens.has(token)) {
+      this.tokens.delete(token);
+      return true;
+    }
+    return false;
+  }
+
   static getToken(): string {
     return this.generate();
   }
@@ -84,10 +92,21 @@ export const sanitizeInput = (input: string, options: SanitizeOptions = {}): str
   return sanitized;
 };
 
+// HTML escaping utility
+export const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};
+
 // Email validation
 export interface ValidationResult {
   isValid: boolean;
   message: string;
+  strength?: number;
 }
 
 export const validateEmail = (email: string): ValidationResult => {
@@ -108,18 +127,18 @@ export const validateEmail = (email: string): ValidationResult => {
   return { isValid: true, message: 'Valid email' };
 };
 
-// Password validation
+// Password validation with strength scoring
 export const validatePassword = (password: string): ValidationResult => {
   if (!password || password.length === 0) {
-    return { isValid: false, message: 'Password is required' };
+    return { isValid: false, message: 'Password is required', strength: 0 };
   }
   
   if (password.length < 8) {
-    return { isValid: false, message: 'Password must be at least 8 characters long' };
+    return { isValid: false, message: 'Password must be at least 8 characters long', strength: 0 };
   }
   
   if (password.length > 128) {
-    return { isValid: false, message: 'Password is too long' };
+    return { isValid: false, message: 'Password is too long', strength: 0 };
   }
   
   const hasLower = /[a-z]/.test(password);
@@ -127,14 +146,33 @@ export const validatePassword = (password: string): ValidationResult => {
   const hasNumber = /[0-9]/.test(password);
   const hasSpecial = /[^a-zA-Z0-9]/.test(password);
   
+  let strength = 0;
+  if (hasLower) strength += 25;
+  if (hasUpper) strength += 25;
+  if (hasNumber) strength += 25;
+  if (hasSpecial) strength += 25;
+  
+  // Length bonus
+  if (password.length >= 12) strength += 10;
+  if (password.length >= 16) strength += 10;
+  
+  // Penalty for repeated characters
+  const repeatedPattern = /(.)\1{2,}/.test(password);
+  if (repeatedPattern) strength -= 20;
+  
   if (!hasLower || !hasUpper || !hasNumber || !hasSpecial) {
     return { 
       isValid: false, 
-      message: 'Password must contain uppercase, lowercase, number, and special character' 
+      message: 'Password must contain uppercase, lowercase, number, and special character',
+      strength: Math.max(0, strength)
     };
   }
   
-  return { isValid: true, message: 'Password is valid' };
+  return { 
+    isValid: true, 
+    message: 'Password is valid',
+    strength: Math.min(100, Math.max(0, strength))
+  };
 };
 
 // URL validation
@@ -157,5 +195,15 @@ export const validateUrl = (url: string): ValidationResult => {
     return { isValid: true, message: 'Valid URL' };
   } catch (error) {
     return { isValid: false, message: 'Invalid URL format' };
+  }
+};
+
+// Secure URL validation
+export const isValidSecureUrl = (url: string): boolean => {
+  try {
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'https:' && !urlObj.hostname.includes('localhost');
+  } catch {
+    return false;
   }
 };
