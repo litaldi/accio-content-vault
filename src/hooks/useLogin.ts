@@ -36,7 +36,7 @@ export const useLogin = () => {
       authRateLimiter.recordAttempt(email);
       const result = await signIn(sanitizedEmail, password);
       
-      if (result.error) {
+      if (result && result.error) {
         throw result.error;
       }
       
@@ -62,7 +62,7 @@ export const useLogin = () => {
       
       const result = await signInWithProvider('google');
       
-      if (result.error) {
+      if (result && result.error) {
         throw result.error;
       }
       

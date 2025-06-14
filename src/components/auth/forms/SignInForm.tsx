@@ -50,7 +50,7 @@ export const SignInForm: React.FC<SignInFormProps> = ({ onSuccess, onError }) =>
 
     try {
       const result = await signIn(formData.email, formData.password);
-      if (result?.error) {
+      if (result && result.error) {
         onError(result.error.message);
         return;
       }

@@ -52,7 +52,7 @@ export const LoginForm: React.FC = () => {
 
     try {
       const result = await signIn(email, password);
-      if (result?.error) {
+      if (result && result.error) {
         setErrors({ general: result.error.message });
         return;
       }
@@ -68,7 +68,7 @@ export const LoginForm: React.FC = () => {
     setIsGoogleLoading(true);
     try {
       const result = await signInWithProvider('google');
-      if (result?.error) {
+      if (result && result.error) {
         setErrors({ general: result.error.message });
         return;
       }

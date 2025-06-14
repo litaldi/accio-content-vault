@@ -68,8 +68,8 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) =>
 
     try {
       const fullName = `${formData.firstName} ${formData.lastName}`;
-      const result = await signUp(fullName, formData.email, formData.password);
-      if (result?.error) {
+      const result = await signUp(formData.email, formData.password, { name: fullName });
+      if (result && result.error) {
         onError(result.error.message);
         return;
       }
