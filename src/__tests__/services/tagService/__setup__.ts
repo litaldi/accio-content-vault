@@ -16,7 +16,7 @@ jest.mock('@/services/contentFetchService', () => ({
         title: 'Content 1', 
         user_id: 'user-123',
         description: 'Test description',
-        content_type: 'url',
+        content_type: 'link',
         created_at: '2023-01-01',
         tags: [] 
       }
@@ -59,7 +59,7 @@ export const createMockContents = (): SavedContent[] => [
     title: 'Test 1', 
     user_id: 'user-123',
     description: 'Test description 1',
-    content_type: 'url',
+    content_type: 'link',
     created_at: '2023-01-01',
     tags: [] 
   },

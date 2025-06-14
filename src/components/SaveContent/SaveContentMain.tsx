@@ -25,6 +25,10 @@ export const SaveContentMain: React.FC<SaveContentMainProps> = ({
   handleSaveContent,
   handleFileUploadComplete
 }) => {
+  const handleFileUpload = (file: File) => {
+    console.log('File selected:', file.name);
+  };
+
   return (
     <div className="md:col-span-2">
       <Card className="shadow-lg border-2 hover:border-primary/30 transition-all duration-300">
@@ -52,7 +56,10 @@ export const SaveContentMain: React.FC<SaveContentMainProps> = ({
             </TabsContent>
             
             <TabsContent value="file" className="pt-4 space-y-6 animate-fade-in">
-              <FileUploadForm onUploadComplete={handleFileUploadComplete} />
+              <FileUploadForm 
+                onFileUpload={handleFileUpload}
+                onUploadComplete={handleFileUploadComplete} 
+              />
             </TabsContent>
           </Tabs>
         </CardContent>

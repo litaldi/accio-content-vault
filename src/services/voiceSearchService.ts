@@ -1,5 +1,5 @@
 
-/// <reference path="../types/speech.d.ts" />
+import { SpeechRecognition, SpeechRecognitionErrorEvent } from '../types/speech';
 
 export interface VoiceSearchOptions {
   continuous?: boolean;

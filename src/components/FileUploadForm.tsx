@@ -6,7 +6,13 @@ import { useToast } from '@/hooks/use-toast';
 import { FileUploadProps } from '@/types';
 import { Upload, File, Image } from 'lucide-react';
 
-const FileUploadForm: React.FC<FileUploadProps> = ({ onUploadComplete }) => {
+const FileUploadForm: React.FC<FileUploadProps> = ({ 
+  onFileUpload, 
+  onUploadComplete,
+  acceptedTypes,
+  maxSize,
+  disabled
+}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +43,9 @@ const FileUploadForm: React.FC<FileUploadProps> = ({ onUploadComplete }) => {
       }
 
       setSelectedFile(file);
+      if (onFileUpload) {
+        onFileUpload(file);
+      }
     }
   };
 
@@ -66,12 +75,14 @@ const FileUploadForm: React.FC<FileUploadProps> = ({ onUploadComplete }) => {
       // Mock file URL - in production this would come from Supabase Storage
       const mockFileUrl = `https://storage.example.com/${Date.now()}-${selectedFile.name}`;
       
-      onUploadComplete({
-        file_url: mockFileUrl,
-        file_type: fileType as "image" | "pdf",
-        file_size: selectedFile.size,
-        title: selectedFile.name,
-      });
+      if (onUploadComplete) {
+        onUploadComplete({
+          file_url: mockFileUrl,
+          file_type: fileType as "image" | "pdf",
+          file_size: selectedFile.size,
+          title: selectedFile.name,
+        });
+      }
       
       toast({
         title: 'File uploaded',
@@ -134,6 +145,7 @@ const FileUploadForm: React.FC<FileUploadProps> = ({ onUploadComplete }) => {
               onChange={handleFileChange}
               accept=".pdf,image/jpeg,image/png"
               className="hidden" 
+              disabled={disabled}
             />
           </div>
         </div>
@@ -142,7 +154,7 @@ const FileUploadForm: React.FC<FileUploadProps> = ({ onUploadComplete }) => {
         <Button 
           type="button" 
           onClick={handleUpload} 
-          disabled={!selectedFile || isUploading}
+          disabled={!selectedFile || isUploading || disabled}
         >
           {isUploading ? "Uploading..." : "Upload"}
         </Button>
