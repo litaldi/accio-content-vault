@@ -104,5 +104,6 @@ const SaveContentUrlForm: React.FC<SaveContentUrlFormProps> = ({ onSaveContent }
   );
 };
 
-export { formSchema, FormData };
+export { formSchema };
+export type { FormData };
 export default SaveContentUrlForm;
