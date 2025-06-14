@@ -1,54 +1,34 @@
 
 import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import { getSecurityHeaders, logSecurityEvent } from '@/utils/security';
+import { setupGlobalErrorHandlers } from '@/utils/errorHandling';
 
 export const useAppSecurity = () => {
-  const location = useLocation();
-
   useEffect(() => {
-    // Log page navigation for security monitoring
-    logSecurityEvent('PAGE_NAVIGATION', { 
-      path: location.pathname,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
-    });
+    // Set up global error handlers for security monitoring
+    setupGlobalErrorHandlers();
 
-    // Set security headers (where possible in client-side)
-    const headers = getSecurityHeaders();
-    
-    // Add meta tags for security
-    const existingCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-    if (!existingCSP) {
-      const cspMeta = document.createElement('meta');
-      cspMeta.setAttribute('http-equiv', 'Content-Security-Policy');
-      cspMeta.setAttribute('content', headers['Content-Security-Policy']);
-      document.head.appendChild(cspMeta);
-    }
+    // Content Security Policy headers
+    const meta = document.createElement('meta');
+    meta.httpEquiv = 'Content-Security-Policy';
+    meta.content = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;";
+    document.head.appendChild(meta);
 
-    // Add other security meta tags
-    const securityMetas = [
-      { 'http-equiv': 'X-Content-Type-Options', content: headers['X-Content-Type-Options'] },
-      { 'http-equiv': 'X-Frame-Options', content: headers['X-Frame-Options'] },
-      { 'http-equiv': 'X-XSS-Protection', content: headers['X-XSS-Protection'] },
-      { name: 'referrer', content: 'strict-origin-when-cross-origin' }
-    ];
+    // Security headers
+    const noSniff = document.createElement('meta');
+    noSniff.httpEquiv = 'X-Content-Type-Options';
+    noSniff.content = 'nosniff';
+    document.head.appendChild(noSniff);
 
-    securityMetas.forEach(meta => {
-      const existing = document.querySelector(`meta[${Object.keys(meta)[0]}="${Object.values(meta)[0]}"]`);
-      if (!existing) {
-        const metaElement = document.createElement('meta');
-        Object.entries(meta).forEach(([key, value]) => {
-          metaElement.setAttribute(key, value);
-        });
-        document.head.appendChild(metaElement);
-      }
-    });
+    const frameOptions = document.createElement('meta');
+    frameOptions.httpEquiv = 'X-Frame-Options';
+    frameOptions.content = 'DENY';
+    document.head.appendChild(frameOptions);
 
-  }, [location.pathname]);
-
-  // Return security utilities for components to use
-  return {
-    logSecurityEvent
-  };
+    return () => {
+      // Cleanup if needed
+      document.head.removeChild(meta);
+      document.head.removeChild(noSniff);
+      document.head.removeChild(frameOptions);
+    };
+  }, []);
 };
