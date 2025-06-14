@@ -1,4 +1,3 @@
-
 import { sanitizeInput, validateEmail, validatePassword, validateUrl, CSRFManager, UnifiedRateLimiter } from './security/core-security';
 
 // Enhanced security utilities with improved validation
@@ -23,7 +22,8 @@ export class SecurityValidator {
       if (!urlValidation.isValid) {
         errors.push(urlValidation.message);
       } else {
-        sanitized.url = urlValidation.sanitizedValue || content.url;
+        // Use the original URL if validation passes, as core-security validateUrl doesn't return sanitized value
+        sanitized.url = content.url;
       }
     }
 
