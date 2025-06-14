@@ -1,6 +1,17 @@
 
 import { logSecurityEvent } from './security';
 
+export const logError = (error: Error, errorInfo?: any) => {
+  console.error('Error logged:', error, errorInfo);
+  
+  logSecurityEvent('application_error', {
+    message: error.message,
+    stack: error.stack,
+    errorInfo,
+    timestamp: new Date().toISOString()
+  });
+};
+
 export const setupGlobalErrorHandlers = () => {
   // Handle unhandled promise rejections
   window.addEventListener('unhandledrejection', (event) => {

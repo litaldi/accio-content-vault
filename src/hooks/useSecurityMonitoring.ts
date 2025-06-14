@@ -1,10 +1,10 @@
 
 import { useEffect, useCallback } from 'react';
 import { SecurityMonitor, logSecurityEvent } from '@/utils/security';
-import { useSecureAuth } from '@/contexts/SecureAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const useSecurityMonitoring = () => {
-  const { user } = useSecureAuth();
+  const { user } = useAuth();
   const monitor = SecurityMonitor.getInstance();
 
   // Monitor for suspicious form activity
