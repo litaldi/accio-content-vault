@@ -14,7 +14,7 @@ import {
   CheckCircle
 } from 'lucide-react';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
-import { EnhancedLoading } from '@/components/ui/enhanced-loading';
+import { LoadingSpinner } from '@/components/ui/enhanced-loading';
 import { 
   validateEmailEnhanced, 
   sanitizeInput, 
@@ -200,7 +200,7 @@ const ContactForm: React.FC = () => {
               disabled={isSubmitting}
             >
               {isSubmitting ? (
-                <EnhancedLoading state="loading" size="sm" />
+                <LoadingSpinner size="sm" />
               ) : (
                 <>
                   <Send className="h-4 w-4" />

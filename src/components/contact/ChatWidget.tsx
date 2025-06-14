@@ -14,7 +14,7 @@ import {
   Headphones
 } from 'lucide-react';
 import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
-import { EnhancedLoading } from '@/components/ui/enhanced-loading';
+import { LoadingSpinner } from '@/components/ui/enhanced-loading';
 import { cn } from '@/lib/utils';
 import { 
   validateEmailEnhanced, 
@@ -268,7 +268,7 @@ const ChatWidget: React.FC = () => {
                 className="flex-1 gap-2"
               >
                 {isSubmitting ? (
-                  <EnhancedLoading state="loading" size="sm" />
+                  <LoadingSpinner size="sm" />
                 ) : (
                   <>
                     <Send className="h-4 w-4" />
