@@ -1,29 +1,21 @@
 
 import '@testing-library/jest-dom';
-import 'jest-axe/extend-expect';
 
 // Mock IntersectionObserver
-class MockIntersectionObserver {
-  readonly root: Element | null = null;
-  readonly rootMargin: string = '';
-  readonly thresholds: ReadonlyArray<number> = [];
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+};
 
-  constructor() {
-    this.observe = jest.fn();
-    this.unobserve = jest.fn();
-    this.disconnect = jest.fn();
-  }
-
-  observe = jest.fn();
-  unobserve = jest.fn();
-  disconnect = jest.fn();
-}
-
-Object.defineProperty(window, 'IntersectionObserver', {
-  writable: true,
-  configurable: true,
-  value: MockIntersectionObserver,
-});
+// Mock ResizeObserver
+global.ResizeObserver = class ResizeObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  unobserve() {}
+};
 
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
@@ -40,21 +32,47 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-// Mock ResizeObserver
-global.ResizeObserver = class ResizeObserver {
-  observe = jest.fn();
-  unobserve = jest.fn();
-  disconnect = jest.fn();
+// Mock crypto for CSRFManager tests
+Object.defineProperty(global, 'crypto', {
+  value: {
+    getRandomValues: jest.fn().mockImplementation((arr: Uint8Array) => {
+      for (let i = 0; i < arr.length; i++) {
+        arr[i] = Math.floor(Math.random() * 256);
+      }
+      return arr;
+    }),
+  },
+});
+
+// Mock console methods to reduce noise in tests
+global.console = {
+  ...console,
+  warn: jest.fn(),
+  error: jest.fn(),
 };
 
-// Extend the Jest matchers
-declare global {
-  namespace jest {
-    interface Matchers<R> {
-      toBeInTheDocument(): R;
-      toHaveAttribute(attr: string, value?: string): R;
-      toBeDisabled(): R;
-      toHaveValue(value: string | string[] | number | null): R;
-    }
-  }
-}
+// Mock window.location methods
+delete (window as any).location;
+window.location = {
+  ...window.location,
+  href: 'http://localhost:3000',
+  reload: jest.fn(),
+};
+
+// Mock localStorage
+const localStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+};
+global.localStorage = localStorageMock as any;
+
+// Mock sessionStorage
+const sessionStorageMock = {
+  getItem: jest.fn(),
+  setItem: jest.fn(),
+  removeItem: jest.fn(),
+  clear: jest.fn(),
+};
+global.sessionStorage = sessionStorageMock as any;

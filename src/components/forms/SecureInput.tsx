@@ -1,6 +1,7 @@
+
 import React, { useState, useCallback } from 'react';
 import { EnhancedInput } from '@/components/ui/enhanced-input';
-import { sanitizeInput } from '@/utils/unified-security';
+import { sanitizeInput, validateEmail, validateUrl } from '@/utils/security';
 import { Shield, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -13,19 +14,9 @@ interface SecureInputProps {
   required?: boolean;
   maxLength?: number;
   sanitize?: boolean;
-  validateUrl?: boolean;
   className?: string;
   description?: string;
 }
-
-const validateSecureUrl = (url: string): boolean => {
-  try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'https:' || urlObj.protocol === 'http:';
-  } catch {
-    return false;
-  }
-};
 
 /**
  * Secure input component with built-in validation and sanitization
@@ -40,7 +31,6 @@ export const SecureInput: React.FC<SecureInputProps> = ({
   required = false,
   maxLength = 1000,
   sanitize = true,
-  validateUrl = false,
   className,
   description
 }) => {
@@ -54,15 +44,16 @@ export const SecureInput: React.FC<SecureInputProps> = ({
     }
 
     if (type === 'email' && inputValue) {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-      if (!emailRegex.test(inputValue)) {
-        return 'Please enter a valid email address';
+      const emailValidation = validateEmail(inputValue);
+      if (!emailValidation.isValid) {
+        return emailValidation.message;
       }
     }
 
-    if (validateUrl && inputValue) {
-      if (!validateSecureUrl(inputValue)) {
-        return 'Please enter a valid and secure URL';
+    if (type === 'url' && inputValue) {
+      const urlValidation = validateUrl(inputValue);
+      if (!urlValidation.isValid) {
+        return urlValidation.message;
       }
     }
 
@@ -71,7 +62,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
     }
 
     return '';
-  }, [type, required, validateUrl, maxLength]);
+  }, [type, required, maxLength]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = e.target.value;

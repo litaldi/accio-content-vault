@@ -1,342 +1,206 @@
 
-# Accio - AI-Powered Content Vault 🧠✨
+# Accio - AI-Powered Knowledge Management Platform
 
-> Transform scattered information into organized intelligence with the power of AI
+A comprehensive, secure, and accessible knowledge management platform built with React, TypeScript, and modern web technologies.
 
-## ✨ Recent UX/UI Enhancements
+## 🛡️ Security Features
 
-Accio has been comprehensively enhanced with a focus on **exceptional user experience**, **accessibility-first design**, and **intuitive interactions**. Every component has been carefully crafted to provide a delightful, efficient, and inclusive experience for all users.
+### Comprehensive Security Implementation
 
-### 🎨 Enhanced Design System
+- **Input Validation & Sanitization**: All user inputs are validated and sanitized to prevent XSS, SQL injection, and other attacks
+- **CSRF Protection**: Token-based CSRF protection on all forms and sensitive operations
+- **Rate Limiting**: Intelligent rate limiting to prevent brute force attacks and abuse
+- **Content Security Policy**: Strict CSP headers to prevent code injection
+- **Secure Authentication**: Protected routes with proper session management
+- **Error Boundaries**: Comprehensive error handling with security event logging
 
-#### **Visual Hierarchy & Typography**
-- **Improved font scales** with responsive sizing across all devices
-- **Enhanced contrast ratios** meeting WCAG 2.1 AA standards
-- **Consistent spacing system** using a harmonious 8px grid
-- **Refined color palette** with semantic color meanings
-- **Better visual hierarchy** with clear heading structures
+### Security Utilities
 
-#### **Component Architecture**
-- **Modular design system** with reusable components
-- **Consistent interaction patterns** across all UI elements
-- **Enhanced micro-interactions** with smooth animations
-- **Improved loading states** and skeleton screens
-- **Better error handling** with actionable error messages
+The platform includes a robust security layer with:
 
-### 🔍 Revolutionary Search Experience
+- **Core Security Functions**: Input sanitization, validation, and escape utilities
+- **File Upload Security**: Secure file validation with type and size restrictions
+- **Rate Limiting**: Configurable rate limiters for different use cases
+- **Security Headers**: Automatic security header configuration
+- **CSRF Management**: Token generation and validation system
 
-#### **Enhanced Unified Search Bar**
-- **Voice Search Integration**: Hands-free search with speech recognition
-- **Smart Autocomplete**: AI-powered suggestions with recent, popular, and intelligent recommendations
-- **Keyboard Shortcuts**: Quick access with ⌘+K (Ctrl+K on Windows)
-- **Real-time Feedback**: Instant visual feedback for all interactions
-- **Multiple Variants**: Hero, dashboard, and minimal variants for different contexts
+```typescript
+import { validateEmail, sanitizeInput, CSRFManager } from '@/utils/security';
 
-#### **Intelligent Search Suggestions**
-- **Grouped Suggestions**: Organized by type (recent, popular, AI-generated)
-- **Visual Categorization**: Clear icons and badges for easy identification
-- **Keyboard Navigation**: Full accessibility with arrow keys and Enter
-- **Quick Actions**: One-click suggestion management and clearing
+// Email validation with security checks
+const result = validateEmail(userEmail);
+if (!result.isValid) {
+  // Handle invalid email
+}
 
-#### **Search Component Breakdown**
-```
-EnhancedUnifiedSearchBar/
-├── VoiceSearchButton.tsx      # Voice input functionality
-├── SearchKeyboardShortcut.tsx # Keyboard shortcut indicator
-├── VoiceSearchFeedback.tsx    # Voice recognition feedback
-├── EnhancedSearchSuggestions.tsx # Smart suggestion panel
-└── SearchExperience.tsx       # Complete search experience wrapper
+// Input sanitization
+const cleanInput = sanitizeInput(userInput, {
+  maxLength: 1000,
+  allowHtml: false,
+  stripWhitespace: true
+});
+
+// CSRF protection
+const token = CSRFManager.generate();
 ```
 
-### ♿ Accessibility Excellence
+## 🧪 Testing & Quality Assurance
 
-#### **WCAG 2.1 AA Compliance**
-- **Enhanced Keyboard Navigation**: Full app functionality without a mouse
-- **Screen Reader Optimization**: Comprehensive ARIA implementation
-- **Focus Management**: Clear visual indicators and logical tab order
-- **High Contrast Support**: Enhanced visibility options
-- **Reduced Motion Respect**: Honors user motion preferences
+### Test Coverage
 
-#### **Accessibility Components**
-- **Skip to Content Links**: Quick navigation for keyboard users
-- **Enhanced Focus Indicators**: Prominent focus rings on all interactive elements
-- **Semantic HTML Structure**: Proper heading hierarchy and landmarks
-- **Accessibility Context**: Global accessibility preferences management
-- **Screen Reader Announcements**: Live regions for dynamic content updates
+- **Unit Tests**: Comprehensive test suite for all security utilities
+- **Component Tests**: Error boundary and UI component testing
+- **Integration Tests**: End-to-end authentication and security flows
+- **Security Tests**: Validation of input sanitization and attack prevention
 
-### 📱 Mobile-First Responsive Design
+### Error Handling
 
-#### **Enhanced Mobile Experience**
-- **Touch-Friendly Controls**: Minimum 44px touch targets
-- **Responsive Layouts**: Seamless adaptation to any screen size
-- **Mobile Navigation**: Intuitive bottom navigation for authenticated users
-- **Gesture Support**: Natural swipe and tap interactions
-- **Performance Optimized**: Fast loading and smooth scrolling
+- **Global Error Boundary**: Catches and handles all unexpected errors
+- **Async Error Boundary**: Specialized handling for async operations
+- **Graceful Degradation**: Fallback UI for error states
+- **Security Event Logging**: Comprehensive logging for security monitoring
 
-#### **Navigation System**
-- **Adaptive Header**: Responsive main navigation with mobile hamburger menu
-- **Footer Navigation**: Bottom tab bar for mobile app-like experience
-- **Skip Links**: Accessible navigation shortcuts
-- **Breadcrumbs**: Clear navigation context (when applicable)
+### Code Quality
 
-### 🎯 Enhanced User Experience Flows
+- **TypeScript**: Full type safety with strict configuration
+- **ESLint & Prettier**: Code formatting and quality enforcement
+- **Security Linting**: Automated security vulnerability detection
+- **Performance Monitoring**: Client-side performance tracking
 
-#### **Authentication & Onboarding**
-- **Streamlined Sign-in/Sign-up**: Clear call-to-action buttons
-- **Demo Account Access**: Easy testing with demo@yourapp.com / Demo1234!
-- **Progressive Disclosure**: Information revealed as needed
-- **Contextual Help**: Tooltips and guidance where needed
+## 🌐 Accessibility (WCAG 2.1 AA Compliant)
 
-#### **Content Management**
-- **Quick Actions**: Fast access to frequently used features
-- **Bulk Operations**: Efficient content management tools
-- **Smart Organization**: AI-powered categorization and tagging
-- **Search Integration**: Universal search across all content
+### Comprehensive Accessibility Features
 
-### 🛠 Technical Enhancements
-
-#### **Performance Optimization**
-- **Code Splitting**: Smaller bundle sizes with lazy loading
-- **Optimized Rendering**: Efficient React patterns and minimal re-renders
-- **Caching Strategy**: Smart data caching for instant responses
-- **Bundle Analysis**: Tree-shaking and dependency optimization
-
-#### **Development Experience**
-- **Component Modularity**: Small, focused, reusable components
-- **TypeScript Excellence**: Comprehensive type safety
-- **Testing Suite**: Accessibility and integration tests included
-- **Documentation**: Inline code documentation and usage examples
-
-## 🚀 Key Features
-
-### 🔍 Advanced Search Capabilities
-- **Natural Language Queries**: Ask questions like "What articles did I save about React last week?"
-- **Voice Search**: Hands-free search with speech recognition
-- **Smart Suggestions**: AI-powered autocomplete with contextual recommendations
-- **Instant Results**: Real-time search with intelligent filtering
-- **Semantic Understanding**: Find content by meaning, not just keywords
-
-### 🎯 Intelligent Organization
-- **Auto-Tagging**: AI automatically categorizes your content
-- **Smart Collections**: Dynamic grouping based on content similarity
-- **Contextual Recommendations**: Discover related content effortlessly
-- **Search-Driven Organization**: Find anything instantly
-
-### 🎨 Beautiful Interface
-- **Thoughtful Typography**: Optimized readability with proper contrast ratios
-- **Smooth Animations**: Delightful micro-interactions that feel responsive
-- **Dark Mode**: Beautiful dark theme that's easy on the eyes
-- **Consistent Design System**: Cohesive visual language throughout
-
-### ♿ Accessibility Features
-- **Screen Reader Support**: Complete ARIA implementation
-- **Keyboard Navigation**: Full app functionality without a mouse
-- **High Contrast Mode**: Enhanced visibility options
+- **Screen Reader Support**: Full ARIA implementation and semantic HTML
+- **Keyboard Navigation**: Complete keyboard accessibility for all interactions
+- **Voice Search**: Built-in voice recognition for search functionality
+- **High Contrast Mode**: Toggle for users with visual impairments
 - **Reduced Motion**: Respects user motion preferences
-- **Focus Management**: Clear visual indicators for keyboard users
+- **Font Size Controls**: Customizable text scaling
+- **Focus Management**: Proper focus handling and skip links
 
-## 🛠 Technical Architecture
+```typescript
+import { useAccessibility } from '@/contexts/AccessibilityContext';
 
-### Frontend Stack
-- **React 18** with modern hooks and concurrent features
-- **TypeScript** for type safety and better developer experience
-- **Tailwind CSS** for utility-first styling with custom design tokens
-- **Shadcn/UI** for beautiful, accessible components
-- **React Query** for efficient data management and caching
-- **React Router** for client-side routing
-
-### Enhanced Components
-```
-src/
-├── components/
-│   ├── search/                # Enhanced search experience
-│   │   ├── EnhancedUnifiedSearchBar.tsx
-│   │   ├── EnhancedSearchSuggestions.tsx
-│   │   ├── SearchExperience.tsx
-│   │   ├── VoiceSearchButton.tsx
-│   │   ├── SearchKeyboardShortcut.tsx
-│   │   └── VoiceSearchFeedback.tsx
-│   ├── accessibility/         # Accessibility components
-│   │   └── SkipToContent.tsx
-│   ├── navigation/           # Navigation system
-│   │   ├── MainNavigation.tsx
-│   │   └── FooterNavigation.tsx
-│   ├── marketing/           # Marketing components
-│   │   └── MarketingFooter.tsx
-│   └── ui/                  # Enhanced UI components
-├── contexts/                # React contexts
-│   ├── AuthContext.tsx     # Authentication state
-│   └── AccessibilityContext.tsx # Accessibility preferences
-├── services/               # External services
-│   └── voiceSearchService.ts # Voice recognition service
-└── hooks/                  # Custom hooks
-    └── useSearchAutocomplete.tsx # Search functionality
+const { announceToScreenReader, toggleHighContrast, setFontSize } = useAccessibility();
 ```
 
-### Performance Metrics
-- **First Contentful Paint**: < 1.5s
-- **Largest Contentful Paint**: < 2.5s
-- **Cumulative Layout Shift**: < 0.1
-- **First Input Delay**: < 100ms
-- **Accessibility Score**: 100/100
+## 🔧 Architecture & Best Practices
 
-## 🎨 Design System
+### Security-First Design
 
-### Typography Scale
-```css
-/* Display text for hero sections */
-.display: text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight
+- **Principle of Least Privilege**: Minimal permissions and access control
+- **Defense in Depth**: Multiple layers of security controls
+- **Secure by Default**: Safe defaults for all configurations
+- **Input Validation**: Client and server-side validation
+- **Output Encoding**: Proper encoding for all user-generated content
 
-/* Page headings */
-.h1: text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight
-.h2: text-2xl lg:text-3xl xl:text-4xl font-semibold tracking-tight
-.h3: text-xl lg:text-2xl xl:text-3xl font-semibold tracking-tight
+### Performance & Scalability
 
-/* Body text */
-.lead: text-lg lg:text-xl text-muted-foreground font-medium
-.body: text-base leading-relaxed
-.caption: text-xs text-muted-foreground
-```
+- **React 18**: Latest React features with concurrent rendering
+- **Vite**: Fast build tool with HMR for development
+- **Code Splitting**: Lazy loading for optimal performance
+- **Error Boundaries**: Graceful error handling without app crashes
+- **Memory Management**: Proper cleanup and resource management
 
-### Color System
-```css
-/* Status colors */
-.success: text-green-600 bg-green-50 border-green-200
-.warning: text-amber-600 bg-amber-50 border-amber-200
-.error: text-red-600 bg-red-50 border-red-200
-.info: text-blue-600 bg-blue-50 border-blue-200
-
-/* Interactive states */
-.primary: bg-primary text-primary-foreground hover:bg-primary/90
-.secondary: bg-secondary text-secondary-foreground hover:bg-secondary/80
-```
-
-### Spacing System
-```css
-/* Section spacing */
-.section-padding: py-12 lg:py-16 xl:py-20
-.section-padding-large: py-16 lg:py-20 xl:py-24
-
-/* Container spacing */
-.container-padding: px-4 sm:px-6 lg:px-8
-.container-max-width: max-w-7xl mx-auto
-
-/* Element spacing */
-.stack-tight: space-y-2
-.stack-default: space-y-4
-.stack-loose: space-y-6
-```
-
-## 🚀 Getting Started
+### Development Workflow
 
 ```bash
-# Install dependencies
-npm install
-
-# Start development server
+# Development
 npm run dev
+
+# Testing
+npm run test
+npm run test:coverage
+
+# Security checks
+npm run security:check
 
 # Build for production
 npm run build
 
 # Preview production build
 npm run preview
-
-# Run accessibility tests
-npm run test:a11y
 ```
 
-## 📱 Mobile Experience
+## 📋 Security Checklist
 
-Accio is designed mobile-first with:
-- **Touch-friendly Controls**: Minimum 44px touch targets
-- **Responsive Layout**: Adapts beautifully to any screen size
-- **Gesture Support**: Intuitive swipe and tap interactions
-- **Native App Feel**: Bottom navigation and mobile-optimized interactions
+### Pre-Deployment Security Review
 
-## 🎯 Accessibility Commitment
+- [ ] All user inputs validated and sanitized
+- [ ] CSRF protection on all forms
+- [ ] Rate limiting configured
+- [ ] Security headers implemented
+- [ ] Authentication flows tested
+- [ ] Error handling verified
+- [ ] Accessibility compliance validated
+- [ ] Performance optimized
+- [ ] Security tests passing
 
-We believe technology should be accessible to everyone:
+### Production Security
 
-- ✅ **WCAG 2.1 AA Compliant**
-- ✅ **Screen Reader Compatible** (tested with NVDA, JAWS, VoiceOver)
-- ✅ **Keyboard Navigation** (full app functionality)
-- ✅ **High Contrast Support** (enhanced visibility options)
-- ✅ **Reduced Motion Respect** (honors user preferences)
-- ✅ **Semantic HTML** (proper document structure)
-- ✅ **Focus Management** (logical tab order and visible indicators)
-- ✅ **Alternative Text** (descriptive alt text for all images)
+- [ ] HTTPS enforced
+- [ ] Security headers configured at server level
+- [ ] Rate limiting at infrastructure level
+- [ ] Monitoring and alerting configured
+- [ ] Backup and recovery procedures
+- [ ] Incident response plan
+- [ ] Regular security updates
+- [ ] Penetration testing completed
 
-## 🧪 Testing & Quality Assurance
+## 🚀 Deployment
 
-### Accessibility Testing
-```bash
-# Run automated accessibility tests
-npm run test:a11y
+### Hosting Configuration
 
-# Test with screen readers
-npm run test:sr
+The application can be deployed to any modern hosting platform with proper security header configuration:
 
-# Keyboard navigation testing
-npm run test:keyboard
+**Netlify** (_headers file):
+```
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:
 ```
 
-### Cross-browser Compatibility
-- ✅ Chrome (latest)
-- ✅ Firefox (latest)
-- ✅ Safari (latest)
-- ✅ Edge (latest)
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
+**Vercel** (vercel.json):
+```json
+{
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" }
+      ]
+    }
+  ]
+}
+```
 
-## 🛣 Roadmap
+## 📖 Documentation
 
-### Upcoming UX/UI Enhancements
-- [ ] **Advanced Customization**: User-customizable themes and layouts
-- [ ] **Gesture Navigation**: Advanced touch gestures for power users
-- [ ] **Voice Commands**: Full voice control interface
-- [ ] **AR/VR Preview**: Immersive content exploration
-- [ ] **Smart Notifications**: Contextual, non-intrusive alerts
+### Additional Resources
 
-### Accessibility Improvements
-- [ ] **Voice Control**: Navigate with voice commands
-- [ ] **Eye Tracking**: Support for eye-tracking devices
-- [ ] **Cognitive Accessibility**: Enhanced support for cognitive disabilities
-- [ ] **Multilingual Support**: Internationalization with RTL support
-
-## 📚 Documentation
-
-### Component Documentation
-- [Search Components](./docs/components/search.md)
-- [Navigation System](./docs/components/navigation.md)
-- [Accessibility Features](./docs/accessibility.md)
-- [Design System](./docs/design-system.md)
-
-### Development Guides
-- [Contributing Guidelines](./CONTRIBUTING.md)
-- [Accessibility Testing](./docs/testing/accessibility.md)
-- [Performance Optimization](./docs/performance.md)
+- [Security Implementation Guide](./SECURITY.md)
+- [Accessibility Guidelines](./docs/accessibility.md)
+- [API Documentation](./docs/api.md)
+- [Testing Guide](./docs/testing.md)
+- [Deployment Guide](./docs/deployment.md)
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
-- Code style and standards
-- Accessibility requirements
-- Testing procedures
-- Design system guidelines
+1. **Security**: All contributions must pass security review
+2. **Testing**: Maintain test coverage above 80%
+3. **Accessibility**: Ensure WCAG 2.1 AA compliance
+4. **Performance**: Monitor and optimize for performance
+5. **Documentation**: Update documentation for all changes
 
-## 📄 License
+## 📞 Support & Security
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+For security-related issues or vulnerabilities, please contact our security team through the appropriate channels outlined in our Security Policy.
 
 ---
 
-<div align="center">
-  <p><strong>Built with ❤️ using Lovable.dev</strong></p>
-  <p><em>Empowering creators to build beautiful, accessible web applications</em></p>
-  
-  ### Accessibility Statement
-  <p>We are committed to ensuring digital accessibility for people with disabilities.<br>
-  We continually improve the user experience for everyone and apply relevant accessibility standards.</p>
-  
-  <p><a href="/accessibility">View our full accessibility statement →</a></p>
-</div>
+Built with ❤️ using React, TypeScript, and modern security best practices.

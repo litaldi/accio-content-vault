@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -12,6 +11,8 @@ import { Typography, Spacing } from '@/components/ui/design-system';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Sparkles, Zap, Shield, Brain } from 'lucide-react';
+import { GlobalErrorBoundary } from '@/components/error-handling/GlobalErrorBoundary';
+import { useAppSecurity } from '@/hooks/useAppSecurity';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -141,26 +142,30 @@ const EnhancedHome = () => {
 };
 
 function App() {
+  useAppSecurity();
+
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <AccessibilityProvider>
-            <Router>
-              <AppLayout>
-                <div className="min-h-screen">
-                  <Routes>
-                    <Route path="/" element={<EnhancedHome />} />
-                    {/* Add other routes here */}
-                  </Routes>
-                </div>
-              </AppLayout>
-              <Toaster />
-            </Router>
-          </AccessibilityProvider>
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <GlobalErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <AccessibilityProvider>
+              <Router>
+                <AppLayout>
+                  <div className="min-h-screen">
+                    <Routes>
+                      <Route path="/" element={<EnhancedHome />} />
+                      {/* Add other routes here */}
+                    </Routes>
+                  </div>
+                </AppLayout>
+                <Toaster />
+              </Router>
+            </AccessibilityProvider>
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </GlobalErrorBoundary>
   );
 }
 

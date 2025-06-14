@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { validateEmailSecure, authRateLimiter, logSecurityEvent } from '@/utils/security-validation-enhanced';
+import { validateEmail, authRateLimiter, logSecurityEvent } from '@/utils/security';
 
 export const useLogin = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +20,17 @@ export const useLogin = () => {
     setIsSubmitting(true);
     
     try {
-      const emailValidation = validateEmailSecure(email);
+      // Rate limiting check
+      const canAttempt = authRateLimiter.canAttempt(email);
+      if (!canAttempt.allowed) {
+        throw new Error('Too many login attempts. Please try again later.');
+      }
+
+      const emailValidation = validateEmail(email);
+      if (!emailValidation.isValid) {
+        throw new Error(emailValidation.message);
+      }
+
       const sanitizedEmail = emailValidation.sanitizedValue || email;
       
       authRateLimiter.recordAttempt(email);
@@ -35,7 +45,11 @@ export const useLogin = () => {
     } catch (error: any) {
       logSecurityEvent('LOGIN_FAILED', { email, error: error.message });
       console.error('Login error:', error);
-      throw error;
+      toast({
+        title: "Login Failed",
+        description: error.message || "Invalid credentials. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -53,6 +67,7 @@ export const useLogin = () => {
       }
       
       logSecurityEvent('GOOGLE_SIGNIN_SUCCESS');
+      navigate(from, { replace: true });
     } catch (error: any) {
       logSecurityEvent('GOOGLE_SIGNIN_FAILED', { error: error.message });
       console.error('Google sign in error:', error);

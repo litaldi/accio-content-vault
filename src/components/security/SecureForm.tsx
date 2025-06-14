@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { CSRFManager, sanitizeInput } from '@/utils/unified-security';
+import { CSRFManager, sanitizeInput } from '@/utils/security';
 
 interface SecureFormProps {
   children: React.ReactNode;
