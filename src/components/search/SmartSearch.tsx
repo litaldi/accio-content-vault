@@ -1,3 +1,4 @@
+
 import React, { useState, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -114,8 +115,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
             </div>
             <VoiceSearchButton
               isListening={isListening}
-              isSupported={voiceSearchService.isSupported()}
-              onClick={handleVoiceSearch}
+              onVoiceSearch={handleVoiceSearch}
             />
           </div>
           

@@ -1,11 +1,11 @@
 
 class VoiceSearchService {
-  private recognition: SpeechRecognition | null = null;
+  private recognition: any = null;
   private isListening = false;
 
   constructor() {
     if (this.isSupported()) {
-      const SpeechRecognitionConstructor = window.SpeechRecognition || window.webkitSpeechRecognition;
+      const SpeechRecognitionConstructor = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       this.recognition = new SpeechRecognitionConstructor();
       this.setupRecognition();
     }
@@ -58,7 +58,7 @@ class VoiceSearchService {
   onRecognitionResult(callback: (result: { transcript: string; isFinal: boolean }) => void) {
     if (!this.recognition) return;
     
-    this.recognition.onresult = (event) => {
+    this.recognition.onresult = (event: any) => {
       const result = event.results[event.results.length - 1];
       callback({
         transcript: result[0].transcript,
