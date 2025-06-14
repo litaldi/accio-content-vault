@@ -10,6 +10,7 @@ interface NavigationLinkProps {
   activeClassName?: string;
   onClick?: () => void;
   external?: boolean;
+  exact?: boolean;
 }
 
 const NavigationLink: React.FC<NavigationLinkProps> = ({
@@ -18,10 +19,15 @@ const NavigationLink: React.FC<NavigationLinkProps> = ({
   className = '',
   activeClassName = '',
   onClick,
-  external = false
+  external = false,
+  exact = true
 }) => {
   const location = useLocation();
-  const isActive = location.pathname === to;
+  
+  // Determine if the link is active based on exact or partial matching
+  const isActive = exact 
+    ? location.pathname === to
+    : location.pathname.startsWith(to);
 
   const baseClassName = cn(
     'transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-md',

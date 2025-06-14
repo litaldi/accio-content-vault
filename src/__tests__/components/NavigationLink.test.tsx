@@ -26,7 +26,7 @@ describe('NavigationLink', () => {
   it('applies active class when path matches exactly', () => {
     mockUseLocation.mockImplementation(() => ({ pathname: '/exact' }));
     render(
-      <NavigationLink to="/exact" exact className="test-class" activeClassName="active-test">
+      <NavigationLink to="/exact" exact={true} className="test-class" activeClassName="active-test">
         Exact Link
       </NavigationLink>
     );
@@ -38,7 +38,7 @@ describe('NavigationLink', () => {
   it('applies active class when path starts with link path', () => {
     mockUseLocation.mockImplementation(() => ({ pathname: '/parent/child' }));
     render(
-      <NavigationLink to="/parent" activeClassName="active-test">
+      <NavigationLink to="/parent" exact={false} activeClassName="active-test">
         Parent Link
       </NavigationLink>
     );
@@ -49,7 +49,7 @@ describe('NavigationLink', () => {
   it('does not apply active class when exact is true and paths dont match exactly', () => {
     mockUseLocation.mockImplementation(() => ({ pathname: '/parent/child' }));
     render(
-      <NavigationLink to="/parent" exact activeClassName="active-test">
+      <NavigationLink to="/parent" exact={true} activeClassName="active-test">
         Parent Link
       </NavigationLink>
     );
