@@ -1,27 +1,17 @@
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 
-interface SearchSuggestion {
+export interface SearchSuggestion {
   id: string;
   query: string;
   type: 'recent' | 'suggestion' | 'popular';
+  category?: string;
 }
 
-interface UseSearchAutocompleteReturn {
-  addRecentSearch: (query: string) => void;
-  generateSuggestions: (query: string) => SearchSuggestion[];
-  clearRecentSearches: () => void;
-  getPopularSearches: () => string[];
-}
-
-const RECENT_SEARCHES_KEY = 'accio_recent_searches';
-const MAX_RECENT_SEARCHES = 5;
-
-export const useSearchAutocomplete = (): UseSearchAutocompleteReturn => {
+export const useSearchAutocomplete = () => {
   const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
-      const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
-      return stored ? JSON.parse(stored) : [];
+      return JSON.parse(localStorage.getItem('recentSearches') || '[]');
     } catch {
       return [];
     }
@@ -31,75 +21,74 @@ export const useSearchAutocomplete = (): UseSearchAutocompleteReturn => {
     if (!query.trim()) return;
     
     const trimmedQuery = query.trim();
-    setRecentSearches(prev => {
-      const filtered = prev.filter(search => search !== trimmedQuery);
-      const updated = [trimmedQuery, ...filtered].slice(0, MAX_RECENT_SEARCHES);
-      
-      try {
-        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
-      } catch {
-        // Silently handle localStorage errors
-      }
-      
-      return updated;
-    });
-  }, []);
+    const updated = [trimmedQuery, ...recentSearches.filter(s => s !== trimmedQuery)].slice(0, 10);
+    
+    setRecentSearches(updated);
+    localStorage.setItem('recentSearches', JSON.stringify(updated));
+  }, [recentSearches]);
 
   const clearRecentSearches = useCallback(() => {
     setRecentSearches([]);
-    try {
-      localStorage.removeItem(RECENT_SEARCHES_KEY);
-    } catch {
-      // Silently handle localStorage errors
-    }
+    localStorage.removeItem('recentSearches');
   }, []);
 
-  const getPopularSearches = useCallback(() => [
-    'productivity tips',
-    'react tutorial', 
-    'javascript best practices',
-    'design patterns',
-    'ai tools'
-  ], []);
-
-  const generateSuggestions = useMemo(() => (query: string): SearchSuggestion[] => {
+  const generateSuggestions = useCallback((query: string): SearchSuggestion[] => {
     const suggestions: SearchSuggestion[] = [];
-    const lowerQuery = query.toLowerCase();
 
-    // Add recent searches that match
-    recentSearches
-      .filter(search => search.toLowerCase().includes(lowerQuery))
-      .forEach((search, index) => {
+    // Add recent searches
+    if (query) {
+      const matchingRecent = recentSearches
+        .filter(search => search.toLowerCase().includes(query.toLowerCase()))
+        .slice(0, 3);
+      
+      matchingRecent.forEach((search, index) => {
         suggestions.push({
           id: `recent-${index}`,
           query: search,
           type: 'recent'
         });
       });
-
-    // Add popular searches that match
-    if (query.length >= 2) {
-      getPopularSearches()
-        .filter(search => 
-          search.toLowerCase().includes(lowerQuery) && 
-          !suggestions.some(s => s.query === search)
-        )
-        .forEach((search, index) => {
-          suggestions.push({
-            id: `popular-${index}`,
-            query: search,
-            type: 'popular'
-          });
+    } else {
+      // Show recent searches when no query
+      recentSearches.slice(0, 5).forEach((search, index) => {
+        suggestions.push({
+          id: `recent-${index}`,
+          query: search,
+          type: 'recent'
         });
+      });
     }
 
-    return suggestions.slice(0, 8);
-  }, [recentSearches, getPopularSearches]);
+    // Add popular suggestions
+    const popularSuggestions = [
+      'React patterns',
+      'TypeScript guide',
+      'Design systems',
+      'API documentation',
+      'JavaScript tutorials'
+    ];
+
+    if (query) {
+      const matchingPopular = popularSuggestions
+        .filter(suggestion => suggestion.toLowerCase().includes(query.toLowerCase()))
+        .slice(0, 2);
+      
+      matchingPopular.forEach((suggestion, index) => {
+        suggestions.push({
+          id: `popular-${index}`,
+          query: suggestion,
+          type: 'popular'
+        });
+      });
+    }
+
+    return suggestions;
+  }, [recentSearches]);
 
   return {
+    recentSearches,
     addRecentSearch,
-    generateSuggestions,
     clearRecentSearches,
-    getPopularSearches
+    generateSuggestions
   };
 };

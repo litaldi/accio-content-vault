@@ -4,126 +4,171 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar, Tag, FileText, Video, Image, Link2 } from 'lucide-react';
-
-interface SearchFilter {
-  id: string;
-  label: string;
-  count: number;
-  checked: boolean;
-}
+import { Separator } from '@/components/ui/separator';
+import { Filter, Calendar, Tag, FileType, Star } from 'lucide-react';
 
 interface SearchSidebarProps {
-  contentTypeFilters: SearchFilter[];
-  tagFilters: SearchFilter[];
-  onFilterChange: (filterId: string, type: 'contentType' | 'tag') => void;
-  onClearFilters: () => void;
+  filters: {
+    dateRange: string;
+    contentTypes: string[];
+    tags: string[];
+    starred: boolean;
+  };
+  onFilterChange: (filters: any) => void;
+  className?: string;
 }
 
 const SearchSidebar: React.FC<SearchSidebarProps> = ({
-  contentTypeFilters,
-  tagFilters,
+  filters,
   onFilterChange,
-  onClearFilters
+  className
 }) => {
-  const contentTypeIcons = {
-    article: FileText,
-    video: Video,
-    image: Image,
-    link: Link2,
-  };
+  const contentTypes = [
+    'Articles',
+    'Videos',
+    'Documents',
+    'Images',
+    'Links',
+    'Notes'
+  ];
+
+  const popularTags = [
+    'React',
+    'TypeScript',
+    'Design',
+    'Development',
+    'Tutorial',
+    'Documentation'
+  ];
+
+  const dateRanges = [
+    'Last 7 days',
+    'Last 30 days',
+    'Last 3 months',
+    'Last year',
+    'All time'
+  ];
 
   return (
-    <div className="space-y-6">
+    <div className={className}>
       <Card>
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-base">Filters</CardTitle>
-            <Button variant="ghost" size="sm" onClick={onClearFilters}>
-              Clear All
-            </Button>
-          </div>
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Filter className="h-5 w-5" />
+            Filters
+          </CardTitle>
         </CardHeader>
         
         <CardContent className="space-y-6">
-          {/* Content Type Filters */}
+          {/* Date Range */}
           <div>
-            <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
-              <FileText className="h-4 w-4" />
-              Content Type
+            <h4 className="font-medium mb-3 flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Date Range
             </h4>
             <div className="space-y-2">
-              {contentTypeFilters.map((filter) => {
-                const Icon = contentTypeIcons[filter.id as keyof typeof contentTypeIcons] || FileText;
-                return (
-                  <div key={filter.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={filter.id}
-                      checked={filter.checked}
-                      onCheckedChange={() => onFilterChange(filter.id, 'contentType')}
-                    />
-                    <label
-                      htmlFor={filter.id}
-                      className="text-sm flex items-center gap-2 flex-1 cursor-pointer"
-                    >
-                      <Icon className="h-3 w-3" />
-                      {filter.label}
-                      <Badge variant="secondary" className="ml-auto text-xs">
-                        {filter.count}
-                      </Badge>
-                    </label>
-                  </div>
-                );
-              })}
+              {dateRanges.map((range) => (
+                <label key={range} className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="radio"
+                    name="dateRange"
+                    value={range}
+                    checked={filters.dateRange === range}
+                    onChange={(e) => onFilterChange({ ...filters, dateRange: e.target.value })}
+                    className="w-4 h-4"
+                  />
+                  <span className="text-sm">{range}</span>
+                </label>
+              ))}
             </div>
           </div>
 
-          {/* Tag Filters */}
+          <Separator />
+
+          {/* Content Types */}
           <div>
-            <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
-              <Tag className="h-4 w-4" />
-              Tags
+            <h4 className="font-medium mb-3 flex items-center gap-2">
+              <FileType className="h-4 w-4" />
+              Content Type
             </h4>
-            <div className="space-y-2 max-h-48 overflow-y-auto">
-              {tagFilters.map((filter) => (
-                <div key={filter.id} className="flex items-center space-x-2">
+            <div className="space-y-2">
+              {contentTypes.map((type) => (
+                <div key={type} className="flex items-center space-x-2">
                   <Checkbox
-                    id={`tag-${filter.id}`}
-                    checked={filter.checked}
-                    onCheckedChange={() => onFilterChange(filter.id, 'tag')}
+                    id={type}
+                    checked={filters.contentTypes.includes(type)}
+                    onCheckedChange={(checked) => {
+                      const updated = checked
+                        ? [...filters.contentTypes, type]
+                        : filters.contentTypes.filter(t => t !== type);
+                      onFilterChange({ ...filters, contentTypes: updated });
+                    }}
                   />
-                  <label
-                    htmlFor={`tag-${filter.id}`}
-                    className="text-sm flex items-center gap-2 flex-1 cursor-pointer"
-                  >
-                    {filter.label}
-                    <Badge variant="secondary" className="ml-auto text-xs">
-                      {filter.count}
-                    </Badge>
+                  <label htmlFor={type} className="text-sm cursor-pointer">
+                    {type}
                   </label>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Date Range */}
+          <Separator />
+
+          {/* Tags */}
           <div>
-            <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Date Range
+            <h4 className="font-medium mb-3 flex items-center gap-2">
+              <Tag className="h-4 w-4" />
+              Tags
             </h4>
-            <div className="space-y-2">
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                Last 7 days
-              </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                Last 30 days
-              </Button>
-              <Button variant="outline" size="sm" className="w-full justify-start">
-                Last 90 days
-              </Button>
+            <div className="flex flex-wrap gap-2">
+              {popularTags.map((tag) => (
+                <Badge
+                  key={tag}
+                  variant={filters.tags.includes(tag) ? "default" : "secondary"}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    const updated = filters.tags.includes(tag)
+                      ? filters.tags.filter(t => t !== tag)
+                      : [...filters.tags, tag];
+                    onFilterChange({ ...filters, tags: updated });
+                  }}
+                >
+                  {tag}
+                </Badge>
+              ))}
             </div>
           </div>
+
+          <Separator />
+
+          {/* Starred Items */}
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              id="starred"
+              checked={filters.starred}
+              onCheckedChange={(checked) => 
+                onFilterChange({ ...filters, starred: !!checked })
+              }
+            />
+            <label htmlFor="starred" className="text-sm cursor-pointer flex items-center gap-2">
+              <Star className="h-4 w-4" />
+              Starred items only
+            </label>
+          </div>
+
+          {/* Clear Filters */}
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => onFilterChange({
+              dateRange: 'All time',
+              contentTypes: [],
+              tags: [],
+              starred: false
+            })}
+          >
+            Clear All Filters
+          </Button>
         </CardContent>
       </Card>
     </div>
