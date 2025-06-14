@@ -5,9 +5,17 @@ import { User } from '@supabase/supabase-js';
 export interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  isDemoMode: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<{ error?: any }>;
+  signUp: (email: string, password: string, metadata?: any) => Promise<{ error?: any }>;
+  signOut: () => Promise<void>;
+  signInWithProvider: (provider: string) => Promise<{ error?: any }>;
+  resetPassword: (email: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -103,12 +111,57 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser(null);
   };
 
+  // Alias methods for compatibility
+  const signIn = async (email: string, password: string) => {
+    try {
+      await login(email, password);
+      return {};
+    } catch (error) {
+      return { error };
+    }
+  };
+
+  const signUp = async (email: string, password: string, metadata?: any) => {
+    try {
+      await register(email, password);
+      return {};
+    } catch (error) {
+      return { error };
+    }
+  };
+
+  const signOut = async (): Promise<void> => {
+    await logout();
+  };
+
+  const signInWithProvider = async (provider: string) => {
+    try {
+      // Mock provider signin
+      return {};
+    } catch (error) {
+      return { error };
+    }
+  };
+
+  const resetPassword = async (email: string): Promise<void> => {
+    // Mock reset password
+    console.log('Reset password for:', email);
+  };
+
   const value: AuthContextType = {
     user,
     loading,
+    isLoading: loading,
+    isAuthenticated: !!user,
+    isDemoMode: user?.email === 'demo@yourapp.com',
     login,
     register,
-    logout
+    logout,
+    signIn,
+    signUp,
+    signOut,
+    signInWithProvider,
+    resetPassword
   };
 
   return (

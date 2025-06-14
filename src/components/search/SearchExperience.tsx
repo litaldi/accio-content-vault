@@ -1,96 +1,115 @@
 
-import React from 'react';
-import { EnhancedUnifiedSearchBar } from './EnhancedUnifiedSearchBar';
-import { Sparkles, Zap, Search } from 'lucide-react';
-import { Typography, Spacing } from '@/components/ui/design-system';
+import React, { useState } from 'react';
+import { Search, Filter, SortAsc, Grid, List } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Spacing } from '@/components/ui/design-system';
+import { EnhancedCard } from '@/components/ui/enhanced-card';
 
-interface SearchExperienceProps {
-  variant?: 'hero' | 'dashboard' | 'minimal';
-  onSearch?: (query: string) => void;
-  searchQuery?: string;
-  onSearchChange?: (query: string) => void;
-  showTips?: boolean;
-  className?: string;
-}
+export const SearchExperience: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
-export const SearchExperience: React.FC<SearchExperienceProps> = ({
-  variant = 'dashboard',
-  onSearch,
-  searchQuery,
-  onSearchChange,
-  showTips = true,
-  className
-}) => {
-  const getPlaceholder = () => {
-    switch (variant) {
-      case 'hero':
-        return "Ask me anything about your saved content...";
-      case 'dashboard':
-        return "Search your knowledge base...";
-      case 'minimal':
-        return "Search...";
-      default:
-        return "Search your knowledge...";
+  const mockResults = [
+    {
+      id: 1,
+      title: 'React Best Practices',
+      type: 'Article',
+      excerpt: 'Comprehensive guide to React development patterns and best practices...',
+      tags: ['React', 'JavaScript', 'Frontend']
+    },
+    {
+      id: 2,
+      title: 'API Design Guidelines',
+      type: 'Document',
+      excerpt: 'Essential guidelines for designing scalable and maintainable APIs...',
+      tags: ['API', 'Backend', 'Design']
+    },
+    {
+      id: 3,
+      title: 'Meeting Notes - Q1 Planning',
+      type: 'Note',
+      excerpt: 'Key decisions and action items from Q1 planning session...',
+      tags: ['Meeting', 'Planning', 'Q1']
     }
-  };
-
-  const getSize = () => {
-    switch (variant) {
-      case 'hero':
-        return 'lg';
-      case 'dashboard':
-        return 'md';
-      case 'minimal':
-        return 'sm';
-      default:
-        return 'md';
-    }
-  };
+  ];
 
   return (
-    <div className={className}>
-      {variant === 'hero' && (
-        <Spacing.Stack gap="6" className="text-center mb-8">
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <Sparkles className="h-4 w-4 text-white" />
-            </div>
-            <Typography.H2 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              AI-Powered Search
-            </Typography.H2>
-          </div>
-          <Typography.Lead>
-            Find exactly what you're looking for with intelligent search and natural language understanding
-          </Typography.Lead>
-        </Spacing.Stack>
-      )}
+    <div className="max-w-6xl mx-auto p-6">
+      {/* Search Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold mb-4">Search Your Knowledge</h1>
+        
+        {/* Search Bar */}
+        <div className="relative mb-4">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <Input
+            type="text"
+            placeholder="Search articles, notes, documents..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-10 pr-4 py-3 text-lg"
+          />
+        </div>
 
-      <EnhancedUnifiedSearchBar
-        variant={variant === 'hero' ? 'hero' : variant === 'minimal' ? 'minimal' : 'default'}
-        size={getSize() as 'sm' | 'md' | 'lg'}
-        placeholder={getPlaceholder()}
-        onSearch={onSearch}
-        searchQuery={searchQuery}
-        onSearchChange={onSearchChange}
-        showVoiceSearch={true}
-      />
-
-      {showTips && variant !== 'minimal' && (
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <Search className="h-3 w-3" />
-            <span>Try: "articles about React"</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Zap className="h-3 w-3" />
-            <span>Or: "what did I save yesterday?"</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <Sparkles className="h-3 w-3" />
-            <span>Voice search enabled</span>
+        {/* Controls */}
+        <div className="flex items-center gap-4">
+          <Button variant="outline" size="sm">
+            <Filter className="h-4 w-4 mr-2" />
+            Filters
+          </Button>
+          <Button variant="outline" size="sm">
+            <SortAsc className="h-4 w-4 mr-2" />
+            Sort
+          </Button>
+          <div className="flex items-center gap-1 ml-auto">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+            >
+              <Grid className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+            >
+              <List className="h-4 w-4" />
+            </Button>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Results */}
+      <Spacing.Stack gap="lg">
+        <div className="text-sm text-muted-foreground">
+          Found {mockResults.length} results
+        </div>
+        
+        <div className={`grid gap-6 ${viewMode === 'grid' ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1'}`}>
+          {mockResults.map((result) => (
+            <EnhancedCard key={result.id} variant="interactive" className="h-full">
+              <div className="p-6">
+                <div className="flex items-start justify-between mb-3">
+                  <h3 className="font-semibold text-lg">{result.title}</h3>
+                  <span className="text-xs bg-muted px-2 py-1 rounded">{result.type}</span>
+                </div>
+                <p className="text-muted-foreground mb-4 line-clamp-2">{result.excerpt}</p>
+                <div className="flex flex-wrap gap-2">
+                  {result.tags.map((tag) => (
+                    <span key={tag} className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </EnhancedCard>
+          ))}
+        </div>
+      </Spacing.Stack>
     </div>
   );
 };
+
+export default SearchExperience;

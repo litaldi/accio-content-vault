@@ -8,6 +8,7 @@ interface OptimizedCardProps extends React.HTMLProps<HTMLDivElement> {
   className?: string;
   elevated?: boolean;
   interactive?: boolean;
+  hover?: boolean;
 }
 
 export const OptimizedCard: React.FC<OptimizedCardProps> = ({
@@ -15,6 +16,7 @@ export const OptimizedCard: React.FC<OptimizedCardProps> = ({
   className,
   elevated = false,
   interactive = false,
+  hover = false,
   ...props
 }) => {
   return (
@@ -23,6 +25,7 @@ export const OptimizedCard: React.FC<OptimizedCardProps> = ({
         'transition-all duration-200',
         elevated && 'shadow-lg',
         interactive && 'hover:shadow-xl hover:-translate-y-1 cursor-pointer',
+        hover && 'hover:shadow-md',
         className
       )}
       {...props}
