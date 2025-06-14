@@ -10,8 +10,8 @@ import { setupGlobalErrorHandlers } from './utils/errorHandling';
 
 // Modern pages
 import ModernHomePage from './pages/ModernHomePage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import Login from './pages/Login';
+import Register from './pages/Register';
 import { SecurityAuditDashboard } from './components/security/SecurityAuditDashboard';
 
 // Security monitoring
@@ -56,8 +56,8 @@ function App() {
                   
                   <Routes>
                     <Route path="/" element={<ModernHomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
                     <Route path="/security-audit" element={<SecurityAuditDashboard />} />
                   </Routes>
                   
