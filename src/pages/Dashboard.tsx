@@ -24,7 +24,6 @@ const Dashboard: React.FC = () => {
   }, [announceNavigation]);
 
   const handleSearch = (query: string, filters: any) => {
-    // Mock search implementation
     console.log('Searching for:', query, 'with filters:', filters);
     // In real app, this would call your search API
   };
@@ -32,7 +31,25 @@ const Dashboard: React.FC = () => {
   const mockContent = {
     id: '1',
     title: 'Advanced React Patterns for Scalable Applications',
-    content: '<p>This is a comprehensive guide to advanced React patterns...</p>',
+    content: `
+      <h1>Advanced React Patterns for Scalable Applications</h1>
+      <p>React has evolved significantly since its inception, and with it, the patterns and practices that help us build maintainable, scalable applications. In this comprehensive guide, we'll explore advanced React patterns that can help you architect better applications.</p>
+      
+      <h2>1. Compound Components Pattern</h2>
+      <p>The compound components pattern allows you to create flexible and reusable components that work together seamlessly. This pattern is particularly useful when building component libraries or complex UI elements.</p>
+      
+      <h2>2. Render Props Pattern</h2>
+      <p>Render props provide a powerful way to share code between React components using a prop whose value is a function. This pattern offers maximum flexibility and composability.</p>
+      
+      <h2>3. Custom Hooks for State Logic</h2>
+      <p>Custom hooks allow you to extract component logic into reusable functions. They're perfect for sharing stateful logic between components while keeping your code DRY.</p>
+      
+      <h2>4. Context with Reducers</h2>
+      <p>Combining React Context with useReducer provides a powerful pattern for managing complex state that needs to be shared across multiple components.</p>
+      
+      <h2>Best Practices and Performance Considerations</h2>
+      <p>When implementing these patterns, it's important to consider performance implications and follow React best practices to ensure your applications remain fast and responsive.</p>
+    `,
     tags: ['React', 'JavaScript', 'Architecture'],
     estimatedReadTime: 12,
     url: 'https://example.com/article'

@@ -1,37 +1,13 @@
 
-import { useState } from 'react';
+import * as React from "react"
+import { toast as sonnerToast } from "sonner"
 
-interface ToastProps {
-  id?: string;
-  title: string;
-  description?: string;
-  variant?: 'default' | 'destructive';
-  action?: React.ReactNode;
-}
+// Re-export Sonner's toast for compatibility
+export const toast = sonnerToast
 
 export const useToast = () => {
-  const [toasts, setToasts] = useState<ToastProps[]>([]);
-
-  const toast = (props: ToastProps) => {
-    const id = props.id || Math.random().toString(36).substr(2, 9);
-    const toastWithId = { ...props, id };
-    
-    console.log('Toast:', toastWithId);
-    setToasts(prev => [...prev, toastWithId]);
-    
-    // Auto-remove toast after 3 seconds
-    setTimeout(() => {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    }, 3000);
-  };
-
-  const dismiss = (id?: string) => {
-    if (id) {
-      setToasts(prev => prev.filter(t => t.id !== id));
-    } else {
-      setToasts([]);
-    }
-  };
-
-  return { toast, toasts, dismiss };
-};
+  return {
+    toast: sonnerToast,
+    dismiss: sonnerToast.dismiss,
+  }
+}

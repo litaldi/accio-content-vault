@@ -1,115 +1,172 @@
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 interface SearchSuggestion {
   id: string;
   query: string;
-  type: 'recent' | 'suggestion' | 'saved';
-  timestamp?: number;
+  type: 'recent' | 'popular' | 'smart';
+  category?: string;
+  confidence?: number;
 }
 
-const RECENT_SEARCHES_KEY = 'accio-recent-searches';
+const STORAGE_KEY = 'accio_recent_searches';
 const MAX_RECENT_SEARCHES = 10;
 
+// Mock popular searches and smart suggestions
+const POPULAR_SEARCHES = [
+  'react hooks tutorial',
+  'javascript best practices',
+  'ai machine learning',
+  'web development trends',
+  'productivity tips',
+  'design patterns',
+  'data visualization',
+  'mobile app development'
+];
+
 export const useSearchAutocomplete = () => {
-  const [recentSearches, setRecentSearches] = useState<SearchSuggestion[]>([]);
-  const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
-
-  // Load recent searches from localStorage
-  useEffect(() => {
+  const [recentSearches, setRecentSearches] = useState<string[]>(() => {
     try {
-      const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        setRecentSearches(parsed);
-      }
-    } catch (error) {
-      console.warn('Failed to load recent searches:', error);
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
     }
-  }, []);
+  });
 
-  const addRecentSearch = (query: string) => {
+  const addRecentSearch = useCallback((query: string) => {
     if (!query.trim()) return;
-
-    const newSearch: SearchSuggestion = {
-      id: `recent-${Date.now()}`,
-      query: query.trim(),
-      type: 'recent',
-      timestamp: Date.now()
-    };
-
+    
+    const normalizedQuery = query.trim().toLowerCase();
     setRecentSearches(prev => {
-      // Remove duplicate if exists
-      const filtered = prev.filter(search => search.query !== query.trim());
-      // Add new search at the beginning
-      const updated = [newSearch, ...filtered].slice(0, MAX_RECENT_SEARCHES);
+      const filtered = prev.filter(search => search.toLowerCase() !== normalizedQuery);
+      const updated = [query.trim(), ...filtered].slice(0, MAX_RECENT_SEARCHES);
       
-      // Save to localStorage
       try {
-        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
-      } catch (error) {
-        console.warn('Failed to save recent searches:', error);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      } catch {
+        // Handle storage errors silently
       }
       
       return updated;
     });
-  };
+  }, []);
 
-  const clearRecentSearches = () => {
+  const clearRecentSearches = useCallback(() => {
     setRecentSearches([]);
-    localStorage.removeItem(RECENT_SEARCHES_KEY);
-  };
+    try {
+      localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Handle storage errors silently
+    }
+  }, []);
 
-  const generateSuggestions = (query: string): SearchSuggestion[] => {
-    if (!query.trim()) return recentSearches;
+  const generateSuggestions = useCallback((query: string): SearchSuggestion[] => {
+    const suggestions: SearchSuggestion[] = [];
+    const normalizedQuery = query.toLowerCase().trim();
 
-    const queryLower = query.toLowerCase();
-    
-    // Filter recent searches that match
-    const matchingRecent = recentSearches.filter(search =>
-      search.query.toLowerCase().includes(queryLower)
-    );
-
-    // Generate smart suggestions based on query
-    const smartSuggestions: SearchSuggestion[] = [];
-    
-    if (query.length >= 2) {
-      // Content type suggestions
-      const contentTypes = ['articles', 'videos', 'pdfs', 'images', 'notes'];
-      contentTypes.forEach(type => {
-        if (type.includes(queryLower)) {
-          smartSuggestions.push({
-            id: `suggestion-${type}`,
-            query: `type:${type}`,
-            type: 'suggestion'
+    // Add recent searches that match
+    if (normalizedQuery.length > 0) {
+      recentSearches
+        .filter(search => search.toLowerCase().includes(normalizedQuery))
+        .slice(0, 5)
+        .forEach((search, index) => {
+          suggestions.push({
+            id: `recent-${index}`,
+            query: search,
+            type: 'recent'
           });
-        }
+        });
+    } else {
+      // Show recent searches when no query
+      recentSearches.slice(0, 5).forEach((search, index) => {
+        suggestions.push({
+          id: `recent-${index}`,
+          query: search,
+          type: 'recent'
+        });
       });
+    }
 
-      // Common search patterns
-      const patterns = [
-        `"${query}"`, // Exact match
-        `${query} tag:important`, // With tags
-        `${query} created:today`, // Time-based
-      ];
+    // Add popular searches that match
+    if (normalizedQuery.length > 0) {
+      POPULAR_SEARCHES
+        .filter(search => 
+          search.toLowerCase().includes(normalizedQuery) &&
+          !suggestions.some(s => s.query.toLowerCase() === search.toLowerCase())
+        )
+        .slice(0, 3)
+        .forEach((search, index) => {
+          suggestions.push({
+            id: `popular-${index}`,
+            query: search,
+            type: 'popular'
+          });
+        });
+    }
 
-      patterns.forEach((pattern, index) => {
-        if (pattern !== query) {
-          smartSuggestions.push({
-            id: `pattern-${index}`,
-            query: pattern,
-            type: 'suggestion'
+    // Generate smart suggestions based on query patterns
+    if (normalizedQuery.length >= 2) {
+      const smartSuggestions = generateSmartSuggestions(normalizedQuery);
+      smartSuggestions.forEach((suggestion, index) => {
+        if (!suggestions.some(s => s.query.toLowerCase() === suggestion.toLowerCase())) {
+          suggestions.push({
+            id: `smart-${index}`,
+            query: suggestion,
+            type: 'smart',
+            confidence: 0.8
           });
         }
       });
     }
 
-    return [...matchingRecent, ...smartSuggestions].slice(0, 8);
+    return suggestions.slice(0, 8);
+  }, [recentSearches]);
+
+  const generateSmartSuggestions = (query: string): string[] => {
+    const suggestions: string[] = [];
+    
+    // Programming-related suggestions
+    if (/react|vue|angular|javascript|js|typescript|ts/.test(query)) {
+      suggestions.push(
+        `${query} best practices`,
+        `${query} tutorial`,
+        `${query} examples`
+      );
+    }
+    
+    // AI/ML suggestions
+    if (/ai|artificial|machine|learning|ml|neural/.test(query)) {
+      suggestions.push(
+        `${query} applications`,
+        `${query} research`,
+        `${query} implementation`
+      );
+    }
+    
+    // Design suggestions
+    if (/design|ui|ux|interface/.test(query)) {
+      suggestions.push(
+        `${query} principles`,
+        `${query} trends`,
+        `${query} tools`
+      );
+    }
+    
+    // General improvements
+    if (query.length >= 3) {
+      suggestions.push(
+        `${query} guide`,
+        `${query} tips`,
+        `how to ${query}`
+      );
+    }
+    
+    return suggestions.slice(0, 3);
   };
 
   return {
     recentSearches,
-    suggestions,
     addRecentSearch,
     clearRecentSearches,
     generateSuggestions

@@ -1,154 +1,110 @@
 
-import React, { useState, useEffect } from 'react';
-import { Search, Filter, Sparkles, Clock, Tag } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import React, { useState, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Checkbox } from '@/components/ui/checkbox';
-import { useDebounce } from '@/hooks/useDebounce';
+import { Badge } from '@/components/ui/badge';
+import { SearchAutocomplete } from './SearchAutocomplete';
+import VoiceSearchButton from './VoiceSearchButton';
+import { Brain, Sparkles, TrendingUp } from 'lucide-react';
 
 interface SmartSearchProps {
-  onSearch: (query: string, filters: SearchFilters) => void;
+  onSearch: (query: string, filters?: any) => void;
   placeholder?: string;
+  className?: string;
 }
 
-interface SearchFilters {
-  contentTypes: string[];
-  tags: string[];
-  dateRange: string;
-  isSemanticSearch: boolean;
-}
-
-const SmartSearch: React.FC<SmartSearchProps> = ({ 
-  onSearch, 
-  placeholder = "Search your knowledge..." 
+const SmartSearch: React.FC<SmartSearchProps> = ({
+  onSearch,
+  placeholder = "Search your knowledge... or ask me anything!",
+  className
 }) => {
-  const [query, setQuery] = useState('');
-  const [filters, setFilters] = useState<SearchFilters>({
-    contentTypes: [],
-    tags: [],
-    dateRange: 'all',
-    isSemanticSearch: false
-  });
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  
-  const debouncedQuery = useDebounce(query, 300);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [smartFilters, setSmartFilters] = useState<string[]>([]);
 
-  useEffect(() => {
-    if (debouncedQuery || filters.contentTypes.length > 0) {
-      onSearch(debouncedQuery, filters);
+  const handleSearch = useCallback((query: string) => {
+    if (!query.trim()) return;
+    
+    // Analyze query for smart filters
+    const filters = analyzeSearchQuery(query);
+    setSmartFilters(filters);
+    
+    onSearch(query, { smartFilters: filters });
+    console.log('Smart search executed:', { query, filters });
+  }, [onSearch]);
+
+  const handleVoiceTranscript = useCallback((transcript: string) => {
+    setSearchQuery(transcript);
+    handleSearch(transcript);
+  }, [handleSearch]);
+
+  const analyzeSearchQuery = (query: string): string[] => {
+    const filters: string[] = [];
+    const lowerQuery = query.toLowerCase();
+    
+    // Content type detection
+    if (/tutorial|guide|how.?to|learn/.test(lowerQuery)) {
+      filters.push('educational');
     }
-  }, [debouncedQuery, filters, onSearch]);
-
-  const searchSuggestions = [
-    { text: "AI articles from last month", icon: Sparkles },
-    { text: "Development tutorials", icon: Tag },
-    { text: "Recent bookmarks", icon: Clock }
-  ];
-
-  const contentTypes = [
-    { id: 'article', label: 'Articles' },
-    { id: 'video', label: 'Videos' },
-    { id: 'document', label: 'Documents' },
-    { id: 'bookmark', label: 'Bookmarks' }
-  ];
-
-  const handleFilterChange = (key: keyof SearchFilters, value: any) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    if (/news|update|latest|recent/.test(lowerQuery)) {
+      filters.push('news');
+    }
+    if (/code|programming|development/.test(lowerQuery)) {
+      filters.push('technical');
+    }
+    if (/video|watch|youtube/.test(lowerQuery)) {
+      filters.push('video');
+    }
+    if (/article|blog|post|read/.test(lowerQuery)) {
+      filters.push('article');
+    }
+    
+    // Technology detection
+    if (/react|vue|angular|javascript|python|ai|machine.?learning/.test(lowerQuery)) {
+      filters.push('technology');
+    }
+    
+    return filters;
   };
 
   return (
-    <div className="relative w-full max-w-2xl mx-auto">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-        <Input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => setShowSuggestions(true)}
-          onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-          placeholder={placeholder}
-          className="pl-10 pr-12 h-12 text-base"
-        />
-        <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-2">
-          <Button
-            variant={filters.isSemanticSearch ? "default" : "ghost"}
-            size="sm"
-            onClick={() => handleFilterChange('isSemanticSearch', !filters.isSemanticSearch)}
-            className="h-8"
-          >
-            <Sparkles className="h-3 w-3" />
-          </Button>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8">
-                <Filter className="h-3 w-3" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80">
-              <div className="space-y-4">
-                <div>
-                  <h4 className="font-medium mb-2">Content Types</h4>
-                  <div className="space-y-2">
-                    {contentTypes.map(type => (
-                      <div key={type.id} className="flex items-center space-x-2">
-                        <Checkbox
-                          id={type.id}
-                          checked={filters.contentTypes.includes(type.id)}
-                          onCheckedChange={(checked) => {
-                            const newTypes = checked
-                              ? [...filters.contentTypes, type.id]
-                              : filters.contentTypes.filter(t => t !== type.id);
-                            handleFilterChange('contentTypes', newTypes);
-                          }}
-                        />
-                        <label htmlFor={type.id} className="text-sm">{type.label}</label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+    <div className={className}>
+      <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-purple-500/5">
+        <CardContent className="p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Brain className="h-6 w-6 text-primary" />
+            <h3 className="text-lg font-semibold">AI-Powered Search</h3>
+            <Sparkles className="h-4 w-4 text-purple-500" />
+          </div>
+          
+          <div className="flex gap-2">
+            <div className="flex-1">
+              <SearchAutocomplete
+                placeholder={placeholder}
+                onSearch={handleSearch}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+              />
+            </div>
+            <VoiceSearchButton
+              onTranscript={handleVoiceTranscript}
+              className="flex-shrink-0"
+            />
+          </div>
+          
+          {smartFilters.length > 0 && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <TrendingUp className="h-3 w-3" />
+                <span>Smart filters applied:</span>
               </div>
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-
-      {/* Search Suggestions */}
-      {showSuggestions && query.length === 0 && (
-        <Card className="absolute top-full mt-2 w-full z-50 shadow-lg">
-          <CardContent className="p-3">
-            <div className="text-xs text-muted-foreground mb-2">Quick searches</div>
-            {searchSuggestions.map((suggestion, index) => (
-              <button
-                key={index}
-                onClick={() => setQuery(suggestion.text)}
-                className="w-full text-left p-2 rounded hover:bg-muted flex items-center gap-2 text-sm"
-              >
-                <suggestion.icon className="h-3 w-3 text-muted-foreground" />
-                {suggestion.text}
-              </button>
-            ))}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Active Filters */}
-      {(filters.contentTypes.length > 0 || filters.isSemanticSearch) && (
-        <div className="flex flex-wrap gap-2 mt-3">
-          {filters.isSemanticSearch && (
-            <Badge variant="secondary" className="gap-1">
-              <Sparkles className="h-3 w-3" />
-              AI Search
-            </Badge>
+              {smartFilters.map((filter) => (
+                <Badge key={filter} variant="secondary" className="text-xs">
+                  {filter}
+                </Badge>
+              ))}
+            </div>
           )}
-          {filters.contentTypes.map(type => (
-            <Badge key={type} variant="outline">
-              {contentTypes.find(t => t.id === type)?.label}
-            </Badge>
-          ))}
-        </div>
-      )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

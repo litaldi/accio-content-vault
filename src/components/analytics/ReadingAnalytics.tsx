@@ -1,117 +1,209 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
 import { 
   BookOpen, 
   Clock, 
-  TrendingUp, 
   Target, 
+  TrendingUp, 
   Calendar,
-  BarChart3,
-  PieChart,
-  Trophy
+  Brain,
+  Star
 } from 'lucide-react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, PieChart as RechartsPieChart, Cell } from 'recharts';
+
+interface ReadingStats {
+  articlesRead: number;
+  totalReadingTime: number;
+  averageReadingTime: number;
+  readingStreak: number;
+  favoriteTopics: string[];
+  weeklyGoal: number;
+  weeklyProgress: number;
+}
+
+interface WeeklyData {
+  day: string;
+  articles: number;
+  minutes: number;
+}
+
+interface TopicData {
+  name: string;
+  value: number;
+  color: string;
+}
 
 const ReadingAnalytics: React.FC = () => {
-  const [selectedPeriod, setSelectedPeriod] = useState('week');
+  const [stats, setStats] = useState<ReadingStats>({
+    articlesRead: 0,
+    totalReadingTime: 0,
+    averageReadingTime: 0,
+    readingStreak: 0,
+    favoriteTopics: [],
+    weeklyGoal: 10,
+    weeklyProgress: 0
+  });
 
-  // Mock data
-  const weeklyReadingData = [
-    { day: 'Mon', minutes: 45, articles: 3 },
-    { day: 'Tue', minutes: 62, articles: 4 },
-    { day: 'Wed', minutes: 38, articles: 2 },
-    { day: 'Thu', minutes: 75, articles: 5 },
-    { day: 'Fri', minutes: 52, articles: 3 },
-    { day: 'Sat', minutes: 28, articles: 2 },
-    { day: 'Sun', minutes: 41, articles: 3 }
-  ];
+  const [weeklyData, setWeeklyData] = useState<WeeklyData[]>([]);
+  const [topicData, setTopicData] = useState<TopicData[]>([]);
 
-  const topicDistribution = [
-    { name: 'Technology', value: 35, color: '#3b82f6' },
-    { name: 'Design', value: 25, color: '#10b981' },
-    { name: 'Business', value: 20, color: '#f59e0b' },
-    { name: 'Science', value: 12, color: '#ef4444' },
-    { name: 'Other', value: 8, color: '#8b5cf6' }
-  ];
+  useEffect(() => {
+    // Simulate loading analytics data
+    loadAnalyticsData();
+  }, []);
 
-  const achievements = [
-    { title: 'Reading Streak', value: '7 days', icon: Target, color: 'text-orange-500' },
-    { title: 'This Week', value: '341 min', icon: Clock, color: 'text-blue-500' },
-    { title: 'Articles Read', value: '22', icon: BookOpen, color: 'text-green-500' },
-    { title: 'Knowledge Score', value: '847', icon: Trophy, color: 'text-purple-500' }
-  ];
+  const loadAnalyticsData = () => {
+    // Mock analytics data
+    const mockStats: ReadingStats = {
+      articlesRead: 47,
+      totalReadingTime: 1260, // minutes
+      averageReadingTime: 12,
+      readingStreak: 7,
+      favoriteTopics: ['React', 'AI/ML', 'Design'],
+      weeklyGoal: 10,
+      weeklyProgress: 8
+    };
 
-  const readingGoals = [
-    { title: 'Daily Reading', current: 45, target: 60, unit: 'minutes' },
-    { title: 'Weekly Articles', current: 22, target: 25, unit: 'articles' },
-    { title: 'Monthly Learning', current: 12, target: 15, unit: 'hours' }
-  ];
+    const mockWeeklyData: WeeklyData[] = [
+      { day: 'Mon', articles: 2, minutes: 45 },
+      { day: 'Tue', articles: 1, minutes: 20 },
+      { day: 'Wed', articles: 3, minutes: 60 },
+      { day: 'Thu', articles: 0, minutes: 0 },
+      { day: 'Fri', articles: 2, minutes: 30 },
+      { day: 'Sat', articles: 1, minutes: 15 },
+      { day: 'Sun', articles: 2, minutes: 40 }
+    ];
+
+    const mockTopicData: TopicData[] = [
+      { name: 'React', value: 35, color: '#3b82f6' },
+      { name: 'AI/ML', value: 25, color: '#8b5cf6' },
+      { name: 'Design', value: 20, color: '#10b981' },
+      { name: 'JavaScript', value: 15, color: '#f59e0b' },
+      { name: 'Other', value: 5, color: '#6b7280' }
+    ];
+
+    setStats(mockStats);
+    setWeeklyData(mockWeeklyData);
+    setTopicData(mockTopicData);
+  };
+
+  const formatTime = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours > 0) {
+      return `${hours}h ${mins}m`;
+    }
+    return `${mins}m`;
+  };
 
   return (
     <div className="space-y-6">
-      {/* Overview Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        {achievements.map((achievement, index) => (
-          <Card key={index}>
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg bg-muted ${achievement.color}`}>
-                  <achievement.icon className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold">{achievement.value}</p>
-                  <p className="text-xs text-muted-foreground">{achievement.title}</p>
-                </div>
+      {/* Overview Stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Articles Read</p>
+                <p className="text-2xl font-bold">{stats.articlesRead}</p>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+              <BookOpen className="h-8 w-8 text-blue-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Total Time</p>
+                <p className="text-2xl font-bold">{formatTime(stats.totalReadingTime)}</p>
+              </div>
+              <Clock className="h-8 w-8 text-green-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Avg. Time</p>
+                <p className="text-2xl font-bold">{stats.averageReadingTime}m</p>
+              </div>
+              <Brain className="h-8 w-8 text-purple-500" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Streak</p>
+                <p className="text-2xl font-bold">{stats.readingStreak}</p>
+              </div>
+              <Star className="h-8 w-8 text-orange-500" />
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Reading Progress Chart */}
-        <Card className="lg:col-span-2">
+      {/* Weekly Goal Progress */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Target className="h-5 w-5" />
+            Weekly Reading Goal
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span>{stats.weeklyProgress} of {stats.weeklyGoal} articles</span>
+              <span>{Math.round((stats.weeklyProgress / stats.weeklyGoal) * 100)}%</span>
+            </div>
+            <Progress value={(stats.weeklyProgress / stats.weeklyGoal) * 100} className="h-2" />
+            <p className="text-xs text-muted-foreground">
+              {stats.weeklyGoal - stats.weeklyProgress} articles to go this week!
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Weekly Activity Chart */}
+        <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
-              Reading Activity
+              <Calendar className="h-5 w-5" />
+              This Week's Activity
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs value={selectedPeriod} onValueChange={setSelectedPeriod}>
-              <TabsList>
-                <TabsTrigger value="week">This Week</TabsTrigger>
-                <TabsTrigger value="month">This Month</TabsTrigger>
-              </TabsList>
-              <TabsContent value="week" className="mt-4">
-                <ResponsiveContainer width="100%" height={200}>
-                  <AreaChart data={weeklyReadingData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="day" />
-                    <YAxis />
-                    <Tooltip 
-                      labelFormatter={(label) => `${label}`}
-                      formatter={(value, name) => [
-                        `${value} ${name === 'minutes' ? 'min' : 'articles'}`,
-                        name === 'minutes' ? 'Reading Time' : 'Articles Read'
-                      ]}
-                    />
-                    <Area
-                      type="monotone"
-                      dataKey="minutes"
-                      stackId="1"
-                      stroke="#3b82f6"
-                      fill="#3b82f6"
-                      fillOpacity={0.6}
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </TabsContent>
-            </Tabs>
+            <ResponsiveContainer width="100%" height={200}>
+              <BarChart data={weeklyData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="day" fontSize={12} />
+                <YAxis fontSize={12} />
+                <Tooltip />
+                <Bar dataKey="articles" fill="#3b82f6" radius={[2, 2, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </CardContent>
         </Card>
 
@@ -119,73 +211,45 @@ const ReadingAnalytics: React.FC = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <PieChart className="h-5 w-5" />
+              <TrendingUp className="h-5 w-5" />
               Reading Topics
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <ResponsiveContainer width="100%" height={150}>
-                <RechartsPieChart>
-                  <RechartsPieChart data={topicDistribution} cx="50%" cy="50%" innerRadius={40} outerRadius={60}>
-                    {topicDistribution.map((entry, index) => (
+            <div className="flex items-center justify-center">
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={topicData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={80}
+                    paddingAngle={5}
+                    dataKey="value"
+                  >
+                    {topicData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
-                  </RechartsPieChart>
-                </RechartsPieChart>
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
               </ResponsiveContainer>
-              <div className="space-y-2">
-                {topicDistribution.map((topic, index) => (
-                  <div key={index} className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-2">
-                      <div 
-                        className="w-3 h-3 rounded-full" 
-                        style={{ backgroundColor: topic.color }}
-                      />
-                      <span>{topic.name}</span>
-                    </div>
-                    <span className="font-medium">{topic.value}%</span>
-                  </div>
-                ))}
-              </div>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-4">
+              {topicData.map((topic) => (
+                <Badge key={topic.name} variant="outline" className="text-xs">
+                  <div 
+                    className="w-2 h-2 rounded-full mr-1" 
+                    style={{ backgroundColor: topic.color }}
+                  />
+                  {topic.name} ({topic.value}%)
+                </Badge>
+              ))}
             </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Reading Goals */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5" />
-            Reading Goals
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-3 gap-6">
-            {readingGoals.map((goal, index) => (
-              <div key={index} className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium">{goal.title}</h4>
-                  <Badge variant={goal.current >= goal.target ? "default" : "secondary"}>
-                    {goal.current}/{goal.target} {goal.unit}
-                  </Badge>
-                </div>
-                <Progress 
-                  value={(goal.current / goal.target) * 100} 
-                  className="h-2"
-                />
-                <p className="text-xs text-muted-foreground">
-                  {goal.current >= goal.target 
-                    ? '🎉 Goal achieved!' 
-                    : `${goal.target - goal.current} ${goal.unit} to go`
-                  }
-                </p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
