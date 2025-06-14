@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme/ThemeProvider';
+import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { SearchExperience } from '@/components/search/SearchExperience';
@@ -143,19 +144,21 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <AccessibilityProvider>
-          <Router>
-            <AppLayout>
-              <div className="min-h-screen">
-                <Routes>
-                  <Route path="/" element={<EnhancedHome />} />
-                  {/* Add other routes here */}
-                </Routes>
-              </div>
-            </AppLayout>
-            <Toaster />
-          </Router>
-        </AccessibilityProvider>
+        <AuthProvider>
+          <AccessibilityProvider>
+            <Router>
+              <AppLayout>
+                <div className="min-h-screen">
+                  <Routes>
+                    <Route path="/" element={<EnhancedHome />} />
+                    {/* Add other routes here */}
+                  </Routes>
+                </div>
+              </AppLayout>
+              <Toaster />
+            </Router>
+          </AccessibilityProvider>
+        </AuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
