@@ -29,8 +29,21 @@ export const Typography = {
       {children}
     </p>
   ),
-  Body: ({ children, className, size = 'base', ...props }: React.HTMLProps<HTMLParagraphElement> & { size?: 'sm' | 'base' | 'lg' }) => (
-    <p className={cn('body-text', size === 'sm' && 'text-sm', size === 'lg' && 'text-lg', className)} {...props}>
+  Body: ({
+    children,
+    className,
+    size = 'base',
+    ...props
+  }: React.HTMLProps<HTMLParagraphElement> & { size?: string }) => (
+    <p
+      className={cn(
+        'body-text',
+        size === 'sm' && 'text-sm',
+        size === 'lg' && 'text-lg',
+        className
+      )}
+      {...props}
+    >
       {children}
     </p>
   ),
@@ -43,11 +56,17 @@ export const Typography = {
 
 // Layout Components
 export const Layout = {
-  Section: ({ children, className, spacing = 'md', background = 'default', ...props }: React.HTMLProps<HTMLElement> & { 
-    spacing?: 'sm' | 'md' | 'lg' | 'xl'; 
-    background?: 'default' | 'muted' | 'primary' 
+  Section: ({
+    children,
+    className,
+    spacing = 'md',
+    background = 'default',
+    ...props
+  }: React.HTMLProps<HTMLElement> & {
+    spacing?: string;
+    background?: string;
   }) => (
-    <section 
+    <section
       className={cn(
         'section-spacing',
         spacing === 'sm' && 'section-spacing-sm',
@@ -56,30 +75,41 @@ export const Layout = {
         background === 'muted' && 'bg-muted/20',
         background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
         className
-      )} 
+      )}
       {...props}
     >
       {children}
     </section>
   ),
-  Container: ({ children, className, size = 'default', ...props }: React.HTMLProps<HTMLDivElement> & { size?: 'sm' | 'default' | 'lg' }) => (
-    <div 
+  Container: ({
+    children,
+    className,
+    size = 'default',
+    ...props
+  }: React.HTMLProps<HTMLDivElement> & { size?: string }) => (
+    <div
       className={cn(
         'container-spacing',
         size === 'sm' && 'container-spacing-sm',
         size === 'lg' && 'container-spacing-lg',
         className
-      )} 
+      )}
       {...props}
     >
       {children}
     </div>
   ),
-  Grid: ({ children, className, columns = 1, gap = 'md', ...props }: React.HTMLProps<HTMLDivElement> & { 
-    columns?: 1 | 2 | 3 | 4; 
-    gap?: 'sm' | 'md' | 'lg' 
+  Grid: ({
+    children,
+    className,
+    columns = 1,
+    gap = 'md',
+    ...props
+  }: React.HTMLProps<HTMLDivElement> & {
+    columns?: number | string;
+    gap?: string;
   }) => (
-    <div 
+    <div
       className={cn(
         'grid',
         columns === 1 && 'grid-cols-1',
@@ -90,7 +120,7 @@ export const Layout = {
         gap === 'md' && 'gap-6',
         gap === 'lg' && 'gap-8',
         className
-      )} 
+      )}
       {...props}
     >
       {children}

@@ -29,8 +29,21 @@ export const Typography = {
       {children}
     </p>
   ),
-  Body: ({ children, className, size = 'base', ...props }: React.HTMLProps<HTMLParagraphElement> & { size?: 'sm' | 'base' | 'lg' }) => (
-    <p className={cn('body-text', size === 'sm' && 'text-sm', size === 'lg' && 'text-lg', className)} {...props}>
+  Body: ({
+    children,
+    className,
+    size = 'base',
+    ...props
+  }: React.HTMLProps<HTMLParagraphElement> & { size?: string }) => (
+    <p
+      className={cn(
+        'body-text',
+        size === 'sm' && 'text-sm',
+        size === 'lg' && 'text-lg',
+        className
+      )}
+      {...props}
+    >
       {children}
     </p>
   ),
@@ -43,11 +56,17 @@ export const Typography = {
 
 // Spacing Components
 export const Spacing = {
-  Section: ({ children, className, size = 'md', background = 'default', ...props }: React.HTMLProps<HTMLElement> & { 
-    size?: 'sm' | 'md' | 'lg' | 'xl';
-    background?: 'default' | 'muted' | 'primary';
+  Section: ({
+    children,
+    className,
+    size = 'md',
+    background = 'default',
+    ...props
+  }: React.HTMLProps<HTMLElement> & {
+    size?: string;
+    background?: string;
   }) => (
-    <section 
+    <section
       className={cn(
         'section-spacing',
         size === 'sm' && 'section-spacing-sm',
@@ -56,34 +75,44 @@ export const Spacing = {
         background === 'muted' && 'bg-muted/20',
         background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
         className
-      )} 
+      )}
       {...props}
     >
       {children}
     </section>
   ),
-  Container: ({ children, className, size = 'default', ...props }: React.HTMLProps<HTMLDivElement> & { size?: 'sm' | 'default' | 'lg' }) => (
-    <div 
+  Container: ({
+    children,
+    className,
+    size = 'default',
+    ...props
+  }: React.HTMLProps<HTMLDivElement> & { size?: string }) => (
+    <div
       className={cn(
         'container-spacing',
         size === 'sm' && 'container-spacing-sm',
         size === 'lg' && 'container-spacing-lg',
         className
-      )} 
+      )}
       {...props}
     >
       {children}
     </div>
   ),
-  Stack: ({ children, className, gap = 'md', ...props }: React.HTMLProps<HTMLDivElement> & { gap?: 'sm' | 'md' | 'lg' }) => (
-    <div 
+  Stack: ({
+    children,
+    className,
+    gap = 'md',
+    ...props
+  }: React.HTMLProps<HTMLDivElement> & { gap?: string }) => (
+    <div
       className={cn(
         'flex flex-col',
         gap === 'sm' && 'gap-2',
         gap === 'md' && 'gap-4',
         gap === 'lg' && 'gap-6',
         className
-      )} 
+      )}
       {...props}
     >
       {children}

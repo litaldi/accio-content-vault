@@ -39,11 +39,17 @@ export const EnterpriseTypography = {
 
 // Enterprise Spacing
 export const EnterpriseSpacing = {
-  Section: ({ children, className, size = 'md', background = 'default', ...props }: React.HTMLProps<HTMLElement> & { 
-    size?: 'sm' | 'md' | 'lg' | 'xl';
-    background?: 'default' | 'muted' | 'primary';
+  Section: ({
+    children,
+    className,
+    size = 'md',
+    background = 'default',
+    ...props
+  }: React.HTMLProps<HTMLElement> & {
+    size?: string;
+    background?: string;
   }) => (
-    <section 
+    <section
       className={cn(
         'section-spacing',
         size === 'sm' && 'section-spacing-sm',
@@ -52,7 +58,7 @@ export const EnterpriseSpacing = {
         background === 'muted' && 'bg-muted/20',
         background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
         className
-      )} 
+      )}
       {...props}
     >
       {children}
