@@ -10,7 +10,8 @@ import {
   Video,
   Clock,
   Eye,
-  MoreHorizontal
+  MoreHorizontal,
+  BookOpen
 } from 'lucide-react';
 
 export const RecentContent: React.FC = () => {

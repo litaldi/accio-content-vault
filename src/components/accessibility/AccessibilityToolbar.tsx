@@ -140,3 +140,6 @@ export const AccessibilityToolbar: React.FC = () => {
     </Card>
   );
 };
+
+// Make sure we have a default export
+export default AccessibilityToolbar;
