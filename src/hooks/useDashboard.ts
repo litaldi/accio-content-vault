@@ -55,7 +55,6 @@ export const useDashboard = () => {
               { id: 'tag-2', name: 'performance', auto_generated: true, confirmed: true },
               { id: 'tag-3', name: 'frontend', auto_generated: false, confirmed: true }
             ],
-            updated_at: new Date().toISOString(),
             has_summary: false,
           },
         ];
