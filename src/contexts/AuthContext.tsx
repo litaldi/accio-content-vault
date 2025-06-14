@@ -1,137 +1,79 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User } from '@/types';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface AuthResult {
-  error?: Error;
+interface User {
+  id: string;
+  email: string;
+  name?: string;
 }
 
 interface AuthContextType {
   user: User | null;
+  session: { access_token: string } | null;
+  signIn: (email: string, password: string) => Promise<void>;
+  signOut: () => Promise<void>;
   loading: boolean;
-  isLoading: boolean;
-  isDemoMode?: boolean;
-  isAuthenticated: boolean;
-  signOut: () => Promise<AuthResult>;
-  login: (email: string, password: string) => Promise<AuthResult>;
-  register: (email: string, password: string, name?: string) => Promise<AuthResult>;
-  signIn: (email: string, password: string) => Promise<AuthResult>;
-  signUp: (email: string, password: string, name?: string) => Promise<AuthResult>;
-  signInWithProvider: (provider: string) => Promise<AuthResult>;
-  logout: () => Promise<AuthResult>;
-  resetPassword: (email: string) => Promise<AuthResult>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<{ access_token: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Mock auth state - in real app, this would connect to your auth service
-    const mockUser: User = {
-      id: '1',
-      email: 'user@example.com',
-      name: 'John Doe',
-      user_metadata: {
-        name: 'John Doe',
-        full_name: 'John Doe',
-        avatar_url: 'https://github.com/shadcn.png'
+    // Simulate checking for existing session
+    const checkSession = async () => {
+      try {
+        const savedUser = localStorage.getItem('user');
+        const savedSession = localStorage.getItem('session');
+        
+        if (savedUser && savedSession) {
+          setUser(JSON.parse(savedUser));
+          setSession(JSON.parse(savedSession));
+        }
+      } catch (error) {
+        console.error('Error checking session:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    
-    setUser(mockUser);
-    setLoading(false);
+
+    checkSession();
   }, []);
 
-  const signOut = async (): Promise<AuthResult> => {
+  const signIn = async (email: string, password: string) => {
+    setLoading(true);
     try {
-      setUser(null);
-      return {};
+      // Demo user for testing
+      if (email === 'demo@yourapp.com' && password === 'Demo1234!') {
+        const demoUser = { id: 'demo', email: 'demo@yourapp.com', name: 'Demo User' };
+        const demoSession = { access_token: 'demo-token' };
+        
+        setUser(demoUser);
+        setSession(demoSession);
+        localStorage.setItem('user', JSON.stringify(demoUser));
+        localStorage.setItem('session', JSON.stringify(demoSession));
+      } else {
+        throw new Error('Invalid credentials');
+      }
     } catch (error) {
-      return { error: error as Error };
+      throw error;
+    } finally {
+      setLoading(false);
     }
   };
 
-  const login = async (email: string, password: string): Promise<AuthResult> => {
-    try {
-      // Mock login
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: 'John Doe',
-        user_metadata: { name: 'John Doe', full_name: 'John Doe' }
-      };
-      setUser(mockUser);
-      return {};
-    } catch (error) {
-      return { error: error as Error };
-    }
-  };
-
-  const register = async (email: string, password: string, name?: string): Promise<AuthResult> => {
-    try {
-      // Mock register
-      const mockUser: User = {
-        id: '1',
-        email,
-        name: name || 'New User',
-        user_metadata: { name: name || 'New User', full_name: name || 'New User' }
-      };
-      setUser(mockUser);
-      return {};
-    } catch (error) {
-      return { error: error as Error };
-    }
-  };
-
-  const signIn = login;
-  const signUp = register;
-  const logout = signOut;
-
-  const signInWithProvider = async (provider: string): Promise<AuthResult> => {
-    try {
-      // Mock provider sign in
-      const mockUser: User = {
-        id: '1',
-        email: 'user@example.com',
-        name: 'John Doe',
-        user_metadata: { name: 'John Doe', full_name: 'John Doe' }
-      };
-      setUser(mockUser);
-      return {};
-    } catch (error) {
-      return { error: error as Error };
-    }
-  };
-
-  const resetPassword = async (email: string): Promise<AuthResult> => {
-    try {
-      // Mock reset password
-      console.log('Password reset requested for:', email);
-      return {};
-    } catch (error) {
-      return { error: error as Error };
-    }
+  const signOut = async () => {
+    setUser(null);
+    setSession(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('session');
   };
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      loading, 
-      isLoading: loading,
-      isDemoMode: true,
-      isAuthenticated: !!user,
-      signOut,
-      login,
-      register,
-      signIn,
-      signUp,
-      signInWithProvider,
-      logout,
-      resetPassword
-    }}>
+    <AuthContext.Provider value={{ user, session, signIn, signOut, loading }}>
       {children}
     </AuthContext.Provider>
   );

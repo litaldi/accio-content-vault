@@ -1,97 +1,59 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-interface AccessibilitySettings {
-  fontSize: 'small' | 'medium' | 'large';
-  highContrast: boolean;
-  reducedMotion: boolean;
-  screenReader: boolean;
-}
-
 interface AccessibilityContextType {
-  settings: AccessibilitySettings;
-  updateSettings: (settings: Partial<AccessibilitySettings>) => void;
-  // Individual property access for backward compatibility
   fontSize: 'small' | 'medium' | 'large';
   setFontSize: (size: 'small' | 'medium' | 'large') => void;
   highContrast: boolean;
   setHighContrast: (enabled: boolean) => void;
-  toggleHighContrast: () => void;
   reducedMotion: boolean;
   setReducedMotion: (enabled: boolean) => void;
-  toggleReducedMotion: () => void;
-  announceToScreenReader: (message: string) => void;
+  announceMessage: (message: string) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
 
 export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [settings, setSettings] = useState<AccessibilitySettings>({
-    fontSize: 'medium',
-    highContrast: false,
-    reducedMotion: false,
-    screenReader: false
-  });
+  const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium');
+  const [highContrast, setHighContrast] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    // Check for system preferences
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const prefersHighContrast = window.matchMedia('(prefers-contrast: high)').matches;
-    
-    setSettings(prev => ({
-      ...prev,
-      reducedMotion: prefersReducedMotion,
-      highContrast: prefersHighContrast
-    }));
+    // Check for user's motion preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      setReducedMotion(e.matches);
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
-  const updateSettings = (newSettings: Partial<AccessibilitySettings>) => {
-    setSettings(prev => ({ ...prev, ...newSettings }));
-  };
-
-  const setFontSize = (fontSize: 'small' | 'medium' | 'large') => {
-    updateSettings({ fontSize });
-  };
-
-  const setHighContrast = (highContrast: boolean) => {
-    updateSettings({ highContrast });
-  };
-
-  const toggleHighContrast = () => {
-    updateSettings({ highContrast: !settings.highContrast });
-  };
-
-  const setReducedMotion = (reducedMotion: boolean) => {
-    updateSettings({ reducedMotion });
-  };
-
-  const toggleReducedMotion = () => {
-    updateSettings({ reducedMotion: !settings.reducedMotion });
-  };
-
-  const announceToScreenReader = (message: string) => {
+  const announceMessage = (message: string) => {
     const announcement = document.createElement('div');
     announcement.setAttribute('aria-live', 'polite');
     announcement.setAttribute('aria-atomic', 'true');
     announcement.className = 'sr-only';
     announcement.textContent = message;
+    
     document.body.appendChild(announcement);
-    setTimeout(() => document.body.removeChild(announcement), 1000);
+    
+    setTimeout(() => {
+      document.body.removeChild(announcement);
+    }, 1000);
   };
 
   return (
-    <AccessibilityContext.Provider value={{ 
-      settings, 
-      updateSettings,
-      fontSize: settings.fontSize,
+    <AccessibilityContext.Provider value={{
+      fontSize,
       setFontSize,
-      highContrast: settings.highContrast,
+      highContrast,
       setHighContrast,
-      toggleHighContrast,
-      reducedMotion: settings.reducedMotion,
+      reducedMotion,
       setReducedMotion,
-      toggleReducedMotion,
-      announceToScreenReader
+      announceMessage
     }}>
       {children}
     </AccessibilityContext.Provider>

@@ -1,186 +1,142 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Brain, Twitter, Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Separator } from '@/components/ui/separator';
-import { ArrowRight, Mail, Twitter, Linkedin, Github } from 'lucide-react';
 
 const MarketingFooter: React.FC = () => {
-  const footerLinks = {
-    product: [
-      { label: 'Features', href: '/features' },
-      { label: 'Pricing', href: '/pricing' },
-      { label: 'API', href: '/api' },
-      { label: 'Integrations', href: '/integrations' }
-    ],
-    company: [
-      { label: 'About Us', href: '/about' },
-      { label: 'Careers', href: '/careers' },
-      { label: 'Blog', href: '/blog' },
-      { label: 'Press Kit', href: '/press' }
-    ],
-    support: [
-      { label: 'Help Center', href: '/help' },
-      { label: 'Contact Us', href: '/contact' },
-      { label: 'FAQ', href: '/faq' },
-      { label: 'Status', href: '/status' }
-    ],
-    legal: [
-      { label: 'Privacy Policy', href: '/privacy' },
-      { label: 'Terms of Service', href: '/terms' },
-      { label: 'Security', href: '/security' },
-      { label: 'GDPR', href: '/gdpr' }
-    ]
-  };
+  const currentYear = new Date().getFullYear();
+
+  const footerSections = [
+    {
+      title: 'Product',
+      links: [
+        { label: 'Features', href: '/features' },
+        { label: 'Pricing', href: '/pricing' },
+        { label: 'Updates', href: '/updates' },
+        { label: 'Beta', href: '/beta' }
+      ]
+    },
+    {
+      title: 'Support',
+      links: [
+        { label: 'Help Center', href: '/help' },
+        { label: 'Contact', href: '/contact' },
+        { label: 'Status', href: '/status' },
+        { label: 'Bug Reports', href: '/bugs' }
+      ]
+    },
+    {
+      title: 'Company',
+      links: [
+        { label: 'About', href: '/about' },
+        { label: 'Blog', href: '/blog' },
+        { label: 'Careers', href: '/careers' },
+        { label: 'Press', href: '/press' }
+      ]
+    },
+    {
+      title: 'Legal',
+      links: [
+        { label: 'Privacy', href: '/privacy' },
+        { label: 'Terms', href: '/terms' },
+        { label: 'Security', href: '/security' },
+        { label: 'Cookies', href: '/cookies' }
+      ]
+    }
+  ];
 
   const socialLinks = [
     { icon: Twitter, href: 'https://twitter.com/accio', label: 'Twitter' },
+    { icon: Github, href: 'https://github.com/accio', label: 'GitHub' },
     { icon: Linkedin, href: 'https://linkedin.com/company/accio', label: 'LinkedIn' },
-    { icon: Github, href: 'https://github.com/accio', label: 'GitHub' }
+    { icon: Mail, href: 'mailto:hello@accio.app', label: 'Email' }
   ];
 
   return (
-    <footer className="bg-muted/30 border-t">
-      {/* Newsletter Section */}
-      <div className="container mx-auto px-4 py-16 max-w-7xl">
-        <div className="bg-gradient-to-r from-primary to-blue-600 rounded-3xl p-8 md:p-12 text-center text-white mb-16">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            Stay ahead of the knowledge curve
-          </h3>
-          <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-            Get productivity tips, feature updates, and expert insights delivered to your inbox.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <Input 
-              type="email" 
-              placeholder="Enter your email" 
-              className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
-            />
-            <Button variant="secondary" className="shrink-0">
-              Subscribe
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </div>
-          <p className="text-sm opacity-75 mt-4">
-            Join 5,000+ subscribers. Unsubscribe anytime.
-          </p>
-        </div>
-
-        {/* Main Footer Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand Column */}
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">A</span>
+    <footer className="bg-muted/30 border-t border-border/60">
+      <div className="container mx-auto px-4 max-w-7xl py-12">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8 mb-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-2">
+            <Link to="/" className="flex items-center gap-2 font-bold text-xl mb-4">
+              <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <Brain className="h-5 w-5 text-white" />
               </div>
-              <span className="text-xl font-bold">Accio</span>
-            </div>
-            <p className="text-muted-foreground mb-6 text-sm leading-relaxed">
-              Transform information chaos into organized intelligence. 
-              The AI-powered knowledge engine for modern professionals.
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Accio
+              </span>
+            </Link>
+            <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+              Transform scattered information into organized intelligence with AI-powered knowledge management.
             </p>
-            <div className="flex gap-3">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="w-10 h-10 bg-muted rounded-lg flex items-center justify-center hover:bg-primary hover:text-white transition-colors"
+            
+            {/* Social Links */}
+            <div className="flex items-center gap-3">
+              {socialLinks.map((social) => (
+                <Button
+                  key={social.href}
+                  variant="ghost"
+                  size="icon"
+                  asChild
+                  className="h-8 w-8 hover:bg-primary/10 hover:text-primary"
                 >
-                  <social.icon className="h-4 w-4" />
-                </a>
+                  <a 
+                    href={social.href} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                  >
+                    <social.icon className="h-4 w-4" />
+                  </a>
+                </Button>
               ))}
             </div>
           </div>
 
-          {/* Product Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Product</h4>
-            <ul className="space-y-3">
-              {footerLinks.product.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    to={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Company</h4>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    to={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Support Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Support</h4>
-            <ul className="space-y-3">
-              {footerLinks.support.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    to={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Legal Links */}
-          <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
-            <ul className="space-y-3">
-              {footerLinks.legal.map((link, index) => (
-                <li key={index}>
-                  <Link 
-                    to={link.href}
-                    className="text-muted-foreground hover:text-foreground transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+          {/* Footer Sections */}
+          {footerSections.map((section) => (
+            <div key={section.title}>
+              <h3 className="font-semibold text-sm mb-4">{section.title}</h3>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      to={link.href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
-        <Separator className="mb-8" />
-
-        {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="text-sm text-muted-foreground">
-            © 2024 Accio. All rights reserved. Built with ❤️ for knowledge workers worldwide.
-          </div>
-          <div className="flex gap-6 text-sm">
-            <Link to="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
-              Privacy
+        {/* Bottom Footer */}
+        <div className="pt-8 border-t border-border/60 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-sm text-muted-foreground">
+            © {currentYear} Accio. All rights reserved.
+          </p>
+          
+          <div className="flex items-center gap-6">
+            <Link 
+              to="/accessibility" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+            >
+              Accessibility
             </Link>
-            <Link to="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
-              Terms
+            <Link 
+              to="/sitemap" 
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors duration-200"
+            >
+              Sitemap
             </Link>
-            <Link to="/security" className="text-muted-foreground hover:text-foreground transition-colors">
-              Security
-            </Link>
+            <div className="text-sm text-muted-foreground">
+              Made with ❤️ using Lovable.dev
+            </div>
           </div>
         </div>
       </div>

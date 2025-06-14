@@ -1,13 +1,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Command, X, Sparkles, Mic, MicOff } from 'lucide-react';
+import { Search, X, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
-import { useSearchAutocomplete, SearchSuggestion } from '@/hooks/useSearchAutocomplete';
+import { useSearchAutocomplete } from '@/hooks/useSearchAutocomplete';
 import { voiceSearchService } from '@/services/voiceSearchService';
 import { SearchSuggestions } from './SearchSuggestions';
+import { VoiceSearchButton } from './VoiceSearchButton';
+import { SearchKeyboardShortcut } from './SearchKeyboardShortcut';
+import { VoiceSearchFeedback } from './VoiceSearchFeedback';
 
 interface EnhancedUnifiedSearchBarProps {
   placeholder?: string;
@@ -206,40 +208,14 @@ export const EnhancedUnifiedSearchBar: React.FC<EnhancedUnifiedSearchBarProps> =
           )}
 
           {showVoiceSearch && voiceSearchService.isSupported() && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleVoiceSearch}
-              className={cn(
-                "h-6 w-6 p-0 transition-all duration-200",
-                size === 'lg' && "h-8 w-8",
-                isListening 
-                  ? "text-red-500 animate-pulse hover:bg-red-50 dark:hover:bg-red-950/20" 
-                  : "hover:bg-muted/80"
-              )}
-              aria-label={isListening ? "Stop voice search" : "Start voice search"}
-            >
-              {isListening ? (
-                <MicOff className="h-3 w-3" />
-              ) : (
-                <Mic className="h-3 w-3" />
-              )}
-            </Button>
+            <VoiceSearchButton
+              isListening={isListening}
+              onVoiceSearch={handleVoiceSearch}
+              size={size}
+            />
           )}
 
-          <div className="flex items-center gap-1">
-            <Badge 
-              variant="outline" 
-              className={cn(
-                "text-xs font-mono border-border/60 bg-muted/40 transition-colors duration-200",
-                size === 'sm' && "text-[10px] px-1 py-0.5",
-                size === 'lg' && "text-sm px-2 py-1"
-              )}
-            >
-              <Command className="h-2.5 w-2.5 mr-1" />
-              K
-            </Badge>
-          </div>
+          <SearchKeyboardShortcut size={size} />
         </div>
 
         {/* AI Suggestions Indicator */}
@@ -271,16 +247,7 @@ export const EnhancedUnifiedSearchBar: React.FC<EnhancedUnifiedSearchBarProps> =
       )}
 
       {/* Voice Search Feedback */}
-      {isListening && (
-        <div className="absolute top-full mt-2 left-1/2 transform -translate-x-1/2 z-50">
-          <div className="flex items-center gap-2 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2 shadow-lg">
-            <div className="h-2 w-2 bg-red-500 rounded-full animate-pulse" />
-            <span className="text-sm text-red-700 dark:text-red-300 font-medium">
-              Listening...
-            </span>
-          </div>
-        </div>
-      )}
+      <VoiceSearchFeedback isVisible={isListening} />
     </div>
   );
 };

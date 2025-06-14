@@ -4,7 +4,7 @@ import { useState, useCallback } from 'react';
 export interface SearchSuggestion {
   id: string;
   query: string;
-  type: 'recent' | 'trending' | 'smart';
+  type: 'recent' | 'popular' | 'suggestion';
   category?: string;
 }
 
@@ -59,8 +59,8 @@ export const useSearchAutocomplete = () => {
       });
     }
 
-    // Add trending suggestions
-    const trendingSuggestions = [
+    // Add popular suggestions
+    const popularSuggestions = [
       'React patterns',
       'TypeScript guide',
       'Design systems',
@@ -69,15 +69,37 @@ export const useSearchAutocomplete = () => {
     ];
 
     if (query) {
-      const matchingTrending = trendingSuggestions
+      const matchingPopular = popularSuggestions
         .filter(suggestion => suggestion.toLowerCase().includes(query.toLowerCase()))
         .slice(0, 2);
       
-      matchingTrending.forEach((suggestion, index) => {
+      matchingPopular.forEach((suggestion, index) => {
         suggestions.push({
-          id: `trending-${index}`,
+          id: `popular-${index}`,
           query: suggestion,
-          type: 'trending'
+          type: 'popular'
+        });
+      });
+    }
+
+    // Add AI suggestions
+    const aiSuggestions = [
+      'Machine learning basics',
+      'AI content creation',
+      'Neural networks explained',
+      'Data science fundamentals'
+    ];
+
+    if (query) {
+      const matchingAI = aiSuggestions
+        .filter(suggestion => suggestion.toLowerCase().includes(query.toLowerCase()))
+        .slice(0, 2);
+      
+      matchingAI.forEach((suggestion, index) => {
+        suggestions.push({
+          id: `suggestion-${index}`,
+          query: suggestion,
+          type: 'suggestion'
         });
       });
     }

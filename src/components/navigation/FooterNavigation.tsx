@@ -1,120 +1,84 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Home, Search, BookOpen, User, Settings } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  Home, 
-  Search, 
-  Bookmark, 
-  Plus, 
-  User,
-  LayoutDashboard
-} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const FooterNavigation: React.FC = () => {
   const location = useLocation();
   const { user } = useAuth();
 
-  // Don't show footer nav on auth pages
-  if (location.pathname.includes('/login') || location.pathname.includes('/register')) {
-    return null;
-  }
+  // Only show on protected routes when user is logged in
+  const protectedRoutes = ['/dashboard', '/saved', '/search', '/profile', '/settings'];
+  const shouldShow = user && protectedRoutes.some(route => location.pathname.startsWith(route));
 
-  const isActiveRoute = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
-    }
-    return location.pathname.startsWith(path);
-  };
+  if (!shouldShow) return null;
 
-  const navigationItems = user ? [
+  const navigationItems = [
     { 
-      path: '/dashboard', 
-      icon: LayoutDashboard, 
-      label: 'Dashboard',
-      ariaLabel: 'Go to dashboard'
-    },
-    { 
-      path: '/search', 
-      icon: Search, 
-      label: 'Search',
-      ariaLabel: 'Search content'
-    },
-    { 
-      path: '/save', 
-      icon: Plus, 
-      label: 'Save',
-      ariaLabel: 'Save new content'
-    },
-    { 
-      path: '/saved', 
-      icon: Bookmark, 
-      label: 'Saved',
-      ariaLabel: 'View saved content'
-    },
-    { 
-      path: '/profile', 
-      icon: User, 
-      label: 'Profile',
-      ariaLabel: 'View profile'
-    }
-  ] : [
-    { 
-      path: '/', 
+      href: '/dashboard', 
       icon: Home, 
       label: 'Home',
-      ariaLabel: 'Go to home page'
+      isActive: location.pathname === '/dashboard'
     },
     { 
-      path: '/features', 
+      href: '/search', 
       icon: Search, 
-      label: 'Features',
-      ariaLabel: 'View features'
+      label: 'Search',
+      isActive: location.pathname.startsWith('/search')
     },
     { 
-      path: '/pricing', 
-      icon: Bookmark, 
-      label: 'Pricing',
-      ariaLabel: 'View pricing'
+      href: '/saved', 
+      icon: BookOpen, 
+      label: 'Saved',
+      isActive: location.pathname.startsWith('/saved')
     },
     { 
-      path: '/login', 
+      href: '/profile', 
       icon: User, 
-      label: 'Login',
-      ariaLabel: 'Sign in to your account'
+      label: 'Profile',
+      isActive: location.pathname.startsWith('/profile')
+    },
+    { 
+      href: '/settings', 
+      icon: Settings, 
+      label: 'Settings',
+      isActive: location.pathname.startsWith('/settings')
     }
   ];
 
   return (
     <nav 
-      className="md:hidden fixed bottom-0 left-0 right-0 bg-background border-t border-border z-40"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80 border-t border-border/60 safe-area-pb"
       role="navigation"
-      aria-label="Mobile navigation"
+      aria-label="Mobile bottom navigation"
     >
-      <div className="flex items-center justify-around px-2 py-2">
-        {navigationItems.map((item) => {
-          const isActive = isActiveRoute(item.path);
-          const Icon = item.icon;
-          
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`
-                flex flex-col items-center justify-center px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 min-h-[64px] min-w-[64px]
-                ${isActive 
-                  ? 'text-primary bg-primary/10' 
-                  : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-                }
-              `}
-              aria-label={item.ariaLabel}
-              aria-current={isActive ? 'page' : undefined}
-            >
-              <Icon className="h-5 w-5 mb-1" aria-hidden="true" />
-              <span className="leading-none">{item.label}</span>
-            </Link>
-          );
-        })}
+      <div className="grid grid-cols-5 h-16">
+        {navigationItems.map((item) => (
+          <Link
+            key={item.href}
+            to={item.href}
+            className={cn(
+              "flex flex-col items-center justify-center gap-1 transition-colors duration-200",
+              "hover:bg-accent/50 active:bg-accent",
+              "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-inset",
+              item.isActive && "text-primary bg-primary/10"
+            )}
+            aria-label={item.label}
+          >
+            <item.icon className={cn(
+              "h-5 w-5",
+              item.isActive ? "text-primary" : "text-muted-foreground"
+            )} />
+            <span className={cn(
+              "text-xs font-medium",
+              item.isActive ? "text-primary" : "text-muted-foreground"
+            )}>
+              {item.label}
+            </span>
+          </Link>
+        ))}
       </div>
     </nav>
   );

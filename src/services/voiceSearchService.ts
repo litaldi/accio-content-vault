@@ -1,84 +1,83 @@
 
-import { SpeechRecognition, SpeechRecognitionErrorEvent } from '../types/speech';
-
-export interface VoiceSearchOptions {
-  continuous?: boolean;
-  interimResults?: boolean;
-  language?: string;
-}
-
-export interface VoiceSearchResult {
-  transcript: string;
-  isFinal: boolean;
-  confidence: number;
-}
-
 class VoiceSearchService {
   private recognition: SpeechRecognition | null = null;
   private isListening = false;
 
   constructor() {
-    if (typeof window !== 'undefined' && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      this.recognition = new SpeechRecognition();
+    if (this.isSupported()) {
+      this.recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      this.setupRecognition();
     }
   }
 
   isSupported(): boolean {
-    return this.recognition !== null;
+    return 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
   }
 
-  startListening(options: VoiceSearchOptions = {}): void {
+  private setupRecognition() {
+    if (!this.recognition) return;
+
+    this.recognition.continuous = false;
+    this.recognition.interimResults = true;
+    this.recognition.lang = 'en-US';
+  }
+
+  startListening(options: {
+    continuous?: boolean;
+    interimResults?: boolean;
+    language?: string;
+  } = {}) {
     if (!this.recognition || this.isListening) return;
 
-    this.recognition.continuous = options.continuous || false;
-    this.recognition.interimResults = options.interimResults || true;
-    this.recognition.lang = options.language || 'en-US';
+    this.recognition.continuous = options.continuous ?? false;
+    this.recognition.interimResults = options.interimResults ?? true;
+    this.recognition.lang = options.language ?? 'en-US';
 
     this.isListening = true;
     this.recognition.start();
   }
 
-  stopListening(): void {
+  stopListening() {
     if (!this.recognition || !this.isListening) return;
-    
+
     this.isListening = false;
     this.recognition.stop();
   }
 
-  onRecognitionResult(callback: (result: VoiceSearchResult) => void): void {
-    if (!this.recognition) return;
-
-    this.recognition.onresult = (event) => {
-      const result = event.results[event.results.length - 1];
-      callback({
-        transcript: result[0].transcript,
-        isFinal: result.isFinal,
-        confidence: result[0].confidence
-      });
-    };
-  }
-
-  onRecognitionStart(callback: () => void): void {
+  onRecognitionStart(callback: () => void) {
     if (!this.recognition) return;
     this.recognition.onstart = callback;
   }
 
-  onRecognitionEnd(callback: () => void): void {
+  onRecognitionEnd(callback: () => void) {
     if (!this.recognition) return;
-    this.recognition.onend = () => {
-      this.isListening = false;
-      callback();
+    this.recognition.onend = callback;
+  }
+
+  onRecognitionResult(callback: (result: { transcript: string; isFinal: boolean }) => void) {
+    if (!this.recognition) return;
+    
+    this.recognition.onresult = (event) => {
+      const result = event.results[event.results.length - 1];
+      callback({
+        transcript: result[0].transcript,
+        isFinal: result.isFinal
+      });
     };
   }
 
-  onRecognitionError(callback: (error: SpeechRecognitionErrorEvent) => void): void {
+  onRecognitionError(callback: () => void) {
     if (!this.recognition) return;
-    this.recognition.onerror = (error) => {
-      this.isListening = false;
-      callback(error);
-    };
+    this.recognition.onerror = callback;
   }
 }
 
 export const voiceSearchService = new VoiceSearchService();
+
+// Global type definitions for older browsers
+declare global {
+  interface Window {
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
+  }
+}
