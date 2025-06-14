@@ -2,43 +2,32 @@
 import React from 'react';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
 
-const EnhancedAccessibility: React.FC = () => {
-  const { fontSize, highContrast, reducedMotion } = useAccessibility();
+interface EnhancedAccessibilityProps {
+  children: React.ReactNode;
+}
+
+export const EnhancedAccessibility: React.FC<EnhancedAccessibilityProps> = ({ children }) => {
+  const { isHighContrast, isReducedMotion, fontSize } = useAccessibility();
 
   React.useEffect(() => {
-    const root = document.documentElement;
+    const documentElement = document.documentElement;
     
-    // Apply font size
-    root.classList.remove('text-sm', 'text-base', 'text-lg', 'text-xl');
-    switch (fontSize) {
-      case 'small':
-        root.classList.add('text-sm');
-        break;
-      case 'medium':
-        root.classList.add('text-base');
-        break;
-      case 'large':
-        root.classList.add('text-lg');
-        break;
-    }
+    // Apply accessibility classes
+    documentElement.classList.toggle('high-contrast', isHighContrast);
+    documentElement.classList.toggle('reduce-motion', isReducedMotion);
+    
+    // Remove old font size classes
+    documentElement.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+    documentElement.classList.add(`font-size-${fontSize}`);
+    
+    return () => {
+      // Cleanup
+      documentElement.classList.remove('high-contrast', 'reduce-motion');
+      documentElement.classList.remove('font-size-small', 'font-size-medium', 'font-size-large');
+    };
+  }, [isHighContrast, isReducedMotion, fontSize]);
 
-    // Apply high contrast
-    if (highContrast) {
-      root.classList.add('high-contrast');
-    } else {
-      root.classList.remove('high-contrast');
-    }
-
-    // Apply reduced motion
-    if (reducedMotion) {
-      root.classList.add('reduce-motion');
-    } else {
-      root.classList.remove('reduce-motion');
-    }
-
-  }, [fontSize, highContrast, reducedMotion]);
-
-  return null;
+  return <>{children}</>;
 };
 
 export default EnhancedAccessibility;

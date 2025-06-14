@@ -1,159 +1,124 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { useAuth } from '@/contexts/AuthContext';
-import { User, Settings, LogOut, Shield, BarChart3, Bell } from 'lucide-react';
-import { Link, Navigate } from 'react-router-dom';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
+import { LogOut, Settings, User } from 'lucide-react';
 
-const Profile = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+const Profile: React.FC = () => {
+  const { user, signOut, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
 
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
+  React.useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
 
-  const handleLogout = async () => {
-    await logout();
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Sign out error:', error);
+    }
   };
 
-  const profileSections = [
-    {
-      icon: User,
-      title: 'Account Information',
-      description: 'Manage your personal information and account settings',
-      action: 'Edit Profile'
-    },
-    {
-      icon: Shield,
-      title: 'Security',
-      description: 'Update your password and security preferences',
-      action: 'Security Settings'
-    },
-    {
-      icon: Bell,
-      title: 'Notifications',
-      description: 'Control how you receive updates and notifications',
-      action: 'Notification Settings'
-    },
-    {
-      icon: BarChart3,
-      title: 'Usage Statistics',
-      description: 'View your knowledge management metrics and insights',
-      action: 'View Stats'
-    }
-  ];
+  if (!user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  const userDisplayName = user.user_metadata?.full_name || 
+                         user.user_metadata?.name || 
+                         user.name || 
+                         'User';
+
+  const userInitials = userDisplayName
+    .split(' ')
+    .map(name => name.charAt(0))
+    .join('')
+    .substring(0, 2)
+    .toUpperCase();
 
   return (
     <>
       <Helmet>
         <title>Profile - Accio</title>
-        <meta name="description" content="Manage your Accio account settings, preferences, and view your knowledge management statistics." />
+        <meta name="description" content="Manage your Accio profile" />
       </Helmet>
 
-      <main className="min-h-screen bg-background">
-        {/* Header */}
-        <section className="py-24 bg-gradient-to-br from-primary/5 to-blue-600/5">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center">
-              <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center mx-auto mb-6">
-                <User className="h-12 w-12 text-primary-foreground" />
+      <div className="container mx-auto px-4 py-8 max-w-2xl">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold">Profile</h1>
+          <p className="text-muted-foreground mt-2">
+            Manage your account information and preferences
+          </p>
+        </div>
+
+        <div className="space-y-6">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center gap-4">
+                <Avatar className="h-16 w-16">
+                  <AvatarFallback className="text-lg">{userInitials}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <CardTitle>{userDisplayName}</CardTitle>
+                  <CardDescription>{user.email}</CardDescription>
+                  <Badge variant="secondary" className="mt-2">
+                    <User className="mr-1 h-3 w-3" />
+                    Verified User
+                  </Badge>
+                </div>
               </div>
-              <h1 className="text-4xl font-bold mb-2">
-                Welcome back, {user?.name || 'User'}!
-              </h1>
-              <p className="text-lg text-muted-foreground mb-4">
-                {user?.email}
-              </p>
-              <p className="text-muted-foreground">
-                Manage your account settings and preferences
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Profile Sections */}
-        <section className="py-24">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="grid md:grid-cols-2 gap-6">
-              {profileSections.map((section, index) => (
-                <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
-                        <section.icon className="h-6 w-6 text-primary" />
-                      </div>
-                      <div>
-                        <CardTitle className="text-xl">{section.title}</CardTitle>
-                        <CardDescription>{section.description}</CardDescription>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <Button variant="outline" className="w-full">
-                      {section.action}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Quick Stats */}
-        <section className="py-16 bg-muted/20">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <h2 className="text-2xl font-bold mb-8 text-center">Your Knowledge Stats</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              <Card className="border-0 shadow-lg text-center">
-                <CardHeader>
-                  <CardTitle className="text-3xl font-bold text-primary">247</CardTitle>
-                  <CardDescription>Documents Organized</CardDescription>
-                </CardHeader>
-              </Card>
-              <Card className="border-0 shadow-lg text-center">
-                <CardHeader>
-                  <CardTitle className="text-3xl font-bold text-primary">52</CardTitle>
-                  <CardDescription>Collections Created</CardDescription>
-                </CardHeader>
-              </Card>
-              <Card className="border-0 shadow-lg text-center">
-                <CardHeader>
-                  <CardTitle className="text-3xl font-bold text-primary">1,432</CardTitle>
-                  <CardDescription>Searches Performed</CardDescription>
-                </CardHeader>
-              </Card>
-            </div>
-          </div>
-        </section>
-
-        {/* Account Actions */}
-        <section className="py-24">
-          <div className="container mx-auto px-4 max-w-4xl">
-            <div className="text-center space-y-6">
-              <h2 className="text-2xl font-bold">Account Actions</h2>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button variant="outline" size="lg" asChild>
-                  <Link to="/">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Dashboard
-                  </Link>
+            </CardHeader>
+            <CardContent>
+              <div className="flex gap-2">
+                <Button variant="outline" onClick={() => navigate('/settings')}>
+                  <Settings className="mr-2 h-4 w-4" />
+                  Settings
                 </Button>
-                <Button 
-                  variant="destructive" 
-                  size="lg"
-                  onClick={handleLogout}
-                >
-                  <LogOut className="h-4 w-4 mr-2" />
+                <Button variant="outline" onClick={handleSignOut}>
+                  <LogOut className="mr-2 h-4 w-4" />
                   Sign Out
                 </Button>
               </div>
-            </div>
-          </div>
-        </section>
-      </main>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Account Information</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Email</label>
+                <p className="text-sm">{user.email}</p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Account Created</label>
+                <p className="text-sm">
+                  {user.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}
+                </p>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-muted-foreground">Last Sign In</label>
+                <p className="text-sm">
+                  {user.last_sign_in_at ? new Date(user.last_sign_in_at).toLocaleDateString() : 'Unknown'}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </>
   );
 };

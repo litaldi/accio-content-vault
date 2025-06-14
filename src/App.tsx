@@ -1,58 +1,100 @@
 
-import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
-import { Toaster } from '@/components/ui/toaster';
-import { ThemeProvider } from '@/components/theme/ThemeProvider';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
-import { AppLayout } from '@/components/layout/AppLayout';
-import { GlobalErrorBoundary } from '@/components/error-handling/GlobalErrorBoundary';
-import { useAppSecurity } from '@/hooks/useAppSecurity';
-import { AppRoutes } from '@/routing/AppRoutes';
+import { EnhancedAccessibility } from '@/components/accessibility/EnhancedAccessibility';
+import { AccessibilityToolbar } from '@/components/accessibility/AccessibilityToolbar';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./pages/Profile";
+import EnhancedSettings from "./pages/EnhancedSettings";
+import ResetPassword from "./pages/ResetPassword";
+import ProtectedRoute from './components/ProtectedRoute';
+import "./index.css";
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 60 * 1000, // 1 minute
-      refetchOnWindowFocus: false,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
     },
   },
 });
 
-// App component with security hook inside Router context
-const AppContent: React.FC = () => {
-  useAppSecurity();
-
-  return (
-    <AppLayout>
-      <div className="min-h-screen">
-        <AppRoutes />
-      </div>
-    </AppLayout>
-  );
-};
-
 function App() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
-    <GlobalErrorBoundary>
+    <ErrorBoundary>
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
-          <ThemeProvider>
+          <TooltipProvider>
             <AuthProvider>
               <AccessibilityProvider>
-                <Router>
-                  <AppContent />
-                  <Toaster />
-                </Router>
+                <EnhancedAccessibility>
+                  <BrowserRouter>
+                    <div className="min-h-screen bg-background font-sans antialiased">
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/reset-password" element={<ResetPassword />} />
+                        <Route
+                          path="/dashboard"
+                          element={
+                            <ProtectedRoute>
+                              <Dashboard />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/profile"
+                          element={
+                            <ProtectedRoute>
+                              <Profile />
+                            </ProtectedRoute>
+                          }
+                        />
+                        <Route
+                          path="/settings"
+                          element={
+                            <ProtectedRoute>
+                              <EnhancedSettings />
+                            </ProtectedRoute>
+                          }
+                        />
+                      </Routes>
+                      <AccessibilityToolbar />
+                      <Toaster />
+                    </div>
+                  </BrowserRouter>
+                </EnhancedAccessibility>
               </AccessibilityProvider>
             </AuthProvider>
-          </ThemeProvider>
+          </TooltipProvider>
         </QueryClientProvider>
       </HelmetProvider>
-    </GlobalErrorBoundary>
+    </ErrorBoundary>
   );
 }
 
