@@ -1,4 +1,6 @@
 
+/// <reference path="../types/speech.d.ts" />
+
 export interface VoiceSearchOptions {
   continuous?: boolean;
   interimResults?: boolean;

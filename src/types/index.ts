@@ -1,4 +1,3 @@
-
 export interface SavedContent {
   id: string;
   user_id?: string;
@@ -18,6 +17,7 @@ export interface SavedContent {
   reading_time?: number;
   author?: string;
   source?: string;
+  has_summary?: boolean;
 }
 
 export interface SearchResult extends SavedContent {
@@ -28,8 +28,10 @@ export interface SearchResult extends SavedContent {
 export interface User {
   id: string;
   email: string;
+  name?: string;
   user_metadata?: {
     name?: string;
+    full_name?: string;
     avatar_url?: string;
   };
 }
@@ -55,6 +57,7 @@ export interface Tag {
 
 export interface FileUploadProps {
   onFileUpload: (file: File) => void;
+  onUploadComplete?: (fileDetails: { file_url: string; file_type: "image" | "pdf"; file_size: number; title: string; }) => void;
   acceptedTypes?: string[];
   maxSize?: number;
   disabled?: boolean;

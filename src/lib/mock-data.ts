@@ -7,7 +7,7 @@ export const mockContents: SavedContent[] = [
     user_id: 'mock-user-1',
     title: 'Introduction to React Hooks',
     description: 'A comprehensive guide to understanding and using React Hooks in modern applications.',
-    content_type: 'url',
+    content_type: 'link',
     url: 'https://example.com/react-hooks',
     created_at: new Date().toISOString(),
     tags: [

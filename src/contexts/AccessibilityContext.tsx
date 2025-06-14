@@ -19,6 +19,8 @@ interface AccessibilityContextType {
   toggleHighContrast: () => void;
   reducedMotion: boolean;
   setReducedMotion: (enabled: boolean) => void;
+  toggleReducedMotion: () => void;
+  announceToScreenReader: (message: string) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -63,6 +65,20 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     updateSettings({ reducedMotion });
   };
 
+  const toggleReducedMotion = () => {
+    updateSettings({ reducedMotion: !settings.reducedMotion });
+  };
+
+  const announceToScreenReader = (message: string) => {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.setAttribute('aria-atomic', 'true');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+    setTimeout(() => document.body.removeChild(announcement), 1000);
+  };
+
   return (
     <AccessibilityContext.Provider value={{ 
       settings, 
@@ -73,7 +89,9 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
       setHighContrast,
       toggleHighContrast,
       reducedMotion: settings.reducedMotion,
-      setReducedMotion
+      setReducedMotion,
+      toggleReducedMotion,
+      announceToScreenReader
     }}>
       {children}
     </AccessibilityContext.Provider>

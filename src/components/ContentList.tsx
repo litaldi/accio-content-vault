@@ -64,8 +64,8 @@ const ContentList: React.FC<ContentListProps> = ({
             {content.tags && content.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
                 {content.tags.slice(0, 4).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
+                  <Badge key={tag.id} variant="secondary" className="text-xs">
+                    {tag.name}
                   </Badge>
                 ))}
                 {content.tags.length > 4 && (
