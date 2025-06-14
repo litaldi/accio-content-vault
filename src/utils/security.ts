@@ -1,4 +1,5 @@
-import { sanitizeInput, validateEmail, validatePassword, CSRFManager, UnifiedRateLimiter } from './security/core-security';
+
+import { sanitizeInput, validateEmail, validatePassword, validateUrl, CSRFManager, UnifiedRateLimiter } from './security/core-security';
 
 // Enhanced security utilities with improved validation
 export class SecurityValidator {
@@ -18,22 +19,11 @@ export class SecurityValidator {
 
     // URL validation
     if (content.url) {
-      try {
-        const url = new URL(content.url);
-        if (!['http:', 'https:'].includes(url.protocol)) {
-          errors.push('Only HTTP and HTTPS URLs are allowed');
-        }
-        // Block localhost in production
-        if (url.hostname === 'localhost' && window.location.hostname !== 'localhost') {
-          errors.push('Localhost URLs not allowed');
-        }
-        // Block private IP ranges
-        if (url.hostname.match(/^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)/)) {
-          errors.push('Private IP addresses not allowed');
-        }
-        sanitized.url = url.toString();
-      } catch {
-        errors.push('Invalid URL format');
+      const urlValidation = validateUrl(content.url);
+      if (!urlValidation.isValid) {
+        errors.push(urlValidation.message);
+      } else {
+        sanitized.url = urlValidation.sanitizedValue || content.url;
       }
     }
 
@@ -223,6 +213,7 @@ export {
   sanitizeInput,
   validateEmail,
   validatePassword,
+  validateUrl,
   CSRFManager,
   UnifiedRateLimiter
 };
@@ -253,3 +244,12 @@ export const logSecurityEvent = (event: string, details: any = {}) => {
     // Ignore storage errors
   }
 };
+
+// Create secure headers function
+export const createSecureHeaders = () => ({
+  'Content-Security-Policy': "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;",
+  'X-Content-Type-Options': 'nosniff',
+  'X-Frame-Options': 'DENY',
+  'X-XSS-Protection': '1; mode=block',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+});
