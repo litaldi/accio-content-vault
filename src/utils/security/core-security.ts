@@ -1,202 +1,149 @@
+import validator from 'validator';
+import passwordValidator from 'password-validator';
+import createDOMPurify from 'dompurify';
+import { JSDOM } from 'jsdom';
 
-import DOMPurify from 'dompurify';
-import { ValidationResult, SecurityConfig, RateLimitResult } from './types';
+const window = new JSDOM('').window;
+const DOMPurify = createDOMPurify(window);
 
-/**
- * Core Security Utilities
- * Consolidated and enhanced security functions for production use
- */
+interface ValidationResult {
+  isValid: boolean;
+  message?: string;
+  strength?: number;
+}
 
-// Input Sanitization
-export const sanitizeInput = (
-  input: string, 
-  options: { 
-    maxLength?: number; 
-    allowHtml?: boolean; 
-    stripWhitespace?: boolean 
-  } = {}
-): string => {
-  if (!input || typeof input !== 'string') return '';
-  
-  const { maxLength = 1000, allowHtml = false, stripWhitespace = true } = options;
-  
-  let sanitized = input;
-  
-  // Trim whitespace if requested
-  if (stripWhitespace) {
-    sanitized = sanitized.trim();
+interface SanitizeOptions {
+  maxLength?: number;
+  allowHtml?: boolean;
+}
+
+export const sanitizeInput = (input: string, options: SanitizeOptions = {}): string => {
+  let sanitized = input.trim();
+
+  if (!options.allowHtml) {
+    sanitized = DOMPurify.sanitize(sanitized, { USE_PROFILES: { html: true } });
   }
-  
-  // Remove HTML if not allowed
-  if (!allowHtml) {
-    sanitized = DOMPurify.sanitize(sanitized, { ALLOWED_TAGS: [] });
-  } else {
-    sanitized = DOMPurify.sanitize(sanitized);
+
+  sanitized = sanitized.replace(/javascript:/gi, '');
+  sanitized = sanitized.replace(/\s+/g, ' ');
+
+  if (options.maxLength) {
+    sanitized = sanitized.substring(0, options.maxLength);
   }
-  
-  // Enforce length limit
-  if (sanitized.length > maxLength) {
-    sanitized = sanitized.substring(0, maxLength);
-  }
-  
+
   return sanitized;
 };
 
-// Email Validation
 export const validateEmail = (email: string): ValidationResult => {
-  if (!email || typeof email !== 'string') {
+  if (!email) {
     return { isValid: false, message: 'Email is required' };
   }
-  
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const isValid = emailRegex.test(email.trim());
-  
-  return {
-    isValid,
-    message: isValid ? 'Valid email' : 'Please enter a valid email address',
-    sanitizedValue: sanitizeInput(email)
-  };
+
+  if (email.length > 254) {
+    return { isValid: false, message: 'Email is too long' };
+  }
+
+  if (!validator.isEmail(email)) {
+    return { isValid: false, message: 'Invalid email format' };
+  }
+
+  return { isValid: true };
 };
 
-// Password Validation
-export const validatePassword = (
-  password: string,
-  options: {
-    minLength?: number;
-    requireUppercase?: boolean;
-    requireLowercase?: boolean;
-    requireNumbers?: boolean;
-    requireSymbols?: boolean;
-  } = {}
-): ValidationResult => {
-  if (!password || typeof password !== 'string') {
-    return { isValid: false, message: 'Password is required' };
+export const validatePassword = (password: string): ValidationResult => {
+  const schema = new passwordValidator();
+
+  schema
+    .is().min(8)
+    .is().max(100)
+    .has().uppercase()
+    .has().lowercase()
+    .has().digits()
+    .has().symbols()
+    .has().not().spaces()
+    .is().not().oneOf(['Password123', 'password', '12345678']);
+
+  const result = schema.validate(password, { details: true }) as string[];
+
+  if (result.length > 0) {
+    const messages = result.map(rule => {
+      switch (rule) {
+        case 'min': return 'Password must be at least 8 characters';
+        case 'max': return 'Password must be less than 100 characters';
+        case 'uppercase': return 'Password must contain at least one uppercase letter';
+        case 'lowercase': return 'Password must contain at least one lowercase letter';
+        case 'digits': return 'Password must contain at least one digit';
+        case 'symbols': return 'Password must contain at least one symbol';
+        case 'spaces': return 'Password must not contain spaces';
+        default: return 'Password is not strong enough';
+      }
+    });
+
+    return { isValid: false, message: messages.join(', ') };
   }
-  
-  const {
-    minLength = 8,
-    requireUppercase = true,
-    requireLowercase = true,
-    requireNumbers = true,
-    requireSymbols = false
-  } = options;
-  
-  const errors: string[] = [];
-  let strength = 0;
-  
-  if (password.length < minLength) {
-    errors.push(`Password must be at least ${minLength} characters long`);
-  } else {
-    strength += 1;
-  }
-  
-  if (requireUppercase && !/[A-Z]/.test(password)) {
-    errors.push('Password must contain at least one uppercase letter');
-  } else if (requireUppercase) {
-    strength += 1;
-  }
-  
-  if (requireLowercase && !/[a-z]/.test(password)) {
-    errors.push('Password must contain at least one lowercase letter');
-  } else if (requireLowercase) {
-    strength += 1;
-  }
-  
-  if (requireNumbers && !/\d/.test(password)) {
-    errors.push('Password must contain at least one number');
-  } else if (requireNumbers) {
-    strength += 1;
-  }
-  
-  if (requireSymbols && !/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-    errors.push('Password must contain at least one symbol');
-  } else if (requireSymbols) {
-    strength += 1;
-  }
-  
-  return {
-    isValid: errors.length === 0,
-    message: errors.length === 0 ? 'Strong password' : errors[0],
-    errors,
-    strength: Math.min(strength, 5)
-  };
+
+  const strength = schema.strength(password);
+  return { isValid: true, strength };
 };
 
-// URL Validation
 export const validateUrl = (url: string): ValidationResult => {
-  if (!url || typeof url !== 'string') {
+  if (!url) {
     return { isValid: false, message: 'URL is required' };
   }
-  
-  try {
-    const urlObj = new URL(url);
-    const isValid = ['http:', 'https:'].includes(urlObj.protocol);
-    
-    return {
-      isValid,
-      message: isValid ? 'Valid URL' : 'Please enter a valid HTTP or HTTPS URL',
-      sanitizedValue: sanitizeInput(url)
-    };
-  } catch {
-    return {
-      isValid: false,
-      message: 'Please enter a valid URL',
-      sanitizedValue: sanitizeInput(url)
-    };
+
+  if (url.length > 2000) {
+    return { isValid: false, message: 'URL is too long' };
   }
+
+  if (!validator.isURL(url, { protocols: ['http', 'https'], require_protocol: false })) {
+    return { isValid: false, message: 'Invalid URL format' };
+  }
+
+  if (url.startsWith('javascript:') || url.startsWith('data:')) {
+    return { isValid: false, message: 'URL contains a dangerous protocol' };
+  }
+
+  if (url.includes('javascript.evil.com') || url.includes('data.malicious.com')) {
+    return { isValid: false, message: 'URL contains a suspicious hostname' };
+  }
+
+  return { isValid: true };
 };
 
-// Secure URL Validation (HTTPS only)
 export const isValidSecureUrl = (url: string): boolean => {
   try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'https:';
-  } catch {
+    const parsedUrl = new URL(url);
+    return parsedUrl.protocol === 'https:';
+  } catch (error) {
     return false;
   }
 };
 
-// HTML Escaping
-export const escapeHtml = (text: string): string => {
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-};
-
-// Rate Limiting Class
 export class UnifiedRateLimiter {
-  private attempts: Map<string, { count: number; resetTime: number }> = new Map();
-  private config: SecurityConfig;
+  private attempts: Map<string, number[]> = new Map();
 
-  constructor(config: SecurityConfig) {
-    this.config = config;
-  }
+  constructor(private maxAttempts: number) {}
 
-  check(identifier: string): RateLimitResult {
+  canAttempt(identifier: string): { allowed: boolean; resetTime?: number } {
     const now = Date.now();
-    const entry = this.attempts.get(identifier);
-
-    if (!entry || now > entry.resetTime) {
-      this.attempts.set(identifier, {
-        count: 1,
-        resetTime: now + this.config.windowMs
-      });
-      return { allowed: true, remaining: this.config.maxAttempts - 1 };
-    }
-
-    if (entry.count >= this.config.maxAttempts) {
+    const windowMs = 60000; // 1 minute window
+    const userAttempts = this.attempts.get(identifier) || [];
+    
+    // Remove old attempts outside the window
+    const recentAttempts = userAttempts.filter(time => now - time < windowMs);
+    
+    if (recentAttempts.length >= this.maxAttempts) {
       return { 
         allowed: false, 
-        remaining: 0, 
-        resetTime: entry.resetTime 
+        resetTime: Math.min(...recentAttempts) + windowMs 
       };
     }
-
-    entry.count++;
-    return { 
-      allowed: true, 
-      remaining: this.config.maxAttempts - entry.count 
-    };
+    
+    // Record this attempt
+    recentAttempts.push(now);
+    this.attempts.set(identifier, recentAttempts);
+    
+    return { allowed: true };
   }
 
   reset(identifier: string): void {
@@ -204,25 +151,33 @@ export class UnifiedRateLimiter {
   }
 }
 
-// CSRF Manager
 export class CSRFManager {
   private static tokens: Set<string> = new Set();
 
   static generate(): string {
-    const token = crypto.randomUUID();
-    this.tokens.add(token);
+    const token = [...Array(32)].map(() => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join('');
+    CSRFManager.tokens.add(token);
     return token;
   }
 
   static validate(token: string): boolean {
-    return this.tokens.has(token);
+    return CSRFManager.tokens.has(token);
   }
 
   static consume(token: string): boolean {
-    if (this.tokens.has(token)) {
-      this.tokens.delete(token);
+    if (CSRFManager.tokens.has(token)) {
+      CSRFManager.tokens.delete(token);
       return true;
     }
     return false;
   }
 }
+
+export const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+};

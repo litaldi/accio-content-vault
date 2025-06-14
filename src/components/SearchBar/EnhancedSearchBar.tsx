@@ -1,12 +1,11 @@
-
 import React, { useState, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { UnifiedSearchBar } from '@/components/search/UnifiedSearchBar';
+import { SearchBar } from '@/components/search/SearchBar';
 import { enhancedSearchService } from '@/services/enhancedSearchService';
 import { naturalLanguageService } from '@/services/naturalLanguageService';
-import { Sparkles, Zap, Clock, Filter } from 'lucide-react';
+import { Sparkles, Zap, Filter } from 'lucide-react';
 
 interface EnhancedSearchBarProps {
   onSearch: (query: string) => void;
@@ -61,7 +60,7 @@ export const EnhancedSearchBar: React.FC<EnhancedSearchBarProps> = ({
     <div className={className}>
       <div className="space-y-4">
         {/* Main Search Bar */}
-        <UnifiedSearchBar
+        <SearchBar
           placeholder="Ask me anything about your knowledge..."
           onSearch={handleSearch}
           searchQuery={searchQuery}

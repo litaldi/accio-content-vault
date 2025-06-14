@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Status } from '@/components/design-system/DesignSystem';
@@ -6,7 +5,7 @@ import ProtectedRoute from '@/components/ProtectedRoute';
 import { Helmet } from 'react-helmet-async';
 
 // Lazy load components for better performance
-const EnhancedHome = React.lazy(() => import('@/pages/EnhancedHome'));
+const Home = React.lazy(() => import('@/pages/Home'));
 const Index = React.lazy(() => import('@/pages/Index'));
 const ModernIndex = React.lazy(() => import('@/pages/ModernIndex'));
 const Login = React.lazy(() => import('@/pages/Login'));
@@ -78,7 +77,7 @@ export const AppRoutes: React.FC = () => {
               <title>Accio - AI-Powered Knowledge Engine</title>
               <meta name="description" content="Transform scattered information into organized intelligence with Accio's AI-powered knowledge management platform." />
             </Helmet>
-            <EnhancedHome />
+            <Home />
           </RouteErrorBoundary>
         } 
       />

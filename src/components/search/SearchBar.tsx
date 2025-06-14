@@ -10,7 +10,7 @@ interface SearchBarProps {
   className?: string;
   showVoiceSearch?: boolean;
   size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'hero' | 'dashboard';
+  variant?: 'default' | 'hero' | 'minimal';
   showTips?: boolean;
 }
 
