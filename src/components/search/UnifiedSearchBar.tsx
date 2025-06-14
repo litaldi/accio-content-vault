@@ -1,12 +1,13 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Clock, ArrowRight, Command, X, Mic } from 'lucide-react';
+import { Search, Command, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useSearchAutocomplete } from '@/hooks/useSearchAutocomplete';
 import { voiceSearchService } from '@/services/voiceSearchService';
+import { VoiceSearchButton } from './VoiceSearchButton';
+import { SearchSuggestions } from './SearchSuggestions';
 
 interface UnifiedSearchBarProps {
   placeholder?: string;
@@ -45,6 +46,7 @@ export const UnifiedSearchBar: React.FC<UnifiedSearchBarProps> = ({
     lg: 'h-12 text-lg'
   };
 
+  // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -160,23 +162,16 @@ export const UnifiedSearchBar: React.FC<UnifiedSearchBarProps> = ({
                 inputRef.current?.focus();
               }}
               className="h-6 w-6 p-0"
+              aria-label="Clear search"
             >
               <X className="h-3 w-3" />
             </Button>
           )}
-          {showVoiceSearch && voiceSearchService.isSupported() && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleVoiceSearch}
-              className={cn(
-                "h-6 w-6 p-0",
-                isListening && "text-red-500 animate-pulse"
-              )}
-            >
-              <Mic className="h-3 w-3" />
-            </Button>
-          )}
+          <VoiceSearchButton
+            isListening={isListening}
+            isSupported={showVoiceSearch && voiceSearchService.isSupported()}
+            onClick={handleVoiceSearch}
+          />
           <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
             <Command className="h-3 w-3" />
             K
@@ -190,47 +185,16 @@ export const UnifiedSearchBar: React.FC<UnifiedSearchBarProps> = ({
             className="fixed inset-0 z-10" 
             onClick={() => setIsOpen(false)}
           />
-          <Card className="absolute top-full left-0 right-0 z-20 mt-1 max-h-64 overflow-hidden shadow-lg bg-background">
-            <ul className="py-2">
-              {suggestions.map((suggestion, index) => (
-                <li key={suggestion.id}>
-                  <button
-                    className={cn(
-                      "w-full px-4 py-2 text-left text-sm flex items-center gap-3 hover:bg-muted transition-colors",
-                      selectedIndex === index && "bg-muted"
-                    )}
-                    onClick={() => handleSearch(suggestion.query)}
-                    onMouseEnter={() => setSelectedIndex(index)}
-                  >
-                    {suggestion.type === 'recent' ? (
-                      <Clock className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    ) : (
-                      <Search className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                    )}
-                    <span className="flex-1 truncate">{suggestion.query}</span>
-                    <ArrowRight className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
-                </li>
-              ))}
-              
-              {suggestions.some(s => s.type === 'recent') && (
-                <>
-                  <hr className="my-2" />
-                  <li>
-                    <button
-                      className="w-full px-4 py-2 text-left text-sm text-muted-foreground hover:bg-muted transition-colors"
-                      onClick={() => {
-                        clearRecentSearches();
-                        setIsOpen(false);
-                      }}
-                    >
-                      Clear recent searches
-                    </button>
-                  </li>
-                </>
-              )}
-            </ul>
-          </Card>
+          <SearchSuggestions
+            suggestions={suggestions}
+            selectedIndex={selectedIndex}
+            onSuggestionClick={handleSearch}
+            onSuggestionHover={setSelectedIndex}
+            onClearRecentSearches={() => {
+              clearRecentSearches();
+              setIsOpen(false);
+            }}
+          />
         </>
       )}
     </div>
