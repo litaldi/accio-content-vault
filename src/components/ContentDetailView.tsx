@@ -103,7 +103,7 @@ const ContentDetailView: React.FC<ContentDetailViewProps> = ({ content, isOpen, 
                 <h3 className="text-sm font-medium">Tags</h3>
                 <div className="flex flex-wrap gap-2 mt-1">
                   {content.tags.map((tag) => (
-                    <span key={tag.id} className="tag">
+                    <span key={tag.id} className="inline-flex items-center px-2 py-1 text-xs bg-secondary text-secondary-foreground rounded-md">
                       {tag.name}
                     </span>
                   ))}

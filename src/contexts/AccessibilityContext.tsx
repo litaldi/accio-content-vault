@@ -11,6 +11,14 @@ interface AccessibilitySettings {
 interface AccessibilityContextType {
   settings: AccessibilitySettings;
   updateSettings: (settings: Partial<AccessibilitySettings>) => void;
+  // Individual property access for backward compatibility
+  fontSize: 'small' | 'medium' | 'large';
+  setFontSize: (size: 'small' | 'medium' | 'large') => void;
+  highContrast: boolean;
+  setHighContrast: (enabled: boolean) => void;
+  toggleHighContrast: () => void;
+  reducedMotion: boolean;
+  setReducedMotion: (enabled: boolean) => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -39,8 +47,34 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     setSettings(prev => ({ ...prev, ...newSettings }));
   };
 
+  const setFontSize = (fontSize: 'small' | 'medium' | 'large') => {
+    updateSettings({ fontSize });
+  };
+
+  const setHighContrast = (highContrast: boolean) => {
+    updateSettings({ highContrast });
+  };
+
+  const toggleHighContrast = () => {
+    updateSettings({ highContrast: !settings.highContrast });
+  };
+
+  const setReducedMotion = (reducedMotion: boolean) => {
+    updateSettings({ reducedMotion });
+  };
+
   return (
-    <AccessibilityContext.Provider value={{ settings, updateSettings }}>
+    <AccessibilityContext.Provider value={{ 
+      settings, 
+      updateSettings,
+      fontSize: settings.fontSize,
+      setFontSize,
+      highContrast: settings.highContrast,
+      setHighContrast,
+      toggleHighContrast,
+      reducedMotion: settings.reducedMotion,
+      setReducedMotion
+    }}>
       {children}
     </AccessibilityContext.Provider>
   );

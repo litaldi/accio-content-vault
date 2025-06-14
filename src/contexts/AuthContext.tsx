@@ -5,6 +5,7 @@ import { User } from '@/types';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isLoading: boolean; // Add alias for backward compatibility
   signOut: () => Promise<void>;
 }
 
@@ -34,7 +35,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signOut }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      loading, 
+      isLoading: loading,
+      signOut 
+    }}>
       {children}
     </AuthContext.Provider>
   );

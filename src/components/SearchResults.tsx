@@ -114,7 +114,7 @@ const SearchResults = ({
                 <a href={content.file_url} target="_blank" rel="noopener noreferrer">
                   <span className="inline-flex items-center">
                     {getFileIcon(content.file_type)}
-                    <span className="ml-2">View {content.file_type}</span>
+                    <span className="ml-2">View {content.file_type || 'file'}</span>
                   </span>
                 </a>
               </Button>
