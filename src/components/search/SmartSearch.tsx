@@ -1,9 +1,9 @@
-
 import React, { useState, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SearchAutocomplete } from './SearchAutocomplete';
 import { VoiceSearchButton } from './VoiceSearchButton';
+import { voiceSearchService } from '@/services/voiceSearchService';
 import { Brain, Sparkles, TrendingUp } from 'lucide-react';
 
 interface SmartSearchProps {
@@ -19,6 +19,7 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [smartFilters, setSmartFilters] = useState<string[]>([]);
+  const [isListening, setIsListening] = useState(false);
 
   const handleSearch = useCallback((query: string) => {
     if (!query.trim()) return;
@@ -31,10 +32,37 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
     console.log('Smart search executed:', { query, filters });
   }, [onSearch]);
 
-  const handleVoiceTranscript = useCallback((transcript: string) => {
-    setSearchQuery(transcript);
-    handleSearch(transcript);
-  }, [handleSearch]);
+  const handleVoiceSearch = useCallback(() => {
+    if (!voiceSearchService.isSupported()) return;
+
+    if (isListening) {
+      voiceSearchService.stopListening();
+      setIsListening(false);
+    } else {
+      setIsListening(true);
+      voiceSearchService.startListening({
+        continuous: false,
+        interimResults: true,
+        language: 'en-US'
+      });
+
+      voiceSearchService.onRecognitionResult((result) => {
+        if (result.isFinal) {
+          setSearchQuery(result.transcript);
+          handleSearch(result.transcript);
+          setIsListening(false);
+        }
+      });
+
+      voiceSearchService.onRecognitionEnd(() => {
+        setIsListening(false);
+      });
+
+      voiceSearchService.onRecognitionError(() => {
+        setIsListening(false);
+      });
+    }
+  }, [isListening, handleSearch]);
 
   const analyzeSearchQuery = (query: string): string[] => {
     const filters: string[] = [];
@@ -85,8 +113,9 @@ const SmartSearch: React.FC<SmartSearchProps> = ({
               />
             </div>
             <VoiceSearchButton
-              onTranscript={handleVoiceTranscript}
-              className="flex-shrink-0"
+              isListening={isListening}
+              isSupported={voiceSearchService.isSupported()}
+              onClick={handleVoiceSearch}
             />
           </div>
           
