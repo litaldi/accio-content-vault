@@ -110,3 +110,6 @@ export const Skeleton: React.FC<SkeletonProps> = ({
     </div>
   );
 };
+
+// Export EnhancedLoading as an alias for LoadingState for backward compatibility
+export const EnhancedLoading = LoadingState;
