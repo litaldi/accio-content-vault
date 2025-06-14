@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { SearchAutocomplete } from './SearchAutocomplete';
-import VoiceSearchButton from './VoiceSearchButton';
+import { VoiceSearchButton } from './VoiceSearchButton';
 import { Brain, Sparkles, TrendingUp } from 'lucide-react';
 
 interface SmartSearchProps {
