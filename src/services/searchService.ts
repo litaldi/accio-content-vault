@@ -1,5 +1,5 @@
 
-import { SavedContent } from '@/types';
+import { SavedContent, Tag } from '@/types';
 
 interface SearchFilters {
   type?: string;
@@ -95,7 +95,7 @@ class SearchService {
   }
 
   private getSearchableText(item: SavedContent, caseSensitive: boolean): string {
-    const text = `${item.title} ${item.content} ${item.tags.join(' ')} ${item.url}`;
+    const text = `${item.title || ''} ${item.description || ''} ${item.tags.map(tag => tag.name).join(' ')} ${item.url || ''}`;
     return caseSensitive ? text : text.toLowerCase();
   }
 
@@ -109,25 +109,26 @@ class SearchService {
     let filtered = results;
 
     if (filters.type) {
-      filtered = filtered.filter(item => item.type === filters.type);
+      filtered = filtered.filter(item => item.content_type === filters.type);
     }
 
     if (filters.tags && filters.tags.length > 0) {
       filtered = filtered.filter(item => 
-        filters.tags!.some(tag => item.tags.includes(tag))
+        filters.tags!.some(tagName => item.tags.some(tag => tag.name === tagName))
       );
     }
 
     if (filters.dateRange) {
       filtered = filtered.filter(item => {
-        const itemDate = new Date(item.savedAt);
+        const itemDate = new Date(item.created_at);
         return itemDate >= filters.dateRange!.start && itemDate <= filters.dateRange!.end;
       });
     }
 
     if (filters.source) {
       filtered = filtered.filter(item => 
-        item.url.includes(filters.source!) || item.title.includes(filters.source!)
+        (item.url && item.url.includes(filters.source!)) || 
+        (item.title && item.title.includes(filters.source!))
       );
     }
 
@@ -146,9 +147,9 @@ class SearchService {
 
   private calculateRelevanceScore(item: SavedContent, searchTerm: string, caseSensitive: boolean): number {
     let score = 0;
-    const title = caseSensitive ? item.title : item.title.toLowerCase();
-    const content = caseSensitive ? item.content : item.content.toLowerCase();
-    const tags = item.tags.map(tag => caseSensitive ? tag : tag.toLowerCase());
+    const title = caseSensitive ? (item.title || '') : (item.title || '').toLowerCase();
+    const description = caseSensitive ? (item.description || '') : (item.description || '').toLowerCase();
+    const tags = item.tags.map(tag => caseSensitive ? tag.name : tag.name.toLowerCase());
 
     // Title matches have highest weight
     if (title.includes(searchTerm)) {
@@ -157,16 +158,16 @@ class SearchService {
     }
 
     // Tag matches have medium weight
-    tags.forEach(tag => {
-      if (tag.includes(searchTerm)) {
+    tags.forEach(tagName => {
+      if (tagName.includes(searchTerm)) {
         score += 5;
-        if (tag === searchTerm) score += 3;
+        if (tagName === searchTerm) score += 3;
       }
     });
 
-    // Content matches have lower weight
-    const contentMatches = (content.match(new RegExp(searchTerm, 'g')) || []).length;
-    score += contentMatches * 1;
+    // Description matches have lower weight
+    const descriptionMatches = (description.match(new RegExp(searchTerm, 'g')) || []).length;
+    score += descriptionMatches * 1;
 
     return score;
   }
@@ -180,8 +181,8 @@ class SearchService {
     // Generate similar queries from existing content
     this.content.forEach(item => {
       item.tags.forEach(tag => {
-        if (tag.toLowerCase().includes(words[0]) && !suggestions.includes(tag)) {
-          suggestions.push(tag);
+        if (tag.name.toLowerCase().includes(words[0]) && !suggestions.includes(tag.name)) {
+          suggestions.push(tag.name);
         }
       });
     });

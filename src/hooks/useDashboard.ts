@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useMemo } from 'react';
-import { SavedContent } from '@/types';
+import { SavedContent, Tag } from '@/types';
 
 interface DashboardFilters {
   searchQuery: string;
@@ -44,14 +44,20 @@ export const useDashboard = () => {
         const mockContent: SavedContent[] = [
           {
             id: '1',
+            user_id: 'user-1',
             title: 'React Performance Best Practices',
+            description: 'Learn about React performance optimization techniques...',
             url: 'https://react.dev/learn/render-and-commit',
-            content: 'Learn about React performance optimization techniques...',
-            tags: ['react', 'performance', 'frontend'],
-            savedAt: new Date().toISOString(),
-            type: 'article',
-            favicon: '',
-            wordCount: 1200,
+            content_type: 'article',
+            created_at: new Date().toISOString(),
+            tags: [
+              { id: 'tag-1', name: 'react', auto_generated: true, confirmed: true },
+              { id: 'tag-2', name: 'performance', auto_generated: true, confirmed: true },
+              { id: 'tag-3', name: 'frontend', auto_generated: false, confirmed: true }
+            ],
+            is_deleted: false,
+            updated_at: new Date().toISOString(),
+            has_summary: false,
           },
         ];
 
@@ -81,9 +87,9 @@ export const useDashboard = () => {
     if (state.searchQuery.trim()) {
       const query = state.searchQuery.toLowerCase();
       filtered = filtered.filter(item =>
-        item.title.toLowerCase().includes(query) ||
-        item.content.toLowerCase().includes(query) ||
-        item.tags.some(tag => tag.toLowerCase().includes(query))
+        item.title?.toLowerCase().includes(query) ||
+        item.description?.toLowerCase().includes(query) ||
+        item.tags.some(tag => tag.name.toLowerCase().includes(query))
       );
     }
 
@@ -92,15 +98,15 @@ export const useDashboard = () => {
       filtered = filtered.filter(item => {
         switch (state.selectedTab) {
           case 'articles':
-            return item.type === 'article';
+            return item.content_type === 'article';
           case 'videos':
-            return item.type === 'video';
+            return item.content_type === 'video';
           case 'notes':
-            return item.type === 'note';
+            return item.content_type === 'note';
           case 'recent':
             const weekAgo = new Date();
             weekAgo.setDate(weekAgo.getDate() - 7);
-            return new Date(item.savedAt) > weekAgo;
+            return new Date(item.created_at) > weekAgo;
           default:
             return true;
         }
@@ -111,7 +117,7 @@ export const useDashboard = () => {
     if (state.activeFilters.length > 0) {
       filtered = filtered.filter(item =>
         state.activeFilters.some(filter =>
-          item.tags.includes(filter) || item.type === filter
+          item.tags.some(tag => tag.name === filter) || item.content_type === filter
         )
       );
     }
@@ -151,8 +157,8 @@ export const useDashboard = () => {
     ...state,
     actions,
     tagStats: {
-      confirmed: state.content.filter(item => item.tags.length > 0).length,
-      rejected: 0,
+      confirmed: state.content.filter(item => item.tags.some(tag => tag.confirmed === true)).length,
+      rejected: state.content.filter(item => item.tags.some(tag => tag.confirmed === false)).length,
     },
   };
 };
