@@ -1,34 +1,70 @@
 
 import { useEffect } from 'react';
 import { setupGlobalErrorHandlers } from '@/utils/errorHandling';
+import { createSecureHeaders, logSecurityEvent } from '@/utils/security';
 
 export const useAppSecurity = () => {
   useEffect(() => {
-    // Set up global error handlers for security monitoring
+    // Set up global error handlers
     setupGlobalErrorHandlers();
 
-    // Content Security Policy headers
+    // Set up security headers (for CSP and other security measures)
+    const headers = createSecureHeaders();
+    
+    // Log security initialization
+    logSecurityEvent('Security system initialized', {
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      url: window.location.href
+    });
+
+    // Set up content security policy
     const meta = document.createElement('meta');
     meta.httpEquiv = 'Content-Security-Policy';
-    meta.content = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;";
+    meta.content = headers['Content-Security-Policy'];
     document.head.appendChild(meta);
 
-    // Security headers
-    const noSniff = document.createElement('meta');
-    noSniff.httpEquiv = 'X-Content-Type-Options';
-    noSniff.content = 'nosniff';
-    document.head.appendChild(noSniff);
+    // Monitor for suspicious activity
+    const monitorSuspiciousActivity = () => {
+      // Monitor for rapid form submissions
+      let formSubmissions = 0;
+      const resetSubmissions = () => { formSubmissions = 0; };
+      
+      document.addEventListener('submit', () => {
+        formSubmissions++;
+        if (formSubmissions > 5) {
+          logSecurityEvent('Suspicious form submission rate detected', {
+            submissions: formSubmissions,
+            timestamp: new Date().toISOString()
+          });
+        }
+        setTimeout(resetSubmissions, 60000); // Reset after 1 minute
+      });
 
-    const frameOptions = document.createElement('meta');
-    frameOptions.httpEquiv = 'X-Frame-Options';
-    frameOptions.content = 'DENY';
-    document.head.appendChild(frameOptions);
+      // Monitor for XSS attempts
+      const originalWrite = document.write;
+      document.write = function(...args) {
+        logSecurityEvent('document.write called - potential XSS', {
+          content: args.join(''),
+          stack: new Error().stack
+        });
+        return originalWrite.apply(document, args);
+      };
+    };
 
+    monitorSuspiciousActivity();
+
+    // Cleanup function
     return () => {
-      // Cleanup if needed
-      document.head.removeChild(meta);
-      document.head.removeChild(noSniff);
-      document.head.removeChild(frameOptions);
+      // Remove the CSP meta tag if needed
+      const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+      if (cspMeta) {
+        cspMeta.remove();
+      }
     };
   }, []);
+
+  return {
+    logSecurityEvent
+  };
 };

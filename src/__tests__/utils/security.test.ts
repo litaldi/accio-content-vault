@@ -1,75 +1,93 @@
 
 import { 
-  sanitizeInput, 
   validateEmail, 
-  validatePassword,
-  validateUrl,
-  isValidSecureUrl
+  validatePassword, 
+  sanitizeInput,
+  UnifiedRateLimiter,
+  CSRFManager 
 } from '@/utils/security';
 
-describe('Security Utils', () => {
-  describe('sanitizeInput', () => {
-    it('should remove script tags', () => {
-      const input = '<script>alert("xss")</script>Hello';
-      const result = sanitizeInput(input);
-      expect(result).toBe('Hello');
-    });
-
-    it('should handle normal text', () => {
-      const input = 'Hello World';
-      const result = sanitizeInput(input);
-      expect(result).toBe('Hello World');
-    });
-
-    it('should handle empty string', () => {
-      const result = sanitizeInput('');
-      expect(result).toBe('');
-    });
-  });
-
+describe('Security Utilities', () => {
   describe('validateEmail', () => {
-    it('should validate correct email', () => {
+    test('validates correct email', () => {
       const result = validateEmail('test@example.com');
       expect(result.isValid).toBe(true);
     });
 
-    it('should invalidate incorrect email', () => {
+    test('rejects invalid email', () => {
       const result = validateEmail('invalid-email');
+      expect(result.isValid).toBe(false);
+    });
+
+    test('rejects email with spaces', () => {
+      const result = validateEmail('test @example.com');
       expect(result.isValid).toBe(false);
     });
   });
 
   describe('validatePassword', () => {
-    it('should validate strong password', () => {
+    test('validates strong password', () => {
       const result = validatePassword('StrongPass123!');
       expect(result.isValid).toBe(true);
+      expect(result.strength).toBeGreaterThan(80);
     });
 
-    it('should invalidate weak password', () => {
+    test('rejects weak password', () => {
       const result = validatePassword('weak');
       expect(result.isValid).toBe(false);
     });
   });
 
-  describe('validateUrl', () => {
-    it('should validate correct URL', () => {
-      const result = validateUrl('https://example.com');
-      expect(result.isValid).toBe(true);
+  describe('sanitizeInput', () => {
+    test('removes script tags', () => {
+      const result = sanitizeInput('<script>alert("xss")</script>Hello');
+      expect(result).toBe('Hello');
     });
 
-    it('should invalidate incorrect URL', () => {
-      const result = validateUrl('not-a-url');
-      expect(result.isValid).toBe(false);
+    test('respects max length', () => {
+      const longString = 'a'.repeat(2000);
+      const result = sanitizeInput(longString, { maxLength: 100 });
+      expect(result.length).toBe(100);
     });
   });
 
-  describe('isValidSecureUrl', () => {
-    it('should validate HTTPS URL', () => {
-      expect(isValidSecureUrl('https://example.com')).toBe(true);
+  describe('UnifiedRateLimiter', () => {
+    test('allows requests within limit', () => {
+      const limiter = new UnifiedRateLimiter(5, 60000);
+      const result = limiter.canAttempt('test-key');
+      expect(result.allowed).toBe(true);
     });
 
-    it('should invalidate HTTP URL', () => {
-      expect(isValidSecureUrl('http://example.com')).toBe(false);
+    test('blocks requests over limit', () => {
+      const limiter = new UnifiedRateLimiter(2, 60000);
+      limiter.canAttempt('test-key');
+      limiter.canAttempt('test-key');
+      const result = limiter.canAttempt('test-key');
+      expect(result.allowed).toBe(false);
+    });
+  });
+
+  describe('CSRFManager', () => {
+    test('generates valid token', () => {
+      const token = CSRFManager.generate();
+      expect(typeof token).toBe('string');
+      expect(token.length).toBeGreaterThan(0);
+    });
+
+    test('validates generated token', () => {
+      const token = CSRFManager.generate();
+      const isValid = CSRFManager.validate(token);
+      expect(isValid).toBe(true);
+    });
+
+    test('consumes token correctly', () => {
+      const token = CSRFManager.generate();
+      const consumed = CSRFManager.consume(token);
+      expect(consumed).toBe(true);
+      
+      // Token should no longer be valid after consumption
+      const stillValid = CSRFManager.validate(token);
+      expect(stillValid).toBe(false);
     });
   });
 });

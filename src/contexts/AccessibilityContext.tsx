@@ -2,17 +2,12 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AccessibilityContextType {
-  isHighContrast: boolean;
-  isReducedMotion: boolean;
-  highContrast: boolean;
-  reducedMotion: boolean;
   fontSize: 'small' | 'medium' | 'large';
-  announceToScreenReader: (message: string) => void;
-  toggleHighContrast: () => void;
-  toggleReducedMotion: () => void;
-  setHighContrast: (value: boolean) => void;
-  setReducedMotion: (value: boolean) => void;
   setFontSize: (size: 'small' | 'medium' | 'large') => void;
+  isHighContrast: boolean;
+  toggleHighContrast: () => void;
+  isReducedMotion: boolean;
+  toggleReducedMotion: () => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -25,89 +20,57 @@ export const useAccessibility = () => {
   return context;
 };
 
-interface AccessibilityProviderProps {
-  children: React.ReactNode;
-}
-
-export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ children }) => {
+export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium');
   const [isHighContrast, setIsHighContrast] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
-  const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium');
 
+  // Load preferences from localStorage
   useEffect(() => {
-    // Load saved preferences
-    const savedContrast = localStorage.getItem('accio_high_contrast') === 'true';
-    const savedMotion = localStorage.getItem('accio_reduced_motion') === 'true';
-    const savedFontSize = localStorage.getItem('accio_font_size') as 'small' | 'medium' | 'large' || 'medium';
+    const savedFontSize = localStorage.getItem('accessibility-font-size') as 'small' | 'medium' | 'large';
+    const savedHighContrast = localStorage.getItem('accessibility-high-contrast') === 'true';
+    const savedReducedMotion = localStorage.getItem('accessibility-reduced-motion') === 'true';
 
-    setIsHighContrast(savedContrast);
-    setIsReducedMotion(savedMotion);
-    setFontSize(savedFontSize);
+    if (savedFontSize) setFontSize(savedFontSize);
+    setIsHighContrast(savedHighContrast);
+    setIsReducedMotion(savedReducedMotion);
 
-    // Apply classes to document
-    document.documentElement.classList.toggle('high-contrast', savedContrast);
-    document.documentElement.classList.toggle('reduce-motion', savedMotion);
-    document.documentElement.classList.toggle(`font-size-${savedFontSize}`, true);
+    // Check for system preferences
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion && !localStorage.getItem('accessibility-reduced-motion')) {
+      setIsReducedMotion(true);
+    }
   }, []);
 
-  const announceToScreenReader = (message: string) => {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
-    
-    document.body.appendChild(announcement);
-    
-    setTimeout(() => {
-      document.body.removeChild(announcement);
-    }, 1000);
+  // Save preferences to localStorage
+  const handleSetFontSize = (size: 'small' | 'medium' | 'large') => {
+    setFontSize(size);
+    localStorage.setItem('accessibility-font-size', size);
   };
 
   const toggleHighContrast = () => {
     const newValue = !isHighContrast;
     setIsHighContrast(newValue);
-    localStorage.setItem('accio_high_contrast', newValue.toString());
-    document.documentElement.classList.toggle('high-contrast', newValue);
-    announceToScreenReader(`High contrast mode ${newValue ? 'enabled' : 'disabled'}`);
+    localStorage.setItem('accessibility-high-contrast', newValue.toString());
   };
 
   const toggleReducedMotion = () => {
     const newValue = !isReducedMotion;
     setIsReducedMotion(newValue);
-    localStorage.setItem('accio_reduced_motion', newValue.toString());
-    document.documentElement.classList.toggle('reduce-motion', newValue);
-    announceToScreenReader(`Reduced motion ${newValue ? 'enabled' : 'disabled'}`);
-  };
-
-  const handleSetFontSize = (size: 'small' | 'medium' | 'large') => {
-    // Remove old font size class
-    document.documentElement.classList.remove(`font-size-${fontSize}`);
-    
-    setFontSize(size);
-    localStorage.setItem('accio_font_size', size);
-    
-    // Add new font size class
-    document.documentElement.classList.add(`font-size-${size}`);
-    announceToScreenReader(`Font size changed to ${size}`);
-  };
-
-  const value = {
-    isHighContrast,
-    isReducedMotion,
-    highContrast: isHighContrast,
-    reducedMotion: isReducedMotion,
-    fontSize,
-    announceToScreenReader,
-    toggleHighContrast,
-    toggleReducedMotion,
-    setHighContrast: setIsHighContrast,
-    setReducedMotion: setIsReducedMotion,
-    setFontSize: handleSetFontSize
+    localStorage.setItem('accessibility-reduced-motion', newValue.toString());
   };
 
   return (
-    <AccessibilityContext.Provider value={value}>
+    <AccessibilityContext.Provider
+      value={{
+        fontSize,
+        setFontSize: handleSetFontSize,
+        isHighContrast,
+        toggleHighContrast,
+        isReducedMotion,
+        toggleReducedMotion,
+      }}
+    >
       {children}
     </AccessibilityContext.Provider>
   );

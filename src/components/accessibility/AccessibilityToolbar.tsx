@@ -1,59 +1,142 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Accessibility, Volume2, Eye, Type } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { 
+  Accessibility, 
+  Type, 
+  Contrast, 
+  Pause,
+  X,
+  Settings
+} from 'lucide-react';
 
 export const AccessibilityToolbar: React.FC = () => {
-  const {
-    isHighContrast,
-    isReducedMotion,
-    fontSize,
-    toggleHighContrast,
-    toggleReducedMotion,
-    setFontSize,
-    announceToScreenReader,
+  const [isOpen, setIsOpen] = useState(false);
+  const { 
+    fontSize, 
+    setFontSize, 
+    isHighContrast, 
+    toggleHighContrast, 
+    isReducedMotion, 
+    toggleReducedMotion 
   } = useAccessibility();
 
-  const handleFontSizeChange = () => {
-    const sizes: Array<'small' | 'medium' | 'large'> = ['small', 'medium', 'large'];
-    const currentIndex = sizes.indexOf(fontSize);
-    const nextIndex = (currentIndex + 1) % sizes.length;
-    const newSize = sizes[nextIndex];
-    setFontSize(newSize);
-    announceToScreenReader(`Font size changed to ${newSize}`);
-  };
-
-  return (
-    <div className="fixed bottom-4 right-4 z-50 bg-background border rounded-lg shadow-lg p-2 flex gap-2">
-      <Button
-        variant={isHighContrast ? 'default' : 'outline'}
-        size="sm"
-        onClick={toggleHighContrast}
-        aria-label={`${isHighContrast ? 'Disable' : 'Enable'} high contrast`}
-      >
-        <Eye className="h-4 w-4" />
-      </Button>
-      
-      <Button
-        variant={isReducedMotion ? 'default' : 'outline'}
-        size="sm"
-        onClick={toggleReducedMotion}
-        aria-label={`${isReducedMotion ? 'Disable' : 'Enable'} reduced motion`}
-      >
-        <Volume2 className="h-4 w-4" />
-      </Button>
-      
+  if (!isOpen) {
+    return (
       <Button
         variant="outline"
         size="sm"
-        onClick={handleFontSizeChange}
-        aria-label={`Current font size: ${fontSize}. Click to change`}
+        className="fixed bottom-4 right-4 z-50 h-12 w-12 rounded-full shadow-lg"
+        onClick={() => setIsOpen(true)}
+        aria-label="Open accessibility toolbar"
       >
-        <Type className="h-4 w-4" />
+        <Accessibility className="h-5 w-5" />
       </Button>
-    </div>
+    );
+  }
+
+  return (
+    <Card className="fixed bottom-4 right-4 z-50 w-80 shadow-lg">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <Accessibility className="h-5 w-5" />
+            <span className="font-medium">Accessibility</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setIsOpen(false)}
+            aria-label="Close accessibility toolbar"
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+
+        <div className="space-y-4">
+          {/* Font Size */}
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Type className="h-4 w-4" />
+              <span className="text-sm font-medium">Font Size</span>
+            </div>
+            <div className="flex gap-2">
+              {(['small', 'medium', 'large'] as const).map((size) => (
+                <Button
+                  key={size}
+                  variant={fontSize === size ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFontSize(size)}
+                  className="flex-1"
+                >
+                  {size === 'small' && 'A'}
+                  {size === 'medium' && 'A'}
+                  {size === 'large' && 'A'}
+                </Button>
+              ))}
+            </div>
+          </div>
+
+          {/* High Contrast */}
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Contrast className="h-4 w-4" />
+                <span className="text-sm font-medium">High Contrast</span>
+              </div>
+              <Button
+                variant={isHighContrast ? 'default' : 'outline'}
+                size="sm"
+                onClick={toggleHighContrast}
+              >
+                {isHighContrast ? 'On' : 'Off'}
+              </Button>
+            </div>
+          </div>
+
+          {/* Reduced Motion */}
+          <div>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Pause className="h-4 w-4" />
+                <span className="text-sm font-medium">Reduce Motion</span>
+              </div>
+              <Button
+                variant={isReducedMotion ? 'default' : 'outline'}
+                size="sm"
+                onClick={toggleReducedMotion}
+              >
+                {isReducedMotion ? 'On' : 'Off'}
+              </Button>
+            </div>
+          </div>
+
+          {/* Keyboard Navigation Info */}
+          <div className="pt-2 border-t">
+            <div className="flex items-center gap-2 mb-2">
+              <Settings className="h-4 w-4" />
+              <span className="text-sm font-medium">Keyboard Shortcuts</span>
+            </div>
+            <div className="space-y-1 text-xs text-muted-foreground">
+              <div className="flex justify-between">
+                <span>Search</span>
+                <Badge variant="outline" className="text-xs">Ctrl + K</Badge>
+              </div>
+              <div className="flex justify-between">
+                <span>Add Content</span>
+                <Badge variant="outline" className="text-xs">Ctrl + N</Badge>
+              </div>
+              <div className="flex justify-between">
+                <span>Help</span>
+                <Badge variant="outline" className="text-xs">F1</Badge>
+              </div>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
-
-export default AccessibilityToolbar;
