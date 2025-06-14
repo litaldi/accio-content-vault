@@ -3,13 +3,7 @@ import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Clock, TrendingUp, Search } from 'lucide-react';
-
-interface SearchSuggestion {
-  id: string;
-  query: string;
-  type: 'recent' | 'trending' | 'smart';
-  description?: string;
-}
+import { SearchSuggestion } from '@/hooks/useSearchAutocomplete';
 
 interface SearchSuggestionsProps {
   suggestions: SearchSuggestion[];

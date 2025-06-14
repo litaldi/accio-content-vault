@@ -1,10 +1,9 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Command, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useSearchAutocomplete } from '@/hooks/useSearchAutocomplete';
+import { useSearchAutocomplete, SearchSuggestion } from '@/hooks/useSearchAutocomplete';
 import { voiceSearchService } from '@/services/voiceSearchService';
 import { VoiceSearchButton } from './VoiceSearchButton';
 import { SearchSuggestions } from './SearchSuggestions';
