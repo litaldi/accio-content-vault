@@ -1,3 +1,4 @@
+
 import validator from 'validator';
 import passwordValidator from 'password-validator';
 import createDOMPurify from 'dompurify';
@@ -10,6 +11,7 @@ interface ValidationResult {
   isValid: boolean;
   message?: string;
   strength?: number;
+  sanitizedValue?: string;
 }
 
 interface SanitizeOptions {
@@ -43,11 +45,13 @@ export const validateEmail = (email: string): ValidationResult => {
     return { isValid: false, message: 'Email is too long' };
   }
 
-  if (!validator.isEmail(email)) {
+  const sanitizedEmail = email.toLowerCase().trim();
+
+  if (!validator.isEmail(sanitizedEmail)) {
     return { isValid: false, message: 'Invalid email format' };
   }
 
-  return { isValid: true };
+  return { isValid: true, sanitizedValue: sanitizedEmail };
 };
 
 export const validatePassword = (password: string): ValidationResult => {

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { AppHeader } from './AppHeader';
-import { AppFooter } from './AppFooter';
+import AppFooter from './AppFooter';
 
 interface UnifiedLayoutProps {
   children: React.ReactNode;
