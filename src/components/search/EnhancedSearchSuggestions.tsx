@@ -28,9 +28,9 @@ export const EnhancedSearchSuggestions: React.FC<EnhancedSearchSuggestionsProps>
     switch (type) {
       case 'recent':
         return <Clock className="h-4 w-4 text-muted-foreground" />;
-      case 'trending':
+      case 'popular':
         return <TrendingUp className="h-4 w-4 text-orange-500" />;
-      case 'smart':
+      case 'suggestion':
         return <Sparkles className="h-4 w-4 text-purple-500" />;
       default:
         return <Search className="h-4 w-4 text-muted-foreground" />;
@@ -41,10 +41,10 @@ export const EnhancedSearchSuggestions: React.FC<EnhancedSearchSuggestionsProps>
     switch (type) {
       case 'recent':
         return 'Recent';
-      case 'trending':
-        return 'Trending';
-      case 'smart':
-        return 'AI Suggested';
+      case 'popular':
+        return 'Popular';
+      case 'suggestion':
+        return 'Suggested';
       default:
         return 'Suggested';
     }
@@ -52,9 +52,9 @@ export const EnhancedSearchSuggestions: React.FC<EnhancedSearchSuggestionsProps>
 
   const getTypeBadgeVariant = (type: SearchSuggestion['type']) => {
     switch (type) {
-      case 'trending':
+      case 'popular':
         return 'default';
-      case 'smart':
+      case 'suggestion':
         return 'secondary';
       default:
         return 'outline';
