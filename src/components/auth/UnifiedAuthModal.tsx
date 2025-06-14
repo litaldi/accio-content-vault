@@ -1,97 +1,69 @@
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SignInForm } from './forms/SignInForm';
 import { SignUpForm } from './forms/SignUpForm';
 import { SocialAuthButtons } from './forms/SocialAuthButtons';
-import { useAuth } from '@/contexts/AuthContext';
-import { useToast } from '@/hooks/use-toast';
+import { Separator } from '@/components/ui/separator';
+import { useNavigate } from 'react-router-dom';
 
 interface UnifiedAuthModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  defaultMode?: 'signin' | 'signup';
+  trigger?: React.ReactNode;
+  defaultTab?: 'signin' | 'signup';
+  onClose?: () => void;
 }
 
 export const UnifiedAuthModal: React.FC<UnifiedAuthModalProps> = ({
-  isOpen,
-  onClose,
-  defaultMode = 'signin'
+  trigger,
+  defaultTab = 'signin',
+  onClose
 }) => {
-  const [mode, setMode] = useState<'signin' | 'signup'>(defaultMode);
-  const { signIn, signUp } = useAuth();
-  const { toast } = useToast();
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState(defaultTab);
+  const navigate = useNavigate();
 
   const handleSuccess = () => {
-    toast({
-      title: mode === 'signin' ? 'Welcome back!' : 'Account created!',
-      description: mode === 'signin' ? 'You have successfully signed in.' : 'Your account has been created successfully.',
-    });
-    onClose();
+    setIsOpen(false);
+    onClose?.();
+    navigate('/dashboard');
   };
 
   const handleError = (error: string) => {
-    toast({
-      title: 'Authentication Error',
-      description: error,
-      variant: 'destructive',
-    });
+    console.error('Auth error:', error);
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        {trigger || <Button>Sign In</Button>}
+      </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            {mode === 'signin' ? 'Welcome Back' : 'Create Account'}
+          <DialogTitle className="text-center">
+            {activeTab === 'signin' ? 'Welcome Back' : 'Create Account'}
           </DialogTitle>
         </DialogHeader>
-
-        <div className="space-y-4">
-          {mode === 'signin' ? (
+        
+        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'signin' | 'signup')}>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="signin">Sign In</TabsTrigger>
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="signin" className="space-y-4">
+            <SocialAuthButtons onSuccess={handleSuccess} onError={handleError} />
+            <Separator />
             <SignInForm onSuccess={handleSuccess} onError={handleError} />
-          ) : (
+          </TabsContent>
+          
+          <TabsContent value="signup" className="space-y-4">
+            <SocialAuthButtons onSuccess={handleSuccess} onError={handleError} />
+            <Separator />
             <SignUpForm onSuccess={handleSuccess} onError={handleError} />
-          )}
-
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">Or continue with</span>
-            </div>
-          </div>
-
-          <SocialAuthButtons onSuccess={handleSuccess} onError={handleError} />
-
-          <div className="text-center text-sm">
-            {mode === 'signin' ? (
-              <>
-                Don't have an account?{' '}
-                <Button
-                  variant="link"
-                  className="p-0"
-                  onClick={() => setMode('signup')}
-                >
-                  Sign up
-                </Button>
-              </>
-            ) : (
-              <>
-                Already have an account?{' '}
-                <Button
-                  variant="link"
-                  className="p-0"
-                  onClick={() => setMode('signin')}
-                >
-                  Sign in
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );

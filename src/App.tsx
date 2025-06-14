@@ -10,6 +10,7 @@ import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { EnhancedAccessibility } from '@/components/accessibility/EnhancedAccessibility';
 import { AccessibilityToolbar } from '@/components/accessibility/AccessibilityToolbar';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { useAppSecurity } from '@/hooks/useAppSecurity';
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -25,12 +26,16 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       retry: 1,
+      refetchOnWindowFocus: false,
     },
   },
 });
 
-function App() {
+function AppContent() {
   const [mounted, setMounted] = useState(false);
+  
+  // Initialize security features
+  useAppSecurity();
 
   useEffect(() => {
     setMounted(true);
@@ -38,12 +43,52 @@ function App() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" role="status" aria-label="Loading application">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        <span className="sr-only">Loading application...</span>
       </div>
     );
   }
 
+  return (
+    <div className="min-h-screen bg-background font-sans antialiased">
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <EnhancedSettings />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      <AccessibilityToolbar />
+      <Toaster />
+    </div>
+  );
+}
+
+function App() {
   return (
     <ErrorBoundary>
       <HelmetProvider>
@@ -53,40 +98,7 @@ function App() {
               <AccessibilityProvider>
                 <EnhancedAccessibility>
                   <BrowserRouter>
-                    <div className="min-h-screen bg-background font-sans antialiased">
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/register" element={<Register />} />
-                        <Route path="/reset-password" element={<ResetPassword />} />
-                        <Route
-                          path="/dashboard"
-                          element={
-                            <ProtectedRoute>
-                              <Dashboard />
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/profile"
-                          element={
-                            <ProtectedRoute>
-                              <Profile />
-                            </ProtectedRoute>
-                          }
-                        />
-                        <Route
-                          path="/settings"
-                          element={
-                            <ProtectedRoute>
-                              <EnhancedSettings />
-                            </ProtectedRoute>
-                          }
-                        />
-                      </Routes>
-                      <AccessibilityToolbar />
-                      <Toaster />
-                    </div>
+                    <AppContent />
                   </BrowserRouter>
                 </EnhancedAccessibility>
               </AccessibilityProvider>

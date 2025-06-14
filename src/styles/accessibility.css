@@ -1,36 +1,10 @@
 
-/* Enhanced Accessibility CSS utilities for WCAG 2.1 AA compliance */
+/**
+ * Accessibility-focused CSS enhancements
+ * Ensures WCAG 2.1 AA compliance and enhanced usability
+ */
 
-/* Font size utilities with better scaling */
-.font-size-small {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
-
-.font-size-medium {
-  font-size: 1rem;
-  line-height: 1.5rem;
-}
-
-.font-size-large {
-  font-size: 1.25rem;
-  line-height: 1.875rem;
-}
-
-/* Line spacing utilities */
-.line-spacing-normal {
-  line-height: 1.5;
-}
-
-.line-spacing-relaxed {
-  line-height: 1.75;
-}
-
-.line-spacing-loose {
-  line-height: 2;
-}
-
-/* Enhanced high contrast mode */
+/* High contrast mode support */
 .high-contrast {
   filter: contrast(1.5) brightness(1.1);
 }
@@ -46,12 +20,11 @@
   border: 2px solid currentColor !important;
 }
 
-/* Grayscale mode */
-.grayscale-mode {
-  filter: grayscale(100%);
+.high-contrast a {
+  text-decoration: underline !important;
 }
 
-/* Enhanced reduced motion preferences */
+/* Reduced motion support */
 .reduce-motion *,
 .reduce-motion *::before,
 .reduce-motion *::after {
@@ -59,139 +32,121 @@
   animation-iteration-count: 1 !important;
   transition-duration: 0.01ms !important;
   scroll-behavior: auto !important;
-  transform: none !important;
 }
 
-/* Enhanced focus visibility */
-.focus-visible-enhanced *:focus-visible {
-  outline: 3px solid #005fcc !important;
-  outline-offset: 2px !important;
-  border-radius: 0.25rem !important;
-  box-shadow: 0 0 0 2px #ffffff, 0 0 0 5px #005fcc !important;
+/* Font size scaling */
+.font-size-small {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
-/* Link underlines when requested */
-.underline-links a {
-  text-decoration: underline !important;
+.font-size-medium {
+  font-size: 1rem;
+  line-height: 1.5rem;
 }
 
-.underline-links a:hover {
-  text-decoration: none !important;
+.font-size-large {
+  font-size: 1.25rem;
+  line-height: 1.875rem;
 }
 
-/* Screen reader mode improvements */
-.screen-reader-mode {
-  font-family: system-ui, -apple-system, sans-serif !important;
-  font-size: 1.125rem !important;
-  line-height: 1.75 !important;
-}
-
-.screen-reader-mode *:focus {
-  outline: 4px solid #005fcc !important;
-  outline-offset: 2px !important;
-  background-color: #fffbf0 !important;
-  color: #000000 !important;
-}
-
-/* Keyboard navigation improvements */
-.keyboard-navigation button:focus-visible,
-.keyboard-navigation input:focus-visible,
-.keyboard-navigation textarea:focus-visible,
-.keyboard-navigation select:focus-visible,
-.keyboard-navigation a:focus-visible,
-.keyboard-navigation [tabindex]:focus-visible {
-  outline: 2px solid #005fcc;
+/* Focus indicators */
+*:focus-visible {
+  outline: 2px solid hsl(var(--primary));
   outline-offset: 2px;
-  border-radius: 0.25rem;
-  box-shadow: 0 0 0 4px rgba(0, 95, 204, 0.2);
+  border-radius: 4px;
 }
 
-/* Enhanced skip links */
+/* Skip links */
 .skip-link {
   position: absolute;
   top: -40px;
   left: 6px;
-  background: #005fcc;
-  color: #ffffff;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
   padding: 12px 16px;
   text-decoration: none;
   border-radius: 0 0 8px 8px;
   z-index: 9999;
   font-weight: 600;
-  font-size: 1rem;
   transition: top 0.3s ease;
-  border: 2px solid #ffffff;
 }
 
 .skip-link:focus {
   top: 0;
-  outline: none;
 }
 
-/* High contrast dark mode */
-.dark.high-contrast {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --primary: 210 100% 80%;
-  --primary-foreground: 0 0% 0%;
-  --border: 0 0% 100%;
-  --card: 0 0% 10%;
-  --card-foreground: 0 0% 100%;
+/* Screen reader only content */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
-/* Ensure minimum touch target sizes (44x44px) */
+/* Touch target sizes for mobile */
 @media (pointer: coarse) {
   button,
   input[type="button"],
   input[type="submit"],
   input[type="reset"],
   a[role="button"],
-  [role="button"],
-  input[type="checkbox"],
-  input[type="radio"] {
+  [role="button"] {
     min-height: 44px;
     min-width: 44px;
     touch-action: manipulation;
   }
-  
-  /* Special handling for small inputs */
-  input[type="checkbox"],
-  input[type="radio"] {
-    transform: scale(1.5);
-    margin: 8px;
-  }
 }
 
-/* Error and success states with better contrast */
+/* Error states */
 .error-state {
-  border-color: #dc2626 !important;
-  color: #dc2626 !important;
+  border-color: hsl(var(--destructive)) !important;
+  color: hsl(var(--destructive)) !important;
 }
 
 .success-state {
-  border-color: #16a34a !important;
-  color: #16a34a !important;
+  border-color: hsl(142 76% 36%) !important;
+  color: hsl(142 76% 36%) !important;
 }
 
-/* Print accessibility */
-@media print {
-  .sr-only {
-    position: static !important;
-    width: auto !important;
-    height: auto !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: visible !important;
-    clip: auto !important;
-    white-space: normal !important;
+/* High contrast focus states */
+@media (prefers-contrast: high) {
+  *:focus-visible {
+    outline: 3px solid;
+    outline-offset: 2px;
   }
   
-  .no-print,
-  .accessibility-controls {
+  button,
+  input,
+  select,
+  textarea {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Print styles for accessibility */
+@media print {
+  .no-print {
     display: none !important;
   }
   
-  /* Ensure good contrast in print */
   * {
     background: transparent !important;
     color: black !important;
@@ -202,25 +157,31 @@
   a,
   a:visited {
     text-decoration: underline;
+    color: black !important;
   }
   
-  a[href]:after {
+  a[href^="http"]:after {
     content: " (" attr(href) ")";
   }
 }
 
-/* Enhanced focus indicators for form elements */
-input:focus-visible,
-textarea:focus-visible,
-select:focus-visible {
-  outline: 2px solid #005fcc;
-  outline-offset: 1px;
-  border-color: #005fcc;
-  box-shadow: 0 0 0 3px rgba(0, 95, 204, 0.1);
+/* Enhanced contrast for form elements */
+input:invalid {
+  border-color: hsl(var(--destructive));
+  box-shadow: 0 0 0 1px hsl(var(--destructive));
 }
 
-/* Announcement region for screen readers */
-.announcement-region {
+input:valid {
+  border-color: hsl(142 76% 36%);
+}
+
+/* Loading states */
+[aria-busy="true"] {
+  cursor: wait;
+}
+
+/* Live region announcements */
+[aria-live] {
   position: absolute;
   left: -10000px;
   width: 1px;
@@ -228,74 +189,10 @@ select:focus-visible {
   overflow: hidden;
 }
 
-/* Safe animations that respect reduced motion */
-@media (prefers-reduced-motion: no-preference) {
-  .safe-animate {
-    transition: all 0.2s ease;
-  }
-  
-  .safe-animate:hover {
-    transform: translateY(-2px);
-  }
-}
-
-/* Ensure text remains readable when zoomed to 200% */
-@media (min-resolution: 192dpi) {
-  body {
-    font-size: 1.125rem;
-    line-height: 1.6;
-  }
-}
-
-/* Color-blind friendly error/success indicators */
-.status-indicator {
-  position: relative;
-}
-
-.status-indicator.error::before {
-  content: "✗";
-  margin-right: 0.5rem;
-  font-weight: bold;
-}
-
-.status-indicator.success::before {
-  content: "✓";
-  margin-right: 0.5rem;
-  font-weight: bold;
-}
-
-.status-indicator.warning::before {
-  content: "⚠";
-  margin-right: 0.5rem;
-  font-weight: bold;
-}
-
-/* Ensure proper spacing for screen readers */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Focus-within for better keyboard navigation */
-.focus-within:focus-within {
-  outline: 2px solid #005fcc;
-  outline-offset: 2px;
-}
-
-/* Ensure sufficient color contrast for placeholder text */
-::placeholder {
-  opacity: 0.7;
-  color: #6b7280;
-}
-
-.high-contrast ::placeholder {
-  opacity: 1;
-  color: currentColor;
+/* Disabled state consistency */
+[disabled],
+[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }

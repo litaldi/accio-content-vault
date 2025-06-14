@@ -16,14 +16,14 @@ interface SignUpFormProps {
 }
 
 export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: ''
+  const [formData, setFormData] = useState({ 
+    name: '', 
+    email: '', 
+    password: '', 
+    confirmPassword: '' 
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
 
@@ -31,6 +31,10 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) =>
 
   const validateForm = () => {
     const errors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      errors.name = 'Name is required';
+    }
 
     const emailResult = validateEmail(formData.email);
     if (!emailResult.isValid) {
@@ -46,14 +50,6 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) =>
       errors.confirmPassword = 'Passwords do not match';
     }
 
-    if (!formData.firstName.trim()) {
-      errors.firstName = 'First name is required';
-    }
-
-    if (!formData.lastName.trim()) {
-      errors.lastName = 'Last name is required';
-    }
-
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -67,8 +63,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) =>
     setFieldErrors({});
 
     try {
-      const fullName = `${formData.firstName} ${formData.lastName}`;
-      const result = await signUp(formData.email, formData.password, { name: fullName });
+      const result = await signUp(formData.email, formData.password, { name: formData.name });
       if (result && result.error) {
         onError(result.error.message);
         return;
@@ -93,39 +88,26 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) =>
       <CardHeader className="pb-4">
         <CardTitle className="text-lg">Create your account</CardTitle>
         <CardDescription>
-          Join thousands of users building their knowledge empire
+          Join thousands of users building their knowledge vault
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="signup-firstname">First Name</Label>
-              <div className="relative">
-                <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input
-                  id="signup-firstname"
-                  placeholder="First name"
-                  value={formData.firstName}
-                  onChange={(e) => updateField('firstName', e.target.value)}
-                  className={cn("pl-10", fieldErrors.firstName && "border-destructive")}
-                  disabled={isLoading}
-                />
-              </div>
-              <FormError message={fieldErrors.firstName} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="signup-lastname">Last Name</Label>
+          <div className="space-y-2">
+            <Label htmlFor="signup-name">Full Name</Label>
+            <div className="relative">
+              <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                id="signup-lastname"
-                placeholder="Last name"
-                value={formData.lastName}
-                onChange={(e) => updateField('lastName', e.target.value)}
-                className={cn(fieldErrors.lastName && "border-destructive")}
+                id="signup-name"
+                type="text"
+                placeholder="Enter your full name"
+                value={formData.name}
+                onChange={(e) => updateField('name', e.target.value)}
+                className={cn("pl-10", fieldErrors.name && "border-destructive")}
                 disabled={isLoading}
               />
-              <FormError message={fieldErrors.lastName} />
             </div>
+            <FormError message={fieldErrors.name} />
           </div>
 
           <div className="space-y-2">
@@ -152,7 +134,7 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) =>
               <Input
                 id="signup-password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Create a password"
+                placeholder="Create a strong password"
                 value={formData.password}
                 onChange={(e) => updateField('password', e.target.value)}
                 className={cn("pl-10 pr-10", fieldErrors.password && "border-destructive")}
@@ -173,18 +155,28 @@ export const SignUpForm: React.FC<SignUpFormProps> = ({ onSuccess, onError }) =>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="signup-confirm">Confirm Password</Label>
+            <Label htmlFor="signup-confirm-password">Confirm Password</Label>
             <div className="relative">
               <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
-                id="signup-confirm"
-                type={showPassword ? "text" : "password"}
+                id="signup-confirm-password"
+                type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
                 onChange={(e) => updateField('confirmPassword', e.target.value)}
-                className={cn("pl-10", fieldErrors.confirmPassword && "border-destructive")}
+                className={cn("pl-10 pr-10", fieldErrors.confirmPassword && "border-destructive")}
                 disabled={isLoading}
               />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-0 h-full px-3"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                disabled={isLoading}
+              >
+                {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Button>
             </div>
             <FormError message={fieldErrors.confirmPassword} />
           </div>

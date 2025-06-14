@@ -1,39 +1,17 @@
 
-import validator from 'validator';
-import passwordValidator from 'password-validator';
+/**
+ * Core Security Utilities
+ * Essential validation and sanitization functions
+ */
 
-interface ValidationResult {
+export interface ValidationResult {
   isValid: boolean;
-  message?: string;
-  strength?: number;
-  sanitizedValue?: string;
+  message: string;
 }
 
-interface SanitizeOptions {
-  maxLength?: number;
-  allowHtml?: boolean;
-}
-
-export const sanitizeInput = (input: string, options: SanitizeOptions = {}): string => {
-  let sanitized = input.trim();
-
-  if (!options.allowHtml) {
-    // Simple HTML sanitization without DOMPurify for client-side
-    sanitized = sanitized
-      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-      .replace(/<[^>]*>/g, '');
-  }
-
-  sanitized = sanitized.replace(/javascript:/gi, '');
-  sanitized = sanitized.replace(/\s+/g, ' ');
-
-  if (options.maxLength) {
-    sanitized = sanitized.substring(0, options.maxLength);
-  }
-
-  return sanitized;
-};
-
+/**
+ * Email validation with security considerations
+ */
 export const validateEmail = (email: string): ValidationResult => {
   if (!email) {
     return { isValid: false, message: 'Email is required' };
@@ -43,153 +21,145 @@ export const validateEmail = (email: string): ValidationResult => {
     return { isValid: false, message: 'Email is too long' };
   }
 
-  const sanitizedEmail = email.toLowerCase().trim();
-
-  if (!validator.isEmail(sanitizedEmail)) {
-    return { isValid: false, message: 'Invalid email format' };
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+  if (!emailRegex.test(email)) {
+    return { isValid: false, message: 'Please enter a valid email address' };
   }
 
-  return { isValid: true, sanitizedValue: sanitizedEmail };
+  return { isValid: true, message: '' };
 };
 
+/**
+ * Password validation with security requirements
+ */
 export const validatePassword = (password: string): ValidationResult => {
-  const schema = new passwordValidator();
-
-  schema
-    .is().min(8)
-    .is().max(100)
-    .has().uppercase()
-    .has().lowercase()
-    .has().digits()
-    .has().symbols()
-    .has().not().spaces()
-    .is().not().oneOf(['Password123', 'password', '12345678']);
-
-  const result = schema.validate(password, { details: true }) as string[];
-
-  if (result.length > 0) {
-    const messages = result.map(rule => {
-      switch (rule) {
-        case 'min': return 'Password must be at least 8 characters';
-        case 'max': return 'Password must be less than 100 characters';
-        case 'uppercase': return 'Password must contain at least one uppercase letter';
-        case 'lowercase': return 'Password must contain at least one lowercase letter';
-        case 'digits': return 'Password must contain at least one digit';
-        case 'symbols': return 'Password must contain at least one symbol';
-        case 'spaces': return 'Password must not contain spaces';
-        default: return 'Password is not strong enough';
-      }
-    });
-
-    return { isValid: false, message: messages.join(', ') };
+  if (!password) {
+    return { isValid: false, message: 'Password is required' };
   }
 
-  // Calculate simple strength score (0-100)
-  let strength = 0;
-  if (password.length >= 8) strength += 20;
-  if (password.length >= 12) strength += 10;
-  if (/[A-Z]/.test(password)) strength += 20;
-  if (/[a-z]/.test(password)) strength += 20;
-  if (/[0-9]/.test(password)) strength += 15;
-  if (/[^A-Za-z0-9]/.test(password)) strength += 15;
+  if (password.length < 8) {
+    return { isValid: false, message: 'Password must be at least 8 characters long' };
+  }
 
-  return { isValid: true, strength };
+  if (password.length > 128) {
+    return { isValid: false, message: 'Password is too long' };
+  }
+
+  if (!/(?=.*[a-z])/.test(password)) {
+    return { isValid: false, message: 'Password must contain at least one lowercase letter' };
+  }
+
+  if (!/(?=.*[A-Z])/.test(password)) {
+    return { isValid: false, message: 'Password must contain at least one uppercase letter' };
+  }
+
+  if (!/(?=.*\d)/.test(password)) {
+    return { isValid: false, message: 'Password must contain at least one number' };
+  }
+
+  return { isValid: true, message: '' };
 };
 
+/**
+ * Input sanitization to prevent XSS
+ */
+export const sanitizeInput = (input: string): string => {
+  return input
+    .replace(/[<>]/g, '') // Remove angle brackets
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove event handlers
+    .trim();
+};
+
+/**
+ * HTML escape for safe rendering
+ */
+export const escapeHtml = (unsafe: string): string => {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
+/**
+ * URL validation
+ */
 export const validateUrl = (url: string): ValidationResult => {
   if (!url) {
     return { isValid: false, message: 'URL is required' };
   }
 
-  if (url.length > 2000) {
-    return { isValid: false, message: 'URL is too long' };
+  try {
+    const urlObj = new URL(url);
+    if (!['http:', 'https:'].includes(urlObj.protocol)) {
+      return { isValid: false, message: 'URL must use HTTP or HTTPS protocol' };
+    }
+    return { isValid: true, message: '' };
+  } catch {
+    return { isValid: false, message: 'Please enter a valid URL' };
   }
-
-  if (!validator.isURL(url, { protocols: ['http', 'https'], require_protocol: false })) {
-    return { isValid: false, message: 'Invalid URL format' };
-  }
-
-  if (url.startsWith('javascript:') || url.startsWith('data:')) {
-    return { isValid: false, message: 'URL contains a dangerous protocol' };
-  }
-
-  if (url.includes('javascript.evil.com') || url.includes('data.malicious.com')) {
-    return { isValid: false, message: 'URL contains a suspicious hostname' };
-  }
-
-  return { isValid: true };
 };
 
+/**
+ * Check if URL is secure (HTTPS)
+ */
 export const isValidSecureUrl = (url: string): boolean => {
   try {
-    const parsedUrl = new URL(url);
-    return parsedUrl.protocol === 'https:';
-  } catch (error) {
+    const urlObj = new URL(url);
+    return urlObj.protocol === 'https:';
+  } catch {
     return false;
   }
 };
 
+/**
+ * Rate limiting utility
+ */
 export class UnifiedRateLimiter {
   private attempts: Map<string, number[]> = new Map();
-  private windowMs: number;
 
-  constructor(private maxAttempts: number, windowMs: number = 60000) {
-    this.windowMs = windowMs;
-  }
-
-  canAttempt(identifier: string): { allowed: boolean; resetTime?: number } {
+  isAllowed(key: string, maxAttempts: number, windowMs: number): boolean {
     const now = Date.now();
-    const userAttempts = this.attempts.get(identifier) || [];
+    const userAttempts = this.attempts.get(key) || [];
     
     // Remove old attempts outside the window
-    const recentAttempts = userAttempts.filter(time => now - time < this.windowMs);
+    const validAttempts = userAttempts.filter(time => now - time < windowMs);
     
-    if (recentAttempts.length >= this.maxAttempts) {
-      return { 
-        allowed: false, 
-        resetTime: Math.min(...recentAttempts) + this.windowMs 
-      };
+    if (validAttempts.length >= maxAttempts) {
+      return false;
     }
-    
-    // Record this attempt
-    recentAttempts.push(now);
-    this.attempts.set(identifier, recentAttempts);
-    
-    return { allowed: true };
+
+    validAttempts.push(now);
+    this.attempts.set(key, validAttempts);
+    return true;
   }
 
-  reset(identifier: string): void {
-    this.attempts.delete(identifier);
+  reset(key: string): void {
+    this.attempts.delete(key);
   }
 }
 
+/**
+ * CSRF token management
+ */
 export class CSRFManager {
-  private static tokens: Set<string> = new Set();
+  private static token: string | null = null;
 
-  static generate(): string {
-    const token = [...Array(32)].map(() => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join('');
-    CSRFManager.tokens.add(token);
-    return token;
+  static generateToken(): string {
+    const array = new Uint8Array(32);
+    crypto.getRandomValues(array);
+    this.token = Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+    return this.token;
   }
 
-  static validate(token: string): boolean {
-    return CSRFManager.tokens.has(token);
+  static getToken(): string | null {
+    return this.token;
   }
 
-  static consume(token: string): boolean {
-    if (CSRFManager.tokens.has(token)) {
-      CSRFManager.tokens.delete(token);
-      return true;
-    }
-    return false;
+  static validateToken(token: string): boolean {
+    return this.token !== null && this.token === token;
   }
 }
-
-export const escapeHtml = (unsafe: string): string => {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-};
