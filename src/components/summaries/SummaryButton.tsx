@@ -10,7 +10,7 @@ interface SummaryButtonProps {
   contentText: string;
   onSummaryGenerated?: () => void;
   variant?: 'default' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'default' | 'lg';
 }
 
 export const SummaryButton: React.FC<SummaryButtonProps> = ({

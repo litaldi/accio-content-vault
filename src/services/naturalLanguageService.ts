@@ -11,6 +11,12 @@ interface QueryIntent {
   }>;
 }
 
+interface SearchResult {
+  content: SavedContent;
+  relevanceScore: number;
+  matchReason: string;
+}
+
 /**
  * Natural Language Processing service for understanding user queries
  */
@@ -60,6 +66,127 @@ export class NaturalLanguageService {
       type,
       confidence,
       entities
+    };
+  }
+
+  /**
+   * Generate suggested queries based on user content
+   */
+  generateSuggestedQueries(content: SavedContent[]): string[] {
+    const suggestions: string[] = [];
+    
+    // Analyze user's content to generate relevant suggestions
+    const tagFrequency: { [key: string]: number } = {};
+    const recentContent = content
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+      .slice(0, 20);
+    
+    // Count tag frequency
+    content.forEach(item => {
+      item.tags.forEach(tag => {
+        tagFrequency[tag.name] = (tagFrequency[tag.name] || 0) + 1;
+      });
+    });
+    
+    // Get top tags
+    const topTags = Object.entries(tagFrequency)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 5)
+      .map(([tag]) => tag);
+    
+    // Generate suggestions based on common patterns
+    const baseSuggestions = [
+      'What did I save about productivity this week?',
+      'Show me recent learning materials',
+      'Find articles from last month',
+      'What programming resources do I have?'
+    ];
+    
+    // Add tag-based suggestions
+    topTags.forEach(tag => {
+      suggestions.push(`What do I have about ${tag}?`);
+      suggestions.push(`Show me recent ${tag} content`);
+    });
+    
+    // Add time-based suggestions for recent content
+    if (recentContent.length > 0) {
+      suggestions.push('What did I save today?');
+      suggestions.push('Show me this week\'s content');
+    }
+    
+    return [...baseSuggestions, ...suggestions].slice(0, 8);
+  }
+
+  /**
+   * Perform semantic search on content
+   */
+  semanticSearch(query: string, content: SavedContent[]): SearchResult[] {
+    const analysis = this.parseQuery(query);
+    const results: SearchResult[] = [];
+    
+    for (const item of content) {
+      const score = this.calculateRelevanceScore(item, analysis);
+      
+      if (score.relevance > 0) {
+        results.push({
+          content: item,
+          relevanceScore: score.relevance,
+          matchReason: score.reason
+        });
+      }
+    }
+    
+    return results.sort((a, b) => b.relevanceScore - a.relevanceScore);
+  }
+
+  /**
+   * Calculate relevance score for content item
+   */
+  private calculateRelevanceScore(item: SavedContent, analysis: QueryIntent) {
+    let score = 0;
+    const reasons: string[] = [];
+    
+    // Keyword matching with different weights
+    analysis.entities.forEach((entity) => {
+      if (entity.type === 'keyword') {
+        const keywordRegex = new RegExp(entity.value, 'gi');
+        
+        if (keywordRegex.test(item.title)) {
+          score += 40;
+          reasons.push(`Title matches "${entity.value}"`);
+        }
+        
+        if (keywordRegex.test(item.description)) {
+          score += 25;
+          reasons.push(`Description contains "${entity.value}"`);
+        }
+        
+        if (item.tags.some(tag => keywordRegex.test(tag.name))) {
+          score += 30;
+          reasons.push(`Tagged with "${entity.value}"`);
+        }
+        
+        if (item.url && keywordRegex.test(item.url)) {
+          score += 10;
+          reasons.push(`URL contains "${entity.value}"`);
+        }
+      }
+    });
+    
+    // Intent-based scoring
+    if (analysis.type === 'question') {
+      if (item.description.length > 100) {
+        score += 10;
+        reasons.push('Detailed content for question');
+      }
+    }
+    
+    // Boost score based on analysis confidence
+    score *= analysis.confidence;
+    
+    return {
+      relevance: Math.min(100, score),
+      reason: reasons.length > 0 ? reasons.join(', ') : 'General content match'
     };
   }
 
