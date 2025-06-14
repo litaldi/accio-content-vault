@@ -1,41 +1,29 @@
 
-import React, { useState, useEffect } from 'react';
-import { Modal } from '@/components/ui/modal';
+import React from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Slider } from '@/components/ui/slider';
-import { 
-  X, 
-  Settings, 
-  Type, 
-  Palette, 
-  Clock,
-  BookOpen,
-  Share,
-  Bookmark
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import ReadAloudButton from '@/components/voice/ReadAloudButton';
+import { ScrollArea } from '@/components/ui/scroll-area';
+import { X, ExternalLink, Clock, Share, Bookmark } from 'lucide-react';
+
+interface ReadingModeContent {
+  id: string;
+  title: string;
+  content: string;
+  tags?: string[];
+  estimatedReadTime?: number;
+  url?: string;
+}
 
 interface ReadingModeProps {
   isOpen: boolean;
   onClose: () => void;
-  content: {
-    id: string;
-    title: string;
-    content: string;
-    tags?: string[];
-    estimatedReadTime?: number;
-    url?: string;
-  };
-}
-
-interface ReadingSettings {
-  fontSize: number;
-  lineHeight: number;
-  fontFamily: 'serif' | 'sans' | 'mono';
-  theme: 'light' | 'dark' | 'sepia';
-  width: 'narrow' | 'medium' | 'wide';
+  content: ReadingModeContent | null;
 }
 
 const ReadingMode: React.FC<ReadingModeProps> = ({
@@ -43,231 +31,81 @@ const ReadingMode: React.FC<ReadingModeProps> = ({
   onClose,
   content
 }) => {
-  const [showSettings, setShowSettings] = useState(false);
-  const [settings, setSettings] = useState<ReadingSettings>({
-    fontSize: 16,
-    lineHeight: 1.6,
-    fontFamily: 'serif',
-    theme: 'dark',
-    width: 'medium'
-  });
+  if (!content) return null;
 
-  useEffect(() => {
-    // Load saved reading preferences
-    const saved = localStorage.getItem('accio_reading_settings');
-    if (saved) {
-      try {
-        setSettings(JSON.parse(saved));
-      } catch {
-        // Use defaults
-      }
-    }
-  }, []);
-
-  const saveSettings = (newSettings: ReadingSettings) => {
-    setSettings(newSettings);
-    localStorage.setItem('accio_reading_settings', JSON.stringify(newSettings));
-  };
-
-  const getThemeClasses = () => {
-    switch (settings.theme) {
-      case 'light':
-        return 'bg-white text-gray-900';
-      case 'sepia':
-        return 'bg-amber-50 text-amber-900';
-      case 'dark':
-      default:
-        return 'bg-gray-900 text-gray-100';
+  const handleShare = () => {
+    if (navigator.share && content.url) {
+      navigator.share({
+        title: content.title,
+        url: content.url
+      });
+    } else if (content.url) {
+      navigator.clipboard.writeText(content.url);
     }
   };
-
-  const getWidthClasses = () => {
-    switch (settings.width) {
-      case 'narrow':
-        return 'max-w-2xl';
-      case 'wide':
-        return 'max-w-5xl';
-      case 'medium':
-      default:
-        return 'max-w-4xl';
-    }
-  };
-
-  const getFontFamilyClass = () => {
-    switch (settings.fontFamily) {
-      case 'sans':
-        return 'font-sans';
-      case 'mono':
-        return 'font-mono';
-      case 'serif':
-      default:
-        return 'font-serif';
-    }
-  };
-
-  if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-background">
-      {/* Header */}
-      <div className="sticky top-0 z-10 border-b bg-background/95 backdrop-blur">
-        <div className="flex items-center justify-between p-4">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={onClose}>
-              <X className="h-5 w-5" />
-            </Button>
-            <div>
-              <h1 className="font-semibold truncate max-w-md">{content.title}</h1>
-              <div className="flex items-center gap-2 mt-1">
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl h-[90vh] p-0">
+        <DialogHeader className="px-6 py-4 border-b">
+          <div className="flex items-start justify-between">
+            <div className="flex-1 pr-4">
+              <DialogTitle className="text-xl leading-tight mb-2">
+                {content.title}
+              </DialogTitle>
+              
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 {content.estimatedReadTime && (
-                  <Badge variant="outline" className="text-xs">
-                    <Clock className="h-3 w-3 mr-1" />
-                    {content.estimatedReadTime}m read
-                  </Badge>
+                  <div className="flex items-center gap-1">
+                    <Clock className="h-3 w-3" />
+                    <span>{content.estimatedReadTime} min read</span>
+                  </div>
                 )}
-                {content.tags?.slice(0, 2).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs">
-                    {tag}
-                  </Badge>
-                ))}
+                
+                {content.tags && content.tags.length > 0 && (
+                  <div className="flex gap-1">
+                    {content.tags.slice(0, 3).map((tag) => (
+                      <Badge key={tag} variant="secondary" className="text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
               </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={handleShare}>
+                <Share className="h-4 w-4" />
+              </Button>
+              
+              <Button variant="outline" size="sm">
+                <Bookmark className="h-4 w-4" />
+              </Button>
+              
+              {content.url && (
+                <Button variant="outline" size="sm" asChild>
+                  <a href={content.url} target="_blank" rel="noopener noreferrer">
+                    <ExternalLink className="h-4 w-4" />
+                  </a>
+                </Button>
+              )}
+              
+              <Button variant="ghost" size="sm" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
             </div>
           </div>
-          
-          <div className="flex items-center gap-2">
-            <ReadAloudButton text={content.content} />
-            <Button variant="ghost" size="icon">
-              <Bookmark className="h-4 w-4" />
-            </Button>
-            <Button variant="ghost" size="icon">
-              <Share className="h-4 w-4" />
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => setShowSettings(!showSettings)}
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Settings Panel */}
-      {showSettings && (
-        <div className="absolute top-16 right-4 z-20 w-80 bg-background border rounded-lg shadow-lg p-4">
-          <h3 className="font-semibold mb-4">Reading Settings</h3>
-          
-          <div className="space-y-4">
-            {/* Font Size */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Font Size</label>
-              <Slider
-                value={[settings.fontSize]}
-                onValueChange={([value]) => saveSettings({ ...settings, fontSize: value })}
-                min={12}
-                max={24}
-                step={1}
-                className="w-full"
-              />
-              <div className="text-xs text-muted-foreground mt-1">
-                {settings.fontSize}px
-              </div>
-            </div>
-
-            {/* Line Height */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Line Height</label>
-              <Slider
-                value={[settings.lineHeight]}
-                onValueChange={([value]) => saveSettings({ ...settings, lineHeight: value })}
-                min={1.2}
-                max={2.0}
-                step={0.1}
-                className="w-full"
-              />
-              <div className="text-xs text-muted-foreground mt-1">
-                {settings.lineHeight.toFixed(1)}
-              </div>
-            </div>
-
-            {/* Font Family */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Font Family</label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['serif', 'sans', 'mono'] as const).map((font) => (
-                  <Button
-                    key={font}
-                    variant={settings.fontFamily === font ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => saveSettings({ ...settings, fontFamily: font })}
-                    className="capitalize"
-                  >
-                    {font}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Theme */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Theme</label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['light', 'dark', 'sepia'] as const).map((theme) => (
-                  <Button
-                    key={theme}
-                    variant={settings.theme === theme ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => saveSettings({ ...settings, theme })}
-                    className="capitalize"
-                  >
-                    {theme}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Width */}
-            <div>
-              <label className="text-sm font-medium mb-2 block">Content Width</label>
-              <div className="grid grid-cols-3 gap-2">
-                {(['narrow', 'medium', 'wide'] as const).map((width) => (
-                  <Button
-                    key={width}
-                    variant={settings.width === width ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => saveSettings({ ...settings, width })}
-                    className="capitalize"
-                  >
-                    {width}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Content */}
-      <div className={cn("min-h-screen transition-all duration-200", getThemeClasses())}>
-        <div className={cn("mx-auto px-6 py-8", getWidthClasses())}>
-          <article 
-            className={cn(
-              "prose prose-lg max-w-none transition-all duration-200",
-              getFontFamilyClass(),
-              settings.theme === 'dark' && "prose-invert",
-              settings.theme === 'sepia' && "prose-amber"
-            )}
-            style={{
-              fontSize: `${settings.fontSize}px`,
-              lineHeight: settings.lineHeight
-            }}
-          >
-            <div dangerouslySetInnerHTML={{ __html: content.content }} />
-          </article>
-        </div>
-      </div>
-    </div>
+        </DialogHeader>
+        
+        <ScrollArea className="flex-1 px-6 py-4">
+          <div 
+            className="prose prose-sm dark:prose-invert max-w-none"
+            dangerouslySetInnerHTML={{ __html: content.content }}
+          />
+        </ScrollArea>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -1,35 +1,86 @@
 
 import React from 'react';
-import { Content } from '@/types';
-import { OptimizedCard } from '@/components/ui/optimized-card';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Clock, ExternalLink } from 'lucide-react';
 
-interface SearchResultsProps {
-  results: Content[];
-  isLoading: boolean;
+interface SearchResultItem {
+  id: string;
+  title: string;
+  description?: string;
+  url?: string;
+  tags?: string[];
+  created_at?: string;
 }
 
-const SearchResults: React.FC<SearchResultsProps> = ({ results, isLoading }) => {
-  if (isLoading) {
-    return <p>Loading search results...</p>;
-  }
+interface SearchResultsProps {
+  results: SearchResultItem[];
+  onResultClick?: (result: SearchResultItem) => void;
+  className?: string;
+}
 
-  if (!results || results.length === 0) {
-    return <p>No results found.</p>;
+const SearchResults: React.FC<SearchResultsProps> = ({
+  results,
+  onResultClick,
+  className
+}) => {
+  if (results.length === 0) {
+    return (
+      <div className="text-center py-8 text-muted-foreground">
+        No results found. Try adjusting your search terms.
+      </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {results.map((result) => (
-        <OptimizedCard key={result.id} interactive>
-          <div className="space-y-2">
-            <h3 className="text-lg font-semibold">{result.title}</h3>
-            <p className="text-sm text-muted-foreground">{result.description}</p>
-            <a href={result.url} target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">
-              Read more
-            </a>
-          </div>
-        </OptimizedCard>
-      ))}
+    <div className={className}>
+      <div className="space-y-4">
+        {results.map((result) => (
+          <Card
+            key={result.id}
+            className="cursor-pointer hover:shadow-md transition-shadow"
+            onClick={() => onResultClick?.(result)}
+          >
+            <CardContent className="p-6">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg mb-2">{result.title}</h3>
+                  {result.description && (
+                    <p className="text-muted-foreground mb-3 line-clamp-2">
+                      {result.description}
+                    </p>
+                  )}
+                  
+                  {result.tags && result.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {result.tags.map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
+                  
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    {result.created_at && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        <span>{new Date(result.created_at).toLocaleDateString()}</span>
+                      </div>
+                    )}
+                    {result.url && (
+                      <div className="flex items-center gap-1">
+                        <ExternalLink className="h-3 w-3" />
+                        <span>View source</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };
