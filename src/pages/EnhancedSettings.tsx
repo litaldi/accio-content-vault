@@ -9,7 +9,7 @@ import { AccessibilitySettings } from '@/components/accessibility/AccessibilityS
 const EnhancedSettings: React.FC = () => {
   const { user } = useAuth();
   
-  const userName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.name || 'User';
+  const userName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email?.split('@')[0] || 'User';
 
   return (
     <AuthenticatedLayout>

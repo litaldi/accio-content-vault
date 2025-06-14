@@ -38,7 +38,7 @@ const Profile: React.FC = () => {
 
   const userDisplayName = user.user_metadata?.full_name || 
                          user.user_metadata?.name || 
-                         user.name || 
+                         user.email?.split('@')[0] || 
                          'User';
 
   const userInitials = userDisplayName

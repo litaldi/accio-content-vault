@@ -8,6 +8,9 @@ interface AccessibilityContextType {
   toggleHighContrast: () => void;
   isReducedMotion: boolean;
   toggleReducedMotion: () => void;
+  // Add missing properties
+  highContrast: boolean;
+  announceToScreenReader: (message: string, priority?: 'polite' | 'assertive') => void;
 }
 
 const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
@@ -27,6 +30,20 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const toggleHighContrast = () => setIsHighContrast(!isHighContrast);
   const toggleReducedMotion = () => setIsReducedMotion(!isReducedMotion);
+
+  const announceToScreenReader = (message: string, priority: 'polite' | 'assertive' = 'polite') => {
+    const announcer = document.createElement('div');
+    announcer.setAttribute('aria-live', priority);
+    announcer.setAttribute('aria-atomic', 'true');
+    announcer.className = 'sr-only';
+    announcer.textContent = message;
+    
+    document.body.appendChild(announcer);
+    
+    setTimeout(() => {
+      document.body.removeChild(announcer);
+    }, 1000);
+  };
 
   // Apply accessibility settings to document
   useEffect(() => {
@@ -58,7 +75,10 @@ export const AccessibilityProvider: React.FC<{ children: React.ReactNode }> = ({
     isHighContrast,
     toggleHighContrast,
     isReducedMotion,
-    toggleReducedMotion
+    toggleReducedMotion,
+    // Add missing properties as aliases
+    highContrast: isHighContrast,
+    announceToScreenReader
   };
 
   return (
