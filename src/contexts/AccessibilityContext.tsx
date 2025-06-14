@@ -4,10 +4,14 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 interface AccessibilityContextType {
   isHighContrast: boolean;
   isReducedMotion: boolean;
+  highContrast: boolean;
+  reducedMotion: boolean;
   fontSize: 'small' | 'medium' | 'large';
   announceToScreenReader: (message: string) => void;
   toggleHighContrast: () => void;
   toggleReducedMotion: () => void;
+  setHighContrast: (value: boolean) => void;
+  setReducedMotion: (value: boolean) => void;
   setFontSize: (size: 'small' | 'medium' | 'large') => void;
 }
 
@@ -91,10 +95,14 @@ export const AccessibilityProvider: React.FC<AccessibilityProviderProps> = ({ ch
   const value = {
     isHighContrast,
     isReducedMotion,
+    highContrast: isHighContrast,
+    reducedMotion: isReducedMotion,
     fontSize,
     announceToScreenReader,
     toggleHighContrast,
     toggleReducedMotion,
+    setHighContrast: setIsHighContrast,
+    setReducedMotion: setIsReducedMotion,
     setFontSize: handleSetFontSize
   };
 
