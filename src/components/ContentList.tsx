@@ -1,159 +1,107 @@
-
-import React, { useState } from 'react';
+import React from 'react';
+import { SavedContent } from '@/types';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { SavedContent, Tag } from '@/types';
-import { formatDistanceToNow } from 'date-fns';
-import { File, FileText, Image, Link, Sparkles, ExternalLink, Calendar, Tag as TagIcon } from 'lucide-react';
-import { SummaryButton } from './summaries/SummaryButton';
-import ContentDetailView from './ContentDetailView';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Link } from 'react-router-dom';
+import { Calendar, FileText, Link2, Tag } from 'lucide-react';
+import { format } from 'date-fns';
+import { useAccessibility } from '@/contexts/AccessibilityContext';
+import { Skeleton } from '@/components/ui/enhanced-loading';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
+import ReadAloudButton from "@/components/voice/ReadAloudButton";
 
-interface ContentListProps {
-  contents: SavedContent[];
-  searchQuery?: string;
-}
-
-const ContentList: React.FC<ContentListProps> = ({ contents, searchQuery }) => {
-  const [selectedContent, setSelectedContent] = useState<SavedContent | null>(null);
-
-  const getContentIcon = (type: string) => {
-    switch (type) {
-      case 'url':
-        return <Link className="h-4 w-4" />;
-      case 'document':
-        return <FileText className="h-4 w-4" />;
-      case 'image':
-        return <Image className="h-4 w-4" />;
-      default:
-        return <File className="h-4 w-4" />;
-    }
-  };
-
-  const highlightText = (text: string, query?: string) => {
-    if (!query || !text) return text;
-    
-    const regex = new RegExp(`(${query})`, 'gi');
-    const parts = text.split(regex);
-    
-    return parts.map((part, index) => 
-      regex.test(part) ? (
-        <mark key={index} className="bg-yellow-200 dark:bg-yellow-800">
-          {part}
-        </mark>
-      ) : (
-        part
-      )
-    );
-  };
-
-  if (contents.length === 0) {
-    return (
-      <Card>
-        <CardContent className="p-12 text-center">
-          <Sparkles className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-          <CardTitle className="mb-2">No content found</CardTitle>
+const ContentList = ({ contents, searchQuery }: { contents: any[], searchQuery: string }) => (
+  <div>
+    {contents.length === 0 && searchQuery ? (
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle>No results found</CardTitle>
           <CardDescription>
-            {searchQuery 
-              ? "Try adjusting your search terms or filters"
-              : "Start by saving some content to your knowledge library"
-            }
+            We couldn't find any content matching your search query.
           </CardDescription>
-          {!searchQuery && (
-            <Button className="mt-4" asChild>
-              <a href="/save-content">Save Your First Content</a>
-            </Button>
-          )}
+        </CardHeader>
+        <CardContent>
+          <p>Please try a different search term or clear the current filters.</p>
         </CardContent>
       </Card>
-    );
-  }
-
-  return (
-    <>
-      <div className="space-y-4">
-        {contents.map((content) => (
-          <Card 
-            key={content.id} 
-            className="hover:shadow-md transition-shadow cursor-pointer group"
-            onClick={() => setSelectedContent(content)}
-          >
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div className="flex items-start gap-3 flex-1">
-                  <div className="mt-1">
-                    {getContentIcon(content.content_type)}
+    ) : null}
+    <ul>
+      {contents.map((item) => (
+        <li key={item.id} className="flex items-center gap-2">
+          <Card className="w-full">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>
+                  <Link to={`/content/${item.id}`} className="hover:underline">
+                    {item.title || <Skeleton />}
+                  </Link>
+                </CardTitle>
+                {item.tags && item.tags.length > 0 && (
+                  <div className="flex items-center space-x-1">
+                    {item.tags.map((tag: any) => (
+                      <TooltipProvider key={tag.id}>
+                        <Tooltip delayDuration={50}>
+                          <TooltipTrigger asChild>
+                            <Badge variant="secondary" className="cursor-pointer">
+                              <Tag className="w-3 h-3 mr-1" />
+                              {tag.name}
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Filter content by {tag.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    ))}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-lg line-clamp-2 group-hover:text-primary transition-colors">
-                      {highlightText(content.title, searchQuery)}
-                    </CardTitle>
-                    {content.url && (
-                      <div className="flex items-center gap-1 mt-1 text-sm text-muted-foreground">
-                        <ExternalLink className="h-3 w-3" />
-                        <span className="truncate">{content.url}</span>
-                      </div>
+                )}
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <CardDescription>
+                    {item.description || <Skeleton lines={3} />}
+                  </CardDescription>
+                  <div className="flex items-center space-x-2 text-muted-foreground text-sm">
+                    <Calendar className="w-4 h-4" />
+                    <span>{item.created_at ? format(new Date(item.created_at), 'MMM dd, yyyy') : <Skeleton />}</span>
+                    {item.file_type && (
+                      <>
+                        <FileText className="w-4 h-4" />
+                        <span>{item.file_type}</span>
+                      </>
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="capitalize">
-                    {content.content_type}
-                  </Badge>
-                  <SummaryButton 
-                    contentId={content.id} 
-                    contentText={content.description || content.title || ''} 
-                    size="sm" 
-                  />
-                </div>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="pt-0">
-              {content.description && (
-                <CardDescription className="mb-4 line-clamp-3">
-                  {highlightText(content.description, searchQuery)}
-                </CardDescription>
-              )}
-              
-              <div className="flex items-center justify-between">
-                <div className="flex flex-wrap gap-1">
-                  {content.tags?.slice(0, 3).map((tag) => (
-                    <Badge 
-                      key={tag.id} 
-                      variant="secondary" 
-                      className="text-xs"
-                    >
-                      <TagIcon className="h-2 w-2 mr-1" />
-                      {tag.name}
-                    </Badge>
-                  ))}
-                  {content.tags && content.tags.length > 3 && (
-                    <Badge variant="secondary" className="text-xs">
-                      +{content.tags.length - 3} more
-                    </Badge>
+                <div className="flex items-center space-x-4">
+                  {item.url && (
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link to={item.url} target="_blank" rel="noopener noreferrer">
+                        <Link2 className="w-4 h-4 mr-2" />
+                        Open Link
+                      </Link>
+                    </Button>
                   )}
-                </div>
-                
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Calendar className="h-3 w-3" />
-                  {formatDistanceToNow(new Date(content.created_at), { addSuffix: true })}
+                  <Avatar>
+                    <AvatarImage src={`https://avatar.vercel.sh/${item.title}.png`} />
+                    <AvatarFallback>{item.title?.charAt(0).toUpperCase() || <Skeleton variant="avatar" />}</AvatarFallback>
+                  </Avatar>
                 </div>
               </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
-
-      {selectedContent && (
-        <ContentDetailView
-          content={selectedContent}
-          isOpen={!!selectedContent}
-          onClose={() => setSelectedContent(null)}
-        />
-      )}
-    </>
-  );
-};
+          <ReadAloudButton text={item.summary || item.text || item.title || ''} />
+        </li>
+      ))}
+    </ul>
+  </div>
+);
 
 export default ContentList;
