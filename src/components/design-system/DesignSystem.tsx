@@ -106,7 +106,7 @@ export const Layout = {
     gap = 'md',
     ...props
   }: React.HTMLProps<HTMLDivElement> & {
-    columns?: number | string;
+    columns?: string | number;
     gap?: string;
   }) => (
     <div

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { CheckCircle, Users, Clock, Shield } from 'lucide-react';
@@ -64,7 +63,11 @@ export const EnterpriseSpacing = {
       {children}
     </section>
   ),
-  Container: ({ children, className, ...props }: React.HTMLProps<HTMLDivElement>) => (
+  Container: ({
+    children,
+    className,
+    ...props
+  }: React.HTMLProps<HTMLDivElement> & { size?: string }) => (
     <div className={cn('container-spacing', className)} {...props}>
       {children}
     </div>
