@@ -43,7 +43,7 @@ export const Typography = {
 
 // Spacing Components
 export const Spacing = {
-  Section: ({ children, className, size = 'md', background, ...props }: React.HTMLProps<HTMLElement> & { 
+  Section: ({ children, className, size = 'md', background = 'default', ...props }: React.HTMLProps<HTMLElement> & { 
     size?: 'sm' | 'md' | 'lg' | 'xl';
     background?: 'default' | 'muted' | 'primary';
   }) => (

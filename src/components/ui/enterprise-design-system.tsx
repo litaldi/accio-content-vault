@@ -39,7 +39,7 @@ export const EnterpriseTypography = {
 
 // Enterprise Spacing
 export const EnterpriseSpacing = {
-  Section: ({ children, className, size = 'md', background, ...props }: React.HTMLProps<HTMLElement> & { 
+  Section: ({ children, className, size = 'md', background = 'default', ...props }: React.HTMLProps<HTMLElement> & { 
     size?: 'sm' | 'md' | 'lg' | 'xl';
     background?: 'default' | 'muted' | 'primary';
   }) => (
