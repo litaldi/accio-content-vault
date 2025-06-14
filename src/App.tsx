@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -141,9 +142,23 @@ const EnhancedHome = () => {
   );
 };
 
-function App() {
+// App component with security hook inside Router context
+const AppContent: React.FC = () => {
   useAppSecurity();
 
+  return (
+    <AppLayout>
+      <div className="min-h-screen">
+        <Routes>
+          <Route path="/" element={<EnhancedHome />} />
+          {/* Add other routes here */}
+        </Routes>
+      </div>
+    </AppLayout>
+  );
+};
+
+function App() {
   return (
     <GlobalErrorBoundary>
       <QueryClientProvider client={queryClient}>
@@ -151,14 +166,7 @@ function App() {
           <AuthProvider>
             <AccessibilityProvider>
               <Router>
-                <AppLayout>
-                  <div className="min-h-screen">
-                    <Routes>
-                      <Route path="/" element={<EnhancedHome />} />
-                      {/* Add other routes here */}
-                    </Routes>
-                  </div>
-                </AppLayout>
+                <AppContent />
                 <Toaster />
               </Router>
             </AccessibilityProvider>

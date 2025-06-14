@@ -1,293 +1,278 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Modal } from '@/components/ui/modal';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   MessageCircle, 
   Send, 
-  CheckCircle, 
-  X,
-  Headphones
+  X, 
+  Bot, 
+  User, 
+  Minimize2,
+  Clock,
+  CheckCircle2
 } from 'lucide-react';
-import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
-import { LoadingSpinner } from '@/components/ui/enhanced-loading';
+import { sanitizeInput } from '@/utils/security';
 import { cn } from '@/lib/utils';
-import { 
-  validateEmailEnhanced, 
-  sanitizeInput, 
-  contactRateLimiter 
-} from '@/utils/unified-security';
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  category: string;
-  message: string;
+interface Message {
+  id: string;
+  content: string;
+  sender: 'user' | 'bot';
+  timestamp: Date;
+  status?: 'sending' | 'sent' | 'delivered';
 }
 
-const ChatWidget: React.FC = () => {
+interface ChatWidgetProps {
+  className?: string;
+}
+
+export const ChatWidget: React.FC<ChatWidgetProps> = ({ className }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    category: 'general',
-    message: ''
-  });
-
-  const { showSuccess, showError } = useEnhancedToast();
-
-  const categories = [
-    { value: 'general', label: 'General Question', icon: '💬' },
-    { value: 'bug', label: 'Bug Report', icon: '🐛' },
-    { value: 'feedback', label: 'Feedback', icon: '💡' },
-    { value: 'feature', label: 'Feature Request', icon: '✨' },
-    { value: 'support', label: 'Technical Support', icon: '🔧' }
-  ];
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.message.trim()) {
-      showError('Message Required', 'Please enter your message before sending.');
-      return;
+  const [isMinimized, setIsMinimized] = useState(false);
+  const [message, setMessage] = useState('');
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      content: 'Hi! I\'m here to help you with any questions about Accio. How can I assist you today?',
+      sender: 'bot',
+      timestamp: new Date(),
+      status: 'delivered'
     }
+  ]);
+  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-    // Rate limiting check
-    const rateLimitCheck = contactRateLimiter.canAttempt('chat-widget');
-    if (!rateLimitCheck.allowed) {
-      showError('Too Many Messages', 'Please wait before sending another message.');
-      return;
-    }
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-    // Validate email if provided
-    if (formData.email && !validateEmailEnhanced(formData.email).isValid) {
-      showError('Invalid Email', 'Please enter a valid email address.');
-      return;
-    }
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-    setIsSubmitting(true);
+  const sendMessage = async () => {
+    if (!message.trim()) return;
 
-    try {
-      // Sanitize inputs
-      const sanitizedData = {
-        name: sanitizeInput(formData.name, { maxLength: 100 }),
-        email: formData.email.trim(),
-        category: formData.category,
-        message: sanitizeInput(formData.message, { maxLength: 1000 })
+    const sanitizedMessage = sanitizeInput(message);
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      content: sanitizedMessage,
+      sender: 'user',
+      timestamp: new Date(),
+      status: 'sending'
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setMessage('');
+    setIsTyping(true);
+
+    // Update message status to sent
+    setTimeout(() => {
+      setMessages(prev => 
+        prev.map(msg => 
+          msg.id === userMessage.id 
+            ? { ...msg, status: 'sent' }
+            : msg
+        )
+      );
+    }, 500);
+
+    // Simulate bot response
+    setTimeout(() => {
+      const botResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        content: getBotResponse(sanitizedMessage),
+        sender: 'bot',
+        timestamp: new Date(),
+        status: 'delivered'
       };
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
       
-      setIsSuccess(true);
-      showSuccess(
-        'Message Sent Successfully!', 
-        "Thank you for reaching out. We'll get back to you within 24 hours."
-      );
+      setMessages(prev => [...prev, botResponse]);
+      setIsTyping(false);
+    }, 1500);
+  };
 
-      // Reset form after showing success
-      setTimeout(() => {
-        setFormData({ name: '', email: '', category: 'general', message: '' });
-        setIsSuccess(false);
-        setIsOpen(false);
-      }, 3000);
+  const getBotResponse = (userMessage: string): string => {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    if (lowerMessage.includes('price') || lowerMessage.includes('cost')) {
+      return "Accio offers flexible pricing plans to suit different needs. You can start with our free tier and upgrade as you grow. Would you like me to connect you with our sales team for detailed pricing information?";
+    }
+    
+    if (lowerMessage.includes('feature') || lowerMessage.includes('what can')) {
+      return "Accio is an AI-powered knowledge management platform that helps you save, organize, and discover content intelligently. Key features include smart search, auto-categorization, content insights, and seamless integrations. What specific feature would you like to know more about?";
+    }
+    
+    if (lowerMessage.includes('help') || lowerMessage.includes('support')) {
+      return "I'm here to help! You can ask me about Accio's features, pricing, getting started, or any technical questions. For complex issues, I can connect you with our support team. What would you like assistance with?";
+    }
+    
+    if (lowerMessage.includes('demo') || lowerMessage.includes('try')) {
+      return "Great! You can try Accio right away with our interactive demo. Would you like me to guide you through the key features, or would you prefer to schedule a personalized demo with our team?";
+    }
+    
+    return "Thanks for your message! I'd be happy to help you learn more about Accio. You can ask me about our features, pricing, getting started, or anything else. What would you like to know?";
+  };
 
-    } catch (error) {
-      showError(
-        'Failed to Send Message', 
-        'Please try again or contact us directly at hello@accio.app'
-      );
-    } finally {
-      setIsSubmitting(false);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
     }
   };
 
-  const handleInputChange = (field: keyof ContactFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-  };
-
-  if (isSuccess) {
+  if (!isOpen) {
     return (
-      <Modal 
-        isOpen={isOpen} 
-        onClose={() => setIsOpen(false)}
-        className="max-w-md"
+      <Button
+        onClick={() => setIsOpen(true)}
+        className={cn(
+          "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50",
+          "bg-primary hover:bg-primary/90 text-primary-foreground",
+          "transition-all duration-200 hover:scale-110",
+          className
+        )}
+        aria-label="Open chat support"
       >
-        <div className="text-center py-8">
-          <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="h-8 w-8 text-white" />
-          </div>
-          <h3 className="text-lg font-semibold text-green-700 dark:text-green-300 mb-2">
-            Message Sent Successfully!
-          </h3>
-          <p className="text-muted-foreground mb-4">
-            Thank you for reaching out. We'll get back to you within 24 hours.
-          </p>
-          <Badge variant="outline" className="text-green-600 border-green-300">
-            <CheckCircle className="h-3 w-3 mr-1" />
-            We've got your message
-          </Badge>
-        </div>
-      </Modal>
+        <MessageCircle className="h-6 w-6" />
+      </Button>
     );
   }
 
   return (
-    <>
-      {/* Floating Chat Button */}
-      <div className="fixed bottom-6 right-6 z-50">
-        <Button
-          onClick={() => setIsOpen(true)}
-          className={cn(
-            "h-14 w-14 rounded-full shadow-lg hover:shadow-xl",
-            "bg-primary hover:bg-primary/90 text-primary-foreground",
-            "transition-all duration-300 hover:scale-110",
-            "group relative"
-          )}
-          aria-label="Open chat"
-        >
-          <MessageCircle className="h-6 w-6 group-hover:scale-110 transition-transform" />
-          
-          {/* Pulse animation */}
-          <div className="absolute inset-0 rounded-full bg-primary animate-ping opacity-20" />
-          
-          {/* Tooltip */}
-          <div className="absolute bottom-full right-0 mb-2 px-3 py-1 bg-background border rounded-lg shadow-md text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-            Need help? Chat with us
-            <div className="absolute top-full right-4 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-border" />
-          </div>
-        </Button>
-      </div>
-
-      {/* Chat Modal */}
-      <Modal 
-        isOpen={isOpen} 
-        onClose={() => setIsOpen(false)}
-        title="Contact Our Team"
-        description="We're here to help! Send us a message and we'll get back to you shortly."
-        className="max-w-md"
-      >
-        <div className="space-y-6">
-          {/* Welcome Message */}
-          <div className="flex items-start gap-3 p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-800">
-            <div className="p-2 bg-blue-500 rounded-full">
-              <Headphones className="h-4 w-4 text-white" />
-            </div>
-            <div>
-              <h4 className="font-medium text-blue-900 dark:text-blue-100">
-                👋 How can we help you today?
-              </h4>
-              <p className="text-sm text-blue-700 dark:text-blue-300 mt-1">
-                Send us a message and we'll respond within 24 hours.
-              </p>
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Name Field */}
-            <div className="space-y-2">
-              <Label htmlFor="name">Your Name</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                placeholder="Enter your name"
-                maxLength={100}
-                className="transition-all focus:ring-2 focus:ring-primary/20"
-              />
-            </div>
-
-            {/* Email Field */}
-            <div className="space-y-2">
-              <Label htmlFor="email">Email Address (optional)</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
-                placeholder="your.email@company.com"
-                maxLength={254}
-                className="transition-all focus:ring-2 focus:ring-primary/20"
-              />
-              <p className="text-xs text-muted-foreground">
-                Leave your email if you'd like us to follow up.
-              </p>
-            </div>
-
-            {/* Category Selection */}
-            <div className="space-y-2">
-              <Label htmlFor="category">What's this about?</Label>
-              <select
-                id="category"
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.icon} {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Message Field */}
-            <div className="space-y-2">
-              <Label htmlFor="message">Your Message *</Label>
-              <Textarea
-                id="message"
-                value={formData.message}
-                onChange={(e) => handleInputChange('message', e.target.value)}
-                placeholder="Tell us what's on your mind..."
-                rows={4}
-                maxLength={1000}
-                className="transition-all focus:ring-2 focus:ring-primary/20 resize-none"
-                required
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex gap-3 pt-4">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setIsOpen(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={isSubmitting || !formData.message.trim()}
-                className="flex-1 gap-2"
-              >
-                {isSubmitting ? (
-                  <LoadingSpinner size="sm" />
-                ) : (
-                  <>
-                    <Send className="h-4 w-4" />
-                    Send Message
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-
-          {/* Footer */}
-          <div className="pt-4 border-t text-center">
-            <p className="text-xs text-muted-foreground">
-              🔒 Your information is secure and will only be used to respond to your message.
-            </p>
-          </div>
+    <Card 
+      className={cn(
+        "fixed bottom-6 right-6 w-80 h-96 shadow-xl z-50 flex flex-col",
+        isMinimized && "h-14",
+        className
+      )}
+    >
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-primary text-primary-foreground rounded-t-lg">
+        <CardTitle className="text-sm font-medium flex items-center gap-2">
+          <Bot className="h-4 w-4" />
+          Accio Support
+        </CardTitle>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 text-primary-foreground hover:bg-primary-foreground/20"
+            onClick={() => setIsMinimized(!isMinimized)}
+          >
+            <Minimize2 className="h-3 w-3" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-6 w-6 text-primary-foreground hover:bg-primary-foreground/20"
+            onClick={() => setIsOpen(false)}
+          >
+            <X className="h-3 w-3" />
+          </Button>
         </div>
-      </Modal>
-    </>
+      </CardHeader>
+
+      {!isMinimized && (
+        <>
+          <CardContent className="flex-1 p-0">
+            <ScrollArea className="h-64 p-4">
+              <div className="space-y-4">
+                {messages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={cn(
+                      "flex items-start gap-2",
+                      msg.sender === 'user' ? "justify-end" : "justify-start"
+                    )}
+                  >
+                    {msg.sender === 'bot' && (
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                          <Bot className="h-3 w-3" />
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                    
+                    <div
+                      className={cn(
+                        "max-w-[80%] rounded-lg px-3 py-2 text-sm",
+                        msg.sender === 'user'
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-muted"
+                      )}
+                    >
+                      <p>{msg.content}</p>
+                      <div className={cn(
+                        "flex items-center justify-between mt-1 text-xs opacity-70",
+                        msg.sender === 'user' ? "text-primary-foreground" : "text-muted-foreground"
+                      )}>
+                        <span>{msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        {msg.sender === 'user' && (
+                          <div className="flex items-center gap-1">
+                            {msg.status === 'sending' && <Clock className="h-3 w-3" />}
+                            {msg.status === 'sent' && <CheckCircle2 className="h-3 w-3" />}
+                            {msg.status === 'delivered' && <CheckCircle2 className="h-3 w-3 text-green-400" />}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {msg.sender === 'user' && (
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="bg-accent text-accent-foreground text-xs">
+                          <User className="h-3 w-3" />
+                        </AvatarFallback>
+                      </Avatar>
+                    )}
+                  </div>
+                ))}
+                
+                {isTyping && (
+                  <div className="flex items-start gap-2">
+                    <Avatar className="h-6 w-6">
+                      <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                        <Bot className="h-3 w-3" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="bg-muted rounded-lg px-3 py-2">
+                      <div className="flex gap-1">
+                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce" />
+                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.1s]" />
+                        <div className="w-2 h-2 bg-muted-foreground rounded-full animate-bounce [animation-delay:0.2s]" />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div ref={messagesEndRef} />
+            </ScrollArea>
+          </CardContent>
+
+          <div className="p-4 border-t">
+            <div className="flex gap-2">
+              <Input
+                placeholder="Type your message..."
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                onKeyPress={handleKeyPress}
+                className="flex-1"
+              />
+              <Button 
+                onClick={sendMessage} 
+                size="icon"
+                disabled={!message.trim() || isTyping}
+              >
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
+    </Card>
   );
 };
 

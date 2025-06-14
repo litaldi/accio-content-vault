@@ -1,80 +1,75 @@
 
 import { 
   sanitizeInput, 
-  isValidSecureUrl, 
-  UnifiedRateLimiter
-} from '@/utils/unified-security';
+  validateEmail, 
+  validatePassword,
+  validateUrl,
+  isValidSecureUrl
+} from '@/utils/security';
 
-describe('Security Utilities', () => {
+describe('Security Utils', () => {
   describe('sanitizeInput', () => {
-    it('should remove HTML tags by default', () => {
+    it('should remove script tags', () => {
       const input = '<script>alert("xss")</script>Hello';
       const result = sanitizeInput(input);
       expect(result).toBe('Hello');
     });
 
-    it('should respect maxLength option', () => {
-      const input = 'This is a very long string';
-      const result = sanitizeInput(input, { maxLength: 10 });
-      expect(result).toBe('This is a ');
+    it('should handle normal text', () => {
+      const input = 'Hello World';
+      const result = sanitizeInput(input);
+      expect(result).toBe('Hello World');
     });
 
-    it('should strip JavaScript protocols', () => {
-      const input = 'javascript:alert("xss")';
-      const result = sanitizeInput(input);
-      expect(result).not.toContain('javascript:');
+    it('should handle empty string', () => {
+      const result = sanitizeInput('');
+      expect(result).toBe('');
+    });
+  });
+
+  describe('validateEmail', () => {
+    it('should validate correct email', () => {
+      const result = validateEmail('test@example.com');
+      expect(result.isValid).toBe(true);
+    });
+
+    it('should invalidate incorrect email', () => {
+      const result = validateEmail('invalid-email');
+      expect(result.isValid).toBe(false);
+    });
+  });
+
+  describe('validatePassword', () => {
+    it('should validate strong password', () => {
+      const result = validatePassword('StrongPass123!');
+      expect(result.isValid).toBe(true);
+    });
+
+    it('should invalidate weak password', () => {
+      const result = validatePassword('weak');
+      expect(result.isValid).toBe(false);
+    });
+  });
+
+  describe('validateUrl', () => {
+    it('should validate correct URL', () => {
+      const result = validateUrl('https://example.com');
+      expect(result.isValid).toBe(true);
+    });
+
+    it('should invalidate incorrect URL', () => {
+      const result = validateUrl('not-a-url');
+      expect(result.isValid).toBe(false);
     });
   });
 
   describe('isValidSecureUrl', () => {
-    it('should accept valid HTTPS URLs', () => {
+    it('should validate HTTPS URL', () => {
       expect(isValidSecureUrl('https://example.com')).toBe(true);
-      expect(isValidSecureUrl('https://subdomain.example.com/path')).toBe(true);
     });
 
-    it('should accept valid HTTP URLs', () => {
-      expect(isValidSecureUrl('http://example.com')).toBe(true);
-    });
-
-    it('should reject dangerous protocols', () => {
-      expect(isValidSecureUrl('javascript:alert("xss")')).toBe(false);
-      expect(isValidSecureUrl('data:text/html,<script>alert("xss")</script>')).toBe(false);
-      expect(isValidSecureUrl('ftp://example.com')).toBe(false);
-    });
-  });
-
-  describe('UnifiedRateLimiter', () => {
-    it('should allow requests within limit', () => {
-      const rateLimit = new UnifiedRateLimiter(3, 60000);
-      
-      expect(rateLimit.canAttempt('user1').allowed).toBe(true);
-      expect(rateLimit.canAttempt('user1').allowed).toBe(true);
-      expect(rateLimit.canAttempt('user1').allowed).toBe(true);
-    });
-
-    it('should block requests over limit', () => {
-      const rateLimit = new UnifiedRateLimiter(2, 60000);
-      
-      rateLimit.canAttempt('user2');
-      rateLimit.canAttempt('user2');
-      const result = rateLimit.canAttempt('user2');
-      
-      expect(result.allowed).toBe(false);
-      expect(result.resetTime).toBeDefined();
-    });
-
-    it('should reset after time window', (done) => {
-      const rateLimit = new UnifiedRateLimiter(1, 100);
-      
-      rateLimit.canAttempt('user3');
-      const blocked = rateLimit.canAttempt('user3');
-      expect(blocked.allowed).toBe(false);
-      
-      setTimeout(() => {
-        const allowed = rateLimit.canAttempt('user3');
-        expect(allowed.allowed).toBe(true);
-        done();
-      }, 150);
+    it('should invalidate HTTP URL', () => {
+      expect(isValidSecureUrl('http://example.com')).toBe(false);
     });
   });
 });

@@ -2,273 +2,392 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  Send, 
-  Mail, 
-  MessageSquare, 
-  Clock,
-  Shield,
-  CheckCircle
-} from 'lucide-react';
-import { useEnhancedToast } from '@/components/feedback/ToastEnhancer';
-import { LoadingSpinner } from '@/components/ui/enhanced-loading';
-import { 
-  validateEmailEnhanced, 
-  sanitizeInput, 
-  contactRateLimiter,
-  CSRFManager 
-} from '@/utils/unified-security';
+import { Textarea } from '@/components/ui/textarea';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Mail, MessageSquare, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
+import { sanitizeInput, validateEmail } from '@/utils/security';
+import { cn } from '@/lib/utils';
 
-interface ContactFormData {
-  name: string;
-  email: string;
-  company: string;
-  category: string;
-  message: string;
+interface ContactFormProps {
+  className?: string;
 }
 
-const ContactForm: React.FC = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
+export const ContactForm: React.FC<ContactFormProps> = ({ className }) => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
     email: '',
     company: '',
-    category: 'general',
-    message: ''
+    phone: '',
+    subject: '',
+    message: '',
+    inquiryType: '',
+    agreeToContact: false
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { showSuccess, showError } = useEnhancedToast();
-
-  const categories = [
-    { value: 'general', label: 'General Inquiry' },
-    { value: 'sales', label: 'Sales & Pricing' },
+  const inquiryTypes = [
+    { value: 'sales', label: 'Sales Inquiry' },
     { value: 'support', label: 'Technical Support' },
     { value: 'partnership', label: 'Partnership' },
-    { value: 'feedback', label: 'Product Feedback' }
+    { value: 'demo', label: 'Request Demo' },
+    { value: 'feedback', label: 'Feedback' },
+    { value: 'other', label: 'Other' }
   ];
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required';
+    }
+
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required';
+    }
+
+    const emailResult = validateEmail(formData.email);
+    if (!emailResult.isValid) {
+      newErrors.email = emailResult.message;
+    }
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = 'Subject is required';
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required';
+    }
+
+    if (!formData.inquiryType) {
+      newErrors.inquiryType = 'Please select an inquiry type';
+    }
+
+    if (!formData.agreeToContact) {
+      newErrors.agreeToContact = 'You must agree to be contacted';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Rate limiting check
-    const rateLimitCheck = contactRateLimiter.canAttempt('contact-form');
-    if (!rateLimitCheck.allowed) {
-      showError('Too Many Attempts', 'Please wait before submitting another message.');
-      return;
-    }
-
-    // Validate required fields
-    if (!formData.name || !formData.email || !formData.message) {
-      showError('Required Fields Missing', 'Please fill in all required fields.');
-      return;
-    }
-
-    // Validate email
-    const emailValidation = validateEmailEnhanced(formData.email);
-    if (!emailValidation.isValid) {
-      showError('Invalid Email', emailValidation.message);
-      return;
-    }
+    if (!validateForm()) return;
 
     setIsSubmitting(true);
 
     try {
-      // Sanitize inputs
+      // Sanitize all form data
       const sanitizedData = {
-        name: sanitizeInput(formData.name, { maxLength: 100 }),
-        email: formData.email.trim(),
-        company: sanitizeInput(formData.company, { maxLength: 100 }),
-        category: formData.category,
-        message: sanitizeInput(formData.message, { maxLength: 2000 })
+        firstName: sanitizeInput(formData.firstName),
+        lastName: sanitizeInput(formData.lastName),
+        email: sanitizeInput(formData.email),
+        company: sanitizeInput(formData.company),
+        phone: sanitizeInput(formData.phone),
+        subject: sanitizeInput(formData.subject),
+        message: sanitizeInput(formData.message),
+        inquiryType: formData.inquiryType,
+        timestamp: new Date().toISOString()
       };
-
-      // Generate CSRF token
-      const csrfToken = CSRFManager.generate();
 
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      showSuccess(
-        'Message Sent Successfully!', 
-        "Thank you for contacting us. We'll respond within 24 hours."
-      );
-
+      console.log('Contact form submitted:', sanitizedData);
+      
+      setIsSubmitted(true);
+      
       // Reset form
-      setFormData({ name: '', email: '', company: '', category: 'general', message: '' });
-
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        company: '',
+        phone: '',
+        subject: '',
+        message: '',
+        inquiryType: '',
+        agreeToContact: false
+      });
     } catch (error) {
-      showError(
-        'Failed to Send Message', 
-        'Please try again or email us directly at hello@accio.app'
-      );
+      setErrors({ general: 'Failed to send message. Please try again.' });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleInputChange = (field: keyof ContactFormData, value: string) => {
+  const updateField = (field: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }));
+    }
   };
 
-  return (
-    <div className="grid lg:grid-cols-2 gap-8">
-      {/* Contact Form */}
-      <Card className="enterprise-shadow">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-3">
-            <MessageSquare className="h-6 w-6 text-primary" />
-            Send Us a Message
-          </CardTitle>
-          <p className="text-muted-foreground">
-            We'd love to hear from you. Drop us a line and we'll get back to you shortly.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid sm:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="contact-name">Full Name *</Label>
-                <Input
-                  id="contact-name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Your full name"
-                  maxLength={100}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="contact-email">Email Address *</Label>
-                <Input
-                  id="contact-email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="your.email@company.com"
-                  maxLength={254}
-                  required
-                />
-              </div>
+  if (isSubmitted) {
+    return (
+      <Card className={cn("max-w-2xl mx-auto", className)}>
+        <CardContent className="pt-6">
+          <div className="text-center space-y-4">
+            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+              <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="contact-company">Company Name</Label>
-              <Input
-                id="contact-company"
-                value={formData.company}
-                onChange={(e) => handleInputChange('company', e.target.value)}
-                placeholder="Your company name"
-                maxLength={100}
-              />
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">Thank You!</h3>
+              <p className="text-muted-foreground">
+                Your message has been sent successfully. We'll get back to you within 24 hours.
+              </p>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="contact-category">How Can We Help?</Label>
-              <select
-                id="contact-category"
-                value={formData.category}
-                onChange={(e) => handleInputChange('category', e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              >
-                {categories.map((category) => (
-                  <option key={category.value} value={category.value}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="contact-message">Your Message *</Label>
-              <Textarea
-                id="contact-message"
-                value={formData.message}
-                onChange={(e) => handleInputChange('message', e.target.value)}
-                placeholder="Tell us how we can help you..."
-                rows={5}
-                maxLength={2000}
-                required
-              />
-            </div>
-
-            <Button
-              type="submit"
-              className="w-full gap-2"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? (
-                <LoadingSpinner size="sm" />
-              ) : (
-                <>
-                  <Send className="h-4 w-4" />
-                  Send Message
-                </>
-              )}
+            <Button onClick={() => setIsSubmitted(false)} variant="outline">
+              Send Another Message
             </Button>
-          </form>
+          </div>
         </CardContent>
       </Card>
+    );
+  }
 
-      {/* Contact Information */}
-      <div className="space-y-6">
-        <Card className="border-primary/20 bg-primary/5">
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-start gap-3">
-                <Mail className="h-5 w-5 text-primary mt-1" />
-                <div>
-                  <h4 className="font-medium">Email Support</h4>
-                  <p className="text-sm text-muted-foreground">hello@accio.app</p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    We typically respond within 24 hours.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-primary mt-1" />
-                <div>
-                  <h4 className="font-medium">Response Time</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Business hours: Monday - Friday, 9 AM - 6 PM EST
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Emergency support available 24/7 for Enterprise customers.
-                  </p>
-                </div>
-              </div>
+  return (
+    <div className={cn("max-w-4xl mx-auto", className)}>
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Contact Information */}
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-2xl font-bold text-foreground mb-4">Get in Touch</h2>
+            <p className="text-muted-foreground">
+              Have questions about Accio? We'd love to hear from you. Send us a message 
+              and we'll respond as soon as possible.
+            </p>
+          </div>
 
-              <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 text-primary mt-1" />
-                <div>
-                  <h4 className="font-medium">Privacy & Security</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Your information is encrypted and secure.
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    We never share your data with third parties.
-                  </p>
-                </div>
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Mail className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Email</p>
+                <p className="text-sm text-muted-foreground">support@accio.com</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
 
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <MessageSquare className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Live Chat</p>
+                <p className="text-sm text-muted-foreground">Available 24/7</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <Phone className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Phone</p>
+                <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                <MapPin className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <p className="font-medium">Office</p>
+                <p className="text-sm text-muted-foreground">
+                  123 Innovation Drive<br />
+                  San Francisco, CA 94107
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Contact Form */}
         <Card>
-          <CardContent className="p-6">
-            <h4 className="font-medium mb-3 flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-500" />
-              What to Expect
-            </h4>
-            <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>• Personalized response from our team</li>
-              <li>• Follow-up if additional information is needed</li>
-              <li>• Solutions tailored to your specific use case</li>
-              <li>• Optional demo or consultation call</li>
-            </ul>
+          <CardHeader>
+            <CardTitle>Send us a message</CardTitle>
+            <CardDescription>
+              Fill out the form below and we'll get back to you shortly.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {errors.general && (
+              <Alert variant="destructive" className="mb-6">
+                <AlertDescription>{errors.general}</AlertDescription>
+              </Alert>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Name Fields */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name *</Label>
+                  <Input
+                    id="firstName"
+                    value={formData.firstName}
+                    onChange={(e) => updateField('firstName', e.target.value)}
+                    className={cn(errors.firstName && "border-destructive")}
+                    disabled={isSubmitting}
+                  />
+                  {errors.firstName && (
+                    <p className="text-sm text-destructive">{errors.firstName}</p>
+                  )}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name *</Label>
+                  <Input
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={(e) => updateField('lastName', e.target.value)}
+                    className={cn(errors.lastName && "border-destructive")}
+                    disabled={isSubmitting}
+                  />
+                  {errors.lastName && (
+                    <p className="text-sm text-destructive">{errors.lastName}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email *</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => updateField('email', e.target.value)}
+                  className={cn(errors.email && "border-destructive")}
+                  disabled={isSubmitting}
+                />
+                {errors.email && (
+                  <p className="text-sm text-destructive">{errors.email}</p>
+                )}
+              </div>
+
+              {/* Company and Phone */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="company">Company</Label>
+                  <Input
+                    id="company"
+                    value={formData.company}
+                    onChange={(e) => updateField('company', e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => updateField('phone', e.target.value)}
+                    disabled={isSubmitting}
+                  />
+                </div>
+              </div>
+
+              {/* Inquiry Type */}
+              <div className="space-y-2">
+                <Label htmlFor="inquiryType">Inquiry Type *</Label>
+                <Select 
+                  value={formData.inquiryType} 
+                  onValueChange={(value) => updateField('inquiryType', value)}
+                  disabled={isSubmitting}
+                >
+                  <SelectTrigger className={cn(errors.inquiryType && "border-destructive")}>
+                    <SelectValue placeholder="Select inquiry type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {inquiryTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {errors.inquiryType && (
+                  <p className="text-sm text-destructive">{errors.inquiryType}</p>
+                )}
+              </div>
+
+              {/* Subject */}
+              <div className="space-y-2">
+                <Label htmlFor="subject">Subject *</Label>
+                <Input
+                  id="subject"
+                  value={formData.subject}
+                  onChange={(e) => updateField('subject', e.target.value)}
+                  className={cn(errors.subject && "border-destructive")}
+                  disabled={isSubmitting}
+                />
+                {errors.subject && (
+                  <p className="text-sm text-destructive">{errors.subject}</p>
+                )}
+              </div>
+
+              {/* Message */}
+              <div className="space-y-2">
+                <Label htmlFor="message">Message *</Label>
+                <Textarea
+                  id="message"
+                  rows={4}
+                  value={formData.message}
+                  onChange={(e) => updateField('message', e.target.value)}
+                  className={cn(errors.message && "border-destructive")}
+                  disabled={isSubmitting}
+                />
+                {errors.message && (
+                  <p className="text-sm text-destructive">{errors.message}</p>
+                )}
+              </div>
+
+              {/* Agreement Checkbox */}
+              <div className="flex items-start space-x-2">
+                <Checkbox
+                  id="agreeToContact"
+                  checked={formData.agreeToContact}
+                  onCheckedChange={(checked) => updateField('agreeToContact', checked as boolean)}
+                  disabled={isSubmitting}
+                />
+                <div className="grid gap-1.5 leading-none">
+                  <Label
+                    htmlFor="agreeToContact"
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    I agree to be contacted by Accio regarding my inquiry *
+                  </Label>
+                  {errors.agreeToContact && (
+                    <p className="text-sm text-destructive">{errors.agreeToContact}</p>
+                  )}
+                </div>
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Sending...
+                  </>
+                ) : (
+                  <>
+                    <Send className="h-4 w-4 mr-2" />
+                    Send Message
+                  </>
+                )}
+              </Button>
+            </form>
           </CardContent>
         </Card>
       </div>
