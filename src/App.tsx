@@ -5,13 +5,15 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from 'react-helmet-async';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { SecureAuthProvider } from '@/contexts/SecureAuthContext';
 import { AccessibilityProvider } from '@/contexts/AccessibilityContext';
 import { EnhancedAccessibility } from '@/components/accessibility/EnhancedAccessibility';
 import { AccessibilityToolbar } from '@/components/accessibility/AccessibilityToolbar';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { SecurityHeaders } from '@/components/security/SecurityHeaders';
 import { useAppSecurity } from '@/hooks/useAppSecurity';
-import ProtectedRoute from '@/components/ProtectedRoute';
+import { securityMonitor } from '@/utils/securityMonitor';
+import SecureProtectedRoute from '@/components/security/SecureProtectedRoute';
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -30,8 +32,14 @@ const queryClient = new QueryClient({
 function AppContent() {
   useAppSecurity();
   
+  useEffect(() => {
+    // Initialize security monitoring
+    securityMonitor.initialize();
+  }, []);
+  
   return (
     <div className="min-h-screen">
+      <SecurityHeaders />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/login" element={<Login />} />
@@ -40,9 +48,9 @@ function AppContent() {
         <Route 
           path="/dashboard" 
           element={
-            <ProtectedRoute>
+            <SecureProtectedRoute>
               <Dashboard />
-            </ProtectedRoute>
+            </SecureProtectedRoute>
           } 
         />
       </Routes>
@@ -57,7 +65,7 @@ function App() {
       <HelmetProvider>
         <QueryClientProvider client={queryClient}>
           <BrowserRouter>
-            <AuthProvider>
+            <SecureAuthProvider>
               <AccessibilityProvider>
                 <EnhancedAccessibility>
                   <TooltipProvider>
@@ -66,7 +74,7 @@ function App() {
                   </TooltipProvider>
                 </EnhancedAccessibility>
               </AccessibilityProvider>
-            </AuthProvider>
+            </SecureAuthProvider>
           </BrowserRouter>
         </QueryClientProvider>
       </HelmetProvider>
