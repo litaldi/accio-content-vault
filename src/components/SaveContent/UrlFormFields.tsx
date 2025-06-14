@@ -5,7 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Link as LinkIcon } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
-import { FormData } from './SaveContentUrlForm'; // Import FormData type
+import { FormData } from './hooks/useSaveContentForm';
 
 interface UrlFormFieldsProps {
   form: UseFormReturn<FormData>;
@@ -31,31 +31,6 @@ const UrlFormFields: React.FC<UrlFormFieldsProps> = ({ form }) => {
             {form.formState.errors.url.message}
           </p>
         )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="title">Title *</Label>
-        <Input
-          id="title"
-          placeholder="Enter title"
-          {...form.register('title')}
-          aria-describedby="title-error"
-        />
-        {form.formState.errors.title && (
-          <p id="title-error" className="text-sm text-destructive">
-            {form.formState.errors.title.message}
-          </p>
-        )}
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          placeholder="Enter description (optional)"
-          rows={3}
-          {...form.register('description')}
-        />
       </div>
     </>
   );

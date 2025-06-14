@@ -6,10 +6,7 @@ import { Tag } from '@/types';
 import { Loader2, Save } from 'lucide-react';
 import UrlFormFields from './UrlFormFields';
 import UrlFormTagSection from './UrlFormTagSection';
-import useSaveContentForm from './hooks/useSaveContentForm';
-
-export const formSchema = useSaveContentForm.formSchema;
-export type FormData = useSaveContentForm.FormData;
+import useSaveContentForm, { formSchema, FormData } from './hooks/useSaveContentForm';
 
 interface SaveContentUrlFormProps {
   onSaveContent?: (url: string, tags: Tag[]) => void;
@@ -32,7 +29,7 @@ const SaveContentUrlForm: React.FC<SaveContentUrlFormProps> = ({ onSaveContent }
     onSaveContent: onSaveContent || (() => {}) 
   });
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormData) => {
     await handleSubmit(data);
     // Reset local state on successful submission
     if (!error) {
@@ -107,4 +104,5 @@ const SaveContentUrlForm: React.FC<SaveContentUrlFormProps> = ({ onSaveContent }
   );
 };
 
+export { formSchema, FormData };
 export default SaveContentUrlForm;

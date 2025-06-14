@@ -7,8 +7,8 @@ import { aiTaggingService } from '@/services/aiTaggingService';
 import { useFormSubmission } from './useFormSubmission';
 import { useTagConfirmation } from './useTagConfirmation';
 
-// Define form validation schema with Zod
-const formSchema = z.object({
+// Export form validation schema with Zod
+export const formSchema = z.object({
   url: z.string()
     .trim()
     .min(1, { message: "URL is required" })
@@ -22,7 +22,7 @@ const formSchema = z.object({
     }, { message: "Please enter a valid URL" })
 });
 
-type FormValues = z.infer<typeof formSchema>;
+export type FormData = z.infer<typeof formSchema>;
 
 interface UseSaveContentFormProps {
   onSaveContent: (url: string, tags: Tag[]) => void;
@@ -49,14 +49,14 @@ const useSaveContentForm = ({ onSaveContent }: UseSaveContentFormProps) => {
   } = useTagConfirmation();
   
   // Initialize form
-  const form = useForm<FormValues>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       url: ''
     }
   });
 
-  const handleSubmit = async (data: FormValues) => {
+  const handleSubmit = async (data: FormData) => {
     setError(null);
 
     if (!user) {
