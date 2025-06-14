@@ -69,5 +69,19 @@ export const Spacing = {
     >
       {children}
     </div>
+  ),
+  Stack: ({ children, className, gap = 'md', ...props }: React.HTMLProps<HTMLDivElement> & { gap?: 'sm' | 'md' | 'lg' }) => (
+    <div 
+      className={cn(
+        'flex flex-col',
+        gap === 'sm' && 'gap-2',
+        gap === 'md' && 'gap-4',
+        gap === 'lg' && 'gap-6',
+        className
+      )} 
+      {...props}
+    >
+      {children}
+    </div>
   )
 };

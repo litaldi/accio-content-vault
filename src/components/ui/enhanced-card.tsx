@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-interface EnhancedCardProps {
+interface EnhancedCardProps extends React.HTMLProps<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   variant?: 'default' | 'interactive' | 'elevated';
@@ -17,6 +17,7 @@ export const EnhancedCard: React.FC<EnhancedCardProps> = ({
   variant = 'default',
   padding = 'md',
   spacing = 'normal',
+  onClick,
   ...props
 }) => {
   return (
@@ -27,6 +28,7 @@ export const EnhancedCard: React.FC<EnhancedCardProps> = ({
         variant === 'elevated' && 'shadow-lg border-0',
         className
       )}
+      onClick={onClick}
       {...props}
     >
       {children}

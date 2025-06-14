@@ -10,6 +10,8 @@ export interface EnhancedButtonProps extends ButtonProps {
   loadingText?: string;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  emphasis?: 'low' | 'medium' | 'high';
+  showArrow?: boolean;
 }
 
 export const EnhancedButton: React.FC<EnhancedButtonProps> = ({
@@ -21,6 +23,8 @@ export const EnhancedButton: React.FC<EnhancedButtonProps> = ({
   loadingText = 'Loading...',
   leftIcon,
   rightIcon,
+  emphasis,
+  showArrow,
   disabled,
   ...props
 }) => {
@@ -29,6 +33,7 @@ export const EnhancedButton: React.FC<EnhancedButtonProps> = ({
       className={cn(
         'transition-all duration-200 transform hover:-translate-y-0.5 active:translate-y-0',
         gradient && 'bg-gradient-to-r from-primary to-purple-600 hover:from-primary/90 hover:to-purple-600/90',
+        emphasis === 'high' && 'shadow-lg hover:shadow-xl',
         className
       )}
       variant={gradient ? 'ghost' : variant}

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Shield, Zap, Brain, Command } from 'lucide-react';
+import { Search, Shield, Zap, Brain } from 'lucide-react';
 import { EnhancedButton } from '@/components/ui/enhanced-button';
 
 export const HomeHeroSection: React.FC = () => {
@@ -35,7 +35,6 @@ export const HomeHeroSection: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
             <EnhancedButton 
               size="lg" 
-              emphasis="high"
               showArrow
               asChild
             >
@@ -44,7 +43,6 @@ export const HomeHeroSection: React.FC = () => {
             <EnhancedButton 
               variant="secondary" 
               size="lg"
-              emphasis="medium"
               asChild
             >
               <Link to="/features">Explore Features</Link>

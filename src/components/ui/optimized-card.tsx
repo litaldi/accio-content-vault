@@ -3,7 +3,7 @@ import React from 'react';
 import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
-interface OptimizedCardProps {
+interface OptimizedCardProps extends React.HTMLProps<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
   elevated?: boolean;

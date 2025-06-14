@@ -1,229 +1,114 @@
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { logSecurityEvent } from '@/utils/security';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { User } from '@supabase/supabase-js';
 
-interface AuthContextType {
+export interface AuthContextType {
   user: User | null;
-  session: Session | null;
   loading: boolean;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  isDemoMode: boolean;
-  signUp: (email: string, password: string, options?: { name?: string }) => Promise<{ error: any }>;
-  signIn: (email: string, password: string) => Promise<{ error: any }>;
-  signOut: () => Promise<void>;
-  signInWithProvider: (provider: 'google') => Promise<{ error: any }>;
-  resetPassword: (email: string) => Promise<void>;
-  securityLog: (event: string, details?: any) => void;
+  login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = () => {
+export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Enhanced auth state listener with security logging
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-
-        // Log auth events for security monitoring
-        if (event === 'SIGNED_IN' && session?.user) {
-          logSecurityEvent('user_signed_in', {
-            userId: session.user.id,
-            email: session.user.email,
-            provider: session.user.app_metadata?.provider || 'email'
-          });
-        } else if (event === 'SIGNED_OUT') {
-          logSecurityEvent('user_signed_out', {
-            timestamp: new Date().toISOString()
-          });
-        } else if (event === 'TOKEN_REFRESHED') {
-          logSecurityEvent('token_refreshed', {
-            userId: session?.user?.id
-          });
-        }
-      }
-    );
-
-    // Get initial session with security logging
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    // Simulate loading
+    const timer = setTimeout(() => {
       setLoading(false);
-      
-      if (session?.user) {
-        logSecurityEvent('session_restored', {
-          userId: session.user.id
-        });
-      }
-    });
+    }, 1000);
 
-    return () => subscription.unsubscribe();
+    return () => clearTimeout(timer);
   }, []);
 
-  const securityLog = (event: string, details: any = {}) => {
-    logSecurityEvent(event, {
-      ...details,
-      userId: user?.id,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
-    });
-  };
-
-  const signUp = async (email: string, password: string, options?: { name?: string }) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
+  const login = async (email: string, password: string): Promise<void> => {
+    setLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: redirectUrl,
-          data: options ? { full_name: options.name } : undefined
-        }
-      });
-
-      if (error) {
-        securityLog('signup_failed', {
-          email,
-          error: error.message,
-          attempt_timestamp: new Date().toISOString()
-        });
+      // Demo login logic
+      if (email === 'demo@yourapp.com' && password === 'Demo1234!') {
+        const mockUser = {
+          id: 'demo-user-id',
+          email: 'demo@yourapp.com',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          app_metadata: {},
+          user_metadata: {},
+          aud: 'authenticated',
+          confirmation_sent_at: null,
+          confirmed_at: new Date().toISOString(),
+          email_confirmed_at: new Date().toISOString(),
+          invited_at: null,
+          last_sign_in_at: new Date().toISOString(),
+          phone: null,
+          phone_confirmed_at: null,
+          recovery_sent_at: null,
+          role: 'authenticated'
+        } as User;
+        
+        setUser(mockUser);
       } else {
-        securityLog('signup_attempted', {
-          email,
-          has_name: !!options?.name
-        });
+        throw new Error('Invalid credentials');
       }
-
-      return { error };
-    } catch (error) {
-      securityLog('signup_error', {
-        email,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
-      return { error };
+    } finally {
+      setLoading(false);
     }
   };
 
-  const signIn = async (email: string, password: string) => {
+  const register = async (email: string, password: string): Promise<void> => {
+    setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      // Mock registration
+      const mockUser = {
+        id: `user-${Date.now()}`,
         email,
-        password
-      });
-
-      if (error) {
-        securityLog('signin_failed', {
-          email,
-          error: error.message,
-          attempt_timestamp: new Date().toISOString()
-        });
-      }
-
-      return { error };
-    } catch (error) {
-      securityLog('signin_error', {
-        email,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
-      return { error };
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        app_metadata: {},
+        user_metadata: {},
+        aud: 'authenticated',
+        confirmation_sent_at: null,
+        confirmed_at: new Date().toISOString(),
+        email_confirmed_at: new Date().toISOString(),
+        invited_at: null,
+        last_sign_in_at: new Date().toISOString(),
+        phone: null,
+        phone_confirmed_at: null,
+        recovery_sent_at: null,
+        role: 'authenticated'
+      } as User;
+      
+      setUser(mockUser);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const signOut = async () => {
-    try {
-      securityLog('signout_initiated', {
-        userId: user?.id
-      });
-      await supabase.auth.signOut();
-    } catch (error) {
-      securityLog('signout_error', {
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
-    }
+  const logout = async (): Promise<void> => {
+    setUser(null);
   };
 
-  const signInWithProvider = async (provider: 'google') => {
-    try {
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider,
-        options: {
-          redirectTo: `${window.location.origin}/`
-        }
-      });
-
-      if (error) {
-        securityLog('oauth_signin_failed', {
-          provider,
-          error: error.message
-        });
-      } else {
-        securityLog('oauth_signin_attempted', {
-          provider
-        });
-      }
-
-      return { error };
-    } catch (error) {
-      securityLog('oauth_signin_error', {
-        provider,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
-      return { error };
-    }
-  };
-
-  const resetPassword = async (email: string) => {
-    try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`
-      });
-
-      securityLog('password_reset_requested', {
-        email,
-        success: !error
-      });
-
-      if (error) throw error;
-    } catch (error) {
-      securityLog('password_reset_error', {
-        email,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
-      throw error;
-    }
-  };
-
-  const value = {
+  const value: AuthContextType = {
     user,
-    session,
     loading,
-    isLoading: loading,
-    isAuthenticated: !!user,
-    isDemoMode: false,
-    signUp,
-    signIn,
-    signOut,
-    signInWithProvider,
-    resetPassword,
-    securityLog
+    login,
+    register,
+    logout
   };
 
   return (
