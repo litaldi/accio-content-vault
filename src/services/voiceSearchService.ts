@@ -1,142 +1,133 @@
 
-/**
- * Voice Search Service for handling speech recognition
- */
+interface VoiceSearchConfig {
+  continuous?: boolean;
+  interimResults?: boolean;
+  language?: string;
+  maxAlternatives?: number;
+}
 
-export interface VoiceSearchResult {
+interface VoiceSearchResult {
   transcript: string;
   confidence: number;
   isFinal: boolean;
 }
 
-export interface VoiceSearchConfig {
-  language?: string;
-  continuous?: boolean;
-  interimResults?: boolean;
-  maxAlternatives?: number;
-}
+type VoiceSearchEventHandler = (result: VoiceSearchResult) => void;
+type VoiceSearchErrorHandler = (error: string) => void;
+type VoiceSearchEventCallback = () => void;
 
-export class VoiceSearchService {
-  private recognition: any = null;
+class VoiceSearchService {
+  private recognition: SpeechRecognition | null = null;
   private isListening = false;
-  private onResult: ((result: VoiceSearchResult) => void) | null = null;
-  private onError: ((error: string) => void) | null = null;
-  private onStart: (() => void) | null = null;
-  private onEnd: (() => void) | null = null;
+  private onResultHandler: VoiceSearchEventHandler | null = null;
+  private onErrorHandler: VoiceSearchErrorHandler | null = null;
+  private onStartHandler: VoiceSearchEventCallback | null = null;
+  private onEndHandler: VoiceSearchEventCallback | null = null;
 
   constructor() {
-    this.initializeRecognition();
-  }
-
-  private initializeRecognition() {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
-      this.recognition = new SpeechRecognition();
+    if (this.isSupported()) {
+      this.initializeRecognition();
     }
   }
 
   isSupported(): boolean {
-    return this.recognition !== null;
+    return 'webkitSpeechRecognition' in window || 'SpeechRecognition' in window;
   }
 
-  startListening(config: VoiceSearchConfig = {}) {
-    if (!this.isSupported()) {
-      this.onError?.('Speech recognition is not supported in this browser');
-      return;
-    }
+  private initializeRecognition(): void {
+    const SpeechRecognitionAPI = window.webkitSpeechRecognition || window.SpeechRecognition;
+    this.recognition = new SpeechRecognitionAPI();
+    this.setupEventListeners();
+  }
 
-    if (this.isListening) {
-      return;
-    }
+  private setupEventListeners(): void {
+    if (!this.recognition) return;
 
-    // Configure recognition
-    this.recognition.continuous = config.continuous ?? false;
-    this.recognition.interimResults = config.interimResults ?? true;
-    this.recognition.lang = config.language ?? 'en-US';
-    this.recognition.maxAlternatives = config.maxAlternatives ?? 1;
-
-    // Event handlers
     this.recognition.onstart = () => {
       this.isListening = true;
-      this.onStart?.();
+      this.onStartHandler?.();
     };
 
-    this.recognition.onresult = (event: any) => {
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const result = event.results[i];
-        const transcript = result[0].transcript;
-        const confidence = result[0].confidence;
-        
-        this.onResult?.({
-          transcript,
-          confidence,
-          isFinal: result.isFinal
-        });
-      }
+    this.recognition.onresult = (event: SpeechRecognitionEvent) => {
+      const result = event.results[event.results.length - 1];
+      const transcript = result[0].transcript;
+      const confidence = result[0].confidence;
+      
+      this.onResultHandler?.({
+        transcript,
+        confidence,
+        isFinal: result.isFinal
+      });
     };
 
-    this.recognition.onerror = (event: any) => {
+    this.recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
       this.isListening = false;
-      let errorMessage = 'Speech recognition error';
+      let errorMessage = 'Speech recognition error occurred.';
       
       switch (event.error) {
+        case 'not-allowed':
+          errorMessage = 'Microphone access denied. Please allow microphone access.';
+          break;
         case 'no-speech':
           errorMessage = 'No speech detected. Please try again.';
           break;
-        case 'audio-capture':
-          errorMessage = 'Audio capture failed. Please check your microphone.';
-          break;
-        case 'not-allowed':
-          errorMessage = 'Microphone access denied. Please enable microphone permissions.';
-          break;
         case 'network':
-          errorMessage = 'Network error occurred during speech recognition.';
+          errorMessage = 'Network error occurred. Please check your connection.';
           break;
         default:
           errorMessage = `Speech recognition error: ${event.error}`;
       }
       
-      this.onError?.(errorMessage);
+      this.onErrorHandler?.(errorMessage);
     };
 
     this.recognition.onend = () => {
       this.isListening = false;
-      this.onEnd?.();
+      this.onEndHandler?.();
     };
+  }
+
+  startListening(config: VoiceSearchConfig = {}): void {
+    if (!this.recognition || this.isListening) return;
+
+    this.recognition.continuous = config.continuous ?? false;
+    this.recognition.interimResults = config.interimResults ?? true;
+    this.recognition.lang = config.language ?? 'en-US';
+    this.recognition.maxAlternatives = config.maxAlternatives ?? 1;
 
     try {
       this.recognition.start();
     } catch (error) {
-      this.isListening = false;
-      this.onError?.('Failed to start speech recognition');
+      this.onErrorHandler?.('Failed to start speech recognition.');
     }
   }
 
-  stopListening() {
+  stopListening(): void {
     if (this.recognition && this.isListening) {
       this.recognition.stop();
     }
   }
 
-  onRecognitionResult(callback: (result: VoiceSearchResult) => void) {
-    this.onResult = callback;
+  onRecognitionStart(handler: VoiceSearchEventCallback): void {
+    this.onStartHandler = handler;
   }
 
-  onRecognitionError(callback: (error: string) => void) {
-    this.onError = callback;
+  onRecognitionResult(handler: VoiceSearchEventHandler): void {
+    this.onResultHandler = handler;
   }
 
-  onRecognitionStart(callback: () => void) {
-    this.onStart = callback;
+  onRecognitionError(handler: VoiceSearchErrorHandler): void {
+    this.onErrorHandler = handler;
   }
 
-  onRecognitionEnd(callback: () => void) {
-    this.onEnd = callback;
+  onRecognitionEnd(handler: VoiceSearchEventCallback): void {
+    this.onEndHandler = handler;
   }
 
-  getListeningState(): boolean {
+  getIsListening(): boolean {
     return this.isListening;
   }
 }
 
+// Export singleton instance
 export const voiceSearchService = new VoiceSearchService();
