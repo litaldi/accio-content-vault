@@ -16,6 +16,7 @@ interface SecureInputProps {
   sanitize?: boolean;
   className?: string;
   description?: string;
+  disabled?: boolean;
 }
 
 /**
@@ -32,7 +33,8 @@ export const SecureInput: React.FC<SecureInputProps> = ({
   maxLength = 1000,
   sanitize = true,
   className,
-  description
+  description,
+  disabled = false
 }) => {
   const [error, setError] = useState<string>('');
   const [isTouched, setIsTouched] = useState(false);
@@ -100,6 +102,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
           className="h-auto p-1 hover:bg-transparent"
           aria-label={showPassword ? 'Hide password' : 'Show password'}
           tabIndex={0}
+          disabled={disabled}
         >
           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
         </Button>
@@ -142,6 +145,7 @@ export const SecureInput: React.FC<SecureInputProps> = ({
         className={className}
         maxLength={maxLength}
         required={required}
+        disabled={disabled}
         aria-describedby={error ? `${label}-error` : undefined}
         aria-invalid={!!(isTouched && error)}
         autoComplete={type === 'password' ? 'current-password' : type === 'email' ? 'email' : undefined}

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
@@ -46,8 +45,14 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
       newErrors.email = emailResult.message;
     }
 
-    // Password validation
-    const passwordResult = validatePassword(formData.password);
+    // Password validation - fix the function call to match new signature
+    const passwordResult = validatePassword(formData.password, {
+      minLength: 8,
+      requireUppercase: true,
+      requireLowercase: true,
+      requireNumbers: true,
+      requireSymbols: true
+    });
     if (!passwordResult.isValid) {
       newErrors.password = passwordResult.message;
     }
