@@ -45,14 +45,8 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
       newErrors.email = emailResult.message;
     }
 
-    // Password validation - fix the function call to match new signature
-    const passwordResult = validatePassword(formData.password, {
-      minLength: 8,
-      requireUppercase: true,
-      requireLowercase: true,
-      requireNumbers: true,
-      requireSymbols: true
-    });
+    // Password validation - fix the function call to match actual signature
+    const passwordResult = validatePassword(formData.password);
     if (!passwordResult.isValid) {
       newErrors.password = passwordResult.message;
     }
@@ -92,7 +86,7 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
           return;
         }
       } else {
-        const result = await signUp(formData.email, formData.password);
+        const result = await signUp(formData.firstName + ' ' + formData.lastName, formData.email, formData.password);
         if (result?.error) {
           setErrors({ general: result.error.message });
           return;
