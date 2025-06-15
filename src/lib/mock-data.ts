@@ -10,9 +10,10 @@ export const mockContents: SavedContent[] = [
     content_type: 'link',
     url: 'https://example.com/react-hooks',
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
     tags: [
-      { id: '1', name: 'React', confirmed: true, auto_generated: false },
-      { id: '2', name: 'JavaScript', confirmed: true, auto_generated: false }
+      { id: '1', name: 'React', confirmed: true, auto_generated: false, created_at: new Date().toISOString() },
+      { id: '2', name: 'JavaScript', confirmed: true, auto_generated: false, created_at: new Date().toISOString() }
     ]
   },
   {
@@ -22,9 +23,10 @@ export const mockContents: SavedContent[] = [
     description: 'Essential TypeScript patterns and practices for building robust applications.',
     content_type: 'document',
     created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
     tags: [
-      { id: '3', name: 'TypeScript', confirmed: true, auto_generated: false },
-      { id: '4', name: 'Programming', confirmed: true, auto_generated: false }
+      { id: '3', name: 'TypeScript', confirmed: true, auto_generated: false, created_at: new Date().toISOString() },
+      { id: '4', name: 'Programming', confirmed: true, auto_generated: false, created_at: new Date().toISOString() }
     ]
   }
 ];

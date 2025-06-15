@@ -47,11 +47,12 @@ describe('SearchResults', () => {
     description: 'This is a test content',
     file_url: '',
     content_type: 'link',
+    created_at: '2023-01-01T00:00:00.000Z',
+    updated_at: '2023-01-01T00:00:00.000Z',
     tags: [
-      { id: 'tag1', name: 'React', auto_generated: false, confirmed: true },
-      { id: 'tag2', name: 'Testing', auto_generated: true, confirmed: true }
-    ],
-    created_at: '2023-01-01T00:00:00.000Z'
+      { id: 'tag1', name: 'React', auto_generated: false, confirmed: true, created_at: '2023-01-01T00:00:00.000Z' },
+      { id: 'tag2', name: 'Testing', auto_generated: true, confirmed: true, created_at: '2023-01-01T00:00:00.000Z' }
+    ]
   };
 
   const mockSearchResults = [

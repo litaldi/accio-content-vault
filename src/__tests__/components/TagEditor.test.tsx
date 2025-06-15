@@ -6,8 +6,8 @@ import TagEditor from '@/components/TagEditor';
 import { Tag } from '@/types';
 
 const mockTags: Tag[] = [
-  { id: '1', name: 'React', auto_generated: false, confirmed: true },
-  { id: '2', name: 'TypeScript', auto_generated: true, confirmed: true },
+  { id: '1', name: 'React', auto_generated: false, confirmed: true, created_at: '2023-01-01T00:00:00.000Z' },
+  { id: '2', name: 'TypeScript', auto_generated: true, confirmed: true, created_at: '2023-01-02T00:00:00.000Z' },
 ];
 
 describe('TagEditor', () => {

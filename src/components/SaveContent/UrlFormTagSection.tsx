@@ -23,10 +23,11 @@ const UrlFormTagSection: React.FC<UrlFormTagSectionProps> = ({
   const addTag = (tagName: string) => {
     if (tagName.trim() && !tags.find(tag => tag.name === tagName.trim())) {
       const newTag: Tag = {
-        id: `temp-${Date.now()}`, // Simple unique ID for client-side
+        id: `temp-${Date.now()}`,
         name: tagName.trim(),
         auto_generated: false,
         confirmed: true,
+        created_at: new Date().toISOString(),
       };
       setTags(prevTags => [...prevTags, newTag]);
       setTagInput('');
@@ -91,5 +92,4 @@ const UrlFormTagSection: React.FC<UrlFormTagSectionProps> = ({
     </div>
   );
 };
-
 export default UrlFormTagSection;

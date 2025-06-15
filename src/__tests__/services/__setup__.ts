@@ -37,8 +37,8 @@ export const mockSupabase = {
 };
 
 export const sampleTags: Tag[] = [
-  { id: 'tag1', name: 'React', auto_generated: false, confirmed: true },
-  { id: 'tag2', name: 'TypeScript', auto_generated: true, confirmed: false },
+  { id: 'tag1', name: 'React', auto_generated: false, confirmed: true, created_at: '2023-01-01T00:00:00.000Z' },
+  { id: 'tag2', name: 'TypeScript', auto_generated: true, confirmed: false, created_at: '2023-01-02T00:00:00.000Z' },
 ];
 
 export const setupMocks = () => {
@@ -61,6 +61,7 @@ export const createMockContents = (): SavedContent[] => [
     description: 'Test description 1',
     content_type: 'link',
     created_at: '2023-01-01',
+    updated_at: '2023-01-01',
     tags: [] 
   },
   { 
@@ -70,6 +71,7 @@ export const createMockContents = (): SavedContent[] => [
     description: 'Test description 2',
     content_type: 'document',
     created_at: '2023-01-02',
+    updated_at: '2023-01-02',
     tags: [] 
   }
 ];

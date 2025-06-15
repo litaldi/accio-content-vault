@@ -1,4 +1,3 @@
-
 import { highlightSearchTerms, normalizeSearchQuery, calculateRelevanceScore } from '@/utils/searchUtils';
 import { SavedContent } from '@/types';
 
@@ -71,9 +70,10 @@ describe('searchUtils', () => {
       file_url: '',
       content_type: 'link',
       created_at: '2024-01-01T00:00:00Z',
+      updated_at: '2024-01-01T00:00:00Z',
       tags: [
-        { id: 'tag-1', name: 'react', auto_generated: false, confirmed: true },
-        { id: 'tag-2', name: 'development', auto_generated: false, confirmed: true }
+        { id: 'tag-1', name: 'react', auto_generated: false, confirmed: true, created_at: '2023-01-01T00:00:00.000Z' },
+        { id: 'tag-2', name: 'development', auto_generated: false, confirmed: true, created_at: '2023-01-02T00:00:00.000Z' }
       ]
     };
 

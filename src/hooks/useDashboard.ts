@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from 'react';
 import { SavedContent, Tag } from '@/types';
 
@@ -21,6 +20,12 @@ const initialFilters: DashboardFilters = {
   selectedTab: 'all',
   activeFilters: [],
 };
+
+const tags: Tag[] = [
+  { id: '1', name: 'analytics', auto_generated: true, confirmed: true, created_at: '2024-01-01T00:00:00Z' },
+  { id: '2', name: 'dashboard', auto_generated: true, confirmed: true, created_at: '2024-01-02T00:00:00Z' },
+  { id: '3', name: 'engagement', auto_generated: false, confirmed: true, created_at: '2024-01-03T00:00:00Z' },
+];
 
 export const useDashboard = () => {
   const [state, setState] = useState<DashboardState>({
