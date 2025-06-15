@@ -57,33 +57,27 @@ export const Typography = {
  * Section Props: accepts spacing (spacing) and background string keywords.
  * These are not forwarded to the DOM.
  */
-type SectionSpacing = string;
-type SectionBackground = string;
-
 interface SectionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'spacing' | 'background'> {
-  spacing?: SectionSpacing;
-  background?: SectionBackground;
+  spacing?: string;
+  background?: string;
 }
 
 /**
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
-type ContainerSize = string;
 interface ContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
-  size?: ContainerSize;
+  size?: string;
 }
 
 /**
  * Grid Props: accepts columns and gap as string/number, not forwarded to DOM.
  */
-type GridGap = string;
-type GridColumns = string | number;
 interface GridProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'columns' | 'gap'> {
-  columns?: GridColumns;
-  gap?: GridGap;
+  columns?: string | number;
+  gap?: string;
 }
 
 export const Layout = {
@@ -94,9 +88,8 @@ export const Layout = {
     background = 'default',
     ...domProps
   }: SectionProps) => {
-    // Remove 'spacing' & 'background' from DOM props:
+    // Remove 'spacing' & 'background' from DOM props
     const restProps = { ...domProps };
-    // (We already used destructuring to remove them; this is just explicit.)
     return (
       <section
         className={cn(

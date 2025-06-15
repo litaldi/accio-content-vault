@@ -57,31 +57,26 @@ export const Typography = {
  * Section Props: accepts size and background as string | union.
  * These are not forwarded to the DOM.
  */
-type SectionSize = string;
-type SectionBackground = string;
-
 interface SectionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'size' | 'background'> {
-  size?: SectionSize;
-  background?: SectionBackground;
+  size?: string;
+  background?: string;
 }
 
 /**
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
-type ContainerSize = string;
 interface ContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
-  size?: ContainerSize;
+  size?: string;
 }
 
 /**
  * Stack Props: accepts gap as string/union, not forwarded to DOM.
  */
-type StackGap = string;
 interface StackProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'gap'> {
-  gap?: StackGap;
+  gap?: string;
 }
 
 export const Spacing = {
