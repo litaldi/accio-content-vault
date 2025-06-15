@@ -53,55 +53,41 @@ export const Typography = {
   )
 };
 
-/**
- * Section Props: accepts size and background as string | union.
- * These are not forwarded to the DOM.
- */
-interface SectionProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'size' | 'background'> {
-  size?: string;
-  background?: string;
+// Custom prop names for DOM safety
+interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+  sectionSize?: string;
+  sectionBackground?: string;
 }
 
-/**
- * Container Props: accepts size string keywords, not forwarded to DOM.
- */
-interface ContainerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
-  size?: string;
+interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  containerSize?: string;
 }
 
-/**
- * Stack Props: accepts gap as string/union, not forwarded to DOM.
- */
-interface StackProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'gap'> {
-  gap?: string;
+interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+  stackGap?: string;
 }
 
 export const Spacing = {
   Section: ({
     children,
     className,
-    size = 'md',
-    background = 'default',
+    sectionSize = 'md',
+    sectionBackground = 'default',
     ...domProps
   }: SectionProps) => {
-    // Remove 'size' & 'background' from DOM props:
-    const restProps = { ...domProps };
     return (
       <section
         className={cn(
           'section-spacing',
-          size === 'sm' && 'section-spacing-sm',
-          size === 'md' && 'section-spacing-md',
-          size === 'lg' && 'section-spacing-lg',
-          size === 'xl' && 'section-spacing-xl',
-          background === 'muted' && 'bg-muted/20',
-          background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
+          sectionSize === 'sm' && 'section-spacing-sm',
+          sectionSize === 'md' && 'section-spacing-md',
+          sectionSize === 'lg' && 'section-spacing-lg',
+          sectionSize === 'xl' && 'section-spacing-xl',
+          sectionBackground === 'muted' && 'bg-muted/20',
+          sectionBackground === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
         )}
-        {...restProps}
+        {...domProps}
       >
         {children}
       </section>
@@ -110,21 +96,22 @@ export const Spacing = {
   Container: ({
     children,
     className,
-    size = 'default',
+    containerSize = 'default',
     ...domProps
   }: ContainerProps) => {
-    const restProps = { ...domProps };
     return (
       <div
         className={cn(
           'container-spacing',
-          size === 'sm' && 'container-spacing-sm',
-          size === 'md' && 'container-spacing-md',
-          size === 'lg' && 'container-spacing-lg',
-          size === 'xl' && 'container-spacing-xl',
+          containerSize === 'sm' && 'container-spacing-sm',
+          containerSize === 'md' && 'container-spacing-md',
+          containerSize === 'lg' && 'container-spacing-lg',
+          containerSize === 'xl' && 'container-spacing-xl',
+          containerSize === '2xl' && 'container-spacing-2xl',
+          containerSize === 'full' && 'container-spacing-full',
           className
         )}
-        {...restProps}
+        {...domProps}
       >
         {children}
       </div>
@@ -133,21 +120,20 @@ export const Spacing = {
   Stack: ({
     children,
     className,
-    gap = 'md',
+    stackGap = 'md',
     ...domProps
   }: StackProps) => {
-    const restProps = { ...domProps };
     return (
       <div
         className={cn(
           'flex flex-col',
-          gap === 'sm' && 'gap-2',
-          gap === 'md' && 'gap-4',
-          gap === 'lg' && 'gap-6',
-          gap === 'default' && 'gap-4',
+          stackGap === 'sm' && 'gap-2',
+          stackGap === 'md' && 'gap-4',
+          stackGap === 'lg' && 'gap-6',
+          stackGap === 'default' && 'gap-4',
           className
         )}
-        {...restProps}
+        {...domProps}
       >
         {children}
       </div>

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -53,56 +54,43 @@ export const Typography = {
   )
 };
 
-/**
- * Section Props: accepts spacing (spacing) and background string keywords.
- * These are not forwarded to the DOM.
- */
-interface SectionProps
-  extends Omit<React.HTMLAttributes<HTMLElement>, 'spacing' | 'background'> {
-  spacing?: string;
-  background?: string;
+// Key: Here we use unique names for custom props
+
+interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+  sectionSpacing?: string;
+  sectionBackground?: string;
 }
 
-/**
- * Container Props: accepts size string keywords, not forwarded to DOM.
- */
-interface ContainerProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
-  size?: string;
+interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  containerSize?: string;
 }
 
-/**
- * Grid Props: accepts columns and gap as string/number, not forwarded to DOM.
- */
-interface GridProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'columns' | 'gap'> {
-  columns?: string | number;
-  gap?: string;
+interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
+  gridColumns?: string | number;
+  gridGap?: string;
 }
 
 export const Layout = {
   Section: ({
     children,
     className,
-    spacing = 'md',
-    background = 'default',
+    sectionSpacing = 'md',
+    sectionBackground = 'default',
     ...domProps
   }: SectionProps) => {
-    // Remove 'spacing' & 'background' from DOM props
-    const restProps = { ...domProps };
     return (
       <section
         className={cn(
           'section-spacing',
-          spacing === 'sm' && 'section-spacing-sm',
-          spacing === 'md' && 'section-spacing-md',
-          spacing === 'lg' && 'section-spacing-lg',
-          spacing === 'xl' && 'section-spacing-xl',
-          background === 'muted' && 'bg-muted/20',
-          background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
+          sectionSpacing === 'sm' && 'section-spacing-sm',
+          sectionSpacing === 'md' && 'section-spacing-md',
+          sectionSpacing === 'lg' && 'section-spacing-lg',
+          sectionSpacing === 'xl' && 'section-spacing-xl',
+          sectionBackground === 'muted' && 'bg-muted/20',
+          sectionBackground === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
         )}
-        {...restProps}
+        {...domProps}
       >
         {children}
       </section>
@@ -111,23 +99,22 @@ export const Layout = {
   Container: ({
     children,
     className,
-    size = 'default',
+    containerSize = 'default',
     ...domProps
   }: ContainerProps) => {
-    const restProps = { ...domProps };
     return (
       <div
         className={cn(
           'container-spacing',
-          size === 'sm' && 'container-spacing-sm',
-          size === 'md' && 'container-spacing-md',
-          size === 'lg' && 'container-spacing-lg',
-          size === 'xl' && 'container-spacing-xl',
-          size === '2xl' && 'container-spacing-2xl',
-          size === 'full' && 'container-spacing-full',
+          containerSize === 'sm' && 'container-spacing-sm',
+          containerSize === 'md' && 'container-spacing-md',
+          containerSize === 'lg' && 'container-spacing-lg',
+          containerSize === 'xl' && 'container-spacing-xl',
+          containerSize === '2xl' && 'container-spacing-2xl',
+          containerSize === 'full' && 'container-spacing-full',
           className
         )}
-        {...restProps}
+        {...domProps}
       >
         {children}
       </div>
@@ -136,26 +123,25 @@ export const Layout = {
   Grid: ({
     children,
     className,
-    columns = 1,
-    gap = 'md',
+    gridColumns = 1,
+    gridGap = 'md',
     ...domProps
   }: GridProps) => {
-    const restProps = { ...domProps };
     return (
       <div
         className={cn(
           'grid',
-          columns === 1 && 'grid-cols-1',
-          columns === 2 && 'grid-cols-1 md:grid-cols-2',
-          columns === 3 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
-          columns === 4 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
-          gap === 'sm' && 'gap-4',
-          gap === 'md' && 'gap-6',
-          gap === 'lg' && 'gap-8',
-          gap === 'default' && 'gap-6',
+          gridColumns === 1 && 'grid-cols-1',
+          gridColumns === 2 && 'grid-cols-1 md:grid-cols-2',
+          gridColumns === 3 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+          gridColumns === 4 && 'grid-cols-1 md:grid-cols-2 lg:grid-cols-4',
+          gridGap === 'sm' && 'gap-4',
+          gridGap === 'md' && 'gap-6',
+          gridGap === 'lg' && 'gap-8',
+          gridGap === 'default' && 'gap-6',
           className
         )}
-        {...restProps}
+        {...domProps}
       >
         {children}
       </div>
@@ -163,7 +149,6 @@ export const Layout = {
   }
 };
 
-// Card Components
 export const Card = {
   Root: ({ children, className, ...props }: React.HTMLProps<HTMLDivElement>) => (
     <div className={cn('clean-card', className)} {...props}>

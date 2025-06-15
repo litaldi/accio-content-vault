@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Typography, Spacing } from '@/components/ui/design-system';
@@ -7,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const CTASection = () => {
   return (
-    <Spacing.Section className="bg-gradient-to-br from-primary/10 to-background">
+    <Spacing.Section>
       <Spacing.Container>
         <div className="text-center max-w-3xl mx-auto">
           <Brain className="h-16 w-16 text-primary mx-auto mb-6" />
