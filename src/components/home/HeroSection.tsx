@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { EnhancedButton } from '@/components/ui/enhanced-button';
-import { Typography, Layout, Spacing } from '@/components/design-system/DesignSystem';
+import { Typography, Spacing } from '@/components/ui/design-system';
 import { Brain, ArrowRight, Sparkles, Users, Shield, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 

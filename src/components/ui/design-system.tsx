@@ -53,7 +53,7 @@ export const Typography = {
   )
 };
 
-// Custom prop names for DOM safety
+// Updated all custom prop types to allow `string`
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   sectionSize?: string;
   sectionBackground?: string;
