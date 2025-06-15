@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -57,8 +58,8 @@ export const Typography = {
  * Section Props: accepts size and background as string | union.
  * These are not forwarded to the DOM.
  */
-type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
-type SectionBackground = 'default' | 'muted' | 'primary' | string;
+type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
+type SectionBackground = 'default' | 'muted' | 'primary' | (string & {});
 
 interface SectionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'size' | 'background'> {
@@ -69,7 +70,7 @@ interface SectionProps
 /**
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
-type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
+type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
 interface ContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
   size?: ContainerSize;
@@ -78,7 +79,7 @@ interface ContainerProps
 /**
  * Stack Props: accepts gap as string/union, not forwarded to DOM.
  */
-type StackGap = 'sm' | 'md' | 'lg' | 'default' | string;
+type StackGap = 'sm' | 'md' | 'lg' | 'default' | (string & {});
 interface StackProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'gap'> {
   gap?: StackGap;
@@ -92,7 +93,7 @@ export const Spacing = {
     background = 'default',
     ...restProps
   }: SectionProps) => {
-    const { size: _size, background: _background, ...props } = restProps;
+    const { size: _size, background: _background, ...domProps } = restProps;
     return (
       <section
         className={cn(
@@ -105,7 +106,7 @@ export const Spacing = {
           background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
         )}
-        {...props}
+        {...domProps}
       >
         {children}
       </section>
@@ -117,7 +118,7 @@ export const Spacing = {
     size = 'default',
     ...restProps
   }: ContainerProps) => {
-    const { size: _size, ...props } = restProps;
+    const { size: _size, ...domProps } = restProps;
     return (
       <div
         className={cn(
@@ -128,7 +129,7 @@ export const Spacing = {
           size === 'xl' && 'container-spacing-xl',
           className
         )}
-        {...props}
+        {...domProps}
       >
         {children}
       </div>
@@ -140,7 +141,7 @@ export const Spacing = {
     gap = 'md',
     ...restProps
   }: StackProps) => {
-    const { gap: _gap, ...props } = restProps;
+    const { gap: _gap, ...domProps } = restProps;
     return (
       <div
         className={cn(
@@ -151,7 +152,7 @@ export const Spacing = {
           gap === 'default' && 'gap-4',
           className
         )}
-        {...props}
+        {...domProps}
       >
         {children}
       </div>
