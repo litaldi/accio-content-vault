@@ -55,7 +55,7 @@ export const Typography = {
 
 // Spacing Components
 
-type SectionSize = 'sm' | 'md' | 'lg' | 'xl';
+type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 type SectionBackground = 'default' | 'muted' | 'primary';
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
@@ -68,7 +68,7 @@ interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: ContainerSize;
 }
 
-type StackGap = 'sm' | 'md' | 'lg';
+type StackGap = 'sm' | 'md' | 'lg' | 'default';
 interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
   gap?: StackGap;
 }
@@ -85,6 +85,7 @@ export const Spacing = {
       className={cn(
         'section-spacing',
         size === 'sm' && 'section-spacing-sm',
+        size === 'md' && 'section-spacing-md',
         size === 'lg' && 'section-spacing-lg',
         size === 'xl' && 'section-spacing-xl',
         background === 'muted' && 'bg-muted/20',
@@ -106,7 +107,9 @@ export const Spacing = {
       className={cn(
         'container-spacing',
         size === 'sm' && 'container-spacing-sm',
+        size === 'md' && 'container-spacing-md',
         size === 'lg' && 'container-spacing-lg',
+        size === 'xl' && 'container-spacing-xl',
         className
       )}
       {...props}
@@ -126,6 +129,7 @@ export const Spacing = {
         gap === 'sm' && 'gap-2',
         gap === 'md' && 'gap-4',
         gap === 'lg' && 'gap-6',
+        gap === 'default' && 'gap-4',
         className
       )}
       {...props}

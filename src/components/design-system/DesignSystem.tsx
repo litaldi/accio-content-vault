@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -56,9 +55,7 @@ export const Typography = {
 
 // Layout Components
 
-// --- Fix: Don't extend HTMLProps to avoid type clash with "size", "background", etc. ---
-
-type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl';
+type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 type SectionBackground = 'default' | 'muted' | 'primary';
 
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
@@ -71,7 +68,7 @@ interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   size?: ContainerSize;
 }
 
-type GridGap = 'sm' | 'md' | 'lg';
+type GridGap = 'sm' | 'md' | 'lg' | 'default';
 type GridColumns = 1 | 2 | 3 | 4;
 
 interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -91,6 +88,7 @@ export const Layout = {
       className={cn(
         'section-spacing',
         spacing === 'sm' && 'section-spacing-sm',
+        spacing === 'md' && 'section-spacing-md',
         spacing === 'lg' && 'section-spacing-lg',
         spacing === 'xl' && 'section-spacing-xl',
         background === 'muted' && 'bg-muted/20',
@@ -112,7 +110,11 @@ export const Layout = {
       className={cn(
         'container-spacing',
         size === 'sm' && 'container-spacing-sm',
+        size === 'md' && 'container-spacing-md',
         size === 'lg' && 'container-spacing-lg',
+        size === 'xl' && 'container-spacing-xl',
+        size === '2xl' && 'container-spacing-2xl',
+        size === 'full' && 'container-spacing-full',
         className
       )}
       {...props}
@@ -137,6 +139,7 @@ export const Layout = {
         gap === 'sm' && 'gap-4',
         gap === 'md' && 'gap-6',
         gap === 'lg' && 'gap-8',
+        gap === 'default' && 'gap-6',
         className
       )}
       {...props}
