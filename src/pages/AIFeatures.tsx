@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -57,7 +56,7 @@ const AIFeatures: React.FC = () => {
       
       <div className="min-h-screen">
         {/* Hero Section */}
-        <Spacing.Section size="xl" className="bg-gradient-to-br from-primary/5 via-background to-purple-500/5 relative overflow-hidden">
+        <Spacing.Section sectionSize="xl" className="bg-gradient-to-br from-primary/5 via-background to-purple-500/5 relative overflow-hidden">
           <div className="absolute inset-0 bg-grid-pattern opacity-5" aria-hidden="true" />
           
           <Spacing.Container className="relative">

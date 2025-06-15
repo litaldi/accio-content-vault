@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Typography, Spacing } from '@/components/ui/design-system';
 import UnifiedPageLayout from '@/components/layout/UnifiedPageLayout';
@@ -9,7 +8,7 @@ const Reminders: React.FC = () => {
       title="Reminders | Accio"
       description="Manage your knowledge reminders and notifications."
     >
-      <Spacing.Section size="lg">
+      <Spacing.Section sectionSize="lg">
         <Spacing.Container>
           <Typography.H2 className="mb-8">Reminders</Typography.H2>
           <Typography.Body>

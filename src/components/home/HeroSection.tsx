@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
 import { EnhancedButton } from '@/components/ui/enhanced-button';
-import { Typography, Layout } from '@/components/design-system/DesignSystem';
+import { Typography, Layout, Spacing } from '@/components/design-system/DesignSystem';
 import { Brain, ArrowRight, Sparkles, Users, Shield, Clock } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -17,8 +16,8 @@ export const HeroSection: React.FC = () => {
   ];
 
   return (
-    <Layout.Section spacing="xl" background="primary">
-      <Layout.Container size="lg" className="text-center">
+    <Spacing.Section sectionSpacing="lg" sectionBackground="primary">
+      <Spacing.Container containerSize="lg" className="text-center">
         {/* Badge */}
         <div className="mb-8 animate-fade-in">
           <Badge variant="outline" className="border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
@@ -90,8 +89,8 @@ export const HeroSection: React.FC = () => {
             </Typography.Caption>
           </div>
         )}
-      </Layout.Container>
-    </Layout.Section>
+      </Spacing.Container>
+    </Spacing.Section>
   );
 };
 

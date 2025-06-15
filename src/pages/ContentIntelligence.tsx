@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Typography, Spacing } from '@/components/ui/design-system';
@@ -36,7 +35,7 @@ const ContentIntelligence: React.FC = () => {
         <meta name="description" content="AI-powered content intelligence with smart summaries, relationship detection, and duplicate analysis." />
       </Helmet>
 
-      <Spacing.Section size="lg">
+      <Spacing.Section sectionSize="lg">
         <Spacing.Container>
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-12">

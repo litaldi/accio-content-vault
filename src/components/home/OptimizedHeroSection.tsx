@@ -8,8 +8,8 @@ const OptimizedHeroSection: React.FC = () => {
   return (
     <Spacing.Section sectionSize="lg" className="bg-gradient-to-br from-primary/10 to-background">
       <Spacing.Container>
+        {/* Left Column: Hero Text and Call-to-Action */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-          {/* Left Column: Hero Text and Call-to-Action */}
           <div className="space-y-6">
             <Typography.H1 className="!text-balance">
               Unlock Your Knowledge Potential with AI

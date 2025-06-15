@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Brain, Shield, Sparkles, Target } from 'lucide-react';
@@ -29,7 +28,7 @@ const EnhancedFeaturesSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section size="lg">
+    <Spacing.Section sectionSize="lg">
       <Spacing.Container>
         <div className="text-center mb-12">
           <Typography.H2>

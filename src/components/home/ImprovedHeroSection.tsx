@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Users, TrendingUp, CheckCircle } from 'lucide-react';
@@ -14,8 +13,8 @@ export const ImprovedHeroSection: React.FC = () => {
   ];
 
   return (
-    <Layout.Section spacing="xl" background="primary">
-      <Layout.Container size="lg" className="text-center">
+    <Layout.Section sectionSpacing="xl" sectionBackground="primary">
+      <Layout.Container containerSize="lg" className="text-center">
         {/* New Feature Badge */}
         <div className="mb-8 animate-fade-in">
           <Badge variant="outline" className="border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">

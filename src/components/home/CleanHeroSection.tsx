@@ -32,7 +32,7 @@ const CleanHeroSection = () => {
 
   return (
     <Spacing.Section 
-      size="xl" 
+      sectionSize="xl" 
       className="bg-gradient-to-br from-primary/5 via-background to-blue-500/5 relative overflow-hidden"
     >
       {/* Background decoration */}

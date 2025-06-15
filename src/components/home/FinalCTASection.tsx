@@ -10,7 +10,7 @@ const FinalCTASection: React.FC = () => {
   const { user } = useAuth();
   
   return (
-    <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/10 to-background">
+    <Spacing.Section sectionSize="lg" className="bg-gradient-to-br from-primary/10 to-background">
       <Spacing.Container>
         <div className="text-center py-16">
           <Brain className="h-10 w-10 mx-auto mb-6 text-primary animate-pulse" />

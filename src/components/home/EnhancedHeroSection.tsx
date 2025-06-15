@@ -36,7 +36,7 @@ const EnhancedHeroSection = () => {
 
   return (
     <Spacing.Section 
-      size="xl" 
+      sectionSize="xl" 
       className="bg-gradient-to-br from-primary/5 via-background to-blue-500/5 relative overflow-hidden"
     >
       <div className="absolute inset-0 bg-grid-pattern opacity-5" aria-hidden="true" />

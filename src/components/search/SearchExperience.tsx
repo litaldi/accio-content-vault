@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Search, Filter, SortAsc, Grid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -82,7 +81,7 @@ export const SearchExperience: React.FC = () => {
       </div>
 
       {/* Results */}
-      <Spacing.Stack gap="lg">
+      <Spacing.Stack stackGap="lg">
         <div className="text-sm text-muted-foreground">
           Found {mockResults.length} results
         </div>

@@ -31,7 +31,7 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section size="lg">
+    <Spacing.Section sectionSize="lg">
       <Spacing.Container>
         <div className="text-center mb-12">
           <Typography.H2 className="mb-4">Frequently Asked Questions</Typography.H2>

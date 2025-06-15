@@ -21,7 +21,7 @@ const BenefitsSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section size="lg" className="bg-gradient-to-br from-primary/5 to-background">
+    <Spacing.Section sectionSize="lg" className="bg-gradient-to-br from-primary/5 to-background">
       <Spacing.Container>
         <div className="text-center mb-16">
           <Badge variant="secondary" className="mb-4">
