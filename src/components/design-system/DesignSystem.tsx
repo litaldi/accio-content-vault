@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -55,13 +54,14 @@ export const Typography = {
 };
 
 /**
- * Section Props: accepts size (spacing) and background string keywords.
+ * Section Props: accepts spacing (spacing) and background string keywords.
  * These are not forwarded to the DOM.
  */
 type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
 type SectionBackground = 'default' | 'muted' | 'primary' | string;
 
-interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "spacing" | "background" | "size"> {
+interface SectionProps
+  extends Omit<React.HTMLAttributes<HTMLElement>, 'spacing' | 'background'> {
   spacing?: SectionSpacing;
   background?: SectionBackground;
 }
@@ -70,7 +70,8 @@ interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "spacing"
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
 type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default' | string;
-interface ContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "size"> {
+interface ContainerProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
   size?: ContainerSize;
 }
 
@@ -79,7 +80,8 @@ interface ContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "siz
  */
 type GridGap = 'sm' | 'md' | 'lg' | 'default' | string;
 type GridColumns = 1 | 2 | 3 | 4 | string;
-interface GridProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "columns" | "gap"> {
+interface GridProps
+  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'columns' | 'gap'> {
   columns?: GridColumns;
   gap?: GridGap;
 }
@@ -90,10 +92,10 @@ export const Layout = {
     className,
     spacing = 'md',
     background = 'default',
-    ...rawProps
+    ...restProps
   }: SectionProps) => {
-    // Don't forward spacing/background to DOM!
-    const { spacing: _spacing, background: _background, ...props } = rawProps;
+    // Remove custom props before spreading to DOM
+    const { /* eslint-disable @typescript-eslint/no-unused-vars */ spacing: _spacing, background: _background, ...props } = restProps;
     return (
       <section
         className={cn(
@@ -116,9 +118,9 @@ export const Layout = {
     children,
     className,
     size = 'default',
-    ...rawProps
+    ...restProps
   }: ContainerProps) => {
-    const { size: _size, ...props } = rawProps;
+    const { size: _size, ...props } = restProps;
     return (
       <div
         className={cn(
@@ -142,9 +144,9 @@ export const Layout = {
     className,
     columns = 1,
     gap = 'md',
-    ...rawProps
+    ...restProps
   }: GridProps) => {
-    const { columns: _cols, gap: _gap, ...props } = rawProps;
+    const { columns: _cols, gap: _gap, ...props } = restProps;
     return (
       <div
         className={cn(
@@ -180,4 +182,3 @@ export const Card = {
     </div>
   )
 };
-
