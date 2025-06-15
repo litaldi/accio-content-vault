@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -33,7 +34,7 @@ export const Typography = {
     className,
     size = 'base',
     ...props
-  }: React.HTMLProps<HTMLParagraphElement> & { size?: string }) => (
+  }: React.HTMLProps<HTMLParagraphElement> & { size?: 'sm' | 'base' | 'lg' }) => (
     <p
       className={cn(
         'body-text',
@@ -55,12 +56,12 @@ export const Typography = {
 
 // Key: Here we use unique names for custom props
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-  sectionSize?: string;
-  sectionBackground?: string;
+  sectionSize?: 'sm' | 'md' | 'lg' | 'xl';
+  sectionBackground?: 'default' | 'muted' | 'primary';
 }
 
 interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
-  containerSize?: string;
+  containerSize?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default';
 }
 
 interface GridProps extends React.HTMLAttributes<HTMLDivElement> {

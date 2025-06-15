@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Layout, Typography } from '@/components/design-system/DesignSystem';
 import { Brain, Search, Shield, Zap, Users, Star, ArrowRight } from 'lucide-react';
@@ -45,7 +46,7 @@ const features = [
 
 const ConsolidatedFeaturesSection: React.FC = () => {
   return (
-    <Layout.Section sectionSpacing="xl" sectionBackground="muted">
+    <Layout.Section sectionSize="xl" sectionBackground="muted">
       <Layout.Container containerSize="lg">
         <div className="text-center mb-16">
           <Typography.H2 className="mb-6">
