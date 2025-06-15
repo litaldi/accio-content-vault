@@ -1,3 +1,4 @@
+
 import { searchAnalyticsService } from './searchAnalyticsService';
 
 export interface ContentStats {
@@ -133,7 +134,7 @@ export class EnhancedAnalyticsService {
   getSearchInsights(): SearchInsights {
     try {
       const searchHistory = searchAnalyticsService.getSearchHistory();
-      const popularSearches = searchAnalyticsService.getPopularSearches();
+      const popularSearches = searchAnalyticsService.getPopularQueries();
 
       const totalSearches = searchHistory.length;
       const semanticSearches = searchHistory.filter(s => s.isSemanticSearch).length;

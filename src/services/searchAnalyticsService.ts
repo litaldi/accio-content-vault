@@ -1,3 +1,4 @@
+
 interface SearchAnalytics {
   query: string;
   timestamp: Date;
@@ -75,6 +76,25 @@ export class SearchAnalyticsService {
     return Array.from(dailyCounts.entries())
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => a.date.localeCompare(b.date));
+  }
+
+  // New method for enhanced analytics compatibility
+  getSearchHistory(): SearchAnalytics[] {
+    return [...this.searches];
+  }
+
+  // New method for tag search statistics (mock implementation)
+  getTagSearchStats(): any {
+    return {
+      totalTagSearches: this.searches.filter(s => s.query.includes('#')).length,
+      averageTagsPerSearch: 1.2,
+      topTaggedQueries: this.getPopularQueries(5).filter(q => q.query.includes('#'))
+    };
+  }
+
+  // Alias for backward compatibility
+  getPopularSearches(limit: number = 10): Array<{ query: string; count: number }> {
+    return this.getPopularQueries(limit);
   }
 
   private getCurrentUserId(): string | undefined {

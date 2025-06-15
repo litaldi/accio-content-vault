@@ -1,39 +1,21 @@
+
 export interface SavedContent {
   id: string;
-  user_id?: string;
   title: string;
-  content?: string;
-  description?: string;
+  description: string;
   url?: string;
-  file_url?: string;
-  file_type?: string;
-  file_size?: number;
-  image_url?: string;
-  tags: Tag[];
+  content_type?: string;
   created_at: string;
-  updated_at?: string;
-  content_type: 'article' | 'video' | 'document' | 'image' | 'link' | 'note';
-  is_favorite?: boolean;
-  reading_time?: number;
-  author?: string;
-  source?: string;
-  has_summary?: boolean;
+  updated_at: string;
+  tags: Tag[];
+  user_id: string;
 }
 
-export interface SearchResult extends SavedContent {
-  relevance_score?: number;
-  highlight?: string;
-}
-
-export interface User {
+export interface Tag {
   id: string;
-  email: string;
-  name?: string;
-  user_metadata?: {
-    name?: string;
-    full_name?: string;
-    avatar_url?: string;
-  };
+  name: string;
+  color?: string;
+  created_at: string;
 }
 
 export interface Collection {
@@ -41,32 +23,26 @@ export interface Collection {
   name: string;
   description?: string;
   created_at: string;
-  updated_at?: string;
-  items_count: number;
-  is_public?: boolean;
+  updated_at: string;
+  user_id: string;
+  items: SavedContent[];
 }
 
-export interface Tag {
+export interface SearchResult {
   id: string;
-  name: string;
-  count?: number;
-  color?: string;
-  auto_generated?: boolean;
-  confirmed?: boolean;
+  title: string;
+  description: string;
+  url?: string;
+  relevanceScore: number;
+  highlights: string[];
 }
 
-export interface FileUploadProps {
-  onFileUpload: (file: File) => void;
-  onUploadComplete?: (fileDetails: { file_url: string; file_type: "image" | "pdf"; file_size: number; title: string; }) => void;
-  acceptedTypes?: string[];
-  maxSize?: number;
-  disabled?: boolean;
-}
-
-export interface TagEditorProps {
-  tags: Tag[];
-  onTagsChange: (tags: Tag[]) => void;
-  readOnly?: boolean;
-  maxTags?: number;
-  variant?: 'default' | 'compact';
+export interface SearchFilters {
+  type?: string;
+  tags?: string[];
+  dateRange?: {
+    start: Date;
+    end: Date;
+  };
+  source?: string;
 }

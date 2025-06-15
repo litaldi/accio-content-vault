@@ -1,167 +1,82 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User } from '@supabase/supabase-js';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-export interface AuthContextType {
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
+
+interface Session {
+  access_token: string;
+  user: User;
+}
+
+interface AuthContextType {
   user: User | null;
-  loading: boolean;
-  isLoading: boolean;
-  isAuthenticated: boolean;
-  isDemoMode: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  signIn: (email: string, password: string) => Promise<{ error?: any }>;
-  signUp: (email: string, password: string, metadata?: any) => Promise<{ error?: any }>;
+  session: Session | null;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  signInWithProvider: (provider: string) => Promise<{ error?: any }>;
-  resetPassword: (email: string) => Promise<void>;
+  loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    // Initialize auth state from localStorage
+    const storedUser = localStorage.getItem('auth_user');
+    const storedSession = localStorage.getItem('auth_session');
 
-    return () => clearTimeout(timer);
+    if (storedUser && storedSession) {
+      try {
+        setUser(JSON.parse(storedUser));
+        setSession(JSON.parse(storedSession));
+      } catch (error) {
+        console.error('Error parsing stored auth data:', error);
+      }
+    }
+
+    setLoading(false);
   }, []);
 
-  const login = async (email: string, password: string): Promise<void> => {
-    setLoading(true);
-    try {
-      // Demo login logic
-      if (email === 'demo@yourapp.com' && password === 'Demo1234!') {
-        const mockUser = {
-          id: 'demo-user-id',
-          email: 'demo@yourapp.com',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-          app_metadata: {},
-          user_metadata: {},
-          aud: 'authenticated',
-          confirmation_sent_at: null,
-          confirmed_at: new Date().toISOString(),
-          email_confirmed_at: new Date().toISOString(),
-          invited_at: null,
-          last_sign_in_at: new Date().toISOString(),
-          phone: null,
-          phone_confirmed_at: null,
-          recovery_sent_at: null,
-          role: 'authenticated'
-        } as User;
-        
-        setUser(mockUser);
-      } else {
-        throw new Error('Invalid credentials');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const register = async (email: string, password: string): Promise<void> => {
-    setLoading(true);
-    try {
-      // Mock registration
-      const mockUser = {
-        id: `user-${Date.now()}`,
-        email,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        app_metadata: {},
-        user_metadata: {},
-        aud: 'authenticated',
-        confirmation_sent_at: null,
-        confirmed_at: new Date().toISOString(),
-        email_confirmed_at: new Date().toISOString(),
-        invited_at: null,
-        last_sign_in_at: new Date().toISOString(),
-        phone: null,
-        phone_confirmed_at: null,
-        recovery_sent_at: null,
-        role: 'authenticated'
-      } as User;
-      
-      setUser(mockUser);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const logout = async (): Promise<void> => {
-    setUser(null);
-  };
-
-  // Alias methods for compatibility
   const signIn = async (email: string, password: string) => {
-    try {
-      await login(email, password);
-      return {};
-    } catch (error) {
-      return { error };
-    }
+    // Mock authentication - in real app this would call your auth service
+    const mockUser: User = {
+      id: 'user-123',
+      email: email,
+      name: email.split('@')[0]
+    };
+
+    const mockSession: Session = {
+      access_token: 'mock-token-' + Date.now(),
+      user: mockUser
+    };
+
+    setUser(mockUser);
+    setSession(mockSession);
+
+    localStorage.setItem('auth_user', JSON.stringify(mockUser));
+    localStorage.setItem('auth_session', JSON.stringify(mockSession));
   };
 
-  const signUp = async (email: string, password: string, metadata?: any) => {
-    try {
-      await register(email, password);
-      return {};
-    } catch (error) {
-      return { error };
-    }
-  };
-
-  const signOut = async (): Promise<void> => {
-    await logout();
-  };
-
-  const signInWithProvider = async (provider: string) => {
-    try {
-      // Mock provider signin
-      return {};
-    } catch (error) {
-      return { error };
-    }
-  };
-
-  const resetPassword = async (email: string): Promise<void> => {
-    // Mock reset password
-    console.log('Reset password for:', email);
+  const signOut = async () => {
+    setUser(null);
+    setSession(null);
+    localStorage.removeItem('auth_user');
+    localStorage.removeItem('auth_session');
   };
 
   const value: AuthContextType = {
     user,
-    loading,
-    isLoading: loading,
-    isAuthenticated: !!user,
-    isDemoMode: user?.email === 'demo@yourapp.com',
-    login,
-    register,
-    logout,
+    session,
     signIn,
-    signUp,
     signOut,
-    signInWithProvider,
-    resetPassword
+    loading
   };
 
   return (
@@ -169,4 +84,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
 };
