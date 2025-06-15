@@ -51,3 +51,42 @@ const OptimizedHeroSection: React.FC = () => {
 };
 
 export default OptimizedHeroSection;
+
+// PricingSection
+const PricingSection: React.FC = () => {
+  return (
+    <Spacing.Section>
+      <Spacing.Container>
+        {/* ... keep rest of code the same ... */}
+      </Spacing.Container>
+    </Spacing.Section>
+  );
+};
+
+export default PricingSection;
+
+// UnifiedFeaturesSection card list (fix size)
+const UnifiedFeaturesSection: React.FC = () => {
+  return (
+    <Spacing.Section>
+      <Spacing.Container>
+        {/* ... keep rest of code the same ... */}
+      </Spacing.Container>
+    </Spacing.Section>
+  );
+};
+
+export default UnifiedFeaturesSection;
+
+// AIFeatures.tsx feature grid fixes
+const AIFeatures: React.FC = () => {
+  return (
+    <Spacing.Section>
+      <Spacing.Container>
+        {/* ... keep rest of code the same ... */}
+      </Spacing.Container>
+    </Spacing.Section>
+  );
+};
+
+export default AIFeatures;

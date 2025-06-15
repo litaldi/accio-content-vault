@@ -17,7 +17,7 @@ export const HeroSection: React.FC = () => {
   ];
 
   return (
-    <Spacing.Section sectionSpacing="lg" sectionBackground="primary">
+    <Spacing.Section sectionSize="lg" sectionBackground="primary">
       <Spacing.Container containerSize="lg" className="text-center">
         {/* Badge */}
         <div className="mb-8 animate-fade-in">

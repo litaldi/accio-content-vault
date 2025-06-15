@@ -54,9 +54,8 @@ export const Typography = {
 };
 
 // Key: Here we use unique names for custom props
-
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
-  sectionSpacing?: string;
+  sectionSize?: string;
   sectionBackground?: string;
 }
 
@@ -73,7 +72,7 @@ export const Layout = {
   Section: ({
     children,
     className,
-    sectionSpacing = 'md',
+    sectionSize = 'md',
     sectionBackground = 'default',
     ...domProps
   }: SectionProps) => {
@@ -81,10 +80,10 @@ export const Layout = {
       <section
         className={cn(
           'section-spacing',
-          sectionSpacing === 'sm' && 'section-spacing-sm',
-          sectionSpacing === 'md' && 'section-spacing-md',
-          sectionSpacing === 'lg' && 'section-spacing-lg',
-          sectionSpacing === 'xl' && 'section-spacing-xl',
+          sectionSize === 'sm' && 'section-spacing-sm',
+          sectionSize === 'md' && 'section-spacing-md',
+          sectionSize === 'lg' && 'section-spacing-lg',
+          sectionSize === 'xl' && 'section-spacing-xl',
           sectionBackground === 'muted' && 'bg-muted/20',
           sectionBackground === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
