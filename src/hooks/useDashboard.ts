@@ -21,7 +21,7 @@ const initialFilters: DashboardFilters = {
   activeFilters: [],
 };
 
-const tags: Tag[] = [
+const tags: import('@/types').Tag[] = [
   { id: '1', name: 'analytics', auto_generated: true, confirmed: true, created_at: '2024-01-01T00:00:00Z' },
   { id: '2', name: 'dashboard', auto_generated: true, confirmed: true, created_at: '2024-01-02T00:00:00Z' },
   { id: '3', name: 'engagement', auto_generated: false, confirmed: true, created_at: '2024-01-03T00:00:00Z' },

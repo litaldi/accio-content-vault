@@ -45,6 +45,7 @@ export const useTagEditor = ({ tags, onTagsChange, maxTags = 50 }: UseTagEditorP
         name: newTagName.trim(),
         auto_generated: false,
         confirmed: true,
+        created_at: new Date().toISOString(), // added created_at
       };
       
       onTagsChange([...tags, newTag]);

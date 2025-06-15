@@ -1,4 +1,3 @@
-
 import { Tag } from '@/types';
 
 interface ContentAnalysis {
@@ -38,7 +37,8 @@ export class AITaggingService {
         id: `tag_${Date.now()}_${index}`,
         name: name.toLowerCase(),
         auto_generated: true,
-        confirmed: false
+        confirmed: false,
+        created_at: new Date().toISOString()
       }));
     } catch (error) {
       console.error('Error generating tags:', error);

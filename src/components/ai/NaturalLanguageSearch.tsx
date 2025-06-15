@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,12 +26,9 @@ export const NaturalLanguageSearch: React.FC<NaturalLanguageSearchProps> = ({
 
   const handleNaturalSearch = async () => {
     if (!query.trim()) return;
-
     setIsSearching(true);
     try {
-      // Simulate processing time for better UX
       await new Promise(resolve => setTimeout(resolve, 500));
-      
       const results = naturalLanguageService.semanticSearch(query, allContent);
       setLastResults(results);
       onSearch(results.map(r => r.content));

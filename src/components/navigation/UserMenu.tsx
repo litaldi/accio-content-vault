@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -29,8 +28,7 @@ export const UserMenu: React.FC = () => {
     }
   };
 
-  const userDisplayName = user.user_metadata?.full_name || 
-                         user.user_metadata?.name || 
+  const userDisplayName = user.name || 
                          user.email?.split('@')[0] || 
                          'User';
 

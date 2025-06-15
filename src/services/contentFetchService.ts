@@ -48,9 +48,9 @@ export const useContentFetchService = () => {
             id: ct.tags.id,
             name: ct.tags.name,
             auto_generated: ct.tags.auto_generated,
-            confirmed: ct.confirmed
+            confirmed: ct.confirmed,
+            created_at: ct.tags.created_at,
           }));
-
         return {
           id: content.id,
           user_id: content.user_id,
@@ -61,8 +61,9 @@ export const useContentFetchService = () => {
           file_type: content.file_type || undefined,
           content_type: content.content_type || 'url',
           created_at: content.created_at,
+          updated_at: content.updated_at,
           has_summary: content.has_summary || false,
-          tags: contentTags as Tag[]
+          tags: contentTags
         };
       });
     } catch (error) {

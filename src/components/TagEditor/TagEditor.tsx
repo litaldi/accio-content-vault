@@ -1,6 +1,13 @@
 
 import React from 'react';
-import { TagEditorProps } from '@/types';
+// Inline props definition
+interface TagEditorProps {
+  tags: import('@/types').Tag[];
+  onTagsChange: (tags: import('@/types').Tag[]) => void;
+  readOnly?: boolean;
+  maxTags?: number;
+  variant?: 'default' | 'compact';
+}
 import TagHeader from './TagHeader';
 import TagList from './TagList';
 import TagInput from './TagInput';

@@ -1,4 +1,3 @@
-
 import { Tag } from '@/types';
 import { useCallback } from 'react';
 import { useBaseService } from './baseService';
@@ -50,6 +49,7 @@ export const useTagService = () => {
           name: newTag.name,
           auto_generated: newTag.auto_generated,
           confirmed: tag.confirmed || false,
+          created_at: newTag.created_at || new Date().toISOString(),
         });
       } else {
         tagId = existingTags[0].id;
@@ -58,6 +58,7 @@ export const useTagService = () => {
           name: existingTags[0].name,
           auto_generated: existingTags[0].auto_generated,
           confirmed: tag.confirmed || false,
+          created_at: existingTags[0].created_at || new Date().toISOString(),
         });
       }
 

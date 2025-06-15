@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
@@ -6,10 +5,10 @@ import { Info, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const DemoBanner: React.FC = () => {
-  const { user, isDemoMode } = useAuth();
+  const { user } = useAuth();
   const [isVisible, setIsVisible] = React.useState(true);
 
-  if (!isDemoMode || !isVisible || user) {
+  if (!isVisible || user) {
     return null;
   }
 

@@ -59,6 +59,7 @@ export const useContentSaveService = () => {
         file_type: content.file_type as "image" | "pdf" | undefined,
         content_type: content.content_type || 'url',
         created_at: content.created_at,
+        updated_at: content.updated_at, // added updated_at
         tags: savedTags
       };
     } catch (error) {

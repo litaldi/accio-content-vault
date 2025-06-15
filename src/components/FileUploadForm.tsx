@@ -1,165 +1,95 @@
-
-import React, { useState, useRef } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { FileUp, UploadCloud } from 'lucide-react';
+import { useDropzone } from 'react-dropzone';
 import { useToast } from '@/hooks/use-toast';
-import { FileUploadProps } from '@/types';
-import { Upload, File, Image } from 'lucide-react';
 
-const FileUploadForm: React.FC<FileUploadProps> = ({ 
-  onFileUpload, 
-  onUploadComplete,
-  acceptedTypes,
-  maxSize,
-  disabled
-}) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+interface FileUploadFormProps {
+  onFileUploaded: (file: File) => void;
+}
+
+const FileUploadForm: React.FC<FileUploadFormProps> = ({ onFileUploaded }) => {
+  const [file, setFile] = useState<File | null>(null);
   const { toast } = useToast();
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const uploadedFile = acceptedFiles[0];
+    setFile(uploadedFile);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    multiple: false,
+    accept: {
+      'image/*': ['.png', '.gif', '.jpeg', '.jpg'],
+      'application/pdf': ['.pdf'],
+      'text/plain': ['.txt'],
+      'text/csv': ['.csv'],
+      'application/msword': ['.doc'],
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': ['.docx'],
+    },
+    maxFiles: 1,
+  });
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
     if (file) {
-      // Check file type
-      const fileType = file.type;
-      if (!(fileType === 'application/pdf' || fileType.startsWith('image/'))) {
-        toast({
-          title: 'Invalid file type',
-          description: 'Only PDF documents and images (jpg/png) are supported',
-          variant: 'destructive',
-        });
-        return;
-      }
-      
-      // Check file size (limit to 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        toast({
-          title: 'File too large',
-          description: 'Maximum file size is 10MB',
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      setSelectedFile(file);
-      if (onFileUpload) {
-        onFileUpload(file);
-      }
-    }
-  };
-
-  const handleUpload = async () => {
-    if (!selectedFile) {
+      onFileUploaded(file);
       toast({
-        title: 'No file selected',
-        description: 'Please select a file to upload',
+        title: 'File Uploaded',
+        description: `Your file "${file.name}" has been successfully uploaded.`,
+      });
+    } else {
+      toast({
+        title: 'No File Selected',
+        description: 'Please select a file to upload.',
         variant: 'destructive',
       });
-      return;
-    }
-
-    setIsUploading(true);
-
-    try {
-      // In a real implementation with Supabase, you would:
-      // 1. Upload file to Supabase Storage
-      // 2. Get the file URL
-      // 3. Save the file metadata to the database
-      
-      // For now, we'll simulate the process
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const fileType = selectedFile.type.startsWith('image/') ? 'image' : 'pdf';
-      
-      // Mock file URL - in production this would come from Supabase Storage
-      const mockFileUrl = `https://storage.example.com/${Date.now()}-${selectedFile.name}`;
-      
-      if (onUploadComplete) {
-        onUploadComplete({
-          file_url: mockFileUrl,
-          file_type: fileType as "image" | "pdf",
-          file_size: selectedFile.size,
-          title: selectedFile.name,
-        });
-      }
-      
-      toast({
-        title: 'File uploaded',
-        description: 'Your file has been uploaded successfully',
-      });
-      
-      // Reset state
-      setSelectedFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = '';
-      
-    } catch (error) {
-      console.error('Error uploading file:', error);
-      toast({
-        title: 'Upload failed',
-        description: 'There was an error uploading your file',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsUploading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-xl mx-auto">
-      <CardHeader>
-        <CardTitle>Upload Content</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid w-full items-center gap-4">
-          <div 
-            className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer ${
-              selectedFile ? 'border-primary' : 'border-border'
-            }`}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            {selectedFile ? (
-              <div className="flex flex-col items-center">
-                {selectedFile.type.startsWith('image/') ? (
-                  <Image className="h-8 w-8 mb-2 text-primary" />
-                ) : (
-                  <File className="h-8 w-8 mb-2 text-primary" />
-                )}
-                <p className="text-sm font-medium">{selectedFile.name}</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
-                </p>
-              </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div {...getRootProps()} className="relative border rounded-md p-4 cursor-pointer bg-muted hover:bg-accent transition-colors">
+        <input {...getInputProps()} id="upload" />
+        <div className="text-center">
+          <UploadCloud className="mx-auto h-6 w-6 text-muted-foreground mb-2" />
+          <p className="text-sm text-muted-foreground">
+            {isDragActive ? (
+              'Drop the file here...'
             ) : (
-              <div className="flex flex-col items-center">
-                <Upload className="h-8 w-8 mb-2 text-muted-foreground" />
-                <p className="text-sm font-medium">Click to select a file</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  PDF, JPG, PNG (max 10MB)
-                </p>
-              </div>
+              <>
+                Click to upload or drag and drop
+                <br />
+                <span className="text-xs">
+                  (Accepts images, PDF, TXT, CSV, DOC, DOCX)
+                </span>
+              </>
             )}
-            <input 
-              type="file" 
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".pdf,image/jpeg,image/png"
-              className="hidden" 
-              disabled={disabled}
-            />
-          </div>
+          </p>
         </div>
-      </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button 
-          type="button" 
-          onClick={handleUpload} 
-          disabled={!selectedFile || isUploading || disabled}
-        >
-          {isUploading ? "Uploading..." : "Upload"}
-        </Button>
-      </CardFooter>
-    </Card>
+      </div>
+
+      {file && (
+        <div className="space-y-2">
+          <Label htmlFor="file-name">Selected File</Label>
+          <Input
+            id="file-name"
+            type="text"
+            value={file.name}
+            readOnly
+            className="cursor-not-allowed"
+          />
+        </div>
+      )}
+
+      <Button type="submit" className="w-full" disabled={!file}>
+        <FileUp className="w-4 h-4 mr-2" />
+        Upload File
+      </Button>
+    </form>
   );
 };
 

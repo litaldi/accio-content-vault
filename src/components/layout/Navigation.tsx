@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -6,7 +5,7 @@ import { Brain, Menu } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 
 export const Navigation: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <nav className="modern-nav">
@@ -29,7 +28,7 @@ export const Navigation: React.FC = () => {
               <Link to="/dashboard" className="modern-nav-item">
                 Dashboard
               </Link>
-              <Button variant="outline" onClick={logout}>
+              <Button variant="outline">
                 Logout
               </Button>
             </div>

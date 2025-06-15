@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -56,7 +55,7 @@ export const SecureLoginForm: React.FC = () => {
     
     try {
       if (isLogin) {
-        const { error } = await signIn(email, password);
+        const { error } = (await signIn(email, password)) || {};
         if (error) {
           if (error.message.includes('Invalid login credentials')) {
             setError('Invalid email or password. Please check your credentials and try again.');
@@ -72,7 +71,7 @@ export const SecureLoginForm: React.FC = () => {
           });
         }
       } else {
-        const { error } = await signUp(email, password, { name });
+        const { error } = (await signUp(email, password, { name })) || {};
         if (error) {
           if (error.message.includes('User already registered')) {
             setError('An account with this email already exists. Please sign in instead.');
