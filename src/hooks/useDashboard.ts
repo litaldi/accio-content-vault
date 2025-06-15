@@ -1,4 +1,5 @@
 
+
 import { useState, useEffect, useMemo } from 'react';
 import { SavedContent, Tag } from '@/types';
 
@@ -62,7 +63,6 @@ export const useDashboard = () => {
               { id: 'tag-2', name: 'performance', auto_generated: true, confirmed: true, created_at: '2024-01-02T00:00:00Z' },
               { id: 'tag-3', name: 'frontend', auto_generated: false, confirmed: true, created_at: '2024-01-03T00:00:00Z' }
             ],
-            has_summary: false,
           },
         ];
 
@@ -167,3 +167,4 @@ export const useDashboard = () => {
     },
   };
 };
+
