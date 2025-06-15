@@ -58,18 +58,18 @@ export const Typography = {
 type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 type SectionBackground = 'default' | 'muted' | 'primary';
 
-interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "size" | "background"> {
   size?: SectionSize;
   background?: SectionBackground;
 }
 
 type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
-interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "size"> {
   size?: ContainerSize;
 }
 
 type StackGap = 'sm' | 'md' | 'lg' | 'default';
-interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+interface StackProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "gap"> {
   gap?: StackGap;
 }
 

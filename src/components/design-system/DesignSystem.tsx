@@ -58,20 +58,20 @@ export const Typography = {
 type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 type SectionBackground = 'default' | 'muted' | 'primary';
 
-interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "spacing" | "background"> {
   spacing?: SectionSpacing;
   background?: SectionBackground;
 }
 
 type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default';
-interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+interface ContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "size"> {
   size?: ContainerSize;
 }
 
 type GridGap = 'sm' | 'md' | 'lg' | 'default';
 type GridColumns = 1 | 2 | 3 | 4;
 
-interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
+interface GridProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "columns" | "gap"> {
   columns?: GridColumns;
   gap?: GridGap;
 }
