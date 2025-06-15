@@ -57,9 +57,8 @@ export const Typography = {
  * Section Props: accepts spacing (spacing) and background string keywords.
  * These are not forwarded to the DOM.
  */
-// Use (string & {}) to allow both literal and generic strings for type safety and compatibility
-type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
-type SectionBackground = 'default' | 'muted' | 'primary' | (string & {});
+type SectionSpacing = string;
+type SectionBackground = string;
 
 interface SectionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'spacing' | 'background'> {
@@ -70,7 +69,7 @@ interface SectionProps
 /**
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
-type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default' | (string & {});
+type ContainerSize = string;
 interface ContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
   size?: ContainerSize;
@@ -79,8 +78,8 @@ interface ContainerProps
 /**
  * Grid Props: accepts columns and gap as string/number, not forwarded to DOM.
  */
-type GridGap = 'sm' | 'md' | 'lg' | 'default' | (string & {});
-type GridColumns = 1 | 2 | 3 | 4 | (string & {}) | number;
+type GridGap = string;
+type GridColumns = string | number;
 interface GridProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'columns' | 'gap'> {
   columns?: GridColumns;

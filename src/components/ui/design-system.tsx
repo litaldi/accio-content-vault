@@ -57,9 +57,8 @@ export const Typography = {
  * Section Props: accepts size and background as string | union.
  * These are not forwarded to the DOM.
  */
-// Use (string & {}) to allow both literal and generic strings for type safety and compatibility
-type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
-type SectionBackground = 'default' | 'muted' | 'primary' | (string & {});
+type SectionSize = string;
+type SectionBackground = string;
 
 interface SectionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'size' | 'background'> {
@@ -70,7 +69,7 @@ interface SectionProps
 /**
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
-type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
+type ContainerSize = string;
 interface ContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
   size?: ContainerSize;
@@ -79,7 +78,7 @@ interface ContainerProps
 /**
  * Stack Props: accepts gap as string/union, not forwarded to DOM.
  */
-type StackGap = 'sm' | 'md' | 'lg' | 'default' | (string & {});
+type StackGap = string;
 interface StackProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'gap'> {
   gap?: StackGap;
