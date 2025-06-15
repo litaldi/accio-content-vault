@@ -94,6 +94,9 @@ export const Layout = {
     background = 'default',
     ...domProps
   }: SectionProps) => {
+    // Remove 'spacing' & 'background' from DOM props:
+    const restProps = { ...domProps };
+    // (We already used destructuring to remove them; this is just explicit.)
     return (
       <section
         className={cn(
@@ -106,7 +109,7 @@ export const Layout = {
           background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
         )}
-        {...domProps}
+        {...restProps}
       >
         {children}
       </section>
@@ -118,6 +121,7 @@ export const Layout = {
     size = 'default',
     ...domProps
   }: ContainerProps) => {
+    const restProps = { ...domProps };
     return (
       <div
         className={cn(
@@ -130,7 +134,7 @@ export const Layout = {
           size === 'full' && 'container-spacing-full',
           className
         )}
-        {...domProps}
+        {...restProps}
       >
         {children}
       </div>
@@ -143,6 +147,7 @@ export const Layout = {
     gap = 'md',
     ...domProps
   }: GridProps) => {
+    const restProps = { ...domProps };
     return (
       <div
         className={cn(
@@ -157,7 +162,7 @@ export const Layout = {
           gap === 'default' && 'gap-6',
           className
         )}
-        {...domProps}
+        {...restProps}
       >
         {children}
       </div>

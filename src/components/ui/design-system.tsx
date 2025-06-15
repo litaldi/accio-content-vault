@@ -92,6 +92,8 @@ export const Spacing = {
     background = 'default',
     ...domProps
   }: SectionProps) => {
+    // Remove 'size' & 'background' from DOM props:
+    const restProps = { ...domProps };
     return (
       <section
         className={cn(
@@ -104,7 +106,7 @@ export const Spacing = {
           background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
         )}
-        {...domProps}
+        {...restProps}
       >
         {children}
       </section>
@@ -116,6 +118,7 @@ export const Spacing = {
     size = 'default',
     ...domProps
   }: ContainerProps) => {
+    const restProps = { ...domProps };
     return (
       <div
         className={cn(
@@ -126,7 +129,7 @@ export const Spacing = {
           size === 'xl' && 'container-spacing-xl',
           className
         )}
-        {...domProps}
+        {...restProps}
       >
         {children}
       </div>
@@ -138,6 +141,7 @@ export const Spacing = {
     gap = 'md',
     ...domProps
   }: StackProps) => {
+    const restProps = { ...domProps };
     return (
       <div
         className={cn(
@@ -148,7 +152,7 @@ export const Spacing = {
           gap === 'default' && 'gap-4',
           className
         )}
-        {...domProps}
+        {...restProps}
       >
         {children}
       </div>
