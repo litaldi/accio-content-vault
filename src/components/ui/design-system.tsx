@@ -4,27 +4,27 @@ import { cn } from '@/lib/utils';
 
 // Typography Components
 export const Typography = {
-  H1: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H1: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1 className={cn('hero-text heading-gradient', className)} {...props}>
       {children}
     </h1>
   ),
-  H2: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H2: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2 className={cn('heading-1', className)} {...props}>
       {children}
     </h2>
   ),
-  H3: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H3: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h3 className={cn('heading-2', className)} {...props}>
       {children}
     </h3>
   ),
-  H4: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H4: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h4 className={cn('heading-3', className)} {...props}>
       {children}
     </h4>
   ),
-  Lead: ({ children, className, ...props }: React.HTMLProps<HTMLParagraphElement>) => (
+  Lead: ({ children, className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p className={cn('lead-text', className)} {...props}>
       {children}
     </p>
@@ -34,7 +34,7 @@ export const Typography = {
     className,
     size = 'base',
     ...props
-  }: React.HTMLProps<HTMLParagraphElement> & { size?: 'sm' | 'base' | 'lg' }) => (
+  }: React.HTMLAttributes<HTMLParagraphElement> & { size?: 'sm' | 'base' | 'lg' }) => (
     <p
       className={cn(
         'body-text',
@@ -47,14 +47,14 @@ export const Typography = {
       {children}
     </p>
   ),
-  Caption: ({ children, className, ...props }: React.HTMLProps<HTMLSpanElement>) => (
+  Caption: ({ children, className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
     <span className={cn('caption-text', className)} {...props}>
       {children}
     </span>
   )
 };
 
-// Updated all custom prop types to allow `string`
+// Updated all custom prop types to allow specific values
 interface SectionProps extends React.HTMLAttributes<HTMLElement> {
   sectionSize?: 'sm' | 'md' | 'lg' | 'xl';
   sectionBackground?: 'default' | 'muted' | 'primary';
@@ -74,7 +74,7 @@ export const Spacing = {
     className,
     sectionSize = 'md',
     sectionBackground = 'default',
-    ...domProps
+    ...props
   }: SectionProps) => {
     return (
       <section
@@ -88,7 +88,7 @@ export const Spacing = {
           sectionBackground === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
         )}
-        {...domProps}
+        {...props}
       >
         {children}
       </section>
@@ -98,7 +98,7 @@ export const Spacing = {
     children,
     className,
     containerSize = 'default',
-    ...domProps
+    ...props
   }: ContainerProps) => {
     return (
       <div
@@ -112,7 +112,7 @@ export const Spacing = {
           containerSize === 'full' && 'container-spacing-full',
           className
         )}
-        {...domProps}
+        {...props}
       >
         {children}
       </div>
@@ -122,7 +122,7 @@ export const Spacing = {
     children,
     className,
     stackGap = 'md',
-    ...domProps
+    ...props
   }: StackProps) => {
     return (
       <div
@@ -134,7 +134,7 @@ export const Spacing = {
           stackGap === 'default' && 'gap-4',
           className
         )}
-        {...domProps}
+        {...props}
       >
         {children}
       </div>

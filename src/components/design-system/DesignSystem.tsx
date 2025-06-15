@@ -4,27 +4,27 @@ import { cn } from '@/lib/utils';
 
 // Typography Components
 export const Typography = {
-  H1: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H1: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1 className={cn('hero-text heading-gradient', className)} {...props}>
       {children}
     </h1>
   ),
-  H2: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H2: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2 className={cn('heading-1', className)} {...props}>
       {children}
     </h2>
   ),
-  H3: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H3: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h3 className={cn('heading-2', className)} {...props}>
       {children}
     </h3>
   ),
-  H4: ({ children, className, ...props }: React.HTMLProps<HTMLHeadingElement>) => (
+  H4: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h4 className={cn('heading-3', className)} {...props}>
       {children}
     </h4>
   ),
-  Lead: ({ children, className, ...props }: React.HTMLProps<HTMLParagraphElement>) => (
+  Lead: ({ children, className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
     <p className={cn('lead-text', className)} {...props}>
       {children}
     </p>
@@ -34,7 +34,7 @@ export const Typography = {
     className,
     size = 'base',
     ...props
-  }: React.HTMLProps<HTMLParagraphElement> & { size?: 'sm' | 'base' | 'lg' }) => (
+  }: React.HTMLAttributes<HTMLParagraphElement> & { size?: 'sm' | 'base' | 'lg' }) => (
     <p
       className={cn(
         'body-text',
@@ -47,7 +47,7 @@ export const Typography = {
       {children}
     </p>
   ),
-  Caption: ({ children, className, ...props }: React.HTMLProps<HTMLSpanElement>) => (
+  Caption: ({ children, className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
     <span className={cn('caption-text', className)} {...props}>
       {children}
     </span>
@@ -75,7 +75,7 @@ export const Layout = {
     className,
     sectionSize = 'md',
     sectionBackground = 'default',
-    ...domProps
+    ...props
   }: SectionProps) => {
     return (
       <section
@@ -89,7 +89,7 @@ export const Layout = {
           sectionBackground === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
           className
         )}
-        {...domProps}
+        {...props}
       >
         {children}
       </section>
@@ -99,7 +99,7 @@ export const Layout = {
     children,
     className,
     containerSize = 'default',
-    ...domProps
+    ...props
   }: ContainerProps) => {
     return (
       <div
@@ -113,7 +113,7 @@ export const Layout = {
           containerSize === 'full' && 'container-spacing-full',
           className
         )}
-        {...domProps}
+        {...props}
       >
         {children}
       </div>
@@ -124,7 +124,7 @@ export const Layout = {
     className,
     gridColumns = 1,
     gridGap = 'md',
-    ...domProps
+    ...props
   }: GridProps) => {
     return (
       <div
@@ -140,7 +140,7 @@ export const Layout = {
           gridGap === 'default' && 'gap-6',
           className
         )}
-        {...domProps}
+        {...props}
       >
         {children}
       </div>
@@ -149,12 +149,12 @@ export const Layout = {
 };
 
 export const Card = {
-  Root: ({ children, className, ...props }: React.HTMLProps<HTMLDivElement>) => (
+  Root: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div className={cn('clean-card', className)} {...props}>
       {children}
     </div>
   ),
-  Content: ({ children, className, ...props }: React.HTMLProps<HTMLDivElement>) => (
+  Content: ({ children, className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
     <div className={cn('p-6', className)} {...props}>
       {children}
     </div>
