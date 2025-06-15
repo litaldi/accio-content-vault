@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -53,24 +54,32 @@ export const Typography = {
   )
 };
 
-// Spacing Components
-
-type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
-type SectionBackground = 'default' | 'muted' | 'primary';
+/**
+ * Section Props: accepts size and background as string | union.
+ * These are not forwarded to the DOM.
+ */
+type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
+type SectionBackground = 'default' | 'muted' | 'primary' | string;
 
 interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "size" | "background"> {
-  size?: SectionSize | string;
-  background?: SectionBackground | string;
+  size?: SectionSize;
+  background?: SectionBackground;
 }
 
-type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
+/**
+ * Container Props: accepts size string keywords, not forwarded to DOM.
+ */
+type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
 interface ContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "size"> {
-  size?: ContainerSize | string;
+  size?: ContainerSize;
 }
 
-type StackGap = 'sm' | 'md' | 'lg' | 'default';
+/**
+ * Stack Props: accepts gap string/union, not forwarded to DOM.
+ */
+type StackGap = 'sm' | 'md' | 'lg' | 'default' | string;
 interface StackProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "gap"> {
-  gap?: StackGap | string;
+  gap?: StackGap;
 }
 
 export const Spacing = {
@@ -79,9 +88,9 @@ export const Spacing = {
     className,
     size = 'md',
     background = 'default',
-    ...props
+    ...rawProps
   }: SectionProps) => {
-    // Do NOT pass size/background to DOM!
+    const { size: _size, background: _background, ...props } = rawProps;
     return (
       <section
         className={cn(
@@ -104,40 +113,47 @@ export const Spacing = {
     children,
     className,
     size = 'default',
-    ...props
-  }: ContainerProps) => (
-    <div
-      className={cn(
-        'container-spacing',
-        size === 'sm' && 'container-spacing-sm',
-        size === 'md' && 'container-spacing-md',
-        size === 'lg' && 'container-spacing-lg',
-        size === 'xl' && 'container-spacing-xl',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  ),
+    ...rawProps
+  }: ContainerProps) => {
+    const { size: _size, ...props } = rawProps;
+    return (
+      <div
+        className={cn(
+          'container-spacing',
+          size === 'sm' && 'container-spacing-sm',
+          size === 'md' && 'container-spacing-md',
+          size === 'lg' && 'container-spacing-lg',
+          size === 'xl' && 'container-spacing-xl',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  },
   Stack: ({
     children,
     className,
     gap = 'md',
-    ...props
-  }: StackProps) => (
-    <div
-      className={cn(
-        'flex flex-col',
-        gap === 'sm' && 'gap-2',
-        gap === 'md' && 'gap-4',
-        gap === 'lg' && 'gap-6',
-        gap === 'default' && 'gap-4',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </div>
-  )
+    ...rawProps
+  }: StackProps) => {
+    const { gap: _gap, ...props } = rawProps;
+    return (
+      <div
+        className={cn(
+          'flex flex-col',
+          gap === 'sm' && 'gap-2',
+          gap === 'md' && 'gap-4',
+          gap === 'lg' && 'gap-6',
+          gap === 'default' && 'gap-4',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </div>
+    );
+  }
 };
+
