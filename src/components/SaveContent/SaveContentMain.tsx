@@ -57,8 +57,7 @@ export const SaveContentMain: React.FC<SaveContentMainProps> = ({
             
             <TabsContent value="file" className="pt-4 space-y-6 animate-fade-in">
               <FileUploadForm 
-                onFileUpload={handleFileUpload}
-                onUploadComplete={handleFileUploadComplete} 
+                onFileUploaded={handleFileUpload}
               />
             </TabsContent>
           </Tabs>

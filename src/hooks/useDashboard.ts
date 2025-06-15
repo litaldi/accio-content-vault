@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo } from 'react';
 import { SavedContent, Tag } from '@/types';
 
@@ -55,10 +56,11 @@ export const useDashboard = () => {
             url: 'https://react.dev/learn/render-and-commit',
             content_type: 'article',
             created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
             tags: [
-              { id: 'tag-1', name: 'react', auto_generated: true, confirmed: true },
-              { id: 'tag-2', name: 'performance', auto_generated: true, confirmed: true },
-              { id: 'tag-3', name: 'frontend', auto_generated: false, confirmed: true }
+              { id: 'tag-1', name: 'react', auto_generated: true, confirmed: true, created_at: '2024-01-01T00:00:00Z' },
+              { id: 'tag-2', name: 'performance', auto_generated: true, confirmed: true, created_at: '2024-01-02T00:00:00Z' },
+              { id: 'tag-3', name: 'frontend', auto_generated: false, confirmed: true, created_at: '2024-01-03T00:00:00Z' }
             ],
             has_summary: false,
           },
