@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 
-export const useDebounce = <T>(value: T, delay: number): T => {
+export function useDebounce<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
 
   useEffect(() => {
@@ -15,4 +15,16 @@ export const useDebounce = <T>(value: T, delay: number): T => {
   }, [value, delay]);
 
   return debouncedValue;
-};
+}
+
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  delay: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: NodeJS.Timeout;
+  
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(null, args), delay);
+  };
+}

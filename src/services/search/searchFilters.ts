@@ -11,19 +11,28 @@ interface SearchFilters {
   source?: string;
 }
 
-export const applyFilters = (results: SavedContent[], filters: SearchFilters): SavedContent[] => {
-  let filtered = results;
+export function applyFilters(content: SavedContent[], filters: SearchFilters): SavedContent[] {
+  let filtered = [...content];
 
+  // Filter by content type
   if (filters.type) {
-    filtered = filtered.filter(item => item.content_type === filters.type);
-  }
-
-  if (filters.tags && filters.tags.length > 0) {
     filtered = filtered.filter(item => 
-      filters.tags!.some(tagName => item.tags.some(tag => tag.name === tagName))
+      item.content_type?.toLowerCase() === filters.type.toLowerCase()
     );
   }
 
+  // Filter by tags
+  if (filters.tags && filters.tags.length > 0) {
+    filtered = filtered.filter(item =>
+      filters.tags!.some(filterTag =>
+        item.tags.some(itemTag => 
+          itemTag.name.toLowerCase().includes(filterTag.toLowerCase())
+        )
+      )
+    );
+  }
+
+  // Filter by date range
   if (filters.dateRange) {
     filtered = filtered.filter(item => {
       const itemDate = new Date(item.created_at);
@@ -31,12 +40,30 @@ export const applyFilters = (results: SavedContent[], filters: SearchFilters): S
     });
   }
 
-  if (filters.source) {
-    filtered = filtered.filter(item => 
-      (item.url && item.url.includes(filters.source!)) || 
-      (item.title && item.title.includes(filters.source!))
-    );
+  // Filter by source/domain
+  if (filters.source && filters.source.trim()) {
+    filtered = filtered.filter(item => {
+      if (!item.url) return false;
+      try {
+        const itemDomain = new URL(item.url).hostname;
+        return itemDomain.toLowerCase().includes(filters.source!.toLowerCase());
+      } catch {
+        return false;
+      }
+    });
   }
 
   return filtered;
-};
+}
+
+export function highlightMatches(text: string, keywords: string[]): string {
+  if (!keywords.length || !text) return text;
+  
+  let highlighted = text;
+  keywords.forEach(keyword => {
+    const regex = new RegExp(`(${keyword})`, 'gi');
+    highlighted = highlighted.replace(regex, '<mark>$1</mark>');
+  });
+  
+  return highlighted;
+}

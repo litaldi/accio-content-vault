@@ -1,24 +1,14 @@
-interface SearchQuery {
+interface SearchAnalytics {
   query: string;
-  timestamp: string;
+  timestamp: Date;
   resultCount: number;
   isSemanticSearch: boolean;
-  tags?: string[];
+  userId?: string;
 }
 
-interface TagSearchStats {
-  [tagName: string]: {
-    count: number;
-    lastSearched: string;
-  };
-}
-
-/**
- * Service to track and analyze user search behavior
- * Helps understand which tags and content types are most valuable
- */
 export class SearchAnalyticsService {
   private static instance: SearchAnalyticsService;
+  private searches: SearchAnalytics[] = [];
 
   static getInstance(): SearchAnalyticsService {
     if (!SearchAnalyticsService.instance) {
@@ -27,108 +17,88 @@ export class SearchAnalyticsService {
     return SearchAnalyticsService.instance;
   }
 
-  /**
-   * Record a search query for analytics
-   */
   recordSearch(query: string, resultCount: number, isSemanticSearch: boolean = false): void {
+    const searchRecord: SearchAnalytics = {
+      query: query.trim(),
+      timestamp: new Date(),
+      resultCount,
+      isSemanticSearch,
+      userId: this.getCurrentUserId()
+    };
+
+    this.searches.push(searchRecord);
+    
+    // Keep only last 1000 searches to prevent memory issues
+    if (this.searches.length > 1000) {
+      this.searches = this.searches.slice(-1000);
+    }
+
+    // Store in localStorage for persistence
     try {
-      const searchData: SearchQuery = {
-        query: query.toLowerCase().trim(),
-        timestamp: new Date().toISOString(),
-        resultCount,
-        isSemanticSearch,
-        tags: this.extractTagsFromQuery(query)
-      };
-
-      // Store search history
-      const searches = this.getSearchHistory();
-      searches.push(searchData);
-      
-      // Keep only last 100 searches
-      const recentSearches = searches.slice(-100);
-      localStorage.setItem('searchHistory', JSON.stringify(recentSearches));
-
-      // Update tag search statistics
-      this.updateTagSearchStats(searchData);
-
-      console.log('Search recorded:', searchData);
+      localStorage.setItem('searchAnalytics', JSON.stringify(this.searches.slice(-100)));
     } catch (error) {
-      console.error('Error recording search:', error);
+      console.warn('Failed to store search analytics:', error);
     }
   }
 
-  /**
-   * Get search history
-   */
-  getSearchHistory(): SearchQuery[] {
-    try {
-      return JSON.parse(localStorage.getItem('searchHistory') || '[]');
-    } catch {
-      return [];
-    }
-  }
-
-  /**
-   * Get tag search statistics
-   */
-  getTagSearchStats(): TagSearchStats {
-    try {
-      return JSON.parse(localStorage.getItem('tagSearchStats') || '{}');
-    } catch {
-      return {};
-    }
-  }
-
-  /**
-   * Get popular search terms
-   */
-  getPopularSearches(limit: number = 10): Array<{query: string, count: number}> {
-    const searches = this.getSearchHistory();
-    const queryCount: {[key: string]: number} = {};
-
-    searches.forEach(search => {
-      queryCount[search.query] = (queryCount[search.query] || 0) + 1;
+  getPopularQueries(limit: number = 10): Array<{ query: string; count: number }> {
+    const queryCount = new Map<string, number>();
+    
+    this.searches.forEach(search => {
+      const count = queryCount.get(search.query) || 0;
+      queryCount.set(search.query, count + 1);
     });
 
-    return Object.entries(queryCount)
+    return Array.from(queryCount.entries())
       .map(([query, count]) => ({ query, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, limit);
   }
 
-  /**
-   * Extract potential tag names from search query
-   */
-  private extractTagsFromQuery(query: string): string[] {
-    const commonTags = [
-      'job', 'career', 'work', 'interview', 'resume',
-      'programming', 'coding', 'javascript', 'react', 'python',
-      'ai', 'machine learning', 'tutorial', 'course', 'learning',
-      'news', 'article', 'video', 'github', 'youtube'
-    ];
-
-    return commonTags.filter(tag => 
-      query.toLowerCase().includes(tag.toLowerCase())
-    );
+  getRecentQueries(limit: number = 5): string[] {
+    return this.searches
+      .slice(-limit)
+      .reverse()
+      .map(search => search.query)
+      .filter((query, index, arr) => arr.indexOf(query) === index);
   }
 
-  /**
-   * Update tag search statistics
-   */
-  private updateTagSearchStats(searchData: SearchQuery): void {
-    if (!searchData.tags || searchData.tags.length === 0) return;
-
-    const stats = this.getTagSearchStats();
+  getSearchTrends(): Array<{ date: string; count: number }> {
+    const dailyCounts = new Map<string, number>();
     
-    searchData.tags.forEach(tag => {
-      if (!stats[tag]) {
-        stats[tag] = { count: 0, lastSearched: searchData.timestamp };
-      }
-      stats[tag].count += 1;
-      stats[tag].lastSearched = searchData.timestamp;
+    this.searches.forEach(search => {
+      const date = search.timestamp.toISOString().split('T')[0];
+      const count = dailyCounts.get(date) || 0;
+      dailyCounts.set(date, count + 1);
     });
 
-    localStorage.setItem('tagSearchStats', JSON.stringify(stats));
+    return Array.from(dailyCounts.entries())
+      .map(([date, count]) => ({ date, count }))
+      .sort((a, b) => a.date.localeCompare(b.date));
+  }
+
+  private getCurrentUserId(): string | undefined {
+    // In a real app, this would get the current user ID from auth context
+    try {
+      return localStorage.getItem('userId') || undefined;
+    } catch {
+      return undefined;
+    }
+  }
+
+  // Initialize from localStorage
+  constructor() {
+    try {
+      const stored = localStorage.getItem('searchAnalytics');
+      if (stored) {
+        this.searches = JSON.parse(stored).map((item: any) => ({
+          ...item,
+          timestamp: new Date(item.timestamp)
+        }));
+      }
+    } catch (error) {
+      console.warn('Failed to load search analytics:', error);
+    }
   }
 }
 

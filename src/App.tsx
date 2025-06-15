@@ -1,74 +1,48 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from './contexts/AuthContext';
-import { AccessibilityProvider } from './contexts/AccessibilityContext';
-import { ThemeProvider } from './components/theme/ThemeProvider';
-import { Toaster } from './components/ui/toaster';
-import { setupGlobalErrorHandlers } from './utils/errorHandling';
-
-// Modern pages
-import ModernHomePage from './pages/ModernHomePage';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import { SecurityAuditDashboard } from './components/security/SecurityAuditDashboard';
-
-// Security monitoring
-import { useSecurityMonitoring } from './hooks/useSecurityMonitoring';
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/contexts/AuthContext';
+import Home from '@/pages/Home';
+import Features from '@/pages/Features';
+import SavedContent from '@/pages/SavedContent';
+import Collections from '@/pages/Collections';
+import Analytics from '@/pages/Analytics';
+import Reminders from '@/pages/Reminders';
+import { HelmetProvider } from 'react-helmet-async';
+import './App.css';
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
+      staleTime: 1000 * 60 * 5, // 5 minutes
       retry: 1,
     },
   },
 });
 
-// Security wrapper component
-const SecurityWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  useSecurityMonitoring();
-  return <>{children}</>;
-};
-
 function App() {
-  useEffect(() => {
-    setupGlobalErrorHandlers();
-  }, []);
-
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AccessibilityProvider>
-          <AuthProvider>
-            <SecurityWrapper>
-              <Router>
-                <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-blue-950">
-                  {/* Skip to content link */}
-                  <a 
-                    href="#main-content" 
-                    className="skip-link"
-                    tabIndex={0}
-                  >
-                    Skip to main content
-                  </a>
-                  
-                  <Routes>
-                    <Route path="/" element={<ModernHomePage />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/security-audit" element={<SecurityAuditDashboard />} />
-                  </Routes>
-                  
-                  <Toaster />
-                </div>
-              </Router>
-            </SecurityWrapper>
-          </AuthProvider>
-        </AccessibilityProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <Router>
+            <div className="min-h-screen bg-background">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/features" element={<Features />} />
+                <Route path="/saved-content" element={<SavedContent />} />
+                <Route path="/collections" element={<Collections />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/reminders" element={<Reminders />} />
+              </Routes>
+              <Toaster />
+            </div>
+          </Router>
+        </AuthProvider>
+      </QueryClientProvider>
+    </HelmetProvider>
   );
 }
 
