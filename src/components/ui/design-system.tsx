@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -58,8 +57,8 @@ export const Typography = {
  * Section Props: accepts size and background as string | union.
  * These are not forwarded to the DOM.
  */
-type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
-type SectionBackground = 'default' | 'muted' | 'primary' | (string & {});
+type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
+type SectionBackground = 'default' | 'muted' | 'primary' | string;
 
 interface SectionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'size' | 'background'> {
@@ -70,7 +69,7 @@ interface SectionProps
 /**
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
-type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
+type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
 interface ContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
   size?: ContainerSize;
@@ -79,7 +78,7 @@ interface ContainerProps
 /**
  * Stack Props: accepts gap as string/union, not forwarded to DOM.
  */
-type StackGap = 'sm' | 'md' | 'lg' | 'default' | (string & {});
+type StackGap = 'sm' | 'md' | 'lg' | 'default' | string;
 interface StackProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'gap'> {
   gap?: StackGap;
@@ -91,9 +90,8 @@ export const Spacing = {
     className,
     size = 'md',
     background = 'default',
-    ...restProps
+    ...domProps
   }: SectionProps) => {
-    const { size: _size, background: _background, ...domProps } = restProps;
     return (
       <section
         className={cn(
@@ -116,9 +114,8 @@ export const Spacing = {
     children,
     className,
     size = 'default',
-    ...restProps
+    ...domProps
   }: ContainerProps) => {
-    const { size: _size, ...domProps } = restProps;
     return (
       <div
         className={cn(
@@ -139,9 +136,8 @@ export const Spacing = {
     children,
     className,
     gap = 'md',
-    ...restProps
+    ...domProps
   }: StackProps) => {
-    const { gap: _gap, ...domProps } = restProps;
     return (
       <div
         className={cn(

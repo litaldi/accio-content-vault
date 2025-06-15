@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -58,8 +57,8 @@ export const Typography = {
  * Section Props: accepts spacing (spacing) and background string keywords.
  * These are not forwarded to the DOM.
  */
-type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default' | (string & {});
-type SectionBackground = 'default' | 'muted' | 'primary' | (string & {});
+type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default' | string;
+type SectionBackground = 'default' | 'muted' | 'primary' | string;
 
 interface SectionProps
   extends Omit<React.HTMLAttributes<HTMLElement>, 'spacing' | 'background'> {
@@ -70,7 +69,7 @@ interface SectionProps
 /**
  * Container Props: accepts size string keywords, not forwarded to DOM.
  */
-type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default' | (string & {});
+type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default' | string;
 interface ContainerProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'size'> {
   size?: ContainerSize;
@@ -79,8 +78,8 @@ interface ContainerProps
 /**
  * Grid Props: accepts columns and gap as string/number, not forwarded to DOM.
  */
-type GridGap = 'sm' | 'md' | 'lg' | 'default' | (string & {});
-type GridColumns = 1 | 2 | 3 | 4 | (string & {});
+type GridGap = 'sm' | 'md' | 'lg' | 'default' | string;
+type GridColumns = 1 | 2 | 3 | 4 | string | number;
 interface GridProps
   extends Omit<React.HTMLAttributes<HTMLDivElement>, 'columns' | 'gap'> {
   columns?: GridColumns;
@@ -93,11 +92,8 @@ export const Layout = {
     className,
     spacing = 'md',
     background = 'default',
-    ...restProps
+    ...domProps
   }: SectionProps) => {
-    // Remove custom props before spreading to DOM
-    // Extract and remove 'spacing' and 'background'
-    const { spacing: _spacing, background: _background, ...domProps } = restProps;
     return (
       <section
         className={cn(
@@ -120,9 +116,8 @@ export const Layout = {
     children,
     className,
     size = 'default',
-    ...restProps
+    ...domProps
   }: ContainerProps) => {
-    const { size: _size, ...domProps } = restProps;
     return (
       <div
         className={cn(
@@ -146,9 +141,8 @@ export const Layout = {
     className,
     columns = 1,
     gap = 'md',
-    ...restProps
+    ...domProps
   }: GridProps) => {
-    const { columns: _cols, gap: _gap, ...domProps } = restProps;
     return (
       <div
         className={cn(
