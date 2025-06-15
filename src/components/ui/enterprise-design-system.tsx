@@ -38,12 +38,15 @@ export const EnterpriseTypography = {
 
 // Enterprise Spacing
 
-interface SectionProps extends React.HTMLProps<HTMLElement> {
-  size?: string;
-  background?: string;
+type SectionSize = 'sm' | 'md' | 'lg' | 'xl';
+type SectionBackground = 'default' | 'muted' | 'primary';
+
+interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+  size?: SectionSize;
+  background?: SectionBackground;
 }
-interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
-  size?: string;
+interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'default';
 }
 
 export const EnterpriseSpacing = {

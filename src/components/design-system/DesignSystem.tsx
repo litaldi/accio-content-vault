@@ -56,18 +56,27 @@ export const Typography = {
 
 // Layout Components
 
-interface SectionProps extends React.HTMLProps<HTMLElement> {
-  spacing?: string;
-  background?: string;
+// --- Fix: Don't extend HTMLProps to avoid type clash with "size", "background", etc. ---
+
+type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl';
+type SectionBackground = 'default' | 'muted' | 'primary';
+
+interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+  spacing?: SectionSpacing;
+  background?: SectionBackground;
 }
 
-interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
-  size?: string;
+type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default';
+interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  size?: ContainerSize;
 }
 
-interface GridProps extends React.HTMLProps<HTMLDivElement> {
-  columns?: string | number;
-  gap?: string;
+type GridGap = 'sm' | 'md' | 'lg';
+type GridColumns = 1 | 2 | 3 | 4;
+
+interface GridProps extends React.HTMLAttributes<HTMLDivElement> {
+  columns?: GridColumns;
+  gap?: GridGap;
 }
 
 export const Layout = {

@@ -55,17 +55,22 @@ export const Typography = {
 
 // Spacing Components
 
-interface SectionProps extends React.HTMLProps<HTMLElement> {
-  size?: string;
-  background?: string;
+type SectionSize = 'sm' | 'md' | 'lg' | 'xl';
+type SectionBackground = 'default' | 'muted' | 'primary';
+
+interface SectionProps extends React.HTMLAttributes<HTMLElement> {
+  size?: SectionSize;
+  background?: SectionBackground;
 }
 
-interface ContainerProps extends React.HTMLProps<HTMLDivElement> {
-  size?: string;
+type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
+interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {
+  size?: ContainerSize;
 }
 
-interface StackProps extends React.HTMLProps<HTMLDivElement> {
-  gap?: string;
+type StackGap = 'sm' | 'md' | 'lg';
+interface StackProps extends React.HTMLAttributes<HTMLDivElement> {
+  gap?: StackGap;
 }
 
 export const Spacing = {
