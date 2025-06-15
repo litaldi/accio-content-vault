@@ -1,4 +1,3 @@
-
 export interface SavedContent {
   id: string;
   title: string;
@@ -9,6 +8,14 @@ export interface SavedContent {
   updated_at: string;
   tags: Tag[];
   user_id: string;
+
+  // Optional fields for richer content representation
+  file_url?: string;
+  file_type?: string;
+  file_size?: number;
+  image_url?: string;
+  reading_time?: number;
+  is_favorite?: boolean;
 }
 
 export interface Tag {
@@ -16,6 +23,10 @@ export interface Tag {
   name: string;
   color?: string;
   created_at: string;
+
+  // Add AI/confirmation states
+  auto_generated?: boolean;
+  confirmed?: boolean;
 }
 
 export interface Collection {
