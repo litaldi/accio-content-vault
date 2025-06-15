@@ -59,18 +59,18 @@ type SectionSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 type SectionBackground = 'default' | 'muted' | 'primary';
 
 interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "size" | "background"> {
-  size?: SectionSize;
-  background?: SectionBackground;
+  size?: SectionSize | string;
+  background?: SectionBackground | string;
 }
 
 type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 interface ContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "size"> {
-  size?: ContainerSize;
+  size?: ContainerSize | string;
 }
 
 type StackGap = 'sm' | 'md' | 'lg' | 'default';
 interface StackProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "gap"> {
-  gap?: StackGap;
+  gap?: StackGap | string;
 }
 
 export const Spacing = {

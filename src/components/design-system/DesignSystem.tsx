@@ -59,21 +59,21 @@ type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 type SectionBackground = 'default' | 'muted' | 'primary';
 
 interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "spacing" | "background" | "size"> {
-  spacing?: SectionSpacing;
-  background?: SectionBackground;
+  spacing?: SectionSpacing | string;
+  background?: SectionBackground | string;
 }
 
 type ContainerSize = 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'default';
 interface ContainerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "size"> {
-  size?: ContainerSize;
+  size?: ContainerSize | string;
 }
 
 type GridGap = 'sm' | 'md' | 'lg' | 'default';
 type GridColumns = 1 | 2 | 3 | 4;
 
 interface GridProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "columns" | "gap"> {
-  columns?: GridColumns;
-  gap?: GridGap;
+  columns?: GridColumns | string;
+  gap?: GridGap | string;
 }
 
 export const Layout = {
