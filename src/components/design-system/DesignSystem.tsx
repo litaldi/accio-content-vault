@@ -58,7 +58,7 @@ export const Typography = {
 type SectionSpacing = 'sm' | 'md' | 'lg' | 'xl' | 'default';
 type SectionBackground = 'default' | 'muted' | 'primary';
 
-interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "spacing" | "background"> {
+interface SectionProps extends Omit<React.HTMLAttributes<HTMLElement>, "spacing" | "background" | "size"> {
   spacing?: SectionSpacing;
   background?: SectionBackground;
 }
@@ -83,23 +83,26 @@ export const Layout = {
     spacing = 'md',
     background = 'default',
     ...props
-  }: SectionProps) => (
-    <section
-      className={cn(
-        'section-spacing',
-        spacing === 'sm' && 'section-spacing-sm',
-        spacing === 'md' && 'section-spacing-md',
-        spacing === 'lg' && 'section-spacing-lg',
-        spacing === 'xl' && 'section-spacing-xl',
-        background === 'muted' && 'bg-muted/20',
-        background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </section>
-  ),
+  }: SectionProps) => {
+    // Don't forward spacing/background to DOM!
+    return (
+      <section
+        className={cn(
+          'section-spacing',
+          spacing === 'sm' && 'section-spacing-sm',
+          spacing === 'md' && 'section-spacing-md',
+          spacing === 'lg' && 'section-spacing-lg',
+          spacing === 'xl' && 'section-spacing-xl',
+          background === 'muted' && 'bg-muted/20',
+          background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </section>
+    );
+  },
   Container: ({
     children,
     className,

@@ -80,23 +80,26 @@ export const Spacing = {
     size = 'md',
     background = 'default',
     ...props
-  }: SectionProps) => (
-    <section
-      className={cn(
-        'section-spacing',
-        size === 'sm' && 'section-spacing-sm',
-        size === 'md' && 'section-spacing-md',
-        size === 'lg' && 'section-spacing-lg',
-        size === 'xl' && 'section-spacing-xl',
-        background === 'muted' && 'bg-muted/20',
-        background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </section>
-  ),
+  }: SectionProps) => {
+    // Do NOT pass size/background to DOM!
+    return (
+      <section
+        className={cn(
+          'section-spacing',
+          size === 'sm' && 'section-spacing-sm',
+          size === 'md' && 'section-spacing-md',
+          size === 'lg' && 'section-spacing-lg',
+          size === 'xl' && 'section-spacing-xl',
+          background === 'muted' && 'bg-muted/20',
+          background === 'primary' && 'bg-gradient-to-br from-primary/5 to-background',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </section>
+    );
+  },
   Container: ({
     children,
     className,
